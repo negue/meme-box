@@ -1,0 +1,48 @@
+<!-- Notes
+The Browser Elements need to exist all the time
+The Loaded Clips need to stay cached?
+-->
+
+<ng-container *ngFor="let entry of mediaClipMap$ | async | keyvalue"
+              [ngSwitch]="entry.value.type">
+  <video *ngSwitchCase="2" #video
+         [volume]="entry.value.volumeSetting / 100"
+         [src]="entry.value.path"
+
+         (loadeddata)="addLog('loadeddata', $event, video)"
+         (loadedmetadata)="addLog('loadedmetadata', $event, video)"
+         (loadstart)="addLog('loadstart', $event, video); addToMap(entry.value, video)"
+         (progress)="addLog('progress', $event, video)"
+         controls
+         (canplaythrough)="addLog('canplaythrough', $event, video)"
+         (canplay)="addLog('canplay', $event, video)"
+        [class.visible]="shouldPlay$(entry.key) | async"
+
+  ></video>
+  <audio *ngSwitchCase="1" #audio
+         [volume]="entry.value.volumeSetting / 100"
+         [src]="entry.value.path"
+         [controls]="true"
+(loadstart)=" addToMap(entry.value, audio)"
+         [class.visible]="shouldPlay$(entry.key) | async"
+  ></audio>
+  <img *ngSwitchCase="0" #img
+       [src]="entry.value.path"
+       [class.visible]="shouldPlay$(entry.key) | async"
+
+       (loadstart)=" addToMap(entry.value, img)"
+  >
+</ng-container>
+
+
+<div style="padding: 2rem">
+<button mat-raised-button  (click)="showPicture()">picture</button>
+<button mat-raised-button  (click)="showAudio()">audio</button>
+<button mat-raised-button (click)="showVideo()">video</button>
+</div>
+
+
+<pre>
+  {{ log | json }}
+  {{ mediaClipMap$ | async | json }}
+</pre>

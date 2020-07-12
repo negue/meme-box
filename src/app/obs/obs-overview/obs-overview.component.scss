@@ -1,0 +1,12 @@
+.items-holder {
+  padding-top: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+
+.obs-item {
+  &:not(:first-of-type) {
+    margin-top: 1rem;
+  }
+}

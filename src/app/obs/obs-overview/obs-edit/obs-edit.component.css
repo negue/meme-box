@@ -1,0 +1,8 @@
+:host {
+
+}
+
+.button-area {
+  display: flex;
+  justify-content: space-evenly;
+}

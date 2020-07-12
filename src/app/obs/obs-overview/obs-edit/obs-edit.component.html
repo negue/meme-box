@@ -1,0 +1,36 @@
+
+<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a OBS URL </h2>
+<mat-dialog-content class="mat-typography">
+
+<form [formGroup]="form">
+
+<div class="example-container">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput
+           formControlName="name">
+  </mat-form-field>
+
+
+</div>
+</form>
+  <mat-selection-list >
+    <!-- Later from Statemanagement and then check if media of ID X is selected for this obs url  --->
+    <mat-list-option *ngFor="let entry of data.clips | keyvalue">
+      {{entry.key}}
+    </mat-list-option>
+  </mat-selection-list>
+
+  Form: {{ form.value | json }}
+  Dialog: {{ data | json }}
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="save()"
+          color="primary"
+          cdkFocusInitial>{{ data.id ? 'Update' : 'Add' }}</button>
+</mat-dialog-actions>
+

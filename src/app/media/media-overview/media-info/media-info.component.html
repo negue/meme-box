@@ -1,0 +1,29 @@
+<div class="info-holder">
+  <div class="preview" *ngIf="info.type === 0 && (info.previewUrl || info.path)">
+    <img [src]="domSanitizer.bypassSecurityTrustUrl(info.previewUrl || info.path)">
+  </div>
+  <div class="informations">
+    <strong>{{info.name}}</strong> Type: {{ info.type | mediaType }} <br><br>
+    Volume: <strong>{{info.volumeSetting}}</strong>% <br/><br/>
+    <ng-container *ngIf="info.clipLength">
+      Clip Length: <strong>{{info.clipLength}}</strong>ms <br/><br/>
+    </ng-container>
+    Play Length: <strong>{{info.playLength}}</strong>ms <br/><br/>
+    Path: {{info.path}} <br/>
+    OBS: {{info.obsName}} <br/><br/>
+
+    <button mat-raised-button color="accent" (click)="preview.emit()">show preview</button>
+
+
+    WIP
+  </div>
+  <div class="buttons">
+    <button mat-icon-button color="primary" (click)="edit.emit()">
+      <mat-icon svgIcon="settings"></mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="delete.emit()">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </div>
+</div>
+

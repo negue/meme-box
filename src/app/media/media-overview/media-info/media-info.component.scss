@@ -1,0 +1,18 @@
+:host {
+  width: 100%;
+  display: block;
+}
+
+.info-holder {
+  display: flex;
+  flex-direction: row;
+}
+
+.informations {
+  margin: 1rem;
+  flex: 1;
+}
+
+.buttons {
+  flex-grow: 0;
+}

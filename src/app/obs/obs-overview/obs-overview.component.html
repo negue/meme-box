@@ -1,0 +1,20 @@
+<div class="items-holder">
+  <div class="obs-item"
+  *ngFor="let obsInfo of obsList$ | async">
+    <app-obs-info [info]="obsInfo"
+                  (onDelete)="delete(obsInfo)"
+                  (onEdit)="showDialog(obsInfo)">
+
+    </app-obs-info>
+  </div>
+
+</div>
+
+<div class="floating-action-button">
+  <button mat-fab color="warn"
+          aria-label="Add a new meme/media"
+          (click)="addNewItem()"
+  >
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</div>

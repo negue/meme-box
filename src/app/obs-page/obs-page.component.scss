@@ -1,0 +1,7 @@
+video, audio, img {
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+}

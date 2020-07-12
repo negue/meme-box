@@ -1,0 +1,55 @@
+<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a clip </h2>
+<mat-dialog-content class="mat-typography">
+<form [formGroup]="form">
+  <mat-form-field>
+    <input matInput placeholder="Name"
+           formControlName="name"
+           type="text">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Type" formControlName="type">
+      <mat-option [value]="0">Picture</mat-option>
+      <mat-option [value]="1">Audio</mat-option>
+      <mat-option [value]="2">Video</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <mat-label>Volume</mat-label>
+  <mat-slider [min]="0" [max]="100" [step]="1"
+              formControlName="volumeSetting">
+
+  </mat-slider>
+
+  <mat-form-field>
+    <input matInput placeholder="Clip Length"
+           formControlName="clipLength"
+           type="number">
+    <span matSuffix>ms</span>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Play Length" formControlName="playLength" type="number">
+    <span matSuffix>ms</span>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Path to the File"
+           formControlName="path"
+           type="text">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Preview URL"
+           formControlName="previewUrl"
+           type="text">
+  </mat-form-field>
+  <img [src]="form.value.previewUrl">
+</form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="save()"
+          color="primary"
+          cdkFocusInitial>{{ data.id ? 'Update' : 'Add' }}</button>
+</mat-dialog-actions>

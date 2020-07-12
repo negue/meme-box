@@ -1,0 +1,34 @@
+<mat-card class="item-header-card">
+  <h3 class="header">{{info.name}}</h3>
+
+  <div class="copy-url-area">
+    <code>{{info.url}}</code>
+  </div>
+
+  <div class="actions">
+    <button mat-button color="primary">
+      <mat-icon svgIcon="content_copy"></mat-icon>
+      Copy URL
+    </button>
+
+    <button mat-icon-button color="accent"
+            (click)="onEdit.emit()">
+      <mat-icon svgIcon="edit"></mat-icon>
+    </button>
+
+
+    <button mat-icon-button color="warn"
+            (click)="onDelete.emit()">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </div>
+
+  {{ info | json }}
+</mat-card>
+
+<div class="media-list">
+  <div class="media-info"
+      *ngFor="let entry of info.clips | keyvalue">
+    <strong>{{entry.key}}</strong>: {{entry.value.clip}}
+  </div>
+</div>

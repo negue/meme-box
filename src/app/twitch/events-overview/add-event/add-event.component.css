@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  background: #444;
+}
+
+form {
+  display: flex;
+  align-content: center;
+}
+
+/*
+  [XX][XX][X]
+*/
+
+mat-form-field {
+  flex: 2;
+  margin: 1rem;
+}
+
+button {
+  flex: 1;
+  align-self: center;
+  margin: 1rem;
+}

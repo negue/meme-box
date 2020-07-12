@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  background: green;
+}
+
+.example-container {
+  height: 100vh;
+}

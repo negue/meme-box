@@ -1,0 +1,39 @@
+.media-list {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  align-content: flex-start;
+}
+
+
+.media-clip {
+  width: 50%;
+  min-height: 6rem;
+
+
+  // left:
+  // padding-left 1rem
+  // padding-right: 0.5;
+
+  // right
+  // padding-left: 0.5
+  // padding-right: 1rem
+
+  &:nth-of-type(2n+1) {
+    padding: 1rem;
+    padding-right: 0.5rem;
+  }
+
+  &:nth-of-type(2n) {
+    padding: 1rem;
+    padding-left: 0.5rem;
+  }
+
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+
+  mat-card {
+    height: 100%;
+  }
+}

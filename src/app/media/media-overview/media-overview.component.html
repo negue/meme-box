@@ -1,0 +1,30 @@
+
+<div class="media-list">
+  <div class="media-clip"
+       *ngFor="let item of mediaList$ | async">
+    <mat-card >
+      <app-media-info [info]="item"
+                      (preview)="onPreview(item)"
+                      (edit)="onEdit(item)"
+                      (delete)="onDelete(item.id)">
+
+      </app-media-info>
+    </mat-card>
+  </div>
+
+</div>
+
+<div class="floating-action-button">
+  <button mat-fab color="warn"
+          aria-label="Add a new meme/media"
+          (click)="addNewItem()"
+  >
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</div>
+
+
+State:
+<pre>
+  {{ query.state$ | async | json }}
+</pre>

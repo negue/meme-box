@@ -1,0 +1,13 @@
+@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.floating-action-button {
+  position: fixed;
+  right: 3rem;
+  bottom: 3rem;
+}
