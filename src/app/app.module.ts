@@ -60,7 +60,10 @@ export class AppModule {
       'add',
       'content_copy',
       'delete',
-      'edit'
+      'edit',
+      'playlist_add_check',
+      'playlist_add',
+      'queue',
     ];
 
     for (const icon of icons) {
