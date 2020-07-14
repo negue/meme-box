@@ -1,8 +1,9 @@
 import {app, BrowserWindow, screen} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import {createExpress} from "./server/express-server";
-import {createWebSocketServer} from "./server/websocket-server";
+import {createExpress, persistence} from "./server/express-server";
+import {createWebSocketServer, sendDataToAllSockets} from "./server/websocket-server";
+import {debounceTime} from "rxjs/operators";
 
 // todo add websocket types
 
@@ -100,3 +101,11 @@ try {
 
 const expressServer = createExpress(EXPRESS_PORT);
 const ws = createWebSocketServer(WS_PORT);
+
+persistence.dataUpdated$()
+  .pipe(
+    debounceTime(600)
+  )
+  .subscribe(() => {
+  sendDataToAllSockets(null, 'UPDATE_DATA');
+})

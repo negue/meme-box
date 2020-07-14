@@ -11,10 +11,24 @@ const server = http.createServer();
 
 const wss = new WebSocket.Server({ server });
 
-const obsPages: {[key: string]: WebSocket} = {};
+const obsPages: {[key: string]: WebSocketType} = {};
 let wsToSend: WebSocketType[] = [];
 
-
+// todo refactor?
+// currently only the server tell which WS to do stuff
+export function sendDataToAllSockets (targetId: string|null, message: string) {
+  if (targetId) {
+    if (obsPages[targetId] && obsPages[targetId].readyState === WebSocket.OPEN) {
+      obsPages[targetId].send(message)
+    }
+  } else {
+    wsToSend.forEach(ws => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(message)
+      }
+    });
+  }
+}
 
 wss.on("connection", (ws: WebSocket) => {
   //connection is up, let's add a simple simple event
@@ -25,6 +39,8 @@ wss.on("connection", (ws: WebSocket) => {
 
     const [action, payload] = message.split('=');
 
+    console.info({action, payload});
+
     switch (action) {
       case "I_AM_OBS": {
         obsPages[payload] = ws;
@@ -32,11 +48,9 @@ wss.on("connection", (ws: WebSocket) => {
         break;
       }
       case "TRIGGER_CLIP": {
-        wsToSend.forEach(ws => {
-          if (ws.readyState === WebSocket.OPEN) {
-            ws.send(message)
-          }
-        } );
+        const payloadObs = JSON.parse(payload);
+
+        sendDataToAllSockets(payloadObs.targetOBS, message);
 
         break;
       }

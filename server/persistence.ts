@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import {Clip, Config, Dictionary, HasId, ObsClip, ObsURL, State, Twitch} from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
+import {Observable, Subject} from "rxjs";
 
 
 function uuidv4() {
@@ -17,6 +18,8 @@ const initialObsUrlObj: ObsURL = Object.freeze({
 });
 
 export class Persistence {
+
+  private updated$ = new Subject();
   private data: State;
 
   constructor(private filePath: string) {
@@ -29,6 +32,10 @@ export class Persistence {
 
       console.info({data: this.data});
     });
+  }
+
+  public dataUpdated$ () : Observable<any> {
+    return this.updated$.asObservable();
   }
 
   public fullState() {
@@ -207,5 +214,6 @@ export class Persistence {
     fs.writeFile(this.filePath, JSON.stringify(this.data, null, '  '), err => {
       console.error(err);
     });
+    this.updated$.next();
   }
 }

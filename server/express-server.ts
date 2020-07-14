@@ -169,3 +169,5 @@ export function createExpress(port) {
 
   return app;
 }
+
+export {persistence};

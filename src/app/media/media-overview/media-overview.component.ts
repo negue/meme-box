@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {MediaEditComponent} from "./media-edit/media-edit.component";
 import {ObsAssigningDialogComponent} from "./obs-assigning-dialog/obs-assigning-dialog/obs-assigning-dialog.component";
+import {take} from "rxjs/operators";
 
 @Component({
   selector: 'app-media-overview',
@@ -49,14 +50,25 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   onPreview(item: Clip) {
-    const triggerObj = {
-      id: item.id,
-      targetOBS: '',
-      repeatX: 0,
-      repeatSecond: 0,
-    }
+    this.query.obsUrls$
+      .pipe(
+        take(1)
+      ).subscribe(obsUrls => {
 
-    this.ws.send(`TRIGGER_CLIP=${JSON.stringify(triggerObj)}`);
+      obsUrls.forEach(url => {
+          if (url.clips[item.id]) {
+            const triggerObj = {
+              id: item.id,
+              targetOBS: url.id,
+              repeatX: 0,
+              repeatSecond: 0,
+            }
+
+            this.ws.send(`TRIGGER_CLIP=${JSON.stringify(triggerObj)}`);
+          }
+        }
+      )
+    });
   }
 
   onAssignObs(item: Clip) {

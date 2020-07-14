@@ -56,3 +56,5 @@
 
   load each clip once?
 
+`UPDATE_DATA`
+- all obs urls need to update their data

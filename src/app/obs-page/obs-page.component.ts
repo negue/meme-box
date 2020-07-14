@@ -4,6 +4,7 @@ import {Clip, Dictionary} from "@memebox/contracts";
 import {filter, withLatestFrom} from "rxjs/operators";
 import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-obs-page',
@@ -19,7 +20,9 @@ export class ObsPageComponent implements OnInit {
   clipToControlMap = new  WeakMap<Clip, HTMLVideoElement|HTMLAudioElement|HTMLImageElement>();
 
   constructor(private appQuery: AppQueries,
-              private appService: AppService) { }
+              private appService: AppService,
+              private route: ActivatedRoute) { }
+
 
   ngOnInit(): void {
     this.appService.loadState();
@@ -45,11 +48,14 @@ export class ObsPageComponent implements OnInit {
             this.mediaClipToShow$.next(payloadObj.id);
             break;
           }
+          case 'UPDATE_DATA': {
+            this.appService.loadState();
+          }
         }
       }
     };
     ws.onopen = ev => {
-      ws.send('I_AM_OBS=someguid');
+      ws.send( `I_AM_OBS=${this.route.snapshot.params.guid}`);
     };
 
     /*
