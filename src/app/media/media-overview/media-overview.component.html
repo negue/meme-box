@@ -4,9 +4,10 @@
        *ngFor="let item of mediaList$ | async">
     <mat-card >
       <app-media-info [info]="item"
-                      (preview)="onPreview(item)"
-                      (edit)="onEdit(item)"
-                      (delete)="onDelete(item.id)">
+                      (onPreview)="onPreview(item)"
+                      (onEdit)="onEdit(item)"
+                      (onDelete)="onDelete(item.id)"
+      (onAssignObs)="onAssignObs(item)">
 
       </app-media-info>
     </mat-card>

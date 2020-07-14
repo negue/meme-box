@@ -91,7 +91,7 @@ app.put('/obsdata/:obsId/clips/:obsClipId', (req, res) => {
   res.send(persistence.updateObsClip(obsId, obsClipId, req.body));
 });
 // Delete
-app.delete('/obsdata/:obsIdclips/:obsClipId', (req, res) => {
+app.delete('/obsdata/:obsId/clips/:obsClipId', (req, res) => {
   const {obsId, obsClipId} = req.params;
 
   res.send(persistence.deleteObsClip(obsId, obsClipId));

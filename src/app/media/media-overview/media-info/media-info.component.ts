@@ -14,13 +14,16 @@ export class MediaInfoComponent implements OnInit {
 
 
   @Output()
-  public preview = new EventEmitter();
+  public onPreview = new EventEmitter();
 
   @Output()
-  public edit = new EventEmitter();
+  public onEdit = new EventEmitter();
 
   @Output()
-  public delete = new EventEmitter();
+  public onDelete = new EventEmitter();
+
+  @Output()
+  public onAssignObs = new EventEmitter();
 
   constructor(public domSanitizer: DomSanitizer) { }
 

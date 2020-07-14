@@ -1,0 +1,7 @@
+<mat-selection-list (selectionChange)="onSelectionChanged($event)">
+  <mat-list-option *ngFor="let obsUrl of obsUrls$|async"
+                   [value]="obsUrl.id"
+                   [selected]="checkedMap[obsUrl.id]">
+    {{obsUrl.name}}
+  </mat-list-option>
+</mat-selection-list>

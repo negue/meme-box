@@ -12,16 +12,19 @@
     Path: {{info.path}} <br/>
     OBS: {{info.obsName}} <br/><br/>
 
-    <button mat-raised-button color="accent" (click)="preview.emit()">show preview</button>
+    <button mat-raised-button color="accent" (click)="onPreview.emit()">show preview</button>
 
 
     WIP
   </div>
   <div class="buttons">
-    <button mat-icon-button color="primary" (click)="edit.emit()">
+    <button mat-icon-button color="accent" (click)="onAssignObs.emit()">
+      <mat-icon svgIcon="playlist_add"></mat-icon>
+    </button>
+    <button mat-icon-button color="accent" (click)="onEdit.emit()">
       <mat-icon svgIcon="settings"></mat-icon>
     </button>
-    <button mat-icon-button color="primary" (click)="delete.emit()">
+    <button mat-icon-button color="primary" (click)="onDelete.emit()">
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </div>

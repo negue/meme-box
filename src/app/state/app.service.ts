@@ -89,7 +89,7 @@ export class AppService {
   }
 
 
-  public async addOrUpdateObsClip (obsUrlId: string, obsClip: ObsClip) {
+  public async addOrUpdateObsClip (obsUrlId: string, obsClip: Partial<ObsClip>) {
     let newId = obsClip?.id ?? '';
 
     if (newId === '') {
@@ -106,7 +106,18 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.obsUrls[obsUrlId].clips[newId]  = obsClip;
+      state.obsUrls[obsUrlId].clips[newId] = obsClip as any; // todo types ...
+    });
+  }
+
+
+  public async deleteObsClipByClipId(obsUrlId: string, clipId: string) {
+    // send the api call
+    await this.http.delete(`${API_BASE}${ENDPOINTS.OBS_DATA}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`).toPromise();
+
+    // remove from state
+    this.appStore.update(state => {
+      delete state.obsUrls[obsUrlId].clips[clipId];
     });
   }
 

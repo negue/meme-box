@@ -28,9 +28,8 @@ export interface ObsURL  extends HasId {
   clips: Dictionary<ObsClip>;
 }
 
-
 export interface ObsClip extends HasId  {
-  clip: string;
+  // later some other settings like position and stuff
 }
 
 export interface ObsViewEntry extends ObsURL {
