@@ -22,13 +22,23 @@
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </div>
-
-  {{ info | json }}
 </mat-card>
+
 
 <div class="media-list">
   <div class="media-info"
-      *ngFor="let entry of info.clips | keyvalue">
-    <strong>{{entry.key}}</strong>: {{entry.value.clip}}
+      *ngFor="let entry of clipList$ | async">
+
+    <ng-container [ngSwitch]="entry.type">
+      <mat-icon svgIcon="insert_photo" *ngSwitchCase="0"></mat-icon>
+      <mat-icon svgIcon="audiotrack" *ngSwitchCase="1"></mat-icon>
+      <mat-icon svgIcon="videocam" *ngSwitchCase="2"></mat-icon>
+    </ng-container>
+
+    <span class="padding">{{entry.name}}</span>
+    <button matListIcon mat-icon-button color="warn"
+            (click)="onDeleteAssignment.emit(entry.id)">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
   </div>
 </div>

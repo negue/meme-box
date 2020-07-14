@@ -1,0 +1,18 @@
+<mat-selection-list (selectionChange)="onSelectionChanged($event)">
+  <mat-list-option *ngFor="let clip of clips$|async"
+                   [value]="clip.id"
+                   [selected]="checkedMap[clip.id]">
+
+    <div class="item-container">
+
+    <span class="icon" [ngSwitch]="clip.type">
+      <mat-icon  matListIcon svgIcon="insert_photo" *ngSwitchCase="0"></mat-icon>
+      <mat-icon matListIcon svgIcon="audiotrack" *ngSwitchCase="1"></mat-icon>
+      <mat-icon matListIcon svgIcon="videocam" *ngSwitchCase="2"></mat-icon>
+    </span>
+
+    <span class="label">{{clip.name}}</span>
+
+    </div>
+  </mat-list-option>
+</mat-selection-list>

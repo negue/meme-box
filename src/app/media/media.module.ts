@@ -15,7 +15,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSliderModule} from "@angular/material/slider";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatDividerModule} from "@angular/material/divider";
-import {ClipAssigningDialogModule} from "./media-overview/clip-assigning-dialog/clip-assigning-dialog.module";
+import {ObsAssigningDialogModule} from "./media-overview/obs-assigning-dialog/obs-assigning-dialog.module";
 
 const routes: Routes = [
   {
@@ -40,7 +40,7 @@ const routes: Routes = [
     MatSliderModule,
     ReactiveFormsModule,
     MatDividerModule,
-    ClipAssigningDialogModule,
+    ObsAssigningDialogModule,
   ]
 })
 export class MediaModule { }

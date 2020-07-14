@@ -26,3 +26,17 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+
+.media-info {
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: #555555;
+  }
+}
+
+.padding {
+  padding-left: 1rem;
+}

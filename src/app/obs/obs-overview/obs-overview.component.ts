@@ -6,6 +6,7 @@ import {Observable} from "rxjs";
 import {AppQueries} from "../../state/app.queries";
 import {map} from "rxjs/operators";
 import {AppService} from "../../state/app.service";
+import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 // todo refactor
 const API_BASE = location.origin;
@@ -48,5 +49,17 @@ export class ObsOverviewComponent implements OnInit {
   delete(obsInfo: ObsViewEntry) {
     console.info({obsInfo});
     this.service.deleteObsUrl(obsInfo.id);
+  }
+
+  showAssignmentDialog(obsInfo: Partial<ObsURL>) {
+    this._dialog.open(
+      ClipAssigningDialogComponent, {
+        data: obsInfo
+      }
+    )
+  }
+
+  deleteAssigned(obsInfo: ObsViewEntry, clipId: string) {
+    this.service.deleteObsClipByClipId(obsInfo.id, clipId);
   }
 }

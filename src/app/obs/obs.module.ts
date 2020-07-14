@@ -12,6 +12,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatInputModule} from "@angular/material/input";
 import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ClipAssigningDialogModule} from "./obs-overview/clip-assigning-dialog/clip-assigning-dialog.module";
 
 
 const routes: Routes = [
@@ -35,7 +36,8 @@ const routes: Routes = [
     MatInputModule,
     MatSelectModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ClipAssigningDialogModule
   ]
 })
 export class ObsModule { }

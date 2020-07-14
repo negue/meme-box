@@ -5,7 +5,7 @@ import {AppQueries} from "../../state/app.queries";
 import {Observable} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {MediaEditComponent} from "./media-edit/media-edit.component";
-import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {ObsAssigningDialogComponent} from "./obs-assigning-dialog/obs-assigning-dialog/obs-assigning-dialog.component";
 
 @Component({
   selector: 'app-media-overview',
@@ -61,7 +61,7 @@ export class MediaOverviewComponent implements OnInit {
 
   onAssignObs(item: Clip) {
     this._dialog.open(
-      ClipAssigningDialogComponent, {
+      ObsAssigningDialogComponent, {
         data: item
       }
     )

@@ -57,6 +57,7 @@ export class AppModule {
   ) {
     const icons = [
       'settings',
+      'audiotrack',
       'add',
       'content_copy',
       'delete',
@@ -64,6 +65,8 @@ export class AppModule {
       'playlist_add_check',
       'playlist_add',
       'queue',
+      'insert_photo',
+      'videocam',
     ];
 
     for (const icon of icons) {

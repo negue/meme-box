@@ -9,10 +9,10 @@ import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-clip-assigning-dialog',
-  templateUrl: './clip-assigning-dialog.component.html',
-  styleUrls: ['./clip-assigning-dialog.component.css']
+  templateUrl: './obs-assigning-dialog.component.html',
+  styleUrls: ['./obs-assigning-dialog.component.css']
 })
-export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
+export class ObsAssigningDialogComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject();
 
