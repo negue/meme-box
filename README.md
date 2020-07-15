@@ -6,13 +6,16 @@ to be used inside OBS.
 ## Working Features
 
 - :white_check_mark: Add / Edit / Delete Clips
-- :white_check_mark: Trigger those on the obs url
+- :white_check_mark: Trigger clips those on specific obs urls
 - :white_check_mark: Simple WebSocket/Rest API to save/serve the data
+
 
 ## TODO
 
-- Configure OBS-Urls / Clips to be "triggered" on those URLs
+- Static parts (clip and different stuff) on each URL
+- Configure the position of each clip per OBS-Urls
 - Configure Twitch Events to get triggered on Obs URLS
+- Additional Types to trigger, like Iframe or something else
 - Streamdeck Plugin
 - Mobile View to trigger from phone / tablet
 - Electron HotKey listener?
@@ -40,6 +43,7 @@ to be used inside OBS.
 
 ### Folders
 Client is in `src/app`
+
 Server is in `main.ts` and `server/*`
 
 ## Based on this Template:
