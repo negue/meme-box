@@ -5,11 +5,8 @@ import {ObsEditComponent} from "./obs-edit/obs-edit.component";
 import {Observable} from "rxjs";
 import {AppQueries} from "../../state/app.queries";
 import {map} from "rxjs/operators";
-import {AppService} from "../../state/app.service";
+import {AppService, EXPRESS_BASE} from "../../state/app.service";
 import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
-
-// todo refactor
-const API_BASE = location.origin;
 
 @Component({
   selector: 'app-obs-overview',
@@ -21,7 +18,7 @@ export class ObsOverviewComponent implements OnInit {
   public obsList$: Observable<ObsViewEntry[]> = this._queries.obsUrls$.pipe(
     map(stateUrlArray => stateUrlArray.map(obsUrl => ({
       ...obsUrl,
-      url: `${API_BASE}/#/obs/${obsUrl.id}`
+      url: `${EXPRESS_BASE}/#/obs/${obsUrl.id}`
     })))
   )
 

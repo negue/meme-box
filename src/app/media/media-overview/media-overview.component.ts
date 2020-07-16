@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {MediaEditComponent} from "./media-edit/media-edit.component";
 import {ObsAssigningDialogComponent} from "./obs-assigning-dialog/obs-assigning-dialog/obs-assigning-dialog.component";
 import {take} from "rxjs/operators";
+import {WS_PORT} from "../../../../server/constants";
 
 @Component({
   selector: 'app-media-overview',
@@ -25,7 +26,7 @@ export class MediaOverviewComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.ws = new WebSocket('ws://localhost:4444');
+    this.ws = new WebSocket(`ws://localhost:${WS_PORT}`);
   }
 
   addNewItem() {

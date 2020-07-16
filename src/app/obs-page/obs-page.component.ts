@@ -5,6 +5,7 @@ import {filter, withLatestFrom} from "rxjs/operators";
 import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
 import {ActivatedRoute} from "@angular/router";
+import {WS_PORT} from "../../../server/constants";
 
 @Component({
   selector: 'app-obs-page',
@@ -27,7 +28,7 @@ export class ObsPageComponent implements OnInit {
   ngOnInit(): void {
     this.appService.loadState();
 
-    const ws = new WebSocket('ws://localhost:4444');
+    const ws = new WebSocket(`ws://localhost:${WS_PORT}`);
     ws.onmessage = event => {
       console.debug("WebSocket message received:", event);
 
@@ -57,36 +58,6 @@ export class ObsPageComponent implements OnInit {
     ws.onopen = ev => {
       ws.send( `I_AM_OBS=${this.route.snapshot.params.guid}`);
     };
-
-    /*
-    this.mediaClipMap = {
-      ['pic1']: {
-        id: 'pic1',
-        type: MediaType.Picture,
-        path: 'https://www.fillmurray.com/250/150',
-
-      } as any,
-      ['audio1']: {
-        id: 'audio1',
-        type: MediaType.Audio,
-        path: 'http://localhost:4445/file/yay.mp3',
-        volumeSetting: 0.3
-      } as Clip as any,
-      ['video1']: {
-        id: 'video1',
-        type: MediaType.Video,
-        path: 'http://localhost:4445/file/JustDoIt.webm',
-        volumeSetting: 0.3
-      } as Clip as any,
-      ['many']: {
-        id: 'many',
-        type: MediaType.Video,
-        path: 'http://localhost:4445/file/many.webm',
-        volumeSetting: 0.3
-      } as Clip as any
-    }*/
-
-
 
     this.mediaClipToShow$.pipe(
         withLatestFrom(this.mediaClipMap$)

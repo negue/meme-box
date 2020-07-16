@@ -71,7 +71,7 @@ export class AppModule {
 
     for (const icon of icons) {
       iconRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(
-        `/assets/material-icons/${icon}.svg`
+         `./assets/material-icons/${icon}.svg`
       ));
     }
   }

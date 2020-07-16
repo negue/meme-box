@@ -2,13 +2,12 @@ import {app, BrowserWindow, screen} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 import {createExpress, persistence} from "./server/express-server";
+import {EXPRESS_PORT, WS_PORT} from "./server/constants";
 import {createWebSocketServer, sendDataToAllSockets} from "./server/websocket-server";
 import {debounceTime} from "rxjs/operators";
 
 // todo add websocket types
 
-const WS_PORT = 4444;
-const EXPRESS_PORT = 4445;
 
 
 // 1. Register the Obs pages - 'I_AM_OBS=someguid'
@@ -102,6 +101,7 @@ try {
 const expressServer = createExpress(EXPRESS_PORT);
 const ws = createWebSocketServer(WS_PORT);
 
+// todo export to server.ts and then refactor it
 persistence.dataUpdated$()
   .pipe(
     debounceTime(600)

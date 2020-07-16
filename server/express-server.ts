@@ -1,5 +1,6 @@
 import * as express from 'express';
 import {Persistence} from "./persistence";
+import {API_PREFIX} from "./constants";
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
@@ -10,22 +11,25 @@ var app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get('/', (req,res) => {
+app.use(express.static('dist'))
+
+
+app.get(API_PREFIX, (req,res) => {
   res.send(persistence.fullState());
 });
 
 // TODO Add CONTSTANTS Values
-
+// TODO better to register apis?
 /**
  * Clips API
  */
 
-app.get('/clips', (req,res) => {
+app.get(`${API_PREFIX}/clips`, (req,res) => {
   res.send(persistence.listClips());
 });
 
 // Post = New
-app.post('/clips', (req, res) => {
+app.post(`${API_PREFIX}/clips`, (req, res) => {
   console.info({req, body: req.body});
 
   // save the clip
@@ -34,12 +38,12 @@ app.post('/clips', (req, res) => {
 });
 
 // Put = Update
-app.put('/clips/:clipId', (req, res) => {
+app.put(`${API_PREFIX}/clips/:clipId`, (req, res) => {
   // update clip
   res.send(persistence.updateClip(req.params['clipId'], req.body));
 });
 // Delete
-app.delete('/clips/:clipId', (req, res) => {
+app.delete(`${API_PREFIX}/clips/:clipId`, (req, res) => {
   // delete clip
   // return ID
   res.send(persistence.deleteClip(req.params['clipId']));
@@ -51,13 +55,13 @@ app.delete('/clips/:clipId', (req, res) => {
  */
 
 
-app.get('/obsdata', (req,res) => {
+app.get(`${API_PREFIX}/obsdata`, (req,res) => {
   res.send(persistence.listObsUrls());
 });
 
 
 // Post = New
-app.post('/obsdata', (req, res) => {
+app.post(`${API_PREFIX}/obsdata`, (req, res) => {
   console.info({req, body: req.body});
 
 
@@ -65,19 +69,19 @@ app.post('/obsdata', (req, res) => {
 });
 
 // Put = Update
-app.put('/obsdata/:obsId', (req, res) => {
+app.put(`${API_PREFIX}/obsdata/:obsId`, (req, res) => {
 
   res.send(persistence.updateObsUrl(req.params['obsId'], req.body));
 });
 // Delete
-app.delete('/obsdata/:obsId', (req, res) => {
+app.delete(`${API_PREFIX}/obsdata/:obsId`, (req, res) => {
 
   res.send(persistence.deleteObsUrl(req.params['obsId']));
 });
 
 
 // Post = New
-app.post('/obsdata/:obsId/clips', (req, res) => {
+app.post(`${API_PREFIX}/obsdata/:obsId/clips`, (req, res) => {
   console.info({req, body: req.body});
   const {obsId} = req.params;
 
@@ -85,13 +89,13 @@ app.post('/obsdata/:obsId/clips', (req, res) => {
 });
 
 // Put = Update
-app.put('/obsdata/:obsId/clips/:obsClipId', (req, res) => {
+app.put(`${API_PREFIX}/obsdata/:obsId/clips/:obsClipId`, (req, res) => {
   const {obsId, obsClipId} = req.params;
 
   res.send(persistence.updateObsClip(obsId, obsClipId, req.body));
 });
 // Delete
-app.delete('/obsdata/:obsId/clips/:obsClipId', (req, res) => {
+app.delete(`${API_PREFIX}/obsdata/:obsId/clips/:obsClipId`, (req, res) => {
   const {obsId, obsClipId} = req.params;
 
   res.send(persistence.deleteObsClip(obsId, obsClipId));
@@ -102,24 +106,24 @@ app.delete('/obsdata/:obsId/clips/:obsClipId', (req, res) => {
  * Twitch API
  */
 
-app.get('/twitch_events', (req,res) => {
+app.get(`${API_PREFIX}/twitch_events`, (req,res) => {
   res.send(persistence.listTwitchEvents());
 });
 
 
 // Post = New
-app.post('/twitch_events', (req, res) => {
+app.post(`${API_PREFIX}/twitch_events`, (req, res) => {
   console.info({req, body: req.body});
 
   res.send(persistence.addTwitchEvent(req.body));
 });
 
 // Put = Update
-app.put('/twitch_events/:eventId', (req, res) => {
+app.put(`${API_PREFIX}/twitch_events/:eventId`, (req, res) => {
   res.send(persistence.updateTwitchEvent(req.params['eventId'], req.body));
 });
 // Delete
-app.delete('/twitch_events/:eventId', (req, res) => {
+app.delete(`${API_PREFIX}/twitch_events/:eventId`, (req, res) => {
   res.send(persistence.deleteTwitchEvent(req.params['eventId']));
 });
 
@@ -128,12 +132,12 @@ app.delete('/twitch_events/:eventId', (req, res) => {
  * Config API
  */
 
-app.get('/config', (req,res) => {
+app.get(`${API_PREFIX}/config`, (req,res) => {
   res.send(persistence.getConfig());
 });
 
 // Put = Update
-app.put('/config', (req, res) => {
+app.put(`${API_PREFIX}/config`, (req, res) => {
   // update config
   res.send(persistence.updateConfig(req.body));
 });
@@ -155,6 +159,7 @@ app.get('/file/*', function(req, res){
 
   const path = `./src/assets/${firstParam}`;
 
+  console.info('LOG', path);
 
   res.sendFile(path, {root: appPath});
 

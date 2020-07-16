@@ -2,8 +2,10 @@ import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
 import {Clip, ENDPOINTS, ObsClip, ObsURL, Twitch} from "@memebox/contracts";
+import {API_PREFIX, EXPRESS_PORT} from "../../../server/constants";
 
-const API_BASE = 'http://localhost:4445/';
+export const EXPRESS_BASE = `http://localhost:${EXPRESS_PORT}`;
+export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}`;
 
 @Injectable({
   providedIn: 'root'
