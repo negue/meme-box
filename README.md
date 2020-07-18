@@ -12,6 +12,9 @@ to be used inside OBS.
 ## Tutorial
 - Create (at least) one OBS-URls
 - Create your first "clip", fill out the name, type and `path to the file`
+  - online URLS can be used
+  - or files inside `<current path of executable>/assets/YOUR_FILE_NAME.ending` can be accessed by
+    `http://localhost:4445/file/YOUR_FILE_NAME.ending`
 - on the `OBS URLs` Page - click on `assign clips`
 - choose your clip there
 - to be sure (because still WIP) - refresh the page
@@ -19,6 +22,7 @@ to be used inside OBS.
   > Hint: when using it on a browser, to play audio / video types, you need to 
     click atleast once in the View, not needed for OBS itself
 - go to `media` page, press `show preview` this will trigger the selected URL targets
+- if everything worked out, the clip should be visible on the OBS URL
 
 ## TODO
 
