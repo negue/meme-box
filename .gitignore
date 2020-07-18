@@ -50,5 +50,5 @@ Thumbs.db
 /src/assets/*.webm
 /src/assets/*.mp3
 /src/assets/*.mp4
-!angular.webpack.js
+ !angular.webpack.cjs
 **/settings.json

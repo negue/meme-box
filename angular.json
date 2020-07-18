@@ -24,7 +24,7 @@
             ],
             "scripts": [],
             "customWebpackConfig": {
-              "path": "./angular.webpack.js"
+              "path": "./angular.webpack.cjs"
             }
           },
           "configurations": {
@@ -119,7 +119,7 @@
               "src/assets"
             ],
             "customWebpackConfig": {
-              "path": "./angular.webpack.js",
+              "path": "./angular.webpack.cjs",
               "target": "electron-renderer"
             }
           }
