@@ -9,6 +9,16 @@ to be used inside OBS.
 - :white_check_mark: Trigger clips those on specific obs urls
 - :white_check_mark: Simple WebSocket/Rest API to save/serve the data
 
+## Tutorial
+- Create (at least) one OBS-URls
+- Create your first "clip", fill out the name, type and `path to the file`
+- on the `OBS URLs` Page - click on `assign clips`
+- choose your clip there
+- to be sure (because still WIP) - refresh the page
+- copy the visible URLs of your OBS-Entry and use it in OBS or any browser
+  > Hint: when using it on a browser, to play audio / video types, you need to 
+    click atleast once in the View, not needed for OBS itself
+- go to `media` page, press `show preview` this will trigger the selected URL targets
 
 ## TODO
 
