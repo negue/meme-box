@@ -5,7 +5,7 @@ import {Clip, ENDPOINTS, ObsClip, ObsURL, Twitch} from "@memebox/contracts";
 import {API_PREFIX, EXPRESS_PORT} from "../../../server/constants";
 
 export const EXPRESS_BASE = `http://localhost:${EXPRESS_PORT}`;
-export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}`;
+export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 @Injectable({
   providedIn: 'root'

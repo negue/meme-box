@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import {Clip, Config, Dictionary, HasId, ObsClip, ObsURL, State, Twitch} from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
+import * as path from "path";
 
 
 function uuidv4() {
@@ -20,15 +21,31 @@ const initialObsUrlObj: ObsURL = Object.freeze({
 export class Persistence {
 
   private updated$ = new Subject();
-  private data: State;
+  private data: State = Object.assign({}, createInitialState());
 
   constructor(private filePath: string) {
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
+
     // Read the file
-    fs.readFile(filePath, 'utf8', (err, data) => {
+    fs.readFile(filePath, {
+      encoding: 'utf8',
+      flag: 'a+' // open or create if not exist
+    }, (err, data) => {
       if (err) {
         return console.log(err);
       }
-      this.data = Object.assign({}, createInitialState(), JSON.parse(data));
+      console.info('SETTING DATA', data);
+
+      let dataFromFile = {};
+
+      if (data && data.includes('{')) {
+        dataFromFile = JSON.parse(data);
+      }
+
+      this.data = Object.assign({}, createInitialState(), dataFromFile);
 
       console.info({data: this.data});
     });

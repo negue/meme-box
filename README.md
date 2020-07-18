@@ -18,7 +18,6 @@ to be used inside OBS.
 - Additional Types to trigger, like Iframe or something else
 - Streamdeck Plugin
 - Mobile View to trigger from phone / tablet
-- Electron HotKey listener?
 - See Issues tagged with [enhancement](https://github.com/negue/meme-box/labels/enhancement) 
 
 

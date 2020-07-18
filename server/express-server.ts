@@ -30,8 +30,6 @@ app.get(`${API_PREFIX}/clips`, (req,res) => {
 
 // Post = New
 app.post(`${API_PREFIX}/clips`, (req, res) => {
-  console.info({req, body: req.body});
-
   // save the clip
   // return ID
   res.send(persistence.addClip(req.body));
@@ -62,9 +60,6 @@ app.get(`${API_PREFIX}/obsdata`, (req,res) => {
 
 // Post = New
 app.post(`${API_PREFIX}/obsdata`, (req, res) => {
-  console.info({req, body: req.body});
-
-
   res.send(persistence.addObsUrl(req.body));
 });
 
@@ -82,7 +77,6 @@ app.delete(`${API_PREFIX}/obsdata/:obsId`, (req, res) => {
 
 // Post = New
 app.post(`${API_PREFIX}/obsdata/:obsId/clips`, (req, res) => {
-  console.info({req, body: req.body});
   const {obsId} = req.params;
 
   res.send(persistence.addObsClip(obsId, req.body));
@@ -113,8 +107,6 @@ app.get(`${API_PREFIX}/twitch_events`, (req,res) => {
 
 // Post = New
 app.post(`${API_PREFIX}/twitch_events`, (req, res) => {
-  console.info({req, body: req.body});
-
   res.send(persistence.addTwitchEvent(req.body));
 });
 
