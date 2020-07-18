@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
-import {Clip, ENDPOINTS, ObsClip, ObsURL, Twitch} from "@memebox/contracts";
+import {Clip, ENDPOINTS, Screen, ScreenClip, Twitch} from "@memebox/contracts";
 import {API_PREFIX, EXPRESS_PORT} from "../../../server/constants";
 
 export const EXPRESS_BASE = `http://localhost:${EXPRESS_PORT}`;
@@ -59,77 +59,66 @@ export class AppService {
   }
 
 
-  public async addOrUpdateObsUrls (url: ObsURL) {
+  public async addOrUpdateScreen (url: Screen) {
     let newId = url?.id ?? '';
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.OBS_DATA}`, url, {
+      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.SCREEN}`, url, {
         responseType: 'text' as any
       }).toPromise();
 
       url.id = newId;
     } else {
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.OBS_DATA}/${newId}`, url).toPromise();
+      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${newId}`, url).toPromise();
     }
 
     // add to the state
     this.appStore.update(state => {
-      state.obsUrls[newId]  = url;
+      state.screen[newId]  = url;
     });
   }
 
-  public async deleteObsUrl(id: string) {
+  public async deleteScreen(id: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.OBS_DATA}/${id}`).toPromise();
+    await this.http.delete(`${API_BASE}${ENDPOINTS.SCREEN}/${id}`).toPromise();
 
     // remove from state
     this.appStore.update(state => {
-      delete state.obsUrls[id];
+      delete state.screen[id];
     });
   }
 
 
-  public async addOrUpdateObsClip (obsUrlId: string, obsClip: Partial<ObsClip>) {
+  public async addOrUpdateScreenClip (obsUrlId: string, obsClip: Partial<ScreenClip>) {
     let newId = obsClip?.id ?? '';
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.OBS_DATA}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}`, obsClip, {
+      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}`, obsClip, {
         responseType: 'text' as any
       }).toPromise();
 
       obsClip.id = newId;
     } else {
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.OBS_DATA}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${newId}`, obsClip).toPromise();
+      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${newId}`, obsClip).toPromise();
     }
 
     // add to the state
     this.appStore.update(state => {
-      state.obsUrls[obsUrlId].clips[newId] = obsClip as any; // todo types ...
+      state.screen[obsUrlId].clips[newId] = obsClip as any; // todo types ...
     });
   }
 
-
-  public async deleteObsClipByClipId(obsUrlId: string, clipId: string) {
+  public async deleteScreenClip(obsUrlId: string, id: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.OBS_DATA}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`).toPromise();
+    await this.http.delete(`${API_BASE}${ENDPOINTS.SCREEN}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${id}`).toPromise();
 
     // remove from state
     this.appStore.update(state => {
-      delete state.obsUrls[obsUrlId].clips[clipId];
-    });
-  }
-
-  public async deleteObsClip(obsUrlId: string, id: string) {
-    // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.OBS_DATA}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${id}`).toPromise();
-
-    // remove from state
-    this.appStore.update(state => {
-      delete state.obsUrls[obsUrlId].clips[id];
+      delete state.screen[obsUrlId].clips[id];
     });
   }
 

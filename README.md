@@ -6,7 +6,7 @@ to be used inside OBS.
 ## Working Features
 
 - :white_check_mark: Add / Edit / Delete Clips
-- :white_check_mark: Trigger clips those on specific obs urls
+- :white_check_mark: Trigger clips those on specific screens
 - :white_check_mark: Simple WebSocket/Rest API to save/serve the data
 
 ## Tutorial
@@ -15,14 +15,14 @@ to be used inside OBS.
   - online URLS can be used
   - or files inside `<current path of executable>/assets/YOUR_FILE_NAME.ending` can be accessed by
     `http://localhost:4445/file/YOUR_FILE_NAME.ending`
-- on the `OBS URLs` Page - click on `assign clips`
+- on the `Screens` Page - click on `assign clips`
 - choose your clip there
 - to be sure (because still WIP) - refresh the page
 - copy the visible URLs of your OBS-Entry and use it in OBS or any browser
   > Hint: when using it on a browser, to play audio / video types, you need to 
     click atleast once in the View, not needed for OBS itself
 - go to `media` page, press `show preview` this will trigger the selected URL targets
-- if everything worked out, the clip should be visible on the OBS URL
+- if everything worked out, the clip should be visible on the target Screen
 
 ## TODO
 

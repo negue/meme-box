@@ -4,7 +4,7 @@ export function createInitialState (): State {
   return {
     config: {},
     twitchEvents: {},
-    obsUrls: {},
+    screen: {},
     clips: {}
   }
 }

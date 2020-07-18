@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {TargetScreenComponent} from "./target-screen/target-screen.component";
 
-import {ObsPageComponent} from "./obs-page/obs-page.component";
 
 // root
 // | main page (with sidebar)
@@ -10,14 +10,23 @@ import {ObsPageComponent} from "./obs-page/obs-page.component";
 
 const rootRoutes: Routes = [
  {
-    path: '',
-    loadChildren: () => import('./main-page/main-page.module').then(module => module.MainPageModule)
+    path: 'manage',
+    loadChildren: () => import('./manage/main-page/main-page.module').then(module => module.MainPageModule)
 
   },
   {
-    path: 'obs/:guid',
-    component: ObsPageComponent
+    path: 'screen/:guid',
+    component: TargetScreenComponent
   },
+  /*
+  {
+    path: 'mobile',
+    component: ObsPageComponent
+  },*/
+  {
+    path: '**',
+    redirectTo: 'manage'
+  }
 ];
 
 

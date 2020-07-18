@@ -1,0 +1,20 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <mat-selection-list [multiple]="false">
+      <mat-list-option routerLink="./media" routerLinkActive="active">
+        Media
+      </mat-list-option>
+      <mat-list-option routerLink="./screen" routerLinkActive="active">
+        Screens
+      </mat-list-option>
+
+      <mat-list-option  routerLink="./twitch" routerLinkActive="active">
+        Twitch Events
+      </mat-list-option>
+    </mat-selection-list>
+
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

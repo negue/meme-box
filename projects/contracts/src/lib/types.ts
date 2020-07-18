@@ -23,21 +23,21 @@ export interface Clip extends HasId {
   type: MediaType;
 }
 
-export interface ObsURL  extends HasId {
+export interface Screen  extends HasId {
   name: string;
-  clips: Dictionary<ObsClip>;
+  clips: Dictionary<ScreenClip>;
 }
 
-export interface ObsClip extends HasId  {
+export interface ScreenClip extends HasId  {
   // later some other settings like position and stuff
 }
 
-export interface ObsViewEntry extends ObsURL {
+export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
 export interface Twitch extends HasId {
-  obsId:      string; // TODO
+  screenId:      string; // TODO
   clipId:     string;
   event:    string; // later an enum?
   contains?: string; // additional settings TODO
@@ -46,7 +46,7 @@ export interface Twitch extends HasId {
 export interface State {
   clips: Dictionary<Clip>;
   twitchEvents: Dictionary<Twitch>;
-  obsUrls: Dictionary<ObsURL>;
+  screen: Dictionary<Screen>;
 
   config:  Partial<Config>;
 }

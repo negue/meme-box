@@ -16,10 +16,10 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatIconRegistry} from "@angular/material/icon";
-import {ObsPageComponent} from './obs-page/obs-page.component';
 import {MatButtonModule} from "@angular/material/button";
 import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
 import {AppConfig} from '../environments/environment';
+import {TargetScreenComponent} from "./target-screen/target-screen.component";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -27,7 +27,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, ObsPageComponent],
+  declarations: [AppComponent, TargetScreenComponent],
   imports: [
     BrowserModule,
     FormsModule,

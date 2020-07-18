@@ -1,6 +1,18 @@
 import * as express from 'express';
 import {Persistence} from "./persistence";
-import {API_PREFIX} from "./constants";
+import {
+  API_PREFIX,
+  CLIP_ENDPOINT,
+  CLIP_ID_ENDPOINT,
+  CONFIG_ENDPOINT,
+  FILE_ENDPOINT,
+  SCREEN_CLIPS_ENDPOINT,
+  SCREEN_CLIPS_ID_ENDPOINT,
+  SCREEN_ENDPOINT,
+  SCREEN_ID_ENDPOINT,
+  TWITCH_ENDPOINT,
+  TWITCH_ID_ENDPOINT
+} from "./constants";
 import * as fs from 'fs';
 
 var cors = require('cors')
@@ -25,24 +37,24 @@ app.get(API_PREFIX, (req,res) => {
  * Clips API
  */
 
-app.get(`${API_PREFIX}/clips`, (req,res) => {
+app.get(CLIP_ENDPOINT, (req,res) => {
   res.send(persistence.listClips());
 });
 
 // Post = New
-app.post(`${API_PREFIX}/clips`, (req, res) => {
+app.post(CLIP_ENDPOINT, (req, res) => {
   // save the clip
   // return ID
   res.send(persistence.addClip(req.body));
 });
 
 // Put = Update
-app.put(`${API_PREFIX}/clips/:clipId`, (req, res) => {
+app.put(CLIP_ID_ENDPOINT, (req, res) => {
   // update clip
   res.send(persistence.updateClip(req.params['clipId'], req.body));
 });
 // Delete
-app.delete(`${API_PREFIX}/clips/:clipId`, (req, res) => {
+app.delete(CLIP_ID_ENDPOINT, (req, res) => {
   // delete clip
   // return ID
   res.send(persistence.deleteClip(req.params['clipId']));
@@ -54,46 +66,46 @@ app.delete(`${API_PREFIX}/clips/:clipId`, (req, res) => {
  */
 
 
-app.get(`${API_PREFIX}/obsdata`, (req,res) => {
+app.get(SCREEN_ENDPOINT, (req,res) => {
   res.send(persistence.listObsUrls());
 });
 
 
 // Post = New
-app.post(`${API_PREFIX}/obsdata`, (req, res) => {
+app.post(SCREEN_ENDPOINT, (req, res) => {
   res.send(persistence.addObsUrl(req.body));
 });
 
 // Put = Update
-app.put(`${API_PREFIX}/obsdata/:obsId`, (req, res) => {
+app.put(SCREEN_ID_ENDPOINT, (req, res) => {
 
-  res.send(persistence.updateObsUrl(req.params['obsId'], req.body));
+  res.send(persistence.updateObsUrl(req.params['screenId'], req.body));
 });
 // Delete
-app.delete(`${API_PREFIX}/obsdata/:obsId`, (req, res) => {
+app.delete(SCREEN_ID_ENDPOINT, (req, res) => {
 
-  res.send(persistence.deleteObsUrl(req.params['obsId']));
+  res.send(persistence.deleteObsUrl(req.params['screenId']));
 });
 
 
 // Post = New
-app.post(`${API_PREFIX}/obsdata/:obsId/clips`, (req, res) => {
-  const {obsId} = req.params;
+app.post(SCREEN_CLIPS_ENDPOINT, (req, res) => {
+  const {screenId} = req.params;
 
-  res.send(persistence.addObsClip(obsId, req.body));
+  res.send(persistence.addObsClip(screenId, req.body));
 });
 
 // Put = Update
-app.put(`${API_PREFIX}/obsdata/:obsId/clips/:obsClipId`, (req, res) => {
-  const {obsId, obsClipId} = req.params;
+app.put(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
+  const {screenId, clipId} = req.params;
 
-  res.send(persistence.updateObsClip(obsId, obsClipId, req.body));
+  res.send(persistence.updateObsClip(screenId, clipId, req.body));
 });
 // Delete
-app.delete(`${API_PREFIX}/obsdata/:obsId/clips/:obsClipId`, (req, res) => {
-  const {obsId, obsClipId} = req.params;
+app.delete(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
+  const {screenId, clipId} = req.params;
 
-  res.send(persistence.deleteObsClip(obsId, obsClipId));
+  res.send(persistence.deleteObsClip(screenId, clipId));
 });
 
 
@@ -101,22 +113,22 @@ app.delete(`${API_PREFIX}/obsdata/:obsId/clips/:obsClipId`, (req, res) => {
  * Twitch API
  */
 
-app.get(`${API_PREFIX}/twitch_events`, (req,res) => {
+app.get(TWITCH_ENDPOINT, (req,res) => {
   res.send(persistence.listTwitchEvents());
 });
 
 
 // Post = New
-app.post(`${API_PREFIX}/twitch_events`, (req, res) => {
+app.post(TWITCH_ENDPOINT, (req, res) => {
   res.send(persistence.addTwitchEvent(req.body));
 });
 
 // Put = Update
-app.put(`${API_PREFIX}/twitch_events/:eventId`, (req, res) => {
+app.put(TWITCH_ID_ENDPOINT, (req, res) => {
   res.send(persistence.updateTwitchEvent(req.params['eventId'], req.body));
 });
 // Delete
-app.delete(`${API_PREFIX}/twitch_events/:eventId`, (req, res) => {
+app.delete(TWITCH_ID_ENDPOINT, (req, res) => {
   res.send(persistence.deleteTwitchEvent(req.params['eventId']));
 });
 
@@ -125,12 +137,12 @@ app.delete(`${API_PREFIX}/twitch_events/:eventId`, (req, res) => {
  * Config API
  */
 
-app.get(`${API_PREFIX}/config`, (req,res) => {
+app.get(CONFIG_ENDPOINT, (req,res) => {
   res.send(persistence.getConfig());
 });
 
 // Put = Update
-app.put(`${API_PREFIX}/config`, (req, res) => {
+app.put(CONFIG_ENDPOINT, (req, res) => {
   // update config
   res.send(persistence.updateConfig(req.body));
 });
@@ -140,7 +152,7 @@ app.put(`${API_PREFIX}/config`, (req, res) => {
 // use filename which is under
 // dev mode : "/src/assets"
 // prod mode:  "/assets"
-app.get('/file/*', function(req, res){
+app.get(FILE_ENDPOINT, function(req, res){
   const firstParam = req.params[0];
 
   if (!firstParam){
@@ -162,11 +174,15 @@ app.get('/file/*', function(req, res){
   ];
 
   for (const path of pathsArray) {
+    console.info({ path });
     if (fs.existsSync(path)) {
+      console.warn('EXISTS');
       res.sendFile(path, {root: appPath});
       return;
     }
   }
+
+  console.error('not found');
 });
 
 

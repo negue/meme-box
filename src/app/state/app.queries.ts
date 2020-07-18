@@ -13,7 +13,7 @@ export class AppQueries extends Query<State> {
   );
 
   clipList$ = this.select(store => Object.values(store.clips));
-  obsUrls$ = this.select(store => Object.values(store.obsUrls));
+  screens$ = this.select(store => Object.values(store.screen));
   twitchEvent$ = this.select(store => Object.values(store.twitchEvents));
 
   clipMap$ = this.select(store => store.clips);

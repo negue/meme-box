@@ -1,6 +1,6 @@
 export const ENDPOINTS = {
   CLIPS: 'clips',
-  OBS_DATA: 'obsdata',
+  SCREEN: 'screen',
   OBS_CLIPS: 'clips',
   TWITCH_EVENTS: 'twitch_events'
 }

@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import {Clip, Config, Dictionary, HasId, ObsClip, ObsURL, State, Twitch} from "../projects/contracts/src/lib/types";
+import {Clip, Config, Dictionary, HasId, Screen, ScreenClip, State, Twitch} from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
@@ -12,7 +12,7 @@ function uuidv4() {
   });
 }
 
-const initialObsUrlObj: ObsURL = Object.freeze({
+const initialObsUrlObj: Screen = Object.freeze({
   id: '',
   name: '',
   clips: {}
@@ -44,6 +44,7 @@ export class Persistence {
       if (data && data.includes('{')) {
         dataFromFile = JSON.parse(data);
       }
+// execute upgrade , changing names or other stuff
 
       this.data = Object.assign({}, createInitialState(), dataFromFile);
 
@@ -102,33 +103,33 @@ export class Persistence {
    *  OBS URLs Settings
    */
 
-  public addObsUrl(obsUrl: ObsURL) {
+  public addObsUrl(obsUrl: Screen) {
     console.info({obsUrl});
 
     obsUrl.id = uuidv4();
-    this.data.obsUrls[obsUrl.id] = Object.assign({}, initialObsUrlObj, obsUrl);
+    this.data.screen[obsUrl.id] = Object.assign({}, initialObsUrlObj, obsUrl);
 
     this.saveData();
     return obsUrl.id;
   }
 
-  public updateObsUrl(id: string, obsUrl: ObsURL) {
+  public updateObsUrl(id: string, obsUrl: Screen) {
     console.info({obsUrl});
 
     obsUrl.id = id;
 
-    this.updateItemInDictionary(this.data.obsUrls, obsUrl);
+    this.updateItemInDictionary(this.data.screen, obsUrl);
 
     this.saveData();
     return obsUrl;
   }
 
   public deleteObsUrl(id: string) {
-    console.info({ prevObsUrl: this.data.obsUrls, id});
+    console.info({ prevObsUrl: this.data.screen, id});
 
-    this.deleteItemInDictionary(this.data.obsUrls, id);
+    this.deleteItemInDictionary(this.data.screen, id);
 
-    console.info({ postObsUrl: this.data.obsUrls, id});
+    console.info({ postObsUrl: this.data.screen, id});
 
     this.saveData();
   }
@@ -138,34 +139,34 @@ export class Persistence {
    *  OBS URLs Settings
    */
 
-  public addObsClip(targetUrlId: string, obsClip: ObsClip) {
+  public addObsClip(targetUrlId: string, obsClip: ScreenClip) {
 
     obsClip.id = uuidv4();
-    this.data.obsUrls[targetUrlId].clips[obsClip.id] = obsClip;
+    this.data.screen[targetUrlId].clips[obsClip.id] = obsClip;
 
     this.saveData();
     return obsClip.id;
   }
 
-  public updateObsClip(targetUrlId: string, id: string, obsClip: ObsClip) {
+  public updateObsClip(targetUrlId: string, id: string, obsClip: ScreenClip) {
     console.info({obsUrl: obsClip});
 
     obsClip.id = id;
 
-    this.updateItemInDictionary(this.data.obsUrls[targetUrlId].clips, obsClip);
+    this.updateItemInDictionary(this.data.screen[targetUrlId].clips, obsClip);
 
     this.saveData();
     return obsClip;
   }
 
   public deleteObsClip(targetUrlId: string, id: string) {
-    this.deleteItemInDictionary(this.data.obsUrls[targetUrlId].clips, id);
+    this.deleteItemInDictionary(this.data.screen[targetUrlId].clips, id);
 
     this.saveData();
   }
 
-  public listObsUrls(): ObsURL[] {
-    return Object.values(this.data.obsUrls);
+  public listObsUrls(): Screen[] {
+    return Object.values(this.data.screen);
   }
 
 
