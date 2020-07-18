@@ -21,7 +21,7 @@ jobs:
           node-version: 12.x
       - run: npm install
       - run: npm run build:prepare
-      - run: npm run build:prepare:all
+      - run: npm run build:all
 
       - name: Create Release
         id: create_release
