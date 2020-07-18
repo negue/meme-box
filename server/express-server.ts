@@ -1,6 +1,7 @@
 import * as express from 'express';
 import {Persistence} from "./persistence";
 import {API_PREFIX} from "./constants";
+import * as fs from 'fs';
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
@@ -136,6 +137,9 @@ app.put(`${API_PREFIX}/config`, (req, res) => {
 
 // TODO use IDs instead of names
 // after the json "database" is done
+// use filename which is under
+// dev mode : "/src/assets"
+// prod mode:  "/assets"
 app.get('/file/*', function(req, res){
   const firstParam = req.params[0];
 
@@ -149,13 +153,20 @@ app.get('/file/*', function(req, res){
   // possible "hack" to access some files
   // TODO check for hijacks and stuff
 
-  const path = `./src/assets/${firstParam}`;
+  // simple solution
+  // check one path and then other
 
-  console.info('LOG', path);
+  const pathsArray = [
+    `./src/assets/${firstParam}`,
+    `./assets/${firstParam}`
+  ];
 
-  res.sendFile(path, {root: appPath});
-
-
+  for (const path of pathsArray) {
+    if (fs.existsSync(path)) {
+      res.sendFile(path, {root: appPath});
+      return;
+    }
+  }
 });
 
 
