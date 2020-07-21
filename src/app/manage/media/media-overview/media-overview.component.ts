@@ -6,8 +6,8 @@ import {take} from "rxjs/operators";
 import {Clip} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
-import {WS_PORT} from "../../../../../server/constants";
 import {ScreenAssigningDialogComponent} from "./screen-assigning-dialog/screen-assigning-dialog/screen-assigning-dialog.component";
+import {WebsocketService} from "../../../core/services/websocket.service";
 
 @Component({
   selector: 'app-media-overview',
@@ -18,15 +18,14 @@ export class MediaOverviewComponent implements OnInit {
 
   public mediaList$: Observable<Clip[]> = this.query.clipList$;
 
-  private ws: WebSocket;
 
   constructor(public service: AppService,
               public query: AppQueries,
-  private _dialog: MatDialog) { }
+              private _dialog: MatDialog,
+              private _wsService: WebsocketService) { }
 
   ngOnInit(): void {
 
-    this.ws = new WebSocket(`ws://localhost:${WS_PORT}`);
   }
 
   addNewItem() {
@@ -51,21 +50,15 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   onPreview(item: Clip) {
+    // ok for now, but needs to be refactored
     this.query.screens$
       .pipe(
         take(1)
-      ).subscribe(obsUrls => {
+      ).subscribe(screens => {
 
-      obsUrls.forEach(url => {
+      screens.forEach(url => {
           if (url.clips[item.id]) {
-            const triggerObj = {
-              id: item.id,
-              targetOBS: url.id,
-              repeatX: 0,
-              repeatSecond: 0,
-            }
-
-            this.ws.send(`TRIGGER_CLIP=${JSON.stringify(triggerObj)}`);
+            this._wsService.triggerClipOnScreen(item.id, url.id);
           }
         }
       )

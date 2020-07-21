@@ -1,0 +1,50 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+$toolbarHeight: 64px;
+
+.page-content {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  height: calc(100vh - #{$toolbarHeight});
+  max-height: calc(100vh - #{$toolbarHeight});
+  overflow-y: auto;
+}
+
+.item {
+  width: var(--item-width-percent, 50%);
+  padding: 1rem 1rem 0;
+
+  // fix 3 / 4 column mode
+  &:nth-of-type(2n+1) {
+    padding-right: 0.5rem;
+  }
+
+  &:nth-of-type(2n+2) {
+    padding-left: 0.5rem;
+  }
+
+  mat-card {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+}
+
+mat-toolbar {
+  mat-select {
+    width: 140px;
+  }
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+app-clip-type {
+  display: inline;
+  padding-right: 0.5rem;
+}

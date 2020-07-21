@@ -6,3 +6,8 @@
 .example-container {
   height: 100vh;
 }
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+}

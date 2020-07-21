@@ -56,4 +56,9 @@ export interface Config {
   twitchChannel: string;
 }
 
+export interface NetworkInfo {
+  ifname: string;
+  address: string;
+}
+
 //TODO: Fix later and forget about the TODO LUL

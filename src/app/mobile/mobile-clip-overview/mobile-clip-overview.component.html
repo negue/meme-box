@@ -1,0 +1,27 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+  <span>MemeBox</span>
+
+  <span class="toolbar-spacer">
+  </span>
+
+  <mat-select placeholder="Columns" [value]="currentColumnSize"
+              (valueChange)="onColumnSizeChanged($event)">
+    <mat-option [value]="50">2 Columns</mat-option>
+    <mat-option [value]="33">3 Columns</mat-option>
+    <mat-option [value]="25">4 Columns</mat-option>
+  </mat-select>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="page-content" [style.--item-width-percent.%]="currentColumnSize">
+  <span class="item" *ngFor="let clip of clipList$|async">
+
+    <mat-card mat-ripple
+              (click)="onPreview(clip)">
+
+    <app-clip-type [type]="clip.type"></app-clip-type>
+      {{clip.name}}
+      </mat-card>
+  </span>
+</div>

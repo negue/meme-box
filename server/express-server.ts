@@ -6,6 +6,7 @@ import {
   CLIP_ID_ENDPOINT,
   CONFIG_ENDPOINT,
   FILE_ENDPOINT,
+  NETWORK_IP_LIST_ENDPOINT,
   SCREEN_CLIPS_ENDPOINT,
   SCREEN_CLIPS_ID_ENDPOINT,
   SCREEN_ENDPOINT,
@@ -14,6 +15,7 @@ import {
   TWITCH_ID_ENDPOINT
 } from "./constants";
 import * as fs from 'fs';
+import {listNetworkInterfaces} from "./network-interfaces";
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
@@ -183,6 +185,12 @@ app.get(FILE_ENDPOINT, function(req, res){
   }
 
   console.error('not found');
+});
+
+// Put = Update
+app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
+  // update config
+  res.send(listNetworkInterfaces());
 });
 
 

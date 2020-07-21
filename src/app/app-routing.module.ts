@@ -18,11 +18,10 @@ const rootRoutes: Routes = [
     path: 'screen/:guid',
     component: TargetScreenComponent
   },
-  /*
   {
     path: 'mobile',
-    component: ObsPageComponent
-  },*/
+    loadChildren: () => import('./mobile/mobile.module').then(module => module.MobileModule)
+  },
   {
     path: '**',
     redirectTo: 'manage'

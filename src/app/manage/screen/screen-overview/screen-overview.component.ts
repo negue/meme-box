@@ -18,7 +18,7 @@ export class ScreenOverviewComponent implements OnInit {
   public obsList$: Observable<ScreenViewEntry[]> = this._queries.screens$.pipe(
     map(stateUrlArray => stateUrlArray.map(obsUrl => ({
       ...obsUrl,
-      url: `${EXPRESS_BASE}/#/obs/${obsUrl.id}`
+      url: `${EXPRESS_BASE}/#/screen/${obsUrl.id}`
     })))
   )
 

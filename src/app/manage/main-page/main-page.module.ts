@@ -4,6 +4,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {MainPageComponent} from "./main-page.component";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
+import {MobileViewLinkComponent} from './mobile-view-link/mobile-view-link.component';
+import {QRCodeModule} from "angular2-qrcode";
 
 
 const mainRoutes: Routes = [
@@ -37,12 +39,13 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [MainPageComponent],
+  declarations: [MainPageComponent, MobileViewLinkComponent],
   imports: [
     CommonModule,
     MatSidenavModule,
     MatListModule,
     RouterModule.forChild(routes),
+    QRCodeModule,
   ]
 })
 export class MainPageModule { }

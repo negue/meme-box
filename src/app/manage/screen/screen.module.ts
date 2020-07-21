@@ -13,6 +13,7 @@ import {ScreenOverviewComponent} from "./screen-overview/screen-overview.compone
 import {ObsInfoComponent} from "./screen-overview/screen-info/obs-info.component";
 import {ScreenEditComponent} from "./screen-overview/screen-edit/screen-edit.component";
 import {ClipAssigningDialogModule} from "./screen-overview/clip-assigning-dialog/clip-assigning-dialog.module";
+import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 
 
 const routes: Routes = [
@@ -26,19 +27,20 @@ const routes: Routes = [
 @NgModule({
   // todo finish renaming
   declarations: [ScreenOverviewComponent, ObsInfoComponent, ScreenEditComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatListModule,
-    MatInputModule,
-    MatSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ClipAssigningDialogModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        MatListModule,
+        MatInputModule,
+        MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ClipAssigningDialogModule,
+        ClipTypeModule
+    ]
 })
 export class ScreenModule { }

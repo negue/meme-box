@@ -1,6 +1,7 @@
 export const WS_PORT = 4444;
 export const EXPRESS_PORT = 4445;
 
+// merge with the other constant file
 
 export const API_PREFIX = '/api';
 export const CLIP_ENDPOINT = `${API_PREFIX}/clips`;
@@ -17,4 +18,5 @@ export const TWITCH_ID_ENDPOINT = `${API_PREFIX}/twitch_events/:eventId`;
 
 export const CONFIG_ENDPOINT = `${API_PREFIX}/config`;
 export const FILE_ENDPOINT = `/file/*`;
+export const NETWORK_IP_LIST_ENDPOINT = `/network_ip_list`;
 

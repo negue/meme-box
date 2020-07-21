@@ -1,0 +1,4 @@
+<div *ngIf="networkInterface$ | async as mobileViewUrl">
+  Mobile View:
+  <qr-code [value]="mobileViewUrl" [size]="140"></qr-code>
+</div>

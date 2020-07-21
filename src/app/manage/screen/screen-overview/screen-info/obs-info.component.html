@@ -29,11 +29,7 @@
   <div class="media-info"
       *ngFor="let entry of clipList$ | async">
 
-    <ng-container [ngSwitch]="entry.type">
-      <mat-icon svgIcon="insert_photo" *ngSwitchCase="0"></mat-icon>
-      <mat-icon svgIcon="audiotrack" *ngSwitchCase="1"></mat-icon>
-      <mat-icon svgIcon="videocam" *ngSwitchCase="2"></mat-icon>
-    </ng-container>
+    <app-clip-type [type]="entry.type"></app-clip-type>
 
     <span class="padding">{{entry.name}}</span>
     <button matListIcon mat-icon-button color="warn"

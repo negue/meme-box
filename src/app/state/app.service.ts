@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Clip, ENDPOINTS, Screen, ScreenClip, Twitch} from "@memebox/contracts";
 import {API_PREFIX, EXPRESS_PORT} from "../../../server/constants";
 
-export const EXPRESS_BASE = `http://localhost:${EXPRESS_PORT}`;
+export const EXPRESS_BASE = `http://${location.hostname}:${EXPRESS_PORT}`;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 @Injectable({
