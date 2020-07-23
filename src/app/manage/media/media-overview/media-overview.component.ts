@@ -51,7 +51,7 @@ export class MediaOverviewComponent implements OnInit {
 
   onPreview(item: Clip) {
     // ok for now, but needs to be refactored
-    this.query.screens$
+    this.query.screensList$
       .pipe(
         take(1)
       ).subscribe(screens => {

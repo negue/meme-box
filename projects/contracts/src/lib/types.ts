@@ -28,8 +28,32 @@ export interface Screen  extends HasId {
   clips: Dictionary<ScreenClip>;
 }
 
+export enum PositionEnum {
+  FullScreen,
+  Absolute,
+  // others...
+}
+
+export enum HideAfterType {
+  Playing,
+  Milliseconds,
+  Repeats // maybe?
+}
+
 export interface ScreenClip extends HasId  {
   // later some other settings like position and stuff
+  width?: string; // 60%, 720px
+  height?: string;
+
+  position?: PositionEnum;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  top?: string;
+  imgFit?: string;
+
+  hideAfter?: HideAfterType;
+  hideAfterValue?: any;
 }
 
 export interface ScreenViewEntry extends Screen {

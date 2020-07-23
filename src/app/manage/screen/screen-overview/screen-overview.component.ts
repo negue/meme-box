@@ -15,7 +15,7 @@ import {ScreenEditComponent} from "./screen-edit/screen-edit.component";
 })
 export class ScreenOverviewComponent implements OnInit {
 
-  public obsList$: Observable<ScreenViewEntry[]> = this._queries.screens$.pipe(
+  public obsList$: Observable<ScreenViewEntry[]> = this._queries.screensList$.pipe(
     map(stateUrlArray => stateUrlArray.map(obsUrl => ({
       ...obsUrl,
       url: `${EXPRESS_BASE}/#/screen/${obsUrl.id}`

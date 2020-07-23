@@ -3,46 +3,57 @@ The Browser Elements need to exist all the time
 The Loaded Clips need to stay cached?
 -->
 
-<ng-container *ngFor="let entry of mediaClipMap$ | async | keyvalue"
-              [ngSwitch]="entry.value.type">
-  <video *ngSwitchCase="2" #video
-         [volume]="entry.value.volumeSetting / 100"
-         [src]="entry.value.path"
+<div *ngFor="let entry of mediaClipMap$ | async | keyvalue"
+      [ngSwitch]="entry.value.clip.type"
+     class="clip-holder {{entry.value.clip.type | mediaTypeClass}}"
 
-         (loadeddata)="addLog('loadeddata', $event, video)"
-         (loadedmetadata)="addLog('loadedmetadata', $event, video)"
-         (loadstart)="addLog('loadstart', $event, video); addToMap(entry.value, video)"
-         (progress)="addLog('progress', $event, video)"
-         controls
-         (canplaythrough)="addLog('canplaythrough', $event, video)"
-         (canplay)="addLog('canplay', $event, video)"
+      [class.fullscreen]="!entry.value.clipSetting.position"
+      [class.absolute]="entry.value.clipSetting.position === 1"
+     [style.--clip-setting-width]="entry.value.clipSetting.width"
+     [style.--clip-setting-height]="entry.value.clipSetting.height"
+     [style.--clip-setting-bottom]="entry.value.clipSetting.bottom"
+     [style.--clip-setting-right]="entry.value.clipSetting.right"
+     [style.--clip-setting-top]="entry.value.clipSetting.top"
+     [style.--clip-setting-left]="entry.value.clipSetting.left"
+     [style.--clip-setting-img-fit]="entry.value.clipSetting.imgFit"
+>
+  <video *ngSwitchCase="2" #video
+         [volume]="entry.value.clip.volumeSetting / 100"
+         [src]="entry.value.clip.path"
+
+         (loadeddata)="addLog('loadeddata', $event)"
+         (loadedmetadata)="addLog('loadedmetadata', $event)"
+         (loadstart)="addLog('loadstart', $event); addToMap(entry.value.clip, video)"
+         (progress)="addLog('progress', $event)"
+
+         (play)="addLog('play', $event)"
+         (playing)="addLog('playing', $event)"
+         (canplaythrough)="addLog('canplaythrough', $event)"
+         (canplay)="addLog('canplay', $event)"
+         (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
         [class.visible]="shouldPlay$(entry.key) | async"
 
   ></video>
   <audio *ngSwitchCase="1" #audio
-         [volume]="entry.value.volumeSetting / 100"
-         [src]="entry.value.path"
-         [controls]="true"
-(loadstart)=" addToMap(entry.value, audio)"
+         [volume]="entry.value.clip.volumeSetting / 100"
+         [src]="entry.value.clip.path"
+         preload="auto" controls
+(loadstart)=" addToMap(entry.value.clip, audio)"
+         (play)="addLog('play', $event)"
+         (playing)="addLog('playing', $event)"
+         (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
          [class.visible]="shouldPlay$(entry.key) | async"
   ></audio>
   <img *ngSwitchCase="0" #img
-       [src]="entry.value.path"
+       [src]="entry.value.clip.path"
        [class.visible]="shouldPlay$(entry.key) | async"
 
-       (loadstart)=" addToMap(entry.value, img)"
+       (loadstart)=" addToMap(entry.value.clip, img)"
   >
-</ng-container>
-
-
-<div style="padding: 2rem">
-<button mat-raised-button  (click)="showPicture()">picture</button>
-<button mat-raised-button  (click)="showAudio()">audio</button>
-<button mat-raised-button (click)="showVideo()">video</button>
 </div>
 
 
-<pre>
+<pre style="display: none">
   {{ log | json }}
   {{ mediaClipMap$ | async | json }}
 </pre>

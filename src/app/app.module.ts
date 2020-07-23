@@ -20,6 +20,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
 import {AppConfig} from '../environments/environment';
 import {TargetScreenComponent} from "./target-screen/target-screen.component";
+import {MediaTypeClassPipe} from './target-screen/media-type-class.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -27,7 +28,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, TargetScreenComponent],
+  declarations: [AppComponent, TargetScreenComponent, MediaTypeClassPipe],
   imports: [
     BrowserModule,
     FormsModule,

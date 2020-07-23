@@ -36,7 +36,7 @@ export class MobileClipOverviewComponent implements OnInit {
 
   onPreview(item: Clip) {
     // ok for now, but needs to be refactored
-    this.appQueries.screens$
+    this.appQueries.screensList$
       .pipe(
         take(1)
       ).subscribe(screens => {

@@ -13,10 +13,11 @@ export class AppQueries extends Query<State> {
   );
 
   clipList$ = this.select(store => Object.values(store.clips));
-  screens$ = this.select(store => Object.values(store.screen));
+  screensList$ = this.select(store => Object.values(store.screen));
   twitchEvent$ = this.select(store => Object.values(store.twitchEvents));
 
   clipMap$ = this.select(store => store.clips);
+  screenMap$ = this.select(store => store.screen);
 
   constructor(protected store: AppStore,
               protected service: AppService) {

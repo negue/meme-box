@@ -1,7 +1,37 @@
 video, audio, img {
   display: none;
+}
 
+video, audio, img {
   &.visible {
     display: block;
   }
+}
+
+.clip-holder {
+  width: var(--clip-setting-width, 100%);
+  height: var(--clip-setting-height, 100%);
+
+  * {
+    width: 100%;
+    height: 100%;
+  }
+
+  &.picture {
+    * {
+      object-fit: var(--clip-setting-img-fit, contain);
+    }
+  }
+}
+
+.fullscreen {
+  position: absolute;
+}
+
+.absolute {
+  position: absolute;
+  bottom: var(--clip-setting-bottom, unset);
+  right: var(--clip-setting-right, unset);
+  top: var(--clip-setting-top, unset);
+  left: var(--clip-setting-left, unset);
 }

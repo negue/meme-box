@@ -17,7 +17,7 @@ export class ScreenAssigningDialogComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   checkedMap: Dictionary<boolean>;
-  obsUrls$: Observable<Screen[]> = this.appQueries.screens$;
+  obsUrls$: Observable<Screen[]> = this.appQueries.screensList$;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Clip,
               private appQueries: AppQueries,
