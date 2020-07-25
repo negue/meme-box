@@ -1,4 +1,4 @@
-/* global $SD, OBSWebSocket, lox */
+/* global $SD */
 import React, {useEffect, useReducer, useState} from "react";
 
 import {createUsePluginSettings, createUseSDAction, SDSelectInput,} from "react-streamdeck";
