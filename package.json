@@ -10,6 +10,7 @@
   "private": true,
   "scripts": {
     "ng": "ng",
+    "cpy": "cpy",
     "start": "npm-run-all -p ng:serve",
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
@@ -22,11 +23,12 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
     "start:server": "npx @zeit/ncc run server/server.ts",
-    "build:prepare:folder": "npx cpy-cli dist release/dist && npx cpy-cli ncc/index.js release --rename=memebox.js ",
+    "build:prepare:folder": "cpy dist release/dist && cpy ncc/index.js release --rename=memebox.js ",
     "build:prepare": "npm run build:prod && npx @zeit/ncc build server/server.ts -o ncc && npm run build:prepare:folder",
     "build:windows": "npx nexe release/memebox.js -t windows-x64 -r dist -o release/out/memebox.exe",
     "build:linux": "npx  nexe release/memebox.js -t linux-x64 -r dist -o release/out/memebox-linux",
-    "build:macos": "npx  nexe release/memebox.js -t mac-x64 -r dist -o release/out/memebox-macos",
+    "build:macos": "npx  nexe release/memebox.js -t mac-x64 -r dist -o release/out/memebox-macos && npm run build:macos:make_app",
+    "build:macos:make_app": "cpy memebox-macos.app/**/* ../release/out --parents --cwd=release-templates && cpy release/out/memebox-macos release/out/memebox-macos.app/Contents/Resources --rename=script",
     "build:all": "npm run build:windows && npm run build:linux && npm run build:macos"
   },
   "devDependencies": {
@@ -80,7 +82,8 @@
     "typescript": "3.8.3",
     "wait-on": "5.0.1",
     "webdriver-manager": "12.1.7",
-    "zone.js": "0.10.3"
+    "zone.js": "0.10.3",
+    "cpy-cli": "3.1.1"
   },
   "engines": {
     "node": ">=10.13.0"
