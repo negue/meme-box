@@ -33,16 +33,6 @@ jobs:
       - run: npm run build:prepare
       - run: npm run build:all
 
-      - name: Yarn Install
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: --cwd memebox-streamdeck install
-
-      - name: Build Streamdeck Plugin
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: --cwd memebox-streamdeck export
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
