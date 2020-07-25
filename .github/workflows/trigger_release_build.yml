@@ -95,15 +95,8 @@ jobs:
         with:
           node-version: 12.16.2
 
-      - name: Yarn Install
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: --cwd memebox-streamdeck install
-
-      - name: Build Streamdeck Plugin
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: --cwd memebox-streamdeck export
+      - run: yarn --cwd memebox-streamdeck install
+      - run: yarn --cwd memebox-streamdeck export
 
       - name: Upload Streamdeck Plugin
         id: upload-release-asset-streamdeck
