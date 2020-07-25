@@ -1,6 +1,6 @@
 export interface TriggerClip {
   id: string;
-  targetScreen: string;
+  targetScreen?: string;
   repeatX?: number;
   repeatSecond?: number;
 }

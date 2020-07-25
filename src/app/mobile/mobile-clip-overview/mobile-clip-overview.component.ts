@@ -3,7 +3,6 @@ import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
 import {Observable} from "rxjs";
 import {Clip} from "@memebox/contracts";
-import {take} from "rxjs/operators";
 import {WebsocketService} from "../../core/services/websocket.service";
 import {SettingsService} from "../../core/services/settings.service";
 
@@ -35,19 +34,7 @@ export class MobileClipOverviewComponent implements OnInit {
 
 
   onPreview(item: Clip) {
-    // ok for now, but needs to be refactored
-    this.appQueries.screensList$
-      .pipe(
-        take(1)
-      ).subscribe(screens => {
-
-      screens.forEach(url => {
-          if (url.clips[item.id]) {
-            this._wsService.triggerClipOnScreen(item.id, url.id);
-          }
-        }
-      )
-    });
+    this._wsService.triggerClipOnScreen(item.id);
   }
 
   onColumnSizeChanged($event: number) {

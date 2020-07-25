@@ -1,5 +1,7 @@
 import * as http from "http";
 import * as WebSocket from "ws";
+import {TriggerClip} from "../projects/contracts/src/lib/actions";
+import {PersistenceInstance} from "./persistence";
 
 // no type ?!
 interface WebSocketType {
@@ -14,21 +16,24 @@ const wss = new WebSocket.Server({ server });
 const obsPages: {[key: string]: WebSocketType} = {};
 let wsToSend: WebSocketType[] = [];
 
-// todo refactor?
-// currently only the server tell which WS to do stuff
-export function sendDataToAllSockets (targetId: string|null, message: string) {
-  if (targetId) {
-    if (obsPages[targetId] && obsPages[targetId].readyState === WebSocket.OPEN) {
-      obsPages[targetId].send(message)
-    }
-  } else {
-    wsToSend.forEach(ws => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(message)
-      }
-    });
+export function sendDataToScreen(targetId: string|null, message: string) {
+  console.info('SENDING DATA TO', targetId, message);
+  if (obsPages[targetId] && obsPages[targetId].readyState === WebSocket.OPEN) {
+    obsPages[targetId].send(message);
+    console.info('SENT DATA TO', targetId);
   }
 }
+
+// todo refactor?
+// currently only the server tell which WS to do stuff
+export function sendDataToAllSockets (message: string) {
+  wsToSend.forEach(ws => {
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(message)
+    }
+  });
+}
+
 
 wss.on("connection", (ws: WebSocket) => {
   //connection is up, let's add a simple simple event
@@ -37,6 +42,7 @@ wss.on("connection", (ws: WebSocket) => {
     console.log("received: %s", message);
     // ws.send(`Hello, you sent -> ${message}`);
 
+    // ACTION={payload}
     const [action, payload] = message.split('=');
 
     console.info({action, payload});
@@ -48,9 +54,27 @@ wss.on("connection", (ws: WebSocket) => {
         break;
       }
       case "TRIGGER_CLIP": {
-        const payloadObs = JSON.parse(payload);
+        const payloadObs: TriggerClip = JSON.parse(payload);
 
-        sendDataToAllSockets(payloadObs.targetOBS, message);
+        console.info('TRIGGER', payloadObs);
+
+        if (!payloadObs.targetScreen) {
+          console.info('NO TARGET');
+          var allScreens = PersistenceInstance.listScreens();
+
+          for (const screen of allScreens) {
+            if (screen.clips[payloadObs.id]) {
+              const newMessageObj = {
+                ...payloadObs,
+                targetScreen: screen.id
+              };
+
+              sendDataToScreen(screen.id, "TRIGGER_CLIP="+JSON.stringify(newMessageObj));
+            }
+          }
+        } else {
+          sendDataToScreen(payloadObs.targetScreen, message);
+        }
 
         break;
       }

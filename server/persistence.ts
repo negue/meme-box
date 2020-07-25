@@ -103,7 +103,11 @@ export class Persistence {
    *  OBS URLs Settings
    */
 
-  public addObsUrl(obsUrl: Screen) {
+  public listScreens() {
+    return Object.values(this.data.screen);
+  }
+
+  public addScreen(obsUrl: Screen) {
     console.info({obsUrl});
 
     obsUrl.id = uuidv4();
@@ -113,7 +117,7 @@ export class Persistence {
     return obsUrl.id;
   }
 
-  public updateObsUrl(id: string, obsUrl: Screen) {
+  public updateScreen(id: string, obsUrl: Screen) {
     console.info({obsUrl});
 
     obsUrl.id = id;
@@ -124,7 +128,7 @@ export class Persistence {
     return obsUrl;
   }
 
-  public deleteObsUrl(id: string) {
+  public deleteScreen(id: string) {
     console.info({ prevObsUrl: this.data.screen, id});
 
     this.deleteItemInDictionary(this.data.screen, id);
@@ -235,3 +239,6 @@ export class Persistence {
     this.updated$.next();
   }
 }
+
+
+export const PersistenceInstance = new Persistence('./settings/settings.json');

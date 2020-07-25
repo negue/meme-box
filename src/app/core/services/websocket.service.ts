@@ -14,11 +14,11 @@ export class WebsocketService {
     this.ws = new WebSocket(`ws://${location.hostname}:${WS_PORT}`);
   }
 
-  public triggerClipOnScreen(clipId: string, screenId: string) {
+  public triggerClipOnScreen(clipId: string, screenId?: string|null) {
     const triggerObj: TriggerClip = {
       id: clipId,
       targetScreen: screenId,
-      repeatX: 0,
+      repeatX: 0,  // todo after streamdeck ?
       repeatSecond: 0,
     }
 

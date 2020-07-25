@@ -83,8 +83,9 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
           case 'TRIGGER_CLIP': {
             const payloadObj:TriggerClip = JSON.parse(payload);
 
+            console.info('Received', payloadObj, thisScreenId);
             if (payloadObj.targetScreen === thisScreenId) {
-              console.error({payloadObj});
+              console.error('YES TRIGGERING IT', {payloadObj});
 
               this.mediaClipToShow$.next(payloadObj.id);
             }

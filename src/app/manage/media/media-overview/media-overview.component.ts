@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {MediaEditComponent} from "./media-edit/media-edit.component";
-import {take} from "rxjs/operators";
 import {Clip} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
@@ -50,19 +49,7 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   onPreview(item: Clip) {
-    // ok for now, but needs to be refactored
-    this.query.screensList$
-      .pipe(
-        take(1)
-      ).subscribe(screens => {
-
-      screens.forEach(url => {
-          if (url.clips[item.id]) {
-            this._wsService.triggerClipOnScreen(item.id, url.id);
-          }
-        }
-      )
-    });
+    this._wsService.triggerClipOnScreen(item.id);
   }
 
   onAssignObs(item: Clip) {

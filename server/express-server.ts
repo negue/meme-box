@@ -1,5 +1,4 @@
 import * as express from 'express';
-import {Persistence} from "./persistence";
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
@@ -16,11 +15,11 @@ import {
 } from "./constants";
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
+import {PersistenceInstance} from "./persistence";
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
 
-var persistence = new Persistence('./settings/settings.json');
 var app = express();
 
 app.use(cors());
@@ -30,7 +29,7 @@ app.use(express.static('dist'))
 
 
 app.get(API_PREFIX, (req,res) => {
-  res.send(persistence.fullState());
+  res.send(PersistenceInstance.fullState());
 });
 
 // TODO Add CONTSTANTS Values
@@ -40,26 +39,26 @@ app.get(API_PREFIX, (req,res) => {
  */
 
 app.get(CLIP_ENDPOINT, (req,res) => {
-  res.send(persistence.listClips());
+  res.send(PersistenceInstance.listClips());
 });
 
 // Post = New
 app.post(CLIP_ENDPOINT, (req, res) => {
   // save the clip
   // return ID
-  res.send(persistence.addClip(req.body));
+  res.send(PersistenceInstance.addClip(req.body));
 });
 
 // Put = Update
 app.put(CLIP_ID_ENDPOINT, (req, res) => {
   // update clip
-  res.send(persistence.updateClip(req.params['clipId'], req.body));
+  res.send(PersistenceInstance.updateClip(req.params['clipId'], req.body));
 });
 // Delete
 app.delete(CLIP_ID_ENDPOINT, (req, res) => {
   // delete clip
   // return ID
-  res.send(persistence.deleteClip(req.params['clipId']));
+  res.send(PersistenceInstance.deleteClip(req.params['clipId']));
 });
 
 
@@ -69,24 +68,24 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
 
 
 app.get(SCREEN_ENDPOINT, (req,res) => {
-  res.send(persistence.listObsUrls());
+  res.send(PersistenceInstance.listObsUrls());
 });
 
 
 // Post = New
 app.post(SCREEN_ENDPOINT, (req, res) => {
-  res.send(persistence.addObsUrl(req.body));
+  res.send(PersistenceInstance.addScreen(req.body));
 });
 
 // Put = Update
 app.put(SCREEN_ID_ENDPOINT, (req, res) => {
 
-  res.send(persistence.updateObsUrl(req.params['screenId'], req.body));
+  res.send(PersistenceInstance.updateScreen(req.params['screenId'], req.body));
 });
 // Delete
 app.delete(SCREEN_ID_ENDPOINT, (req, res) => {
 
-  res.send(persistence.deleteObsUrl(req.params['screenId']));
+  res.send(PersistenceInstance.deleteScreen(req.params['screenId']));
 });
 
 
@@ -94,20 +93,20 @@ app.delete(SCREEN_ID_ENDPOINT, (req, res) => {
 app.post(SCREEN_CLIPS_ENDPOINT, (req, res) => {
   const {screenId} = req.params;
 
-  res.send(persistence.addObsClip(screenId, req.body));
+  res.send(PersistenceInstance.addObsClip(screenId, req.body));
 });
 
 // Put = Update
 app.put(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
   const {screenId, clipId} = req.params;
 
-  res.send(persistence.updateObsClip(screenId, clipId, req.body));
+  res.send(PersistenceInstance.updateObsClip(screenId, clipId, req.body));
 });
 // Delete
 app.delete(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
   const {screenId, clipId} = req.params;
 
-  res.send(persistence.deleteObsClip(screenId, clipId));
+  res.send(PersistenceInstance.deleteObsClip(screenId, clipId));
 });
 
 
@@ -116,22 +115,22 @@ app.delete(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
  */
 
 app.get(TWITCH_ENDPOINT, (req,res) => {
-  res.send(persistence.listTwitchEvents());
+  res.send(PersistenceInstance.listTwitchEvents());
 });
 
 
 // Post = New
 app.post(TWITCH_ENDPOINT, (req, res) => {
-  res.send(persistence.addTwitchEvent(req.body));
+  res.send(PersistenceInstance.addTwitchEvent(req.body));
 });
 
 // Put = Update
 app.put(TWITCH_ID_ENDPOINT, (req, res) => {
-  res.send(persistence.updateTwitchEvent(req.params['eventId'], req.body));
+  res.send(PersistenceInstance.updateTwitchEvent(req.params['eventId'], req.body));
 });
 // Delete
 app.delete(TWITCH_ID_ENDPOINT, (req, res) => {
-  res.send(persistence.deleteTwitchEvent(req.params['eventId']));
+  res.send(PersistenceInstance.deleteTwitchEvent(req.params['eventId']));
 });
 
 
@@ -140,13 +139,13 @@ app.delete(TWITCH_ID_ENDPOINT, (req, res) => {
  */
 
 app.get(CONFIG_ENDPOINT, (req,res) => {
-  res.send(persistence.getConfig());
+  res.send(PersistenceInstance.getConfig());
 });
 
 // Put = Update
 app.put(CONFIG_ENDPOINT, (req, res) => {
   // update config
-  res.send(persistence.updateConfig(req.body));
+  res.send(PersistenceInstance.updateConfig(req.body));
 });
 
 // TODO use IDs instead of names
@@ -202,4 +201,4 @@ export function createExpress(port) {
   return app;
 }
 
-export {persistence};
+export {PersistenceInstance};

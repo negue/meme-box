@@ -1,0 +1,37 @@
+{
+	"Actions": [
+		{
+			"Icon": "action/images/actionimage",
+			"Name": "Trigger a clip",
+			"States": [
+				{
+					"Image": "action/images/action"
+				}
+			],
+			"Tooltip": "Trigger a clip",
+			"UUID": "com.memebox.memebox-streamdeck.action"
+		}
+	],
+	"SDKVersion": 2,
+	"Author": "negue",
+	"CodePath": "code.html",
+	"PropertyInspectorPath": "propertyinspector/index.html",
+	"Description": "Trigger clips of MemeBox",
+	"Name": "MemeBox",
+	"Icon": "action/images/action",
+	"URL": "",
+	"Version": "1.0.0",
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "10.11"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Software": {
+		"MinimumVersion": "4.1"
+	}
+}

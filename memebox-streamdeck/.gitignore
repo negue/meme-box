@@ -1,0 +1,7 @@
+node_modules
+DistributionToo*.*
+/build
+release
+.idea/**/*
+/.idea/**/*
+
