@@ -76,35 +76,3 @@ jobs:
           asset_path: ./release/out/memebox-macos
           asset_name: memebox-macos
           asset_content_type: application/octet-stream
-
-  streamdeck:
-    name: Build and Upload Streamdeck
-    runs-on: macos-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Cache multiple paths
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-      - name: Use Node.js 12.16.2
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.16.2
-
-      - run: yarn --cwd memebox-streamdeck install
-      - run: yarn --cwd memebox-streamdeck export
-
-      - name: Upload Streamdeck Plugin
-        id: upload-release-asset-streamdeck
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.build.output.uploadURL }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
-          asset_name: MemeBox-streamdeck.streamDeckPlugin
-          asset_content_type: application/octet-stream
