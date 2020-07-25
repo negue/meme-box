@@ -91,6 +91,7 @@ jobs:
   streamdeck:
     name: Build and Upload Streamdeck
     runs-on: windows-latest
+    needs: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
