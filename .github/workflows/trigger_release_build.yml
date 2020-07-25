@@ -26,14 +26,14 @@ jobs:
 
       - name: Yarn Install
         uses: borales/actions-yarn@v2.0.0
-        working-directory: ./memeboc-streamdeck
         with:
+          working-directory: ./memeboc-streamdeck
           cmd: install # will run `yarn install` command
 
       - name: Build Streamdeck Plugin
         uses: borales/actions-yarn@v2.0.0
-        working-directory: ./memeboc-streamdeck
         with:
+          working-directory: ./memeboc-streamdeck
           cmd: export
 
       - name: Create Release
