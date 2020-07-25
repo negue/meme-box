@@ -79,7 +79,7 @@ jobs:
 
   streamdeck:
     name: Build and Upload Streamdeck
-    runs-on: windows-latest
+    runs-on: macos-latest
     needs: build
     steps:
       - name: Checkout code
