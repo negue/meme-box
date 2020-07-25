@@ -25,16 +25,16 @@ jobs:
       - run: npm run build:all
 
       - name: Yarn Install
+        uses: borales/actions-yarn@v2.0.0
         working-directory: ./memeboc-streamdeck
-        - uses: borales/actions-yarn@v2.0.0
-          with:
-            cmd: install # will run `yarn install` command
+        with:
+          cmd: install # will run `yarn install` command
 
       - name: Build Streamdeck Plugin
+        uses: borales/actions-yarn@v2.0.0
         working-directory: ./memeboc-streamdeck
-        - uses: borales/actions-yarn@v2.0.0
-          with:
-            cmd: export
+        with:
+          cmd: export
 
       - name: Create Release
         id: create_release
