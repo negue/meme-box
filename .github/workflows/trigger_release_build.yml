@@ -27,12 +27,12 @@ jobs:
       - name: Yarn Install
         uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: instal --cwd memeboc-streamdeck
+          cmd: install --cwd memebox-streamdeck
 
       - name: Build Streamdeck Plugin
         uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: export --cwd memeboc-streamdeck
+          cmd: export --cwd memebox-streamdeck
 
       - name: Create Release
         id: create_release
