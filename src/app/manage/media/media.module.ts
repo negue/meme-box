@@ -16,6 +16,7 @@ import {MatSliderModule} from "@angular/material/slider";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatDividerModule} from "@angular/material/divider";
 import {ScreenAssigningDialogModule} from "./media-overview/screen-assigning-dialog/screen-assigning-dialog.module";
+import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 
 const routes: Routes = [
   {
@@ -27,20 +28,21 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [MediaOverviewComponent, MediaInfoComponent, MediaTypePipe, MediaEditComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSliderModule,
-    ReactiveFormsModule,
-    MatDividerModule,
-    ScreenAssigningDialogModule,
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSliderModule,
+        ReactiveFormsModule,
+        MatDividerModule,
+        ScreenAssigningDialogModule,
+        ClipTypeModule,
+    ]
 })
 export class MediaModule { }

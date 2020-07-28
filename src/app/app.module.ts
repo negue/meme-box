@@ -68,6 +68,7 @@ export class AppModule {
       'queue',
       'insert_photo',
       'videocam',
+      'video_library'
     ];
 
     for (const icon of icons) {

@@ -1,10 +1,20 @@
 <div class="info-holder">
+
+  <div class="info-content">
+
+    <div class="title-row">
+  <app-clip-type [type]="info.type"></app-clip-type>
+  <strong>{{info.name}}</strong>
+    </div>
   <div class="preview" *ngIf="info.type === 0 && (info.previewUrl || info.path)">
     <img [src]="domSanitizer.bypassSecurityTrustUrl(info.previewUrl || info.path)">
   </div>
   <div class="informations">
-    <strong>{{info.name}}</strong> Type: {{ info.type | mediaType }} <br><br>
+  <ng-container *ngIf="info.type !== 0">
+
     Volume: <strong>{{info.volumeSetting}}</strong>% <br/><br/>
+
+    </ng-container>
     <ng-container *ngIf="info.clipLength">
       Clip Length: <strong>{{info.clipLength}}</strong>ms <br/><br/>
     </ng-container>
@@ -12,12 +22,14 @@
     Path: {{info.path}} <br/>
 
 
-    <button mat-raised-button color="accent" (click)="onPreview.emit()">show preview</button>
 
-
-    WIP
+  </div>
   </div>
   <div class="buttons">
+    <button mat-icon-button color="warn" (click)="onPreview.emit()">
+      <mat-icon svgIcon="video_library"></mat-icon>
+    </button>
+
     <button mat-icon-button color="accent" (click)="onAssignObs.emit()">
       <mat-icon svgIcon="playlist_add"></mat-icon>
     </button>
@@ -27,6 +39,9 @@
     <button mat-icon-button color="primary" (click)="onDelete.emit()">
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
+
+
+
   </div>
 </div>
 

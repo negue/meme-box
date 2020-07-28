@@ -4,6 +4,7 @@
   <mat-form-field>
     <input matInput placeholder="Name"
            formControlName="name"
+           autocomplete="off"
            type="text" required>
   </mat-form-field>
 
@@ -36,6 +37,7 @@
   <mat-form-field *ngIf="false">
     <input matInput placeholder="Clip Length"
            formControlName="clipLength"
+           autocomplete="off"
            type="number">
     <span matSuffix>ms</span>
   </mat-form-field>
@@ -43,6 +45,7 @@
   <mat-form-field>
     <input matInput [placeholder]="typeSelection.value === 0 ? 'Visible Duration' : 'Play Length'"
            formControlName="playLength"
+           autocomplete="off"
            type="number" required>
     <span matSuffix>ms</span>
     <mat-hint>The duration on how long it should be visible</mat-hint>
@@ -50,11 +53,13 @@
   <mat-form-field>
     <input matInput placeholder="URL to the File"
            formControlName="path"
+           autocomplete="off"
            type="text" required>
   </mat-form-field>
   <mat-form-field *ngIf="false">
     <input matInput placeholder="Preview URL"
            formControlName="previewUrl"
+           autocomplete="off"
            type="text">
   </mat-form-field>
   <img [src]="form.value.path || form.value.previewUrl">
