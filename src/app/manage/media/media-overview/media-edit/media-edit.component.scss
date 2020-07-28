@@ -1,0 +1,30 @@
+:host {
+  display: block;
+  min-width: 400px;
+  max-width: 600px;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+img {
+  align-self: center;
+}
+
+.slider__row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+
+  mat-slider{
+    flex: 1;
+  }
+
+  .volume__label {
+    width: 3rem;
+    text-align: right;
+  }
+}

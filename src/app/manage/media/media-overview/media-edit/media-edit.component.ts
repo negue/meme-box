@@ -1,13 +1,19 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip} from "@memebox/contracts";
-import {FormBuilder} from "@angular/forms";
+import {Clip, MediaType} from "@memebox/contracts";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
+
+const INITIAL_CLIP: Partial<Clip> = {
+  type: MediaType.Picture,
+  name: 'Your Clip Name',
+  volumeSetting: 10
+}
 
 @Component({
   selector: 'app-media-edit',
   templateUrl: './media-edit.component.html',
-  styleUrls: ['./media-edit.component.css']
+  styleUrls: ['./media-edit.component.scss']
 })
 export class MediaEditComponent implements OnInit {
 
@@ -17,14 +23,16 @@ export class MediaEditComponent implements OnInit {
     type: 0,
     volumeSetting: 0,
     clipLength: 0,
-    playLength: 0,
+    playLength: new FormControl(0, [Validators.required]),
     path: '',
     previewUrl: '',
   });
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Clip,
               private dialogRef: MatDialogRef<any>,
-              private appService: AppService) { }
+              private appService: AppService) {
+    this.data = this.data ?? INITIAL_CLIP as any;
+  }
 
   ngOnInit(): void {
     this.form.reset(this.data);
@@ -33,8 +41,13 @@ export class MediaEditComponent implements OnInit {
   async save() {
     const {value} = this.form;
 
-    await this.appService.addOrUpdateClip(value);
+    if (this.form.valid) {
+      await this.appService.addOrUpdateClip(value);
 
-    this.dialogRef.close();
+      this.dialogRef.close();
+    } else {
+      // highlight hack
+      this.form.markAllAsTouched();
+    }
   }
 }

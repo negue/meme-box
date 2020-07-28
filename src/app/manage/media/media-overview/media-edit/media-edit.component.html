@@ -1,14 +1,17 @@
-<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a clip </h2>
+<h2 mat-dialog-title> {{ data?.id ? 'Update Clip: "' + form.value.name + '"' : 'Add a clip' }}  </h2>
 <mat-dialog-content class="mat-typography">
 <form [formGroup]="form">
   <mat-form-field>
     <input matInput placeholder="Name"
            formControlName="name"
-           type="text">
+           type="text" required>
   </mat-form-field>
 
   <mat-form-field>
-    <mat-select placeholder="Type" formControlName="type">
+    <mat-select placeholder="Type"
+                formControlName="type"
+                [value]="data?.type || 0"
+                #typeSelection>
       <mat-option [value]="0">Picture</mat-option>
       <mat-option [value]="1">Audio</mat-option>
       <mat-option [value]="2">Video</mat-option>
@@ -16,13 +19,21 @@
   </mat-form-field>
 
 
-  <mat-label>Volume</mat-label>
-  <mat-slider [min]="0" [max]="100" [step]="1"
-              formControlName="volumeSetting">
+  <ng-container *ngIf="typeSelection.value !== 0">
+    <mat-label>Volume</mat-label>
+    <div class="slider__row">
+    <mat-slider [min]="0" [max]="100" [step]="1" #volumeSlider
+                formControlName="volumeSetting">
 
-  </mat-slider>
+    </mat-slider>
+      <div class="volume__label">
 
-  <mat-form-field>
+        {{volumeSlider.value }}
+      </div>
+    </div>
+  </ng-container>
+
+  <mat-form-field *ngIf="false">
     <input matInput placeholder="Clip Length"
            formControlName="clipLength"
            type="number">
@@ -30,20 +41,23 @@
   </mat-form-field>
 
   <mat-form-field>
-    <input matInput placeholder="Play Length" formControlName="playLength" type="number">
+    <input matInput [placeholder]="typeSelection.value === 0 ? 'Visible Duration' : 'Play Length'"
+           formControlName="playLength"
+           type="number" required>
     <span matSuffix>ms</span>
+    <mat-hint>The duration on how long it should be visible</mat-hint>
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Path to the File"
+    <input matInput placeholder="URL to the File"
            formControlName="path"
-           type="text">
+           type="text" required>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field *ngIf="false">
     <input matInput placeholder="Preview URL"
            formControlName="previewUrl"
            type="text">
   </mat-form-field>
-  <img [src]="form.value.previewUrl">
+  <img [src]="form.value.path || form.value.previewUrl">
 </form>
 </mat-dialog-content>
 
@@ -51,5 +65,5 @@
   <button mat-button mat-dialog-close>Cancel</button>
   <button mat-raised-button (click)="save()"
           color="primary"
-          cdkFocusInitial>{{ data.id ? 'Update' : 'Add' }}</button>
+          cdkFocusInitial>{{ data?.id ? 'Update' : 'Add' }}</button>
 </mat-dialog-actions>

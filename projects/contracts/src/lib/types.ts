@@ -19,7 +19,6 @@ export interface Clip extends HasId {
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip
   path: string;
-  obsName: string; // TODO refactor once state management is available to a GUID
   type: MediaType;
 }
 

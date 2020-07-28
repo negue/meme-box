@@ -28,7 +28,7 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   addNewItem() {
-    this.showDialog({});
+    this.showDialog(null);
   }
 
 
