@@ -5,7 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 @Component({
   selector: 'app-url-panel',
   templateUrl: './url-panel.component.html',
-  styleUrls: ['./url-panel.component.css']
+  styleUrls: ['./url-panel.component.scss']
 })
 export class UrlPanelComponent implements OnInit {
 

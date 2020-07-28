@@ -7,6 +7,10 @@ import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigni
 import {AppService, EXPRESS_BASE} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {ScreenEditComponent} from "./screen-edit/screen-edit.component";
+import {
+  ConfirmationsPayload,
+  SimpleConfirmationDialogComponent
+} from "../../../shared/components/simple-confirmation-dialog/simple-confirmation-dialog.component";
 
 @Component({
   selector: 'app-screen-overview',
@@ -44,8 +48,18 @@ export class ScreenOverviewComponent implements OnInit {
   }
 
   delete(obsInfo: ScreenViewEntry) {
-    console.info({obsInfo});
-    this.service.deleteScreen(obsInfo.id);
+
+      const dialogRef = this._dialog.open(SimpleConfirmationDialogComponent, {
+        data: {
+          title: 'Are you sure you want to delete this screen?'
+        } as ConfirmationsPayload
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.service.deleteScreen(obsInfo.id);
+        }
+      });
   }
 
   showAssignmentDialog(obsInfo: Partial<Screen>) {

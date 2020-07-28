@@ -1,8 +1,8 @@
 <div class="copy-url-area">
-  <code>{{url}}</code>
+ <input type="text" readonly [value]="url">
 </div>
 
-<button mat-icon-button (click)="copyURL()">
+<button mat-icon-button (click)="copyURL()" title="Copy URL to Clipboard">
 <mat-icon svgIcon="content_copy">
 
 </mat-icon>

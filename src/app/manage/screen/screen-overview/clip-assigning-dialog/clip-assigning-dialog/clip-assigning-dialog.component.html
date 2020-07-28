@@ -1,3 +1,6 @@
+ <h1 mat-dialog-title>Assign your clips to Screen "{{data.name}}"</h1>
+<div mat-dialog-content>
+
 <mat-selection-list (selectionChange)="onSelectionChanged($event)">
   <mat-list-option *ngFor="let clip of clips$|async"
                    [value]="clip.id"
@@ -16,3 +19,5 @@
     </div>
   </mat-list-option>
 </mat-selection-list>
+
+</div>

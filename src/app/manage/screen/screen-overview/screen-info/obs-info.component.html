@@ -1,33 +1,51 @@
 <mat-card class="item-header-card">
-  <h3 class="header">{{info.name}}</h3>
 
-  <app-url-panel [url]="info.url"></app-url-panel>
-
-  <div class="actions">
+  <div class="header-line bottom-spacing">
     <button mat-icon-button color="accent"
+            class="small-icon"
             (click)="onEdit.emit()">
       <mat-icon svgIcon="edit"></mat-icon>
     </button>
 
+    <h3 class="header">
+
+      {{info.name}}
+    </h3>
 
     <button mat-icon-button color="warn"
+            class="small-icon"
             (click)="onDelete.emit()">
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </div>
+
+
+
+  <app-url-panel [url]="info.url" class="bottom-spacing"></app-url-panel>
+
+  <ng-container *ngIf="clipList$ | async as clipList">
+    <div class="header-line bottom-spacing">
+      <h4 class="header">Clips: </h4>
+
+      <button mat-raised-button class="button-padding"
+              color="primary"
+              (click)="onEditAssignments.next()">
+        <mat-icon svgIcon="playlist_add"></mat-icon>
+         {{ clipList.length === 0 ? 'Assign Clips' : 'Edit Clips' }}
+      </button>
+    </div>
+    <div class="media-list">
+      <table class="mat-table">
+        <tr *ngFor="let entry of clipList; let even = even;"
+            class="row"
+            [ngClass]="{gray: even}">
+          <td>
+          <app-clip-type [type]="entry.type"></app-clip-type>
+          </td>
+          <td>{{entry.name}}</td>
+        </tr>
+      </table>
+    </div>
+  </ng-container>
 </mat-card>
 
-
-<div class="media-list">
-  <div class="media-info"
-      *ngFor="let entry of clipList$ | async">
-
-    <app-clip-type [type]="entry.type"></app-clip-type>
-
-    <span class="padding">{{entry.name}}</span>
-    <button matListIcon mat-icon-button color="warn"
-            (click)="onDeleteAssignment.emit(entry.id)">
-      <mat-icon svgIcon="delete"></mat-icon>
-    </button>
-  </div>
-</div>

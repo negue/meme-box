@@ -1,18 +1,12 @@
 <div class="items-holder">
   <div class="obs-item"
-  *ngFor="let obsInfo of obsList$ | async">
+       *ngFor="let obsInfo of obsList$ | async">
     <app-obs-info [info]="obsInfo"
                   (onDelete)="delete(obsInfo)"
-                  (onDeleteAssignment)="deleteAssigned(obsInfo, $event)"
+                  (onEditAssignments)="showAssignmentDialog(obsInfo)"
                   (onEdit)="showDialog(obsInfo)">
 
     </app-obs-info>
-    <button mat-raised-button class="button-padding"
-            color="accent"
-            (click)="showAssignmentDialog(obsInfo)">
-      <mat-icon svgIcon="playlist_add"></mat-icon>
-      Assign Clips
-    </button>
   </div>
 
 </div>

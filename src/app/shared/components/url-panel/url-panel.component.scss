@@ -5,12 +5,19 @@
 
 .copy-url-area {
   background: #333;
-  margin-left: 2rem;
   border: 1px solid #222222;
   border-radius: 1rem;
-  padding: 1rem 2rem 1rem 1rem;
+  padding: 1rem 3rem 1rem 1rem;
 
   align-self: center;
+
+  input {
+    width: 100%;
+    border: 0;
+    height: 1.5rem;
+    background: transparent;
+    color: white;
+  }
 }
 
 button {

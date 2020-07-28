@@ -2,24 +2,33 @@
 .item-header-card {
   margin-bottom: 1rem;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+}
+
+.bottom-spacing {
+  margin-bottom: 1.5rem;
 }
 
 .header {
-  align-self: center;
-}
-
-app-url-panel {
   flex: 1;
 }
 
-.actions {
-  width: max(20%, 200px);
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+app-url-panel {
+  width: 100%;
 }
 
+.header-line {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+
+}
+
+button.small-icon {
+  width: 2rem;
+}
 
 .media-info {
   display: flex;
@@ -33,3 +42,17 @@ app-url-panel {
 .padding {
   padding-left: 1rem;
 }
+
+table {
+  width: 100%;
+
+  td {
+    padding: 0.5rem;
+  }
+}
+
+.gray {
+  background-color: #545454
+}
+
+// TODO better naming ^^

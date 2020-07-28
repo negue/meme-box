@@ -26,7 +26,7 @@ export class ObsInfoComponent implements OnInit {
   public onDelete = new EventEmitter();
 
   @Output()
-  public onDeleteAssignment = new EventEmitter<string>(); // ClipID
+  public onEditAssignments = new EventEmitter();
 
   constructor(private appQueries: AppQueries) { }
 
