@@ -1,5 +1,5 @@
 <mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
+  <mat-drawer mode="side" opened class="sidebar">
     <mat-selection-list [multiple]="false">
       <mat-list-option routerLink="./media" routerLinkActive="active">
         Media
@@ -8,7 +8,7 @@
         Screens
       </mat-list-option>
 
-      <mat-list-option  routerLink="./twitch" routerLinkActive="active">
+      <mat-list-option *ngIf="false" routerLink="./twitch" routerLinkActive="active">
         Twitch Events
       </mat-list-option>
     </mat-selection-list>

@@ -1,16 +1,9 @@
 <mat-card class="item-header-card">
   <h3 class="header">{{info.name}}</h3>
 
-  <div class="copy-url-area">
-    <code>{{info.url}}</code>
-  </div>
+  <app-url-panel [url]="info.url"></app-url-panel>
 
   <div class="actions">
-    <button mat-button color="primary">
-      <mat-icon svgIcon="content_copy"></mat-icon>
-      Copy URL
-    </button>
-
     <button mat-icon-button color="accent"
             (click)="onEdit.emit()">
       <mat-icon svgIcon="edit"></mat-icon>

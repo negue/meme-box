@@ -9,19 +9,12 @@
   align-self: center;
 }
 
-.copy-url-area {
+app-url-panel {
   flex: 1;
-  background: #333;
-  margin-left: 2rem;
-  border: 1px solid #222222;
-  border-radius: 1rem;
-  padding: 1rem;
-
-  align-self: center;
 }
 
 .actions {
-  width: 20%;
+  width: max(20%, 200px);
   display: flex;
   flex-direction: row;
   justify-content: space-between;

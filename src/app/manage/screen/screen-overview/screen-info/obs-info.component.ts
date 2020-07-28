@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {AppQueries} from "../../../../state/app.queries";
 
+
 @Component({
   selector: 'app-obs-info',
   templateUrl: './obs-info.component.html',
@@ -31,5 +32,6 @@ export class ObsInfoComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
 
 }

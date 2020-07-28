@@ -69,6 +69,7 @@ export class AppService {
       }).toPromise();
 
       url.id = newId;
+      url.clips = {};
     } else {
       // add the clip to api & await
       await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${newId}`, url).toPromise();
