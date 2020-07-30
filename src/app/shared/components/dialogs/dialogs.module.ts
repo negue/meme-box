@@ -11,6 +11,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import {MatButtonModule} from "@angular/material/button";
     MatSliderModule,
     MatInputModule,
     MatButtonModule,
+    MatSnackBarModule
   ],
   providers: [
     DialogService

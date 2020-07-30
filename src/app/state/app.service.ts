@@ -3,16 +3,20 @@ import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
 import {Clip, ENDPOINTS, Screen, ScreenClip, Twitch} from "@memebox/contracts";
 import {API_PREFIX, EXPRESS_PORT} from "../../../server/constants";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 export const EXPRESS_BASE = `http://${location.hostname}:${EXPRESS_PORT}`;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
+
+const SNACKBAR_DURATION = 3000;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
   constructor(private appStore: AppStore,
-              private http: HttpClient) {}
+              private http: HttpClient,
+              private snackbar: MatSnackBar) {}
 
   public loadState() {
     this.appStore.setLoading(true);
@@ -56,6 +60,10 @@ export class AppService {
     this.appStore.update(state => {
       delete state.clips[clipId];
     });
+
+    this.snackbar.open('Clip removed.', null, {
+      duration: SNACKBAR_DURATION,
+    });
   }
 
 
@@ -85,14 +93,9 @@ export class AppService {
       // add all current clips to this newly created screen
 
       const allClips = Object.keys(this.appStore.getValue().clips);
-
-      this.appStore.update(state => {
-        for (const clipKey of allClips) {
-          state.screen[newId].clips[clipKey] = {
-            id: clipKey
-          };
-        }
-      });
+      for (const clipKey of allClips) {
+        await this.addScreenClipById(newId, clipKey);
+      }
     }
   }
 
@@ -104,27 +107,55 @@ export class AppService {
     this.appStore.update(state => {
       delete state.screen[id];
     });
+
+    this.snackbar.open('Screen removed.'), null, {
+      duration: SNACKBAR_DURATION,
+    };
   }
 
+  public async addScreenClipById (screenId: string, clipId: string) {
 
-  public async addOrUpdateScreenClip (obsUrlId: string, obsClip: Partial<ScreenClip>) {
+      const screenClip:ScreenClip = {
+        id: clipId
+      };
+
+      // add the clip to api & await
+      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`, screenClip).toPromise();
+
+
+    // add to the state
+    this.appStore.update(state => {
+      state.screen[screenId].clips[clipId] = screenClip as ScreenClip;
+    });
+
+
+    this.snackbar.open('Screen/Clip Assignment saved.', null, {
+      duration: SNACKBAR_DURATION,
+    });
+  }
+
+  public async addOrUpdateScreenClip (screenId: string, obsClip: Partial<ScreenClip>) {
     let newId = obsClip?.id ?? '';
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}`, obsClip, {
+      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}`, obsClip, {
         responseType: 'text' as any
       }).toPromise();
 
       obsClip.id = newId;
     } else {
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${newId}`, obsClip).toPromise();
+      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${newId}`, obsClip).toPromise();
     }
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[obsUrlId].clips[newId] = obsClip as any; // todo types ...
+      state.screen[screenId].clips[newId] = obsClip as ScreenClip;
+    });
+
+    this.snackbar.open('Screen/Clip Assignment saved.', null, {
+      duration: SNACKBAR_DURATION,
     });
   }
 
@@ -135,6 +166,11 @@ export class AppService {
     // remove from state
     this.appStore.update(state => {
       delete state.screen[obsUrlId].clips[id];
+    });
+
+
+    this.snackbar.open('Screen/Clip Assignment removed.', null, {
+      duration: SNACKBAR_DURATION,
     });
   }
 
@@ -167,6 +203,10 @@ export class AppService {
     // remove from state
     this.appStore.update(state => {
       delete state.twitchEvents[clipId];
+    });
+
+    this.snackbar.open('Twitch-Event removed.', null, {
+      duration: SNACKBAR_DURATION,
     });
   }
 
