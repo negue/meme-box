@@ -12,7 +12,7 @@ function uuidv4() {
   });
 }
 
-const initialObsUrlObj: Screen = Object.freeze({
+const initialScreenObj: Screen = Object.freeze({
   id: '',
   name: '',
   clips: {}
@@ -99,41 +99,27 @@ export class Persistence {
     return Object.values(this.data.clips);
   }
 
-  /*
-   *  OBS URLs Settings
-   */
+  public addScreen(screen: Screen) {
 
-  public listScreens() {
-    return Object.values(this.data.screen);
-  }
-
-  public addScreen(obsUrl: Screen) {
-    console.info({obsUrl});
-
-    obsUrl.id = uuidv4();
-    this.data.screen[obsUrl.id] = Object.assign({}, initialObsUrlObj, obsUrl);
+    screen.id = uuidv4();
+    this.data.screen[screen.id] = Object.assign({}, initialScreenObj, screen);
 
     this.saveData();
-    return obsUrl.id;
+    return screen.id;
   }
 
-  public updateScreen(id: string, obsUrl: Screen) {
-    console.info({obsUrl});
+  public updateScreen(id: string, screen: Screen) {
 
-    obsUrl.id = id;
+    screen.id = id;
 
-    this.updateItemInDictionary(this.data.screen, obsUrl);
+    this.updateItemInDictionary(this.data.screen, screen);
 
     this.saveData();
-    return obsUrl;
+    return screen;
   }
 
   public deleteScreen(id: string) {
-    console.info({ prevObsUrl: this.data.screen, id});
-
     this.deleteItemInDictionary(this.data.screen, id);
-
-    console.info({ postObsUrl: this.data.screen, id});
 
     this.saveData();
   }
@@ -152,15 +138,13 @@ export class Persistence {
     return obsClip.id;
   }
 
-  public updateObsClip(targetUrlId: string, id: string, obsClip: ScreenClip) {
-    console.info({obsUrl: obsClip});
+  public updateObsClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
+    screenClip.id = id;
 
-    obsClip.id = id;
-
-    this.updateItemInDictionary(this.data.screen[targetUrlId].clips, obsClip);
+    this.updateItemInDictionary(this.data.screen[targetUrlId].clips, screenClip);
 
     this.saveData();
-    return obsClip;
+    return screenClip;
   }
 
   public deleteObsClip(targetUrlId: string, id: string) {
@@ -169,7 +153,7 @@ export class Persistence {
     this.saveData();
   }
 
-  public listObsUrls(): Screen[] {
+  public listScreens(): Screen[] {
     return Object.values(this.data.screen);
   }
 

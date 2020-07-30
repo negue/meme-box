@@ -68,7 +68,7 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
 
 
 app.get(SCREEN_ENDPOINT, (req,res) => {
-  res.send(PersistenceInstance.listObsUrls());
+  res.send(PersistenceInstance.listScreens());
 });
 
 

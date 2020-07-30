@@ -159,13 +159,13 @@ export class AppService {
     });
   }
 
-  public async deleteScreenClip(obsUrlId: string, id: string) {
+  public async deleteScreenClip(screenId: string, id: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.SCREEN}/${obsUrlId}/${ENDPOINTS.OBS_CLIPS}/${id}`).toPromise();
+    await this.http.delete(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${id}`).toPromise();
 
     // remove from state
     this.appStore.update(state => {
-      delete state.screen[obsUrlId].clips[id];
+      delete state.screen[screenId].clips[id];
     });
 
 

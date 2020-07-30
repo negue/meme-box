@@ -15,9 +15,9 @@ import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 export class ScreenOverviewComponent implements OnInit {
 
   public screenList: Observable<ScreenViewEntry[]> = this._queries.screensList$.pipe(
-    map(stateUrlArray => stateUrlArray.map(obsUrl => ({
-      ...obsUrl,
-      url: `${EXPRESS_BASE}/#/screen/${obsUrl.id}`
+    map(stateUrlArray => stateUrlArray.map(screen => ({
+      ...screen,
+      url: `${EXPRESS_BASE}/#/screen/${screen.id}`
     })))
   )
 
