@@ -38,6 +38,12 @@
                 class="row"
                 [ngClass]="{gray: even}">
               <td>{{entry.name}}</td>
+              <td class="small-column">
+                <button mat-icon-button color="accent"
+                        (click)="onEditScreenClipOptions.emit(entry)">
+                  <mat-icon svgIcon="settings"></mat-icon>
+                </button>
+              </td>
             </tr>
           </table>
         </div>

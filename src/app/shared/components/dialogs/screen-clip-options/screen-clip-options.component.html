@@ -1,0 +1,85 @@
+<h2 mat-dialog-title> Update a Screen / Clip Assignment </h2>
+<mat-dialog-content class="mat-typography" *ngIf="clipInfo$ | async as clipInfo">
+{{ clipInfo | json }} <br/>
+
+{{form.value | json}}
+
+  <form [formGroup]="form">
+    <mat-form-field>
+      <input matInput placeholder="Width"
+             formControlName="width"
+             autocomplete="off"
+             type="text">
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <input matInput placeholder="Height"
+             formControlName="height"
+             autocomplete="off"
+             type="text">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Image-Fit"
+                  formControlName="imgFit"
+                  value="contain">
+        <mat-option value="contain">Contain</mat-option>
+        <mat-option value="fill">Fill</mat-option>
+        <mat-option value="cover">Cover</mat-option>
+        <mat-option value="scale-down">Scale down</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Position"
+                  formControlName="position"
+                  [value]="clipInfo?.position || 0"
+                  #positionSelection>
+        <mat-option [value]="0">Fullscreen</mat-option>
+        <mat-option [value]="1">Absolute</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-container *ngIf="positionSelection.value === 1">
+      <mat-form-field>
+        <input matInput placeholder="Left"
+               formControlName="left"
+               autocomplete="off"
+               type="text">
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <input matInput placeholder="Right"
+               formControlName="right"
+               autocomplete="off"
+               type="text">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Top"
+               formControlName="bottom"
+               autocomplete="off"
+               type="text">
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <input matInput placeholder="Bottom"
+               formControlName="bottom"
+               autocomplete="off"
+               type="text">
+      </mat-form-field>
+    </ng-container>
+  </form>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="save()"
+          color="primary"
+          cdkFocusInitial>Upate</button>
+</mat-dialog-actions>

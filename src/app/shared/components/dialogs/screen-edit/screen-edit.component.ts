@@ -34,15 +34,15 @@ export class ScreenEditComponent implements OnInit {
   async save() {
     const {value} = this.form;
 
-    const newScreenClipValue = {
+    const newScreenValue = {
       ...this.data,
       ...value
     };
 
-    await this.appService.addOrUpdateScreen(newScreenClipValue);
+    await this.appService.addOrUpdateScreen(newScreenValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.open(`Screen "${newScreenClipValue.name}" ${newScreenClipValue.id ? 'updated' : 'added' } 🎉`);
+    this.snackBar.open(`Screen "${newScreenValue.name}" ${newScreenValue.id ? 'updated' : 'added' } 🎉`);
 
     this.dialogRef.close();
   }

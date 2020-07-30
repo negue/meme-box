@@ -61,4 +61,11 @@ export class MediaOverviewComponent implements OnInit {
       }
     )
   }
+
+  onClipOptions(item: Clip, screen: Screen) {
+    this._dialog.showScreenClipOptionsDialog({
+      clipId: item.id,
+      screenId: screen.id
+    });
+  }
 }

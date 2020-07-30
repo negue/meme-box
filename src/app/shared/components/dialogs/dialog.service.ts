@@ -10,6 +10,10 @@ import {
 } from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
 import {MediaEditComponent} from "./media-edit/media-edit.component";
 import {ScreenEditComponent} from "./screen-edit/screen-edit.component";
+import {
+  ScreenClipOptionsComponent,
+  ScreenClipOptionsPayload
+} from "./screen-clip-options/screen-clip-options.component";
 
 @Injectable()
 export class DialogService {
@@ -45,6 +49,13 @@ export class DialogService {
     )
   }
 
+  showScreenClipOptionsDialog (payload: ScreenClipOptionsPayload) {
+    this._dialog.open(
+      ScreenClipOptionsComponent, {
+        data: payload
+      }
+    )
+  }
 
   open<T, D = any, R = any>(
     componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,

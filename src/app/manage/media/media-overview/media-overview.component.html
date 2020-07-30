@@ -10,7 +10,9 @@
                         (onPreview)="onPreview(item)"
                         (onEdit)="onEdit(item)"
                         (onDelete)="onDelete(item.id)"
-        (onAssignObs)="onAssignObs(item)">
+                         (onAssignObs)="onAssignObs(item)"
+                        (onEditScreenClipOptions)="onClipOptions(item, $event)"
+        >
 
         </app-media-info>
       </mat-card>

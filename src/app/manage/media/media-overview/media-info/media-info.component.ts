@@ -32,6 +32,9 @@ export class MediaInfoComponent implements OnInit {
   @Output()
   public onAssignObs = new EventEmitter();
 
+  @Output()
+  public onEditScreenClipOptions = new EventEmitter<Screen>();
+
   constructor(public domSanitizer: DomSanitizer,
               private appQueries: AppQueries) { }
 

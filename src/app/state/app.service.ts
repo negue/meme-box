@@ -25,7 +25,10 @@ export class AppService {
       // delay(5000)
     ).subscribe(
       value => {
+        console.info('LOADED STATE', value);
         this.appStore.update(state => value);
+
+        console.info('UPDATED STATE', value);
         this.appStore.setLoading(false);
       }
     )
