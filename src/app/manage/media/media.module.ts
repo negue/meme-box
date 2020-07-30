@@ -7,7 +7,6 @@ import {MediaInfoComponent} from './media-overview/media-info/media-info.compone
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MediaTypePipe} from './media-overview/media-info/media-type.pipe';
-import {MediaEditComponent} from './media-overview/media-edit/media-edit.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -17,6 +16,8 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatDividerModule} from "@angular/material/divider";
 import {ScreenAssigningDialogModule} from "./media-overview/screen-assigning-dialog/screen-assigning-dialog.module";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
+import {MatListModule} from "@angular/material/list";
+import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 
 const routes: Routes = [
   {
@@ -27,22 +28,24 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [MediaOverviewComponent, MediaInfoComponent, MediaTypePipe, MediaEditComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatSliderModule,
-        ReactiveFormsModule,
-        MatDividerModule,
-        ScreenAssigningDialogModule,
-        ClipTypeModule,
-    ]
+  declarations: [MediaOverviewComponent, MediaInfoComponent, MediaTypePipe],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSliderModule,
+    ReactiveFormsModule,
+    MatDividerModule,
+    ScreenAssigningDialogModule,
+    ClipTypeModule,
+    MatListModule,
+    GettingStartedModule,
+  ]
 })
 export class MediaModule { }

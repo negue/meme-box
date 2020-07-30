@@ -1,14 +1,18 @@
-<div class="items-holder">
+<div class="items-holder"
+*ngIf="screenList | async as screenList">
   <div class="obs-item"
-       *ngFor="let obsInfo of obsList$ | async">
-    <app-obs-info [info]="obsInfo"
-                  (onDelete)="delete(obsInfo)"
-                  (onEditAssignments)="showAssignmentDialog(obsInfo)"
-                  (onEdit)="showDialog(obsInfo)">
+       *ngFor="let screen of screenList">
+    <app-obs-info [info]="screen"
+                  (onDelete)="delete(screen)"
+                  (onEditAssignments)="showAssignmentDialog(screen)"
+                  (onEdit)="showDialog(screen)">
 
     </app-obs-info>
   </div>
 
+  <div class="obs-item" *ngIf="screenList.length === 0">
+    <app-getting-started></app-getting-started>
+  </div>
 </div>
 
 <div class="floating-action-button">

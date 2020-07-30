@@ -22,6 +22,7 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
     "start:server": "npx @zeit/ncc run server/server.ts",
+    "start:all": "npm-run-all -p start:server ng:serve:web",
     "build:prepare:folder": "npx cpy-cli dist release/dist && npx cpy-cli ncc/index.js release --rename=memebox.js ",
     "build:prepare": "npm run build:prod && npx @zeit/ncc build server/server.ts -o ncc && npm run build:prepare:folder",
     "build:windows": "npx nexe release/memebox.js -t windows-x64 -r dist -o release/out/memebox.exe",

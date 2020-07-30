@@ -60,6 +60,7 @@ export class AppService {
 
 
   public async addOrUpdateScreen (url: Screen) {
+    let screensAvailable = Object.keys(this.appStore.getValue().screen).length > 0;
     let newId = url?.id ?? '';
 
     if (newId === '') {
@@ -79,6 +80,20 @@ export class AppService {
     this.appStore.update(state => {
       state.screen[newId]  = url;
     });
+
+    if (!screensAvailable) {
+      // add all current clips to this newly created screen
+
+      const allClips = Object.keys(this.appStore.getValue().clips);
+
+      this.appStore.update(state => {
+        for (const clipKey of allClips) {
+          state.screen[newId].clips[clipKey] = {
+            id: clipKey
+          };
+        }
+      });
+    }
   }
 
   public async deleteScreen(id: string) {
