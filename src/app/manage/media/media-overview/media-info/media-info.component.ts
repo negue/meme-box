@@ -1,6 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
-import {Clip} from "@memebox/contracts";
+import {Clip, Screen} from "@memebox/contracts";
+import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
+import {AppQueries} from "../../../../state/app.queries";
 
 @Component({
   selector: 'app-media-info',
@@ -8,6 +11,10 @@ import {Clip} from "@memebox/contracts";
   styleUrls: ['./media-info.component.scss']
 })
 export class MediaInfoComponent implements OnInit {
+
+  public screenList$: Observable<Screen[]> = this.appQueries.screensList$.pipe(
+    map(screenList => screenList.filter(screen => !!screen.clips[this.info.id]))
+  )
 
   @Input()
   public info: Clip;
@@ -25,7 +32,8 @@ export class MediaInfoComponent implements OnInit {
   @Output()
   public onAssignObs = new EventEmitter();
 
-  constructor(public domSanitizer: DomSanitizer) { }
+  constructor(public domSanitizer: DomSanitizer,
+              private appQueries: AppQueries) { }
 
   ngOnInit(): void {
   }

@@ -5,6 +5,12 @@
   flex-direction: column;
 }
 
+
+app-url-panel {
+  width: 100%;
+}
+
+
 .bottom-spacing {
   margin-bottom: 1.5rem;
 }
@@ -12,11 +18,6 @@
 .header {
   flex: 1;
 }
-
-app-url-panel {
-  width: 100%;
-}
-
 .header-line {
   width: 100%;
   display: flex;

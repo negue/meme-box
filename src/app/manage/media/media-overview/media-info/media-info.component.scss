@@ -40,3 +40,33 @@
   height: 200px;
   object-fit: cover;
 }
+
+table {
+  width: 100%;
+
+  td {
+    padding: 0.5rem;
+  }
+}
+
+.gray {
+  background-color: #545454
+}
+
+
+
+.bottom-spacing {
+  margin-bottom: 1.5rem;
+}
+
+.header {
+  flex: 1;
+}
+.header-line {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+
+}
