@@ -5,7 +5,9 @@
     <app-obs-info [info]="screen"
                   (onDelete)="delete(screen)"
                   (onEditAssignments)="showAssignmentDialog(screen)"
-                  (onEdit)="showDialog(screen)">
+                  (onEdit)="showDialog(screen)"
+                  (onEditScreenClipOptions)="onClipOptions($event, screen)"
+    >
 
     </app-obs-info>
   </div>

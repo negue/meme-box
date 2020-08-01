@@ -1,9 +1,6 @@
 <h2 mat-dialog-title> Update a Screen / Clip Assignment </h2>
 <mat-dialog-content class="mat-typography" *ngIf="clipInfo$ | async as clipInfo">
-{{ clipInfo | json }} <br/>
-
-{{form.value | json}}
-
+  
   <form [formGroup]="form">
     <mat-form-field>
       <input matInput placeholder="Width"

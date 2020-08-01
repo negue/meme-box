@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Screen, ScreenViewEntry} from "@memebox/contracts";
+import {Clip, Screen, ScreenViewEntry} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
@@ -60,5 +60,12 @@ export class ScreenOverviewComponent implements OnInit {
 
   deleteAssigned(obsInfo: ScreenViewEntry, clipId: string) {
     this.service.deleteScreenClip(obsInfo.id, clipId);
+  }
+
+  onClipOptions(item: Clip, screen: Screen) {
+    this._dialog.showScreenClipOptionsDialog({
+      clipId: item.id,
+      screenId: screen.id
+    });
   }
 }

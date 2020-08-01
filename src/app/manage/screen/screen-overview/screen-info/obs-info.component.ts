@@ -28,6 +28,9 @@ export class ObsInfoComponent implements OnInit {
   @Output()
   public onEditAssignments = new EventEmitter();
 
+  @Output()
+  public onEditScreenClipOptions = new EventEmitter<Clip>();
+
   constructor(private appQueries: AppQueries) { }
 
   ngOnInit(): void {
