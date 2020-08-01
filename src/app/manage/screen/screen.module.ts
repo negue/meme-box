@@ -11,10 +11,10 @@ import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ScreenOverviewComponent} from "./screen-overview/screen-overview.component";
 import {ObsInfoComponent} from "./screen-overview/screen-info/obs-info.component";
-import {ScreenEditComponent} from "./screen-overview/screen-edit/screen-edit.component";
 import {ClipAssigningDialogModule} from "./screen-overview/clip-assigning-dialog/clip-assigning-dialog.module";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {UrlPanelModule} from "../../shared/components/url-panel/url-panel.module";
+import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 
 
 const routes: Routes = [
@@ -27,22 +27,23 @@ const routes: Routes = [
 
 @NgModule({
   // todo finish renaming
-  declarations: [ScreenOverviewComponent, ObsInfoComponent, ScreenEditComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatListModule,
-    MatInputModule,
-    MatSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ClipAssigningDialogModule,
-    ClipTypeModule,
-    UrlPanelModule
-  ]
+  declarations: [ScreenOverviewComponent, ObsInfoComponent],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        MatListModule,
+        MatInputModule,
+        MatSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ClipAssigningDialogModule,
+        ClipTypeModule,
+        UrlPanelModule,
+        GettingStartedModule
+    ]
 })
 export class ScreenModule { }

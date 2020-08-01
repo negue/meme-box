@@ -74,28 +74,27 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
       const dataAsString = event.data as string;
 
-      if (dataAsString.includes('TRIGGER_CLIP')) {
-        console.error({dataAsString});
+      console.error({dataAsString});
 
-        const [action, payload] = dataAsString.split('=');
+      const [action, payload] = dataAsString.split('=');
 
-        switch (action) {
-          case 'TRIGGER_CLIP': {
-            const payloadObj:TriggerClip = JSON.parse(payload);
+      switch (action) {
+        case 'TRIGGER_CLIP': {
+          const payloadObj:TriggerClip = JSON.parse(payload);
 
-            console.info('Received', payloadObj, thisScreenId);
-            if (payloadObj.targetScreen === thisScreenId) {
-              console.error('YES TRIGGERING IT', {payloadObj});
+          console.info('Received', payloadObj, thisScreenId);
+          if (payloadObj.targetScreen === thisScreenId) {
+            console.error('YES TRIGGERING IT', {payloadObj});
 
-              this.mediaClipToShow$.next(payloadObj.id);
-            }
-            break;
+            this.mediaClipToShow$.next(payloadObj.id);
           }
-          case 'UPDATE_DATA': {
-            this.appService.loadState();
-          }
+          break;
+        }
+        case 'UPDATE_DATA': {
+          this.appService.loadState();
         }
       }
+
     };
     ws.onopen = ev => {
       ws.send( `I_AM_OBS=${this.route.snapshot.params.guid}`);

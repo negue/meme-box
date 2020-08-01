@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Clip, Dictionary, Screen} from "@memebox/contracts";
 import {Observable, Subject} from "rxjs";
@@ -17,14 +17,17 @@ export class ScreenAssigningDialogComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   checkedMap: Dictionary<boolean>;
-  obsUrls$: Observable<Screen[]> = this.appQueries.screensList$;
+  screenList: Observable<Screen[]> = this.appQueries.screensList$;
+  trackByScreen: TrackByFunction<Screen> = (index, item) => {
+    return item.id;
+  }
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Clip,
               private appQueries: AppQueries,
               private appService: AppService) { }
 
   ngOnInit(): void {
-    this.obsUrls$.pipe(
+    this.screenList.pipe(
       takeUntil(this.destroy$),
     ).subscribe(allUrls =>  {
       this.checkedMap = {};

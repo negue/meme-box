@@ -21,6 +21,8 @@ import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
 import {AppConfig} from '../environments/environment';
 import {TargetScreenComponent} from "./target-screen/target-screen.component";
 import {MediaTypeClassPipe} from './target-screen/media-type-class.pipe';
+import {ServicesModule} from "./shared/services/services.module";
+import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -46,7 +48,9 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     BrowserAnimationsModule,
     MatButtonModule,
 
-    AppConfig.production ? [] : AkitaNgDevtools.forRoot()
+    AppConfig.production ? [] : AkitaNgDevtools.forRoot(),
+    ServicesModule,
+    DialogsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

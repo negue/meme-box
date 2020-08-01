@@ -1,16 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
-import {MediaEditComponent} from "./media-edit/media-edit.component";
-import {Clip} from "@memebox/contracts";
+import {Clip, Screen} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {ScreenAssigningDialogComponent} from "./screen-assigning-dialog/screen-assigning-dialog/screen-assigning-dialog.component";
 import {WebsocketService} from "../../../core/services/websocket.service";
-import {
-  ConfirmationsPayload,
-  SimpleConfirmationDialogComponent
-} from "../../../shared/components/simple-confirmation-dialog/simple-confirmation-dialog.component";
+import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 
 @Component({
   selector: 'app-media-overview',
@@ -21,10 +16,11 @@ export class MediaOverviewComponent implements OnInit {
 
   public mediaList$: Observable<Clip[]> = this.query.clipList$;
 
+  public screenList$: Observable<Screen[]> = this.query.screensList$
 
   constructor(public service: AppService,
               public query: AppQueries,
-              private _dialog: MatDialog,
+              private _dialog: DialogService,
               private _wsService: WebsocketService) { }
 
   ngOnInit(): void {
@@ -37,26 +33,17 @@ export class MediaOverviewComponent implements OnInit {
 
 
   showDialog(clipInfo: Partial<Clip>) {
-    this._dialog.open(
-      MediaEditComponent, {
-        data: clipInfo
-      }
-    )
+    this._dialog.showMediaEditDialog(clipInfo);
   }
 
-  onDelete(clipId: string) {
-    const dialogRef = this._dialog.open(SimpleConfirmationDialogComponent, {
-      data: {
-        title: 'Are you sure you want to delete this clip?',
-      } as ConfirmationsPayload
+  async onDelete(clipId: string) {
+    const result = await this._dialog.showConfirmationDialog({
+      title: 'Are you sure you want to delete this clip?',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.service.deleteClip(clipId);
-      }
-    });
-
+    if (result) {
+      this.service.deleteClip(clipId);
+    }
   }
 
   onEdit(item: Clip) {
@@ -73,5 +60,12 @@ export class MediaOverviewComponent implements OnInit {
         data: item
       }
     )
+  }
+
+  onClipOptions(item: Clip, screen: Screen) {
+    this._dialog.showScreenClipOptionsDialog({
+      clipId: item.id,
+      screenId: screen.id
+    });
   }
 }

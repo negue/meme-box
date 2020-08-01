@@ -39,10 +39,17 @@
         <tr *ngFor="let entry of clipList; let even = even;"
             class="row"
             [ngClass]="{gray: even}">
-          <td>
-          <app-clip-type [type]="entry.type"></app-clip-type>
+          <td class="small-column">
+            <app-clip-type [type]="entry.type"></app-clip-type>
           </td>
           <td>{{entry.name}}</td>
+
+          <td class="small-column">
+            <button mat-icon-button color="accent"
+                    (click)="onEditScreenClipOptions.emit(entry)">
+              <mat-icon svgIcon="settings"></mat-icon>
+            </button>
+          </td>
         </tr>
       </table>
     </div>

@@ -1,18 +1,29 @@
 
-<div class="media-list">
-  <div class="media-clip"
-       *ngFor="let item of mediaList$ | async">
-    <mat-card >
-      <app-media-info [info]="item"
-                      (onPreview)="onPreview(item)"
-                      (onEdit)="onEdit(item)"
-                      (onDelete)="onDelete(item.id)"
-      (onAssignObs)="onAssignObs(item)">
+<div class="media-list"
+     *ngIf="mediaList$ | async as mediaList"
+    [class.flex-start]="mediaList.length > 0">
 
-      </app-media-info>
-    </mat-card>
-  </div>
+    <div class="media-clip"
+         *ngFor="let item of mediaList">
+      <mat-card >
+        <app-media-info [info]="item"
+                        (onPreview)="onPreview(item)"
+                        (onEdit)="onEdit(item)"
+                        (onDelete)="onDelete(item.id)"
+                         (onAssignObs)="onAssignObs(item)"
+                        (onEditScreenClipOptions)="onClipOptions(item, $event)"
+        >
 
+        </app-media-info>
+      </mat-card>
+    </div>
+  <ng-container *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ">
+
+    <div [class.media-clip]="mediaList.length !== 0"
+         [class.center-card]="mediaList.length === 0">
+      <app-getting-started></app-getting-started>
+    </div>
+  </ng-container>
 </div>
 
 <div class="floating-action-button">
@@ -23,9 +34,3 @@
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </div>
-
-
-State:
-<pre>
-  {{ query.state$ | async | json }}
-</pre>

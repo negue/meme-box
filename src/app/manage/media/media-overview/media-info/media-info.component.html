@@ -3,45 +3,69 @@
   <div class="info-content">
 
     <div class="title-row">
-  <app-clip-type [type]="info.type"></app-clip-type>
-  <strong>{{info.name}}</strong>
+      <app-clip-type [type]="info.type"></app-clip-type>
+      <strong>{{info.name}}</strong>
     </div>
-  <div class="preview" *ngIf="info.type === 0 && (info.previewUrl || info.path)">
-    <img [src]="domSanitizer.bypassSecurityTrustUrl(info.previewUrl || info.path)">
-  </div>
-  <div class="informations">
-  <ng-container *ngIf="info.type !== 0">
+    <div class="preview" *ngIf="info.type === 0 && (info.previewUrl || info.path)">
+      <img [src]="domSanitizer.bypassSecurityTrustUrl(info.previewUrl || info.path)">
+    </div>
+    <div class="informations ">
+      <div class="bottom-spacing">
+      <ng-container *ngIf="info.type !== 0">
+        Volume: <strong>{{info.volumeSetting}}</strong>% <br/><br/>
+      </ng-container>
 
-    Volume: <strong>{{info.volumeSetting}}</strong>% <br/><br/>
+      <ng-container *ngIf="info.clipLength">
+        Clip Length: <strong>{{info.clipLength}}</strong>ms <br/><br/>
+      </ng-container>
+      Play Length: <strong>{{info.playLength}}</strong>ms <br/><br/>
+      Path: {{info.path}} <br/>
+      </div>
+      <ng-container *ngIf="screenList$ | async as screenList">
+        <div class="header-line bottom-spacing">
+          <h4 class="header">Screens: </h4>
 
-    </ng-container>
-    <ng-container *ngIf="info.clipLength">
-      Clip Length: <strong>{{info.clipLength}}</strong>ms <br/><br/>
-    </ng-container>
-    Play Length: <strong>{{info.playLength}}</strong>ms <br/><br/>
-    Path: {{info.path}} <br/>
+          <button mat-raised-button class="button-padding"
+                  color="primary"
+                  (click)="onAssignObs.emit()">
+            <mat-icon svgIcon="playlist_add"></mat-icon>
+            {{ screenList.length === 0 ? 'Assign to Screens' : 'Edit Screens' }}
+          </button>
+        </div>
+        <div class="media-list">
+          <table class="mat-table">
+            <tr *ngFor="let entry of screenList; let even = even;"
+                class="row"
+                [ngClass]="{gray: even}">
+              <td>{{entry.name}}</td>
+              <td class="small-column">
+                <button mat-icon-button color="accent"
+                        (click)="onEditScreenClipOptions.emit(entry)">
+                  <mat-icon svgIcon="settings"></mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </ng-container>
 
-
-
-  </div>
+    </div>
   </div>
   <div class="buttons">
     <button mat-icon-button color="warn" (click)="onPreview.emit()">
       <mat-icon svgIcon="video_library"></mat-icon>
     </button>
 
-    <button mat-icon-button color="accent" (click)="onAssignObs.emit()">
-      <mat-icon svgIcon="playlist_add"></mat-icon>
-    </button>
     <button mat-icon-button color="accent" (click)="onEdit.emit()">
-      <mat-icon svgIcon="settings"></mat-icon>
+      <mat-icon svgIcon="edit"></mat-icon>
     </button>
     <button mat-icon-button color="primary" (click)="onDelete.emit()">
       <mat-icon svgIcon="delete"></mat-icon>
     </button>
 
 
-
   </div>
+
+
 </div>
 

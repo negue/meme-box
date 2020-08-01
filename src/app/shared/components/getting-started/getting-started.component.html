@@ -1,0 +1,39 @@
+<mat-card *ngIf="(mediaList$ |async).length === 0 || (screenList$ | async).length  === 0">
+  <mat-card-title>
+    Getting started:
+  </mat-card-title>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item>
+        <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
+          <button mat-raised-button color="primary"
+                  class="full-width"
+                  (click)="newMediaClip()">
+            1. Add a clip
+          </button>
+        </ng-container>
+        <ng-template #mediaClipAdded>
+          <span class="strikethrough">
+             1. Add a clip
+          </span>
+        </ng-template>
+      </mat-list-item>
+      <mat-list-item>
+        <ng-container *ngIf="(screenList$ | async).length  === 0; else screenAdded">
+          <button mat-raised-button color="primary"
+                  class="full-width"
+                  (click)="newScreen()">
+            2. Add a Screen
+          </button>
+        </ng-container>
+        <ng-template #screenAdded>
+          <span class="strikethrough">
+               2. Add a Screen
+          </span>
+        </ng-template>
+
+      </mat-list-item>
+    </mat-list>
+
+  </mat-card-content>
+</mat-card>
