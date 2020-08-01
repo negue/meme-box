@@ -4,7 +4,11 @@ import {
   CLIP_ENDPOINT,
   CLIP_ID_ENDPOINT,
   CONFIG_ENDPOINT,
+  CONFIG_MEDIA_ENDPOINT,
+  EXPRESS_PORT,
   FILE_ENDPOINT,
+  FILES_ENDPOINT,
+  FILES_OPEN_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
   SCREEN_CLIPS_ENDPOINT,
   SCREEN_CLIPS_ID_ENDPOINT,
@@ -16,6 +20,12 @@ import {
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
+import {MediaType} from "../projects/contracts/src/lib/types";
+
+import * as open from 'open';
+
+const { resolve, basename, extname, sep, normalize } = require('path');
+const { readdir } = require('fs').promises;
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
@@ -93,20 +103,20 @@ app.delete(SCREEN_ID_ENDPOINT, (req, res) => {
 app.post(SCREEN_CLIPS_ENDPOINT, (req, res) => {
   const {screenId} = req.params;
 
-  res.send(PersistenceInstance.addObsClip(screenId, req.body));
+  res.send(PersistenceInstance.addScreenClip(screenId, req.body));
 });
 
 // Put = Update
 app.put(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
   const {screenId, clipId} = req.params;
 
-  res.send(PersistenceInstance.updateObsClip(screenId, clipId, req.body));
+  res.send(PersistenceInstance.updateScreenClip(screenId, clipId, req.body));
 });
 // Delete
 app.delete(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
   const {screenId, clipId} = req.params;
 
-  res.send(PersistenceInstance.deleteObsClip(screenId, clipId));
+  res.send(PersistenceInstance.deleteScreenClip(screenId, clipId));
 });
 
 
@@ -148,6 +158,83 @@ app.put(CONFIG_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.updateConfig(req.body));
 });
 
+// Put = Update Media Folder Path
+app.put(CONFIG_MEDIA_ENDPOINT, (req, res) => {
+  // update config
+  res.send(PersistenceInstance.updateMediaFolder(req.body.mediaFolder));
+});
+
+async function getFiles(dir) {
+  const dirents = await readdir(dir, { withFileTypes: true });
+  const files = await Promise.all(dirents.map((dirent) => {
+    const res = resolve(dir, dirent.name);
+    return dirent.isDirectory() ? getFiles(res) : res;
+  }));
+  return Array.prototype.concat(...files);
+}
+
+function fileEndingToType (fileEnding: string) : MediaType {
+  fileEnding = fileEnding.toLowerCase().replace('.', '');
+
+  switch (fileEnding) {
+    case 'jpg':
+    case 'jpeg':
+    case 'gif':
+    case 'webp':
+    case 'png':
+      return MediaType.Picture;
+    case 'mp3':
+    case 'wav':
+    case 'ogg':
+    case 'flac':
+      return MediaType.Audio;
+    case 'mp4':
+    case 'webm':
+      return MediaType.Video;
+  }
+}
+
+
+app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
+
+  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
+
+  open(mediaFolder);
+
+  res.send({open: true});
+});
+
+app.get(FILES_ENDPOINT, async (req, res) => {
+
+  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
+
+  // fullpath as array
+  const files = await getFiles(mediaFolder);
+
+  // files with information
+  const fileInfoList = files.map((fullPath: string) => {
+    const ext = extname(fullPath);
+    const fileName = basename(fullPath);
+
+    const fileType = fileEndingToType(ext);
+
+    const apiUrl = fullPath
+      .replace(mediaFolder,
+      `http://localhost:${EXPRESS_PORT}/file`
+      ).split(sep).join('/');
+
+    return {
+      fullPath,
+      fileName,
+      ext,
+      fileType,
+      apiUrl
+    }
+  });
+
+  res.send(fileInfoList);
+});
+
 // TODO use IDs instead of names
 // after the json "database" is done
 // use filename which is under
@@ -161,16 +248,15 @@ app.get(FILE_ENDPOINT, function(req, res){
     return;
   }
 
-  const appPath = process.cwd();
-
   // possible "hack" to access some files
   // TODO check for hijacks and stuff
 
   // simple solution
   // check one path and then other
+  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
   const pathsArray = [
-    `./src/assets/${firstParam}`,
+    normalize(`${mediaFolder}/${firstParam}`),
     `./assets/${firstParam}`
   ];
 
@@ -178,7 +264,7 @@ app.get(FILE_ENDPOINT, function(req, res){
     console.info({ path });
     if (fs.existsSync(path)) {
       console.warn('EXISTS');
-      res.sendFile(path, {root: appPath});
+      res.sendFile(path);
       return;
     }
   }

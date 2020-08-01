@@ -18,6 +18,7 @@ import {ScreenAssigningDialogModule} from "./media-overview/screen-assigning-dia
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {MatListModule} from "@angular/material/list";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
+import {ConfigMediaPathModule} from "./media-overview/config-media-path/config-media-path.module";
 
 const routes: Routes = [
   {
@@ -46,6 +47,7 @@ const routes: Routes = [
     ClipTypeModule,
     MatListModule,
     GettingStartedModule,
+    ConfigMediaPathModule
   ]
 })
 export class MediaModule { }

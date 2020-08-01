@@ -1,6 +1,6 @@
-import {State} from "./types";
+import {SettingsState} from "./types";
 
-export function createInitialState (): State {
+export function createInitialState (): SettingsState {
   return {
     config: {},
     twitchEvents: {},

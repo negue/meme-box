@@ -7,6 +7,19 @@ import {AppService, EXPRESS_BASE} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 
+function createLocalOrProductionUrlBase() {
+  const port = location.port;
+  let urlBase = EXPRESS_BASE;
+
+  if (port === '4200') {
+    urlBase = location.host;
+  }
+
+  return urlBase;
+}
+
+
+
 @Component({
   selector: 'app-screen-overview',
   templateUrl: './screen-overview.component.html',
@@ -17,7 +30,7 @@ export class ScreenOverviewComponent implements OnInit {
   public screenList: Observable<ScreenViewEntry[]> = this._queries.screensList$.pipe(
     map(stateUrlArray => stateUrlArray.map(screen => ({
       ...screen,
-      url: `${EXPRESS_BASE}/#/screen/${screen.id}`
+      url: `${createLocalOrProductionUrlBase()}/#/screen/${screen.id}`
     })))
   )
 

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
-import {Clip, ENDPOINTS, Screen, ScreenClip, Twitch} from "@memebox/contracts";
-import {API_PREFIX, EXPRESS_PORT} from "../../../server/constants";
+import {Clip, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch} from "@memebox/contracts";
+import {API_PREFIX, EXPRESS_PORT, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 export const EXPRESS_BASE = `http://${location.hostname}:${EXPRESS_PORT}`;
@@ -30,6 +30,19 @@ export class AppService {
 
         console.info('UPDATED STATE', value);
         this.appStore.setLoading(false);
+      }
+    )
+  }
+
+  public listFiles () {
+    this.http.get<FileInfo[]>(`${EXPRESS_BASE}${FILES_ENDPOINT}`).pipe(
+      // delay(5000)
+    ).subscribe(
+      value => {
+        console.info('LOADED FILES ', value);
+        this.appStore.update(state => {
+          state.currentMediaFiles = value;
+        });
       }
     )
   }
@@ -213,4 +226,22 @@ export class AppService {
     });
   }
 
+  public async updateMediaFolder (newFolder: string) {
+    const newConfig = {
+      mediaFolder: newFolder
+    };
+
+    // update path & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_MEDIA_PATH}`, newConfig).toPromise();
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.mediaFolder = newFolder;
+    });
+  }
+
+  public  openMediaFolder () {
+    // update path & await
+    this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();
+  }
 }

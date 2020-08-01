@@ -1,5 +1,14 @@
 import * as fs from 'fs';
-import {Clip, Config, Dictionary, HasId, Screen, ScreenClip, State, Twitch} from "../projects/contracts/src/lib/types";
+import {
+  Clip,
+  Config,
+  Dictionary,
+  HasId,
+  Screen,
+  ScreenClip,
+  SettingsState,
+  Twitch
+} from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
@@ -21,7 +30,7 @@ const initialScreenObj: Screen = Object.freeze({
 export class Persistence {
 
   private updated$ = new Subject();
-  private data: State = Object.assign({}, createInitialState());
+  private data: SettingsState = Object.assign({}, createInitialState());
 
   constructor(private filePath: string) {
     const dir = path.dirname(filePath);
@@ -92,12 +101,24 @@ export class Persistence {
   public deleteClip(id: string) {
     this.deleteItemInDictionary(this.data.clips, id);
 
+    const screenKeys = Object.keys(this.data.screen);
+
+    for (const screenKey of screenKeys) {
+      const screen = this.data.screen[screenKey];
+
+      this.deleteItemInDictionary(screen.clips, id);
+    }
+
     this.saveData();
   }
 
   public listClips(): Clip[] {
     return Object.values(this.data.clips);
   }
+
+  /*
+   *  Screens Persistence
+   */
 
   public addScreen(screen: Screen) {
 
@@ -124,12 +145,15 @@ export class Persistence {
     this.saveData();
   }
 
+  public listScreens(): Screen[] {
+    return Object.values(this.data.screen);
+  }
 
   /*
-   *  OBS URLs Settings
+   *  Screen Clips Settings
    */
 
-  public addObsClip(targetUrlId: string, obsClip: ScreenClip) {
+  public addScreenClip(targetUrlId: string, obsClip: ScreenClip) {
 
     obsClip.id = uuidv4();
     this.data.screen[targetUrlId].clips[obsClip.id] = obsClip;
@@ -138,7 +162,7 @@ export class Persistence {
     return obsClip.id;
   }
 
-  public updateObsClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
+  public updateScreenClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
     screenClip.id = id;
 
     this.updateItemInDictionary(this.data.screen[targetUrlId].clips, screenClip);
@@ -147,15 +171,12 @@ export class Persistence {
     return screenClip;
   }
 
-  public deleteObsClip(targetUrlId: string, id: string) {
+  public deleteScreenClip(targetUrlId: string, id: string) {
     this.deleteItemInDictionary(this.data.screen[targetUrlId].clips, id);
 
     this.saveData();
   }
 
-  public listScreens(): Screen[] {
-    return Object.values(this.data.screen);
-  }
 
 
   /*
@@ -196,6 +217,14 @@ export class Persistence {
   // TODO maybe key/value safety / validations
   public updateConfig(config: Config) {
     this.data.config = config;
+
+    this.saveData();
+  }
+
+  public updateMediaFolder (newFolder: string) {
+    console.info({newFolder});
+    this.data.config = this.data.config || {};
+    this.data.config.mediaFolder = newFolder;
 
     this.saveData();
   }

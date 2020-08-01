@@ -3,5 +3,6 @@ export const ENDPOINTS = {
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
   TWITCH_EVENTS: 'twitch_events',
-  NETWORK_LIST: 'network_ip_list'
+  NETWORK_LIST: 'network_ip_list',
+  CONFIG_MEDIA_PATH: 'config/media'
 }

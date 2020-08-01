@@ -66,12 +66,19 @@ export interface Twitch extends HasId {
   contains?: string; // additional settings TODO
 }
 
-export interface State {
+/**
+ * Settings.json - State
+ */
+export interface SettingsState {
   clips: Dictionary<Clip>;
   twitchEvents: Dictionary<Twitch>;
   screen: Dictionary<Screen>;
 
   config:  Partial<Config>;
+}
+
+export interface AppState extends SettingsState {
+  currentMediaFiles: FileInfo[];
 }
 
 export interface Config {
@@ -85,3 +92,11 @@ export interface NetworkInfo {
 }
 
 //TODO: Fix later and forget about the TODO LUL
+
+export interface FileInfo {
+  fullPath: string;
+  fileName: string;
+  apiUrl: string;
+  ext: string;
+  fileType: MediaType;
+}

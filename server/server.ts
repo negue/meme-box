@@ -2,7 +2,9 @@ import {createExpress, PersistenceInstance} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
 import {EXPRESS_PORT, WS_PORT} from "./constants";
 import {debounceTime} from "rxjs/operators";
-import opn from 'opn';
+import * as open from 'open';
+
+import * as fs from 'fs';
 
 
 const expressServer = createExpress(EXPRESS_PORT);
@@ -18,4 +20,10 @@ PersistenceInstance.dataUpdated$()
     sendDataToAllSockets('UPDATE_DATA');
   });
 
-opn(`http://localhost:${EXPRESS_PORT}`);
+
+if(fs.existsSync('package.json')) {
+  open(`http://localhost:4200`);
+} else {
+  open(`http://localhost:${EXPRESS_PORT}`);
+}
+

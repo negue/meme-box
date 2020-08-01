@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, Dictionary, ScreenClip, TriggerClip} from "@memebox/contracts";
-import {filter, map, pairwise, takeUntil, withLatestFrom} from "rxjs/operators";
+import {Clip, Dictionary, ScreenClip} from "@memebox/contracts";
+import {filter, map, pairwise, take, takeUntil, withLatestFrom} from "rxjs/operators";
 import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
 import {ActivatedRoute} from "@angular/router";
-import {WS_PORT} from "../../../server/constants";
 import {KeyValue} from "@angular/common";
+import {WebsocketService} from "../core/services/websocket.service";
 
 interface CombinedClip {
   clip: Clip;
@@ -60,7 +60,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
   constructor(private appQuery: AppQueries,
               private appService: AppService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private wsService: WebsocketService) { }
 
 
   ngOnInit(): void {
@@ -68,37 +69,28 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     const thisScreenId = this.route.snapshot.params.guid;
 
-    const ws = new WebSocket(`ws://localhost:${WS_PORT}`);
-    ws.onmessage = event => {
-      console.debug("WebSocket message received:", event);
+    this.wsService.onOpenConnection$.pipe(
+      take(1)
+    ).subscribe(value => {
+      this.wsService.sendI_Am_OBS(thisScreenId);
+    })
 
-      const dataAsString = event.data as string;
+    this.wsService.onUpdateData$.pipe(
+      takeUntil(this._destroy$),
+    ).subscribe(value => {
+      this.appService.loadState();
+    });
 
-      console.error({dataAsString});
+    this.wsService.onTriggerClip$.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(clip =>  {
+      if (clip.targetScreen === thisScreenId) {
+        console.error('YES TRIGGERING IT', {clip});
 
-      const [action, payload] = dataAsString.split('=');
-
-      switch (action) {
-        case 'TRIGGER_CLIP': {
-          const payloadObj:TriggerClip = JSON.parse(payload);
-
-          console.info('Received', payloadObj, thisScreenId);
-          if (payloadObj.targetScreen === thisScreenId) {
-            console.error('YES TRIGGERING IT', {payloadObj});
-
-            this.mediaClipToShow$.next(payloadObj.id);
-          }
-          break;
-        }
-        case 'UPDATE_DATA': {
-          this.appService.loadState();
-        }
+        this.mediaClipToShow$.next(clip.id);
       }
+    });
 
-    };
-    ws.onopen = ev => {
-      ws.send( `I_AM_OBS=${this.route.snapshot.params.guid}`);
-    };
     this.screenId$.next(this.route.snapshot.params.guid);
 
     // TODO Fix , multiple triggers of clips..
