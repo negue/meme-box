@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {Clip} from "@memebox/contracts";
 import {WebsocketService} from "../../core/services/websocket.service";
 import {SettingsService} from "../../core/services/settings.service";
+import {take, takeUntil} from "rxjs/operators";
 
 const SettingMobileColumnSize = 'MOBILE_COLUMN_SIZE';
 
@@ -13,10 +14,12 @@ const SettingMobileColumnSize = 'MOBILE_COLUMN_SIZE';
   templateUrl: './mobile-clip-overview.component.html',
   styleUrls: ['./mobile-clip-overview.component.scss']
 })
-export class MobileClipOverviewComponent implements OnInit {
+export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   public currentColumnSize = 50;
   public clipList$: Observable<Clip[]> = this.appQueries.clipList$;
+
+  private _destroy$ = new Subject();
 
   constructor(private appQueries: AppQueries,
               private appService: AppService,
@@ -30,6 +33,18 @@ export class MobileClipOverviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.appService.loadState();
+
+    this._wsService.onOpenConnection$.pipe(
+      take(1)
+    ).subscribe(value => {
+      this._wsService.sendI_Am_OBS('1');
+    })
+
+    this._wsService.onUpdateData$.pipe(
+      takeUntil(this._destroy$),
+    ).subscribe(value => {
+      this.appService.loadState();
+    });
   }
 
 
@@ -40,5 +55,10 @@ export class MobileClipOverviewComponent implements OnInit {
   onColumnSizeChanged($event: number) {
     this.currentColumnSize = $event;
     this._settingsService.saveSetting(SettingMobileColumnSize, `${$event}`);
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }

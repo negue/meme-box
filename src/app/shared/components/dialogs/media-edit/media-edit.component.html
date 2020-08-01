@@ -46,7 +46,7 @@
     <input matInput [placeholder]="typeSelection.value === 0 ? 'Visible Duration' : 'Play Length'"
            formControlName="playLength"
            autocomplete="off"
-           type="number" required>
+           type="number" [required]="typeSelection.value === 0">
     <span matSuffix>ms</span>
     <mat-hint>The duration on how long it should be visible</mat-hint>
   </mat-form-field>
@@ -55,6 +55,15 @@
            formControlName="path"
            autocomplete="off"
            type="text" required>
+    <div matSuffix>
+      <mat-select (valueChange)="onChange($event)"
+                  *ngIf="availableMediaFiles|async as mediaFiles">
+
+        <mat-option [value]="file" *ngFor="let file of mediaFiles">
+          {{file.fileName}}
+        </mat-option>
+      </mat-select>
+    </div>
   </mat-form-field>
   <mat-form-field *ngIf="false">
     <input matInput placeholder="Preview URL"

@@ -1,0 +1,24 @@
+<h2 mat-dialog-title> Update Media-Folder Path </h2>
+<mat-dialog-content class="mat-typography">
+  <form [formGroup]="form">
+
+    <div class="example-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Path</mat-label>
+        <input matInput type="text"
+               autocomplete="off"
+               formControlName="path" />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="save()"
+          color="primary"
+          cdkFocusInitial> Update </button>
+</mat-dialog-actions>
+

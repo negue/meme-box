@@ -16,11 +16,23 @@ export class MobileViewLinkComponent implements OnInit {
 
   constructor(private http: HttpClient) {
     this.networkInterface$ = this.http.get<NetworkInfo[]>(`${EXPRESS_BASE}/${ENDPOINTS.NETWORK_LIST}`).pipe(
-      map(value => `http://${value[0].address}:${location.port}/#/mobile` )
+      map(value => {
+        const port = location.port;
+        let urlBase = `${value[0].address}:${port}`;
+
+        if (port === '4200') {
+          urlBase = location.host;
+        }
+
+        return `http:///${urlBase}#/mobile`;
+      } )
     );
   }
 
   ngOnInit(): void {
   }
 
+  openInTab(mobileViewUrl: string) {
+    window.open(mobileViewUrl, '_blank');
+  }
 }
