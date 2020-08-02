@@ -10,7 +10,7 @@ export class MediaTypeClassPipe implements PipeTransform {
     transform(value: MediaType): string {
       switch(value) {
         case MediaType.Picture:
-          return 'picture';
+          return 'image';
         case MediaType.Video:
           return 'video';
         case MediaType.Audio:

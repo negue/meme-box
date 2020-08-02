@@ -7,8 +7,8 @@ A complete management app for image / audio / video clips to be used inside OBS.
 ### Usability
 
 * [x] Layout of 'workspace'
-* [ ] Terminology? Screens/media/clips/memes/boxes?
-* [ ] Layout of 'media' cards
+* [?] Terminology? Screens/media/clips/memes/boxes?
+* [x] Layout of 'media' cards
 * [ ] One place for one action
 * [ ] Lay out actions on clip cards
 * [ ] Do we need the sidebar?
