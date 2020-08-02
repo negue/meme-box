@@ -7,22 +7,25 @@ A complete management app for image / audio / video clips to be used inside OBS.
 ### Usability
 
 * [x] Layout of 'workspace'
-* [?] Terminology? Screens/media/clips/memes/boxes?
+* [x] Terminology? Screens/media/clips/memes/boxes?
 * [x] Layout of 'media' cards
 * [x] Settings screen styling
-* [ ] One place for one action
 * [x] Lay out actions on clip cards
 * [x] Do we need the sidebar?
     * Menu items:
         * Screens/memes
         * Clips
         * Settings
-* [ ] Media folder - if empty path - 'set media folder' 
-        - and make it part of 'onboarding'
-* [ ] Preview button explanation
-* [ ] More detailed onboarding + instructions
-* [ ] Screen list on media card - fixed height + scroll for really long list
 
+* [ ] ONBOARDING: Media folder - if empty path - 'set media folder' 
+        - and make it part of 'onboarding'
+* [ ] More detailed onboarding + instructions
+* [ ] Screens layout
+* [ ] Screen list on media card - fixed height + scroll for really long list
+* [ ] One place for one action
+* [ ] Preview button explanation
+* [ ] Make sure all snackbar notifications are consistent
+* [ ] Where does the 'mobile view' go? DOes it go on every screen?
 
 ### Design
 
