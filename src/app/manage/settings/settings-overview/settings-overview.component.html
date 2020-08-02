@@ -1,0 +1,14 @@
+<div>
+  TO DO STYLES
+  <mat-card>
+    Media Folder: {{ (config$ | async).mediaFolder}}
+
+    <button mat-raised-button color="primary"
+            (click)="openMediaFolderDialog()">Change Media Folder
+    </button>
+    <button mat-raised-button color="accent"
+            (click)="openMediaFolderExplorer()">Open Media Folder
+    </button>
+  </mat-card>
+
+</div>

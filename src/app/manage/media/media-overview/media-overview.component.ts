@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {Clip, Config, Screen} from "@memebox/contracts";
+import {Clip, Screen} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {ScreenAssigningDialogComponent} from "./screen-assigning-dialog/screen-assigning-dialog/screen-assigning-dialog.component";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
-import {ConfigMediaPathComponent} from "./config-media-path/config-media-path.component";
 
 @Component({
   selector: 'app-media-overview',
@@ -16,8 +15,6 @@ import {ConfigMediaPathComponent} from "./config-media-path/config-media-path.co
 export class MediaOverviewComponent implements OnInit {
 
   public mediaList$: Observable<Clip[]> = this.query.clipList$;
-  public config$: Observable<Partial<Config>> = this.query.config$;
-
   public screenList$: Observable<Screen[]> = this.query.screensList$
 
   constructor(public service: AppService,
@@ -29,12 +26,12 @@ export class MediaOverviewComponent implements OnInit {
 
   }
 
-  addNewItem() {
+  addNewItem(): any {
     this.showDialog(null);
   }
 
 
-  showDialog(clipInfo: Partial<Clip>) {
+  showDialog(clipInfo: Partial<Clip>): void {
     this._dialog.showMediaEditDialog(clipInfo);
   }
 
@@ -44,19 +41,19 @@ export class MediaOverviewComponent implements OnInit {
     });
 
     if (result) {
-      this.service.deleteClip(clipId);
+      await this.service.deleteClip(clipId);
     }
   }
 
-  onEdit(item: Clip) {
+  onEdit(item: Clip): void {
     this.showDialog(item);
   }
 
-  onPreview(item: Clip) {
+  onPreview(item: Clip): void {
     this._wsService.triggerClipOnScreen(item.id);
   }
 
-  onAssignObs(item: Clip) {
+  onAssignObs(item: Clip): void {
     this._dialog.open(
       ScreenAssigningDialogComponent, {
         data: item
@@ -64,20 +61,10 @@ export class MediaOverviewComponent implements OnInit {
     )
   }
 
-  onClipOptions(item: Clip, screen: Screen) {
+  onClipOptions(item: Clip, screen: Screen): void  {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id
     });
-  }
-
-  openMediaFolderDialog() {
-    this._dialog.open(ConfigMediaPathComponent, {
-      data: {}
-    });
-  }
-
-  openMediaFolderExplorer() {
-    this.service.openMediaFolder();
   }
 }

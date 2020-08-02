@@ -1,0 +1,9 @@
+::ng-deep .mat-tab-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+::ng-deep .mat-tab-links-active {
+  color: green;
+}
