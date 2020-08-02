@@ -67,6 +67,8 @@ export class AppModule {
       'content_copy',
       'delete',
       'edit',
+      'folder',
+      'launch',
       'playlist_add_check',
       'playlist_add',
       'queue',

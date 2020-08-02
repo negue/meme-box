@@ -9,7 +9,7 @@ import {AppQueries} from "../../../state/app.queries";
 @Component({
   selector: 'app-settings-overview',
   templateUrl: './settings-overview.component.html',
-  styleUrls: ['./settings-overview.component.css']
+  styleUrls: ['./settings-overview.component.scss']
 })
 export class SettingsOverviewComponent implements OnInit {
   public config$: Observable<Partial<Config>> = this.query.config$;

@@ -1,14 +1,24 @@
-<div>
-  TO DO STYLES
+<div class="settings">
   <mat-card>
-    Media Folder: {{ (config$ | async).mediaFolder}}
+    <div class="title-row">
+      <h2 class="mat-h2 title-name">Media folder</h2>
+      <mat-icon svgIcon="folder"></mat-icon>
+    </div>
 
-    <button mat-raised-button color="primary"
-            (click)="openMediaFolderDialog()">Change Media Folder
-    </button>
-    <button mat-raised-button color="accent"
-            (click)="openMediaFolderExplorer()">Open Media Folder
-    </button>
+    <p class="media-folder-name">{{ (config$ | async).mediaFolder}}</p>
+
+    <div class="action-buttons">
+      <button mat-raised-button color="accent"
+              (click)="openMediaFolderExplorer()">
+        <mat-icon svgIcon="launch"></mat-icon>
+        Open Media Folder
+      </button>
+      <button mat-raised-button color="primary"
+              (click)="openMediaFolderDialog()">
+        <mat-icon svgIcon="edit"></mat-icon>
+        Change Media Folder
+      </button>
+    </div>
   </mat-card>
 
 </div>

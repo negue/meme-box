@@ -1,0 +1,33 @@
+.settings {
+  display: block;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.title-name {
+  margin-bottom: 0;
+}
+
+.media-folder-name {
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  button {
+    width: 45%;
+  }
+}

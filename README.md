@@ -9,10 +9,10 @@ A complete management app for image / audio / video clips to be used inside OBS.
 * [x] Layout of 'workspace'
 * [?] Terminology? Screens/media/clips/memes/boxes?
 * [x] Layout of 'media' cards
-* [ ] Settings screen styling
+* [x] Settings screen styling
 * [ ] One place for one action
-* [ ] Lay out actions on clip cards
-* [ ] Do we need the sidebar?
+* [x] Lay out actions on clip cards
+* [x] Do we need the sidebar?
     * Menu items:
         * Screens/memes
         * Clips
@@ -40,6 +40,7 @@ ____
 * [ ] See Issues tagged with [enhancement](https://github.com/negue/meme-box/labels/enhancement) 
 * [ ] Fix all typescript warnings :P
 * [ ] Extract snackbar service to a service with fixed settings
+* [ ] REMOVE CONSOLE LOGS! 
 
 ## Working Features
 

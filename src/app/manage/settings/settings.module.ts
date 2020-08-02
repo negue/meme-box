@@ -4,6 +4,8 @@ import { SettingsOverviewComponent } from './settings-overview/settings-overview
 import {RouterModule, Routes} from "@angular/router";
 import {MediaModule} from "../media/media.module";
 import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
 
 const routes: Routes = [
   {
@@ -18,6 +20,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     MatCardModule,
+    MatIconModule,
+    MatButtonModule
   ]
 })
 export class SettingsModule { }
