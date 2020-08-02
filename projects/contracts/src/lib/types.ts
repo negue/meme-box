@@ -1,4 +1,4 @@
-export const enum MediaType {
+export enum MediaType {
   Picture,
   Audio,
   Video

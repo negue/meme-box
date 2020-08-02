@@ -13,6 +13,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {ScreenClipOptionsComponent} from './screen-clip-options/screen-clip-options.component';
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -22,17 +23,18 @@ import {ScreenClipOptionsComponent} from './screen-clip-options/screen-clip-opti
     SimpleConfirmationDialogComponent,
     ScreenClipOptionsComponent
   ],
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatSliderModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSnackBarModule
-  ],
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatSliderModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSnackBarModule,
+        MatIconModule
+    ],
   providers: [
     DialogService
   ]

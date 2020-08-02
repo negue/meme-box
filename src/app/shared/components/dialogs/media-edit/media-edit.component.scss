@@ -4,7 +4,6 @@
   max-width: 600px;
 }
 
-
 form {
   display: flex;
   flex-direction: column;
@@ -15,10 +14,22 @@ img {
   width: 100%;
 }
 
+.form-field-row {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+}
+
+::ng-deep .mat-form-field {
+  display: block !important;
+}
+
 .slider__row {
   display: flex;
   flex-direction: row;
   width: 100%;
+  margin-bottom: 2rem;
 
   mat-slider{
     flex: 1;
@@ -27,5 +38,17 @@ img {
   .volume__label {
     width: 3rem;
     text-align: right;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+
+  button {
+    width: 30%;
   }
 }

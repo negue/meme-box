@@ -81,8 +81,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       await this.appService.addOrUpdateClip(value);
 
+      //TODO - "extract snackbar service to a service with fixed settings"
       this.snackBar.open(`Clip "${value.name}"  ${value.id ? 'updated' : 'added' } 🎉`, null, {
-        duration: 4000
+        duration: 4000,
+        verticalPosition: 'top'
       });
 
       this.dialogRef.close();
@@ -98,6 +100,14 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     this.form.patchValue({
       path: $event.apiUrl
     })
+  }
+
+  get MediaType() {
+    return MediaType;
+  }
+
+  updateMediaType(value: MediaType): void {
+    this.form.patchValue({type: value})
   }
 
   ngOnDestroy(): void {

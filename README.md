@@ -9,6 +9,7 @@ A complete management app for image / audio / video clips to be used inside OBS.
 * [x] Layout of 'workspace'
 * [?] Terminology? Screens/media/clips/memes/boxes?
 * [x] Layout of 'media' cards
+* [ ] Settings screen styling
 * [ ] One place for one action
 * [ ] Lay out actions on clip cards
 * [ ] Do we need the sidebar?
@@ -20,10 +21,12 @@ A complete management app for image / audio / video clips to be used inside OBS.
         - and make it part of 'onboarding'
 * [ ] Preview button explanation
 * [ ] More detailed onboarding + instructions
+* [ ] Screen list on media card - fixed height + scroll for really long list
 
 
 ### Design
 
+* [ ] REMOVE MATERIAL DESIGN (keep components, down with colours and font sizes)
 * [ ] Define light + dark colour palettes with BLUE as the accent colour
 
 ____
@@ -35,7 +38,8 @@ ____
 * [ ] Configure Twitch Events to get triggered on Screens
 * [ ] Additional Types to trigger, like Iframe or something else
 * [ ] See Issues tagged with [enhancement](https://github.com/negue/meme-box/labels/enhancement) 
-
+* [ ] Fix all typescript warnings :P
+* [ ] Extract snackbar service to a service with fixed settings
 
 ## Working Features
 
