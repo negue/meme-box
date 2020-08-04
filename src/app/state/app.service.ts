@@ -16,7 +16,8 @@ const SNACKBAR_DURATION = 3000;
 export class AppService {
   constructor(private appStore: AppStore,
               private http: HttpClient,
-              private snackbar: MatSnackBar) {}
+              private snackbar: MatSnackBar) {
+  }
 
   public loadState() {
     this.appStore.setLoading(true);
@@ -34,7 +35,7 @@ export class AppService {
     )
   }
 
-  public listFiles () {
+  public listFiles() {
     this.http.get<FileInfo[]>(`${EXPRESS_BASE}${FILES_ENDPOINT}`).pipe(
       // delay(5000)
     ).subscribe(
@@ -47,7 +48,7 @@ export class AppService {
     )
   }
 
-  public async addOrUpdateClip (clip: Clip) {
+  public async addOrUpdateClip(clip: Clip) {
     let newClipId = clip?.id ?? '';
 
     if (newClipId === '') {
@@ -64,7 +65,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.clips[newClipId]  = clip;
+      state.clips[newClipId] = clip;
     });
   }
 
@@ -83,7 +84,7 @@ export class AppService {
   }
 
 
-  public async addOrUpdateScreen (url: Screen) {
+  public async addOrUpdateScreen(url: Screen) {
     let screensAvailable = Object.keys(this.appStore.getValue().screen).length > 0;
     let newId = url?.id ?? '';
 
@@ -102,7 +103,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[newId]  = url;
+      state.screen[newId] = url;
     });
 
     if (!screensAvailable) {
@@ -129,14 +130,14 @@ export class AppService {
     };
   }
 
-  public async addScreenClipById (screenId: string, clipId: string) {
+  public async addScreenClipById(screenId: string, clipId: string) {
 
-      const screenClip:ScreenClip = {
-        id: clipId
-      };
+    const screenClip: ScreenClip = {
+      id: clipId
+    };
 
-      // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`, screenClip).toPromise();
+    // add the clip to api & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`, screenClip).toPromise();
 
 
     // add to the state
@@ -150,7 +151,7 @@ export class AppService {
     });
   }
 
-  public async addOrUpdateScreenClip (screenId: string, obsClip: Partial<ScreenClip>) {
+  public async addOrUpdateScreenClip(screenId: string, obsClip: Partial<ScreenClip>) {
     let newId = obsClip?.id ?? '';
 
     if (newId === '') {
@@ -191,7 +192,7 @@ export class AppService {
   }
 
 
-  public async addOrUpdateTwitchEvent (event: Twitch) {
+  public async addOrUpdateTwitchEvent(event: Twitch) {
     let newId = event?.id ?? '';
 
     if (newId === '') {
@@ -208,7 +209,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.twitchEvents[newId]  = event;
+      state.twitchEvents[newId] = event;
     });
   }
 
@@ -226,7 +227,7 @@ export class AppService {
     });
   }
 
-  public async updateMediaFolder (newFolder: string) {
+  public async updateMediaFolder(newFolder: string) {
     const newConfig = {
       mediaFolder: newFolder
     };
@@ -240,7 +241,7 @@ export class AppService {
     });
   }
 
-  public  openMediaFolder () {
+  public openMediaFolder() {
     // update path & await
     this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();
   }

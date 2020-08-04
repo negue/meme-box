@@ -8,13 +8,13 @@
     <p class="media-folder-name">{{ (config$ | async).mediaFolder}}</p>
 
     <div class="action-buttons">
-      <button mat-raised-button color="accent"
-              (click)="openMediaFolderExplorer()">
+      <button (click)="openMediaFolderExplorer()" color="accent"
+              mat-raised-button>
         <mat-icon svgIcon="launch"></mat-icon>
         Open Media Folder
       </button>
-      <button mat-raised-button color="primary"
-              (click)="openMediaFolderDialog()">
+      <button (click)="openMediaFolderDialog()" color="primary"
+              mat-raised-button>
         <mat-icon svgIcon="edit"></mat-icon>
         Change Media Folder
       </button>

@@ -12,13 +12,11 @@ import {AppQueries} from "../../../../state/app.queries";
 })
 export class MediaInfoComponent implements OnInit {
 
+  @Input()
+  public info: Clip;
   public screenList$: Observable<Screen[]> = this.appQueries.screensList$.pipe(
     map(screenList => screenList.filter(screen => !!screen.clips[this.info.id]))
   )
-
-  @Input()
-  public info: Clip;
-
   @Output()
   public onPreview = new EventEmitter();
 
@@ -35,7 +33,8 @@ export class MediaInfoComponent implements OnInit {
   public onEditScreenClipOptions = new EventEmitter<Screen>();
 
   constructor(public domSanitizer: DomSanitizer,
-              private appQueries: AppQueries) { }
+              private appQueries: AppQueries) {
+  }
 
   ngOnInit(): void {
   }

@@ -1,8 +1,9 @@
 <div *ngIf="networkInterface$ | async as mobileViewUrl"
-    class="holder"
+     class="holder"
 >
-  <button mat-raised-button color="accent"
-          (click)="openInTab(mobileViewUrl)">Mobile View:</button>
+  <button (click)="openInTab(mobileViewUrl)" color="accent"
+          mat-raised-button>Mobile View:
+  </button>
 
-  <qr-code [value]="mobileViewUrl" [size]="140"></qr-code>
+  <qr-code [size]="140" [value]="mobileViewUrl"></qr-code>
 </div>

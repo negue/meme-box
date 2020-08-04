@@ -16,7 +16,8 @@ export class GettingStartedComponent implements OnInit {
 
 
   constructor(private query: AppQueries,
-              private dialog: DialogService) { }
+              private dialog: DialogService) {
+  }
 
   ngOnInit(): void {
   }

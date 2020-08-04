@@ -14,22 +14,23 @@ import {AppService} from "../../../../../state/app.service";
 })
 export class ScreenAssigningDialogComponent implements OnInit, OnDestroy {
 
-  private destroy$ = new Subject();
-
   checkedMap: Dictionary<boolean>;
   screenList: Observable<Screen[]> = this.appQueries.screensList$;
+  private destroy$ = new Subject();
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Clip,
+              private appQueries: AppQueries,
+              private appService: AppService) {
+  }
+
   trackByScreen: TrackByFunction<Screen> = (index, item) => {
     return item.id;
   }
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: Clip,
-              private appQueries: AppQueries,
-              private appService: AppService) { }
-
   ngOnInit(): void {
     this.screenList.pipe(
       takeUntil(this.destroy$),
-    ).subscribe(allUrls =>  {
+    ).subscribe(allUrls => {
       this.checkedMap = {};
 
       allUrls.forEach(url => {
@@ -48,7 +49,7 @@ export class ScreenAssigningDialogComponent implements OnInit, OnDestroy {
         id: this.data.id,
       });
     } else {
-      this.appService.deleteScreenClip(value,this.data.id);
+      this.appService.deleteScreenClip(value, this.data.id);
     }
   }
 

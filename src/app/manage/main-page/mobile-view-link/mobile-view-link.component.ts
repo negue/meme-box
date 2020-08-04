@@ -25,7 +25,7 @@ export class MobileViewLinkComponent implements OnInit {
         }
 
         return `http:///${urlBase}#/mobile`;
-      } )
+      })
     );
   }
 

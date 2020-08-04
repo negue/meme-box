@@ -9,7 +9,7 @@ import {TargetScreenComponent} from "./target-screen/target-screen.component";
 // | obs view page
 
 const rootRoutes: Routes = [
- {
+  {
     path: 'manage',
     loadChildren: () => import('./manage/main-page/main-page.module').then(module => module.MainPageModule)
   },
@@ -37,4 +37,5 @@ const rootRoutes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

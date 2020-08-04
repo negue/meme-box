@@ -4,18 +4,20 @@
     <mat-icon svgIcon="screen"></mat-icon>
   </div>
 
-  <label for="input-url" class="label-hidden">Screen URL</label>
-  <input class="input-url" id="input-url" type="text" readonly [value]="info.url" />
+  <label class="label-hidden" for="input-url">Screen URL</label>
+  <input [value]="info.url" class="input-url" id="input-url" readonly type="text"/>
 
   <div class="action-buttons">
-    <button mat-raised-button color="accent" (click)="onEdit.emit()">
-      <mat-icon svgIcon="edit"></mat-icon> Edit Name
+    <button (click)="onEdit.emit()" color="accent" mat-raised-button>
+      <mat-icon svgIcon="edit"></mat-icon>
+      Edit Name
     </button>
 
-    <button mat-raised-button
+    <button (click)="copyURL()"
             color="accent"
-            (click)="copyURL()">
-      <mat-icon svgIcon="content_copy"></mat-icon> Copy URL
+            mat-raised-button>
+      <mat-icon svgIcon="content_copy"></mat-icon>
+      Copy URL
     </button>
 
   </div>
@@ -23,12 +25,12 @@
   <ng-container *ngIf="clipList$ | async as clipList">
 
     <div class="action-buttons">
-      <button mat-raised-button
+      <button (click)="onEditAssignments.next()"
               class="single-button"
               color="primary"
-              (click)="onEditAssignments.next()">
+              mat-raised-button>
         <mat-icon svgIcon="playlist_add"></mat-icon>
-         {{ clipList.length === 0 ? 'Assign Media' : 'Edit Media' }}
+        {{ clipList.length === 0 ? 'Assign Media' : 'Edit Media' }}
       </button>
     </div>
 
@@ -40,8 +42,8 @@
           </td>
           <td>{{entry.name}}</td>
           <td>
-            <button mat-icon-button color="accent"
-                    (click)="onEditScreenClipOptions.emit(entry)">
+            <button (click)="onEditScreenClipOptions.emit(entry)" color="accent"
+                    mat-icon-button>
               <mat-icon svgIcon="settings"></mat-icon>
             </button>
           </td>
@@ -50,8 +52,9 @@
     </div>
   </ng-container>
 
-  <button mat-stroked-button class="delete-screen" color="warn" (click)="onDelete.emit()">
-    <mat-icon svgIcon="delete"></mat-icon> Delete Screen
+  <button (click)="onDelete.emit()" class="delete-screen" color="warn" mat-stroked-button>
+    <mat-icon svgIcon="delete"></mat-icon>
+    Delete Screen
   </button>
 </div>
 

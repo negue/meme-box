@@ -4,51 +4,51 @@ The Loaded Clips need to stay cached?
 -->
 
 <div *ngFor="let entry of mediaClipMap$ | async | keyvalue"
-      [ngSwitch]="entry.value.clip.type"
-     class="clip-holder {{entry.value.clip.type | mediaTypeClass}}"
+     [class.absolute]="entry.value.clipSetting.position === 1"
+     [class.fullscreen]="!entry.value.clipSetting.position"
 
-      [class.fullscreen]="!entry.value.clipSetting.position"
-      [class.absolute]="entry.value.clipSetting.position === 1"
-     [style.--clip-setting-width]="entry.value.clipSetting.width"
-     [style.--clip-setting-height]="entry.value.clipSetting.height"
+     [ngSwitch]="entry.value.clip.type"
      [style.--clip-setting-bottom]="entry.value.clipSetting.bottom"
+     [style.--clip-setting-height]="entry.value.clipSetting.height"
+     [style.--clip-setting-img-fit]="entry.value.clipSetting.imgFit"
+     [style.--clip-setting-left]="entry.value.clipSetting.left"
      [style.--clip-setting-right]="entry.value.clipSetting.right"
      [style.--clip-setting-top]="entry.value.clipSetting.top"
-     [style.--clip-setting-left]="entry.value.clipSetting.left"
-     [style.--clip-setting-img-fit]="entry.value.clipSetting.imgFit"
+     [style.--clip-setting-width]="entry.value.clipSetting.width"
+     class="clip-holder {{entry.value.clip.type | mediaTypeClass}}"
 >
-  <video *ngSwitchCase="2" #video
-         [volume]="entry.value.clip.volumeSetting / 100"
-         [src]="entry.value.clip.path"
+  <video #video (canplay)="addLog('canplay', $event)"
+         (canplaythrough)="addLog('canplaythrough', $event)"
+         (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
 
          (loadeddata)="addLog('loadeddata', $event)"
          (loadedmetadata)="addLog('loadedmetadata', $event)"
          (loadstart)="addLog('loadstart', $event); addToMap(entry.value.clip, video)"
-         (progress)="addLog('progress', $event)"
-
          (play)="addLog('play', $event)"
+
          (playing)="addLog('playing', $event)"
-         (canplaythrough)="addLog('canplaythrough', $event)"
-         (canplay)="addLog('canplay', $event)"
-         (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
-        [class.visible]="shouldPlay$(entry.key) | async"
+         (progress)="addLog('progress', $event)"
+         *ngSwitchCase="2"
+         [class.visible]="shouldPlay$(entry.key) | async"
+         [src]="entry.value.clip.path"
+         [volume]="entry.value.clip.volumeSetting / 100"
 
   ></video>
-  <audio *ngSwitchCase="1" #audio
-         [volume]="entry.value.clip.volumeSetting / 100"
-         [src]="entry.value.clip.path"
-         preload="auto" controls
-(loadstart)=" addToMap(entry.value.clip, audio)"
+  <audio #audio (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
+         (loadstart)=" addToMap(entry.value.clip, audio)"
          (play)="addLog('play', $event)"
-         (playing)="addLog('playing', $event)"
-         (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
+         (playing)="addLog('playing', $event)" *ngSwitchCase="1"
          [class.visible]="shouldPlay$(entry.key) | async"
+         [src]="entry.value.clip.path"
+         [volume]="entry.value.clip.volumeSetting / 100"
+         controls
+         preload="auto"
   ></audio>
-  <img *ngSwitchCase="0" #img
-       [src]="entry.value.clip.path"
+  <img #img (loadstart)=" addToMap(entry.value.clip, img)"
+       *ngSwitchCase="0"
        [class.visible]="shouldPlay$(entry.key) | async"
 
-       (loadstart)=" addToMap(entry.value.clip, img)"
+       [src]="entry.value.clip.path"
   >
 </div>
 

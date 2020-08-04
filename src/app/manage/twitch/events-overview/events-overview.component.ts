@@ -14,7 +14,8 @@ export class EventsOverviewComponent implements OnInit {
   eventsList$: Observable<Twitch[]> = this.queries.twitchEvent$;
 
   constructor(private queries: AppQueries,
-              private appService: AppService) { }
+              private appService: AppService) {
+  }
 
   ngOnInit(): void {
   }

@@ -44,12 +44,13 @@ export class ScreenClipOptionsComponent implements OnInit {
               private dialogRef: MatDialogRef<any>,
               private appQueries: AppQueries,
               private appService: AppService,
-              private snackBar: MatSnackBar) { }
+              private snackBar: MatSnackBar) {
+  }
 
   ngOnInit(): void {
     this.clipInfo$.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(value =>  {
+    ).subscribe(value => {
       this._clipInfo = {
         position: PositionEnum.FullScreen,
         ...value
@@ -76,8 +77,7 @@ export class ScreenClipOptionsComponent implements OnInit {
       });
 
       this.dialogRef.close();
-    }
-    else {
+    } else {
       // highlight hack
       this.form.markAllAsTouched();
     }

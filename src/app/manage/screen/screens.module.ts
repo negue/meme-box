@@ -27,21 +27,22 @@ const routes: Routes = [
 @NgModule({
   // todo finish renaming
   declarations: [ScreenOverviewComponent, ObsInfoComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        MatListModule,
-        MatInputModule,
-        MatSelectModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ClipAssigningDialogModule,
-        ClipTypeModule,
-        GettingStartedModule
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatListModule,
+    MatInputModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ClipAssigningDialogModule,
+    ClipTypeModule,
+    GettingStartedModule
+  ]
 })
-export class ScreensModule { }
+export class ScreensModule {
+}

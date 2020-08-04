@@ -20,7 +20,8 @@ export class MediaOverviewComponent implements OnInit {
   constructor(public service: AppService,
               public query: AppQueries,
               private _dialog: DialogService,
-              private _wsService: WebsocketService) { }
+              private _wsService: WebsocketService) {
+  }
 
   ngOnInit(): void {
 
@@ -62,7 +63,7 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   //TODO - the name and other information should come from the state
-  onClipOptions(item: Clip, screen: Screen): void  {
+  onClipOptions(item: Clip, screen: Screen): void {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,

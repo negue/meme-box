@@ -8,9 +8,9 @@ describe('ScreenClipOptionsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScreenClipOptionsComponent ]
+      declarations: [ScreenClipOptionsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -3,6 +3,6 @@ ClipID: <strong>{{ item.clipId }}</strong>
 screenId: <strong>{{ item.screenId }}</strong>
 
 
-<button mat-icon-button color="primary" (click)="onDelete.emit()">
+<button (click)="onDelete.emit()" color="primary" mat-icon-button>
   <mat-icon svgIcon="delete"></mat-icon>
 </button>

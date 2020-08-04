@@ -8,9 +8,9 @@ describe('ClipTypeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ClipTypeComponent ]
+      declarations: [ClipTypeComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

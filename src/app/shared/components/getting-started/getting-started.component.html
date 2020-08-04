@@ -6,9 +6,9 @@
     <mat-list>
       <mat-list-item>
         <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
-          <button mat-raised-button color="primary"
-                  class="full-width"
-                  (click)="newMediaClip()">
+          <button (click)="newMediaClip()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
             1. Add a clip
           </button>
         </ng-container>
@@ -20,9 +20,9 @@
       </mat-list-item>
       <mat-list-item>
         <ng-container *ngIf="(screenList$ | async).length  === 0; else screenAdded">
-          <button mat-raised-button color="primary"
-                  class="full-width"
-                  (click)="newScreen()">
+          <button (click)="newScreen()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
             2. Add a Screen
           </button>
         </ng-container>

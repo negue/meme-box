@@ -1,20 +1,20 @@
-<div class="media-list"
-     *ngIf="mediaList$ | async as mediaList">
+<div *ngIf="mediaList$ | async as mediaList"
+     class="media-list">
 
-    <div class="media-clip"
-         *ngFor="let item of mediaList">
-      <mat-card >
-        <app-media-info [info]="item"
-                        (onPreview)="onPreview(item)"
-                        (onEdit)="onEdit(item)"
-                        (onDelete)="onDelete(item.id)"
-                         (onAssignObs)="onAssignObs(item)"
-                        (onEditScreenClipOptions)="onClipOptions(item, $event)"
-        >
+  <div *ngFor="let item of mediaList"
+       class="media-clip">
+    <mat-card>
+      <app-media-info (onAssignObs)="onAssignObs(item)"
+                      (onDelete)="onDelete(item.id)"
+                      (onEdit)="onEdit(item)"
+                      (onEditScreenClipOptions)="onClipOptions(item, $event)"
+                      (onPreview)="onPreview(item)"
+                      [info]="item"
+      >
 
-        </app-media-info>
-      </mat-card>
-    </div>
+      </app-media-info>
+    </mat-card>
+  </div>
   <ng-container *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ">
     <div [class.media-clip]="mediaList.length !== 0">
       <app-getting-started></app-getting-started>
@@ -23,16 +23,17 @@
 
 
   <div class="media-clip add-new">
-    <mat-card  (click)="addNewItem()" class="card-add-new">
-      <mat-icon svgIcon="add"></mat-icon> Add new media
+    <mat-card (click)="addNewItem()" class="card-add-new">
+      <mat-icon svgIcon="add"></mat-icon>
+      Add new media
     </mat-card>
   </div>
 </div>
 
 <div class="floating-action-button">
-  <button mat-fab color="warn"
-          aria-label="Add a new meme/media"
-          (click)="addNewItem()"
+  <button (click)="addNewItem()" aria-label="Add a new meme/media"
+          color="warn"
+          mat-fab
   >
     <mat-icon svgIcon="add"></mat-icon>
   </button>

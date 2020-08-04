@@ -8,9 +8,9 @@ describe('ConfigMediaPathComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfigMediaPathComponent ]
+      declarations: [ConfigMediaPathComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

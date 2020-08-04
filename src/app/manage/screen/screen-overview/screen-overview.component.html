@@ -1,26 +1,27 @@
-<div class="screens-list"
-*ngIf="screenList | async as screenList">
-  <div class="screens-item"
-       *ngFor="let screen of screenList">
-    <mat-card >
-      <app-obs-info [info]="screen"
-                    (onDelete)="delete(screen)"
-                    (onEditAssignments)="showAssignmentDialog(screen)"
+<div *ngIf="screenList | async as screenList"
+     class="screens-list">
+  <div *ngFor="let screen of screenList"
+       class="screens-item">
+    <mat-card>
+      <app-obs-info (onDelete)="delete(screen)"
                     (onEdit)="showDialog(screen)"
+                    (onEditAssignments)="showAssignmentDialog(screen)"
                     (onEditScreenClipOptions)="onClipOptions($event, screen)"
+                    [info]="screen"
       >
 
       </app-obs-info>
     </mat-card>
   </div>
 
-  <div class="obs-item" *ngIf="screenList.length === 0">
+  <div *ngIf="screenList.length === 0" class="obs-item">
     <app-getting-started></app-getting-started>
   </div>
 
   <div class="screens-item add-new">
-    <mat-card  (click)="addNewItem()" class="card-add-new">
-      <mat-icon svgIcon="add"></mat-icon> Add new screen
+    <mat-card (click)="addNewItem()" class="card-add-new">
+      <mat-icon svgIcon="add"></mat-icon>
+      Add new screen
     </mat-card>
   </div>
 </div>

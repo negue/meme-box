@@ -29,28 +29,29 @@ const routes: Routes = [
 
 
 @NgModule({
-    declarations: [MediaOverviewComponent, MediaInfoComponent, MediaTypePipe],
-    exports: [
-        MediaOverviewComponent
-    ],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatSliderModule,
-        ReactiveFormsModule,
-        MatDividerModule,
-        ScreenAssigningDialogModule,
-        ClipTypeModule,
-        MatListModule,
-        GettingStartedModule,
-        ConfigMediaPathModule
-    ]
+  declarations: [MediaOverviewComponent, MediaInfoComponent, MediaTypePipe],
+  exports: [
+    MediaOverviewComponent
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSliderModule,
+    ReactiveFormsModule,
+    MatDividerModule,
+    ScreenAssigningDialogModule,
+    ClipTypeModule,
+    MatListModule,
+    GettingStartedModule,
+    ConfigMediaPathModule
+  ]
 })
-export class MediaModule { }
+export class MediaModule {
+}

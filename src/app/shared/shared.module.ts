@@ -14,4 +14,5 @@ import {MatButtonModule} from "@angular/material/button";
   imports: [CommonModule, TranslateModule, FormsModule, MatDialogModule, MatButtonModule],
   exports: [TranslateModule, WebviewDirective, FormsModule]
 })
-export class SharedModule {}
+export class SharedModule {
+}

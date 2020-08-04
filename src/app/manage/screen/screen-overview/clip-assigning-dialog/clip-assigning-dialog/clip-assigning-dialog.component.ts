@@ -14,10 +14,9 @@ import {AppService} from "../../../../../state/app.service";
 })
 export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
 
-  private destroy$ = new Subject();
-
   checkedMap: Dictionary<boolean>;
   clips$: Observable<Clip[]> = this.appQueries.clipList$;
+  private destroy$ = new Subject();
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Screen,
               private appQueries: AppQueries,

@@ -14,7 +14,8 @@ export class EventInfoComponent implements OnInit {
   @Output()
   onDelete = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

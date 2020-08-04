@@ -7,16 +7,16 @@ import {MediaType} from "@memebox/contracts";
 })
 export class MediaTypeClassPipe implements PipeTransform {
 
-    transform(value: MediaType): string {
-      switch(value) {
-        case MediaType.Picture:
-          return 'image';
-        case MediaType.Video:
-          return 'video';
-        case MediaType.Audio:
-          return 'audio';
-        default:
-          return '';
-      }
+  transform(value: MediaType): string {
+    switch (value) {
+      case MediaType.Picture:
+        return 'image';
+      case MediaType.Video:
+        return 'video';
+      case MediaType.Audio:
+        return 'audio';
+      default:
+        return '';
+    }
   }
 }

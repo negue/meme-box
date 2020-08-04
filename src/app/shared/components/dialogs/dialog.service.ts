@@ -41,7 +41,7 @@ export class DialogService {
     )
   }
 
-  showScreenEditDialog (screen: Partial<Screen>) {
+  showScreenEditDialog(screen: Partial<Screen>) {
     this._dialog.open(
       ScreenEditComponent, {
         data: screen
@@ -49,7 +49,7 @@ export class DialogService {
     )
   }
 
-  showScreenClipOptionsDialog (payload: ScreenClipOptionsPayload) {
+  showScreenClipOptionsDialog(payload: ScreenClipOptionsPayload) {
     this._dialog.open(
       ScreenClipOptionsComponent, {
         data: payload

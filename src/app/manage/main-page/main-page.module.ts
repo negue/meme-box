@@ -56,4 +56,5 @@ const routes: Routes = [
     NavigationModule,
   ]
 })
-export class MainPageModule { }
+export class MainPageModule {
+}

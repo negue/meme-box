@@ -5,18 +5,18 @@
 <div mat-dialog-content>
 
   <ol class="media-list">
-    <li class="media-list-option"
-        [class.selected]="checkedMap[clip.id]"
+    <li (click)="toDo()"
         *ngFor="let clip of clips$|async"
-        (click)="toDo()">
-      <figure class="image-container" *ngIf="clip.type === 0">
+        [class.selected]="checkedMap[clip.id]"
+        class="media-list-option">
+      <figure *ngIf="clip.type === 0" class="image-container">
         <figcaption class="media-name">
           <mat-icon class="media-icon" matListIcon svgIcon="insert_photo"></mat-icon>
           {{clip.name}}</figcaption>
-        <img class="media-img" [src]="clip.path" [alt]="clip.name"/>
+        <img [alt]="clip.name" [src]="clip.path" class="media-img"/>
       </figure>
 
-      <span class="audio-container" *ngIf="clip.type === 1">
+      <span *ngIf="clip.type === 1" class="audio-container">
         <span class="media-name">
           <mat-icon class="media-icon" matListIcon svgIcon="audiotrack"></mat-icon>
           {{clip.name}}
@@ -28,7 +28,7 @@
 
       </span>
 
-      <span class="video-container" *ngIf="clip.type === 2">
+      <span *ngIf="clip.type === 2" class="video-container">
           <span class="media-name">
             <mat-icon class="media-icon" matListIcon svgIcon="videocam"></mat-icon>
             {{clip.name}}

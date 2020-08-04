@@ -19,13 +19,14 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [EventsOverviewComponent, EventInfoComponent, AddEventComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatSelectModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        MatIconModule,
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatSelectModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatIconModule,
+  ]
 })
-export class TwitchModule { }
+export class TwitchModule {
+}

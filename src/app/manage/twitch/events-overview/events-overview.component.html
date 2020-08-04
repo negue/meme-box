@@ -1,6 +1,6 @@
 <app-add-event (added)="newEventConfigReceived($event)"></app-add-event>
 
-<app-event-info *ngFor="let item of eventsList$ | async"
-                [item]="item"
-(onDelete)="deleteEvent(item.id)">
+<app-event-info (onDelete)="deleteEvent(item.id)"
+                *ngFor="let item of eventsList$ | async"
+                [item]="item">
 </app-event-info>
