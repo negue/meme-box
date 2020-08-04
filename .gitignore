@@ -12,6 +12,7 @@ main.js
 !src/karma.conf.js
 *.js.map
 /ncc
+.cache
 
 
 # dependencies

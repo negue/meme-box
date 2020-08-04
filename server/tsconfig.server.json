@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/server",
+    "module": "system",
+    "types": []
+  },
+  "files": [
+    "server.ts"
+  ],
+  "include": [
+    "projects/contracts/**/*.ts",
+    "server/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ]
+}
