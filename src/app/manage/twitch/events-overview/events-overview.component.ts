@@ -17,7 +17,8 @@ export class EventsOverviewComponent implements OnInit {
 
   constructor(private queries: AppQueries,
               private appService: AppService,
-              private dialogService: DialogService) { }
+              private dialogService: DialogService) {
+  }
 
   ngOnInit(): void {
   }

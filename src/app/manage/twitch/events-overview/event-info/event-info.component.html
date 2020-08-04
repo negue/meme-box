@@ -8,11 +8,11 @@
 </ng-container>
 
 
-<button mat-icon-button color="warn" (click)="onDelete.emit()">
+<button (click)="onDelete.emit()" color="warn" mat-icon-button>
   <mat-icon svgIcon="delete"></mat-icon>
 </button>
 
 
-<button mat-icon-button color="accent" (click)="onEdit.emit()">
+<button (click)="onEdit.emit()" color="accent" mat-icon-button>
   <mat-icon svgIcon="edit"></mat-icon>
 </button>

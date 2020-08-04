@@ -6,9 +6,9 @@
     <div class="example-container">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput
-               autocomplete="off"
-               formControlName="name">
+        <input autocomplete="off"
+               formControlName="name"
+               matInput>
       </mat-form-field>
 
 
@@ -17,8 +17,8 @@
     <div class="example-container">
       <mat-form-field appearance="outline">
         <mat-label>Twitch Event</mat-label>
-        <mat-select formControlName="event"
-                    [required]="true">
+        <mat-select [required]="true"
+                    formControlName="event">
           <mat-option *ngFor="let item of twitchEvents"
                       [value]="item">
             {{ item }}
@@ -32,8 +32,8 @@
     <div class="example-container">
       <mat-form-field>
         <mat-label>Meme</mat-label>
-        <mat-select formControlName="clipId"
-                    [required]="true">
+        <mat-select [required]="true"
+                    formControlName="clipId">
 
           <mat-option *ngFor="let item of clipList$ | async"
                       [value]="item.id">
@@ -46,11 +46,10 @@
 </mat-dialog-content>
 
 
-
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button (click)="save()"
+  <button (click)="save()" cdkFocusInitial
           color="primary"
-          cdkFocusInitial>{{ data.id ? 'Update' : 'Add' }}</button>
+          mat-raised-button>{{ data.id ? 'Update' : 'Add' }}</button>
 </mat-dialog-actions>
 

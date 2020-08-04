@@ -56,7 +56,8 @@
     </div>
     <div class="form-field-row">
       <mat-form-field>
-        <input [placeholder]="form.value.type === 0 ? 'Visible screen time (ms)' : 'Play time on screen (ms)'" [required]="form.value.type === 0"
+        <input [placeholder]="form.value.type === 0 ? 'Visible screen time (ms)' : 'Play time on screen (ms)'"
+               [required]="form.value.type === 0"
                autocomplete="off"
                formControlName="playLength"
                matInput
