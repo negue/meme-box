@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
-import {Clip, Twitch} from "@memebox/contracts";
+import {Clip, Twitch, TwitchTypesArray} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {AppQueries} from "../../../../state/app.queries";
 
@@ -16,8 +16,8 @@ export class AddEventComponent implements OnInit {
     clipId: ''
   });
 
-  twitchEvents = ['message', 'follow', 'sub', 'bits', 'raid', 'host', 'etc'];
-  memeList$: Observable<Clip[]> = this.appQueries.clipList$;
+  twitchEvents = TwitchTypesArray;
+  clipList$: Observable<Clip[]> = this.appQueries.clipList$;
 
   @Output()
   added = new EventEmitter<Twitch>();

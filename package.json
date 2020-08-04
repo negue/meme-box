@@ -21,6 +21,7 @@
     "e2e": "npm run build:prod && cross-env TS_NODE_PROJECT='e2e/tsconfig.e2e.json' mocha --timeout 300000 --require ts-node/register e2e/**/*.e2e.ts",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
+    "start:app": "npm run ng:serve:web",
     "start:server": "npx ts-node server/server.ts",
     "start:all": "npm-run-all -p ng:serve:web start:server",
     "build:prepare:folder": "npx cpy-cli dist release/dist && npx cpy-cli ncc/index.js release --rename=memebox.js ",

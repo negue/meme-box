@@ -1,0 +1,56 @@
+<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Screen </h2>
+<mat-dialog-content class="mat-typography">
+
+  <form [formGroup]="form">
+
+    <div class="example-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput
+               autocomplete="off"
+               formControlName="name">
+      </mat-form-field>
+
+
+    </div>
+
+    <div class="example-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Twitch Event</mat-label>
+        <mat-select formControlName="event"
+                    [required]="true">
+          <mat-option *ngFor="let item of twitchEvents"
+                      [value]="item">
+            {{ item }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+
+    <div class="example-container">
+      <mat-form-field>
+        <mat-label>Meme</mat-label>
+        <mat-select formControlName="clipId"
+                    [required]="true">
+
+          <mat-option *ngFor="let item of clipList$ | async"
+                      [value]="item.id">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="save()"
+          color="primary"
+          cdkFocusInitial>{{ data.id ? 'Update' : 'Add' }}</button>
+</mat-dialog-actions>
+

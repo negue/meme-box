@@ -1,3 +1,5 @@
+import {TwitchEventTypes} from "./types";
+
 export const ENDPOINTS = {
   CLIPS: 'clips',
   SCREEN: 'screen',
@@ -6,3 +8,14 @@ export const ENDPOINTS = {
   NETWORK_LIST: 'network_ip_list',
   CONFIG_MEDIA_PATH: 'config/media'
 }
+
+
+export const TwitchTypesArray = [
+  TwitchEventTypes.follow,
+  TwitchEventTypes.sub,
+  TwitchEventTypes.bits,
+  TwitchEventTypes.channelPoints,
+  TwitchEventTypes.host,
+  TwitchEventTypes.message,
+  TwitchEventTypes.raid,
+];
