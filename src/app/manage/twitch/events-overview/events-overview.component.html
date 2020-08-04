@@ -2,5 +2,7 @@
 
 <app-event-info *ngFor="let item of eventsList$ | async"
                 [item]="item"
-(onDelete)="deleteEvent(item.id)">
+                (onDelete)="deleteEvent(item.id)"
+                (onEdit)="editEvent(item)"
+>
 </app-event-info>

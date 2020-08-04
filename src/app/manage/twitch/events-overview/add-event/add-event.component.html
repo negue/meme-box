@@ -15,7 +15,7 @@
      <mat-select formControlName="clipId"
                 [required]="true">
 
-      <mat-option *ngFor="let item of memeList$ | async"
+      <mat-option *ngFor="let item of clipList$ | async"
                   [value]="item.id">
         {{ item.name }}
       </mat-option>

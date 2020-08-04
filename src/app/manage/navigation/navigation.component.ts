@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-navigation',
@@ -9,6 +9,7 @@ export class NavigationComponent implements OnInit {
   links = [
     {path:'./media', displayName: 'Media'},
     {path:'./screens', displayName: 'Screens'},
+    {path:'./twitch', displayName: 'Twitch'},
     {path:'./settings', displayName: 'Settings'}
   ]
 
