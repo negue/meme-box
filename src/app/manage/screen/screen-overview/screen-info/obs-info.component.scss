@@ -1,3 +1,14 @@
+:host {
+  width: 100%;
+  display: block;
+}
+
+
+.info-holder {
+  display: flex;
+  flex-direction: column;
+}
+
 .title-row {
   display: flex;
   flex-direction: row;
@@ -39,4 +50,18 @@
   button {
     width: 45%;
   }
+
+  .single-button {
+    width: 100%;
+  }
+}
+
+.mat-table {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.delete-screen {
+  margin-left: auto;
+  margin-right: auto;
 }

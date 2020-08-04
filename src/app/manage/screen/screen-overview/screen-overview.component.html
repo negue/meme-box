@@ -2,14 +2,16 @@
 *ngIf="screenList | async as screenList">
   <div class="screens-item"
        *ngFor="let screen of screenList">
-    <app-obs-info [info]="screen"
-                  (onDelete)="delete(screen)"
-                  (onEditAssignments)="showAssignmentDialog(screen)"
-                  (onEdit)="showDialog(screen)"
-                  (onEditScreenClipOptions)="onClipOptions($event, screen)"
-    >
+    <mat-card >
+      <app-obs-info [info]="screen"
+                    (onDelete)="delete(screen)"
+                    (onEditAssignments)="showAssignmentDialog(screen)"
+                    (onEdit)="showDialog(screen)"
+                    (onEditScreenClipOptions)="onClipOptions($event, screen)"
+      >
 
-    </app-obs-info>
+      </app-obs-info>
+    </mat-card>
   </div>
 
   <div class="obs-item" *ngIf="screenList.length === 0">

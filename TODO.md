@@ -48,6 +48,7 @@ ____
 
 * [ ] Screens > Edit Clips > Tab selector for media type to filter media types
 * [ ] Screens > Edit Clips > search for media
+* [ ] Fixed height table of items with overflow: scroll
 
 
 

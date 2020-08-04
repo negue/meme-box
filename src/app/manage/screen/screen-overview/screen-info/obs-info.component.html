@@ -1,4 +1,4 @@
-<mat-card class="item-header-card">
+<div class="info-holder">
   <div class="title-row">
     <h2 class="mat-h2 title-name">{{info.name}}</h2>
     <mat-icon svgIcon="screen"></mat-icon>
@@ -21,27 +21,25 @@
   </div>
 
   <ng-container *ngIf="clipList$ | async as clipList">
-    <div class="header-line bottom-spacing">
-      <h4 class="header">Clips: </h4>
 
-      <button mat-raised-button class="button-padding"
+    <div class="action-buttons">
+      <button mat-raised-button
+              class="single-button"
               color="primary"
               (click)="onEditAssignments.next()">
         <mat-icon svgIcon="playlist_add"></mat-icon>
          {{ clipList.length === 0 ? 'Assign Clips' : 'Edit Clips' }}
       </button>
     </div>
+
     <div class="media-list">
       <table class="mat-table">
-        <tr *ngFor="let entry of clipList; let even = even;"
-            class="row"
-            [ngClass]="{gray: even}">
-          <td class="small-column">
+        <tr *ngFor="let entry of clipList;">
+          <td>
             <app-clip-type [type]="entry.type"></app-clip-type>
           </td>
           <td>{{entry.name}}</td>
-
-          <td class="small-column">
+          <td>
             <button mat-icon-button color="accent"
                     (click)="onEditScreenClipOptions.emit(entry)">
               <mat-icon svgIcon="settings"></mat-icon>
@@ -52,8 +50,8 @@
     </div>
   </ng-container>
 
-  <button mat-stroked-button class="delete-media" color="warn" (click)="onDelete.emit()">
-    <mat-icon svgIcon="delete"></mat-icon> Delete Media
+  <button mat-stroked-button class="delete-screen" color="warn" (click)="onDelete.emit()">
+    <mat-icon svgIcon="delete"></mat-icon> Delete Screen
   </button>
-</mat-card>
+</div>
 
