@@ -1,23 +1,7 @@
-<mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened class="sidebar">
-    <mat-selection-list [multiple]="false">
-      <mat-list-option routerLink="./media" routerLinkActive="active">
-        Media
-      </mat-list-option>
-      <mat-list-option routerLink="./screen" routerLinkActive="active">
-        Screens
-      </mat-list-option>
+<app-navigation></app-navigation>
+<router-outlet></router-outlet>
 
-      <mat-list-option *ngIf="false" routerLink="./twitch" routerLinkActive="active">
-        Twitch Events
-      </mat-list-option>
-    </mat-selection-list>
 
-    <div class="bottom">
-      <app-mobile-view-link></app-mobile-view-link>
-    </div>
-  </mat-drawer>
-  <mat-drawer-content>
-    <router-outlet></router-outlet>
-  </mat-drawer-content>
-</mat-drawer-container>
+<div class="bottom">
+  <app-mobile-view-link></app-mobile-view-link>
+</div>

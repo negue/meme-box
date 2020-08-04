@@ -1,21 +1,5 @@
-
-<div>
-  <mat-card>
-    Media Folder: {{ (config$ | async).mediaFolder}}
-
-    <button mat-raised-button color="primary"
-            (click)="openMediaFolderDialog()">Change Media Folder
-    </button>
-    <button mat-raised-button color="accent"
-            (click)="openMediaFolderExplorer()">Open Media Folder
-    </button>
-  </mat-card>
-
-</div>
-
 <div class="media-list"
-     *ngIf="mediaList$ | async as mediaList"
-    [class.flex-start]="mediaList.length > 0">
+     *ngIf="mediaList$ | async as mediaList">
 
     <div class="media-clip"
          *ngFor="let item of mediaList">
@@ -33,8 +17,7 @@
     </div>
   <ng-container *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ">
 
-    <div [class.media-clip]="mediaList.length !== 0"
-         [class.center-card]="mediaList.length === 0">
+    <div [class.media-clip]="mediaList.length !== 0">
       <app-getting-started></app-getting-started>
     </div>
   </ng-container>

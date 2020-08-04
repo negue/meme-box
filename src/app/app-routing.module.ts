@@ -12,7 +12,6 @@ const rootRoutes: Routes = [
  {
     path: 'manage',
     loadChildren: () => import('./manage/main-page/main-page.module').then(module => module.MainPageModule)
-
   },
   {
     path: 'screen/:guid',

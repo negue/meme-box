@@ -46,4 +46,4 @@ const routes: Routes = [
         GettingStartedModule
     ]
 })
-export class ScreenModule { }
+export class ScreensModule { }

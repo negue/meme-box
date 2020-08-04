@@ -19,7 +19,6 @@ export class MediaInfoComponent implements OnInit {
   @Input()
   public info: Clip;
 
-
   @Output()
   public onPreview = new EventEmitter();
 
