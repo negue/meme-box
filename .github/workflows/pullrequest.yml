@@ -1,0 +1,25 @@
+name: Pull-Request CI
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Use Node.js 12.16.2
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.16.2
+      - run: npm install
+      - run: npm run build:prepare
