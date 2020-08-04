@@ -59,11 +59,24 @@ export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
+export const enum TwitchEventTypes {
+  message = 'message',
+  follow = 'follow',
+  sub = 'sub',
+  bits = 'bits',
+  raid = 'raid',
+  host = 'host',
+  channelPoints = 'channelPoints'
+}
+
 export interface Twitch extends HasId {
+  name: string;
   screenId:      string; // TODO
   clipId:     string;
-  event:    string; // later an enum?
+  event: TwitchEventTypes;
   contains?: string; // additional settings TODO
+  // !magic
+  // TODO other options per type
 }
 
 /**

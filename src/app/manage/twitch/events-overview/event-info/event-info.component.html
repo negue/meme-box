@@ -1,8 +1,18 @@
-Event: <strong>{{ item.event }}</strong>
-ClipID: <strong>{{ item.clipId }}</strong>
-screenId: <strong>{{ item.screenId }}</strong>
+<b>{{item.name}}</b> - Event: <strong>{{ item.event }}</strong> -
+
+<ng-container *ngIf="allInformations$ | async as information">
+
+  Clip: <strong>{{ information.clip.name }}</strong>
+  <!-- Screen: <strong>{{ information.screen.name }}</strong> -->
+
+</ng-container>
 
 
-<button mat-icon-button color="primary" (click)="onDelete.emit()">
+<button mat-icon-button color="warn" (click)="onDelete.emit()">
   <mat-icon svgIcon="delete"></mat-icon>
+</button>
+
+
+<button mat-icon-button color="accent" (click)="onEdit.emit()">
+  <mat-icon svgIcon="edit"></mat-icon>
 </button>

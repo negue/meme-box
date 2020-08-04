@@ -8,6 +8,9 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatButtonModule} from "@angular/material/button";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatIconModule} from "@angular/material/icon";
+import {EditTwitchEventComponent} from './events-overview/edit-twitch-event/edit-twitch-event.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatInputModule} from "@angular/material/input";
 
 
 const routes: Routes = [
@@ -18,14 +21,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [EventsOverviewComponent, EventInfoComponent, AddEventComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatSelectModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        MatIconModule,
-    ]
+  declarations: [EventsOverviewComponent, EventInfoComponent, AddEventComponent, EditTwitchEventComponent],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatSelectModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatInputModule,
+  ]
 })
 export class TwitchModule { }
