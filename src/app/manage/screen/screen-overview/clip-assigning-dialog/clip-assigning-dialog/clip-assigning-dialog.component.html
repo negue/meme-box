@@ -1,23 +1,44 @@
- <h1 mat-dialog-title>Assign your clips to Screen "{{data.name}}"</h1>
+<h1 mat-dialog-title>Choose media for "{{data.name}}"</h1>
+
+<!-- TODO: Noob to fix selection -->
+
 <div mat-dialog-content>
 
-<mat-selection-list (selectionChange)="onSelectionChanged($event)">
-  <mat-list-option *ngFor="let clip of clips$|async"
-                   [value]="clip.id"
-                   [selected]="checkedMap[clip.id]">
+  <ol class="media-list">
+    <li class="media-list-option"
+        [class.selected]="checkedMap[clip.id]"
+        *ngFor="let clip of clips$|async"
+        (click)="toDo()">
+      <figure class="image-container" *ngIf="clip.type === 0">
+        <figcaption class="media-name">
+          <mat-icon class="media-icon" matListIcon svgIcon="insert_photo"></mat-icon>
+          {{clip.name}}</figcaption>
+        <img class="media-img" [src]="clip.path" [alt]="clip.name"/>
+      </figure>
 
-    <div class="item-container">
+      <span class="audio-container" *ngIf="clip.type === 1">
+        <span class="media-name">
+          <mat-icon class="media-icon" matListIcon svgIcon="audiotrack"></mat-icon>
+          {{clip.name}}
+        </span>
 
-    <span class="icon" [ngSwitch]="clip.type">
-      <mat-icon  matListIcon svgIcon="insert_photo" *ngSwitchCase="0"></mat-icon>
-      <mat-icon matListIcon svgIcon="audiotrack" *ngSwitchCase="1"></mat-icon>
-      <mat-icon matListIcon svgIcon="videocam" *ngSwitchCase="2"></mat-icon>
-    </span>
+        <span class="audio-image">
+          <mat-icon matListIcon svgIcon="speaker"></mat-icon>
+        </span>
 
-    <span class="label">{{clip.name}}</span>
+      </span>
 
-    </div>
-  </mat-list-option>
-</mat-selection-list>
+      <span class="video-container" *ngIf="clip.type === 2">
+          <span class="media-name">
+            <mat-icon class="media-icon" matListIcon svgIcon="videocam"></mat-icon>
+            {{clip.name}}
+        </span>
 
+        <span class="video-image">
+          <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+        </span>
+      </span>
+    </li>
+
+  </ol>
 </div>

@@ -13,7 +13,6 @@ import {ScreenOverviewComponent} from "./screen-overview/screen-overview.compone
 import {ObsInfoComponent} from "./screen-overview/screen-info/obs-info.component";
 import {ClipAssigningDialogModule} from "./screen-overview/clip-assigning-dialog/clip-assigning-dialog.module";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
-import {UrlPanelModule} from "../../shared/components/url-panel/url-panel.module";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 
 
@@ -42,7 +41,6 @@ const routes: Routes = [
         ReactiveFormsModule,
         ClipAssigningDialogModule,
         ClipTypeModule,
-        UrlPanelModule,
         GettingStartedModule
     ]
 })

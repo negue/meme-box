@@ -10,11 +10,11 @@ import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [ClipAssigningDialogComponent],
-  imports: [
-    CommonModule,
-    MatListModule,
-    MatIconModule,
-    MatDialogModule
-  ]
+    imports: [
+        CommonModule,
+        MatListModule,
+        MatIconModule,
+        MatDialogModule,
+    ]
 })
 export class ClipAssigningDialogModule { }

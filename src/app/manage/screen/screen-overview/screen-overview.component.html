@@ -1,6 +1,6 @@
-<div class="items-holder"
+<div class="screens-list"
 *ngIf="screenList | async as screenList">
-  <div class="obs-item"
+  <div class="screens-item"
        *ngFor="let screen of screenList">
     <app-obs-info [info]="screen"
                   (onDelete)="delete(screen)"
@@ -15,13 +15,10 @@
   <div class="obs-item" *ngIf="screenList.length === 0">
     <app-getting-started></app-getting-started>
   </div>
-</div>
 
-<div class="floating-action-button">
-  <button mat-fab color="warn"
-          aria-label="Add a new meme/media"
-          (click)="addNewItem()"
-  >
-    <mat-icon svgIcon="add"></mat-icon>
-  </button>
+  <div class="screens-item add-new">
+    <mat-card  (click)="addNewItem()" class="card-add-new">
+      <mat-icon svgIcon="add"></mat-icon> Add new screen
+    </mat-card>
+  </div>
 </div>

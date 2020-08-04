@@ -8,10 +8,13 @@ import {AppQueries} from "../../../../state/app.queries";
 import {distinctUntilChanged, filter, map, pairwise, startWith, takeUntil} from "rxjs/operators";
 import {combineLatest, Subject} from "rxjs";
 
+//TODO: clean up initial clip stuff - always populate
+// clipLength + playLength so the user doesn't want to die
 const INITIAL_CLIP: Partial<Clip> = {
   type: MediaType.Picture,
   name: 'Your Clip Name',
-  volumeSetting: 10
+  volumeSetting: 10,
+  playLength: 600
 }
 
 @Component({

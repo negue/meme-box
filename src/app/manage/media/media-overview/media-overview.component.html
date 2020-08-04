@@ -16,11 +16,17 @@
       </mat-card>
     </div>
   <ng-container *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ">
-
     <div [class.media-clip]="mediaList.length !== 0">
       <app-getting-started></app-getting-started>
     </div>
   </ng-container>
+
+
+  <div class="media-clip add-new">
+    <mat-card  (click)="addNewItem()" class="card-add-new">
+      <mat-icon svgIcon="add"></mat-icon> Add new media
+    </mat-card>
+  </div>
 </div>
 
 <div class="floating-action-button">

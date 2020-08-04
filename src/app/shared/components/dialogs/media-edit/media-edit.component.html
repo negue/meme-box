@@ -29,20 +29,6 @@
     </button>
   </div>
 
-  <ng-container *ngIf="form.value.type !== 0">
-    <mat-label>Volume</mat-label>
-    <div class="slider__row">
-    <mat-slider [min]="0" [max]="100" [step]="1" #volumeSlider
-                formControlName="volumeSetting">
-
-    </mat-slider>
-      <div class="volume__label">
-
-        {{volumeSlider.value }}
-      </div>
-    </div>
-  </ng-container>
-
   <mat-form-field *ngIf="false">
     <input matInput placeholder="Media Length"
            formControlName="clipLength"
@@ -53,16 +39,7 @@
 
   <div class="form-field-row">
     <mat-form-field>
-      <input matInput [placeholder]="form.value.type === 0 ? 'How long would you like your media clip to be visible in the screen? (ms)' : 'How long would you like your media clip to be played in the screen? (ms)'"
-             formControlName="playLength"
-             autocomplete="off"
-             type="number" [required]="form.value.type === 0">
-      <span matSuffix>ms</span>
-    </mat-form-field>
-  </div>
-  <div class="form-field-row">
-    <mat-form-field>
-      <input matInput placeholder="URL to the File"
+      <input matInput placeholder="File"
              formControlName="path"
              autocomplete="off"
              type="text" required>
@@ -77,6 +54,29 @@
       </div>
     </mat-form-field>
   </div>
+  <div class="form-field-row">
+    <mat-form-field>
+      <input matInput [placeholder]="form.value.type === 0 ? 'Visible screen time (ms)' : 'Play time on screen (ms)'"
+             formControlName="playLength"
+             autocomplete="off"
+             type="number"
+             [required]="form.value.type === 0">
+      <span matSuffix>ms</span>
+    </mat-form-field>
+  </div>
+  <ng-container *ngIf="form.value.type !== 0">
+    <mat-label>Volume</mat-label>
+    <div class="slider__row">
+      <mat-slider [min]="0" [max]="100" [step]="1" #volumeSlider
+                  formControlName="volumeSetting">
+
+      </mat-slider>
+      <div class="volume__label">
+
+        {{volumeSlider.value }}
+      </div>
+    </div>
+  </ng-container>
   <div class="form-field-row">
     <mat-form-field *ngIf="false">
       <input matInput placeholder="Preview URL"

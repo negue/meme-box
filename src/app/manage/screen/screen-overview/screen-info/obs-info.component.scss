@@ -1,64 +1,42 @@
-
-.item-header-card {
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-
-app-url-panel {
-  width: 100%;
-}
-
-
-.bottom-spacing {
-  margin-bottom: 1.5rem;
-}
-
-.header {
-  flex: 1;
-}
-.header-line {
-  width: 100%;
+.title-row {
   display: flex;
   flex-direction: row;
   align-items: center;
-
-
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
 }
 
-button.small-icon {
-  width: 2rem;
+.title-name {
+  margin-bottom: 0;
 }
 
-.media-info {
-  display: flex;
-  align-items: center;
-
-  &:hover {
-    background: #555555;
-  }
-}
-
-.padding {
-  padding-left: 1rem;
-}
-
-table {
+.input-url {
+  background: transparent;
+  border-radius: 0.5rem;
+  padding: 0.8rem;
   width: 100%;
+  border: 0.1rem solid black;
+  color: white;
+  margin-bottom: 1rem;
 
-  td {
-    padding: 0.5rem;
+  &:focus {
+    outline: none;
+    border-color: red;
   }
 }
 
-.gray {
-  background-color: #545454
+.label-hidden {
+  display: none;
 }
 
-// TODO better naming ^^
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 2rem;
 
-
-.small-column {
-  width: 50px;
+  button {
+    width: 45%;
+  }
 }
