@@ -25,7 +25,7 @@ export class WebsocketService {
 
       const dataAsString = event.data as string;
 
-      console.error({dataAsString});
+      // console.error({dataAsString});
 
       const [action, payload] = dataAsString.split('=');
 

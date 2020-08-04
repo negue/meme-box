@@ -1,4 +1,46 @@
-@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
+@import '~@angular/material/theming';
+@import '~angular-material-css-vars/main';
+
+// optional
+$mat-css-dark-theme-selector: '.isDarkTheme';
+$mat-css-light-theme-selector: '.isLightTheme';
+
+@mixin app-theme($theme) {
+  // Extract the palettes you need from the theme definition.
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+
+  // Define any styles affected by the theme.
+  .app-header {
+    // Use mat-color to extract individual colors from a palette.
+    background-color: mat-color($primary);
+    border: medium solid mat-color($accent, A400);
+  }
+}
+
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto, monospace',
+  $headline: mat-typography-level(32px, 48px, 700),
+  $body-1: mat-typography-level(16px, 24px, 500)
+);
+
+// init theme
+// TODO ADD CSS-VARS
+// examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
+
+@include init-material-css-vars() {
+  // TODO PR to angular-material-css-vars to accept typography
+  @include mat-core($custom-typography);
+};
+
+@include mat-css-set-palette-defaults($mat-light-blue, 'primary');
+@include mat-css-set-palette-defaults($mat-pink, 'accent');
+@include mat-css-set-palette-defaults($mat-purple, 'warn');
+
+
 
 * {
   margin: 0;
