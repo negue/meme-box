@@ -202,7 +202,7 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "scss"
+      "style": "scss"
     },
     "component": {
       "prefix": "app",
