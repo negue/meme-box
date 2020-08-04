@@ -11,12 +11,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export interface ScreenClipOptionsPayload {
   screenId: string;
   clipId: string;
+  name: string;
 }
 
 @Component({
   selector: 'app-screen-clip-options',
   templateUrl: './screen-clip-options.component.html',
-  styleUrls: ['./screen-clip-options.component.css']
+  styleUrls: ['./screen-clip-options.component.scss']
 })
 export class ScreenClipOptionsComponent implements OnInit {
 

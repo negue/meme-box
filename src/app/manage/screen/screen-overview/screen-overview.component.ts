@@ -78,7 +78,8 @@ export class ScreenOverviewComponent implements OnInit {
   onClipOptions(item: Clip, screen: Screen) {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
-      screenId: screen.id
+      screenId: screen.id,
+      name: item.name
     });
   }
 }

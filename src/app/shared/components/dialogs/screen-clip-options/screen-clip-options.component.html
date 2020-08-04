@@ -1,9 +1,9 @@
-<h2 mat-dialog-title> Update a Screen / Clip Assignment </h2>
+<h2 mat-dialog-title>Configure {{data.name}} </h2>
 <mat-dialog-content class="mat-typography" *ngIf="clipInfo$ | async as clipInfo">
 
   <form [formGroup]="form">
     <mat-form-field>
-      <input matInput placeholder="Width"
+      <input matInput placeholder="Width (px)"
              formControlName="width"
              autocomplete="off"
              type="text">
@@ -11,7 +11,7 @@
 
 
     <mat-form-field>
-      <input matInput placeholder="Height"
+      <input matInput placeholder="Height (px)"
              formControlName="height"
              autocomplete="off"
              type="text">

@@ -44,11 +44,13 @@ export class ObsInfoComponent implements OnInit {
     if (this.clipboard.copy(this.info.url)) {
       this._snackBar.open('URL copied to clipboard', null, {
         duration: 5000,
+        verticalPosition: 'top'
+
       });
     } else {
       this._snackBar.open('URL couldn\'t be copied to clipboard', null, {
         duration: 10000,
-
+        verticalPosition: 'top',
         panelClass: ['mat-toolbar', 'mat-warn']
       });
     }

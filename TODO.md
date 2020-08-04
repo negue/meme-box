@@ -15,7 +15,7 @@
         * Screens/memes
         * Clips
         * Settings
-* [ ] Screens layout
+* [x] Screens layout
 * [ ] ONBOARDING: Media folder - if empty path - 'set media folder' 
         - and make it part of 'onboarding'
 * [ ] More detailed onboarding + instructions
@@ -49,6 +49,7 @@ ____
 * [ ] Screens > Edit Clips > Tab selector for media type to filter media types
 * [ ] Screens > Edit Clips > search for media
 * [ ] Fixed height table of items with overflow: scroll
+* [ ] Require a name for screen and name for media
 
 
 

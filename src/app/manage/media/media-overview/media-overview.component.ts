@@ -61,10 +61,12 @@ export class MediaOverviewComponent implements OnInit {
     )
   }
 
+  //TODO - the name and other information should come from the state
   onClipOptions(item: Clip, screen: Screen): void  {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
-      screenId: screen.id
+      screenId: screen.id,
+      name: item.name
     });
   }
 }
