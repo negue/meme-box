@@ -10,25 +10,25 @@ import {AppService} from "../../../../../state/app.service";
 @Component({
   selector: 'app-clip-assigning-dialog',
   templateUrl: './clip-assigning-dialog.component.html',
-  styleUrls: ['./clip-assigning-dialog.component.css']
+  styleUrls: ['./clip-assigning-dialog.component.scss']
 })
 export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
 
-  private destroy$ = new Subject();
-
   checkedMap: Dictionary<boolean>;
   clips$: Observable<Clip[]> = this.appQueries.clipList$;
+  private destroy$ = new Subject();
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Screen,
               private appQueries: AppQueries,
-              private appService: AppService) { }
+              private appService: AppService) {
+  }
 
   ngOnInit(): void {
     this.clips$.pipe(
       takeUntil(this.destroy$),
-    ).subscribe(clips =>  {
+    ).subscribe(clips => {
       this.checkedMap = {};
-console.info({data: this.data});
+      console.info({data: this.data});
       clips.forEach(c => {
         if (this.data.clips[c.id]) {
           this.checkedMap[c.id] = true;
@@ -47,6 +47,10 @@ console.info({data: this.data});
     } else {
       this.appService.deleteScreenClip(this.data.id, value);
     }
+  }
+
+  toDo() {
+    console.log('MAKE THIS WORK and call onSelectionChange or something like that');
   }
 
   ngOnDestroy(): void {

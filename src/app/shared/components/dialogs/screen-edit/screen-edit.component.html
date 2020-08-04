@@ -1,27 +1,26 @@
 <h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Screen </h2>
 <mat-dialog-content class="mat-typography">
 
-<form [formGroup]="form">
+  <form [formGroup]="form">
 
-<div class="example-container">
-  <mat-form-field appearance="outline">
-    <mat-label>Name</mat-label>
-    <input matInput
-           autocomplete="off"
-           formControlName="name">
-  </mat-form-field>
+    <div class="example-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input autocomplete="off"
+               formControlName="name"
+               matInput>
+      </mat-form-field>
 
 
-</div>
-</form>
+    </div>
+  </form>
 </mat-dialog-content>
-
 
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button (click)="save()"
+  <button (click)="save()" cdkFocusInitial
           color="primary"
-          cdkFocusInitial>{{ data.id ? 'Update' : 'Add' }}</button>
+          mat-raised-button>{{ data.id ? 'Update' : 'Add' }}</button>
 </mat-dialog-actions>
 

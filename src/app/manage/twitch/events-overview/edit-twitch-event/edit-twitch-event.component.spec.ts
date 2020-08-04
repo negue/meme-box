@@ -8,9 +8,9 @@ describe('EditTwitchEventComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditTwitchEventComponent ]
+      declarations: [EditTwitchEventComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

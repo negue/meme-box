@@ -13,7 +13,8 @@ export interface ConfirmationsPayload {
 })
 export class SimpleConfirmationDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationsPayload) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationsPayload) {
+  }
 
   ngOnInit(): void {
   }

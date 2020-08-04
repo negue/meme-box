@@ -14,7 +14,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     CommonModule,
     MatListModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
   ]
 })
-export class ClipAssigningDialogModule { }
+export class ClipAssigningDialogModule {
+}

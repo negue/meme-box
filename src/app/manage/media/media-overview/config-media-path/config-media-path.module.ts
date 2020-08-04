@@ -19,4 +19,5 @@ import {MatButtonModule} from "@angular/material/button";
     MatButtonModule
   ]
 })
-export class ConfigMediaPathModule { }
+export class ConfigMediaPathModule {
+}

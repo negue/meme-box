@@ -5,7 +5,8 @@ import {Injectable} from '@angular/core';
 })
 export class SettingsService {
 
-  constructor() { }
+  constructor() {
+  }
 
   public loadSetting(key: string, defaultValue?: string): string {
     return localStorage.getItem(key) ?? defaultValue;

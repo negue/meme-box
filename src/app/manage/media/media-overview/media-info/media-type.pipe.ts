@@ -8,7 +8,7 @@ import {MediaType} from "@memebox/contracts";
 export class MediaTypePipe implements PipeTransform {
 
   transform(value: MediaType): string {
-    switch(value) {
+    switch (value) {
       case MediaType.Picture:
         return 'Image';
       case MediaType.Video:

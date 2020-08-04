@@ -8,10 +8,13 @@ import {AppQueries} from "../../../../state/app.queries";
 import {distinctUntilChanged, filter, map, pairwise, startWith, takeUntil} from "rxjs/operators";
 import {combineLatest, Subject} from "rxjs";
 
+//TODO: clean up initial clip stuff - always populate
+// clipLength + playLength so the user doesn't want to die
 const INITIAL_CLIP: Partial<Clip> = {
   type: MediaType.Picture,
   name: 'Your Clip Name',
-  volumeSetting: 10
+  volumeSetting: 10,
+  playLength: 600
 }
 
 @Component({
@@ -40,10 +43,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       startWith(INITIAL_CLIP)
     )
   ]).pipe(
-    map(([mediaFiles, currentFormValues]) =>{
+    map(([mediaFiles, currentFormValues]) => {
       const currentFileType = currentFormValues.type;
 
-     return mediaFiles.filter(m => m.fileType === currentFileType);
+      return mediaFiles.filter(m => m.fileType === currentFileType);
     })
   );
 
@@ -55,6 +58,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
               private appQuery: AppQueries,
               private snackBar: MatSnackBar) {
     this.data = this.data ?? INITIAL_CLIP as any;
+  }
+
+  get MediaType() {
+    return MediaType;
   }
 
   ngOnInit(): void {
@@ -82,7 +89,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       await this.appService.addOrUpdateClip(value);
 
       //TODO - "extract snackbar service to a service with fixed settings"
-      this.snackBar.open(`Clip "${value.name}"  ${value.id ? 'updated' : 'added' } 🎉`, null, {
+      this.snackBar.open(`Clip "${value.name}"  ${value.id ? 'updated' : 'added'} 🎉`, null, {
         duration: 4000,
         verticalPosition: 'top'
       });
@@ -100,10 +107,6 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     this.form.patchValue({
       path: $event.apiUrl
     })
-  }
-
-  get MediaType() {
-    return MediaType;
   }
 
   updateMediaType(value: MediaType): void {

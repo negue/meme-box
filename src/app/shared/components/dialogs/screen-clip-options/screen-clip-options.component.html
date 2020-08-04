@@ -1,25 +1,25 @@
-<h2 mat-dialog-title> Update a Screen / Clip Assignment </h2>
-<mat-dialog-content class="mat-typography" *ngIf="clipInfo$ | async as clipInfo">
+<h2 mat-dialog-title>Configure {{data.name}} </h2>
+<mat-dialog-content *ngIf="clipInfo$ | async as clipInfo" class="mat-typography">
 
   <form [formGroup]="form">
     <mat-form-field>
-      <input matInput placeholder="Width"
-             formControlName="width"
-             autocomplete="off"
+      <input autocomplete="off" formControlName="width"
+             matInput
+             placeholder="Width (px)"
              type="text">
     </mat-form-field>
 
 
     <mat-form-field>
-      <input matInput placeholder="Height"
-             formControlName="height"
-             autocomplete="off"
+      <input autocomplete="off" formControlName="height"
+             matInput
+             placeholder="Height (px)"
              type="text">
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Image-Fit"
-                  formControlName="imgFit"
+      <mat-select formControlName="imgFit"
+                  placeholder="Image-Fit"
                   value="contain">
         <mat-option value="contain">Contain</mat-option>
         <mat-option value="fill">Fill</mat-option>
@@ -29,10 +29,10 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Position"
-                  formControlName="position"
+      <mat-select #positionSelection
                   [value]="clipInfo?.position || 0"
-                  #positionSelection>
+                  formControlName="position"
+                  placeholder="Position">
         <mat-option [value]="0">Fullscreen</mat-option>
         <mat-option [value]="1">Absolute</mat-option>
       </mat-select>
@@ -40,32 +40,32 @@
 
     <ng-container *ngIf="positionSelection.value === 1">
       <mat-form-field>
-        <input matInput placeholder="Left"
-               formControlName="left"
-               autocomplete="off"
+        <input autocomplete="off" formControlName="left"
+               matInput
+               placeholder="Left"
                type="text">
       </mat-form-field>
 
 
       <mat-form-field>
-        <input matInput placeholder="Right"
-               formControlName="right"
-               autocomplete="off"
+        <input autocomplete="off" formControlName="right"
+               matInput
+               placeholder="Right"
                type="text">
       </mat-form-field>
 
       <mat-form-field>
-        <input matInput placeholder="Top"
-               formControlName="top"
-               autocomplete="off"
+        <input autocomplete="off" formControlName="top"
+               matInput
+               placeholder="Top"
                type="text">
       </mat-form-field>
 
 
       <mat-form-field>
-        <input matInput placeholder="Bottom"
-               formControlName="bottom"
-               autocomplete="off"
+        <input autocomplete="off" formControlName="bottom"
+               matInput
+               placeholder="Bottom"
                type="text">
       </mat-form-field>
     </ng-container>
@@ -76,7 +76,8 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button (click)="save()"
+  <button (click)="save()" cdkFocusInitial
           color="primary"
-          cdkFocusInitial>Upate</button>
+          mat-raised-button>Upate
+  </button>
 </mat-dialog-actions>

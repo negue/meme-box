@@ -9,10 +9,11 @@ import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [ScreenAssigningDialogComponent],
-    imports: [
-        CommonModule,
-        MatListModule,
-        MatDialogModule
-    ]
+  imports: [
+    CommonModule,
+    MatListModule,
+    MatDialogModule
+  ]
 })
-export class ScreenAssigningDialogModule { }
+export class ScreenAssigningDialogModule {
+}

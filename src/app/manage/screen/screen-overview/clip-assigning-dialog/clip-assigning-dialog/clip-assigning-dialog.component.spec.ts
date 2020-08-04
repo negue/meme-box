@@ -8,9 +8,9 @@ describe('ClipAssigningDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ClipAssigningDialogComponent ]
+      declarations: [ClipAssigningDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

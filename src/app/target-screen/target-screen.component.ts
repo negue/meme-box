@@ -54,14 +54,15 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     })
   );
   mediaClipToShow$ = new BehaviorSubject<string>(null);
-  clipToControlMap = new  WeakMap<Clip, HTMLVideoElement|HTMLAudioElement|HTMLImageElement>();
+  clipToControlMap = new WeakMap<Clip, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
 
   private _destroy$ = new Subject();
 
   constructor(private appQuery: AppQueries,
               private appService: AppService,
               private route: ActivatedRoute,
-              private wsService: WebsocketService) { }
+              private wsService: WebsocketService) {
+  }
 
 
   ngOnInit(): void {
@@ -83,7 +84,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     this.wsService.onTriggerClip$.pipe(
       takeUntil(this._destroy$)
-    ).subscribe(clip =>  {
+    ).subscribe(clip => {
       if (clip.targetScreen === thisScreenId) {
         console.error('YES TRIGGERING IT', {clip});
 
@@ -115,7 +116,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
       if (mediaInformation.clip.playLength) {
         setTimeout(() => {
-           this.mediaClipToShow$.next(null);
+          this.mediaClipToShow$.next(null);
         }, mediaInformation.clip.playLength)
       }
     });
@@ -162,7 +163,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     const currentlyPlaying = this.mediaClipToShow$.value;
 
     if (currentlyPlaying == entry.key) {
-       this.mediaClipToShow$.next(null);
+      this.mediaClipToShow$.next(null);
     }
   }
 

@@ -9,4 +9,5 @@ import {CommonModule} from '@angular/common';
 
   ]
 })
-export class StateModule { }
+export class StateModule {
+}

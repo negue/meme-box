@@ -71,25 +71,27 @@ export class AppModule {
     public materialCssVarsService: MaterialCssVarsService
   ) {
     const icons = [
-      'settings',
-      'audiotrack',
       'add',
+      'audiotrack',
       'content_copy',
       'delete',
       'edit',
       'folder',
+      'insert_photo',
       'launch',
       'playlist_add_check',
       'playlist_add',
       'queue',
-      'insert_photo',
+      'screen',
+      'settings',
+      'speaker',
       'videocam',
       'video_library'
     ];
 
     for (const icon of icons) {
       iconRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(
-         `./assets/material-icons/${icon}.svg`
+        `./assets/material-icons/${icon}.svg`
       ));
     }
 

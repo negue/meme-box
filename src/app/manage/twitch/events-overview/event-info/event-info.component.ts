@@ -31,7 +31,8 @@ export class EventInfoComponent implements OnInit {
   @Output()
   onEdit = new EventEmitter<any>();
 
-  constructor(private appQueries: AppQueries) { }
+  constructor(private appQueries: AppQueries) {
+  }
 
   ngOnInit(): void {
   }

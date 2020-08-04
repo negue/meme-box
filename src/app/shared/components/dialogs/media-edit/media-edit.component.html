@@ -1,97 +1,98 @@
 <h2 mat-dialog-title> {{ data?.id ? 'Update Media: "' + form.value.name + '"' : 'Add media' }}  </h2>
 <mat-dialog-content class="mat-typography">
-<form [formGroup]="form">
-  <mat-form-field>
-    <input matInput placeholder="Name"
-           formControlName="name"
-           autocomplete="off"
-           type="text" required>
-  </mat-form-field>
-
-  <div class="action-buttons">
-    <button mat-raised-button
-            [color]="form.value.type === MediaType.Picture ? 'primary' : 'accent'"
-            (click)="updateMediaType(MediaType.Picture)">
-      <mat-icon svgIcon="insert_photo"></mat-icon>
-      Image
-    </button>
-    <button mat-raised-button
-            [color]="form.value.type === MediaType.Audio ? 'primary' : 'accent'"
-            (click)="updateMediaType(MediaType.Audio)">
-      <mat-icon svgIcon="audiotrack"></mat-icon>
-      Audio
-    </button>
-    <button mat-raised-button
-            [color]="form.value.type === MediaType.Video ? 'primary' : 'accent'"
-            (click)="updateMediaType(MediaType.Video)">
-      <mat-icon svgIcon="videocam"></mat-icon>
-      Video
-    </button>
-  </div>
-
-  <ng-container *ngIf="form.value.type !== 0">
-    <mat-label>Volume</mat-label>
-    <div class="slider__row">
-    <mat-slider [min]="0" [max]="100" [step]="1" #volumeSlider
-                formControlName="volumeSetting">
-
-    </mat-slider>
-      <div class="volume__label">
-
-        {{volumeSlider.value }}
-      </div>
-    </div>
-  </ng-container>
-
-  <mat-form-field *ngIf="false">
-    <input matInput placeholder="Media Length"
-           formControlName="clipLength"
-           autocomplete="off"
-           type="number">
-    <span matSuffix>ms</span>
-  </mat-form-field>
-
-  <div class="form-field-row">
+  <form [formGroup]="form">
     <mat-form-field>
-      <input matInput [placeholder]="form.value.type === 0 ? 'How long would you like your media clip to be visible in the screen? (ms)' : 'How long would you like your media clip to be played in the screen? (ms)'"
-             formControlName="playLength"
-             autocomplete="off"
-             type="number" [required]="form.value.type === 0">
+      <input autocomplete="off" formControlName="name"
+             matInput
+             placeholder="Name"
+             required type="text">
+    </mat-form-field>
+
+    <div class="action-buttons">
+      <button (click)="updateMediaType(MediaType.Picture)"
+              [color]="form.value.type === MediaType.Picture ? 'primary' : 'accent'"
+              mat-raised-button>
+        <mat-icon svgIcon="insert_photo"></mat-icon>
+        Image
+      </button>
+      <button (click)="updateMediaType(MediaType.Audio)"
+              [color]="form.value.type === MediaType.Audio ? 'primary' : 'accent'"
+              mat-raised-button>
+        <mat-icon svgIcon="audiotrack"></mat-icon>
+        Audio
+      </button>
+      <button (click)="updateMediaType(MediaType.Video)"
+              [color]="form.value.type === MediaType.Video ? 'primary' : 'accent'"
+              mat-raised-button>
+        <mat-icon svgIcon="videocam"></mat-icon>
+        Video
+      </button>
+    </div>
+
+    <mat-form-field *ngIf="false">
+      <input autocomplete="off" formControlName="clipLength"
+             matInput
+             placeholder="Media Length"
+             type="number">
       <span matSuffix>ms</span>
     </mat-form-field>
-  </div>
-  <div class="form-field-row">
-    <mat-form-field>
-      <input matInput placeholder="URL to the File"
-             formControlName="path"
-             autocomplete="off"
-             type="text" required>
-      <div matSuffix>
-        <mat-select (valueChange)="onChange($event)"
-                    *ngIf="availableMediaFiles|async as mediaFiles">
 
-          <mat-option [value]="file" *ngFor="let file of mediaFiles">
-            {{file.fileName}}
-          </mat-option>
-        </mat-select>
+    <div class="form-field-row">
+      <mat-form-field>
+        <input autocomplete="off" formControlName="path"
+               matInput
+               placeholder="File"
+               required type="text">
+        <div matSuffix>
+          <mat-select (valueChange)="onChange($event)"
+                      *ngIf="availableMediaFiles|async as mediaFiles">
+
+            <mat-option *ngFor="let file of mediaFiles" [value]="file">
+              {{file.fileName}}
+            </mat-option>
+          </mat-select>
+        </div>
+      </mat-form-field>
+    </div>
+    <div class="form-field-row">
+      <mat-form-field>
+        <input [placeholder]="form.value.type === 0 ? 'Visible screen time (ms)' : 'Play time on screen (ms)'"
+               [required]="form.value.type === 0"
+               autocomplete="off"
+               formControlName="playLength"
+               matInput
+               type="number">
+        <span matSuffix>ms</span>
+      </mat-form-field>
+    </div>
+    <ng-container *ngIf="form.value.type !== 0">
+      <mat-label>Volume</mat-label>
+      <div class="slider__row">
+        <mat-slider #volumeSlider [max]="100" [min]="0" [step]="1"
+                    formControlName="volumeSetting">
+
+        </mat-slider>
+        <div class="volume__label">
+
+          {{volumeSlider.value }}
+        </div>
       </div>
-    </mat-form-field>
-  </div>
-  <div class="form-field-row">
-    <mat-form-field *ngIf="false">
-      <input matInput placeholder="Preview URL"
-             formControlName="previewUrl"
-             autocomplete="off"
-             type="text">
-    </mat-form-field>
-  </div>
-  <img [src]="form.value.path || form.value.previewUrl">
-</form>
+    </ng-container>
+    <div class="form-field-row">
+      <mat-form-field *ngIf="false">
+        <input autocomplete="off" formControlName="previewUrl"
+               matInput
+               placeholder="Preview URL"
+               type="text">
+      </mat-form-field>
+    </div>
+    <img [src]="form.value.path || form.value.previewUrl">
+  </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button (click)="save()"
+  <button (click)="save()" cdkFocusInitial
           color="primary"
-          cdkFocusInitial>{{ data?.id ? 'Update' : 'Add' }}</button>
+          mat-raised-button>{{ data?.id ? 'Update' : 'Add' }}</button>
 </mat-dialog-actions>

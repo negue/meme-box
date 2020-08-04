@@ -23,20 +23,21 @@ import {MatIconModule} from "@angular/material/icon";
     SimpleConfirmationDialogComponent,
     ScreenClipOptionsComponent
   ],
-    imports: [
-        CommonModule,
-        MatDialogModule,
-        MatFormFieldModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        MatSliderModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSnackBarModule,
-        MatIconModule
-    ],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatIconModule
+  ],
   providers: [
     DialogService
   ]
 })
-export class DialogsModule { }
+export class DialogsModule {
+}

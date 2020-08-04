@@ -14,4 +14,5 @@ import {MatIconModule} from "@angular/material/icon";
     MatIconModule
   ]
 })
-export class ClipTypeModule { }
+export class ClipTypeModule {
+}

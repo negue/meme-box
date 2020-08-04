@@ -8,7 +8,8 @@ import {AppService} from "../../state/app.service";
 })
 export class MainPageComponent implements OnInit {
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService) {
+  }
 
   ngOnInit(): void {
     this.appService.loadState();

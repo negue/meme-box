@@ -11,12 +11,13 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export interface ScreenClipOptionsPayload {
   screenId: string;
   clipId: string;
+  name: string;
 }
 
 @Component({
   selector: 'app-screen-clip-options',
   templateUrl: './screen-clip-options.component.html',
-  styleUrls: ['./screen-clip-options.component.css']
+  styleUrls: ['./screen-clip-options.component.scss']
 })
 export class ScreenClipOptionsComponent implements OnInit {
 
@@ -43,12 +44,13 @@ export class ScreenClipOptionsComponent implements OnInit {
               private dialogRef: MatDialogRef<any>,
               private appQueries: AppQueries,
               private appService: AppService,
-              private snackBar: MatSnackBar) { }
+              private snackBar: MatSnackBar) {
+  }
 
   ngOnInit(): void {
     this.clipInfo$.pipe(
       takeUntil(this.destroy$)
-    ).subscribe(value =>  {
+    ).subscribe(value => {
       this._clipInfo = {
         position: PositionEnum.FullScreen,
         ...value
@@ -75,8 +77,7 @@ export class ScreenClipOptionsComponent implements OnInit {
       });
 
       this.dialogRef.close();
-    }
-    else {
+    } else {
       // highlight hack
       this.form.markAllAsTouched();
     }

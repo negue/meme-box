@@ -33,4 +33,5 @@ const routes: Routes = [
     MatInputModule,
   ]
 })
-export class TwitchModule { }
+export class TwitchModule {
+}

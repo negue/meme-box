@@ -5,20 +5,20 @@
     <div class="example-container">
       <mat-form-field appearance="outline">
         <mat-label>Path</mat-label>
-        <input matInput type="text"
-               autocomplete="off"
-               formControlName="path" />
+        <input autocomplete="off" formControlName="path"
+               matInput
+               type="text"/>
       </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>
 
 
-
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
-  <button mat-raised-button (click)="save()"
+  <button (click)="save()" cdkFocusInitial
           color="primary"
-          cdkFocusInitial> Update </button>
+          mat-raised-button> Update
+  </button>
 </mat-dialog-actions>
 

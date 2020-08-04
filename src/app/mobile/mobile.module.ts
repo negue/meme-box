@@ -17,6 +17,7 @@ const routes: Routes = [
     component: MobileClipOverviewComponent,
   },
 ];
+
 @NgModule({
   declarations: [MobileClipOverviewComponent],
   imports: [
@@ -32,4 +33,5 @@ const routes: Routes = [
     ClipTypeModule,
   ]
 })
-export class MobileModule { }
+export class MobileModule {
+}

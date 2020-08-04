@@ -3,6 +3,8 @@ import {Clip, ScreenViewEntry} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {AppQueries} from "../../../../state/app.queries";
+import {Clipboard} from "@angular/cdk/clipboard";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
@@ -12,13 +14,11 @@ import {AppQueries} from "../../../../state/app.queries";
 })
 export class ObsInfoComponent implements OnInit {
 
+  @Input()
+  public info: ScreenViewEntry;
   public clipList$: Observable<Clip[]> = this.appQueries.clipList$.pipe(
     map(clipList => clipList.filter(clip => !!this.info.clips[clip.id]))
   )
-
-  @Input()
-  public info: ScreenViewEntry;
-
   @Output()
   public onEdit = new EventEmitter();
 
@@ -31,9 +31,28 @@ export class ObsInfoComponent implements OnInit {
   @Output()
   public onEditScreenClipOptions = new EventEmitter<Clip>();
 
-  constructor(private appQueries: AppQueries) { }
+  constructor(private appQueries: AppQueries,
+              private clipboard: Clipboard,
+              private _snackBar: MatSnackBar) {
+  }
 
   ngOnInit(): void {
+  }
+
+  copyURL(): void {
+    if (this.clipboard.copy(this.info.url)) {
+      this._snackBar.open('URL copied to clipboard', null, {
+        duration: 5000,
+        verticalPosition: 'top'
+
+      });
+    } else {
+      this._snackBar.open('URL couldn\'t be copied to clipboard', null, {
+        duration: 10000,
+        verticalPosition: 'top',
+        panelClass: ['mat-toolbar', 'mat-warn']
+      });
+    }
   }
 
 

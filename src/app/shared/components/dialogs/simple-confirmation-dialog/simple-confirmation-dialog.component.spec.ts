@@ -8,9 +8,9 @@ describe('SimpleConfirmationDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SimpleConfirmationDialogComponent ]
+      declarations: [SimpleConfirmationDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

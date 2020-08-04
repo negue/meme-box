@@ -1,18 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-clip-type',
   templateUrl: './clip-type.component.html',
   styleUrls: ['./clip-type.component.css']
 })
-export class ClipTypeComponent implements OnInit {
+export class ClipTypeComponent {
 
   @Input()
   public type: number;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
   }
 
 }

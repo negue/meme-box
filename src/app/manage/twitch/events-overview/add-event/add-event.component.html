@@ -1,19 +1,19 @@
 <form [formGroup]="formGroup">
   <mat-form-field>
     <mat-label>Twitch Event</mat-label>
-  <mat-select formControlName="event"
-  [required]="true">
-    <mat-option *ngFor="let item of twitchEvents"
-                [value]="item">
-      {{ item }}
-    </mat-option>
-  </mat-select>
+    <mat-select [required]="true"
+                formControlName="event">
+      <mat-option *ngFor="let item of twitchEvents"
+                  [value]="item">
+        {{ item }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>Meme</mat-label>
-     <mat-select formControlName="clipId"
-                [required]="true">
+    <mat-select [required]="true"
+                formControlName="clipId">
 
       <mat-option *ngFor="let item of clipList$ | async"
                   [value]="item.id">
@@ -22,6 +22,7 @@
     </mat-select>
   </mat-form-field>
 
-  <button mat-raised-button color="primary"
-  (click)="triggerAdd()">Add</button>
+  <button (click)="triggerAdd()" color="primary"
+          mat-raised-button>Add
+  </button>
 </form>

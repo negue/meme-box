@@ -58,7 +58,7 @@ export class EditTwitchEventComponent implements OnInit {
     await this.appService.addOrUpdateTwitchEvent(newTwitchValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.open(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added' } 🎉`);
+    this.snackBar.open(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added'} 🎉`);
 
     this.dialogRef.close();
   }

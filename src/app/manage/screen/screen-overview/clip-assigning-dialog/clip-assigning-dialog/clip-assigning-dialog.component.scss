@@ -1,0 +1,67 @@
+:host {
+  width: 100%;
+}
+
+.media-list {
+  display: grid;
+  padding: 2rem;
+  width: 100%;
+  list-style: none;
+
+  @media screen and (min-width: 620px) {
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 2rem;
+  }
+
+  @media screen and (min-width: 930px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 2rem;
+  }
+}
+
+.media-list-option {
+  margin-bottom: 1rem;
+  cursor: pointer;
+
+  &.selected {
+    border: 1px solid red;
+  }
+}
+
+.image-container {
+
+}
+
+.media-img {
+  width: 100%;
+}
+
+.media-name {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.media-icon {
+  margin-right: 0.5rem;
+}
+
+.audio-container, .video-container {
+  height: 100%;
+  display: block;
+  position: relative;
+}
+
+//TODO this is weird
+.audio-image, .video-image {
+  display: flex;
+  height: 75%;
+  align-items: center;
+  justify-content: center;
+
+  .mat-icon {
+    height: 6rem;
+    width: 6rem;
+  }
+}
+

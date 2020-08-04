@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ConfigMediaPathComponent} from "../../media/media-overview/config-media-path/config-media-path.component";
 import {Observable} from "rxjs";
 import {Config} from "@memebox/contracts";
@@ -16,7 +16,8 @@ export class SettingsOverviewComponent implements OnInit {
 
   constructor(public service: AppService,
               public query: AppQueries,
-              private _dialog: DialogService) { }
+              private _dialog: DialogService) {
+  }
 
   ngOnInit(): void {
   }

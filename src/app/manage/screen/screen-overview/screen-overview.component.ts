@@ -19,7 +19,6 @@ function createLocalOrProductionUrlBase() {
 }
 
 
-
 @Component({
   selector: 'app-screen-overview',
   templateUrl: './screen-overview.component.html',
@@ -36,9 +35,10 @@ export class ScreenOverviewComponent implements OnInit {
 
   constructor(
     private _dialog: DialogService,
-  private _queries: AppQueries,
+    private _queries: AppQueries,
     public service: AppService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -78,7 +78,8 @@ export class ScreenOverviewComponent implements OnInit {
   onClipOptions(item: Clip, screen: Screen) {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
-      screenId: screen.id
+      screenId: screen.id,
+      name: item.name
     });
   }
 }

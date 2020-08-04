@@ -7,13 +7,14 @@ import {Component, OnInit} from '@angular/core';
 })
 export class NavigationComponent implements OnInit {
   links = [
-    {path:'./media', displayName: 'Media'},
-    {path:'./screens', displayName: 'Screens'},
-    {path:'./twitch', displayName: 'Twitch'},
-    {path:'./settings', displayName: 'Settings'}
+    {path: './media', displayName: 'Media'},
+    {path: './screens', displayName: 'Screens'},
+    {path: './twitch', displayName: 'Twitch'},
+    {path: './settings', displayName: 'Settings'}
   ]
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

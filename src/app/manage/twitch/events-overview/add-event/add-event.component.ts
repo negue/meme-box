@@ -22,7 +22,8 @@ export class AddEventComponent implements OnInit {
   @Output()
   added = new EventEmitter<Twitch>();
 
-  constructor(private appQueries: AppQueries) { }
+  constructor(private appQueries: AppQueries) {
+  }
 
   ngOnInit(): void {
   }

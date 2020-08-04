@@ -31,7 +31,7 @@ export class WebsocketService {
 
       switch (action) {
         case 'TRIGGER_CLIP': {
-          const payloadObj:TriggerClip = JSON.parse(payload);
+          const payloadObj: TriggerClip = JSON.parse(payload);
 
           this.onTriggerClip$.next(payloadObj);
 
@@ -46,11 +46,11 @@ export class WebsocketService {
   }
 
   public sendI_Am_OBS(guid: string) {
-    this.ws.send( `I_AM_OBS=${guid}`);
+    this.ws.send(`I_AM_OBS=${guid}`);
   }
 
 
-  public triggerClipOnScreen(clipId: string, screenId?: string|null) {
+  public triggerClipOnScreen(clipId: string, screenId?: string | null) {
     const triggerObj: TriggerClip = {
       id: clipId,
       targetScreen: screenId,
