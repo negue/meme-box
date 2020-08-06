@@ -3,9 +3,9 @@ import {FormBuilder} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Clip, Twitch, TwitchTypesArray} from "@memebox/contracts";
 import {AppService} from "../../../../state/app.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {Observable} from "rxjs";
 import {AppQueries} from "../../../../state/app.queries";
+import {SnackbarService} from "../../../../core/services/snackbar.service";
 
 @Component({
   selector: 'app-edit-twitch-event',
@@ -32,7 +32,7 @@ export class EditTwitchEventComponent implements OnInit {
               private dialogRef: MatDialogRef<any>,
               private appService: AppService,
               private appQueries: AppQueries,
-              private snackBar: MatSnackBar) {
+              private snackBar: SnackbarService) {
     this.form.patchValue({
       name: data.name,
       id: data.id,
@@ -58,7 +58,7 @@ export class EditTwitchEventComponent implements OnInit {
     await this.appService.addOrUpdateTwitchEvent(newTwitchValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.open(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added'} 🎉`);
+    this.snackBar.normal(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added'} 🎉`);
 
     this.dialogRef.close();
   }
