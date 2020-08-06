@@ -28,7 +28,6 @@ $custom-typography: mat-typography-config(
 );
 
 // init theme
-// TODO ADD CSS-VARS
 // examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
 
 @include init-material-css-vars() {

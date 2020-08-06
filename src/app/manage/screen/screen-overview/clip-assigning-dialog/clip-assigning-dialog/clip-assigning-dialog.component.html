@@ -1,12 +1,31 @@
-<h1 mat-dialog-title>Choose media for "{{data.name}}"</h1>
-
-<!-- TODO: Noob to fix selection -->
+<h1 mat-dialog-title>Choose media for "{{(screen$ | async).name}}"</h1>
 
 <div mat-dialog-content>
+  Filter:
+  <div class="action-buttons" *ngIf="selectedFilters$ | async as selectedFilters">
+    <button (click)="toggleFilter(MediaType.Picture)"
+            [color]="selectedFilters.includes(MediaType.Picture) ? 'primary' : 'accent'"
+            mat-raised-button>
+      <mat-icon svgIcon="insert_photo"></mat-icon>
+      Image
+    </button>
+    <button (click)="toggleFilter(MediaType.Audio)"
+            [color]="selectedFilters.includes(MediaType.Audio) ? 'primary' : 'accent'"
+            mat-raised-button>
+      <mat-icon svgIcon="audiotrack"></mat-icon>
+      Audio
+    </button>
+    <button (click)="toggleFilter(MediaType.Video)"
+            [color]="selectedFilters.includes(MediaType.Video) ? 'primary' : 'accent'"
+            mat-raised-button>
+      <mat-icon svgIcon="videocam"></mat-icon>
+      Video
+    </button>
+  </div>
 
   <ol class="media-list">
-    <li (click)="toDo()"
-        *ngFor="let clip of clips$|async"
+    <li *ngFor="let clip of clips$|async"
+        (click)="clickToSelect(clip)"
         [class.selected]="checkedMap[clip.id]"
         class="media-list-option">
       <figure *ngIf="clip.type === 0" class="image-container">

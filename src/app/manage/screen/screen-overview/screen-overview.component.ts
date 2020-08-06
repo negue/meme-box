@@ -63,10 +63,10 @@ export class ScreenOverviewComponent implements OnInit {
     }
   }
 
-  showAssignmentDialog(obsInfo: Partial<Screen>) {
+  showAssignmentDialog(screen: Partial<Screen>) {
     this._dialog.open(
       ClipAssigningDialogComponent, {
-        data: obsInfo
+        data: screen.id
       }
     )
   }
