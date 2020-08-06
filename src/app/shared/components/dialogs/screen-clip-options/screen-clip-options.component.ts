@@ -61,23 +61,24 @@ export class ScreenClipOptionsComponent implements OnInit {
   }
 
   async save() {
-    if (this.form.valid) {
-      const {value} = this.form;
-
-      const newScreenClipValue: ScreenClip = {
-        ...this._clipInfo,
-        ...value
-      };
-
-      await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
-
-      // todo refactor "better way?" to trigger those snackbars
-      this.snackBar.normal(`Screen / Clip Assignment updated 🎉`);
-
-      this.dialogRef.close();
-    } else {
+    if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
+      return;
     }
+
+    const {value} = this.form;
+
+    const newScreenClipValue: ScreenClip = {
+      ...this._clipInfo,
+      ...value
+    };
+
+    await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
+
+    // todo refactor "better way?" to trigger those snackbars
+    this.snackBar.normal(`Screen / Clip Assignment updated 🎉`);
+
+    this.dialogRef.close();
   }
 }

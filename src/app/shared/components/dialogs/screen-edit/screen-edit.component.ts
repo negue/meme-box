@@ -32,6 +32,12 @@ export class ScreenEditComponent implements OnInit {
   }
 
   async save() {
+    if (!this.form.valid) {
+      // highlight hack
+      this.form.markAllAsTouched();
+      return;
+    }
+
     const {value} = this.form;
 
     const newScreenValue = {

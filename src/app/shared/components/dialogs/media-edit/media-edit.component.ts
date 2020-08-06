@@ -84,19 +84,19 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   }
 
   async save() {
-    const {value} = this.form;
-
-    if (this.form.valid) {
-      await this.appService.addOrUpdateClip(value);
-
-      //TODO - "extract snackbar service to a service with fixed settings"
-      this.snackBar.normal(`Clip "${value.name}"  ${value.id ? 'updated' : 'added'} 🎉`);
-
-      this.dialogRef.close();
-    } else {
+    if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
+      return;
     }
+
+    const {value} = this.form;
+
+    await this.appService.addOrUpdateClip(value);
+
+    this.snackBar.normal(`Clip "${value.name}"  ${value.id ? 'updated' : 'added'} 🎉`);
+
+    this.dialogRef.close();
   }
 
   onChange($event: FileInfo) {

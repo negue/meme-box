@@ -45,7 +45,7 @@ ____
 
 * [ ] Screens > Edit Clips > Tab selector for media type to filter media types
 * [ ] Screens > Edit Clips > search for media
-* [ ] Require a name for screen and name for media
+* [ ] Validation Messages
 
 
 
