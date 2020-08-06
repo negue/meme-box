@@ -25,7 +25,7 @@
 * [ ] Preview button explanation
 * [ ] Make sure all snackbar notifications are consistent
 * [ ] Where does the 'mobile view' go? Does it go on every screen?
-* [ ] Fixed size for dialogs
+* [*] Fixed size for dialogs
 
 ### Design
 
@@ -41,6 +41,9 @@ ____
 * [ ] See Issues tagged with [enhancement](https://github.com/negue/meme-box/labels/enhancement) 
 * [ ] Fix all typescript warnings :P
 * [ ] REMOVE CONSOLE LOGS!
+* [ ] Can we have a 'preview' command on each screen card?
+* [ ] Snackbar alerts render a random emoji from a collection
+* [ ] Pass in name of media/screen to snackbar notifications for ENTERPRISE level feedback
 
 ## Proposed Features
 

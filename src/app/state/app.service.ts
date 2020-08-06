@@ -77,7 +77,7 @@ export class AppService {
       delete state.clips[clipId];
     });
 
-    this.snackbar.normal('Clip removed.');
+    this.snackbar.normal('Media deleted!');
   }
 
 
@@ -111,6 +111,8 @@ export class AppService {
         await this.addScreenClipById(newId, clipKey);
       }
     }
+
+    this.snackbar.normal('Screen updated!');
   }
 
   public async deleteScreen(id: string) {
@@ -122,7 +124,7 @@ export class AppService {
       delete state.screen[id];
     });
 
-    this.snackbar.normal('Screen removed.');
+    this.snackbar.normal('Screen removed!');
   }
 
   public async addScreenClipById(screenId: string, clipId: string) {
@@ -141,7 +143,7 @@ export class AppService {
     });
 
 
-    this.snackbar.normal('Screen/Clip Assignment saved.');
+    this.snackbar.normal('Media saved!');
   }
 
   public async addOrUpdateScreenClip(screenId: string, obsClip: Partial<ScreenClip>) {
@@ -164,7 +166,7 @@ export class AppService {
       state.screen[screenId].clips[newId] = obsClip as ScreenClip;
     });
 
-    this.snackbar.normal('Screen/Clip Assignment saved.');
+    this.snackbar.normal('Media added to screen!');
   }
 
   public async deleteScreenClip(screenId: string, id: string) {
@@ -177,9 +179,8 @@ export class AppService {
     });
 
 
-    this.snackbar.normal('Screen/Clip Assignment removed.');
+    this.snackbar.normal('Media removed from screen!');
   }
-
 
   public async addOrUpdateTwitchEvent(event: Twitch) {
     let newId = event?.id ?? '';
@@ -211,7 +212,7 @@ export class AppService {
       delete state.twitchEvents[clipId];
     });
 
-    this.snackbar.normal('Twitch-Event removed.');
+    this.snackbar.normal('Twitch event removed!');
   }
 
   public async updateMediaFolder(newFolder: string) {

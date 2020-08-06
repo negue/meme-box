@@ -27,7 +27,7 @@ export class DialogService {
   // any for now, until the confirmation dialog has its own enum
   showConfirmationDialog(payload: ConfirmationsPayload): Promise<any> {
     const dialogRef = this._dialog.open(SimpleConfirmationDialogComponent, {
-      data: payload
+      data: payload,
     });
 
     return dialogRef.afterClosed().toPromise();
@@ -36,7 +36,9 @@ export class DialogService {
   showMediaEditDialog(clipInfo: Partial<Clip>) {
     this._dialog.open(
       MediaEditComponent, {
-        data: clipInfo
+        data: clipInfo,
+        height: '600px',
+        width: '600px',
       }
     )
   }

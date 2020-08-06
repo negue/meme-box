@@ -1,9 +1,11 @@
+<app-styleguide></app-styleguide>
+
 <div *ngIf="mediaList$ | async as mediaList"
      class="media-list">
 
   <div *ngFor="let item of mediaList"
        class="media-clip">
-    <mat-card>
+    <mat-card class="media-clip-card">
       <app-media-info (onAssignObs)="onAssignObs(item)"
                       (onDelete)="onDelete(item.id)"
                       (onEdit)="onEdit(item)"

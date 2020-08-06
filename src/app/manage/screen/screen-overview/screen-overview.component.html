@@ -2,7 +2,7 @@
      class="screens-list">
   <div *ngFor="let screen of screenList"
        class="screens-item">
-    <mat-card>
+    <mat-card class="screens-item-card">
       <app-screen-info (onDelete)="delete(screen)"
                        (onEdit)="showDialog(screen)"
                        (onEditAssignments)="showAssignmentDialog(screen)"

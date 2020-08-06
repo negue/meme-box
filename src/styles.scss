@@ -1,5 +1,6 @@
 @import '~@angular/material/theming';
 @import '~angular-material-css-vars/main';
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
 
 // optional
 $mat-css-dark-theme-selector: '.isDarkTheme';
@@ -22,7 +23,7 @@ $mat-css-light-theme-selector: '.isLightTheme';
 // Define a custom typography config that overrides the font-family as well as the
 // `headlines` and `body-1` levels.
 $custom-typography: mat-typography-config(
-  $font-family: 'Roboto, monospace',
+  $font-family: 'Barlow, sans-serif',
   $headline: mat-typography-level(32px, 48px, 700),
   $body-1: mat-typography-level(16px, 24px, 500)
 );
@@ -40,6 +41,10 @@ $custom-typography: mat-typography-config(
 @include mat-css-set-palette-defaults($mat-red, 'warn');
 
 
+
+body {
+  font-size: 16px;
+}
 
 * {
   margin: 0;
