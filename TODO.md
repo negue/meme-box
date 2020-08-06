@@ -17,11 +17,11 @@
         * Settings
 * [x] Screens layout
 * [ ] ONBOARDING: Media folder - if empty path - 'set media folder' 
-        - and make it part of 'onboarding'
-* [ ] More detailed onboarding + instructions
+        - and make it part of 'onboarding' - in progress
+* [ ] More detailed onboarding + instructions - in progress
 
-* [ ] Screen list on media card - fixed height + scroll for really long list
-* [ ] One place for one action
+* [*] Screen list on media card - fixed height + scroll for really long list
+* [*?] One place for one action
 * [ ] Preview button explanation
 * [ ] Make sure all snackbar notifications are consistent
 * [ ] Where does the 'mobile view' go? Does it go on every screen?
