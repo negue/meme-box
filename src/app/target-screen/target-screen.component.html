@@ -8,6 +8,7 @@ The Loaded Clips need to stay cached?
      [class.fullscreen]="!entry.value.clipSetting.position"
 
      [ngSwitch]="entry.value.clip.type"
+     [style.--clip-background]="entry.value.backgroundColor"
      [style.--clip-setting-bottom]="entry.value.clipSetting.bottom"
      [style.--clip-setting-height]="entry.value.clipSetting.height"
      [style.--clip-setting-img-fit]="entry.value.clipSetting.imgFit"
@@ -17,6 +18,8 @@ The Loaded Clips need to stay cached?
      [style.--clip-setting-width]="entry.value.clipSetting.width"
      class="clip-holder {{entry.value.clip.type | mediaTypeClass}}"
 >
+  <span class="debug-name">{{entry.value.clip.name}}</span>
+
   <video #video (canplay)="addLog('canplay', $event)"
          (canplaythrough)="addLog('canplaythrough', $event)"
          (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
