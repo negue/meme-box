@@ -58,10 +58,15 @@
 
 .mat-table {
   width: 100%;
-  margin-bottom: 2rem;
 }
 
 .delete-screen {
   margin-left: auto;
   margin-right: auto;
+}
+
+.media-list {
+  max-height: 10rem;
+  overflow-y: scroll;
+  margin-bottom: 2rem;
 }

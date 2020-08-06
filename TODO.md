@@ -36,19 +36,15 @@ ____
 
 ## Negue TODO
 
-* [ ] Static parts (clip and different stuff) on each Screen
 * [ ] Configure Twitch Events to get triggered on Screens
-* [ ] Additional Types to trigger, like Iframe or something else
 * [ ] See Issues tagged with [enhancement](https://github.com/negue/meme-box/labels/enhancement) 
 * [ ] Fix all typescript warnings :P
-* [ ] Extract snackbar service to a service with fixed settings
 * [ ] REMOVE CONSOLE LOGS!
 
 ## Proposed Features
 
 * [ ] Screens > Edit Clips > Tab selector for media type to filter media types
 * [ ] Screens > Edit Clips > search for media
-* [ ] Fixed height table of items with overflow: scroll
 * [ ] Require a name for screen and name for media
 
 

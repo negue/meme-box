@@ -89,7 +89,7 @@
   },
   "dependencies": {
     "@datorama/akita": "5.2.0",
-    "@gewd/ng-utils": "0.2.1",
+    "@gewd/ng-utils": "0.2.2",
     "@types/express": "4.17.6",
     "angular-material-css-vars": "1.0.0",
     "angular2-qrcode": "2.0.3",

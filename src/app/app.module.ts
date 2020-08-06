@@ -25,6 +25,8 @@ import {ServicesModule} from "./shared/services/services.module";
 import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
 import {MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
 
+import {NgErrorOverlayModule} from '@gewd/ng-utils/ng-error-overlay';
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -60,6 +62,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       lightThemeClass: 'isLightTheme',
       // ...
     }),
+
+    NgErrorOverlayModule
   ],
   providers: [],
   bootstrap: [AppComponent]
