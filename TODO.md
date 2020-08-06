@@ -25,6 +25,7 @@
 * [ ] Preview button explanation
 * [ ] Make sure all snackbar notifications are consistent
 * [ ] Where does the 'mobile view' go? Does it go on every screen?
+* [ ] Fixed size for dialogs
 
 ### Design
 

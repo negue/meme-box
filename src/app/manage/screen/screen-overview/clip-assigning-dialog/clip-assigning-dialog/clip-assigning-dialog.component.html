@@ -1,31 +1,45 @@
 <h1 mat-dialog-title>Choose media for "{{(screen$ | async).name}}"</h1>
 
 <div mat-dialog-content>
-  Filter:
-  <div class="action-buttons" *ngIf="selectedFilters$ | async as selectedFilters">
-    <button (click)="toggleFilter(MediaType.Picture)"
-            [color]="selectedFilters.includes(MediaType.Picture) ? 'primary' : 'accent'"
-            mat-raised-button>
-      <mat-icon svgIcon="insert_photo"></mat-icon>
+  <mat-chip-list *ngIf="selectedFilters$ | async as selectedFilters" aria-label="Filter media type">
+    <mat-chip (click)="toggleFilter(MediaType.Picture)"
+              [color]="selectedFilters.includes(MediaType.Picture) ? 'primary' : 'accent'"
+              class="filterChip">
       Image
-    </button>
-    <button (click)="toggleFilter(MediaType.Audio)"
-            [color]="selectedFilters.includes(MediaType.Audio) ? 'primary' : 'accent'"
-            mat-raised-button>
-      <mat-icon svgIcon="audiotrack"></mat-icon>
+      <span class="svgContainer">
+        <mat-icon *ngIf="selectedFilters.includes(MediaType.Picture)"
+                  svgIcon="check_circle"></mat-icon>
+        <mat-icon *ngIf="!selectedFilters.includes(MediaType.Picture)"
+                  svgIcon="circle"></mat-icon>
+      </span>
+    </mat-chip>
+    <mat-chip (click)="toggleFilter(MediaType.Audio)"
+              [color]="selectedFilters.includes(MediaType.Audio) ? 'primary' : 'accent'"
+              class="filterChip">
       Audio
-    </button>
-    <button (click)="toggleFilter(MediaType.Video)"
-            [color]="selectedFilters.includes(MediaType.Video) ? 'primary' : 'accent'"
-            mat-raised-button>
-      <mat-icon svgIcon="videocam"></mat-icon>
+      <span class="svgContainer">
+        <mat-icon *ngIf="selectedFilters.includes(MediaType.Audio)"
+                  svgIcon="check_circle"></mat-icon>
+       <mat-icon *ngIf="!selectedFilters.includes(MediaType.Audio)"
+                 svgIcon="circle"></mat-icon>
+      </span>
+    </mat-chip>
+    <mat-chip (click)="toggleFilter(MediaType.Video)"
+              [color]="selectedFilters.includes(MediaType.Video) ? 'primary' : 'accent'"
+              class="filterChip">
       Video
-    </button>
-  </div>
+      <span class="svgContainer">
+        <mat-icon *ngIf="selectedFilters.includes(MediaType.Video)"
+                  svgIcon="check_circle"></mat-icon>
+        <mat-icon *ngIf="!selectedFilters.includes(MediaType.Video)"
+                  svgIcon="circle"></mat-icon>
+      </span>
+    </mat-chip>
+  </mat-chip-list>
 
   <ol class="media-list">
-    <li *ngFor="let clip of clips$|async"
-        (click)="clickToSelect(clip)"
+    <li (click)="clickToSelect(clip)"
+        *ngFor="let clip of clips$|async"
         [class.selected]="checkedMap[clip.id]"
         class="media-list-option">
       <figure *ngIf="clip.type === 0" class="image-container">

@@ -53,7 +53,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   }
 
   clickToSelect(clip: Clip) {
-     const isSelected = this.checkedMap[clip.id] || false;
+    const isSelected = this.checkedMap[clip.id] || false;
 
 
     if (!isSelected) {
