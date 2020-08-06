@@ -8,11 +8,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 
 
 @Component({
-  selector: 'app-obs-info',
-  templateUrl: './obs-info.component.html',
-  styleUrls: ['./obs-info.component.scss']
+  selector: 'app-screen-info',
+  templateUrl: './screen-info.component.html',
+  styleUrls: ['./screen-info.component.scss']
 })
-export class ObsInfoComponent implements OnInit {
+export class ScreenInfoComponent implements OnInit {
 
   @Input()
   public info: ScreenViewEntry;

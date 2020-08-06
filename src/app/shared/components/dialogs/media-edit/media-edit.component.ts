@@ -3,10 +3,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Clip, FileInfo, MediaType} from "@memebox/contracts";
 import {FormBuilder} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {AppQueries} from "../../../../state/app.queries";
 import {distinctUntilChanged, filter, map, pairwise, startWith, takeUntil} from "rxjs/operators";
 import {combineLatest, Subject} from "rxjs";
+import {SnackbarService} from "../../../../core/services/snackbar.service";
 
 //TODO: clean up initial clip stuff - always populate
 // clipLength + playLength so the user doesn't want to die
@@ -14,7 +14,8 @@ const INITIAL_CLIP: Partial<Clip> = {
   type: MediaType.Picture,
   name: 'Your Clip Name',
   volumeSetting: 10,
-  playLength: 600
+  playLength: 600,
+  clipLength: 600 // TODO once its possible to get the data from the clip itself
 }
 
 @Component({
@@ -56,7 +57,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
               private dialogRef: MatDialogRef<any>,
               private appService: AppService,
               private appQuery: AppQueries,
-              private snackBar: MatSnackBar) {
+              private snackBar: SnackbarService) {
     this.data = this.data ?? INITIAL_CLIP as any;
   }
 
@@ -83,22 +84,19 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   }
 
   async save() {
-    const {value} = this.form;
-
-    if (this.form.valid) {
-      await this.appService.addOrUpdateClip(value);
-
-      //TODO - "extract snackbar service to a service with fixed settings"
-      this.snackBar.open(`Clip "${value.name}"  ${value.id ? 'updated' : 'added'} 🎉`, null, {
-        duration: 4000,
-        verticalPosition: 'top'
-      });
-
-      this.dialogRef.close();
-    } else {
+    if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
+      return;
     }
+
+    const {value} = this.form;
+
+    await this.appService.addOrUpdateClip(value);
+
+    this.snackBar.normal(`Clip "${value.name}"  ${value.id ? 'updated' : 'added'} 🎉`);
+
+    this.dialogRef.close();
   }
 
   onChange($event: FileInfo) {

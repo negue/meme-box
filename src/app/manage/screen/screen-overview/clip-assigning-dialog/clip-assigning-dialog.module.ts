@@ -4,6 +4,7 @@ import {ClipAssigningDialogComponent} from './clip-assigning-dialog/clip-assigni
 import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
 
 // todo better name? :D
 
@@ -15,6 +16,7 @@ import {MatDialogModule} from "@angular/material/dialog";
     MatListModule,
     MatIconModule,
     MatDialogModule,
+    MatButtonModule,
   ]
 })
 export class ClipAssigningDialogModule {

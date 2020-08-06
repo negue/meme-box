@@ -8,7 +8,11 @@
         <mat-label>Name</mat-label>
         <input autocomplete="off"
                formControlName="name"
-               matInput>
+               matInput required>
+
+        <mat-error *ngIf="form.controls['name'].hasError('required')">
+          Name is required
+        </mat-error>
       </mat-form-field>
 
 

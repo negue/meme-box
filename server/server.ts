@@ -20,7 +20,8 @@ PersistenceInstance.dataUpdated$()
     sendDataToAllSockets('UPDATE_DATA');
   });
 
-
+// TODO add delay during development build
+// because angular needs some seconds more to start
 if(fs.existsSync('package.json')) {
   open(`http://localhost:4200`);
 } else {

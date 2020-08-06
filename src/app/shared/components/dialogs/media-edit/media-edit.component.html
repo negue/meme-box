@@ -6,6 +6,10 @@
              matInput
              placeholder="Name"
              required type="text">
+
+      <mat-error *ngIf="form.controls['name'].hasError('required')">
+        Name is required
+      </mat-error>
     </mat-form-field>
 
     <div class="action-buttons">
@@ -52,6 +56,10 @@
             </mat-option>
           </mat-select>
         </div>
+
+        <mat-error *ngIf="form.controls['path'].hasError('required')">
+          You need to enter the URL or select a file.
+        </mat-error>
       </mat-form-field>
     </div>
     <div class="form-field-row">
@@ -63,6 +71,10 @@
                matInput
                type="number">
         <span matSuffix>ms</span>
+
+        <mat-error *ngIf="form.controls['playLength'].hasError('required')">
+          How long should it be visible on screen?
+        </mat-error>
       </mat-form-field>
     </div>
     <ng-container *ngIf="form.value.type !== 0">

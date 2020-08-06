@@ -8,6 +8,10 @@
         {{ item }}
       </mat-option>
     </mat-select>
+
+    <mat-error *ngIf="formGroup.controls['event'].hasError('required')">
+      You need to choose an event-type?
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>
@@ -20,6 +24,10 @@
         {{ item.name }}
       </mat-option>
     </mat-select>
+
+    <mat-error *ngIf="formGroup.controls['clipId'].hasError('required')">
+      You need to select a clip.
+    </mat-error>
   </mat-form-field>
 
   <button (click)="triggerAdd()" color="primary"

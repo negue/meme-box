@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ObsInfoComponent} from './obs-info.component';
+import {ScreenInfoComponent} from './screen-info.component';
 
 describe('ObsInfoComponent', () => {
-  let component: ObsInfoComponent;
-  let fixture: ComponentFixture<ObsInfoComponent>;
+  let component: ScreenInfoComponent;
+  let fixture: ComponentFixture<ScreenInfoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ObsInfoComponent]
+      declarations: [ScreenInfoComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ObsInfoComponent);
+    fixture = TestBed.createComponent(ScreenInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

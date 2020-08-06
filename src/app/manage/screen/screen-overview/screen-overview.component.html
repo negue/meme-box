@@ -3,14 +3,14 @@
   <div *ngFor="let screen of screenList"
        class="screens-item">
     <mat-card>
-      <app-obs-info (onDelete)="delete(screen)"
+      <app-screen-info (onDelete)="delete(screen)"
                     (onEdit)="showDialog(screen)"
                     (onEditAssignments)="showAssignmentDialog(screen)"
                     (onEditScreenClipOptions)="onClipOptions($event, screen)"
                     [info]="screen"
       >
 
-      </app-obs-info>
+      </app-screen-info>
     </mat-card>
   </div>
 
@@ -25,3 +25,4 @@
     </mat-card>
   </div>
 </div>
+

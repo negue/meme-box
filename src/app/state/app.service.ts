@@ -3,12 +3,11 @@ import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
 import {Clip, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch} from "@memebox/contracts";
 import {API_PREFIX, EXPRESS_PORT, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {SnackbarService} from "../core/services/snackbar.service";
 
 export const EXPRESS_BASE = `http://${location.hostname}:${EXPRESS_PORT}`;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
-const SNACKBAR_DURATION = 3000;
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,7 @@ const SNACKBAR_DURATION = 3000;
 export class AppService {
   constructor(private appStore: AppStore,
               private http: HttpClient,
-              private snackbar: MatSnackBar) {
+              private snackbar: SnackbarService) {
   }
 
   public loadState() {
@@ -78,9 +77,7 @@ export class AppService {
       delete state.clips[clipId];
     });
 
-    this.snackbar.open('Clip removed.', null, {
-      duration: SNACKBAR_DURATION,
-    });
+    this.snackbar.normal('Clip removed.');
   }
 
 
@@ -125,9 +122,7 @@ export class AppService {
       delete state.screen[id];
     });
 
-    this.snackbar.open('Screen removed.'), null, {
-      duration: SNACKBAR_DURATION,
-    };
+    this.snackbar.normal('Screen removed.');
   }
 
   public async addScreenClipById(screenId: string, clipId: string) {
@@ -146,9 +141,7 @@ export class AppService {
     });
 
 
-    this.snackbar.open('Screen/Clip Assignment saved.', null, {
-      duration: SNACKBAR_DURATION,
-    });
+    this.snackbar.normal('Screen/Clip Assignment saved.');
   }
 
   public async addOrUpdateScreenClip(screenId: string, obsClip: Partial<ScreenClip>) {
@@ -171,9 +164,7 @@ export class AppService {
       state.screen[screenId].clips[newId] = obsClip as ScreenClip;
     });
 
-    this.snackbar.open('Screen/Clip Assignment saved.', null, {
-      duration: SNACKBAR_DURATION,
-    });
+    this.snackbar.normal('Screen/Clip Assignment saved.');
   }
 
   public async deleteScreenClip(screenId: string, id: string) {
@@ -186,9 +177,7 @@ export class AppService {
     });
 
 
-    this.snackbar.open('Screen/Clip Assignment removed.', null, {
-      duration: SNACKBAR_DURATION,
-    });
+    this.snackbar.normal('Screen/Clip Assignment removed.');
   }
 
 
@@ -222,9 +211,7 @@ export class AppService {
       delete state.twitchEvents[clipId];
     });
 
-    this.snackbar.open('Twitch-Event removed.', null, {
-      duration: SNACKBAR_DURATION,
-    });
+    this.snackbar.normal('Twitch-Event removed.');
   }
 
   public async updateMediaFolder(newFolder: string) {

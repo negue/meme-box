@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Screen} from "@memebox/contracts";
 import {FormBuilder} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {SnackbarService} from "../../../../core/services/snackbar.service";
 
 @Component({
   selector: 'app-obs-edit',
@@ -20,7 +20,7 @@ export class ScreenEditComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: Screen,
               private dialogRef: MatDialogRef<any>,
               private appService: AppService,
-              private snackBar: MatSnackBar) {
+              private snackBar: SnackbarService) {
     this.form.patchValue({
       name: data.name,
       id: data.id
@@ -32,6 +32,12 @@ export class ScreenEditComponent implements OnInit {
   }
 
   async save() {
+    if (!this.form.valid) {
+      // highlight hack
+      this.form.markAllAsTouched();
+      return;
+    }
+
     const {value} = this.form;
 
     const newScreenValue = {
@@ -42,7 +48,7 @@ export class ScreenEditComponent implements OnInit {
     await this.appService.addOrUpdateScreen(newScreenValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.open(`Screen "${newScreenValue.name}" ${newScreenValue.id ? 'updated' : 'added'} 🎉`);
+    this.snackBar.normal(`Screen "${newScreenValue.name}" ${newScreenValue.id ? 'updated' : 'added'} 🎉`);
 
     this.dialogRef.close();
   }

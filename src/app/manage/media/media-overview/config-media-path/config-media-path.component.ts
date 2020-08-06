@@ -2,10 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {AppService} from "../../../../state/app.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {AppQueries} from "../../../../state/app.queries";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import {SnackbarService} from "../../../../core/services/snackbar.service";
 
 @Component({
   selector: 'app-config-media-path',
@@ -26,7 +26,7 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
   constructor(private appQuery: AppQueries,
               private dialogRef: MatDialogRef<any>,
               private appService: AppService,
-              private snackBar: MatSnackBar) {
+              private snackBar: SnackbarService) {
 
   }
 
@@ -41,11 +41,17 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
   }
 
   async save() {
+    if (!this.form.valid) {
+      // highlight hack
+      this.form.markAllAsTouched();
+      return;
+    }
+
     const {value} = this.form;
 
     await this.appService.updateMediaFolder(value.path);
 
-    this.snackBar.open(`Media-Folder Path changed 🎉`);
+    this.snackBar.normal(`Media-Folder Path changed 🎉`);
 
     this.dialogRef.close();
   }

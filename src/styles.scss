@@ -28,7 +28,6 @@ $custom-typography: mat-typography-config(
 );
 
 // init theme
-// TODO ADD CSS-VARS
 // examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
 
 @include init-material-css-vars() {
@@ -38,7 +37,7 @@ $custom-typography: mat-typography-config(
 
 @include mat-css-set-palette-defaults($mat-light-blue, 'primary');
 @include mat-css-set-palette-defaults($mat-pink, 'accent');
-@include mat-css-set-palette-defaults($mat-purple, 'warn');
+@include mat-css-set-palette-defaults($mat-red, 'warn');
 
 
 

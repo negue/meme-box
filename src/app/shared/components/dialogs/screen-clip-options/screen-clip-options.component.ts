@@ -6,7 +6,7 @@ import {map, takeUntil} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {SnackbarService} from "../../../../core/services/snackbar.service";
 
 export interface ScreenClipOptionsPayload {
   screenId: string;
@@ -44,7 +44,7 @@ export class ScreenClipOptionsComponent implements OnInit {
               private dialogRef: MatDialogRef<any>,
               private appQueries: AppQueries,
               private appService: AppService,
-              private snackBar: MatSnackBar) {
+              private snackBar: SnackbarService) {
   }
 
   ngOnInit(): void {
@@ -61,25 +61,24 @@ export class ScreenClipOptionsComponent implements OnInit {
   }
 
   async save() {
-    if (this.form.valid) {
-      const {value} = this.form;
-
-      const newScreenClipValue: ScreenClip = {
-        ...this._clipInfo,
-        ...value
-      };
-
-      await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
-
-      // todo refactor "better way?" to trigger those snackbars
-      this.snackBar.open(`Screen / Clip Assignment updated 🎉`, null, {
-        duration: 4000
-      });
-
-      this.dialogRef.close();
-    } else {
+    if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
+      return;
     }
+
+    const {value} = this.form;
+
+    const newScreenClipValue: ScreenClip = {
+      ...this._clipInfo,
+      ...value
+    };
+
+    await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
+
+    // todo refactor "better way?" to trigger those snackbars
+    this.snackBar.normal(`Screen / Clip Assignment updated 🎉`);
+
+    this.dialogRef.close();
   }
 }
