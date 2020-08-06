@@ -6,8 +6,13 @@
       <mat-form-field appearance="outline">
         <mat-label>Path</mat-label>
         <input autocomplete="off" formControlName="path"
-               matInput
+               matInput required
                type="text"/>
+
+
+        <mat-error *ngIf="form.controls['path'].hasError('required')">
+          You need to select a media folder.
+        </mat-error>
       </mat-form-field>
     </div>
   </form>

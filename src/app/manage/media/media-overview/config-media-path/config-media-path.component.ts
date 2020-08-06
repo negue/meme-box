@@ -41,6 +41,12 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
   }
 
   async save() {
+    if (!this.form.valid) {
+      // highlight hack
+      this.form.markAllAsTouched();
+      return;
+    }
+
     const {value} = this.form;
 
     await this.appService.updateMediaFolder(value.path);
