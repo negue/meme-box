@@ -46,7 +46,6 @@ export class Persistence {
       if (err) {
         return console.log(err);
       }
-      console.info('SETTING DATA', data);
 
       let dataFromFile = {};
 
@@ -57,7 +56,6 @@ export class Persistence {
 
       this.data = Object.assign({}, createInitialState(), dataFromFile);
 
-      console.info({data: this.data});
     });
   }
 
