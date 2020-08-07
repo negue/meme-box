@@ -35,3 +35,20 @@ video, audio, img {
   top: var(--clip-setting-top, unset);
   left: var(--clip-setting-left, unset);
 }
+
+:host{
+  .debug-name {
+    display: none;
+  }
+
+  &.debug-mode {
+    .debug-name {
+      display: block;
+    }
+
+    .clip-holder {
+      display: block;
+      background: var(--clip-background);
+    }
+  }
+}

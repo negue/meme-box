@@ -1,7 +1,7 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {Clip, Dictionary, ScreenClip} from "@memebox/contracts";
-import {filter, map, pairwise, take, takeUntil, withLatestFrom} from "rxjs/operators";
+import {distinctUntilChanged, filter, map, pairwise, take, takeUntil, withLatestFrom} from "rxjs/operators";
 import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
 import {ActivatedRoute} from "@angular/router";
@@ -11,6 +11,7 @@ import {WebsocketService} from "../core/services/websocket.service";
 interface CombinedClip {
   clip: Clip;
   clipSetting: ScreenClip;
+  backgroundColor: string;
 }
 
 @Component({
@@ -21,6 +22,10 @@ interface CombinedClip {
 export class TargetScreenComponent implements OnInit, OnDestroy {
 
   log = [];
+
+  debug$ = this.route.queryParams.pipe(
+    map(queryParams => queryParams['debug'] === 'true')
+  );
 
   screenId$ = new BehaviorSubject<string>(null);
 
@@ -46,7 +51,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       for (const [key, entry] of Object.entries(assignedClips)) {
         result[key] = {
           clipSetting: entry,
-          clip: allClips[key]
+          clip: allClips[key],
+          backgroundColor: this.random_rgba()
         }
       }
 
@@ -61,12 +67,24 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   constructor(private appQuery: AppQueries,
               private appService: AppService,
               private route: ActivatedRoute,
-              private wsService: WebsocketService) {
+              private wsService: WebsocketService,
+              private element: ElementRef<HTMLElement>) {
   }
 
 
   ngOnInit(): void {
     this.appService.loadState();
+
+    this.debug$.pipe(
+      distinctUntilChanged(),
+      takeUntil(this._destroy$)
+    ).subscribe(value => {
+      if (value) {
+        this.element.nativeElement.classList.add('debug-mode');
+      } else{
+        this.element.nativeElement.classList.remove('debug-mode');
+      }
+    })
 
     const thisScreenId = this.route.snapshot.params.guid;
 
@@ -166,6 +184,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       this.mediaClipToShow$.next(null);
     }
   }
+
+  random_rgba() {
+    var o = Math.round, r = Math.random, s = 255;
+    return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',0.34)';
+  }
+
 
   ngOnDestroy(): void {
     this._destroy$.next();
