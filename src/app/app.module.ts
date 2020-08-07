@@ -77,6 +77,8 @@ export class AppModule {
     const icons = [
       'add',
       'audiotrack',
+      'circle',
+      'check_circle',
       'content_copy',
       'delete',
       'edit',

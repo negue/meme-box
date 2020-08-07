@@ -11,6 +11,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {EditTwitchEventComponent} from './events-overview/edit-twitch-event/edit-twitch-event.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
+import {StyleguideModule} from "../../shared/styleguide/styleguide.module";
 
 
 const routes: Routes = [
@@ -22,16 +23,17 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [EventsOverviewComponent, EventInfoComponent, AddEventComponent, EditTwitchEventComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatSelectModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatDialogModule,
-    MatInputModule,
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatSelectModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatDialogModule,
+        MatInputModule,
+        StyleguideModule,
+    ]
 })
 export class TwitchModule {
 }

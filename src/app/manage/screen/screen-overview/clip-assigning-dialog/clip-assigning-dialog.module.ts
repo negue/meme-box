@@ -5,6 +5,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
+import {MatChipsModule} from "@angular/material/chips";
 
 // todo better name? :D
 
@@ -17,6 +18,7 @@ import {MatButtonModule} from "@angular/material/button";
     MatIconModule,
     MatDialogModule,
     MatButtonModule,
+    MatChipsModule,
   ]
 })
 export class ClipAssigningDialogModule {

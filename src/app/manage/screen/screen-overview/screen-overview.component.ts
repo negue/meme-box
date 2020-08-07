@@ -66,7 +66,9 @@ export class ScreenOverviewComponent implements OnInit {
   showAssignmentDialog(screen: Partial<Screen>) {
     this._dialog.open(
       ClipAssigningDialogComponent, {
-        data: screen.id
+        data: screen.id,
+        height: '600px',
+        width: '800px',
       }
     )
   }
