@@ -261,15 +261,13 @@ app.get(FILE_ENDPOINT, function(req, res){
   ];
 
   for (const path of pathsArray) {
-    console.info({ path });
     if (fs.existsSync(path)) {
-      console.warn('EXISTS');
       res.sendFile(path);
       return;
     }
   }
 
-  console.error('not found');
+  console.error(`file not found: ${firstParam}`);
 });
 
 // Put = Update

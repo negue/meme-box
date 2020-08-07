@@ -1,3 +1,10 @@
+::ng-deep {
+  // target-screens needs to be transparent for OBS
+  .mat-app-background {
+    background-color: transparent !important;
+  }
+}
+
 video, audio, img {
   display: none;
 }
