@@ -29,7 +29,6 @@
 }
 
 .image-container {
-
 }
 
 .media-img {
@@ -46,14 +45,16 @@
   margin-right: 0.5rem;
 }
 
-.audio-container, .video-container {
+.audio-container,
+.video-container {
   height: 100%;
   display: block;
   position: relative;
 }
 
 //TODO this is weird
-.audio-image, .video-image {
+.audio-image,
+.video-image {
   display: flex;
   height: 75%;
   align-items: center;
@@ -65,3 +66,8 @@
   }
 }
 
+.iframe-container {
+  .media-iframe-conatiner {
+    width: 100%;
+  }
+}
