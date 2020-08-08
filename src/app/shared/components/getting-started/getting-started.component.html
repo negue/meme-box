@@ -4,12 +4,19 @@
   </mat-card-title>
   <mat-card-content>
     <mat-list>
+      <mat-list-item *ngIf="inOfflineMode$ | async">
+        <button (click)="fillData()" class="full-width"
+                color="primary"
+                mat-raised-button>
+          Offline Mode: Fill with dummy data
+        </button>
+      </mat-list-item>
       <mat-list-item>
-
         <div>
-        1. Choose media folder - show media choose component in situ
+          1. Choose media folder - show media choose component in situ
         </div>
-
+      </mat-list-item>
+      <mat-list-item>
         <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
           <button (click)="newMediaClip()" class="full-width"
                   color="primary"
