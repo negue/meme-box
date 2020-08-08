@@ -19,7 +19,7 @@ import { ClipTypeModule } from "../../shared/components/clip-type/clip-type.modu
 import { MatListModule } from "@angular/material/list";
 import { GettingStartedModule } from "../../shared/components/getting-started/getting-started.module";
 import { ConfigMediaPathModule } from "./media-overview/config-media-path/config-media-path.module";
-import { PipesModule } from "../../core/pipes/pipes-module";
+import { PipesModule } from "../../core/pipes/pipes.module";
 
 const routes: Routes = [
   {

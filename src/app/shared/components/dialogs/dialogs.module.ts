@@ -14,7 +14,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ScreenClipOptionsComponent } from "./screen-clip-options/screen-clip-options.component";
 import { MatIconModule } from "@angular/material/icon";
-import { PipesModule } from "../../../core/pipes/pipes-module";
+import { PipesModule } from "../../../core/pipes/pipes.module";
 
 @NgModule({
   declarations: [

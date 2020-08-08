@@ -111,7 +111,7 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <ng-container *ngIf="form.value.type !== 0 || form.value.type === 3">
+    <ng-container *ngIf="form.value.type !== 0 || form.value.type !== 3">
       <mat-label>Volume</mat-label>
       <div class="slider__row">
         <mat-slider
@@ -141,7 +141,7 @@
     <img [src]="form.value.path || form.value.previewUrl" />
     <iframe
       *ngIf="form.value.type === 3"
-      [src]="form.value.path || form.value.previewUrl | safeurl"
+      [src]="form.value.path | safeurl"
     ></iframe>
   </form>
 </mat-dialog-content>

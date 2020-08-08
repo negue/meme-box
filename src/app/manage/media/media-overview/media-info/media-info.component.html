@@ -14,7 +14,7 @@
     />
   </div>
   <div *ngIf="info.type === 3 && (info.previewUrl || info.path)">
-    <iframe [src]="info.path || info.previewUrl | safeurl"></iframe>
+    <iframe [src]="info.path | safeurl"></iframe>
   </div>
   <div class="information">
     <div class="bottom-spacing">

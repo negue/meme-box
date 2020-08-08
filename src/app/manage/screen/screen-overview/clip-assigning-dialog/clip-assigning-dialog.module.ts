@@ -5,7 +5,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatButtonModule } from "@angular/material/button";
-import { PipesModule } from "../../../../core/pipes/pipes-module";
+import { PipesModule } from "../../../../core/pipes/pipes.module";
 // todo better name? :D
 
 @NgModule({
