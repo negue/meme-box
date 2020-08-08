@@ -12,11 +12,21 @@ export class WebsocketService {
   public onTriggerClip$ = new Subject<TriggerClip>();
 
   private ws: WebSocket;
+  private isConnected = false;
 
   constructor() {
+   setTimeout(() => this.connect(), 150);
+  }
+
+  public connect() {
+    if (this.isConnected) {
+      return;
+    }
+
     this.ws = new WebSocket(`ws://${location.hostname}:${WS_PORT}`);
 
     this.ws.onopen = ev => {
+      this.isConnected = true;
       this.onOpenConnection$.next();
     };
 

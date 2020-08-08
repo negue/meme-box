@@ -1,4 +1,2 @@
-export const AppConfig = {
-  production: false,
-  environment: 'LOCAL'
-};
+// TODO improve the environment files
+export {AppConfig} from './environment.dev';

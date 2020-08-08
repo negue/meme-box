@@ -92,6 +92,7 @@ export interface SettingsState {
 
 export interface AppState extends SettingsState {
   currentMediaFiles: FileInfo[];
+  offlineMode: boolean;
 }
 
 export interface Config {

@@ -20,6 +20,7 @@ export class AppQueries extends Query<AppState> {
   screenMap$ = this.select(store => store.screen);
   config$ = this.select(store => store.config);
   currentMediaFile$ = this.select(store => store.currentMediaFiles);
+  inOfflineMode$ = this.select(store => store.offlineMode);
 
   constructor(protected store: AppStore,
               protected service: AppService) {

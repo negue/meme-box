@@ -24,7 +24,6 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
   addNewItem(): any {
