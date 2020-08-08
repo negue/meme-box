@@ -1,7 +1,2 @@
-export const AppConfig = {
-  production: false,
-  environment: 'DEV',
-  ngModules: [
-    // NgErrorOverlayModule
-  ]
-};
+// TODO improve the environment files
+export {AppConfig} from './environment.dev';
