@@ -51,9 +51,13 @@
 .delete-media {
   margin-left: auto;
   margin-right: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1rem;
 }
 
-table {
+.mat-table {
   width: 100%;
   margin-bottom: 1rem;
 
@@ -61,6 +65,10 @@ table {
     padding: 0.5rem;
     font-size: 0.8rem;
   }
+}
+
+.media-list {
+  margin-bottom: 3rem;
 }
 
 .gray {
@@ -81,8 +89,6 @@ table {
   display: flex;
   flex-direction: row;
   align-items: center;
-
-
 }
 
 .small-column {

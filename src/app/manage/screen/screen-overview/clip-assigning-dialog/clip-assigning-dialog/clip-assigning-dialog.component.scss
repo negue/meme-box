@@ -66,8 +66,21 @@
   }
 }
 
+.filterChip {
+  cursor: pointer;
+}
 .iframe-container {
   .media-iframe-conatiner {
     width: 100%;
   }
+}
+
+.svgContainer {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 50%;
+  background-color: red;
+  margin-left: 0.25rem;
+  display: flex;
+  align-items: center;
 }

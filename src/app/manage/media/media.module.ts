@@ -20,6 +20,7 @@ import { MatListModule } from "@angular/material/list";
 import { GettingStartedModule } from "../../shared/components/getting-started/getting-started.module";
 import { ConfigMediaPathModule } from "./media-overview/config-media-path/config-media-path.module";
 import { PipesModule } from "../../core/pipes/pipes.module";
+import {StyleguideModule} from "../../shared/styleguide/styleguide.module";
 
 const routes: Routes = [
   {
@@ -50,6 +51,7 @@ const routes: Routes = [
     MatListModule,
     GettingStartedModule,
     ConfigMediaPathModule,
-  ],
+    StyleguideModule
+  ]
 })
 export class MediaModule {}

@@ -45,6 +45,11 @@ http://localhost:4200 opens automatically.
 ```sh
 npm install
 npm run start:all
+
+# if you want to work on the server, its easier to start client / server separately
+# that way you only have to restart the server alone
+npm run start:app
+npm run start:server
 ```
 
 

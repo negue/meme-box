@@ -1,3 +1,10 @@
+::ng-deep {
+  // target-screens needs to be transparent for OBS
+  .mat-app-background {
+    background-color: transparent !important;
+  }
+}
+
 video, audio, img {
   display: none;
 }
@@ -34,4 +41,21 @@ video, audio, img {
   right: var(--clip-setting-right, unset);
   top: var(--clip-setting-top, unset);
   left: var(--clip-setting-left, unset);
+}
+
+:host{
+  .debug-name {
+    display: none;
+  }
+
+  &.debug-mode {
+    .debug-name {
+      display: block;
+    }
+
+    .clip-holder {
+      display: block;
+      background: var(--clip-background);
+    }
+  }
 }

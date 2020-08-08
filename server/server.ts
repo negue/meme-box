@@ -20,10 +20,21 @@ PersistenceInstance.dataUpdated$()
     sendDataToAllSockets('UPDATE_DATA');
   });
 
+
+console.log('Server is ready');
+
 // TODO add delay during development build
 // because angular needs some seconds more to start
 if(fs.existsSync('package.json')) {
-  open(`http://localhost:4200`);
+  const waitForLocalhost = require('wait-for-localhost');
+
+  console.info('Waiting on Angular to finish the build :)');
+
+  (async () => {
+    await waitForLocalhost({port: 4200});
+
+    open(`http://localhost:4200`);
+  })();
 } else {
   open(`http://localhost:${EXPRESS_PORT}`);
 }

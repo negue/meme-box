@@ -6,6 +6,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatButtonModule } from "@angular/material/button";
 import { PipesModule } from "../../../../core/pipes/pipes.module";
+import {MatChipsModule} from "@angular/material/chips";
 // todo better name? :D
 
 @NgModule({
@@ -17,6 +18,7 @@ import { PipesModule } from "../../../../core/pipes/pipes.module";
     MatIconModule,
     MatDialogModule,
     MatButtonModule,
-  ],
+    MatChipsModule,
+  ]
 })
 export class ClipAssigningDialogModule {}

@@ -9,7 +9,8 @@ const SNACKBAR_DURATION = 3000;
 })
 export class SnackbarService {
 
-  constructor(private matSnackBar: MatSnackBar) { }
+  constructor(private matSnackBar: MatSnackBar) {
+  }
 
   normal(text: string) {
     this.matSnackBar.open(text, null, {
