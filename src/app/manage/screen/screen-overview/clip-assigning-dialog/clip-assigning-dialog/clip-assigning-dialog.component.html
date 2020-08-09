@@ -1,9 +1,11 @@
 <h1 mat-dialog-title>Choose media for "{{(screen$ | async).name}}"</h1>
 
 <div mat-dialog-content>
-  <mat-chip-list *ngIf="selectedFilters$ | async as selectedFilters" aria-label="Filter media type">
+  <div class="filterRow">
+    <mat-icon class="filterRow__icon" matListIcon svgIcon="filter"></mat-icon>
+    <mat-chip-list *ngIf="selectedFilters$ | async as selectedFilters" aria-label="Filter media type">
     <mat-chip (click)="toggleFilter(MediaType.Picture)"
-              [color]="selectedFilters.includes(MediaType.Picture) ? 'primary' : 'accent'"
+              [class.filterChip--selected]="selectedFilters.includes(MediaType.Picture)"
               class="filterChip">
       Image
       <span class="svgContainer">
@@ -14,7 +16,7 @@
       </span>
     </mat-chip>
     <mat-chip (click)="toggleFilter(MediaType.Audio)"
-              [color]="selectedFilters.includes(MediaType.Audio) ? 'primary' : 'accent'"
+              [class.filterChip--selected]="selectedFilters.includes(MediaType.Audio)"
               class="filterChip">
       Audio
       <span class="svgContainer">
@@ -25,7 +27,7 @@
       </span>
     </mat-chip>
     <mat-chip (click)="toggleFilter(MediaType.Video)"
-              [color]="selectedFilters.includes(MediaType.Video) ? 'primary' : 'accent'"
+              [class.filterChip--selected]="selectedFilters.includes(MediaType.Video)"
               class="filterChip">
       Video
       <span class="svgContainer">
@@ -36,22 +38,22 @@
       </span>
     </mat-chip>
   </mat-chip-list>
-
-  <ol class="media-list">
+  </div>
+  <ol class="mediaList">
     <li (click)="clickToSelect(clip)"
         *ngFor="let clip of clips$|async"
-        [class.selected]="checkedMap[clip.id]"
-        class="media-list-option">
-      <figure *ngIf="clip.type === 0" class="image-container">
-        <figcaption class="media-name">
-          <mat-icon class="media-icon" matListIcon svgIcon="insert_photo"></mat-icon>
+        [class.mediaList__option--selected]="checkedMap[clip.id]"
+        class="mediaList__option">
+      <figure *ngIf="clip.type === 0">
+        <figcaption class="mediaList__name">
+          <mat-icon class="mediaList__icon" matListIcon svgIcon="insert_photo"></mat-icon>
           {{clip.name}}</figcaption>
-        <img [alt]="clip.name" [src]="clip.path" class="media-img"/>
+        <img [alt]="clip.name" [src]="clip.path" class="mediaList__img"/>
       </figure>
 
-      <span *ngIf="clip.type === 1" class="audio-container">
-        <span class="media-name">
-          <mat-icon class="media-icon" matListIcon svgIcon="audiotrack"></mat-icon>
+      <span *ngIf="clip.type === 1" class="mediaList__audioContainer">
+        <span class="mediaList__name">
+          <mat-icon class="mediaList__icon" matListIcon svgIcon="audiotrack"></mat-icon>
           {{clip.name}}
         </span>
 
@@ -61,9 +63,9 @@
 
       </span>
 
-      <span *ngIf="clip.type === 2" class="video-container">
-          <span class="media-name">
-            <mat-icon class="media-icon" matListIcon svgIcon="videocam"></mat-icon>
+      <span *ngIf="clip.type === 2" class="mediaList__videoContainer">
+          <span class="mediaList__name">
+            <mat-icon class="mediaList__icon" matListIcon svgIcon="videocam"></mat-icon>
             {{clip.name}}
         </span>
 

@@ -6,9 +6,9 @@ export const StyleguideColors = {
   primary: '#4bcffa',
   accent: '#575fcf',
   warn: '#f53b57',
-  highlight: '#00d8d6'
+  highlight: '#00d8d6',
+  chipSelected: '#ffd32a'
 }
-
 
 
 @Component({

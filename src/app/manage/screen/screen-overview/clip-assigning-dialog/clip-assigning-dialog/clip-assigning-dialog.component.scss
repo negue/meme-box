@@ -2,9 +2,21 @@
   width: 100%;
 }
 
-.media-list {
+.filterRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 1rem 1rem 2rem 0;
+}
+
+.filterRow__icon {
+  margin-right: 1rem;
+}
+
+.mediaList {
   display: grid;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
   list-style: none;
 
@@ -19,34 +31,35 @@
   }
 }
 
-.media-list-option {
+.mediaList__option {
   margin-bottom: 1rem;
   cursor: pointer;
-
-  &.selected {
-    border: 1px solid red;
-  }
+  padding: 0;
+  transition: padding 0.1s ease-in-out;
+  border-radius: 1rem;
 }
 
-.image-container {
-
+.mediaList__option--selected {
+  background-color: #3F4855;
+  padding: 0.75rem;
+  border: 0.25rem solid #00d8d6;
 }
 
-.media-img {
+.mediaList__img {
   width: 100%;
 }
 
-.media-name {
+.mediaList__name {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
 }
 
-.media-icon {
-  margin-right: 0.5rem;
+.mediaList__icon {
+  margin-right: 0.5em;
 }
 
-.audio-container, .video-container {
+.mediaList__audioContainer, .mediaList__videoContainer {
   height: 100%;
   display: block;
   position: relative;
@@ -69,11 +82,22 @@
   cursor: pointer;
 }
 
+.filterChip--selected {
+  background-color: red;
+}
+
+::ng-deep .mat-chip {
+  &.mat-chip.mat-standard-chip {
+    &.filterChip--selected {
+      background-color: #575fcf;
+    }
+  }
+}
+
 .svgContainer {
   height: 1.5rem;
   width: 1.5rem;
   border-radius: 50%;
-  background-color: red;
   margin-left: 0.25rem;
   display: flex;
   align-items: center;

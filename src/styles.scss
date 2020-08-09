@@ -40,6 +40,7 @@ $custom-typography: mat-typography-config(
 body {
   font-size: 16px;
   background-color: #2f3640 !important;
+  font-family: Barlow, sans-serif;
 }
 
 * {
@@ -56,6 +57,16 @@ body {
 
   .mat-table {
     background: transparent !important;
+  }
+
+  .mat-dialog-container {
+    background-color: #2f3640 !important;
+  }
+
+  .mat-chip.mat-standard-chip {
+    background-color: #3F4855;
+    color: white;
+    font-family: Barlow, sans-serif;
   }
 }
 

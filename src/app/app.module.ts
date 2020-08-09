@@ -82,6 +82,7 @@ export class AppModule {
       'content_copy',
       'delete',
       'edit',
+      'filter',
       'folder',
       'insert_photo',
       'launch',
