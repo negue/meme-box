@@ -1,14 +1,4 @@
-<div class="colorBlocks">
-  <div class="colorBlocks__block colorBlocks__block--primary"></div>
-  <div class="colorBlocks__block colorBlocks__block--primaryContrast"></div>
-  <div class="colorBlocks__block colorBlocks__block--accent"></div>
-  <div class="colorBlocks__block colorBlocks__block--warn"></div>
-  <div class="colorBlocks__block colorBlocks__block--background"></div>
-  <div class="colorBlocks__block colorBlocks__block--foreground"></div>
-</div>
-
-
-<div class="textHolder">
-  <h1>This is a title</h1>
-  <p>I'm baby vinyl cornhole pitchfork live-edge gochujang flexitarian. Wayfarers williamsburg glossier jianbing slow-carb trust fund. Mustache etsy umami, pickled keffiyeh kombucha blue bottle art party flexitarian meggings lo-fi slow-carb adaptogen. Shaman seitan salvia, kombucha biodiesel drinking vinegar lyft. Squid butcher synth trust fund jean shorts cold-pressed man braid palo santo shoreditch art party microdosing. Small batch pitchfork cold-pressed, pinterest quinoa tumeric lo-fi food truck jianbing selfies pug +1 prism microdosing. La croix hammock 90's wayfarers gastropub.</p>
+<div class="colorBlocks" >
+  <div class="colorBlocks__block" *ngFor="let color of colors"
+  [style.backgroundColor]="color.hex">{{ color.name }}</div>
 </div>
