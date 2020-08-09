@@ -1,32 +1,38 @@
-<div class="info-holder">
-  <div class="title-row">
-    <h2 class="mat-h2 title-name">{{info.name}}</h2>
+<div class="infoHolder">
+  <div class="titleRow">
+    <h2 class="mat-h2 titleName">{{info.name}}</h2>
     <mat-icon svgIcon="screen"></mat-icon>
   </div>
 
-  <label class="label-hidden" for="input-url">Screen URL</label>
-  <input [value]="info.url" class="input-url" id="input-url" readonly type="text"/>
+  <mat-form-field class="matFormField">
+    <label class="inputLabel--hidden" for="input-url">Screen URL</label>
+    <input [value]="info.url" matInput class="inputUrl" id="input-url" readonly type="text"/>
+    <button mat-button
+            matSuffix
+            (click)="copyURL()"
+            [attr.aria-label]="'Copy URL'"
+            class="copyUrlButton">
+      <mat-icon svgIcon="content_copy"></mat-icon>
+      Copy URL
+    </button>
+  </mat-form-field>
 
-  <div class="action-buttons">
+  <div class="actionButtons">
     <button (click)="onEdit.emit()" color="accent" mat-flat-button>
       <mat-icon svgIcon="edit"></mat-icon>
       Edit Name
     </button>
-
-    <button (click)="copyURL()"
-            color="primary"
-            mat-button>
-      <mat-icon svgIcon="content_copy"></mat-icon>
-      Copy URL
+    <button (click)="onPreview.emit()" color="primary" mat-button>
+      <mat-icon svgIcon="video_library"></mat-icon>
+      Preview
     </button>
-
   </div>
 
   <ng-container *ngIf="clipList$ | async as clipList">
 
-    <div class="action-buttons">
+    <div class="actionButtons">
       <button (click)="onEditAssignments.next()"
-              class="single-button"
+              class="actionButtons--single"
               color="accent"
               mat-flat-button>
         <mat-icon svgIcon="playlist_add"></mat-icon>
@@ -34,8 +40,8 @@
       </button>
     </div>
 
-    <div class="media-list">
-      <table class="mat-table">
+    <div class="mediaList">
+      <table class="matTable">
         <tr *ngFor="let entry of clipList;">
           <td>
             <app-clip-type [type]="entry.type"></app-clip-type>
@@ -52,7 +58,7 @@
     </div>
   </ng-container>
 
-  <button (click)="onDelete.emit()" class="delete-screen" color="warn" mat-flat-button>
+  <button (click)="onDelete.emit()" class="deleteScreenButton" color="warn" mat-flat-button>
     <mat-icon svgIcon="delete"></mat-icon>
     Delete Screen
   </button>
