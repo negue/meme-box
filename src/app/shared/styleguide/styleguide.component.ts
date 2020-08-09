@@ -1,5 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
+export const StyleguideColors = {
+  background: '#2f3640',
+  foreground: '#ffffff',
+  primary: '#4bcffa',
+  accent: '#575fcf',
+  warn: '#f53b57',
+  highlight: '#00d8d6'
+}
+
+
+
 @Component({
   selector: 'app-styleguide',
   templateUrl: './styleguide.component.html',
@@ -79,12 +90,12 @@ export class StyleguideComponent implements OnInit {
       hex: '#808e9b',
     },
     {
-      name: '--good-night',
-      hex: '#485460',
+      name: '--increase-luminance-of-electromagnetic',
+      hex: '#3F4855',
     },
     {
-      name: '--black-pearl',
-      hex: '#1e272e',
+      name: '--electromagnetic',
+      hex: '#2f3640',
     },
   ]
   constructor() { }

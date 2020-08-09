@@ -39,12 +39,24 @@ $custom-typography: mat-typography-config(
 
 body {
   font-size: 16px;
+  background-color: #2f3640 !important;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-weight: 400;
+}
+
+.isDarkTheme {
+  .mat-card {
+    background-color: #3F4855 !important;
+  }
+
+  .mat-table {
+    background: transparent !important;
+  }
 }
 
 .floating-action-button {

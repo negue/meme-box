@@ -10,11 +10,11 @@
   <div class="information">
     <div class="bottom-spacing">
       <div class="action-buttons">
-        <button (click)="onEdit.emit()" color="accent" mat-raised-button>
+        <button (click)="onEdit.emit()" color="accent" mat-flat-button>
           <mat-icon svgIcon="edit"></mat-icon>
           Edit
         </button>
-        <button (click)="onPreview.emit()" color="warn" mat-raised-button>
+        <button (click)="onPreview.emit()" color="primary" mat-button>
           <mat-icon svgIcon="video_library"></mat-icon>
           Preview
         </button>
@@ -27,8 +27,7 @@
       </div>
       <div class="media-list">
         <table class="mat-table">
-          <tr *ngFor="let entry of screenList; let even = even;"
-              [ngClass]="{gray: even}"
+          <tr *ngFor="let entry of screenList"
               class="row">
             <td>{{entry.name}}</td>
           </tr>
@@ -36,9 +35,9 @@
       </div>
     </ng-container>
   </div>
-  <button (click)="onDelete.emit()" class="delete-media" color="warn" mat-stroked-button>
+  <button (click)="onDelete.emit()" class="delete-media" color="warn" mat-flat-button>
     <mat-icon svgIcon="delete"></mat-icon>
-    Delete Media
+    Delete media
   </button>
 </div>
 

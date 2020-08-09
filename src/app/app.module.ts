@@ -24,6 +24,7 @@ import { MediaTypeClassPipe } from './target-screen/media-type-class.pipe';
 import { ServicesModule } from "./shared/services/services.module";
 import { DialogsModule } from "./shared/components/dialogs/dialogs.module";
 import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
+import { StyleguideColors } from './shared/styleguide/styleguide.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -100,13 +101,16 @@ export class AppModule {
       ));
     }
 
-    this.materialCssVarsService.setVariable(MaterialCssVariables.BackgroundBackground, '#073B4C');
-
-    this.materialCssVarsService.setPrimaryColor('#118AB2');
-    // Primary Color Contrast ... might be a custom css var, couldn't find a method for it
-    this.materialCssVarsService.setAccentColor('#06D6A0');
-    this.materialCssVarsService.setWarnColor('#EF476F');
-    this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundText, '#ffffff');
+    this.materialCssVarsService.setDarkTheme(true);
+    this.materialCssVarsService.setAutoContrastEnabled(true)
+    this.materialCssVarsService.setPrimaryColor(StyleguideColors.primary);
+    this.materialCssVarsService.setAccentColor(StyleguideColors.accent);
+    this.materialCssVarsService.setWarnColor(StyleguideColors.warn);
+    this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundText, StyleguideColors.foreground);
     this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundTextAlpha, '1');
+
+    // commented out because setDarkTheme overrides this
+    // bg colours are set in styles.scss using !important :(
+    // this.materialCssVarsService.setVariable(MaterialCssVariables.BackgroundBackground, StyleguideColors.background);
   }
 }
