@@ -19,7 +19,7 @@ import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module
 import {MatListModule} from "@angular/material/list";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 import {ConfigMediaPathModule} from "./media-overview/config-media-path/config-media-path.module";
-import {StyleguideModule} from "../../shared/styleguide/styleguide.module";
+import {MatChipsModule} from "@angular/material/chips";
 
 const routes: Routes = [
   {
@@ -52,7 +52,7 @@ const routes: Routes = [
     MatListModule,
     GettingStartedModule,
     ConfigMediaPathModule,
-    StyleguideModule
+    MatChipsModule,
   ]
 })
 export class MediaModule {

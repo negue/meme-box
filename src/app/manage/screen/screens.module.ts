@@ -14,7 +14,6 @@ import {ScreenInfoComponent} from "./screen-overview/screen-info/screen-info.com
 import {ClipAssigningDialogModule} from "./screen-overview/clip-assigning-dialog/clip-assigning-dialog.module";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
-import { StyleguideModule } from '../../shared/styleguide/styleguide.module';
 
 
 const routes: Routes = [
@@ -43,7 +42,6 @@ const routes: Routes = [
         ClipAssigningDialogModule,
         ClipTypeModule,
         GettingStartedModule,
-        StyleguideModule,
     ],
 })
 export class ScreensModule {
