@@ -35,23 +35,33 @@
 
 .mediaInfo__preview {
   margin-bottom: 2rem;
+  height: 10rem;
 }
 
 .mediaInfo__preview__img {
-  width: 100%;
-  max-width: 200px;
+  height: 100%;
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
 
+.mediaInfo__preview__audio, .mediaInfo__preview__video {
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+
+  .mat-icon {
+    width: 8rem;
+    height: 8rem;
+  }
+}
+
 .mediaInfo__delete {
   margin-left: auto;
   margin-right: auto;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 1rem;
+  display: block;
 }
 
 .mediaInfo__screensList {

@@ -67,10 +67,11 @@
       </table>
     </div>
   </ng-container>
-
-  <button (click)="onDelete.emit()" class="deleteScreenButton" color="warn" mat-flat-button>
-    <mat-icon svgIcon="delete"></mat-icon>
-    Delete Screen
-  </button>
+  <mat-card-actions>
+    <button (click)="onDelete.emit()" class="deleteScreenButton" color="warn" mat-flat-button>
+      <mat-icon svgIcon="delete"></mat-icon>
+      Delete Screen
+    </button>
+  </mat-card-actions>
 </div>
 
