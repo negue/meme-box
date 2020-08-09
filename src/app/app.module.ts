@@ -1,29 +1,29 @@
 import 'reflect-metadata';
 import '../polyfills';
 
-import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {CoreModule} from './core/core.module';
-import {SharedModule} from './shared/shared.module';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
 
-import {AppRoutingModule} from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 // NG Translate
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import {AppComponent} from './app.component';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatIconRegistry} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
-import {AppConfig} from '../environments/environment';
-import {TargetScreenComponent} from "./target-screen/target-screen.component";
-import {MediaTypeClassPipe} from './target-screen/media-type-class.pipe';
-import {ServicesModule} from "./shared/services/services.module";
-import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
-import {MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatIconRegistry } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AppConfig } from '../environments/environment';
+import { TargetScreenComponent } from "./target-screen/target-screen.component";
+import { MediaTypeClassPipe } from './target-screen/media-type-class.pipe';
+import { ServicesModule } from "./shared/services/services.module";
+import { DialogsModule } from "./shared/components/dialogs/dialogs.module";
+import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -72,6 +72,7 @@ export class AppModule {
     private sanitizer: DomSanitizer,
     public materialCssVarsService: MaterialCssVarsService
   ) {
+    //todo extract to its own file
     const icons = [
       'add',
       'audiotrack',
@@ -99,9 +100,13 @@ export class AppModule {
       ));
     }
 
-    const hex = '#3f51b5';
-    this.materialCssVarsService.setDarkTheme(true);
-    this.materialCssVarsService.setPrimaryColor(hex);
-    this.materialCssVarsService.setAccentColor('#333');
+    this.materialCssVarsService.setVariable(MaterialCssVariables.BackgroundBackground, '#073B4C');
+
+    this.materialCssVarsService.setPrimaryColor('#118AB2');
+    // Primary Color Contrast ... might be a custom css var, couldn't find a method for it
+    this.materialCssVarsService.setAccentColor('#06D6A0');
+    this.materialCssVarsService.setWarnColor('#EF476F');
+    this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundText, '#ffffff');
+    this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundTextAlpha, '1');
   }
 }

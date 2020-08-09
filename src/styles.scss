@@ -32,7 +32,9 @@ $custom-typography: mat-typography-config(
 // examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
 
 @include init-material-css-vars($typography-config: $custom-typography) {
-
+  .mat-app-background {
+    background-color: var(--palette-background-background);
+  }
 };
 
 body {
