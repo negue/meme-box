@@ -21,6 +21,16 @@
   margin-bottom: 0;
 }
 
+.formFieldRow {
+  margin-bottom: 2rem;
+  width: 100%;
+  display: block;
+
+  ::ng-deep .mat-form-field {
+    display: block;
+  }
+}
+
 .inputLabel--hidden {
   display: none;
 }
@@ -50,7 +60,16 @@
 }
 
 .mediaList {
-  max-height: 10rem;
+  max-height: 11.2rem;
   overflow-y: scroll;
   margin-bottom: 2rem;
+}
+
+.mediaList__settingsCell {
+  text-align: right;
+}
+
+.mediaList__settingsCellButton {
+  width: 3rem;
+  height: 3rem;
 }

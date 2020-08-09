@@ -8,3 +8,14 @@ form {
   display: flex;
   flex-direction: column;
 }
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.title__icon {
+  margin-right: 0.5rem;
+}
