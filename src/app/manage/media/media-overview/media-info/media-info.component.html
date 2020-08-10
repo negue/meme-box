@@ -7,11 +7,9 @@
     *ngIf="info.type === 0 && (info.previewUrl || info.path)"
     class="preview"
   >
-    <img
-      [src]="domSanitizer.bypassSecurityTrustUrl(info.previewUrl || info.path)"
-      alt="{{ info.name }}"
-      class="preview-img"
-    />
+    <img [src]="(info.previewUrl || info.path) | safeurl"
+         alt="{{ info.name }}"
+         class="preview-img" />
   </div>
   <div *ngIf="info.type === 3 && (info.previewUrl || info.path)">
     <iframe [src]="info.path | safeurl"></iframe>
@@ -38,10 +36,9 @@
       </div>
       <div class="media-list">
         <table class="mat-table">
-          <tr
-            *ngFor="let entry of screenList; let even = even"
-            [ngClass]="{ gray: even }"
-            class="row"
+          <tr *ngFor="let entry of screenList; let even = even"
+              [ngClass]="{ gray: even }"
+              class="row"
           >
             <td>{{ entry.name }}</td>
           </tr>
@@ -49,11 +46,10 @@
       </div>
     </ng-container>
   </div>
-  <button
-    (click)="onDelete.emit()"
-    class="delete-media"
-    color="warn"
-    mat-stroked-button
+  <button (click)="onDelete.emit()"
+          class="delete-media"
+          color="warn"
+          mat-stroked-button
   >
     <mat-icon svgIcon="delete"></mat-icon>
     Delete Media
