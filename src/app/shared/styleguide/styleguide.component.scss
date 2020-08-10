@@ -1,5 +1,6 @@
 
-//https://stackoverflow.com/a/47497820
+// https://stackoverflow.com/a/47497820
+// https://flatuicolors.com/palette/se
 
 :host {
   width: 100%;
@@ -11,59 +12,20 @@
 
 .colorBlocks {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  background-color: #073B4C;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
 }
 
 .colorBlocks__block {
-  width: 100px;
   height: 100px;
-}
-
-.colorBlocks__block--primary {
-  background-color:  #118AB2;
-}
-
-.colorBlocks__block--primaryContrast {
-  background-color: #FFD166;
- }
-
-//positive
-.colorBlocks__block--accent {
-  background-color: #06D6A0;
- }
-
-.colorBlocks__block--warn {
-  background-color: #EF476F;
- }
-
-.colorBlocks__block--background {
-  background-color: #073B4C;
- }
-.colorBlocks__block--foreground {
-  background-color: #ffffff;
- }
-
-.textHolder {
-  background-color: #073B4C;
-}
-
-h1 {
-  color: #ffffff;
-  font-size: 2rem;
-  line-height: 3rem;
-  font-weight: 700;
+  display: flex;
   font-family: Barlow, sans-serif;
+  font-size: 12px;
+  padding: 5px;
 }
-
-p {
-  color: #ffffff;
-  font-size: 1.2rem;
-  line-height: 2rem;
-  font-weight: 400;
-  font-family: Barlow, sans-serif;
-}
-
 
 
 

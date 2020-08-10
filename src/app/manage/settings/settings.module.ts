@@ -15,13 +15,13 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [SettingsOverviewComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+    ],
 })
 export class SettingsModule {
 }

@@ -19,7 +19,7 @@ import { SnackbarService } from "../../../../core/services/snackbar.service";
 // clipLength + playLength so the user doesn't want to die
 const INITIAL_CLIP: Partial<Clip> = {
   type: MediaType.Picture,
-  name: "Your Clip Name",
+  name: 'Media Filename',
   volumeSetting: 10,
   playLength: 600,
   clipLength: 600, // TODO once its possible to get the data from the clip itself

@@ -1,4 +1,6 @@
-.screens-list {
+@import '~angular-material-css-vars/public-util';
+
+.screensList {
   display: grid;
   padding: 2rem;
 
@@ -13,12 +15,12 @@
   }
 }
 
-.screens-item {
+.screensList__item {
   width: 100%;
   margin-bottom: 2rem;
 }
 
-.screens-item-card {
+.screensList__item__card {
   height: 100%;
 }
 
@@ -26,15 +28,16 @@
   cursor: pointer;
 }
 
-.card-add-new {
+.screensList__item--addNew {
   height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
 
   &:hover {
-    background-color: red;
+    background-color: mat-css-color-accent() !important;
   }
 }

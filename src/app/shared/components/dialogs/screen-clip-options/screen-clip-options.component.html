@@ -1,19 +1,21 @@
-<h2 mat-dialog-title>Configure {{data.name}} </h2>
+<h2 mat-dialog-title class="title">
+  <mat-icon svgIcon="code" class="title__icon"></mat-icon>
+  Custom CSS for {{data.name}} FOR THIS SCREEN
+</h2>
 <mat-dialog-content *ngIf="clipInfo$ | async as clipInfo" class="mat-typography">
 
   <form [formGroup]="form">
     <mat-form-field>
       <input autocomplete="off" formControlName="width"
              matInput
-             placeholder="Width (px, %, and so on...)"
+             placeholder="Width (px, %, rem, em)"
              type="text">
     </mat-form-field>
-
 
     <mat-form-field>
       <input autocomplete="off" formControlName="height"
              matInput
-             placeholder="Height (px, %, and so on...)"
+             placeholder="Height (px, %, rem, em)"
              type="text">
     </mat-form-field>
 
@@ -33,8 +35,8 @@
                   [value]="clipInfo?.position || 0"
                   formControlName="position"
                   placeholder="Position">
-        <mat-option [value]="0">Fullscreen</mat-option>
-        <mat-option [value]="1">Absolute</mat-option>
+        <mat-option [value]="0">Full screen</mat-option>
+        <mat-option [value]="1">Manual position</mat-option>
       </mat-select>
     </mat-form-field>
 

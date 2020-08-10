@@ -32,17 +32,42 @@ $custom-typography: mat-typography-config(
 // examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
 
 @include init-material-css-vars($typography-config: $custom-typography) {
-
+  .mat-app-background {
+    background-color: var(--palette-background-background);
+  }
 };
 
 body {
   font-size: 16px;
+  background-color: #2f3640 !important;
+  font-family: Barlow, sans-serif;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-weight: 400;
+}
+
+.isDarkTheme {
+  .mat-card {
+    background-color: #3F4855 !important;
+  }
+
+  .mat-table {
+    background: transparent !important;
+  }
+
+  .mat-dialog-container {
+    background-color: #2f3640 !important;
+  }
+
+  .mat-chip.mat-standard-chip {
+    background-color: #3F4855;
+    color: white;
+    font-family: Barlow, sans-serif;
+  }
 }
 
 .floating-action-button {

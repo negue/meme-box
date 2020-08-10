@@ -1,17 +1,16 @@
-<app-styleguide></app-styleguide>
-
 <div *ngIf="mediaList$ | async as mediaList"
-     class="media-list">
+     class="mediaList">
 
   <div *ngFor="let item of mediaList"
-       class="media-clip">
-    <mat-card class="media-clip-card">
+       class="mediaList__clip">
+    <mat-card class="mediaList__clipCard">
       <app-media-info (onAssignObs)="onAssignObs(item)"
                       (onDelete)="onDelete(item.id)"
                       (onEdit)="onEdit(item)"
                       (onEditScreenClipOptions)="onClipOptions(item, $event)"
                       (onPreview)="onPreview(item)"
                       [info]="item"
+                      class="mediaList__appMediaInfo"
       >
 
       </app-media-info>
@@ -24,8 +23,8 @@
   </ng-container>
 
 
-  <div class="media-clip add-new">
-    <mat-card (click)="addNewItem()" class="card-add-new">
+  <div class="mediaList__clip">
+    <mat-card (click)="addNewItem()" class="mediaList__clipCard mediaList__clipCard--addNew">
       <mat-icon svgIcon="add"></mat-icon>
       Add new media
     </mat-card>

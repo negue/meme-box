@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { StyleguideComponent } from './styleguide.component';
+import {StyleguideComponent} from './styleguide.component';
 
 describe('StyleguideComponent', () => {
   let component: StyleguideComponent;
