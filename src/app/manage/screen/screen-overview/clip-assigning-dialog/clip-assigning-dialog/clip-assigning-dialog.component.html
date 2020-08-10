@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Choose media for "{{(screen$ | async).name}}"</h1>
+<h1 mat-dialog-title>Choose media for "{{ (screen$ | async).name }}"</h1>
 
 <div mat-dialog-content>
   <mat-chip-list *ngIf="selectedFilters$ | async as selectedFilters" aria-label="Filter media type">
@@ -44,34 +44,59 @@
         class="media-list-option">
       <figure *ngIf="clip.type === 0" class="image-container">
         <figcaption class="media-name">
-          <mat-icon class="media-icon" matListIcon svgIcon="insert_photo"></mat-icon>
-          {{clip.name}}</figcaption>
-        <img [alt]="clip.name" [src]="clip.path" class="media-img"/>
+          <mat-icon
+            class="media-icon"
+            matListIcon
+            svgIcon="insert_photo"
+          ></mat-icon>
+          {{ clip.name }}
+        </figcaption>
+        <img [alt]="clip.name" [src]="clip.path" class="media-img" />
       </figure>
 
       <span *ngIf="clip.type === 1" class="audio-container">
         <span class="media-name">
-          <mat-icon class="media-icon" matListIcon svgIcon="audiotrack"></mat-icon>
-          {{clip.name}}
+          <mat-icon
+            class="media-icon"
+            matListIcon
+            svgIcon="audiotrack"
+          ></mat-icon>
+          {{ clip.name }}
         </span>
 
         <span class="audio-image">
           <mat-icon matListIcon svgIcon="speaker"></mat-icon>
         </span>
-
       </span>
 
       <span *ngIf="clip.type === 2" class="video-container">
-          <span class="media-name">
-            <mat-icon class="media-icon" matListIcon svgIcon="videocam"></mat-icon>
-            {{clip.name}}
+        <span class="media-name">
+          <mat-icon
+            class="media-icon"
+            matListIcon
+            svgIcon="videocam"
+          ></mat-icon>
+          {{ clip.name }}
         </span>
 
         <span class="video-image">
           <mat-icon matListIcon svgIcon="video_library"></mat-icon>
         </span>
       </span>
-    </li>
 
+      <span *ngIf="clip.type === 3" class="iframe-container">
+        <span class="media-name">
+          <mat-icon
+            class="media-icon"
+            matListIcon
+            svgIcon="videocam"
+          ></mat-icon>
+          {{ clip.name }}
+        </span>
+        <span class="media-iframe-container">
+          <iframe [src]="clip.path | safeurl"></iframe>
+        </span>
+      </span>
+    </li>
   </ol>
 </div>
