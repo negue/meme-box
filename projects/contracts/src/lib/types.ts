@@ -1,7 +1,8 @@
 export enum MediaType {
   Picture,
   Audio,
-  Video
+  Video,
+  IFrame,
 }
 
 export interface HasId {

@@ -66,7 +66,8 @@
 }
 
 //TODO this is weird
-.audio-image, .video-image {
+.audio-image,
+.video-image {
   display: flex;
   height: 75%;
   align-items: center;
@@ -80,6 +81,11 @@
 
 .filterChip {
   cursor: pointer;
+}
+.iframe-container {
+  .media-iframe-conatiner {
+    width: 100%;
+  }
 }
 
 .filterChip--selected {

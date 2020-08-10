@@ -1,11 +1,15 @@
-<h2 mat-dialog-title> {{ data?.id ? 'Update Media: "' + form.value.name + '"' : 'Add media' }}  </h2>
+<h2 mat-dialog-title>
+  {{ data?.id ? 'Update Media: "' + form.value.name + '"' : "Add media" }}
+</h2>
 <mat-dialog-content class="mat-typography">
   <form [formGroup]="form">
     <mat-form-field>
-      <input autocomplete="off" formControlName="name"
+      <input autocomplete="off"
+             formControlName="name"
              matInput
              placeholder="Name"
-             required type="text">
+             required
+             type="text"/>
 
       <mat-error *ngIf="form.controls['name'].hasError('required')">
         Name is required
@@ -15,44 +19,59 @@
     <div class="action-buttons">
       <button (click)="updateMediaType(MediaType.Picture)"
               [color]="form.value.type === MediaType.Picture ? 'primary' : 'accent'"
-              mat-raised-button>
+              mat-raised-button
+      >
         <mat-icon svgIcon="insert_photo"></mat-icon>
         Image
       </button>
       <button (click)="updateMediaType(MediaType.Audio)"
               [color]="form.value.type === MediaType.Audio ? 'primary' : 'accent'"
-              mat-raised-button>
+              mat-raised-button
+      >
         <mat-icon svgIcon="audiotrack"></mat-icon>
         Audio
       </button>
       <button (click)="updateMediaType(MediaType.Video)"
               [color]="form.value.type === MediaType.Video ? 'primary' : 'accent'"
-              mat-raised-button>
+              mat-raised-button
+      >
         <mat-icon svgIcon="videocam"></mat-icon>
         Video
+      </button>
+      <button (click)="updateMediaType(MediaType.IFrame)"
+              [color]="form.value.type === MediaType.IFrame ? 'primary' : 'accent'"
+              mat-raised-button
+      >
+        <mat-icon svgIcon="videocam"></mat-icon>
+        IFrame
       </button>
     </div>
 
     <mat-form-field *ngIf="false">
-      <input autocomplete="off" formControlName="clipLength"
+      <input autocomplete="off"
+             formControlName="clipLength"
              matInput
              placeholder="Media Length"
-             type="number">
+             type="number"
+      />
       <span matSuffix>ms</span>
     </mat-form-field>
 
     <div class="form-field-row">
       <mat-form-field>
-        <input autocomplete="off" formControlName="path"
+        <input autocomplete="off"
+               formControlName="path"
                matInput
-               placeholder="File"
-               required type="text">
-        <div matSuffix>
+               [placeholder]="form.value.type !== 3 ? 'File' : 'URL'"
+               required
+               type="text"
+        />
+        <div matSuffix *ngIf="form.value.type !== 3">
           <mat-select (valueChange)="onChange($event)"
-                      *ngIf="availableMediaFiles|async as mediaFiles">
-
+                      *ngIf="availableMediaFiles | async as mediaFiles"
+          >
             <mat-option *ngFor="let file of mediaFiles" [value]="file">
-              {{file.fileName}}
+              {{ file.fileName }}
             </mat-option>
           </mat-select>
         </div>
@@ -64,12 +83,17 @@
     </div>
     <div class="form-field-row">
       <mat-form-field>
-        <input [placeholder]="form.value.type === 0 ? 'Visible screen time (ms)' : 'Play time on screen (ms)'"
+        <input [placeholder]="
+                 form.value.type === 0
+                   ? 'Visible screen time (ms)'
+                   : 'Play time on screen (ms)'
+               "
                [required]="form.value.type === 0"
                autocomplete="off"
                formControlName="playLength"
                matInput
-               type="number">
+               type="number"
+        />
         <span matSuffix>ms</span>
 
         <mat-error *ngIf="form.controls['playLength'].hasError('required')">
@@ -77,28 +101,36 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <ng-container *ngIf="form.value.type !== 0">
+    <ng-container *ngIf="form.value.type !== 0 && form.value.type !== 3">
       <mat-label>Volume</mat-label>
       <div class="slider__row">
-        <mat-slider #volumeSlider [max]="100" [min]="0" [step]="1"
-                    formControlName="volumeSetting">
-
+        <mat-slider #volumeSlider
+                    [max]="100"
+                    [min]="0"
+                    [step]="1"
+                    formControlName="volumeSetting"
+        >
         </mat-slider>
         <div class="volume__label">
-
-          {{volumeSlider.value }}
+          {{ volumeSlider.value }}
         </div>
       </div>
     </ng-container>
     <div class="form-field-row">
       <mat-form-field *ngIf="false">
-        <input autocomplete="off" formControlName="previewUrl"
+        <input autocomplete="off"
+               formControlName="previewUrl"
                matInput
                placeholder="Preview URL"
-               type="text">
+               type="text"
+        />
       </mat-form-field>
     </div>
-    <img [src]="form.value.path || form.value.previewUrl">
+    <img *ngIf="form.value.type === 0"
+         [src]="form.value.path || form.value.previewUrl" />
+    <iframe *ngIf="form.value.type === 3"
+            [src]="form.value.path | safeurl"
+    ></iframe>
   </form>
 </mat-dialog-content>
 

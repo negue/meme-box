@@ -5,11 +5,9 @@
   }
 }
 
-video, audio, img {
+video, audio, img, iframe {
   display: none;
-}
 
-video, audio, img {
   &.visible {
     display: block;
   }

@@ -6,8 +6,8 @@
   <mat-card-content>
     <div class="mediaInfo__preview">
         <img *ngIf="info.type === 0 && (info.previewUrl || info.path)"
-             [src]="domSanitizer.bypassSecurityTrustUrl(info.previewUrl || info.path)"
-             alt="{{info.name}}"
+             [src]="(info.previewUrl || info.path) | safeurl"
+             [alt]="info.name"
              class="mediaInfo__preview__img">
 
       <div *ngIf="info.type === 1" class="mediaInfo__preview__audio">
@@ -16,6 +16,9 @@
 
       <div *ngIf="info.type === 2" class="mediaInfo__preview__video">
         <mat-icon matListIcon svgIcon="videocam"></mat-icon>
+      </div>
+      <div *ngIf="info.type === 3 && (info.previewUrl || info.path)">
+        <iframe [src]="info.path | safeurl"></iframe>
       </div>
     </div>
 
@@ -47,4 +50,3 @@
     </button>
   </mat-card-actions>
 </div>
-

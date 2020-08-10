@@ -23,18 +23,16 @@ import {MatChipsModule} from "@angular/material/chips";
 
 const routes: Routes = [
   {
-    path: '',
-    component: MediaOverviewComponent
-  }
+    path: "",
+    component: MediaOverviewComponent,
+  },
 ];
-
 
 @NgModule({
   declarations: [MediaOverviewComponent, MediaInfoComponent, MediaTypePipe],
-  exports: [
-    MediaOverviewComponent
-  ],
+  exports: [MediaOverviewComponent],
   imports: [
+    PipesModule,
     CommonModule,
     RouterModule.forChild(routes),
     MatCardModule,
@@ -55,5 +53,4 @@ const routes: Routes = [
     MatChipsModule,
   ]
 })
-export class MediaModule {
-}
+export class MediaModule {}

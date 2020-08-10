@@ -26,6 +26,8 @@ import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
 import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
 import {StyleguideColors} from './shared/styleguide/styleguide.component';
 
+import { PipesModule } from "./core/pipes/pipes.module";
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -62,7 +64,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       // ...
     }),
 
-    ...AppConfig.ngModules
+    ...AppConfig.ngModules,
+     PipesModule
   ],
   providers: [],
   bootstrap: [AppComponent]
