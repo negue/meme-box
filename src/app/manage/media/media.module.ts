@@ -20,6 +20,7 @@ import {MatListModule} from "@angular/material/list";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 import {ConfigMediaPathModule} from "./media-overview/config-media-path/config-media-path.module";
 import {MatChipsModule} from "@angular/material/chips";
+import { PipesModule } from "../../core/pipes/pipes.module";
 
 const routes: Routes = [
   {

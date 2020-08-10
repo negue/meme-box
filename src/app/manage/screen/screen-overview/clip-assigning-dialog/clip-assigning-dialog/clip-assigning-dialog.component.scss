@@ -1,5 +1,15 @@
+@import '~angular-material-css-vars/public-util';
+
 :host {
   width: 100%;
+
+  ::ng-deep .mat-chip {
+    &.mat-chip.mat-standard-chip {
+      &.filterChip--selected {
+        background-color: mat-css-color-accent();
+      }
+    }
+  }
 }
 
 .filterRow {
@@ -92,13 +102,7 @@
   background-color: red;
 }
 
-::ng-deep .mat-chip {
-  &.mat-chip.mat-standard-chip {
-    &.filterChip--selected {
-      background-color: #575fcf;
-    }
-  }
-}
+
 
 .svgContainer {
   height: 1.5rem;

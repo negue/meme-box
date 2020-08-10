@@ -1,3 +1,5 @@
+@import '~angular-material-css-vars/public-util';
+
 .mediaList {
   display: grid;
   padding: 2rem;
@@ -36,6 +38,6 @@
   cursor: pointer;
 
   &:hover {
-    background-color: #575fcf !important;
+    background-color: mat-css-color-accent() !important;
   }
 }
