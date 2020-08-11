@@ -34,7 +34,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, TargetScreenComponent, MediaTypeClassPipe],
+  declarations: [AppComponent, TargetScreenComponent, MediaTypeClassPipe ],
   imports: [
     BrowserModule,
     FormsModule,

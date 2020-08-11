@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {DialogService} from "../../shared/components/dialogs/dialog.service";
+import {QrcodeDialogComponent} from "../qrcode-dialog/qrcode-dialog.component";
 
 @Component({
   selector: 'app-navigation',
@@ -12,10 +14,16 @@ export class NavigationComponent implements OnInit {
     {path: './twitch', displayName: 'Twitch'}
   ]
 
-  constructor() {
+  constructor(private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
   }
 
+  openMobileViewDialog() {
+    console.info('open qr');
+    this.dialogService.open(QrcodeDialogComponent, {
+
+    });
+  }
 }
