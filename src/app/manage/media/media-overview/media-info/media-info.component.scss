@@ -68,7 +68,8 @@
   margin-top: 2rem;
   margin-bottom: 6rem;
   height: 8.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .mediaInfo__screensListTitle {

@@ -54,3 +54,4 @@ Thumbs.db
 /src/assets/*.mp4
  !angular.webpack.cjs
 **/settings.json
+**/settings.json*.backup
