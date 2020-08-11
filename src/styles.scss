@@ -51,6 +51,8 @@ body {
 }
 
 .isDarkTheme {
+  --palette-background-background: 47, 54, 64;
+
   .mat-card {
     background-color: #3F4855 !important;
   }
