@@ -1,6 +1,6 @@
 import {Injectable, TemplateRef} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {Clip, Screen} from "@memebox/contracts";
+import {Clip, Screen, Twitch} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
 import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
@@ -14,6 +14,7 @@ import {
   ScreenClipOptionsComponent,
   ScreenClipOptionsPayload
 } from "./screen-clip-options/screen-clip-options.component";
+import {TwitchEditComponent} from "./twitch-edit/twitch-edit.component";
 
 @Injectable()
 export class DialogService {
@@ -55,6 +56,14 @@ export class DialogService {
     this._dialog.open(
       ScreenClipOptionsComponent, {
         data: payload
+      }
+    )
+  }
+
+  showTwitchEditDialog(info: Partial<Twitch>) {
+    this._dialog.open(
+      TwitchEditComponent, {
+        data: info,
       }
     )
   }

@@ -174,6 +174,8 @@ export class AppService {
       state.screen[screenId].clips[newId] = obsClip as ScreenClip;
     });
 
+    // todo add added / updated
+    // todo add name?
     this.snackbar.normal('Media added to screen!');
   }
 
@@ -209,6 +211,9 @@ export class AppService {
     this.appStore.update(state => {
       state.twitchEvents[newId] = event;
     });
+
+
+    this.snackbar.normal('Twitch event added / updated (TODO)!');
   }
 
   public async deleteTwitchEvent(clipId: string) {

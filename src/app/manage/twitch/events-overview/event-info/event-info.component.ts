@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Twitch} from "@memebox/contracts";
 import {AppQueries} from "../../../../state/app.queries";
 import {map} from "rxjs/operators";
+import {MatCheckboxChange} from "@angular/material/checkbox";
+import {AppService} from "../../../../state/app.service";
 
 @Component({
   selector: 'app-event-info',
@@ -16,11 +18,11 @@ export class EventInfoComponent implements OnInit {
   allInformations$ = this.appQueries.state$.pipe(
     map(value => {
       const clip = value.clips[this.item.clipId];
-      const screen = value.screen[this.item.screenId];
+      // const screen = value.screen[this.item.screenId];
 
       return {
         clip,
-        screen
+        // screen
       };
     })
   )
@@ -31,10 +33,19 @@ export class EventInfoComponent implements OnInit {
   @Output()
   onEdit = new EventEmitter<any>();
 
-  constructor(private appQueries: AppQueries) {
+  constructor(private appQueries: AppQueries,
+              private appService: AppService) {
   }
 
   ngOnInit(): void {
   }
 
+  onActiveChanged($event: MatCheckboxChange) {
+    const newItem = {
+      ...this.item,
+      active: $event.checked
+    }
+
+    this.appService.addOrUpdateTwitchEvent(newItem);
+  }
 }

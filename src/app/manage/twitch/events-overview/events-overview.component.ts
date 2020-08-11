@@ -4,7 +4,6 @@ import {Observable} from "rxjs";
 import {AppQueries} from "../../../state/app.queries";
 import {AppService} from "../../../state/app.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
-import {EditTwitchEventComponent} from "./edit-twitch-event/edit-twitch-event.component";
 
 @Component({
   selector: 'app-events-overview',
@@ -32,8 +31,6 @@ export class EventsOverviewComponent implements OnInit {
   }
 
   editEvent(twitchEventItem: Twitch) {
-    this.dialogService.open(EditTwitchEventComponent, {
-      data: twitchEventItem
-    });
+    this.dialogService.showTwitchEditDialog( twitchEventItem);
   }
 }

@@ -3,6 +3,7 @@ import {FormBuilder} from "@angular/forms";
 import {Clip, Twitch, TwitchTypesArray} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {AppQueries} from "../../../../state/app.queries";
+import {DialogService} from "../../../../shared/components/dialogs/dialog.service";
 
 @Component({
   selector: 'app-add-event',
@@ -22,21 +23,14 @@ export class AddEventComponent implements OnInit {
   @Output()
   added = new EventEmitter<Twitch>();
 
-  constructor(private appQueries: AppQueries) {
+  constructor(private appQueries: AppQueries,
+              private dialog: DialogService) {
   }
 
   ngOnInit(): void {
   }
 
   triggerAdd() {
-    if (!this.formGroup.valid) {
-      return;
-    }
-
-    const newEvent: Twitch = this.formGroup.value;
-
-    this.added.emit(newEvent);
-
-    this.formGroup.reset();
+    this.dialog.showTwitchEditDialog(null);
   }
 }
