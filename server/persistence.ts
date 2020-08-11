@@ -27,6 +27,8 @@ const initialScreenObj: Screen = Object.freeze({
   clips: {}
 });
 
+let fileBackupToday = false;
+
 export class Persistence {
 
   private updated$ = new Subject();
@@ -34,6 +36,9 @@ export class Persistence {
 
   constructor(private filePath: string) {
     const dir = path.dirname(filePath);
+
+    // if the settings folder not exist
+    // create it
     if (!fs.existsSync(dir)){
       fs.mkdirSync(dir);
     }
@@ -47,12 +52,20 @@ export class Persistence {
         return console.log(err);
       }
 
+      if (!fileBackupToday) {
+        const backupPathFile = `${this.filePath}.${fileDateGenerator()}.backup`;
+
+        saveFile(backupPathFile, data);
+
+        fileBackupToday = true;
+      }
+
       let dataFromFile = {};
 
       if (data && data.includes('{')) {
         dataFromFile = JSON.parse(data);
       }
-// execute upgrade , changing names or other stuff
+      // execute upgrade , changing names or other stuff
 
       this.data = Object.assign({}, createInitialState(), dataFromFile);
 
@@ -244,12 +257,32 @@ export class Persistence {
   }
 
   private saveData() {
-    fs.writeFile(this.filePath, JSON.stringify(this.data, null, '  '), err => {
-      console.error(err);
-    });
+    saveFile(this.filePath, this.data, true);
     this.updated$.next();
   }
 }
 
+function saveFile(filePath: string, data: any, stringify: boolean = false) {
+  fs.writeFile(filePath, stringify ? JSON.stringify(data, null, '  ') : data, err => {
+    if (err) {
+      console.error(`Error on Saving File: ${filePath}`, err);
+    }
+  });
+}
+
+function fileDateGenerator() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+  const second = now.getSeconds();
+
+  // YYYY_MM_DD_HH_MM_SS
+  const newDateString = `${year}_${month}_${day}__${hour}_${minute}_${second}`;
+
+  return newDateString;
+}
 
 export const PersistenceInstance = new Persistence('./settings/settings.json');
