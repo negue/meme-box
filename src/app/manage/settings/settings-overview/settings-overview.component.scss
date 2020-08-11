@@ -1,7 +1,7 @@
-.settings {
-  display: block;
-  max-width: 500px;
-  margin: 2rem auto;
+@import '../../../../utils/mixins';
+
+.settingsList {
+  @include gridLayout;
 }
 
 .title-row {
@@ -31,3 +31,14 @@
     width: 45%;
   }
 }
+
+
+:host {
+  ::ng-deep {
+    .mat-card {
+      padding-bottom: 2rem;
+    }
+  }
+}
+
+

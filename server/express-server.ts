@@ -5,6 +5,7 @@ import {
   CLIP_ID_ENDPOINT,
   CONFIG_ENDPOINT,
   CONFIG_MEDIA_ENDPOINT,
+  CONFIG_TWITCH_CHANNEL_ENDPOINT,
   EXPRESS_PORT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
@@ -162,6 +163,12 @@ app.put(CONFIG_ENDPOINT, (req, res) => {
 app.put(CONFIG_MEDIA_ENDPOINT, (req, res) => {
   // update config
   res.send(PersistenceInstance.updateMediaFolder(req.body.mediaFolder));
+});
+
+// Put = Update Media Folder Path
+app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
+  // update config
+  res.send(PersistenceInstance.updateTwitchChannel(req.body.twitchChannel));
 });
 
 async function getFiles(dir) {

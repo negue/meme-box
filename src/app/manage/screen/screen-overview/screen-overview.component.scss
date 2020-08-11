@@ -1,23 +1,12 @@
 @import '~angular-material-css-vars/public-util';
+@import '../../../../utils/mixins';
 
 .screensList {
-  display: grid;
-  padding: 2rem;
-
-  @media screen and (min-width: 620px) {
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 2rem;
-  }
-
-  @media screen and (min-width: 930px) {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 2rem;
-  }
+  @include gridLayout;
 }
 
 .screensList__item {
-  width: 100%;
-  margin-bottom: 2rem;
+ @include gridLayout__item;
 }
 
 .screensList__item__card {

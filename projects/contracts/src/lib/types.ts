@@ -72,10 +72,11 @@ export const enum TwitchEventTypes {
 
 export interface Twitch extends HasId {
   name: string;
-  screenId:      string; // TODO
+  // screenId:      string; // TODO
   clipId:     string;
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
+  active: boolean;
   // !magic
   // TODO other options per type
 }

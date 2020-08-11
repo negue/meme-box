@@ -1,8 +1,12 @@
+
+<mat-checkbox [checked]="item.active" (change)="onActiveChanged($event)"></mat-checkbox>
+
+
 <b>{{item.name}}</b> - Event: <strong>{{ item.event }}</strong> -
 
 <ng-container *ngIf="allInformations$ | async as information">
 
-  Clip: <strong>{{ information.clip.name }}</strong>
+  Clip: <strong>{{ information.clip?.name }}</strong>
   <!-- Screen: <strong>{{ information.screen.name }}</strong> -->
 
 </ng-container>
