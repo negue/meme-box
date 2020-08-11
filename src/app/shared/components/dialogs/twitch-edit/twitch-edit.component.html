@@ -1,4 +1,4 @@
-<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Screen </h2>
+<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Twitch Event </h2>
 <mat-dialog-content class="mat-typography">
 
   <form [formGroup]="form">
@@ -30,7 +30,7 @@
 
 
     <div class="example-container">
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Meme</mat-label>
         <mat-select [required]="true"
                     formControlName="clipId">
@@ -40,6 +40,18 @@
             {{ item.name }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="form.controls['clipId'].hasError('required')">
+          You need to select 'A media item'.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="example-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Contains</mat-label>
+        <input autocomplete="off"
+               formControlName="contains"
+               matInput>
       </mat-form-field>
     </div>
   </form>
