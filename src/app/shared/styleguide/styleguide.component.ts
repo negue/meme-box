@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 
 export const StyleguideColors = {
-  background: '#2f3640',
+  background: '#2f3640', // todo add custom css var
   foreground: '#ffffff',
   primary: '#4bcffa',
   accent: '#575fcf',
   warn: '#f53b57',
-  highlight: '#00d8d6',
+  highlight: '#00d8d6', // todo add custom css var
   chipSelected: '#ffd32a'
 }
 

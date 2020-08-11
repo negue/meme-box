@@ -26,7 +26,7 @@ import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
 import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
 import {StyleguideColors} from './shared/styleguide/styleguide.component';
 
-import { PipesModule } from "./core/pipes/pipes.module";
+import {PipesModule} from "./core/pipes/pipes.module";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -93,6 +93,7 @@ export class AppModule {
       'playlist_add_check',
       'playlist_add',
       'preview',
+      'qr_code_scanner',
       'queue',
       'screen',
       'settings',

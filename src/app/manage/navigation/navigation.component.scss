@@ -1,10 +1,66 @@
-::ng-deep .mat-tab-links {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+@import '~angular-material-css-vars/public-util';
+
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  // no mat-css-scss function?
+  background: rgb(var(--palette-background-background));
+
+  ::ng-deep {
+    .mat-tab-links {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    .mat-tab-links-active {
+      border-bottom: 0.5rem solid #00d8d6;
+      opacity: 1 !important;
+    }
+  }
 }
 
-::ng-deep .mat-tab-links-active {
-  border-bottom: 0.5rem solid #00d8d6;
-  opacity: 1 !important;
+.navigation {
+  display: flex;
+  flex-direction: row;
+
+  &__mainLinks {
+    flex: 1;
+  }
+
+  &__iconLinks {
+    width: 110px;
+
+    display: flex;
+    align-items: center;
+  }
+}
+
+
+
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave {
+  0%, 100% {
+    transform: rotate(0)
+  }
+  20%, 60% {
+    transform: rotate(-25deg)
+  }
+  40%, 80% {
+    transform: rotate(10deg)
+  }
+}
+
+@media (max-width: 500px) {
+  .github-corner:hover .octo-arm {
+    animation: none
+  }
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+  }
 }
