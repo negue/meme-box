@@ -1,0 +1,23 @@
+  <form [formGroup]="form">
+
+    <div class="example-container">
+      <mat-form-field >
+        <mat-label>Account</mat-label>
+        <input autocomplete="off" [readonly]="!editMode"
+               formControlName="name" (keyup.enter)="save()"
+               matInput required>
+
+        <mat-error *ngIf="form.controls['name'].hasError('required')">
+          Account is required
+        </mat-error>
+
+        <button (click)="toggleOrSave()" matSuffix
+                color="primary"
+                mat-raised-button>{{editMode ? 'Update' : 'Edit'}}</button>
+
+      </mat-form-field>
+
+
+    </div>
+  </form>
+

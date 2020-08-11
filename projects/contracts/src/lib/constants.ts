@@ -1,12 +1,15 @@
 import {TwitchEventTypes} from "./types";
 
+// TODO merge App / Server Endpoint CONSTANTS
+
 export const ENDPOINTS = {
   CLIPS: 'clips',
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
   TWITCH_EVENTS: 'twitch_events',
   NETWORK_LIST: 'network_ip_list',
-  CONFIG_MEDIA_PATH: 'config/media'
+  CONFIG_MEDIA_PATH: 'config/media',
+  CONFIG_TWITCH_CHANNEL: 'config/twitchChannel'
 }
 
 

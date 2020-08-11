@@ -31,3 +31,14 @@
     width: 45%;
   }
 }
+
+
+:host {
+  ::ng-deep {
+    .mat-card {
+      padding-bottom: 2rem;
+    }
+  }
+}
+
+

@@ -18,6 +18,7 @@ export const TWITCH_ID_ENDPOINT = `${API_PREFIX}/twitch_events/:eventId`;
 
 export const CONFIG_ENDPOINT = `${API_PREFIX}/config`;
 export const CONFIG_MEDIA_ENDPOINT = `${API_PREFIX}/config/media`;
+export const CONFIG_TWITCH_CHANNEL_ENDPOINT = `${API_PREFIX}/config/twitchChannel`;
 export const FILES_ENDPOINT = `/files`;
 export const FILES_OPEN_ENDPOINT = `/files/open`;
 export const FILE_ENDPOINT = `/file/*`;

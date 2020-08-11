@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
-import {Clip, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch} from "@memebox/contracts";
+import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch} from "@memebox/contracts";
 import {API_PREFIX, EXPRESS_PORT, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
 import {SnackbarService} from "../core/services/snackbar.service";
 
@@ -240,6 +240,23 @@ export class AppService {
     this.appStore.update(state => {
       state.config.mediaFolder = newFolder;
     });
+  }
+
+  public async updateTwitchChannel(twitchChannel: string) {
+    const newConfig: Partial<Config> = {
+      twitchChannel: twitchChannel
+    };
+
+    // update path & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_CHANNEL}`, newConfig).toPromise();
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.twitchChannel = twitchChannel;
+    });
+
+
+    this.snackbar.normal('Twitch Channel updated!');
   }
 
   public async openMediaFolder() {

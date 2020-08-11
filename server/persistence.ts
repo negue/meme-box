@@ -240,6 +240,14 @@ export class Persistence {
     this.saveData();
   }
 
+
+  public updateTwitchChannel (channel: string) {
+    this.data.config = this.data.config || {};
+    this.data.config.twitchChannel  = channel;
+
+    this.saveData();
+  }
+
   public getConfig() {
     return this.data.config;
   }

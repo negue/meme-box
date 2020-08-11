@@ -5,6 +5,10 @@ import {RouterModule, Routes} from "@angular/router";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
+import {TwitchSettingComponent} from './twitch-setting/twitch-setting.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
 
 const routes: Routes = [
   {
@@ -14,14 +18,17 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [SettingsOverviewComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatCardModule,
-        MatIconModule,
-        MatButtonModule,
-    ],
+  declarations: [SettingsOverviewComponent, TwitchSettingComponent],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
 })
 export class SettingsModule {
 }
