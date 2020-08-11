@@ -9,6 +9,7 @@ import {TwitchSettingComponent} from './twitch-setting/twitch-setting.component'
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
+import { TwitchIconComponent } from './svg/twitch-icon/twitch-icon.component';
 
 const routes: Routes = [
   {
@@ -18,7 +19,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [SettingsOverviewComponent, TwitchSettingComponent],
+  declarations: [SettingsOverviewComponent, TwitchSettingComponent, TwitchIconComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
