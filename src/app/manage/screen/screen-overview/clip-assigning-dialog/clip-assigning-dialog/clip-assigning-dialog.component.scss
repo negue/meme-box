@@ -1,4 +1,5 @@
 @import '~angular-material-css-vars/public-util';
+@import '../../../../../../utils/mixins';
 
 :host {
   width: 100%;
@@ -25,20 +26,9 @@
 }
 
 .mediaList {
-  display: grid;
-  padding: 1rem;
+  @include gridLayout;
   width: 100%;
   list-style: none;
-
-  @media screen and (min-width: 620px) {
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 2rem;
-  }
-
-  @media screen and (min-width: 930px) {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 2rem;
-  }
 }
 
 .mediaList__option {

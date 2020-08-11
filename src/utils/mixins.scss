@@ -1,0 +1,19 @@
+@mixin gridLayout {
+  display: grid;
+  padding: 2rem;
+
+  @media screen and (min-width: 620px) {
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 2rem;
+  }
+
+  @media screen and (min-width: 930px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 2rem;
+  }
+}
+
+@mixin gridLayout__item {
+  width: 100%;
+  margin-bottom: 2rem;
+}
