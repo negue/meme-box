@@ -9,7 +9,8 @@
     "**/*.ts"
   ],
   "exclude": [
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/*.stories.*"
   ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
