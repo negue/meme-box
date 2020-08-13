@@ -10,6 +10,7 @@ main.js
 **/*.js
 !memebox-streamdeck/**/*.js
 !src/karma.conf.js
+!.storybook/**
 *.js.map
 /ncc
 .cache
