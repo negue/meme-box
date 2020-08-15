@@ -38,7 +38,6 @@ export class DialogService {
     this._dialog.open(
       MediaEditComponent, {
         data: clipInfo,
-        height: '600px',
         width: '600px',
       }
     )

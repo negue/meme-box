@@ -67,7 +67,6 @@ export class ScreenOverviewComponent implements OnInit {
     this._dialog.open(
       ClipAssigningDialogComponent, {
         data: screen.id,
-        height: '600px',
         width: '800px',
       }
     )
