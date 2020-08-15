@@ -62,7 +62,8 @@
 
 .mediaList {
   max-height: 11.2rem;
-  overflow-y: scroll;
+  height: 11.2rem;
+  overflow-y: auto;
   margin-bottom: 2rem;
 }
 

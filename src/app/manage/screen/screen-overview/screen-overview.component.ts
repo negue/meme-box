@@ -6,6 +6,8 @@ import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigni
 import {AppService, EXPRESS_BASE} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
+import {WebsocketService} from "../../../core/services/websocket.service";
+import {SnackbarService} from "../../../core/services/snackbar.service";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
@@ -37,6 +39,8 @@ export class ScreenOverviewComponent implements OnInit {
     private _dialog: DialogService,
     private _queries: AppQueries,
     public service: AppService,
+    private webSocket: WebsocketService,
+    private snackbar: SnackbarService
   ) {
   }
 
@@ -68,6 +72,8 @@ export class ScreenOverviewComponent implements OnInit {
       ClipAssigningDialogComponent, {
         data: screen.id,
         width: '800px',
+
+        panelClass: 'max-height-dialog'
       }
     )
   }
@@ -82,5 +88,14 @@ export class ScreenOverviewComponent implements OnInit {
       screenId: screen.id,
       name: item.name
     });
+  }
+
+  onPreview(clipId: string, screen: ScreenViewEntry) {
+    if (clipId) {
+      this.webSocket.triggerClipOnScreen(clipId, screen.id);
+    } else{
+      this.snackbar.normal('Not implemented yet, sorry.')
+    }
+
   }
 }
