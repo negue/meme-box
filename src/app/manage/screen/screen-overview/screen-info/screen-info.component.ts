@@ -22,9 +22,8 @@ export class ScreenInfoComponent implements OnInit {
   @Output()
   public onEdit = new EventEmitter();
 
-  // TODO
   @Output()
-  public onPreview = new EventEmitter()
+  public onPreview = new EventEmitter<string>()
 
   @Output()
   public onDelete = new EventEmitter();

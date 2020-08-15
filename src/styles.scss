@@ -37,6 +37,12 @@ $custom-typography: mat-typography-config(
   }
 };
 
+.max-height-dialog {
+  .mat-dialog-content {
+    height: 600px;
+  }
+}
+
 body {
   font-size: 16px;
   background-color: #2f3640 !important;

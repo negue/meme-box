@@ -50,7 +50,7 @@
           </td>
           <td>{{entry.name}}</td>
           <td class="mediaList__settingsCell">
-            <button (click)="onEditScreenClipOptions.emit(entry)"
+            <button (click)="onPreview.emit(entry.id)"
                     class="mediaList__settingsCellButton"
                     mat-icon-button>
               <mat-icon svgIcon="preview"></mat-icon>
