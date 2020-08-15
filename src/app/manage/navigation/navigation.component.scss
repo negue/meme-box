@@ -39,6 +39,15 @@
 }
 
 
+.github-corner {
+  svg {
+    pointer-events: none;
+
+    path {
+      pointer-events: visible;
+    }
+  }
+}
 
 .github-corner:hover .octo-arm {
   animation: octocat-wave 560ms ease-in-out
