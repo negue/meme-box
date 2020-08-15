@@ -39,6 +39,7 @@ export class DialogService {
       MediaEditComponent, {
         data: clipInfo,
         width: '600px',
+        panelClass: 'max-height-dialog'
       }
     )
   }

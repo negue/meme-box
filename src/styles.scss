@@ -37,8 +37,10 @@ $custom-typography: mat-typography-config(
   }
 };
 
-.mat-dialog-content {
-  height: 600px;
+.max-height-dialog {
+  .mat-dialog-content {
+    height: 600px;
+  }
 }
 
 body {
