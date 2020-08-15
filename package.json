@@ -92,6 +92,7 @@
     "@datorama/akita": "5.2.0",
     "@gewd/ng-utils": "0.2.2",
     "@types/express": "4.17.6",
+    "@types/tmi.js": "1.4.1",
     "angular-material-css-vars": "1.1.0",
     "angular2-qrcode": "2.0.3",
     "body-parser": "1.19.0",
@@ -100,6 +101,7 @@
     "immer": "7.0.5",
     "open": "7.1.0",
     "rxjs": "6.6.2",
+    "tmi.js": "1.5.0",
     "tslib": "^2.0.0",
     "ws": "6.2.1"
   }

@@ -1,25 +1,52 @@
-import {createExpress, PersistenceInstance} from "./express-server";
+import {createExpress, ExampleTwitchCommandsSubject} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
 import {EXPRESS_PORT, WS_PORT} from "./constants";
-import {debounceTime} from "rxjs/operators";
+import {debounceTime, startWith} from "rxjs/operators";
 import * as open from 'open';
 
 import * as fs from 'fs';
+import {TwitchHandler} from "./twitch.handler";
+import {PersistenceInstance} from "./persistence";
 
 
 const expressServer = createExpress(EXPRESS_PORT);
 const ws = createWebSocketServer(WS_PORT);
 
+let currentTwitchAccount = '';
+let twitchHandler:TwitchHandler = null;
 
 // todo export to server.ts and then refactor it
 PersistenceInstance.dataUpdated$()
   .pipe(
-    debounceTime(600)
+    debounceTime(600),
+    startWith(true)
   )
   .subscribe(() => {
+    console.info('Data Updated');
     sendDataToAllSockets('UPDATE_DATA');
+
+    const config = PersistenceInstance.getConfig();
+    const twitchChannelInConfig = config.twitchChannel;
+
+    console.info({config, twitchChannelInConfig});
+    if (currentTwitchAccount !== twitchChannelInConfig) {
+      currentTwitchAccount = twitchChannelInConfig;
+
+      console.info(`Creating the TwitchHandler for: ${currentTwitchAccount}`);
+
+      if (twitchHandler != null) {
+        twitchHandler.disconnect();
+      }
+
+      twitchHandler = new TwitchHandler(currentTwitchAccount);
+    }
   });
 
+ExampleTwitchCommandsSubject.subscribe(value => {
+  if (twitchHandler) {
+    twitchHandler.handle(value);
+  }
+})
 
 console.log('Server is ready');
 

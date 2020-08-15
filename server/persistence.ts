@@ -68,7 +68,7 @@ export class Persistence {
       // execute upgrade , changing names or other stuff
 
       this.data = Object.assign({}, createInitialState(), dataFromFile);
-
+      this.updated$.next();
     });
   }
 
