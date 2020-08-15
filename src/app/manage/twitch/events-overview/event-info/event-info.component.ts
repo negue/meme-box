@@ -33,6 +33,9 @@ export class EventInfoComponent implements OnInit {
   @Output()
   onEdit = new EventEmitter<any>();
 
+  @Output()
+  onPreview = new EventEmitter<any>();
+
   constructor(private appQueries: AppQueries,
               private appService: AppService) {
   }

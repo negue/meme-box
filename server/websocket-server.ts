@@ -34,6 +34,20 @@ export function sendDataToAllSockets (message: string) {
   });
 }
 
+export function triggerMediaClipById(payloadObs: TriggerClip) {
+  var allScreens = PersistenceInstance.listScreens();
+
+  for (const screen of allScreens) {
+    if (screen.clips[payloadObs.id]) {
+      const newMessageObj = {
+        ...payloadObs,
+        targetScreen: screen.id
+      };
+
+      sendDataToScreen(screen.id, "TRIGGER_CLIP="+JSON.stringify(newMessageObj));
+    }
+  }
+}
 
 wss.on("connection", (ws: WebSocket) => {
   //connection is up, let's add a simple simple event
@@ -60,18 +74,8 @@ wss.on("connection", (ws: WebSocket) => {
 
         if (!payloadObs.targetScreen) {
           console.info('NO TARGET');
-          var allScreens = PersistenceInstance.listScreens();
 
-          for (const screen of allScreens) {
-            if (screen.clips[payloadObs.id]) {
-              const newMessageObj = {
-                ...payloadObs,
-                targetScreen: screen.id
-              };
-
-              sendDataToScreen(screen.id, "TRIGGER_CLIP="+JSON.stringify(newMessageObj));
-            }
-          }
+          triggerMediaClipById(payloadObs);
         } else {
           sendDataToScreen(payloadObs.targetScreen, message);
         }

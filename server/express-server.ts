@@ -16,14 +16,16 @@ import {
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
   TWITCH_ENDPOINT,
-  TWITCH_ID_ENDPOINT
+  TWITCH_ID_ENDPOINT,
+  TWITCH_TRIGGER_ENDPOINT
 } from "./constants";
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {MediaType} from "../projects/contracts/src/lib/types";
+import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 
 import * as open from 'open';
+import {Subject} from "rxjs";
 
 const { resolve, basename, extname, sep, normalize } = require('path');
 const { readdir } = require('fs').promises;
@@ -38,6 +40,7 @@ app.use(bodyParser.json());
 
 app.use(express.static('dist'))
 
+export const ExampleTwitchCommandsSubject = new Subject<TwitchTriggerCommand>();
 
 app.get(API_PREFIX, (req,res) => {
   res.send(PersistenceInstance.fullState());
@@ -142,6 +145,13 @@ app.put(TWITCH_ID_ENDPOINT, (req, res) => {
 // Delete
 app.delete(TWITCH_ID_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.deleteTwitchEvent(req.params['eventId']));
+});
+
+// Trigger Twitch Command
+app.post(TWITCH_TRIGGER_ENDPOINT, (req, res) => {
+  ExampleTwitchCommandsSubject.next(req.body);
+
+  res.send({ok: true});
 });
 
 
@@ -291,5 +301,3 @@ export function createExpress(port) {
 
   return app;
 }
-
-export {PersistenceInstance};

@@ -116,3 +116,8 @@ export interface FileInfo {
   ext: string;
   fileType: MediaType;
 }
+
+export interface TwitchTriggerCommand {
+  event: TwitchEventTypes;
+  message: string;
+}
