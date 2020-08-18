@@ -1,18 +1,14 @@
 import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, Dictionary, ScreenClip} from "@memebox/contracts";
+import {Clip, Dictionary} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, pairwise, take, takeUntil, withLatestFrom} from "rxjs/operators";
 import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {WebsocketService} from "../core/services/websocket.service";
+import {CombinedClip} from "./types";
 
-interface CombinedClip {
-  clip: Clip;
-  clipSetting: ScreenClip;
-  backgroundColor: string;
-}
 
 @Component({
   selector: 'app-target-screen',
@@ -121,7 +117,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       withLatestFrom(this.mediaClipMap$),
       takeUntil(this._destroy$)
     ).subscribe(([clipIdToPlay, mediaClipMap]) => {
-      const mediaInformation = mediaClipMap[clipIdToPlay];
+     /* const mediaInformation = mediaClipMap[clipIdToPlay];
 
       const control = this.clipToControlMap.get(mediaInformation.clip);
 
@@ -136,7 +132,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.mediaClipToShow$.next(null);
         }, mediaInformation.clip.playLength)
-      }
+      } */
     });
 
     this.mediaClipToShow$.pipe(
@@ -145,14 +141,14 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(([[prev, current], mediaClipMap]) => {
       if (prev) {
-        const mediaInformation = mediaClipMap[prev];
+        /*const mediaInformation = mediaClipMap[prev];
 
         const control = this.clipToControlMap.get(mediaInformation.clip);
 
         if (control instanceof HTMLMediaElement) {
           control.pause();
           control.currentTime = 0;
-        }
+        }*/
       }
     })
   }
@@ -167,9 +163,9 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     });
   }
 
-  shouldPlay$(key: string) {
+  shouldPlay$(key: string): Observable<boolean> {
     return this.mediaClipToShow$.pipe(
-      filter(mediaToShow => mediaToShow === key)
+      map(mediaToShow => mediaToShow === key)
     )
   }
 
