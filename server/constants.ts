@@ -1,4 +1,4 @@
-export const WS_PORT = 4444;
+export const DEFAULT_PORT = 4444;
 
 // merge with the other constant file
 

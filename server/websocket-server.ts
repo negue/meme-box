@@ -93,7 +93,7 @@ wss.on("connection", (ws: WebSocket) => {
 export function createWebSocketServer(port) {
   //start our server
   server.listen(port, () => {
-    console.log(`WebSocket started on port ${port}`);
+    console.log(`Server started on port: ${port}`);
   });
 
   return {server, wss};

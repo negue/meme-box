@@ -4,7 +4,7 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 import {NgErrorOverlayModule} from "@gewd/ng-utils/ng-error-overlay";
-import {WS_PORT} from "../../server/constants";
+import {DEFAULT_PORT} from "../../server/constants";
 
 export const AppConfig = {
   production: false,
@@ -12,5 +12,5 @@ export const AppConfig = {
   ngModules: [
     NgErrorOverlayModule
   ],
-  expressBase: `http://${location.hostname}:${WS_PORT}`
+  expressBase: `http://${location.hostname}:${DEFAULT_PORT}`
 };
