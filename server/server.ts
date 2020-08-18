@@ -1,6 +1,6 @@
 import {createExpress, ExampleTwitchCommandsSubject} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
-import {EXPRESS_PORT, WS_PORT} from "./constants";
+import {WS_PORT} from "./constants";
 import {debounceTime, startWith} from "rxjs/operators";
 import * as open from 'open';
 
@@ -9,8 +9,11 @@ import {TwitchHandler} from "./twitch.handler";
 import {PersistenceInstance} from "./persistence";
 
 
-const expressServer = createExpress(EXPRESS_PORT);
-const ws = createWebSocketServer(WS_PORT);
+const expressServer = createExpress(WS_PORT);
+const {server, wss} = createWebSocketServer(WS_PORT);
+
+// Also mount the app here
+server.on('request', expressServer);
 
 let currentTwitchAccount = '';
 let twitchHandler:TwitchHandler = null;
@@ -63,6 +66,6 @@ if(fs.existsSync('package.json')) {
     open(`http://localhost:4200`);
   })();
 } else {
-  open(`http://localhost:${EXPRESS_PORT}`);
+  open(`http://localhost:${WS_PORT}`);
 }
 

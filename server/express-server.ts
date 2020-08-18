@@ -6,7 +6,6 @@ import {
   CONFIG_ENDPOINT,
   CONFIG_MEDIA_ENDPOINT,
   CONFIG_TWITCH_CHANNEL_ENDPOINT,
-  EXPRESS_PORT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT,
@@ -235,9 +234,10 @@ app.get(FILES_ENDPOINT, async (req, res) => {
 
     const fileType = fileEndingToType(ext);
 
+    // TODO replace PORT with the "--port"
     const apiUrl = fullPath
       .replace(mediaFolder,
-      `http://localhost:${EXPRESS_PORT}/file`
+      `http://localhost:${app.get('port')}/file`
       ).split(sep).join('/');
 
     return {
@@ -297,7 +297,7 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 export function createExpress(port) {
   app.set('port', port);
 
-  app.listen(app.get('port'));
+  // app.listen(app.get('port'));
 
   return app;
 }
