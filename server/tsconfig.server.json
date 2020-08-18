@@ -2,7 +2,7 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../out-tsc/server",
-    "module": "system",
+    "module": "ES2015",
     "types": []
   },
   "files": [
