@@ -1,10 +1,10 @@
 import {ChatUserstate} from "tmi.js";
 
 export enum MediaType {
-  Picture,
-  Audio,
-  Video,
-  IFrame,
+  Picture = 0,
+  Audio = 1,
+  Video = 2,
+  IFrame = 3,
 }
 
 export interface HasId {
@@ -56,6 +56,9 @@ export interface ScreenClip extends HasId  {
 
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
+
+  animationIn?: string|null;
+  animationOut?: string|null;
 }
 
 export interface ScreenViewEntry extends Screen {

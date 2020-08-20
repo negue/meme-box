@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {AppQueries} from "../../../../state/app.queries";
 import {Observable, Subject} from "rxjs";
-import {PositionEnum, ScreenClip} from "@memebox/contracts";
+import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, PositionEnum, Screen, ScreenClip} from "@memebox/contracts";
 import {map, takeUntil} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
@@ -21,6 +21,8 @@ export interface ScreenClipOptionsPayload {
 })
 export class ScreenClipOptionsComponent implements OnInit {
 
+  // TODO formly?
+  // TODO any other typed forms
   public form = new FormBuilder().group({
     id: '',
     width: '',
@@ -32,11 +34,30 @@ export class ScreenClipOptionsComponent implements OnInit {
     bottom: '',
     top: '',
     imgFit: '', // todo image fit setting as enum
-  })
 
-  public clipInfo$: Observable<ScreenClip> = this.appQueries.screenMap$.pipe(
-    map(screenMap => screenMap[this.data.screenId].clips[this.data.clipId])
+    animationIn: '',
+    animationOut: ''
+  });
+
+  public animateInList = ANIMATION_IN_ARRAY;
+
+  public animateOutList = ANIMATION_OUT_ARRAY;
+
+  public currentScreen$: Observable<Screen> = this.appQueries.screenMap$.pipe(
+    map(screenMap => screenMap[this.data.screenId])
   );
+
+  public clipInfo$: Observable<ScreenClip> = this.currentScreen$.pipe(
+    map(screen => ({
+      position: PositionEnum.FullScreen,
+      animationIn: '',
+      animationOut: '',
+      ...screen.clips[this.data.clipId]
+    }))
+  );
+
+
+
   private _clipInfo: ScreenClip = null;
   private destroy$ = new Subject();
 
@@ -51,11 +72,9 @@ export class ScreenClipOptionsComponent implements OnInit {
     this.clipInfo$.pipe(
       takeUntil(this.destroy$)
     ).subscribe(value => {
-      this._clipInfo = {
-        position: PositionEnum.FullScreen,
-        ...value
-      };
+      this._clipInfo = value;
 
+      console.info(this._clipInfo);
       this.form.reset(this._clipInfo);
     })
   }

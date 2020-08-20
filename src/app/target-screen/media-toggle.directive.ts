@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {Clip} from "@memebox/contracts";
+import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, Clip} from "@memebox/contracts";
 import {CombinedClip} from "./types";
 import {KeyValue} from "@angular/common";
 import {BehaviorSubject, Subject} from "rxjs";
@@ -13,19 +13,6 @@ enum MediaState {
   ANIMATE_OUT
 }
 
-const IN_ANIMATION_ARRAY = [
-  'animate__fadeInDownBig',
-  'animate__backInRight',
-  'animate__flipInX',
-  'animate__lightSpeedInRight',
-  'animate__jackInTheBox',
-  'animate__bounce'
-];
-
-const OUT_ANIMATION_ARRAY = [
-  'animate__backOutDown',
-  'animate__bounceOutRight'
-];
 
 @Directive({
   selector: '[appMediaToggle]',
@@ -143,7 +130,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.ANIMATE_IN:
       {
-        this.selectedInAnimation = this.randomAnimation(IN_ANIMATION_ARRAY);
+        // get the animation from screenclipsettings
+        // handle the "random" id
+        this.selectedInAnimation = this.randomAnimation(ANIMATION_IN_ARRAY);
         this.startAnimation(this.selectedInAnimation);
         break;
       }
@@ -157,7 +146,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.ANIMATE_OUT:
       {
-        this.selectedOutAnimation = this.randomAnimation(OUT_ANIMATION_ARRAY);
+        this.selectedOutAnimation = this.randomAnimation(ANIMATION_OUT_ARRAY);
         this.startAnimation(this.selectedOutAnimation);
         break;
       }

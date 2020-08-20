@@ -6,3 +6,4 @@ export * from './lib/types';
 export * from './lib/createInitialState';
 export * from './lib/constants';
 export * from './lib/actions';
+export * from './lib/animations';
