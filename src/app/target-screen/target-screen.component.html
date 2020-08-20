@@ -1,9 +1,10 @@
 <!-- Notes
 The Browser Elements need to exist all the time
 The Loaded Clips need to stay cached?
+
 -->
 
-<div *ngFor="let entry of mediaClipMap$ | async | keyvalue"
+<div *ngFor="let entry of mediaClipMap$ | async | keyvalue; trackBy: trackByKeyValue"
      [class.absolute]="entry.value.clipSetting.position === 1"
      [class.fullscreen]="!entry.value.clipSetting.position"
      [ngSwitch]="entry.value.clip.type"
@@ -15,30 +16,35 @@ The Loaded Clips need to stay cached?
      [style.--clip-setting-right]="entry.value.clipSetting.right"
      [style.--clip-setting-top]="entry.value.clipSetting.top"
      [style.--clip-setting-width]="entry.value.clipSetting.width"
-     class="clip-holder {{ entry.value.clip.type | mediaTypeClass }}"
+     [style.--animate-duration]="'777ms'"
+     appMediaToggle
+     [combinedClip]="entry.value"
+     [controlsMap]="clipToControlMap"
+     #mediaToggleVar="appMediaToggle"
+     class="clip-holder {{ entry.value.clip.type | mediaTypeClass }} "
 >
   <span class="debug-name">{{ entry.value.clip.name }}</span>
 
   <video #video *ngSwitchCase="2"
          (canplay)="addLog('canplay', $event)"
          (canplaythrough)="addLog('canplaythrough', $event)"
-         (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
+         (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
          (loadeddata)="addLog('loadeddata', $event)"
          (loadedmetadata)="addLog('loadedmetadata', $event)"
          (loadstart)="addLog('loadstart', $event); addToMap(entry.value.clip, video)"
          (play)="addLog('play', $event)"
          (playing)="addLog('playing', $event)"
          (progress)="addLog('progress', $event)"
-         [class.visible]="shouldPlay$(entry.key) | async"
+         [class.visible]="mediaToggleVar.isVisible$ | async"
          [src]="entry.value.clip.path"
          [volume]="entry.value.clip.volumeSetting / 100"
   ></video>
   <audio #audio *ngSwitchCase="1"
-         (ended)="addLog('ended', $event); hideIfStillPlaying(entry)"
+         (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
          (loadstart)="addToMap(entry.value.clip, audio)"
          (play)="addLog('play', $event)"
          (playing)="addLog('playing', $event)"
-         [class.visible]="shouldPlay$(entry.key) | async"
+         [class.visible]="mediaToggleVar.isVisible$ | async"
          [src]="entry.value.clip.path"
          [volume]="entry.value.clip.volumeSetting / 100"
          controls
@@ -46,11 +52,11 @@ The Loaded Clips need to stay cached?
   ></audio>
   <img #img *ngSwitchCase="0"
        (loadstart)="addToMap(entry.value.clip, img)"
-       [class.visible]="shouldPlay$(entry.key) | async"
+       [class.visible]="mediaToggleVar.isVisible$ | async"
        [src]="entry.value.clip.path"
   />
   <iframe #iFrame *ngSwitchCase="3"
-          [class.visible]="shouldPlay$(entry.key) | async"
+          [class.visible]="mediaToggleVar.isVisible$ | async"
           [src]="entry.value.clip.path | safeurl">
   </iframe>
 </div>

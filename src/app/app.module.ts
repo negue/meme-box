@@ -27,6 +27,7 @@ import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} fro
 import {StyleguideColors} from './shared/styleguide/styleguide.component';
 
 import {PipesModule} from "./core/pipes/pipes.module";
+import {MediaToggleDirective} from './target-screen/media-toggle.directive';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -34,7 +35,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, TargetScreenComponent, MediaTypeClassPipe ],
+  declarations: [AppComponent, TargetScreenComponent, MediaTypeClassPipe, MediaToggleDirective ],
   imports: [
     BrowserModule,
     FormsModule,

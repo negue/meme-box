@@ -1,18 +1,14 @@
-import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, Dictionary, ScreenClip} from "@memebox/contracts";
-import {distinctUntilChanged, filter, map, pairwise, take, takeUntil, withLatestFrom} from "rxjs/operators";
+import {Clip, Dictionary} from "@memebox/contracts";
+import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {WebsocketService} from "../core/services/websocket.service";
+import {CombinedClip} from "./types";
 
-interface CombinedClip {
-  clip: Clip;
-  clipSetting: ScreenClip;
-  backgroundColor: string;
-}
 
 @Component({
   selector: 'app-target-screen',
@@ -62,7 +58,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   mediaClipToShow$ = new BehaviorSubject<string>(null);
   clipToControlMap = new WeakMap<Clip, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
 
+  trackByKeyValue: TrackByFunction<KeyValue<string, CombinedClip>> = (index, item) => {
+    return item.key;
+  }
+
   private _destroy$ = new Subject();
+
 
   constructor(private appQuery: AppQueries,
               private appService: AppService,
@@ -111,50 +112,6 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     });
 
     this.screenId$.next(this.route.snapshot.params.guid);
-
-    // TODO Fix , multiple triggers of clips..
-    // Only one clip can shown at once
-    // if a 2nd one is added, it can hide the first one ...
-
-    this.mediaClipToShow$.pipe(
-      filter(clip => !!clip),
-      withLatestFrom(this.mediaClipMap$),
-      takeUntil(this._destroy$)
-    ).subscribe(([clipIdToPlay, mediaClipMap]) => {
-      const mediaInformation = mediaClipMap[clipIdToPlay];
-
-      const control = this.clipToControlMap.get(mediaInformation.clip);
-
-      if (control instanceof HTMLAudioElement
-        || control instanceof HTMLVideoElement) {
-        control.currentTime = 0;
-        control.play();
-        console.info('play', control.readyState);
-      }
-
-      if (mediaInformation.clip.playLength) {
-        setTimeout(() => {
-          this.mediaClipToShow$.next(null);
-        }, mediaInformation.clip.playLength)
-      }
-    });
-
-    this.mediaClipToShow$.pipe(
-      pairwise(),
-      withLatestFrom(this.mediaClipMap$),
-      takeUntil(this._destroy$)
-    ).subscribe(([[prev, current], mediaClipMap]) => {
-      if (prev) {
-        const mediaInformation = mediaClipMap[prev];
-
-        const control = this.clipToControlMap.get(mediaInformation.clip);
-
-        if (control instanceof HTMLMediaElement) {
-          control.pause();
-          control.currentTime = 0;
-        }
-      }
-    })
   }
 
   addLog(load: string, $event: Event) {
@@ -167,22 +124,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     });
   }
 
-  shouldPlay$(key: string) {
-    return this.mediaClipToShow$.pipe(
-      filter(mediaToShow => mediaToShow === key)
-    )
-  }
-
   addToMap(value: Clip, element: any) {
     this.clipToControlMap.set(value, element);
-  }
-
-  hideIfStillPlaying(entry: KeyValue<string, CombinedClip>) {
-    const currentlyPlaying = this.mediaClipToShow$.value;
-
-    if (currentlyPlaying == entry.key) {
-      this.mediaClipToShow$.next(null);
-    }
   }
 
   random_rgba() {

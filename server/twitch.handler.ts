@@ -2,7 +2,7 @@ import * as tmi from 'tmi.js';
 import {Subscription} from "rxjs";
 import {PersistenceInstance} from "./persistence";
 import {startWith} from "rxjs/operators";
-import {Twitch, TwitchEventTypes, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
+import {Twitch, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 import {triggerMediaClipById} from "./websocket-server";
 
 
@@ -42,43 +42,86 @@ export class TwitchHandler {
     })
 
     this.tmiClient.on('message', (channel, tags, message, self) => {
-      if (!message.startsWith("!")) {
-        return;
-      }
+      const command = this.getCommandOfMessage(message);
 
       this.handle({
-        event: TwitchEventTypes.message,
-        message
+       // event: TwitchEventTypes.message,
+        message,
+        command,
+        tags
       });
 
-      // "Alca: Hello, World!"
-      console.log(`${tags['display-name']}: ${message}`, tags);
+      console.log(`TMI-Message: ${tags['display-name']}: ${message}`, tags);
     });
 
     this.tmiClient.on('action', (channel, tags, message, self) => {
+      const command = this.getCommandOfMessage(message);
 
-      console.log(`${tags['display-name']}: ${message}`, channel, tags);
-    })
+      // todo add the correct twitchevent-types?
+      this.handle({
+       // event: TwitchEventTypes.message,
+        message,
+        command,
+        tags
+      });
 
+      console.log(`TMI-Action: ${tags['display-name']}: ${message}`, channel, tags);
+    });
+
+
+    this.tmiClient.on('cheer', (channel, tags, message) => {
+      const command = this.getCommandOfMessage(message);
+
+      // todo add the correct twitchevent-types!
+      this.handle({
+        // event: TwitchEventTypes.message,
+        message,
+        command,
+        tags
+      });
+
+      console.log(`TMI-Cheer: ${tags['display-name']}: ${message}`, channel, tags);
+    });
   }
 
-  handle(command: TwitchTriggerCommand) {
-    for (const twitchSetting of this.twitchSettings){
-      if (!twitchSetting.active){
+  getCommandOfMessage (message: string): Twitch {
+    if (!message) {
+      return null;
+    }
+
+    let foundCommand: Twitch = null;
+    for (const twitchSetting of this.twitchSettings) {
+      if (!twitchSetting.active) {
         continue;
       }
 
-      console.info('Checking', twitchSetting);
+      if (message.includes(twitchSetting.contains)) {
+        if (!foundCommand) {
+          foundCommand = twitchSetting;
+        } else {
+          // another command, example
+          //!party
+          //!partyhard
+          // always take the "longer" command
 
-      if (twitchSetting.event === command.event
-        && command.message.includes(twitchSetting.contains)) {
-        console.info('Contained', twitchSetting.contains);
-        triggerMediaClipById({
-          id: twitchSetting.clipId
-        });
-
-        break;
+          if (foundCommand.contains.length < twitchSetting.contains.length) {
+            foundCommand = twitchSetting;
+          }
+        }
       }
+    }
+
+    return foundCommand;
+  }
+
+  handle(trigger: TwitchTriggerCommand) {
+    if (trigger.command) {
+      console.info('Contained', trigger.command.contains);
+      console.info('Full Message', trigger.message);
+      console.info('Tags', trigger.tags);
+      triggerMediaClipById({
+        id: trigger.command.clipId
+      });
     }
   }
 }

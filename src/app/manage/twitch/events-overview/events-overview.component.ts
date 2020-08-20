@@ -37,10 +37,12 @@ export class EventsOverviewComponent implements OnInit {
   }
 
   previewEvent(item: Twitch) {
+    // TODO custom payload to trigger it and set the command on the server part
     const triggerObj: TwitchTriggerCommand = {
-      event: item.event,
+      //event: item.event,
+      command: item,
       message: item.contains
-    }
+    };
 
     this.http.post(`${API_BASE}${ENDPOINTS.TWITCH_TRIGGER}`, triggerObj)
       .subscribe(value =>{

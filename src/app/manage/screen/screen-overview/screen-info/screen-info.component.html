@@ -58,6 +58,7 @@
           </td>
           <td class="mediaList__settingsCell">
             <button (click)="onEditScreenClipOptions.emit(entry)"
+                    *ngIf="entry.type !== 1"
                     class="mediaList__settingsCellButton"
                     mat-icon-button>
               <mat-icon svgIcon="settings"></mat-icon>

@@ -1,6 +1,6 @@
 <h2 mat-dialog-title class="title">
   <mat-icon svgIcon="code" class="title__icon"></mat-icon>
-  Custom CSS for {{data.name}} FOR THIS SCREEN
+  Custom CSS for Media: {{data.name}} / Screen: {{(currentScreen$|async).name}}
 </h2>
 <mat-dialog-content *ngIf="clipInfo$ | async as clipInfo" class="mat-typography">
 
@@ -71,6 +71,25 @@
                type="text">
       </mat-form-field>
     </ng-container>
+
+    <mat-form-field>
+      <mat-select formControlName="animationIn"
+                  placeholder="Animate IN">
+        <mat-option value="">None</mat-option>
+        <mat-option value="random">Random</mat-option>
+        <mat-option *ngFor="let animation of animateInList" [value]="animation">{{animation}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="animationOut"
+                  placeholder="Animate OUT">
+        <mat-option value="">None</mat-option>
+        <mat-option value="random">Random</mat-option>
+
+        <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation}}</mat-option>
+      </mat-select>
+    </mat-form-field>
   </form>
 
 </mat-dialog-content>
