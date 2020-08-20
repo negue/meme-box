@@ -3,5 +3,6 @@ export const AppConfig = {
   environment: 'PROD',
   ngModules: [
 
-  ]
+  ],
+  expressBase: `http://${location.hostname}:${location.port}`
 };

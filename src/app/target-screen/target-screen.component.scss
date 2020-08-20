@@ -27,7 +27,7 @@ video, img, iframe {
     height: 100%;
   }
 
-  &.picture {
+  &.image {
     * {
       object-fit: var(--clip-setting-img-fit, contain);
     }

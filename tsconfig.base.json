@@ -23,6 +23,9 @@
     "paths": {
       "@memebox/contracts": [
         "projects/contracts/src/public-api.ts"
+      ],
+      "@memebox/app/env": [
+        "src/environments/environment.ts"
       ]
     }
   },

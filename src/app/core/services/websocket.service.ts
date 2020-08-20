@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {WS_PORT} from "../../../../server/constants";
+import {DEFAULT_PORT} from "../../../../server/constants";
 import {TriggerClip} from "@memebox/contracts";
 import {Subject} from "rxjs";
 
@@ -23,7 +23,7 @@ export class WebsocketService {
       return;
     }
 
-    this.ws = new WebSocket(`ws://${location.hostname}:${WS_PORT}`);
+    this.ws = new WebSocket(`ws://${location.hostname}:${DEFAULT_PORT}`);
 
     this.ws.onopen = ev => {
       this.isConnected = true;
