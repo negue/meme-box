@@ -54,9 +54,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnChanges({combinedClip}: SimpleChanges): void {
-    if (combinedClip) {
-      this.getAnimationValues();
-    }
+
   }
 
 
@@ -82,6 +80,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(toShow => {
       if (toShow === this.combinedClip.clip.id) {
+        this.getAnimationValues();
+
         this.triggerState(
           this.combinedClip.clipSetting.animationIn
             ? MediaState.ANIMATE_IN
@@ -89,8 +89,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         );
       }
     });
-
-    this.getAnimationValues();
   }
 
   private getAnimationValues() {
