@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {Clip, Dictionary} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, pairwise, take, takeUntil, withLatestFrom} from "rxjs/operators";
@@ -58,7 +58,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   mediaClipToShow$ = new BehaviorSubject<string>(null);
   clipToControlMap = new WeakMap<Clip, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
 
+  trackByKeyValue: TrackByFunction<KeyValue<string, CombinedClip>> = (index, item) => {
+    return item.key;
+  }
+
   private _destroy$ = new Subject();
+
 
   constructor(private appQuery: AppQueries,
               private appService: AppService,
@@ -168,11 +173,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   hideIfStillPlaying(entry: KeyValue<string, CombinedClip>) {
-    const currentlyPlaying = this.mediaClipToShow$.value;
+    /*const currentlyPlaying = this.mediaClipToShow$.value;
 
     if (currentlyPlaying == entry.key) {
       this.mediaClipToShow$.next(null);
     }
+     */
   }
 
   random_rgba() {

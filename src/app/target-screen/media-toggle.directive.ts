@@ -41,36 +41,33 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   @HostListener('animationend', ['$event'])
   onAnimationEnd(event: any) {
     if (this.currentState === MediaState.ANIMATE_IN) {
-      this.currentState = MediaState.VISIBLE;
-      this.applyChangesByState();
-
-      // TODO refactor the logic here
-      this.playMedia();
+      this.triggerState(MediaState.VISIBLE);
 
       return;
     }
 
     if (this.currentState === MediaState.ANIMATE_OUT) {
-      this.currentState = MediaState.HIDDEN;
-      this.applyChangesByState();
-      this.isVisible$.next(false);
+      this.triggerState(MediaState.HIDDEN);
 
       return;
     }
   }
 
-  ngOnChanges({trigger}: SimpleChanges): void {
-
+  ngOnChanges({combinedClip}: SimpleChanges): void {
+    if (combinedClip) {
+      this.getAnimationValues();
+    }
   }
 
 
   stopIfStillPlaying(entry: KeyValue<string, CombinedClip>) {
+    console.info('stopifPlaying', this.currentState);
     if (this.currentState === MediaState.VISIBLE) {
-      this.currentState = MediaState.ANIMATE_OUT;
 
-      this.applyChangesByState();
-
-      this.stopMedia();
+      console.info('stopifPlaying', this.selectedOutAnimation);
+      this.triggerState(this.selectedOutAnimation
+        ? MediaState.ANIMATE_OUT
+        : MediaState.HIDDEN)
     }
   }
 
@@ -85,13 +82,20 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(toShow => {
       if (toShow === this.combinedClip.clip.id) {
-        this.currentState = MediaState.ANIMATE_IN;
-        this.isVisible$.next(true);
-
-
-        this.applyChangesByState();
+        this.triggerState(
+          this.combinedClip.clipSetting.animationIn
+            ? MediaState.ANIMATE_IN
+            : MediaState.VISIBLE
+        );
       }
-    })
+    });
+
+    this.getAnimationValues();
+  }
+
+  private getAnimationValues() {
+    this.selectedInAnimation = this.getAnimationName(true);
+    this.selectedOutAnimation = this.getAnimationName(false);
   }
 
   private playMedia() {
@@ -101,8 +105,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       || control instanceof HTMLVideoElement) {
       control.currentTime = 0;
       control.play();
-      console.info('play', control.readyState);
     }
+
+    console.info('playMedia', this.combinedClip.clip);
 
     if (this.combinedClip.clip.playLength) {
       setTimeout(() => {
@@ -120,37 +125,44 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  // todo refactor later once its working
-  private applyChangesByState() {
-    switch (this.currentState) {
+  private triggerState(newState: MediaState) {
+    switch (newState) {
       case MediaState.HIDDEN:
       {
         this.removeAnimation(this.selectedOutAnimation);
+        this.isVisible$.next(false);
         break;
       }
       case MediaState.ANIMATE_IN:
       {
-        // get the animation from screenclipsettings
-        // handle the "random" id
-        this.selectedInAnimation = this.randomAnimation(ANIMATION_IN_ARRAY);
         this.startAnimation(this.selectedInAnimation);
+
+        this.isVisible$.next(true);
+
         break;
       }
       case MediaState.VISIBLE:
       {
+        this.isVisible$.next(true);
         this.removeAnimation(this.selectedInAnimation);
 
         // "once its done"
+        this.playMedia();
 
         break;
       }
       case MediaState.ANIMATE_OUT:
       {
-        this.selectedOutAnimation = this.randomAnimation(ANIMATION_OUT_ARRAY);
+        this.selectedOutAnimation = this.getAnimationName(false);
+        console.warn('Animation OUT', this.selectedOutAnimation, this.combinedClip.clipSetting);
         this.startAnimation(this.selectedOutAnimation);
+
+        this.stopMedia();
         break;
       }
     }
+
+    this.currentState = newState;
   }
 
   private startAnimation(animationName: string) {
@@ -162,6 +174,18 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     if (animationName) {
       this.element.nativeElement.classList.remove(animationName);
     }
+  }
+
+  private getAnimationName (animateIn: boolean) {
+    let selectedAnimation = animateIn
+      ? this.combinedClip.clipSetting.animationIn
+      : this.combinedClip.clipSetting.animationOut;
+
+    if (selectedAnimation === 'random') {
+      selectedAnimation = this.randomAnimation(animateIn ? ANIMATION_IN_ARRAY : ANIMATION_OUT_ARRAY);
+    }
+
+    return selectedAnimation;
   }
 
   private randomAnimation(animations: string[]) {
