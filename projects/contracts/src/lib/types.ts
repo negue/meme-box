@@ -1,3 +1,5 @@
+import {ChatUserstate} from "tmi.js";
+
 export enum MediaType {
   Picture,
   Audio,
@@ -60,6 +62,8 @@ export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
+// TODO refactor, maybe all messages
+// and then like "yes, but this one only with bits.."
 export const enum TwitchEventTypes {
   message = 'message',
   follow = 'follow',
@@ -118,6 +122,7 @@ export interface FileInfo {
 }
 
 export interface TwitchTriggerCommand {
-  event: TwitchEventTypes;
   message: string;
+  command?: Twitch; // Config-Object
+  tags?: ChatUserstate;
 }
