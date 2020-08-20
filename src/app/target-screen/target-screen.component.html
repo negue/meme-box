@@ -16,8 +16,10 @@ The Loaded Clips need to stay cached?
      [style.--clip-setting-top]="entry.value.clipSetting.top"
      [style.--clip-setting-width]="entry.value.clipSetting.width"
      [style.--animate-duration]="'777ms'"
-     appMediaToggle [combinedClip]="entry.value" [controlsMap]="clipToControlMap"
-     [trigger]="shouldPlay$(entry.key) | async" #mediaToggleVar="appMediaToggle"
+     appMediaToggle
+     [combinedClip]="entry.value"
+     [controlsMap]="clipToControlMap"
+     #mediaToggleVar="appMediaToggle"
      class="clip-holder {{ entry.value.clip.type | mediaTypeClass }} "
 >
   <span class="debug-name">{{ entry.value.clip.name }}</span>

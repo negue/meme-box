@@ -1,8 +1,10 @@
-import {Directive, ElementRef, HostListener, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Clip} from "@memebox/contracts";
 import {CombinedClip} from "./types";
 import {KeyValue} from "@angular/common";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
+import {TargetScreenComponent} from "./target-screen.component";
+import {takeUntil} from "rxjs/operators";
 
 enum MediaState {
   HIDDEN,
@@ -16,7 +18,8 @@ const IN_ANIMATION_ARRAY = [
   'animate__backInRight',
   'animate__flipInX',
   'animate__lightSpeedInRight',
-  'animate__jackInTheBox'
+  'animate__jackInTheBox',
+  'animate__bounce'
 ];
 
 const OUT_ANIMATION_ARRAY = [
@@ -28,7 +31,7 @@ const OUT_ANIMATION_ARRAY = [
   selector: '[appMediaToggle]',
   exportAs: 'appMediaToggle'
 })
-export class MediaToggleDirective implements OnChanges {
+export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   // TODO find a better way? maybe a service?
   @Input()
@@ -37,20 +40,19 @@ export class MediaToggleDirective implements OnChanges {
   @Input()
   public combinedClip: CombinedClip;
 
-  @Input()
-  public trigger = false;
-
   public isVisible$ = new BehaviorSubject<boolean>(false);
 
   private currentState = MediaState.HIDDEN;
   private selectedInAnimation = '';
   private selectedOutAnimation = '';
+  private _destroy$ = new Subject();
 
-  constructor(private element: ElementRef<HTMLElement>) {
+  constructor(private element: ElementRef<HTMLElement>,
+              private parentComp: TargetScreenComponent) {
   }
 
   @HostListener('animationend', ['$event'])
-  onMouseEnter(event: any) {
+  onAnimationEnd(event: any) {
     if (this.currentState === MediaState.ANIMATE_IN) {
       this.currentState = MediaState.VISIBLE;
       this.applyChangesByState();
@@ -71,14 +73,7 @@ export class MediaToggleDirective implements OnChanges {
   }
 
   ngOnChanges({trigger}: SimpleChanges): void {
-    if (trigger && this.trigger) {
-      this.currentState = MediaState.ANIMATE_IN;
-      this.isVisible$.next(true);
-    } else {
 
-    }
-
-    this.applyChangesByState();
   }
 
 
@@ -90,6 +85,26 @@ export class MediaToggleDirective implements OnChanges {
 
       this.stopMedia();
     }
+  }
+
+
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+
+  ngOnInit(): void {
+    this.parentComp.mediaClipToShow$.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(toShow => {
+      if (toShow === this.combinedClip.clip.id) {
+        this.currentState = MediaState.ANIMATE_IN;
+        this.isVisible$.next(true);
+
+
+        this.applyChangesByState();
+      }
+    })
   }
 
   private playMedia() {

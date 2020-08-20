@@ -163,12 +163,6 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     });
   }
 
-  shouldPlay$(key: string): Observable<boolean> {
-    return this.mediaClipToShow$.pipe(
-      map(mediaToShow => mediaToShow === key)
-    )
-  }
-
   addToMap(value: Clip, element: any) {
     this.clipToControlMap.set(value, element);
   }

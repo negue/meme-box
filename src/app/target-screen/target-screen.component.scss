@@ -6,7 +6,11 @@
   }
 }
 
-video, audio, img, iframe {
+audio {
+  display: none;
+}
+
+video, img, iframe {
   display: none;
 
   &.visible {
@@ -48,6 +52,10 @@ video, audio, img, iframe {
   }
 
   &.debug-mode {
+    audio {
+      display: block;
+    }
+
     .debug-name {
       display: block;
     }
