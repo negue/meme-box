@@ -56,8 +56,6 @@ ExampleTwitchCommandsSubject.subscribe(value => {
 
 console.log('Server is ready');
 
-// TODO add delay during development build
-// because angular needs some seconds more to start
 if(fs.existsSync('package.json')) {
   const waitForLocalhost = require('wait-for-localhost');
 
@@ -69,6 +67,6 @@ if(fs.existsSync('package.json')) {
     open(`http://localhost:4200`);
   })();
 } else {
-  open(`http://localhost:${DEFAULT_PORT}`);
+  open(`http://localhost:${NEW_PORT}`);
 }
 
