@@ -3,7 +3,7 @@
 
   <form [formGroup]="form">
 
-    <div class="example-container">
+    <div class="form-control">
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input autocomplete="off"
@@ -16,6 +16,16 @@
       </mat-form-field>
 
 
+    </div>
+
+    <div class="form-control textarea">
+      <mat-form-field appearance="outline">
+        <mat-label>Custom CSS</mat-label>
+        <textarea autocomplete="off"
+               formControlName="customCss"
+               matInput >
+        </textarea>
+      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>
