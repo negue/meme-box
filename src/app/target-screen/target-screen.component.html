@@ -21,11 +21,13 @@ The Loaded Clips need to stay cached?
      [combinedClip]="entry.value"
      [controlsMap]="clipToControlMap"
      #mediaToggleVar="appMediaToggle"
-     class="clip-holder {{ entry.value.clip.type | mediaTypeClass }} "
+
+     [class.clip-is-visible]="mediaToggleVar.isVisible$ | async"
+     class="clip-holder {{ entry.value.clip.type | mediaTypeClass }} {{ entry.value.clipSetting.id }} "
 >
   <span class="debug-name">{{ entry.value.clip.name }}</span>
 
-  <video #video *ngSwitchCase="2"
+  <video #video *ngSwitchCase="2" class="media-clip"
          (canplay)="addLog('canplay', $event)"
          (canplaythrough)="addLog('canplaythrough', $event)"
          (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
@@ -39,7 +41,7 @@ The Loaded Clips need to stay cached?
          [src]="entry.value.clip.path"
          [volume]="entry.value.clip.volumeSetting / 100"
   ></video>
-  <audio #audio *ngSwitchCase="1"
+  <audio #audio *ngSwitchCase="1"  class="media-clip"
          (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
          (loadstart)="addToMap(entry.value.clip, audio)"
          (play)="addLog('play', $event)"
@@ -50,15 +52,28 @@ The Loaded Clips need to stay cached?
          controls
          preload="auto"
   ></audio>
-  <img #img *ngSwitchCase="0"
+  <img #img *ngSwitchCase="0"  class="media-clip"
        (loadstart)="addToMap(entry.value.clip, img)"
        [class.visible]="mediaToggleVar.isVisible$ | async"
        [src]="entry.value.clip.path"
   />
-  <iframe #iFrame *ngSwitchCase="3"
+  <iframe #iFrame *ngSwitchCase="3"  class="media-clip"
           [class.visible]="mediaToggleVar.isVisible$ | async"
           [src]="entry.value.clip.path | safeurl">
   </iframe>
+
+  <div *ngIf="entry.value.clipSetting.customCss as customCss"
+  class="custom-css-debug">
+    {{  customCss }} <br/>
+
+    <pre>
+      {{ parseCss(entry.value.clipSetting) | json }}
+    </pre>
+ <br/>
+    <pre>
+      {{ toCssAgain(entry.value.clipSetting) }}
+    </pre>
+  </div>
 </div>
 
 <pre style="display: none;">

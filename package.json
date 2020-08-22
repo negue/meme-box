@@ -56,6 +56,7 @@
     "@datorama/akita-ngdevtools": "^5.0.1",
     "@ngx-translate/core": "12.1.2",
     "@ngx-translate/http-loader": "5.0.0",
+    "@types/css": "0.0.31",
     "@types/jasmine": "3.5.10",
     "@types/jasminewd2": "2.0.8",
     "@types/mocha": "7.0.2",
@@ -98,6 +99,7 @@
     "animate.css": "4.1.0",
     "body-parser": "1.19.0",
     "cors": "2.8.5",
+    "css": "3.0.0",
     "express": "4.17.1",
     "immer": "7.0.5",
     "open": "7.1.0",
@@ -105,5 +107,9 @@
     "tmi.js": "1.5.0",
     "tslib": "^2.0.0",
     "ws": "6.2.1"
+  },
+  "browser": {
+    "path": false,
+    "fs": false
   }
 }

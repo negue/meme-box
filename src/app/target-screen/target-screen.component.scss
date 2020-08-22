@@ -22,7 +22,7 @@ video, img, iframe {
   width: var(--clip-setting-width, 100%);
   height: var(--clip-setting-height, 100%);
 
-  * {
+  *:not(pre) {
     width: 100%;
     height: 100%;
   }
@@ -65,4 +65,9 @@ video, img, iframe {
       background: var(--clip-background);
     }
   }
+}
+
+.custom-css-debug {
+  display: none;
+  color: black;
 }
