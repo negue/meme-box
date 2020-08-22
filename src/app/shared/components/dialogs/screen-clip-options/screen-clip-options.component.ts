@@ -36,7 +36,9 @@ export class ScreenClipOptionsComponent implements OnInit {
     imgFit: '', // todo image fit setting as enum
 
     animationIn: '',
-    animationOut: ''
+    animationOut: '',
+
+    customCss: ''
   });
 
   public animateInList = ANIMATION_IN_ARRAY;

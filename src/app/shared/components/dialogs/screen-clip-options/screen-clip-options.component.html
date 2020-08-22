@@ -90,6 +90,15 @@
         <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation}}</mat-option>
       </mat-select>
     </mat-form-field>
+
+
+    <mat-form-field >
+      <mat-label>Custom CSS</mat-label>
+      <textarea autocomplete="off"
+                formControlName="customCss"
+                matInput >
+      </textarea>
+    </mat-form-field>
   </form>
 
 </mat-dialog-content>
@@ -99,6 +108,6 @@
   <button mat-button mat-dialog-close>Cancel</button>
   <button (click)="save()" cdkFocusInitial
           color="primary"
-          mat-raised-button>Upate
+          mat-raised-button>Update
   </button>
 </mat-dialog-actions>
