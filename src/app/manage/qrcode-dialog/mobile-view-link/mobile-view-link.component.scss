@@ -4,9 +4,17 @@
 }
 
 .holder {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
+
+  &:not(:last-of-type) {
+    margin-right: 2rem;
+  }
+}
+
+h3 {
+  margin-bottom: 1rem;
 }
 
 button {

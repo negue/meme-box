@@ -12,5 +12,6 @@ export const AppConfig = {
   ngModules: [
     NgErrorOverlayModule
   ],
-  expressBase: `http://${location.hostname}:${DEFAULT_PORT}`
+  expressBase: `http://${location.hostname}:${DEFAULT_PORT}`,
+  wsBase: `ws://${location.hostname}:${DEFAULT_PORT}`
 };

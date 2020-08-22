@@ -4,5 +4,6 @@ export const AppConfig = {
   ngModules: [
 
   ],
-  expressBase: `http://${location.hostname}:${location.port}`
+  expressBase: `http://${location.hostname}:${location.port}`,
+  wsBase: `ws://${location.hostname}:${location.port}`
 };
