@@ -24,7 +24,7 @@
     "start:app": "npm run ng:serve:web",
     "start:server": "npx ts-node server/server.ts",
     "start:all": "npm-run-all -p start:app start:server",
-    "build:prepare:folder": "npx cpy-cli dist release/dist && npx cpy-cli ncc/index.js release --rename=memebox.js ",
+    "build:prepare:folder": "npx cpy-cli ncc/index.js release --rename=memebox.js ",
     "build:prepare": "npm run build:prod && npm run build:server && npm run build:prepare:folder",
     "build:server": "tsc -p server/tsconfig.server.json && npx @zeit/ncc build out-tsc/server/server/server.js -o ncc",
     "build:windows": "npx nexe release/memebox.js -t windows-x64 -r dist -o release/out/memebox.exe",
