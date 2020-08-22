@@ -8,13 +8,14 @@ import {SnackbarService} from "../../../../core/services/snackbar.service";
 @Component({
   selector: 'app-obs-edit',
   templateUrl: './screen-edit.component.html',
-  styleUrls: ['./screen-edit.component.css']
+  styleUrls: ['./screen-edit.component.scss']
 })
 export class ScreenEditComponent implements OnInit {
 
   public form = new FormBuilder().group({
     name: '',
-    id: ''
+    id: '',
+    customCss: ''
   })
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Screen,
@@ -23,7 +24,8 @@ export class ScreenEditComponent implements OnInit {
               private snackBar: SnackbarService) {
     this.form.patchValue({
       name: data.name,
-      id: data.id
+      id: data.id,
+      customCss: data.customCss
     })
   }
 

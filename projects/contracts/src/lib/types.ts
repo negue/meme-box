@@ -28,6 +28,7 @@ export interface Clip extends HasId {
 export interface Screen  extends HasId {
   name: string;
   clips: Dictionary<ScreenClip>;
+  customCss?: string;
 }
 
 export enum PositionEnum {
@@ -59,6 +60,8 @@ export interface ScreenClip extends HasId  {
 
   animationIn?: string|null;
   animationOut?: string|null;
+
+  customCss?: string;
 }
 
 export interface ScreenViewEntry extends Screen {

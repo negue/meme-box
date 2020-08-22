@@ -47,7 +47,8 @@ export class DialogService {
   showScreenEditDialog(screen: Partial<Screen>) {
     this._dialog.open(
       ScreenEditComponent, {
-        data: screen
+        data: screen,
+        width: '60%'
       }
     )
   }
