@@ -68,9 +68,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     if (this.currentState === MediaState.VISIBLE
       && this.clipVisibility === VisibilityEnum.Play) {
 
-      this.triggerState(this.selectedOutAnimation
-        ? MediaState.ANIMATE_OUT
-        : MediaState.HIDDEN)
+     this.animateOutOrHide();
     }
   }
 
@@ -87,16 +85,27 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       if (toShow === this.combinedClip.clip.id) {
         this.getAnimationValues();
 
-        // Trigger Play / Toggle
-        this.triggerState(
-          this.combinedClip.clipSetting.animationIn
-            ? MediaState.ANIMATE_IN
-            : MediaState.VISIBLE
-        );
+        if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
+          this.animateOutOrHide();
+        } else {
+          // Trigger Play
+          this.triggerState(
+            this.combinedClip.clipSetting.animationIn
+              ? MediaState.ANIMATE_IN
+              : MediaState.VISIBLE
+          );
+        }
       }
     });
 
     this.updateNeededVariables();
+  }
+
+  private animateOutOrHide() {
+    this.triggerState(this.selectedOutAnimation
+      ? MediaState.ANIMATE_OUT
+      : MediaState.HIDDEN
+    );
   }
 
   private updateNeededVariables() {
