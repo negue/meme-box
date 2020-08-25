@@ -53,7 +53,10 @@ export class Persistence {
       }
 
       if (!fileBackupToday) {
-        const backupPathFile = `${this.filePath}.${fileDateGenerator()}.backup`;
+        const targetDir = path.dirname(this.filePath);
+        const targetFileName = path.basename(this.filePath);
+
+        const backupPathFile = `${targetDir}/backups/${targetFileName}.${fileDateGenerator()}.backup`;
 
         saveFile(backupPathFile, data);
 
@@ -271,6 +274,12 @@ export class Persistence {
 }
 
 function saveFile(filePath: string, data: any, stringify: boolean = false) {
+  const getDirOfPath = path.dirname(filePath);
+
+  console.info({getDirOfPath, filePath});
+
+  fs.mkdirSync(getDirOfPath);
+
   fs.writeFile(filePath, stringify ? JSON.stringify(data, null, '  ') : data, err => {
     if (err) {
       console.error(`Error on Saving File: ${filePath}`, err);
