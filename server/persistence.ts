@@ -29,6 +29,12 @@ const initialScreenObj: Screen = Object.freeze({
 
 let fileBackupToday = false;
 
+function createDirIfNotExists(dir) {
+  if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+  }
+}
+
 export class Persistence {
 
   private updated$ = new Subject();
@@ -39,9 +45,7 @@ export class Persistence {
 
     // if the settings folder not exist
     // create it
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-    }
+    createDirIfNotExists(dir);
 
     // Read the file
     fs.readFile(filePath, {
@@ -276,9 +280,7 @@ export class Persistence {
 function saveFile(filePath: string, data: any, stringify: boolean = false) {
   const getDirOfPath = path.dirname(filePath);
 
-  console.info({getDirOfPath, filePath});
-
-  fs.mkdirSync(getDirOfPath);
+  createDirIfNotExists(getDirOfPath);
 
   fs.writeFile(filePath, stringify ? JSON.stringify(data, null, '  ') : data, err => {
     if (err) {
