@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {TriggerClip} from "@memebox/contracts";
+import {ACTIONS, TriggerClip} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {AppConfig} from "@memebox/app/env";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,13 @@ import {AppConfig} from "@memebox/app/env";
 export class WebsocketService {
   public onOpenConnection$ = new Subject();
   public onUpdateData$ = new Subject();
+  public onReloadScreen$ = new Subject();
   public onTriggerClip$ = new Subject<TriggerClip>();
 
   private ws: WebSocket;
   private isConnected = false;
 
-  constructor() {
+  constructor(private snackbar: SnackbarService) {
    setTimeout(() => this.connect(), 150);
   }
 
@@ -40,15 +42,20 @@ export class WebsocketService {
       const [action, payload] = dataAsString.split('=');
 
       switch (action) {
-        case 'TRIGGER_CLIP': {
+        case ACTIONS.TRIGGER_CLIP: {
           const payloadObj: TriggerClip = JSON.parse(payload);
 
           this.onTriggerClip$.next(payloadObj);
 
           break;
         }
-        case 'UPDATE_DATA': {
+        case ACTIONS.UPDATE_DATA: {
           this.onUpdateData$.next();
+          break;
+        }
+        case ACTIONS.RELOAD_SCREEN: {
+          this.onReloadScreen$.next();
+          break;
         }
       }
 
@@ -56,7 +63,7 @@ export class WebsocketService {
   }
 
   public sendI_Am_OBS(guid: string) {
-    this.ws.send(`I_AM_OBS=${guid}`);
+    this.ws.send(`${ACTIONS.I_AM_OBS}=${guid}`);
   }
 
 
@@ -68,6 +75,11 @@ export class WebsocketService {
       repeatSecond: 0,
     }
 
-    this.ws.send(`TRIGGER_CLIP=${JSON.stringify(triggerObj)}`);
+    this.ws.send(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);
+    this.snackbar.normal(`Triggered clip.`);
+  }
+
+  public reloadScreen(screenId: string | null) {
+    this.ws.send(`${ACTIONS.RELOAD_SCREEN}=${screenId}`);
   }
 }

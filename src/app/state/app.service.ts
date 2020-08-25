@@ -213,8 +213,7 @@ export class AppService {
       state.twitchEvents[newId] = event;
     });
 
-
-    this.snackbar.normal('Twitch event added / updated (TODO)!');
+    this.snackbar.normal('Twitch event added / updated!');
   }
 
   public async deleteTwitchEvent(clipId: string) {

@@ -7,6 +7,7 @@ import * as open from 'open';
 import * as fs from 'fs';
 import {TwitchHandler} from "./twitch.handler";
 import {PersistenceInstance} from "./persistence";
+import {ACTIONS} from "../projects/contracts/src/lib/actions";
 
 const portArgument = process.argv.find(arg => arg.includes('--port'));
 
@@ -29,7 +30,7 @@ PersistenceInstance.dataUpdated$()
   )
   .subscribe(() => {
     console.info('Data Updated');
-    sendDataToAllSockets('UPDATE_DATA');
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
 
     const config = PersistenceInstance.getConfig();
     const twitchChannelInConfig = config.twitchChannel;

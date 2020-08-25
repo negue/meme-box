@@ -72,11 +72,11 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       .pipe(
         map((value) => value.type as MediaType),
         distinctUntilChanged(),
+        startWith(this.form.value.type),
         pairwise(),
         takeUntil(this._destroy$)
       )
       .subscribe(([prev, next]) => {
-        console.info(prev, next);
         this.form.patchValue({
           path: "",
           previewUrl: "",
@@ -108,7 +108,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     await this.appService.addOrUpdateClip(value);
 
     this.snackBar.normal(
-      `Clip "${value.name}"  ${value.id ? "updated" : "added"} 🎉`
+      `Clip "${value.name}"  ${value.id ? "updated" : "added"}`
     );
 
     this.dialogRef.close();

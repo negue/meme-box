@@ -1,6 +1,6 @@
 import * as http from "http";
 import * as WebSocket from "ws";
-import {TriggerClip} from "../projects/contracts/src/lib/actions";
+import {ACTIONS, TriggerClip} from "../projects/contracts/src/lib/actions";
 import {PersistenceInstance} from "./persistence";
 
 // no type ?!
@@ -44,7 +44,7 @@ export function triggerMediaClipById(payloadObs: TriggerClip) {
         targetScreen: screen.id
       };
 
-      sendDataToScreen(screen.id, "TRIGGER_CLIP="+JSON.stringify(newMessageObj));
+      sendDataToScreen(screen.id, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(newMessageObj)}`);
     }
   }
 }
@@ -62,12 +62,12 @@ wss.on("connection", (ws: WebSocket) => {
     console.info({action, payload});
 
     switch (action) {
-      case "I_AM_OBS": {
+      case ACTIONS.I_AM_OBS: {
         obsPages[payload] = ws;
         wsToSend.push(ws);
         break;
       }
-      case "TRIGGER_CLIP": {
+      case ACTIONS.TRIGGER_CLIP: {
         const payloadObs: TriggerClip = JSON.parse(payload);
 
         console.info('TRIGGER', payloadObs);
@@ -80,6 +80,10 @@ wss.on("connection", (ws: WebSocket) => {
           sendDataToScreen(payloadObs.targetScreen, message);
         }
 
+        break;
+      }
+      case ACTIONS.RELOAD_SCREEN: {
+        sendDataToScreen(payload, message);
         break;
       }
     }

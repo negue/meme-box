@@ -28,6 +28,7 @@ import {StyleguideColors} from './shared/styleguide/styleguide.component';
 
 import {PipesModule} from "./core/pipes/pipes.module";
 import {MediaToggleDirective} from './target-screen/media-toggle.directive';
+import {APP_ICONS} from "./app.icons";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -77,33 +78,7 @@ export class AppModule {
     private sanitizer: DomSanitizer,
     public materialCssVarsService: MaterialCssVarsService
   ) {
-    //todo extract to its own file
-    const icons = [
-      'add',
-      'audiotrack',
-      'circle',
-      'check_circle',
-      'code',
-      'content_copy',
-      'delete',
-      'edit',
-      'filter',
-      'folder',
-      'insert_photo',
-      'launch',
-      'playlist_add_check',
-      'playlist_add',
-      'preview',
-      'qr_code_scanner',
-      'queue',
-      'screen',
-      'settings',
-      'speaker',
-      'videocam',
-      'video_library'
-    ];
-
-    for (const icon of icons) {
+    for (const icon of APP_ICONS) {
       iconRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(
         `./assets/material-icons/${icon}.svg`
       ));

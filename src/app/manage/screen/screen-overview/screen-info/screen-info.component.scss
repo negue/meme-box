@@ -54,10 +54,14 @@
   width: 100%;
 }
 
-.deleteScreenButton {
+.centeredScreenButton {
   margin-left: auto;
   margin-right: auto;
   display: block;
+
+  &:not(:last-of-type) {
+    margin-bottom: 1rem;
+  }
 }
 
 .mediaList {

@@ -98,7 +98,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.normal(`Screen / Clip Assignment updated 🎉`);
+    this.snackBar.normal(`Screen / Clip Assignment updated`);
 
     this.dialogRef.close();
   }
