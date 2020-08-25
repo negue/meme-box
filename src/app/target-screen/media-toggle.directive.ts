@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, Clip} from "@memebox/contracts";
+import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, Clip, VisibilityEnum} from "@memebox/contracts";
 import {CombinedClip} from "./types";
 import {KeyValue} from "@angular/common";
 import {BehaviorSubject, Subject} from "rxjs";
@@ -33,6 +33,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private selectedInAnimation = '';
   private selectedOutAnimation = '';
   private _destroy$ = new Subject();
+  private clipVisibility: VisibilityEnum;
 
   constructor(private element: ElementRef<HTMLElement>,
               private parentComp: TargetScreenComponent) {
@@ -54,13 +55,16 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnChanges({combinedClip}: SimpleChanges): void {
-
+    if (combinedClip) {
+      this.updateNeededVariables();
+    }
   }
 
 
+
   stopIfStillPlaying(entry: KeyValue<string, CombinedClip>) {
-    console.info('stopifPlaying', this.currentState);
-    if (this.currentState === MediaState.VISIBLE) {
+    if (this.currentState === MediaState.VISIBLE
+      && this.clipVisibility === VisibilityEnum.Play) {
 
       console.info('stopifPlaying', this.selectedOutAnimation);
       this.triggerState(this.selectedOutAnimation
@@ -82,6 +86,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       if (toShow === this.combinedClip.clip.id) {
         this.getAnimationValues();
 
+        // Trigger Play / Toggle
         this.triggerState(
           this.combinedClip.clipSetting.animationIn
             ? MediaState.ANIMATE_IN
@@ -89,6 +94,24 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         );
       }
     });
+
+    this.updateNeededVariables();
+  }
+
+  private updateNeededVariables() {
+    const lastVisibility = this.clipVisibility;
+
+    this.clipVisibility = this.combinedClip.clipSetting.visibility ?? VisibilityEnum.Play;
+
+    setTimeout(() => {
+      if (lastVisibility !== VisibilityEnum.Play) {
+        this.isVisible$.next(false);
+      }
+
+      if (this.clipVisibility === VisibilityEnum.Static) {
+        this.isVisible$.next(true);
+      }
+    }, 100);
   }
 
   private getAnimationValues() {
@@ -104,8 +127,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       control.currentTime = 0;
       control.play();
     }
-
-    console.info('playMedia', this.combinedClip.clip);
 
     if (this.combinedClip.clip.playLength) {
       setTimeout(() => {
