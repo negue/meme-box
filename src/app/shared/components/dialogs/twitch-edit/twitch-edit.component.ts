@@ -67,7 +67,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     await this.appService.addOrUpdateTwitchEvent(newTwitchValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.normal(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added'} 🎉`);
+    this.snackBar.normal(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added'}`);
 
     this.dialogRef.close();
   }

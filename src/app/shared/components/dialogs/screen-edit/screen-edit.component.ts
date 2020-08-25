@@ -50,7 +50,7 @@ export class ScreenEditComponent implements OnInit {
     await this.appService.addOrUpdateScreen(newScreenValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.normal(`Screen "${newScreenValue.name}" ${newScreenValue.id ? 'updated' : 'added'} 🎉`);
+    this.snackBar.normal(`Screen "${newScreenValue.name}" ${newScreenValue.id ? 'updated' : 'added'}`);
 
     this.dialogRef.close();
   }

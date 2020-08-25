@@ -108,7 +108,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     await this.appService.addOrUpdateClip(value);
 
     this.snackBar.normal(
-      `Clip "${value.name}"  ${value.id ? "updated" : "added"} 🎉`
+      `Clip "${value.name}"  ${value.id ? "updated" : "added"}`
     );
 
     this.dialogRef.close();

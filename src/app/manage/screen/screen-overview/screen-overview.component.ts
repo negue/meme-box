@@ -94,7 +94,7 @@ export class ScreenOverviewComponent implements OnInit {
     if (clipId) {
       this.webSocket.triggerClipOnScreen(clipId, screen.id);
     } else{
-      this.snackbar.normal('Not implemented yet, sorry.')
+      this.snackbar.sorry('Not implemented yet, sorry.')
     }
 
   }

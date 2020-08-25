@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {ACTIONS, TriggerClip} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {AppConfig} from "@memebox/app/env";
+import {SnackbarService} from "./snackbar.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class WebsocketService {
   private ws: WebSocket;
   private isConnected = false;
 
-  constructor() {
+  constructor(private snackbar: SnackbarService) {
    setTimeout(() => this.connect(), 150);
   }
 
@@ -75,6 +76,7 @@ export class WebsocketService {
     }
 
     this.ws.send(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);
+    this.snackbar.normal(`Triggered clip.`);
   }
 
   public reloadScreen(screenId: string | null) {
