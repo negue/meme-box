@@ -6,6 +6,17 @@
 
   <form [formGroup]="form">
     <mat-form-field>
+      <mat-select formControlName="visibility"
+                  placeholder="Visibility"
+                  value="0">
+        <mat-option [value]="0">Play</mat-option>
+        <mat-option [value]="1">Static</mat-option>
+        <mat-option [value]="2">Toggle</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field>
       <input autocomplete="off" formControlName="width"
              matInput
              placeholder="Width (px, %, rem, em)"

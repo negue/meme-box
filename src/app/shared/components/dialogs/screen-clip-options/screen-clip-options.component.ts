@@ -1,7 +1,14 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {AppQueries} from "../../../../state/app.queries";
 import {Observable, Subject} from "rxjs";
-import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, PositionEnum, Screen, ScreenClip} from "@memebox/contracts";
+import {
+  ANIMATION_IN_ARRAY,
+  ANIMATION_OUT_ARRAY,
+  PositionEnum,
+  Screen,
+  ScreenClip,
+  VisibilityEnum
+} from "@memebox/contracts";
 import {map, takeUntil} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
@@ -28,6 +35,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     width: '',
     height: '',
 
+    visibility: VisibilityEnum.Play,
     position: PositionEnum.FullScreen,
     left: '',
     right: '',
@@ -51,6 +59,7 @@ export class ScreenClipOptionsComponent implements OnInit {
 
   public clipInfo$: Observable<ScreenClip> = this.currentScreen$.pipe(
     map(screen => ({
+      visibility: VisibilityEnum.Play,
       position: PositionEnum.FullScreen,
       animationIn: '',
       animationOut: '',
@@ -76,7 +85,6 @@ export class ScreenClipOptionsComponent implements OnInit {
     ).subscribe(value => {
       this._clipInfo = value;
 
-      console.info(this._clipInfo);
       this.form.reset(this._clipInfo);
     })
   }

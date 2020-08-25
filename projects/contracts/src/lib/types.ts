@@ -37,6 +37,12 @@ export enum PositionEnum {
   // others...
 }
 
+export enum VisibilityEnum {
+  Play = 0,
+  Static,
+  Toggle
+}
+
 export enum HideAfterType {
   Playing,
   Milliseconds,
@@ -44,6 +50,9 @@ export enum HideAfterType {
 }
 
 export interface ScreenClip extends HasId  {
+  visibility: VisibilityEnum;
+  loop?: boolean;
+
   // later some other settings like position and stuff
   width?: string; // 60%, 720px
   height?: string;
