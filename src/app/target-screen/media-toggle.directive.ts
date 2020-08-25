@@ -13,6 +13,7 @@ enum MediaState {
   ANIMATE_OUT
 }
 
+const ALL_MEDIA = [MediaType.Audio, MediaType.Video];
 
 @Directive({
   selector: '[appMediaToggle]',
@@ -119,11 +120,15 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
 
       if (this.clipVisibility === VisibilityEnum.Static) {
-        if([MediaType.Audio, MediaType.Video].includes(this.combinedClip.clip.type)) {
+        if(ALL_MEDIA.includes(this.combinedClip.clip.type)) {
           this.playMedia();
         }
 
         this.isVisible$.next(true);
+      } else {
+        if(ALL_MEDIA.includes(this.combinedClip.clip.type)) {
+          this.stopMedia();
+        }
       }
     }, 100);
   }

@@ -36,6 +36,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     height: '',
 
     visibility: VisibilityEnum.Play,
+    loop: false,
     position: PositionEnum.FullScreen,
     left: '',
     right: '',
@@ -60,6 +61,7 @@ export class ScreenClipOptionsComponent implements OnInit {
   public clipInfo$: Observable<ScreenClip> = this.currentScreen$.pipe(
     map(screen => ({
       visibility: VisibilityEnum.Play,
+      loop: false,
       position: PositionEnum.FullScreen,
       animationIn: '',
       animationOut: '',

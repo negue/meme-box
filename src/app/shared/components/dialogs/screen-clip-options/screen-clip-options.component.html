@@ -15,6 +15,14 @@
       </mat-select>
     </mat-form-field>
 
+    <mat-form-field>
+      <mat-select formControlName="loop"
+                  placeholder="Loop Media Clip"
+                  value="0">
+        <mat-option [value]="false">No</mat-option>
+        <mat-option [value]="true">Yes</mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <mat-form-field>
       <input autocomplete="off" formControlName="width"
