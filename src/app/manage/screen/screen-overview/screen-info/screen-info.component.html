@@ -69,7 +69,11 @@
     </div>
   </ng-container>
   <mat-card-actions>
-    <button (click)="onDelete.emit()" class="deleteScreenButton" color="warn" mat-flat-button>
+    <button (click)="onReload.emit()" class="centeredScreenButton" color="primary" mat-flat-button>
+      <mat-icon svgIcon="replay"></mat-icon>
+      Reload Screen
+    </button>
+    <button (click)="onDelete.emit()" class="centeredScreenButton" color="warn" mat-flat-button>
       <mat-icon svgIcon="delete"></mat-icon>
       Delete Screen
     </button>

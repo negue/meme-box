@@ -34,6 +34,9 @@ export class ScreenInfoComponent implements OnInit {
   @Output()
   public onEditScreenClipOptions = new EventEmitter<Clip>();
 
+  @Output()
+  public onReload = new EventEmitter();
+
   constructor(private appQueries: AppQueries,
               private clipboard: Clipboard,
               private _snackBar: MatSnackBar) {
