@@ -8,23 +8,29 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'app-mobile-view-link',
   templateUrl: './mobile-view-link.component.html',
-  styleUrls: ['./mobile-view-link.component.css']
+  styleUrls: ['./mobile-view-link.component.scss']
 })
 export class MobileViewLinkComponent implements OnInit {
 
-  public networkInterface$: Observable<string>;
+  public networkInterface$: Observable<NetworkInfo[]>;
 
   constructor(private http: HttpClient) {
+    const port = location.port;
+
     this.networkInterface$ = this.http.get<NetworkInfo[]>(`${EXPRESS_BASE}/${ENDPOINTS.NETWORK_LIST}`).pipe(
-      map(value => {
-        const port = location.port;
-        let urlBase = `${value[0].address}:${port}`;
+      map(networkInfos => {
+        return networkInfos.map(networkInfo => {
+          let urlBase = `${networkInfo.address}:${port}`;
 
-        if (port === '4200') {
-          urlBase = location.host;
-        }
+          if (port === '4200') {
+            urlBase = location.host;
+          }
 
-        return `http:///${urlBase}#/mobile`;
+          return {
+            ifname: networkInfo.ifname,
+            address: `http:///${urlBase}#/mobile`
+          };
+        });
       })
     );
   }

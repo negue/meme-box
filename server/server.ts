@@ -1,30 +1,62 @@
-import {createExpress, PersistenceInstance} from "./express-server";
+import {createExpress, ExampleTwitchCommandsSubject} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
-import {EXPRESS_PORT, WS_PORT} from "./constants";
-import {debounceTime} from "rxjs/operators";
+import {DEFAULT_PORT} from "./constants";
+import {debounceTime, startWith} from "rxjs/operators";
 import * as open from 'open';
 
 import * as fs from 'fs';
+import {TwitchHandler} from "./twitch.handler";
+import {PersistenceInstance} from "./persistence";
+import {ACTIONS} from "../projects/contracts/src/lib/actions";
 
+const portArgument = process.argv.find(arg => arg.includes('--port'));
 
-const expressServer = createExpress(EXPRESS_PORT);
-const ws = createWebSocketServer(WS_PORT);
+const NEW_PORT = portArgument ? +portArgument.replace('--port=', '') : DEFAULT_PORT;
 
+const expressServer = createExpress(NEW_PORT);
+const {server, wss} = createWebSocketServer(NEW_PORT);
+
+// Also mount the app here
+server.on('request', expressServer);
+
+let currentTwitchAccount = '';
+let twitchHandler:TwitchHandler = null;
 
 // todo export to server.ts and then refactor it
 PersistenceInstance.dataUpdated$()
   .pipe(
-    debounceTime(600)
+    debounceTime(600),
+    startWith(true)
   )
   .subscribe(() => {
-    sendDataToAllSockets('UPDATE_DATA');
+    console.info('Data Updated');
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
+
+    const config = PersistenceInstance.getConfig();
+    const twitchChannelInConfig = config.twitchChannel;
+
+    console.info({config, twitchChannelInConfig});
+    if (currentTwitchAccount !== twitchChannelInConfig) {
+      currentTwitchAccount = twitchChannelInConfig;
+
+      console.info(`Creating the TwitchHandler for: ${currentTwitchAccount}`);
+
+      if (twitchHandler != null) {
+        twitchHandler.disconnect();
+      }
+
+      twitchHandler = new TwitchHandler(currentTwitchAccount);
+    }
   });
 
+ExampleTwitchCommandsSubject.subscribe(value => {
+  if (twitchHandler) {
+    twitchHandler.handle(value);
+  }
+})
 
 console.log('Server is ready');
 
-// TODO add delay during development build
-// because angular needs some seconds more to start
 if(fs.existsSync('package.json')) {
   const waitForLocalhost = require('wait-for-localhost');
 
@@ -36,6 +68,6 @@ if(fs.existsSync('package.json')) {
     open(`http://localhost:4200`);
   })();
 } else {
-  open(`http://localhost:${EXPRESS_PORT}`);
+  open(`http://localhost:${NEW_PORT}`);
 }
 

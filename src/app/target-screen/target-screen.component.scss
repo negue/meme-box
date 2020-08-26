@@ -1,11 +1,16 @@
 ::ng-deep {
+
   // target-screens needs to be transparent for OBS
   .mat-app-background {
     background-color: transparent !important;
   }
 }
 
-video, audio, img, iframe {
+audio {
+  display: none;
+}
+
+video, img, iframe {
   display: none;
 
   &.visible {
@@ -17,12 +22,12 @@ video, audio, img, iframe {
   width: var(--clip-setting-width, 100%);
   height: var(--clip-setting-height, 100%);
 
-  * {
+  *:not(pre) {
     width: 100%;
     height: 100%;
   }
 
-  &.picture {
+  &.image {
     * {
       object-fit: var(--clip-setting-img-fit, contain);
     }
@@ -47,6 +52,10 @@ video, audio, img, iframe {
   }
 
   &.debug-mode {
+    audio {
+      display: block;
+    }
+
     .debug-name {
       display: block;
     }
@@ -56,4 +65,9 @@ video, audio, img, iframe {
       background: var(--clip-background);
     }
   }
+}
+
+.custom-css-debug {
+  display: none;
+  color: black;
 }

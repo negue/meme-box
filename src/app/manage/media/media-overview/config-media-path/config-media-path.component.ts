@@ -51,7 +51,7 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
 
     await this.appService.updateMediaFolder(value.path);
 
-    this.snackBar.normal(`Media-Folder Path changed 🎉`);
+    this.snackBar.normal(`Media-Folder Path changed`);
 
     this.dialogRef.close();
   }

@@ -6,7 +6,6 @@ import {
   CONFIG_ENDPOINT,
   CONFIG_MEDIA_ENDPOINT,
   CONFIG_TWITCH_CHANNEL_ENDPOINT,
-  EXPRESS_PORT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT,
@@ -16,14 +15,16 @@ import {
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
   TWITCH_ENDPOINT,
-  TWITCH_ID_ENDPOINT
+  TWITCH_ID_ENDPOINT,
+  TWITCH_TRIGGER_ENDPOINT
 } from "./constants";
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {MediaType} from "../projects/contracts/src/lib/types";
+import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 
 import * as open from 'open';
+import {Subject} from "rxjs";
 
 const { resolve, basename, extname, sep, normalize } = require('path');
 const { readdir } = require('fs').promises;
@@ -38,6 +39,7 @@ app.use(bodyParser.json());
 
 app.use(express.static('dist'))
 
+export const ExampleTwitchCommandsSubject = new Subject<TwitchTriggerCommand>();
 
 app.get(API_PREFIX, (req,res) => {
   res.send(PersistenceInstance.fullState());
@@ -144,6 +146,13 @@ app.delete(TWITCH_ID_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.deleteTwitchEvent(req.params['eventId']));
 });
 
+// Trigger Twitch Command
+app.post(TWITCH_TRIGGER_ENDPOINT, (req, res) => {
+  ExampleTwitchCommandsSubject.next(req.body);
+
+  res.send({ok: true});
+});
+
 
 /**
  * Config API
@@ -225,9 +234,10 @@ app.get(FILES_ENDPOINT, async (req, res) => {
 
     const fileType = fileEndingToType(ext);
 
+    // TODO replace PORT with the "--port"
     const apiUrl = fullPath
       .replace(mediaFolder,
-      `http://localhost:${EXPRESS_PORT}/file`
+      `http://localhost:${app.get('port')}/file`
       ).split(sep).join('/');
 
     return {
@@ -287,9 +297,7 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 export function createExpress(port) {
   app.set('port', port);
 
-  app.listen(app.get('port'));
+  // app.listen(app.get('port'));
 
   return app;
 }
-
-export {PersistenceInstance};

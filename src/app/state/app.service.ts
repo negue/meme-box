@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
 import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch} from "@memebox/contracts";
-import {API_PREFIX, EXPRESS_PORT, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
+import {API_PREFIX, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
 import {SnackbarService} from "../core/services/snackbar.service";
+import {AppConfig} from '@memebox/app/env';
 
-export const EXPRESS_BASE = `http://${location.hostname}:${EXPRESS_PORT}`;
+export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 
@@ -212,8 +213,7 @@ export class AppService {
       state.twitchEvents[newId] = event;
     });
 
-
-    this.snackbar.normal('Twitch event added / updated (TODO)!');
+    this.snackbar.normal('Twitch event added / updated!');
   }
 
   public async deleteTwitchEvent(clipId: string) {

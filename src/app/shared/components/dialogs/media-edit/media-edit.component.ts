@@ -1,19 +1,14 @@
-import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Clip, FileInfo, MediaType } from "@memebox/contracts";
-import { FormBuilder } from "@angular/forms";
-import { AppService } from "../../../../state/app.service";
-import { AppQueries } from "../../../../state/app.queries";
-import {
-  distinctUntilChanged,
-  filter,
-  map,
-  pairwise,
-  startWith,
-  takeUntil,
-} from "rxjs/operators";
-import { combineLatest, Subject } from "rxjs";
-import { SnackbarService } from "../../../../core/services/snackbar.service";
+import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Clip, FileInfo, MediaType} from "@memebox/contracts";
+import {FormBuilder} from "@angular/forms";
+import {AppService} from "../../../../state/app.service";
+import {AppQueries} from "../../../../state/app.queries";
+import {distinctUntilChanged, filter, map, pairwise, startWith, takeUntil,} from "rxjs/operators";
+import {combineLatest, Subject} from "rxjs";
+import {SnackbarService} from "../../../../core/services/snackbar.service";
+
+const DEFAUULT_PLAY_LENGTH =  600;
 
 //TODO: clean up initial clip stuff - always populate
 // clipLength + playLength so the user doesn't want to die
@@ -21,8 +16,8 @@ const INITIAL_CLIP: Partial<Clip> = {
   type: MediaType.Picture,
   name: 'Media Filename',
   volumeSetting: 10,
-  playLength: 600,
-  clipLength: 600, // TODO once its possible to get the data from the clip itself
+  playLength: DEFAUULT_PLAY_LENGTH,
+  clipLength: DEFAUULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
 };
 
 @Component({
@@ -75,17 +70,29 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     this.form.valueChanges
       .pipe(
-        map((value) => value.type),
+        map((value) => value.type as MediaType),
         distinctUntilChanged(),
+        startWith(this.form.value.type),
         pairwise(),
         takeUntil(this._destroy$)
       )
-      .subscribe((value) => {
-        console.info(value);
+      .subscribe(([prev, next]) => {
         this.form.patchValue({
           path: "",
           previewUrl: "",
         });
+
+        if ([MediaType.Audio, MediaType.Video].includes(next) ) {
+          this.form.patchValue({
+            playLength: undefined
+          });
+        }
+
+        if ([MediaType.Picture, MediaType.IFrame].includes(next)) {
+          this.form.patchValue({
+            playLength: DEFAUULT_PLAY_LENGTH
+          });
+        }
       });
   }
 
@@ -101,7 +108,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     await this.appService.addOrUpdateClip(value);
 
     this.snackBar.normal(
-      `Clip "${value.name}"  ${value.id ? "updated" : "added"} 🎉`
+      `Clip "${value.name}"  ${value.id ? "updated" : "added"}`
     );
 
     this.dialogRef.close();
@@ -112,6 +119,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     this.form.patchValue({
       path: $event.apiUrl,
+      name: $event.fileName
     });
   }
 

@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {Twitch} from "@memebox/contracts";
+import {ENDPOINTS, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {AppQueries} from "../../../state/app.queries";
-import {AppService} from "../../../state/app.service";
+import {API_BASE, AppService} from "../../../state/app.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-events-overview',
@@ -16,7 +17,8 @@ export class EventsOverviewComponent implements OnInit {
 
   constructor(private queries: AppQueries,
               private appService: AppService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private http: HttpClient) {
   }
 
   ngOnInit(): void {
@@ -32,5 +34,19 @@ export class EventsOverviewComponent implements OnInit {
 
   editEvent(twitchEventItem: Twitch) {
     this.dialogService.showTwitchEditDialog( twitchEventItem);
+  }
+
+  previewEvent(item: Twitch) {
+    // TODO custom payload to trigger it and set the command on the server part
+    const triggerObj: TwitchTriggerCommand = {
+      //event: item.event,
+      command: item,
+      message: item.contains
+    };
+
+    this.http.post(`${API_BASE}${ENDPOINTS.TWITCH_TRIGGER}`, triggerObj)
+      .subscribe(value =>{
+          // need result?
+    })
   }
 }

@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  width: 100%; /* todo better width? */
+
+  ::ng-deep {
+    .mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+.button-area {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+textarea {
+  min-height: 15rem;
+}

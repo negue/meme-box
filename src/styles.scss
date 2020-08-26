@@ -1,6 +1,8 @@
 @import '~@angular/material/theming';
 @import '~angular-material-css-vars/main';
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
+@import '~animate.css/animate.css';
+
 
 // optional
 $mat-css-dark-theme-selector: '.isDarkTheme';
@@ -36,6 +38,12 @@ $custom-typography: mat-typography-config(
     background-color: var(--palette-background-background);
   }
 };
+
+.max-height-dialog {
+  .mat-dialog-content {
+    height: 600px;
+  }
+}
 
 body {
   font-size: 16px;

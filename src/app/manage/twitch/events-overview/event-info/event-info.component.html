@@ -11,6 +11,10 @@
 
 </ng-container>
 
+<button (click)="onPreview.emit()" color="primary" mat-button>
+  <mat-icon svgIcon="preview"></mat-icon>
+  Preview
+</button>
 
 <button (click)="onDelete.emit()" color="warn" mat-icon-button>
   <mat-icon svgIcon="delete"></mat-icon>

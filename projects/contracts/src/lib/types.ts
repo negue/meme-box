@@ -1,8 +1,10 @@
+import {ChatUserstate} from "tmi.js";
+
 export enum MediaType {
-  Picture,
-  Audio,
-  Video,
-  IFrame,
+  Picture = 0,
+  Audio = 1,
+  Video = 2,
+  IFrame = 3,
 }
 
 export interface HasId {
@@ -26,6 +28,7 @@ export interface Clip extends HasId {
 export interface Screen  extends HasId {
   name: string;
   clips: Dictionary<ScreenClip>;
+  customCss?: string;
 }
 
 export enum PositionEnum {
@@ -54,12 +57,19 @@ export interface ScreenClip extends HasId  {
 
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
+
+  animationIn?: string|null;
+  animationOut?: string|null;
+
+  customCss?: string;
 }
 
 export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
+// TODO refactor, maybe all messages
+// and then like "yes, but this one only with bits.."
 export const enum TwitchEventTypes {
   message = 'message',
   follow = 'follow',
@@ -115,4 +125,10 @@ export interface FileInfo {
   apiUrl: string;
   ext: string;
   fileType: MediaType;
+}
+
+export interface TwitchTriggerCommand {
+  message: string;
+  command?: Twitch; // Config-Object
+  tags?: ChatUserstate;
 }

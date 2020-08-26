@@ -22,7 +22,7 @@
   <div class="actionButtons">
     <button (click)="onEdit.emit()" color="accent" mat-flat-button>
       <mat-icon svgIcon="edit"></mat-icon>
-      Edit Name
+      Edit
     </button>
     <button (click)="onPreview.emit()" color="primary" mat-button>
       <mat-icon svgIcon="preview"></mat-icon>
@@ -50,7 +50,7 @@
           </td>
           <td>{{entry.name}}</td>
           <td class="mediaList__settingsCell">
-            <button (click)="onEditScreenClipOptions.emit(entry)"
+            <button (click)="onPreview.emit(entry.id)"
                     class="mediaList__settingsCellButton"
                     mat-icon-button>
               <mat-icon svgIcon="preview"></mat-icon>
@@ -58,6 +58,7 @@
           </td>
           <td class="mediaList__settingsCell">
             <button (click)="onEditScreenClipOptions.emit(entry)"
+                    *ngIf="entry.type !== 1"
                     class="mediaList__settingsCellButton"
                     mat-icon-button>
               <mat-icon svgIcon="settings"></mat-icon>
@@ -68,7 +69,11 @@
     </div>
   </ng-container>
   <mat-card-actions>
-    <button (click)="onDelete.emit()" class="deleteScreenButton" color="warn" mat-flat-button>
+    <button (click)="onReload.emit()" class="centeredScreenButton" color="primary" mat-flat-button>
+      <mat-icon svgIcon="replay"></mat-icon>
+      Reload Screen
+    </button>
+    <button (click)="onDelete.emit()" class="centeredScreenButton" color="warn" mat-flat-button>
       <mat-icon svgIcon="delete"></mat-icon>
       Delete Screen
     </button>

@@ -22,9 +22,8 @@ export class ScreenInfoComponent implements OnInit {
   @Output()
   public onEdit = new EventEmitter();
 
-  // TODO
   @Output()
-  public onPreview = new EventEmitter()
+  public onPreview = new EventEmitter<string>()
 
   @Output()
   public onDelete = new EventEmitter();
@@ -34,6 +33,9 @@ export class ScreenInfoComponent implements OnInit {
 
   @Output()
   public onEditScreenClipOptions = new EventEmitter<Clip>();
+
+  @Output()
+  public onReload = new EventEmitter();
 
   constructor(private appQueries: AppQueries,
               private clipboard: Clipboard,
