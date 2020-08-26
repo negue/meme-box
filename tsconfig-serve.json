@@ -28,9 +28,6 @@
     "server/express-server.ts",
     "server/websocket-server.ts"
   ],
-  "include": [
-    "server/**/*.ts"
-  ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
