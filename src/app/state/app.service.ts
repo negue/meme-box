@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
-import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch} from "@memebox/contracts";
+import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch, VisibilityEnum} from "@memebox/contracts";
 import {API_PREFIX, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
 import {SnackbarService} from "../core/services/snackbar.service";
 import {AppConfig} from '@memebox/app/env';
@@ -139,7 +139,8 @@ export class AppService {
   public async addScreenClipById(screenId: string, clipId: string) {
 
     const screenClip: ScreenClip = {
-      id: clipId
+      id: clipId,
+      visibility: VisibilityEnum.Play
     };
 
     // add the clip to api & await
@@ -279,7 +280,8 @@ export class AppService {
             "right": null,
             "bottom": null,
             "top": null,
-            "imgFit": null
+            "imgFit": null,
+            visibility: VisibilityEnum.Play
           },
           "65e61814-2748-4176-ba88-e99ac411f920": {
             "position": 0,
@@ -290,7 +292,8 @@ export class AppService {
             "right": null,
             "bottom": null,
             "top": null,
-            "imgFit": null
+            "imgFit": null,
+            visibility: VisibilityEnum.Play
           },
         }
       };

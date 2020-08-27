@@ -29,6 +29,12 @@ const initialScreenObj: Screen = Object.freeze({
 
 let fileBackupToday = false;
 
+function createDirIfNotExists(dir) {
+  if (!fs.existsSync(dir)){
+    fs.mkdirSync(dir);
+  }
+}
+
 export class Persistence {
 
   private updated$ = new Subject();
@@ -39,9 +45,7 @@ export class Persistence {
 
     // if the settings folder not exist
     // create it
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-    }
+    createDirIfNotExists(dir);
 
     // Read the file
     fs.readFile(filePath, {
@@ -53,7 +57,10 @@ export class Persistence {
       }
 
       if (!fileBackupToday) {
-        const backupPathFile = `${this.filePath}.${fileDateGenerator()}.backup`;
+        const targetDir = path.dirname(this.filePath);
+        const targetFileName = path.basename(this.filePath);
+
+        const backupPathFile = `${targetDir}/backups/${targetFileName}.${fileDateGenerator()}.backup`;
 
         saveFile(backupPathFile, data);
 
@@ -271,6 +278,10 @@ export class Persistence {
 }
 
 function saveFile(filePath: string, data: any, stringify: boolean = false) {
+  const getDirOfPath = path.dirname(filePath);
+
+  createDirIfNotExists(getDirOfPath);
+
   fs.writeFile(filePath, stringify ? JSON.stringify(data, null, '  ') : data, err => {
     if (err) {
       console.error(`Error on Saving File: ${filePath}`, err);
