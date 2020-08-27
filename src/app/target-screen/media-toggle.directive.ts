@@ -103,10 +103,15 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private animateOutOrHide() {
-    this.triggerState(this.selectedOutAnimation
+    const targetState = this.selectedOutAnimation
       ? MediaState.ANIMATE_OUT
-      : MediaState.HIDDEN
-    );
+      : MediaState.HIDDEN;
+
+    this.triggerState(targetState);
+
+    if (targetState === MediaState.HIDDEN) {
+      this.stopMedia();
+    }
   }
 
   private updateNeededVariables() {
@@ -145,8 +150,14 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       || control instanceof HTMLVideoElement) {
       control.currentTime = 0;
       control.play();
+    }
 
-      console.warn('Media Control play()');
+    if (control instanceof HTMLImageElement) {
+      // reset if its a gif
+      if (this.combinedClip.clip.path.includes('.gif')) {
+        control.src = '';
+        control.src = this.combinedClip.clip.path;
+      }
     }
 
     if (this.combinedClip.clip.playLength) {
