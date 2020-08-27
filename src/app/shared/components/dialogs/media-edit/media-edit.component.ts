@@ -71,8 +71,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     this.form.valueChanges
       .pipe(
         map((value) => value.type as MediaType),
-        distinctUntilChanged(),
         startWith(this.form.value.type),
+        distinctUntilChanged(),
         pairwise(),
         takeUntil(this._destroy$)
       )
