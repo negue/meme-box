@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, Clip} from "@memebox/contracts";
+import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY} from "@memebox/contracts";
 import {CombinedClip} from "./types";
 import {KeyValue} from "@angular/common";
 import {BehaviorSubject, Subject} from "rxjs";
@@ -19,11 +19,6 @@ enum MediaState {
   exportAs: 'appMediaToggle'
 })
 export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
-
-  // TODO find a better way? maybe a service?
-  @Input()
-  public controlsMap = new WeakMap<Clip, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
-
   @Input()
   public combinedClip: CombinedClip;
 
@@ -103,6 +98,13 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       || control instanceof HTMLVideoElement) {
       control.currentTime = 0;
       control.play();
+    }
+
+    if (control instanceof HTMLImageElement) {
+      // does the path already have a query-questionmark?
+      const queryExists = this.combinedClip.clip.path.includes('?');
+
+      control.src = `${this.combinedClip.clip.path}${ queryExists ? '&' : '?'}someVar=${Date()}`
     }
 
     console.info('playMedia', this.combinedClip.clip);
