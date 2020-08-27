@@ -58,7 +58,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     })
   );
   mediaClipToShow$ = new BehaviorSubject<string>(null);
-  clipToControlMap = new WeakMap<Clip, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
+  clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
 
   screen$ = combineLatest([
     this.screenId$,
@@ -161,7 +161,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   addToMap(value: Clip, element: any) {
-    this.clipToControlMap.set(value, element);
+    this.clipToControlMap.set(value.id, element);
   }
 
   random_rgba() {

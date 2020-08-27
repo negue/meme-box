@@ -19,7 +19,6 @@ The Loaded Clips need to stay cached?
      [style.--animate-duration]="'777ms'"
      appMediaToggle
      [combinedClip]="entry.value"
-     [controlsMap]="clipToControlMap"
      #mediaToggleVar="appMediaToggle"
 
      [class.clip-is-visible]="mediaToggleVar.isVisible$ | async"
@@ -39,6 +38,7 @@ The Loaded Clips need to stay cached?
          (progress)="addLog('progress', $event)"
          [class.visible]="mediaToggleVar.isVisible$ | async"
          [src]="entry.value.clip.path"
+         [loop]="entry.value.clipSetting.loop"
          [volume]="entry.value.clip.volumeSetting / 100"
   ></video>
   <audio #audio *ngSwitchCase="1"  class="media-clip"
@@ -49,6 +49,7 @@ The Loaded Clips need to stay cached?
          [class.visible]="mediaToggleVar.isVisible$ | async"
          [src]="entry.value.clip.path"
          [volume]="entry.value.clip.volumeSetting / 100"
+         [loop]="entry.value.clipSetting.loop"
          controls
          preload="auto"
   ></audio>

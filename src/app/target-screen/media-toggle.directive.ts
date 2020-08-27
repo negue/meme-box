@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, Clip} from "@memebox/contracts";
+import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, MediaType, VisibilityEnum} from "@memebox/contracts";
 import {CombinedClip} from "./types";
 import {KeyValue} from "@angular/common";
 import {BehaviorSubject, Subject} from "rxjs";
@@ -13,17 +13,13 @@ enum MediaState {
   ANIMATE_OUT
 }
 
+const ALL_MEDIA = [MediaType.Audio, MediaType.Video];
 
 @Directive({
   selector: '[appMediaToggle]',
   exportAs: 'appMediaToggle'
 })
 export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
-
-  // TODO find a better way? maybe a service?
-  @Input()
-  public controlsMap = new WeakMap<Clip, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
-
   @Input()
   public combinedClip: CombinedClip;
 
@@ -33,6 +29,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private selectedInAnimation = '';
   private selectedOutAnimation = '';
   private _destroy$ = new Subject();
+  private clipVisibility: VisibilityEnum;
 
   constructor(private element: ElementRef<HTMLElement>,
               private parentComp: TargetScreenComponent) {
@@ -54,18 +51,25 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnChanges({combinedClip}: SimpleChanges): void {
-
+    if (combinedClip) {
+      this.updateNeededVariables();
+    }
   }
 
 
-  stopIfStillPlaying(entry: KeyValue<string, CombinedClip>) {
-    console.info('stopifPlaying', this.currentState);
-    if (this.currentState === MediaState.VISIBLE) {
 
-      console.info('stopifPlaying', this.selectedOutAnimation);
-      this.triggerState(this.selectedOutAnimation
-        ? MediaState.ANIMATE_OUT
-        : MediaState.HIDDEN)
+  stopIfStillPlaying(entry: KeyValue<string, CombinedClip>) {
+    console.info('stopifPlaying', {
+      animationOut: this.selectedOutAnimation,
+      state: this.currentState,
+      clipVisibility: this.clipVisibility
+    });
+
+
+    if (this.currentState === MediaState.VISIBLE
+      && this.clipVisibility === VisibilityEnum.Play) {
+
+     this.animateOutOrHide();
     }
   }
 
@@ -82,13 +86,51 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       if (toShow === this.combinedClip.clip.id) {
         this.getAnimationValues();
 
-        this.triggerState(
-          this.combinedClip.clipSetting.animationIn
-            ? MediaState.ANIMATE_IN
-            : MediaState.VISIBLE
-        );
+        if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
+          this.animateOutOrHide();
+        } else {
+          // Trigger Play
+          this.triggerState(
+            this.combinedClip.clipSetting.animationIn
+              ? MediaState.ANIMATE_IN
+              : MediaState.VISIBLE
+          );
+        }
       }
     });
+
+    this.updateNeededVariables();
+  }
+
+  private animateOutOrHide() {
+    this.triggerState(this.selectedOutAnimation
+      ? MediaState.ANIMATE_OUT
+      : MediaState.HIDDEN
+    );
+  }
+
+  private updateNeededVariables() {
+    const lastVisibility = this.clipVisibility;
+
+    this.clipVisibility = this.combinedClip.clipSetting.visibility ?? VisibilityEnum.Play;
+
+    setTimeout(() => {
+      if (lastVisibility !== VisibilityEnum.Play) {
+        this.isVisible$.next(false);
+      }
+
+      if (this.clipVisibility === VisibilityEnum.Static) {
+        if(ALL_MEDIA.includes(this.combinedClip.clip.type)) {
+          this.playMedia();
+        }
+
+        this.isVisible$.next(true);
+      } else {
+        if(ALL_MEDIA.includes(this.combinedClip.clip.type)) {
+          this.stopMedia();
+        }
+      }
+    }, 100);
   }
 
   private getAnimationValues() {
@@ -97,15 +139,15 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private playMedia() {
-    const control = this.controlsMap.get(this.combinedClip.clip);
+    const control = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
 
     if (control instanceof HTMLAudioElement
       || control instanceof HTMLVideoElement) {
       control.currentTime = 0;
       control.play();
-    }
 
-    console.info('playMedia', this.combinedClip.clip);
+      console.warn('Media Control play()');
+    }
 
     if (this.combinedClip.clip.playLength) {
       setTimeout(() => {
@@ -115,7 +157,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private stopMedia () {
-    const control = this.controlsMap.get(this.combinedClip.clip);
+    const control = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
 
     if (control instanceof HTMLMediaElement) {
       control.pause();
