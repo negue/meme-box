@@ -128,6 +128,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       location.reload();
     });
 
+    this.wsService.onReconnection$.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(() => {
+      location.reload();
+    });
+
     this.screenId$.next(this.route.snapshot.params.guid);
 
     this.mediaClipMap$.pipe(
