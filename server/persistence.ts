@@ -12,6 +12,7 @@ import {
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
+import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
 
 
 function uuidv4() {
@@ -60,7 +61,7 @@ export class Persistence {
         const targetDir = path.dirname(this.filePath);
         const targetFileName = path.basename(this.filePath);
 
-        const backupPathFile = `${targetDir}/backups/${targetFileName}.${fileDateGenerator()}.backup`;
+        const backupPathFile = `${targetDir}/backups/${targetFileName}.${simpleDateString()}.backup`;
 
         saveFile(backupPathFile, data);
 
@@ -287,21 +288,6 @@ function saveFile(filePath: string, data: any, stringify: boolean = false) {
       console.error(`Error on Saving File: ${filePath}`, err);
     }
   });
-}
-
-function fileDateGenerator() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  const hour = now.getHours();
-  const minute = now.getMinutes();
-  const second = now.getSeconds();
-
-  // YYYY_MM_DD_HH_MM_SS
-  const newDateString = `${year}_${month}_${day}__${hour}_${minute}_${second}`;
-
-  return newDateString;
 }
 
 export const PersistenceInstance = new Persistence('./settings/settings.json');

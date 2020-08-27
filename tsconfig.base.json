@@ -26,6 +26,9 @@
       ],
       "@memebox/app/env": [
         "src/environments/environment.ts"
+      ],
+      "@memebox/utils": [
+        "projects/utils/src/public-api.ts"
       ]
     }
   },
@@ -34,7 +37,7 @@
     "src/polyfills.ts"
   ],
   "include": [
-    "src/**/*.d.ts"
+    "src/**/* .d.ts"
   ],
   "exclude": [
     "node_modules"
