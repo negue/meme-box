@@ -44,12 +44,15 @@ img {
 
 .action-buttons {
   display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   margin-top: 1rem;
   margin-bottom: 2rem;
 
   button {
     width: 30%;
+    margin-bottom: 0.5rem;
   }
 }

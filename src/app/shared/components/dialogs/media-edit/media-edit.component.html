@@ -17,33 +17,15 @@
     </mat-form-field>
 
     <div class="action-buttons">
-      <button (click)="updateMediaType(MediaType.Picture)"
-              [color]="form.value.type === MediaType.Picture ? 'primary' : 'accent'"
+      <button *ngFor="let button of mediaTypeList"
               mat-raised-button
+
+              (click)="updateMediaType(button.type)"
+              [color]="form.value.type === button.type ? 'primary' : 'accent'"
+
       >
-        <mat-icon svgIcon="insert_photo"></mat-icon>
-        Image
-      </button>
-      <button (click)="updateMediaType(MediaType.Audio)"
-              [color]="form.value.type === MediaType.Audio ? 'primary' : 'accent'"
-              mat-raised-button
-      >
-        <mat-icon svgIcon="audiotrack"></mat-icon>
-        Audio
-      </button>
-      <button (click)="updateMediaType(MediaType.Video)"
-              [color]="form.value.type === MediaType.Video ? 'primary' : 'accent'"
-              mat-raised-button
-      >
-        <mat-icon svgIcon="videocam"></mat-icon>
-        Video
-      </button>
-      <button (click)="updateMediaType(MediaType.IFrame)"
-              [color]="form.value.type === MediaType.IFrame ? 'primary' : 'accent'"
-              mat-raised-button
-      >
-        <mat-icon svgIcon="videocam"></mat-icon>
-        IFrame
+        <mat-icon [svgIcon]="button.icon"></mat-icon>
+        {{ button.name }}
       </button>
     </div>
 
@@ -57,16 +39,17 @@
       <span matSuffix>ms</span>
     </mat-form-field>
 
-    <div class="form-field-row">
+    <div class="form-field-row"
+         *ngIf="form.value.type !== MediaType.Meta">
       <mat-form-field>
         <input autocomplete="off"
                formControlName="path"
                matInput
-               [placeholder]="form.value.type !== 3 ? 'File' : 'URL'"
+               [placeholder]="form.value.type !== MediaType.IFrame ? 'File' : 'URL'"
                required
                type="text"
         />
-        <div matSuffix *ngIf="form.value.type !== 3">
+        <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
           <mat-select (valueChange)="onChange($event)"
                       *ngIf="availableMediaFiles | async as mediaFiles"
           >
@@ -81,7 +64,8 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div class="form-field-row">
+    <div class="form-field-row"
+         *ngIf="form.value.type !== MediaType.Meta">
       <mat-form-field>
         <input [placeholder]="
                  form.value.type === 0
@@ -101,7 +85,7 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <ng-container *ngIf="form.value.type !== 0 && form.value.type !== 3">
+    <ng-container *ngIf="[MediaType.Audio, MediaType.Video].includes(form.value.type)">
       <mat-label>Volume</mat-label>
       <div class="slider__row">
         <mat-slider #volumeSlider
@@ -126,9 +110,9 @@
         />
       </mat-form-field>
     </div>
-    <img *ngIf="form.value.type === 0"
+    <img *ngIf="form.value.type === MediaType.Picture"
          [src]="form.value.path || form.value.previewUrl" />
-    <iframe *ngIf="form.value.type === 3"
+    <iframe *ngIf="form.value.type === MediaType.IFrame"
             [src]="form.value.path | safeurl"
     ></iframe>
   </form>

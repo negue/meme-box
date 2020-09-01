@@ -20,6 +20,12 @@ const INITIAL_CLIP: Partial<Clip> = {
   clipLength: DEFAUULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
 };
 
+interface MediaTypeButton {
+  type: MediaType;
+  name: string;
+  icon: string;
+}
+
 @Component({
   selector: "app-media-edit",
   templateUrl: "./media-edit.component.html",
@@ -47,6 +53,34 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       return mediaFiles.filter((m) => m.fileType === currentFileType);
     })
   );
+
+  mediaTypeList: MediaTypeButton[] = [
+    {
+      icon: 'insert_photo',
+      name: 'Image',
+      type: MediaType.Picture
+    },
+    {
+      icon: 'audiotrack',
+      name: 'Audio',
+      type: MediaType.Audio
+    },
+    {
+      icon: 'videocam',
+      name: 'Video',
+      type: MediaType.Video
+    },
+    {
+      icon: 'insert_photo', // todo ICON for iframe
+      name: 'IFrame',
+      type: MediaType.IFrame
+    },
+    {
+      icon: 'art_track',
+      name: 'Meta',
+      type: MediaType.Meta
+    }
+  ]
 
   private _destroy$ = new Subject();
 

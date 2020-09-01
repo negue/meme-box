@@ -2,12 +2,12 @@ Todo for Tags/Meta Clips
 
 - [x] Persistance / State
 - [ ] Apply Clip-Edit-Dialog changes
-  - [ ] add a meta type button
+  - [x] add a meta type button
   - [ ] tag assignment controls
   - [ ] on clip type: meta
        - [ ] add meta type selection
        - [ ] delay
-       - [ ] hide all other unneeded controls
+       - [x] hide all other unneeded controls
 - [ ] Clip Overview Component
   - [x] add screen icon to the screen "chips"
   - [x] add tag icon to tag "chips"
