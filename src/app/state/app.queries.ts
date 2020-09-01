@@ -15,6 +15,8 @@ export class AppQueries extends Query<AppState> {
   clipList$ = this.select(store => Object.values(store.clips));
   screensList$ = this.select(store => Object.values(store.screen));
   twitchEvent$ = this.select(store => Object.values(store.twitchEvents));
+  tagList$ = this.select(store => Object.values(store.tags));
+
 
   clipMap$ = this.select(store => store.clips);
   screenMap$ = this.select(store => store.screen);
