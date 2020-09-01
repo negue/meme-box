@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
-import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Twitch, VisibilityEnum} from "@memebox/contracts";
+import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Tag, Twitch, VisibilityEnum} from "@memebox/contracts";
 import {API_PREFIX, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
 import {SnackbarService} from "../core/services/snackbar.service";
 import {AppConfig} from '@memebox/app/env';
+import {setDummyData} from "./app.dummy.data";
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -89,6 +90,53 @@ export class AppService {
     this.snackbar.normal('Media deleted!');
   }
 
+
+  public async addOrUpdateTag(tag: Tag) {
+    let newTagId = tag?.id ?? '';
+
+    if (newTagId === '') {
+      // add the clip to api & await
+      newTagId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.TAGS}`, tag, {
+        responseType: 'text' as any
+      }).toPromise();
+
+      tag.id = newTagId;
+    } else {
+      // add the clip to api & await
+      await this.http.put<string>(`${API_BASE}${ENDPOINTS.TAGS}/${newTagId}`, tag).toPromise();
+    }
+
+    // add to the state
+    this.appStore.update(state => {
+      state.tags[newTagId] = tag;
+    });
+  }
+
+  public async deleteTag(tagId: string) {
+    // send the api call
+    await this.http.delete(`${API_BASE}${ENDPOINTS.TAGS}/${tagId}`).toPromise();
+
+    // TODO SHARED STATE OPERATIONS?
+
+    // remove from state
+    this.appStore.update(state => {
+      delete state.tags[tagId];
+
+      for(const clip of Object.values(state.clips)) {
+        if (clip.tags && clip.tags.includes(tagId)) {
+          this.deleteInArray(clip.tags, tagId);
+        }
+      }
+    });
+
+    this.snackbar.normal('Tag deleted!');
+  }
+
+
+  private deleteInArray(arr: any[], itemToDelete: any) {
+    const itemIndex = arr.indexOf(itemToDelete);
+    arr.splice(itemIndex, 1);
+  }
 
   public async addOrUpdateScreen(url: Screen) {
     let screensAvailable = Object.keys(this.appStore.getValue().screen).length > 0;
@@ -267,59 +315,7 @@ export class AppService {
 
   fillDummyData() {
     this.appStore.update(state => {
-      state.screen["356a0f2f-6d3a-4fbd-b2db-45b0fd97546a"] = {
-        "name": "Firefox",
-        "id": "356a0f2f-6d3a-4fbd-b2db-45b0fd97546a",
-        "clips": {
-          "cbdc0e82-d23f-4b94-96cc-c6438753ca53": {
-            "position": 0,
-            "id": "cbdc0e82-d23f-4b94-96cc-c6438753ca53",
-            "width": "50%",
-            "height": "60%",
-            "left": null,
-            "right": null,
-            "bottom": null,
-            "top": null,
-            "imgFit": null,
-            visibility: VisibilityEnum.Play
-          },
-          "65e61814-2748-4176-ba88-e99ac411f920": {
-            "position": 0,
-            "id": "65e61814-2748-4176-ba88-e99ac411f920",
-            "width": "50%",
-            "height": "60%",
-            "left": null,
-            "right": null,
-            "bottom": null,
-            "top": null,
-            "imgFit": null,
-            visibility: VisibilityEnum.Play
-          },
-        }
-      };
-
-      state.clips = {
-        "cbdc0e82-d23f-4b94-96cc-c6438753ca53": {
-          "id": "cbdc0e82-d23f-4b94-96cc-c6438753ca53",
-          "name": "Fill Murray",
-          "type": 0,
-          "volumeSetting": 10,
-          "clipLength": null,
-          "playLength": 4000,
-          "path": "https://www.fillmurray.com/460/300",
-          "previewUrl": null
-        },
-        "65e61814-2748-4176-ba88-e99ac411f920": {
-          "id": "65e61814-2748-4176-ba88-e99ac411f920",
-          "name": "Placekitten",
-          "type": 0,
-          "volumeSetting": 100,
-          "clipLength": null,
-          "playLength": 4000,
-          "path": "https://placekitten.com/408/287",
-          "previewUrl": null
-        },
-      }
+      setDummyData(state);
     })
   }
 }

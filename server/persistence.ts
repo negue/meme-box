@@ -157,8 +157,15 @@ export class Persistence {
     return tag;
   }
 
+  // TODO Extract shared state logic between app/ server
   public deleteTag(id: string) {
     this.deleteItemInDictionary(this.data.tags, id);
+
+    for(const clip of Object.values(this.data.clips)) {
+      if (clip.tags && clip.tags.includes(id)) {
+        this.deleteInArray(clip.tags, id);
+      }
+    }
 
     this.saveData();
   }
@@ -303,6 +310,11 @@ export class Persistence {
 
   private deleteItemInDictionary<T extends HasId>(dict: Dictionary<T>, id: string) {
     delete dict[id];
+  }
+
+  private deleteInArray(arr: any[], itemToDelete: any) {
+    const itemIndex = arr.indexOf(itemToDelete);
+    arr.splice(itemIndex, 1);
   }
 
   private saveData() {

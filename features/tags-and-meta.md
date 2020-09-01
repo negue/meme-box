@@ -10,7 +10,7 @@ Todo for Tags/Meta Clips
        - [ ] hide all other unneeded controls
 - [ ] Clip Overview Component
   - [x] add screen icon to the screen "chips"
-  - [ ] add tag icon to tag "chips"
+  - [x] add tag icon to tag "chips"
   - [ ] add a color to the tag chips
 - [ ]  if a meta clip is triggered:
   - [ ] go through of the assigned tags
@@ -22,11 +22,18 @@ Todo for Tags/Meta Clips
       - [ ] trigger that internally
     - [ ] on "all", with delay
       - [ ] trigger each and wait each time
-- [ ] new rest api endpoints
-  - [ ] list of tags
-  - [ ] add a tag
-  - [ ] update
-  - [ ] delete
+- [x] new rest api endpoints
+  - [x] list of tags
+  - [x] add a tag
+  - [x] update
+  - [x] delete
+  - [x] delete must also remove all used places
+- [ ] use api endpoints
+  - [x] add a tag
+  - [x] update
+  - [x] delete
+  - [ ] try to share the state / persistence operations
+        to improve dev-speed
 - [ ] test with mobile view
 - [ ] test with twitch api
 - [ ] test with streamdeck

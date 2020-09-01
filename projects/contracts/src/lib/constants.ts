@@ -4,6 +4,7 @@ import {TwitchEventTypes} from "./types";
 
 export const ENDPOINTS = {
   CLIPS: 'clips',
+  TAGS: 'tags',
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
   TWITCH_EVENTS: 'twitch_events',
