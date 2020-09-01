@@ -5,6 +5,9 @@ export enum MediaType {
   Audio = 1,
   Video = 2,
   IFrame = 3,
+
+
+  Meta = 100
 }
 
 export interface HasId {
@@ -15,6 +18,13 @@ export interface Dictionary<T> {
   [key: string]: T
 }
 
+export enum MetaTriggerTypes {
+  Random,
+  All,
+  AllDelay
+}
+
+// (Media) Clip
 export interface Clip extends HasId {
   name: string;
   previewUrl: string;
@@ -23,6 +33,12 @@ export interface Clip extends HasId {
   playLength: number; // ms, time to play of this clip
   path: string;
   type: MediaType;
+
+  tags?: string[];  // All normal Media-Types can use that to be "tagged"
+                    // the Meta Type will use that to trigger all clips of that tagId
+
+  metaType?: MetaTriggerTypes;
+  metaDelay?: number; // in ms
 }
 
 export interface Screen  extends HasId {
@@ -100,6 +116,11 @@ export interface Twitch extends HasId {
   // TODO other options per type
 }
 
+export interface Tag extends HasId {
+  name: string;
+  color: string;
+}
+
 /**
  * Settings.json - State
  */
@@ -107,6 +128,7 @@ export interface SettingsState {
   clips: Dictionary<Clip>;
   twitchEvents: Dictionary<Twitch>;
   screen: Dictionary<Screen>;
+  tags: Dictionary<Tag>;
 
   config:  Partial<Config>;
 }
