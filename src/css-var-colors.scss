@@ -1,0 +1,14 @@
+@mixin list-colors(){
+  /**
+    * Material CSS-VAR Colors, examples:
+    * - mat-css-color-accent()
+    * - rgb(var(--palette-background-background))  // or other --palette-**
+    *
+    * to override material-css-vars look at AppModule.constructor
+    *
+    * The following colors are not one of the overwritten material-css-var
+    *
+    */
+
+    --card-background-color: #3F4855;
+}

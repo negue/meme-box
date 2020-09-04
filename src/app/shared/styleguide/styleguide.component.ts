@@ -1,9 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 export const StyleguideColors = {
-  background: '#2f3640', // todo add custom css var
+  // var(--palette-background-background)
+  background: '#2f3640',
   foreground: '#ffffff',
   primary: '#4bcffa',
+  // mat-css-color-accent()
   accent: '#575fcf',
   warn: '#f53b57',
   highlight: '#00d8d6', // todo add custom css var

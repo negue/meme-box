@@ -2,6 +2,7 @@
 @import '~angular-material-css-vars/main';
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
 @import '~animate.css/animate.css';
+@import './css-var-colors';
 
 
 // optional
@@ -35,7 +36,7 @@ $custom-typography: mat-typography-config(
 
 @include init-material-css-vars($typography-config: $custom-typography) {
   .mat-app-background {
-    background-color: var(--palette-background-background);
+    background-color: var(--palette-background-background) !important;
   }
 };
 
@@ -45,9 +46,12 @@ $custom-typography: mat-typography-config(
   }
 }
 
+:root {
+  @include list-colors();
+}
+
 body {
   font-size: 16px;
-  background-color: #2f3640 !important;
   font-family: Barlow, sans-serif;
 }
 
@@ -59,10 +63,8 @@ body {
 }
 
 .isDarkTheme {
-  --palette-background-background: 47, 54, 64;
-
   .mat-card {
-    background-color: #3F4855 !important;
+    background-color: var(--card-background-color) !important;
   }
 
   .mat-table {
@@ -74,7 +76,7 @@ body {
   }
 
   .mat-chip.mat-standard-chip {
-    background-color: #3F4855;
+    background-color: var(--card-background-color);
     color: white;
     font-family: Barlow, sans-serif;
   }
