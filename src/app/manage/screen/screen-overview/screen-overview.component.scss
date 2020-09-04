@@ -25,8 +25,15 @@
   justify-content: center;
   transition: background-color 0.2s ease-in-out;
   cursor: pointer;
+  background-color: #3F4855; //TODO HOW TO GET THIS VARIABLE
+  color: #ffffff; //TODO HOW TO GET THIS VARIABLE
+  font-size: 1.6rem;
+  border-color: transparent;
+  border-radius: 4px;
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0px rgba(0, 0, 0, 0.14), 0 1px 3px 0px rgba(0, 0, 0, 0.12);
 
-  &:hover {
+  &:hover, &:focus {
     background-color: mat-css-color-accent() !important;
+    outline: 0;
   }
 }

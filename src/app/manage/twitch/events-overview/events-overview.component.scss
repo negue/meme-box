@@ -1,23 +1,14 @@
-@import '~angular-material-css-vars/public-util';
 @import '../../../../utils/mixins';
 
-.mediaList {
+.eventsList {
   @include gridLayout;
 }
 
-.mediaList__clip {
+.eventsList__item {
   @include gridLayout__item;
 }
 
-.mediaList__clipCard {
-  height: 100%;
-}
-
-.mediaList__appMediaInfo {
-  height: 100%;
-}
-
-.mediaList__clipCard--addNew {
+.eventsList__item--addNew {
   height: 100%;
   width: 100%;
   display: flex;
