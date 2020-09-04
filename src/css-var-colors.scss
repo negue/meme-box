@@ -3,6 +3,7 @@
     * Material CSS-VAR Colors, examples:
     * - mat-css-color-accent()
     * - rgb(var(--palette-background-background))  // or other --palette-**
+    * - var(--palette-foreground-text) .... some are with var / some with rgb(var())
     *
     * to override material-css-vars look at AppModule.constructor
     *

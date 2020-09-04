@@ -38,6 +38,10 @@ $custom-typography: mat-typography-config(
   .mat-app-background {
     background-color: var(--palette-background-background) !important;
   }
+
+  .navigation {
+    background-color: var(--palette-background-background) !important;
+  }
 };
 
 .max-height-dialog {

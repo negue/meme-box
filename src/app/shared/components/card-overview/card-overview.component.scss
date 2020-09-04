@@ -1,0 +1,16 @@
+:host {
+  --grid-padding: 2rem;
+
+  display: grid;
+  padding: var(--grid-padding);
+
+  @media screen and (min-width: 620px) {
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: var(--grid-padding);
+  }
+
+  @media screen and (min-width: 930px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: var(--grid-padding);
+  }
+}

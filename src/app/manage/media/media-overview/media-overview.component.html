@@ -1,9 +1,6 @@
-<div *ngIf="mediaList$ | async as mediaList"
-     class="mediaList">
-
-  <div *ngFor="let item of mediaList"
-       class="mediaList__clip">
-    <mat-card class="mediaList__clipCard">
+<div *ngIf="mediaList$ | async as mediaList">
+  <app-card-overview>
+    <app-overview-item *ngFor="let item of mediaList">
       <app-media-info (onAssignObs)="onAssignObs(item)"
                       (onDelete)="onDelete(item.id)"
                       (onEdit)="onEdit(item)"
@@ -14,22 +11,17 @@
       >
 
       </app-media-info>
-    </mat-card>
-  </div>
-  <ng-container *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ">
-    <div [class.media-clip]="mediaList.length !== 0">
+    </app-overview-item>
+
+    <app-overview-item *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ">
       <app-getting-started></app-getting-started>
-    </div>
-  </ng-container>
+    </app-overview-item>
 
+    <app-overview-add-item label="Add new media"
+    (click)="addNewItem()">
 
-  <div class="mediaList__clip">
-    <button (click)="addNewItem()"
-            class="mediaList__clipCard--addNew">
-      <mat-icon svgIcon="add"></mat-icon>
-      Add new media
-    </button>
-  </div>
+    </app-overview-add-item>
+  </app-card-overview>
 </div>
 
 <div class="floating-action-button">
