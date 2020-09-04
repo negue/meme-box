@@ -8,7 +8,7 @@ import {AppService} from "../../../../state/app.service";
 @Component({
   selector: 'app-event-info',
   templateUrl: './event-info.component.html',
-  styleUrls: ['./event-info.component.css']
+  styleUrls: ['./event-info.component.scss']
 })
 export class EventInfoComponent implements OnInit {
 
