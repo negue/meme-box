@@ -3,6 +3,7 @@ export const DEFAULT_PORT = 4444;
 // merge with the other constant file
 
 export const API_PREFIX = '/api';
+export const TAGS_ENDPOINT = `${API_PREFIX}/tags`;
 export const CLIP_ENDPOINT = `${API_PREFIX}/clips`;
 export const CLIP_ID_ENDPOINT = `${API_PREFIX}/clips/:clipId`;
 export const SCREEN_ENDPOINT = `${API_PREFIX}/screen`;

@@ -1,7 +1,7 @@
 /* global $SD */
 import React, {useEffect, useReducer, useState} from "react";
 
-import {createUsePluginSettings, createUseSDAction, SDSelectInput,} from "react-streamdeck";
+import {createUsePluginSettings, createUseSDAction, SDSelectInput, SDTextInput} from "react-streamdeck";
 // Slightly modified sdpi.css file. Adds 'data-' prefixes where needed.
 import "react-streamdeck/dist/css/sdpi.css";
 
@@ -18,10 +18,6 @@ const useSDAction = createUseSDAction({
   useEffect
 });
 
-// TODO use the constants
-const clipEndpoint = "http://localhost:4445/api/clips"
-
-
 export default function App() {
   const getSettings = createGetSettings($SD);
   useEffect(getSettings, []);
@@ -30,30 +26,51 @@ export default function App() {
 
   const [clipList, updateClipList] = useState([]);
 
-  fetch(clipEndpoint)
-    .then(response => response.json())
-    .then(value => {
-    console.info('ALL CLIPS', value);
-    const selectionOptions = value.map(v => {
-      return {
-        label: v.name,
-        value: v.id
-      }
-    });
-
-    updateClipList(selectionOptions);
-  })
-
   const [settings, setSettings] = createUsePluginSettings({
     useState,
     useEffect,
     useReducer
   })(
     {
-      clipId: ""
+      clipId: "",
+      port: 4444
     },
     connectedResult
   );
+
+  const [prevPort, setPrevPort] = useState("")
+
+  useEffect(() => {
+
+    if (settings.port !== prevPort) {
+      setPrevPort(settings.port);
+
+        updateClipList([]);
+
+        console.info('Refreshing the List', settings);
+
+        const clipEndpoint = `http://localhost:${settings.port}/api/clips`
+
+        fetch(clipEndpoint)
+          .then(response => response.json())
+          .then(value => {
+            console.info('ALL CLIPS', value);
+            const selectionOptions = value.map(v => {
+              return {
+                label: v.name,
+                value: v.id
+              }
+            });
+
+            updateClipList(selectionOptions);
+          })
+          .catch(e => {
+            console.info('No connection to MemeBox', e);
+          })
+
+    }
+  }, [prevPort, setPrevPort, settings, updateClipList])
+
 
 
   console.log({
@@ -63,6 +80,18 @@ export default function App() {
 
   return (
     <div>
+      <SDTextInput
+        label="Port"
+        value={settings.port}
+        onChange={event => {
+          const newState = {
+            ...settings,
+            clipId: undefined,
+            port: event.target.value
+          };
+          setSettings(newState);
+        }}
+      />
       <SDSelectInput
         label="Clip"
         selectedOption={settings.clipId}

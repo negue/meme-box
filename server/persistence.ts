@@ -7,6 +7,7 @@ import {
   Screen,
   ScreenClip,
   SettingsState,
+  Tag,
   Twitch
 } from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
@@ -134,6 +135,45 @@ export class Persistence {
   public listClips(): Clip[] {
     return Object.values(this.data.clips);
   }
+
+
+  /*
+   *  Clips Persistence
+   */
+
+  public addTag(tag: Tag) {
+    tag.id = uuidv4();
+    this.data.tags[tag.id] = tag;
+
+    this.saveData();
+    return tag.id;
+  }
+
+  public updateTag(id: string, tag: Tag) {
+    tag.id = id;
+    this.updateItemInDictionary(this.data.tags, tag);
+
+    this.saveData();
+    return tag;
+  }
+
+  // TODO Extract shared state logic between app/ server
+  public deleteTag(id: string) {
+    this.deleteItemInDictionary(this.data.tags, id);
+
+    for(const clip of Object.values(this.data.clips)) {
+      if (clip.tags && clip.tags.includes(id)) {
+        this.deleteInArray(clip.tags, id);
+      }
+    }
+
+    this.saveData();
+  }
+
+  public listTags(): Tag[] {
+    return Object.values(this.data.tags);
+  }
+
 
   /*
    *  Screens Persistence
@@ -270,6 +310,11 @@ export class Persistence {
 
   private deleteItemInDictionary<T extends HasId>(dict: Dictionary<T>, id: string) {
     delete dict[id];
+  }
+
+  private deleteInArray(arr: any[], itemToDelete: any) {
+    const itemIndex = arr.indexOf(itemToDelete);
+    arr.splice(itemIndex, 1);
   }
 
   private saveData() {

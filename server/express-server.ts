@@ -14,6 +14,7 @@ import {
   SCREEN_CLIPS_ID_ENDPOINT,
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
+  TAGS_ENDPOINT,
   TWITCH_ENDPOINT,
   TWITCH_ID_ENDPOINT,
   TWITCH_TRIGGER_ENDPOINT
@@ -25,6 +26,7 @@ import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/typ
 
 import * as open from 'open';
 import {Subject} from "rxjs";
+import {TAG_ROUTES} from "./rest-endpoints/tags";
 
 const { resolve, basename, extname, sep, normalize } = require('path');
 const { readdir } = require('fs').promises;
@@ -74,6 +76,7 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.deleteClip(req.params['clipId']));
 });
 
+app.use(TAGS_ENDPOINT, TAG_ROUTES);
 
 /**
  * OBS-Specific API
@@ -297,7 +300,8 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 export function createExpress(port) {
   app.set('port', port);
 
-  // app.listen(app.get('port'));
+  // app.get('port')
+
 
   return app;
 }

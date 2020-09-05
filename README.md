@@ -1,16 +1,19 @@
 # MemeBox
 
-A complete management app for image / audio / video clips to be used inside OBS.
+A complete management app for image / audio / video / iframe clips to be used inside OBS.
 
 ## Working Features
 
 * [x] Add / Edit / Delete Clips
-* [x] Trigger clips by mobile-view or media-page on specific screens
+* [x] Custom CSS per Clip / Screen
+* [x] Custom Position per Clip / Screen
+* [x] Custom Visibility States: Play, Toggle and Static
 * [x] Trigger clips by streamdeck-plugin
+* [x] Trigger clips twitch messages
 * [x] Simple WebSocket/Rest API to save/serve the data
-* [x] specific position per clip/screen
 * [x] clip can be hidden by `Play Time` or once a clip has ended
-* [x] mobile-view can be opened by qr-code
+* [x] mobile-view can be opened by qr-code, and trigger clips from it
+* [x] `Meta-Clip` to trigger random other clips
 
 -----
 
@@ -23,6 +26,7 @@ A complete management app for image / audio / video clips to be used inside OBS.
   - online URLS can be used
   - or files inside `<current path of executable>/assets/YOUR_FILE_NAME.ending` can be accessed by
     `http://localhost:4445/file/YOUR_FILE_NAME.ending`
+    > or just select it inside the dialog
 - On the `Screens` Page - click on `assign clips`
 - Choose your clip there
 - Copy the visible URLs of your Screen-Entry and use it in OBS or any browser

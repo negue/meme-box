@@ -17,33 +17,15 @@
     </mat-form-field>
 
     <div class="action-buttons">
-      <button (click)="updateMediaType(MediaType.Picture)"
-              [color]="form.value.type === MediaType.Picture ? 'primary' : 'accent'"
+      <button *ngFor="let button of mediaTypeList"
               mat-raised-button
+
+              (click)="updateMediaType(button.type)"
+              [color]="form.value.type === button.type ? 'primary' : 'accent'"
+
       >
-        <mat-icon svgIcon="insert_photo"></mat-icon>
-        Image
-      </button>
-      <button (click)="updateMediaType(MediaType.Audio)"
-              [color]="form.value.type === MediaType.Audio ? 'primary' : 'accent'"
-              mat-raised-button
-      >
-        <mat-icon svgIcon="audiotrack"></mat-icon>
-        Audio
-      </button>
-      <button (click)="updateMediaType(MediaType.Video)"
-              [color]="form.value.type === MediaType.Video ? 'primary' : 'accent'"
-              mat-raised-button
-      >
-        <mat-icon svgIcon="videocam"></mat-icon>
-        Video
-      </button>
-      <button (click)="updateMediaType(MediaType.IFrame)"
-              [color]="form.value.type === MediaType.IFrame ? 'primary' : 'accent'"
-              mat-raised-button
-      >
-        <mat-icon svgIcon="videocam"></mat-icon>
-        IFrame
+        <mat-icon [svgIcon]="button.icon"></mat-icon>
+        {{ button.name }}
       </button>
     </div>
 
@@ -57,16 +39,16 @@
       <span matSuffix>ms</span>
     </mat-form-field>
 
-    <div class="form-field-row">
+    <div class="form-field-row" [class.hidden]="form.value.type === MediaType.Meta">
       <mat-form-field>
         <input autocomplete="off"
                formControlName="path"
                matInput
-               [placeholder]="form.value.type !== 3 ? 'File' : 'URL'"
-               required
+               [required]="form.value.type !== MediaType.Meta"
+               [placeholder]="form.value.type !== MediaType.IFrame ? 'File' : 'URL'"
                type="text"
         />
-        <div matSuffix *ngIf="form.value.type !== 3">
+        <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
           <mat-select (valueChange)="onChange($event)"
                       *ngIf="availableMediaFiles | async as mediaFiles"
           >
@@ -81,14 +63,15 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <div class="form-field-row">
+    <div class="form-field-row"
+         *ngIf="form.value.type !== MediaType.Meta">
       <mat-form-field>
         <input [placeholder]="
                  form.value.type === 0
                    ? 'Visible screen time (ms)'
                    : 'Play time on screen (ms)'
                "
-               [required]="form.value.type === 0"
+               [required]="form.value.type === MediaType.Picture"
                autocomplete="off"
                formControlName="playLength"
                matInput
@@ -101,7 +84,7 @@
         </mat-error>
       </mat-form-field>
     </div>
-    <ng-container *ngIf="form.value.type !== 0 && form.value.type !== 3">
+    <ng-container *ngIf="[MediaType.Audio, MediaType.Video].includes(form.value.type)">
       <mat-label>Volume</mat-label>
       <div class="slider__row">
         <mat-slider #volumeSlider
@@ -116,8 +99,8 @@
         </div>
       </div>
     </ng-container>
-    <div class="form-field-row">
-      <mat-form-field *ngIf="false">
+    <div class="form-field-row"  *ngIf="false">
+      <mat-form-field>
         <input autocomplete="off"
                formControlName="previewUrl"
                matInput
@@ -126,9 +109,70 @@
         />
       </mat-form-field>
     </div>
-    <img *ngIf="form.value.type === 0"
+
+    <div class="form-field-row">
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Tag selection">
+          <mat-chip
+            *ngFor="let tag of currentTags$ | async"
+            [selectable]="false"
+            [removable]="true"
+            (removed)="removeTag(tag)">
+            {{tag.name}}
+            <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Assign a new tag..."
+            #tagInput
+            [formControl]="tagFormCtrl"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="enterNewTag($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
+          <mat-option *ngFor="let tag of filteredTags$ | async"
+                      [value]="tag">
+            {{tag.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+    </div>
+
+    <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta">
+      <mat-form-field>
+        <mat-select formControlName="metaType"
+                    placeholder="Meta Type"
+                    required
+                    value="0">
+          <mat-option [value]="0">Random</mat-option>
+          <mat-option [value]="1">All</mat-option>
+          <mat-option [value]="2">All with Delay</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta && form.value.metaType === 2">
+      <mat-form-field>
+        <input placeholder="Delay between clip-trigger (ms)"
+               required
+               autocomplete="off"
+               formControlName="metaDelay"
+               matInput
+               type="number"
+        />
+        <span matSuffix>ms</span>
+
+        <mat-error *ngIf="form.controls['playLength'].hasError('required')">
+
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <img *ngIf="form.value.type === MediaType.Picture"
          [src]="form.value.path || form.value.previewUrl" />
-    <iframe *ngIf="form.value.type === 3"
+    <iframe *ngIf="form.value.type === MediaType.IFrame"
             [src]="form.value.path | safeurl"
     ></iframe>
   </form>

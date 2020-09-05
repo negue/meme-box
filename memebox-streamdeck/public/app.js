@@ -57,7 +57,7 @@ async function connected(jsn) {
 	);
 }
 
-const memeBoxSocket = new WebSocket(`ws://localhost:4444`);
+let memeBoxSocket;
 
 
 /** ACTIONS */
@@ -72,6 +72,19 @@ const action = {
 		);
 		this.settings[jsonObj.context] = Utils.getProp(jsonObj, "payload.settings", {});
 		this.doSomeThing(this.settings, "onDidReceiveSettings", "orange");
+
+
+    try {
+      console.info('did receive config', this.settings);
+
+      if (this.settings.port) {
+        console.info('Creating a WS');
+        memeBoxSocket = new WebSocket(`ws://localhost:${this.settings.port}`)
+      }
+    }
+    catch  {
+
+    }
 	},
 
 	/**
@@ -97,6 +110,18 @@ const action = {
 		 * $SD.api.getSettings(jsn.context);
 		 */
 		this.settings[jsn.context] = jsn.payload.settings;
+
+		try {
+      console.info('will appear', jsn.payload.settings);
+
+      if (jsn.payload.settings.port) {
+        console.info('Creating a WS');
+        memeBoxSocket = new WebSocket(`ws://localhost:${jsn.payload.settings.port}`)
+      }
+    }
+    catch  {
+
+    }
 	},
 
 	onKeyUp: async function(jsn) {

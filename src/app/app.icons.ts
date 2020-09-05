@@ -1,6 +1,8 @@
 export const APP_ICONS = [
   'add',
+  'art_track',
   'audiotrack',
+  'cancel',
   'circle',
   'check_circle',
   'code',
@@ -14,12 +16,13 @@ export const APP_ICONS = [
   'playlist_add_check',
   'playlist_add',
   'preview',
-  'replay',
   'qr_code_scanner',
   'queue',
+  'replay',
   'screen',
   'settings',
   'speaker',
+  'tag',
   'videocam',
   'video_library'
 ];

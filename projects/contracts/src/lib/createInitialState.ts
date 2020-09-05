@@ -5,6 +5,7 @@ export function createInitialState (): SettingsState {
     config: {},
     twitchEvents: {},
     screen: {},
-    clips: {}
+    clips: {},
+    tags: {}
   }
 }

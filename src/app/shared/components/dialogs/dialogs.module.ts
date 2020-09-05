@@ -16,6 +16,8 @@ import {ScreenClipOptionsComponent} from "./screen-clip-options/screen-clip-opti
 import {MatIconModule} from "@angular/material/icon";
 import {PipesModule} from "../../../core/pipes/pipes.module";
 import {TwitchEditComponent} from './twitch-edit/twitch-edit.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import {TwitchEditComponent} from './twitch-edit/twitch-edit.component';
     MatButtonModule,
     MatSnackBarModule,
     MatIconModule,
+    MatChipsModule,
+    MatAutocompleteModule,
   ],
   providers: [DialogService],
 })
