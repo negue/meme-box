@@ -1,26 +1,48 @@
+<div class="eventInfo__titleRow">
+  <h2 class="mat-h2 eventInfo__titleRow__name">
+    <span class="eventInfo__titleRow__event">
+      {{ item.event }}:
+    </span>
+    {{item.name}}
+  </h2>
+</div>
 
-<mat-checkbox [checked]="item.active" (change)="onActiveChanged($event)"></mat-checkbox>
+<div class="eventInfo__checkbox">
+  <mat-chip-list>
+    <mat-chip class="eventInfo__chip"
+              [class.eventInfo__chip--selected]="item.active">
+      <mat-checkbox [checked]="item.active" (change)="onActiveChanged($event)">
+        {{item.active ? 'Event active' : 'Event inactive'}}
+      </mat-checkbox>
+    </mat-chip>
+  </mat-chip-list>
+</div>
 
+<div class="eventInfo__actionButtons">
+  <button (click)="onEdit.emit()" color="accent" mat-flat-button>
+    <mat-icon svgIcon="edit"></mat-icon>
+    Edit
+  </button>
+  <button (click)="onPreview.emit()" color="primary" mat-button>
+    <mat-icon svgIcon="preview"></mat-icon>
+    Preview
+  </button>
+</div>
 
-<b>{{item.name}}</b> - Event: <strong>{{ item.event }}</strong> -
+<div class="eventInfo__meta">
+  <ng-container *ngIf="allInformations$ | async as information">
 
-<ng-container *ngIf="allInformations$ | async as information">
+    <p>Clip: {{ information.clip?.name }}</p>
+    <!-- Screen: <strong>{{ information.screen.name }}</strong> -->
+    <!-- it would be SUPER AMAZING to have a preview of the media here! -->
 
-  Clip: <strong>{{ information.clip?.name }}</strong>
-  <!-- Screen: <strong>{{ information.screen.name }}</strong> -->
+  </ng-container>
+</div>
 
-</ng-container>
+<mat-card-actions>
+  <button (click)="onDelete.emit()" class="eventInfo__delete" color="warn" mat-flat-button>
+    <mat-icon svgIcon="delete"></mat-icon>
+    Delete event
+  </button>
+</mat-card-actions>
 
-<button (click)="onPreview.emit()" color="primary" mat-button>
-  <mat-icon svgIcon="preview"></mat-icon>
-  Preview
-</button>
-
-<button (click)="onDelete.emit()" color="warn" mat-icon-button>
-  <mat-icon svgIcon="delete"></mat-icon>
-</button>
-
-
-<button (click)="onEdit.emit()" color="accent" mat-icon-button>
-  <mat-icon svgIcon="edit"></mat-icon>
-</button>

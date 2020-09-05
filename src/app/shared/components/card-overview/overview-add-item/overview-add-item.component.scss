@@ -1,23 +1,12 @@
 @import '~angular-material-css-vars/public-util';
-@import '../../../../utils/mixins';
 
-.screensList {
-  @include gridLayout;
-}
-
-.screensList__item {
- @include gridLayout__item;
-}
-
-.screensList__item__card {
+:host {
+  width: 100%;
   height: 100%;
+  margin-bottom: var(--grid-padding);
 }
 
-.add-new {
-  cursor: pointer;
-}
-
-.screensList__item--addNew {
+button {
   height: 100%;
   width: 100%;
   display: flex;
@@ -25,8 +14,8 @@
   justify-content: center;
   transition: background-color 0.2s ease-in-out;
   cursor: pointer;
-  background-color: #3F4855; //TODO HOW TO GET THIS VARIABLE
-  color: #ffffff; //TODO HOW TO GET THIS VARIABLE
+  background-color: var(--card-background-color);
+  color: var(--palette-foreground-text);
   font-size: 1.6rem;
   border-color: transparent;
   border-radius: 4px;

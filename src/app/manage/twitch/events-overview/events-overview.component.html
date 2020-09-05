@@ -1,9 +1,16 @@
-<app-add-event (added)="newEventConfigReceived($event)"></app-add-event>
 
-<app-event-info (onDelete)="deleteEvent(item.id)"
-                (onEdit)="editEvent(item)"
-                (onPreview)="previewEvent(item)"
-                *ngFor="let item of eventsList$ | async"
-                [item]="item"
->
-</app-event-info>
+<div class="eventsList">
+  <mat-card *ngFor="let item of eventsList$ | async"
+       class="eventsList__item">
+    <app-event-info (onDelete)="deleteEvent(item.id)"
+                    (onEdit)="editEvent(item)"
+                    (onPreview)="previewEvent(item)"
+                    [item]="item"
+    >
+    </app-event-info>
+  </mat-card>
+  <button class="eventsList__item--addNew">
+    <app-add-event (added)="newEventConfigReceived($event)"></app-add-event>
+  </button>
+</div>
+

@@ -9,7 +9,7 @@ import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'app-events-overview',
   templateUrl: './events-overview.component.html',
-  styleUrls: ['./events-overview.component.css']
+  styleUrls: ['./events-overview.component.scss']
 })
 export class EventsOverviewComponent implements OnInit {
 

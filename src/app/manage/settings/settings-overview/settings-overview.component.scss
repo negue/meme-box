@@ -4,6 +4,10 @@
   @include gridLayout;
 }
 
+.settingsList__item {
+  @include gridLayout__item;
+}
+
 .title-row {
   display: flex;
   flex-direction: row;
@@ -24,11 +28,16 @@
 
 .action-buttons {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 
   button {
-    width: 45%;
+    width: 100%;
+    margin-bottom: 1rem;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
   }
 }
 

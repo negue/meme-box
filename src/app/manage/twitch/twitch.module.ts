@@ -11,7 +11,8 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatInputModule} from "@angular/material/input";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-
+import {MatCardModule} from "@angular/material/card";
+import {MatChipsModule} from "@angular/material/chips";
 
 const routes: Routes = [
   {
@@ -32,6 +33,8 @@ const routes: Routes = [
     MatDialogModule,
     MatInputModule,
     MatCheckboxModule,
+    MatCardModule,
+    MatChipsModule,
   ]
 })
 export class TwitchModule {

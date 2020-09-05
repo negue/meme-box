@@ -1,32 +1,6 @@
 @import '~angular-material-css-vars/public-util';
 @import '../../../../utils/mixins';
 
-.mediaList {
-  @include gridLayout;
-}
-
-.mediaList__clip {
-  @include gridLayout__item;
-}
-
-.mediaList__clipCard {
-  height: 100%;
-}
-
 .mediaList__appMediaInfo {
   height: 100%;
-}
-
-.mediaList__clipCard--addNew {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s ease-in-out;
-  cursor: pointer;
-
-  &:hover {
-    background-color: mat-css-color-accent() !important;
-  }
 }

@@ -5,9 +5,10 @@
 
     <div class="example-container">
       <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
+        <mat-label>Event Name</mat-label>
         <input autocomplete="off"
                formControlName="name"
+               placeholder="Raided by whitep4nth3r"
                matInput>
       </mat-form-field>
 
@@ -16,7 +17,7 @@
 
     <div class="example-container">
       <mat-form-field appearance="outline">
-        <mat-label>Twitch Event</mat-label>
+        <mat-label>Twitch Event Type</mat-label>
         <mat-select [required]="true"
                     formControlName="event">
           <mat-option *ngFor="let item of twitchEvents"
@@ -28,10 +29,20 @@
 
     </div>
 
+    <div class="example-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Message text to trigger event</mat-label>
+        <input autocomplete="off"
+               formControlName="contains"
+               placeholder="!wow"
+               matInput>
+      </mat-form-field>
+    </div>
+
 
     <div class="example-container">
       <mat-form-field appearance="outline">
-        <mat-label>Meme</mat-label>
+        <mat-label>Select media</mat-label>
         <mat-select [required]="true"
                     formControlName="clipId">
 
@@ -46,14 +57,7 @@
       </mat-form-field>
     </div>
 
-    <div class="example-container">
-      <mat-form-field appearance="outline">
-        <mat-label>Contains</mat-label>
-        <input autocomplete="off"
-               formControlName="contains"
-               matInput>
-      </mat-form-field>
-    </div>
+
   </form>
 </mat-dialog-content>
 
@@ -62,6 +66,6 @@
   <button mat-button mat-dialog-close>Cancel</button>
   <button (click)="save()" cdkFocusInitial
           color="primary"
-          mat-raised-button>{{ data.id ? 'Update' : 'Add' }}</button>
+          mat-raised-button>{{ data.id ? 'Update Event' : 'Add Event' }}</button>
 </mat-dialog-actions>
 

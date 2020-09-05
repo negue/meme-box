@@ -34,7 +34,12 @@
 </form>
 -->
 
+<!--
+ Ideally we need to make this consistent with screen overview and
+ media overview 'add new' - so can we remove the button within a button?
+-->
 
 <button (click)="triggerAdd()" color="primary"
-        mat-flat-button>Add
+        mat-flat-button>
+  <mat-icon svgIcon="add"></mat-icon> Add New Event
 </button>

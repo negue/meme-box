@@ -1,4 +1,4 @@
-<mat-card *ngIf="(mediaList$ |async).length === 0 || (screenList$ | async).length  === 0">
+<ng-container *ngIf="(mediaList$ |async).length === 0 || (screenList$ | async).length  === 0">
   <mat-card-title>
     Getting started:
   </mat-card-title>
@@ -48,6 +48,6 @@
     </mat-list>
 
   </mat-card-content>
-</mat-card>
+</ng-container>
 
 <div>Remove 'add media' block to right right of this when there is no media and we are in onboarding mode</div>

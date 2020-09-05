@@ -1,23 +1,14 @@
-@import '~angular-material-css-vars/public-util';
 @import '../../../../utils/mixins';
 
-.screensList {
+.eventsList {
   @include gridLayout;
 }
 
-.screensList__item {
- @include gridLayout__item;
+.eventsList__item {
+  @include gridLayout__item;
 }
 
-.screensList__item__card {
-  height: 100%;
-}
-
-.add-new {
-  cursor: pointer;
-}
-
-.screensList__item--addNew {
+.eventsList__item--addNew {
   height: 100%;
   width: 100%;
   display: flex;

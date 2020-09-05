@@ -1,20 +1,16 @@
-@mixin gridLayout {
+:host {
+  --grid-padding: 2rem;
+
   display: grid;
-  padding: 2rem;
+  padding: var(--grid-padding);
 
   @media screen and (min-width: 620px) {
     grid-template-columns: 1fr 1fr;
-    grid-column-gap: 2rem;
+    grid-column-gap: var(--grid-padding);
   }
 
   @media screen and (min-width: 930px) {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-column-gap: 2rem;
+    grid-column-gap: var(--grid-padding);
   }
-}
-
-@mixin gridLayout__item {
-  width: 100%;
-  height: 100%;
-  margin-bottom: 2rem;
 }

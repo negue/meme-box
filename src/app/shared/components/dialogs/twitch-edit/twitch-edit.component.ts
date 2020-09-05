@@ -9,9 +9,9 @@ import {SnackbarService} from "../../../../core/services/snackbar.service";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {
-  name: 'Your Twitch Event', // TODO better default value
+  name: '',
   event: TwitchEventTypes.message,
-  contains: '!wow',
+  contains: '',
   active: true
 };
 
