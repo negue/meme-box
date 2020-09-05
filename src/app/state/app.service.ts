@@ -59,6 +59,8 @@ export class AppService {
 
   public async addOrUpdateClip(clip: Clip) {
     let newClipId = clip?.id ?? '';
+    let isItNew = !newClipId;
+
 
     if (newClipId === '') {
       // add the clip to api & await
@@ -76,6 +78,10 @@ export class AppService {
     this.appStore.update(state => {
       state.clips[newClipId] = clip;
     });
+
+    this.snackbar.normal(
+      `Clip "${clip.name}"  ${isItNew ? "added" : "updated"}`
+    );
   }
 
   public async deleteClip(clipId: string) {

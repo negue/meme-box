@@ -110,6 +110,37 @@
         />
       </mat-form-field>
     </div>
+
+    <div class="form-field-row">
+      <mat-form-field class="example-chip-list">
+        <mat-chip-list #chipList aria-label="Fruit selection">
+          <mat-chip
+            *ngFor="let tag of currentTags$ | async"
+            [selectable]="false"
+            [removable]="true"
+            (removed)="removeTag(tag)">
+            {{tag.name}}
+            <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Assign a new tag..."
+            #tagInput
+            [formControl]="tagFormCtrl"
+            [matAutocomplete]="auto"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="enterNewTag($event)">
+        </mat-chip-list>
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
+          <mat-option *ngFor="let tag of filteredTags$ | async"
+                      [value]="tag">
+            {{tag.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+    </div>
+
     <img *ngIf="form.value.type === MediaType.Picture"
          [src]="form.value.path || form.value.previewUrl" />
     <iframe *ngIf="form.value.type === MediaType.IFrame"

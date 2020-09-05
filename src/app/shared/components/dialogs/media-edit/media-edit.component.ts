@@ -1,18 +1,22 @@
-import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, FileInfo, MediaType} from "@memebox/contracts";
-import {FormBuilder} from "@angular/forms";
+import {Clip, FileInfo, MediaType, Tag} from "@memebox/contracts";
+import {FormBuilder, FormControl} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
 import {AppQueries} from "../../../../state/app.queries";
-import {distinctUntilChanged, filter, map, pairwise, startWith, takeUntil,} from "rxjs/operators";
-import {combineLatest, Subject} from "rxjs";
+import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil,} from "rxjs/operators";
+import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent} from "@angular/material/chips";
 
 const DEFAUULT_PLAY_LENGTH =  600;
 
 //TODO: clean up initial clip stuff - always populate
 // clipLength + playLength so the user doesn't want to die
 const INITIAL_CLIP: Partial<Clip> = {
+  tags: [],
   type: MediaType.Picture,
   name: 'Media Filename',
   volumeSetting: 10,
@@ -30,6 +34,7 @@ interface MediaTypeButton {
   selector: "app-media-edit",
   templateUrl: "./media-edit.component.html",
   styleUrls: ["./media-edit.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaEditComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
@@ -82,6 +87,26 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     }
   ]
 
+
+  // region Tag specific
+
+  // current available tags in memebox / state
+  availableTags$ = this.appQuery.tagList$;
+
+  // Current Tags assigned to this clip
+  currentTags$ = new BehaviorSubject<Tag[]>([]);
+
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  tagFormCtrl = new FormControl();  // needed in form?!
+
+  // current "filtered" tags
+  filteredTags$: Observable<Tag[]>;
+
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+  // endregion
+
   private _destroy$ = new Subject();
 
   constructor(
@@ -91,7 +116,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     private appQuery: AppQueries,
     private snackBar: SnackbarService
   ) {
-    this.data = this.data ?? (INITIAL_CLIP as any);
+    this.data = Object.assign({}, INITIAL_CLIP, this.data);
   }
 
   get MediaType() {
@@ -128,6 +153,21 @@ export class MediaEditComponent implements OnInit, OnDestroy {
           });
         }
       });
+
+    this.availableTags$.pipe(
+      take(1)
+    ).subscribe(allTags => {
+      this.currentTags$.next(allTags.filter(tag => this.data.tags.includes(tag.id)));
+    });
+
+    this.filteredTags$ = combineLatest([
+      this.tagFormCtrl.valueChanges.pipe(
+        startWith(null)
+      ),
+      this.availableTags$
+    ]).pipe(
+      map(([tagInputValue, allTags]) => this._filter(tagInputValue, allTags))
+    );
   }
 
   async save() {
@@ -139,11 +179,19 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     const { value } = this.form;
 
-    await this.appService.addOrUpdateClip(value);
+    const valueAsClip: Clip = value;
 
-    this.snackBar.normal(
-      `Clip "${value.name}"  ${value.id ? "updated" : "added"}`
-    );
+    const tagsToAssign = this.currentTags$.value;
+
+    for (const tag of tagsToAssign) {
+      if (!tag.id) {
+        await this.appService.addOrUpdateTag(tag)
+      }
+    }
+
+    valueAsClip.tags = tagsToAssign.map(tag => tag.id)
+
+    await this.appService.addOrUpdateClip(valueAsClip);
 
     this.dialogRef.close();
   }
@@ -165,4 +213,68 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     this._destroy$.next();
     this._destroy$.complete();
   }
+
+  // region Tag specific methods
+
+  // remove this clip
+  removeTag(tag: Tag) {
+    const currentTags = this.currentTags$.value;
+
+    const index = currentTags.indexOf(tag);
+
+    if (index >= 0) {
+      currentTags.splice(index, 1);
+    }
+
+    this.currentTags$.next(currentTags);
+  }
+
+  // Add an existing Tag to this media-clip
+  selectedNewTag($event: MatAutocompleteSelectedEvent) {
+    const currentTags = this.currentTags$.value;
+    currentTags.push($event.option.value);
+
+    this.tagInput.nativeElement.value = '';
+    this.tagFormCtrl.setValue(null);
+
+    this.currentTags$.next(currentTags);
+  }
+
+  // Enters a completely new tag to this media-clip
+  enterNewTag($event: MatChipInputEvent) {
+    const input = $event.input;
+    const value = $event.value;
+
+    const currentTags = this.currentTags$.value;
+
+
+    // Add our tag
+    if ((value || '').trim()) {
+      currentTags.push({
+        color: '',
+        id: '',
+        name: value.trim()
+      } as Tag);
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.tagFormCtrl.setValue(null);
+    this.currentTags$.next(currentTags);
+  }
+
+  private _filter(value: string, allTags: Tag[]): Tag[] {
+    if (typeof value === 'string') {
+      const filterValue = value.toLowerCase();
+
+      return allTags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
+    }
+
+    return allTags;
+  }
+
+  // endregion
 }

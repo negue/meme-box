@@ -3,7 +3,8 @@ Todo for Tags/Meta Clips
 - [x] Persistance / State
 - [ ] Apply Clip-Edit-Dialog changes
   - [x] add a meta type button
-  - [ ] tag assignment controls
+  - [x] tag assignment controls
+  - [x] save tag changes to a clip // save the tagIds
   - [ ] on clip type: meta
        - [ ] add meta type selection
        - [ ] delay

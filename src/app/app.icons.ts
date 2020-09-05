@@ -2,6 +2,7 @@ export const APP_ICONS = [
   'add',
   'art_track',
   'audiotrack',
+  'cancel',
   'circle',
   'check_circle',
   'code',
