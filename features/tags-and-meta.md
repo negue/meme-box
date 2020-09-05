@@ -36,8 +36,10 @@ Todo for Tags/Meta Clips
   - [ ] try to share the state / persistence operations
         to improve dev-speed
 - [x] test with clip preview 
-- [ ] test with mobile view
-- [ ] test with twitch api
+- [x] test with mobile view
+- [x] test with twitch api
 - [ ] test with streamdeck
+  - [ ] add new config item to set the custom port
+  - [ ] and then work with that
 - [ ] fill changelog
 - [ ] add to the readme file
