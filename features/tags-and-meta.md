@@ -1,28 +1,28 @@
 Todo for Tags/Meta Clips
 
 - [x] Persistance / State
-- [ ] Apply Clip-Edit-Dialog changes
+- [x] Apply Clip-Edit-Dialog changes
   - [x] add a meta type button
   - [x] tag assignment controls
   - [x] save tag changes to a clip // save the tagIds
-  - [ ] on clip type: meta
-       - [ ] add meta type selection
-       - [ ] delay
+  - [x] on clip type: meta
+       - [x] add meta type selection
+       - [x] delay
        - [x] hide all other unneeded controls
 - [ ] Clip Overview Component
   - [x] add screen icon to the screen "chips"
   - [x] add tag icon to tag "chips"
   - [ ] add a color to the tag chips
-- [ ]  if a meta clip is triggered:
-  - [ ] go through of the assigned tags
-    - [ ] list all clips by tags
-    - [ ] on random: 
-      - [ ] pick a random one
-      - [ ] trigger that internally
-    - [ ] on "all":
-      - [ ] trigger that internally
-    - [ ] on "all", with delay
-      - [ ] trigger each and wait each time
+- [x]  if a meta clip is triggered:
+  - [x] go through of the assigned tags
+    - [x] list all clips by tags
+    - [x] on random: 
+      - [x] pick a random one
+      - [x] trigger that internally
+    - [x] on "all":
+      - [x] trigger that internally
+    - [x] on "all", with delay
+      - [x] trigger each and wait each time
 - [x] new rest api endpoints
   - [x] list of tags
   - [x] add a tag
@@ -35,6 +35,7 @@ Todo for Tags/Meta Clips
   - [x] delete
   - [ ] try to share the state / persistence operations
         to improve dev-speed
+- [x] test with clip preview 
 - [ ] test with mobile view
 - [ ] test with twitch api
 - [ ] test with streamdeck

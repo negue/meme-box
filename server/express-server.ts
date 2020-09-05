@@ -300,7 +300,8 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 export function createExpress(port) {
   app.set('port', port);
 
-  // app.listen(app.get('port'));
+  // app.get('port')
+
 
   return app;
 }

@@ -2,6 +2,7 @@ import * as http from "http";
 import * as WebSocket from "ws";
 import {ACTIONS, TriggerClip} from "../projects/contracts/src/lib/actions";
 import {PersistenceInstance} from "./persistence";
+import {MediaType, MetaTriggerTypes} from "../projects/contracts/src/lib/types";
 
 // no type ?!
 interface WebSocketType {
@@ -34,19 +35,69 @@ export function sendDataToAllSockets (message: string) {
   });
 }
 
-export function triggerMediaClipById(payloadObs: TriggerClip) {
-  var allScreens = PersistenceInstance.listScreens();
+export async function triggerMediaClipById(payloadObs: TriggerClip) {
+  const allScreens = PersistenceInstance.listScreens();
+  const clipConfig = PersistenceInstance.fullState().clips[payloadObs.id];
 
-  for (const screen of allScreens) {
-    if (screen.clips[payloadObs.id]) {
-      const newMessageObj = {
-        ...payloadObs,
-        targetScreen: screen.id
-      };
+  if (clipConfig.type !== MediaType.Meta) {
+    // No Meta Type
+    // Trigger the clip on all assign screens
+    for (const screen of allScreens) {
+      if (screen.clips[payloadObs.id]) {
+        const newMessageObj = {
+          ...payloadObs,
+          targetScreen: screen.id
+        };
 
-      sendDataToScreen(screen.id, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(newMessageObj)}`);
+        sendDataToScreen(screen.id, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(newMessageObj)}`);
+      }
+    }
+  } else {
+    // Get all Tags
+    const assignedTags = clipConfig.tags || [];
+
+    if (assignedTags.length === 0) {
+      return;
+    }
+
+    // Get all clips assigned with these tags
+    const allClips = PersistenceInstance.listClips().filter(
+      clip => clip.id !== clipConfig.id && clip.tags && clip.tags.some(tagId => assignedTags.includes(tagId))
+    );
+    // per metaType
+    switch (clipConfig.metaType) {
+      case MetaTriggerTypes.Random: {
+        // random 0..1
+        const randomIndex = Math.floor(Math.random()*allClips.length);
+
+        const clipToTrigger = allClips[randomIndex];
+
+        triggerMediaClipById(clipToTrigger);
+
+        break;
+      }
+      case MetaTriggerTypes.All: {
+        allClips.forEach(clipToTrigger => {
+          triggerMediaClipById(clipToTrigger);
+        });
+
+        break;
+      }
+      case MetaTriggerTypes.AllDelay: {
+
+        for (const clipToTrigger of allClips) {
+          await triggerMediaClipById(clipToTrigger);
+          await timeoutAsync(clipConfig.metaDelay)
+        }
+
+        break;
+      }
     }
   }
+}
+
+function timeoutAsync(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 wss.on("connection", (ws: WebSocket) => {

@@ -1,27 +1,26 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, FileInfo, MediaType, Tag} from "@memebox/contracts";
-import {FormBuilder, FormControl} from "@angular/forms";
+import {Clip, FileInfo, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
 import {AppQueries} from "../../../../state/app.queries";
 import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil,} from "rxjs/operators";
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
 
-const DEFAUULT_PLAY_LENGTH =  600;
+const DEFAULT_PLAY_LENGTH =  600;
 
-//TODO: clean up initial clip stuff - always populate
-// clipLength + playLength so the user doesn't want to die
 const INITIAL_CLIP: Partial<Clip> = {
   tags: [],
   type: MediaType.Picture,
   name: 'Media Filename',
   volumeSetting: 10,
-  playLength: DEFAUULT_PLAY_LENGTH,
-  clipLength: DEFAUULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
+  playLength: DEFAULT_PLAY_LENGTH,
+  clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
+  metaDelay: 750,
+  metaType: MetaTriggerTypes.Random
 };
 
 interface MediaTypeButton {
@@ -46,6 +45,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     playLength: 0,
     path: "",
     previewUrl: "",
+
+    metaType: 0,
+    metaDelay: 0,
   });
 
   availableMediaFiles = combineLatest([
@@ -113,8 +115,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: Clip,
     private dialogRef: MatDialogRef<any>,
     private appService: AppService,
-    private appQuery: AppQueries,
-    private snackBar: SnackbarService
+    private appQuery: AppQueries
   ) {
     this.data = Object.assign({}, INITIAL_CLIP, this.data);
   }
@@ -149,8 +150,18 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
         if ([MediaType.Picture, MediaType.IFrame].includes(next)) {
           this.form.patchValue({
-            playLength: DEFAUULT_PLAY_LENGTH
+            playLength: DEFAULT_PLAY_LENGTH
           });
+        }
+
+        if (prev === MediaType.Meta) {
+          console.info('adding validators');
+          this.form.controls['path'].setValidators(Validators.required);
+        }
+
+        if (next == MediaType.Meta){
+          console.info('clearing validators');
+          this.form.controls['path'].clearValidators();
         }
       });
 
@@ -174,6 +185,12 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
+      console.info(this.form);
+
+      for (const [ctrlName, ctrl] of Object.entries(this.form.controls)) {
+        console.info(ctrlName, ctrl.valid);
+      }
+
       return;
     }
 
