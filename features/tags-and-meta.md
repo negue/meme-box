@@ -12,7 +12,7 @@ Todo for Tags/Meta Clips
 - [ ] Clip Overview Component
   - [x] add screen icon to the screen "chips"
   - [x] add tag icon to tag "chips"
-  - [ ] add a color to the tag chips
+  
 - [x]  if a meta clip is triggered:
   - [x] go through of the assigned tags
     - [x] list all clips by tags
@@ -29,17 +29,20 @@ Todo for Tags/Meta Clips
   - [x] update
   - [x] delete
   - [x] delete must also remove all used places
-- [ ] use api endpoints
+- [x] use api endpoints
   - [x] add a tag
   - [x] update
   - [x] delete
-  - [ ] try to share the state / persistence operations
-        to improve dev-speed
 - [x] test with clip preview 
 - [x] test with mobile view
 - [x] test with twitch api
-- [ ] test with streamdeck
-  - [ ] add new config item to set the custom port
-  - [ ] and then work with that
-- [ ] fill changelog
-- [ ] add to the readme file
+- [x] test with streamdeck
+  - [x] add new config item to set the custom port
+  - [x] and then work with that
+- [x] fill changelog
+- [x] add to the readme file
+
+Open todos:
+- [ ] add a color to the tag chips
+- [ ] try to share the state / persistence operations
+      to improve dev-speed
