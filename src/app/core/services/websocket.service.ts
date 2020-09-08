@@ -5,6 +5,7 @@ import {AppConfig} from "@memebox/app/env";
 import {SnackbarService} from "./snackbar.service";
 
 export enum ConnectionState{
+  NONE,
   Disconnected,
   Connected,
   Reconnecting,
@@ -20,7 +21,7 @@ export class WebsocketService {
   public onUpdateData$ = new Subject();
   public onReloadScreen$ = new Subject();
   public onTriggerClip$ = new Subject<TriggerClip>();
-  public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.Disconnected)
+  public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.NONE)
 
   private ws: WebSocket;
   private firstConnectionWorked = true;

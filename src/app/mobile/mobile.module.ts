@@ -9,6 +9,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatSelectModule} from "@angular/material/select";
 import {ClipTypeModule} from "../shared/components/clip-type/clip-type.module";
+import {MatIconModule} from "@angular/material/icon";
 
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
     MatSliderModule,
     MatSelectModule,
     ClipTypeModule,
+    MatIconModule,
   ]
 })
 export class MobileModule {
