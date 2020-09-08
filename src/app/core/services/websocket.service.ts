@@ -1,8 +1,15 @@
 import {Injectable} from '@angular/core';
 import {ACTIONS, TriggerClip} from "@memebox/contracts";
-import {Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {AppConfig} from "@memebox/app/env";
 import {SnackbarService} from "./snackbar.service";
+
+export enum ConnectionState{
+  Disconnected,
+  Connected,
+  Reconnecting,
+  Error
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +20,7 @@ export class WebsocketService {
   public onUpdateData$ = new Subject();
   public onReloadScreen$ = new Subject();
   public onTriggerClip$ = new Subject<TriggerClip>();
+  public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.Disconnected)
 
   private ws: WebSocket;
   private firstConnectionWorked = true;
@@ -72,7 +80,6 @@ export class WebsocketService {
     }
   }
 
-
   private connect() {
     if (this.isConnected) {
       console.warn('already isConnected!');
@@ -92,11 +99,14 @@ export class WebsocketService {
       this.ws = null;
     }
 
+    this.connectionState$.next(ConnectionState.Reconnecting);
+
     this.ws = new WebSocket(AppConfig.wsBase);
 
     this.ws.onopen = ev => {
       this.isConnected = true;
       this.onOpenConnection$.next();
+      this.connectionState$.next(ConnectionState.Connected);
 
       if (this.intervalId !== 0) {
         clearInterval(this.intervalId);
@@ -117,6 +127,8 @@ export class WebsocketService {
       console.warn('On Close', ev);
       this.isConnected = false;
       this.firstConnectionWorked = false;
+
+      this.connectionState$.next(ConnectionState.Disconnected);
 
       if (this.intervalId === 0) {
         console.info('new interval');
