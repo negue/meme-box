@@ -2,7 +2,13 @@ import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
 import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Tag, Twitch, VisibilityEnum} from "@memebox/contracts";
-import {API_PREFIX, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
+import {
+  API_PREFIX,
+  DANGER_CLEAN_CONFIG_ENDPOINT,
+  DANGER_IMPORT_ALL_ENDPOINT,
+  FILES_ENDPOINT,
+  FILES_OPEN_ENDPOINT
+} from "../../../server/constants";
 import {SnackbarService} from "../core/services/snackbar.service";
 import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from "./app.dummy.data";
@@ -323,5 +329,15 @@ export class AppService {
     this.appStore.update(state => {
       setDummyData(state);
     })
+  }
+
+  async deleteAll() {
+    await this.http.post<any>(`${EXPRESS_BASE}${DANGER_CLEAN_CONFIG_ENDPOINT}`, null).toPromise();
+    location.reload();
+  }
+
+  async importAll() {
+    await this.http.post<any>(`${EXPRESS_BASE}${DANGER_IMPORT_ALL_ENDPOINT}`, null).toPromise();
+    location.reload();
   }
 }

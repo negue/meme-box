@@ -49,6 +49,16 @@ PersistenceInstance.dataUpdated$()
     }
   });
 
+PersistenceInstance.hardRefresh$()
+  .pipe(
+    debounceTime(600),
+    startWith(true)
+  )
+  .subscribe(() => {
+    console.info('Data Hard-Refresh');
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
+  });
+
 ExampleTwitchCommandsSubject.subscribe(value => {
   if (twitchHandler) {
     twitchHandler.handle(value);

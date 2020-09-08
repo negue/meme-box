@@ -40,6 +40,7 @@ function createDirIfNotExists(dir) {
 export class Persistence {
 
   private updated$ = new Subject();
+  private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
 
   constructor(private filePath: string) {
@@ -84,6 +85,11 @@ export class Persistence {
   public dataUpdated$ () : Observable<any> {
     return this.updated$.asObservable();
   }
+
+  public hardRefresh$ () : Observable<any> {
+    return this._hardRefresh$.asObservable();
+  }
+
 
   public fullState() {
     return  this.data;
@@ -298,6 +304,15 @@ export class Persistence {
 
   public getConfig() {
     return this.data.config;
+  }
+
+  public cleanUpConfigs() {
+    this.data.clips = {};
+    this.data.tags = {};
+    this.data.screen = {};
+    this.data.twitchEvents = {};
+
+    this._hardRefresh$.next();
   }
 
   /*

@@ -6,6 +6,7 @@ import {
   CONFIG_ENDPOINT,
   CONFIG_MEDIA_ENDPOINT,
   CONFIG_TWITCH_CHANNEL_ENDPOINT,
+  DANGER_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT,
@@ -27,6 +28,7 @@ import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/typ
 import * as open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
+import {DANGER_ROUTES} from "./rest-endpoints/danger";
 
 const { resolve, basename, extname, sep, normalize } = require('path');
 const { readdir } = require('fs').promises;
@@ -77,6 +79,7 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
 });
 
 app.use(TAGS_ENDPOINT, TAG_ROUTES);
+app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 
 /**
  * OBS-Specific API
