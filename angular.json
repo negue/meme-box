@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-electron": {
+    "memebox-app": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -77,31 +77,33 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "memebox-app:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "angular-electron:build:dev"
+              "browserTarget": "memebox-app:build:dev"
             },
             "web": {
-              "browserTarget": "angular-electron:build:web"
+              "browserTarget": "memebox-app:build:web"
             },
             "production": {
-              "browserTarget": "angular-electron:build:production"
+              "browserTarget": "memebox-app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular-electron:build"
+            "browserTarget": "memebox-app:build"
           }
         },
         "test": {
@@ -139,7 +141,7 @@
         }
       }
     },
-    "angular-electron-e2e": {
+    "memebox-app-e2e": {
       "root": "e2e",
       "projectType": "application",
       "architect": {
@@ -238,7 +240,7 @@
       }
     }
   },
-  "defaultProject": "angular-electron",
+  "defaultProject": "memebox-app",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
