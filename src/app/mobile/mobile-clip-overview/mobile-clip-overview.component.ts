@@ -3,7 +3,7 @@ import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
 import {Observable, Subject} from "rxjs";
 import {Clip} from "@memebox/contracts";
-import {WebsocketService} from "../../core/services/websocket.service";
+import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
 import {SettingsService} from "../../core/services/settings.service";
 import {take, takeUntil} from "rxjs/operators";
 
@@ -18,6 +18,10 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   public currentColumnSize = 50;
   public clipList$: Observable<Clip[]> = this.appQueries.clipList$;
+
+  connectionState$ = this._wsService.connectionState$;
+
+  ConnectionState = ConnectionState;
 
   private _destroy$ = new Subject();
 

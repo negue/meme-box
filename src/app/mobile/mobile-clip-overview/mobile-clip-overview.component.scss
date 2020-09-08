@@ -18,6 +18,10 @@ $toolbarHeight: 64px;
   width: var(--item-width-percent, 50%);
   padding: 1rem 1rem 0;
 
+  &-wide {
+    width: 100%;
+  }
+
   // fix 3 / 4 column mode
   &:nth-of-type(2n+1) {
     padding-right: 0.5rem;
@@ -47,4 +51,11 @@ mat-toolbar {
 app-clip-type {
   display: inline;
   padding-right: 0.5rem;
+}
+
+.connectionIcon {
+  color: black;
+  height: 5rem;
+  width: 5rem;
+  margin: 2rem;
 }

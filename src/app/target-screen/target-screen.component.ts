@@ -8,7 +8,7 @@ import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
-import {WebsocketService} from "../core/services/websocket.service";
+import {ConnectionState, WebsocketService} from "../core/services/websocket.service";
 import {CombinedClip} from "./types";
 
 
@@ -59,6 +59,10 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   );
   mediaClipToShow$ = new BehaviorSubject<string>(null);
   clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
+
+  connectionState$ = this.wsService.connectionState$;
+
+  ConnectionState = ConnectionState;
 
   screen$ = combineLatest([
     this.screenId$,

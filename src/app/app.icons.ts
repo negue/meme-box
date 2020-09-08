@@ -24,5 +24,6 @@ export const APP_ICONS = [
   'speaker',
   'tag',
   'videocam',
-  'video_library'
+  'video_library',
+  'wifi_off'
 ];
