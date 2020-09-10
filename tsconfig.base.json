@@ -29,6 +29,9 @@
       ],
       "@memebox/utils": [
         "projects/utils/src/public-api.ts"
+      ],
+      "@memebox/state": [
+        "projects/state/src/public-api.ts"
       ]
     }
   },

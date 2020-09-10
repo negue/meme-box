@@ -23,12 +23,13 @@ import {
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
+import {TwitchTriggerCommand} from "../projects/contracts/src/public-api";
 
 import * as open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
+import {listAllFilesFromFolderAsync} from "./utils/media-files";
 
 const { resolve, basename, extname, sep, normalize } = require('path');
 const { readdir } = require('fs').promises;
@@ -186,36 +187,6 @@ app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.updateTwitchChannel(req.body.twitchChannel));
 });
 
-async function getFiles(dir) {
-  const dirents = await readdir(dir, { withFileTypes: true });
-  const files = await Promise.all(dirents.map((dirent) => {
-    const res = resolve(dir, dirent.name);
-    return dirent.isDirectory() ? getFiles(res) : res;
-  }));
-  return Array.prototype.concat(...files);
-}
-
-function fileEndingToType (fileEnding: string) : MediaType {
-  fileEnding = fileEnding.toLowerCase().replace('.', '');
-
-  switch (fileEnding) {
-    case 'jpg':
-    case 'jpeg':
-    case 'gif':
-    case 'webp':
-    case 'png':
-      return MediaType.Picture;
-    case 'mp3':
-    case 'wav':
-    case 'ogg':
-    case 'flac':
-      return MediaType.Audio;
-    case 'mp4':
-    case 'webm':
-      return MediaType.Video;
-  }
-}
-
 
 app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
@@ -230,30 +201,7 @@ app.get(FILES_ENDPOINT, async (req, res) => {
 
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  // fullpath as array
-  const files = await getFiles(mediaFolder);
-
-  // files with information
-  const fileInfoList = files.map((fullPath: string) => {
-    const ext = extname(fullPath);
-    const fileName = basename(fullPath);
-
-    const fileType = fileEndingToType(ext);
-
-    // TODO replace PORT with the "--port"
-    const apiUrl = fullPath
-      .replace(mediaFolder,
-      `http://localhost:${app.get('port')}/file`
-      ).split(sep).join('/');
-
-    return {
-      fullPath,
-      fileName,
-      ext,
-      fileType,
-      apiUrl
-    }
-  });
+  const fileInfoList = await listAllFilesFromFolderAsync(mediaFolder);
 
   res.send(fileInfoList);
 });

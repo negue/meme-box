@@ -4,30 +4,21 @@ import {
   Config,
   Dictionary,
   HasId,
+  PositionEnum,
   Screen,
   ScreenClip,
   SettingsState,
   Tag,
-  Twitch
+  Twitch,
+  VisibilityEnum
 } from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
+import {uuidv4} from "../projects/utils/src/lib/uuid";
+import {operations} from "../projects/state/src/public-api";
 
-
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
-const initialScreenObj: Screen = Object.freeze({
-  id: '',
-  name: '',
-  clips: {}
-});
 
 let fileBackupToday = false;
 
@@ -36,6 +27,8 @@ function createDirIfNotExists(dir) {
     fs.mkdirSync(dir);
   }
 }
+
+// TODO Bulk-Insert/Update Mode?
 
 export class Persistence {
 
@@ -103,12 +96,7 @@ export class Persistence {
    */
 
   public addClip(clip: Clip) {
-    console.info({clip});
-
-    clip.id = uuidv4();
-    this.data.clips[clip.id] = clip;
-
-    console.info(this.data.clips);
+    operations.addClip(this.data, clip);
 
     this.saveData();
     return clip.id;
@@ -185,10 +173,8 @@ export class Persistence {
    *  Screens Persistence
    */
 
-  public addScreen(screen: Screen) {
-
-    screen.id = uuidv4();
-    this.data.screen[screen.id] = Object.assign({}, initialScreenObj, screen);
+  public addScreen(screen: Partial<Screen>) {
+    operations.addScreen(this.data, screen);
 
     this.saveData();
     return screen.id;
@@ -218,13 +204,11 @@ export class Persistence {
    *  Screen Clips Settings
    */
 
-  public addScreenClip(targetUrlId: string, obsClip: ScreenClip) {
-
-    obsClip.id = uuidv4();
-    this.data.screen[targetUrlId].clips[obsClip.id] = obsClip;
+  public addScreenClip(targetUrlId: string, screenClip: ScreenClip) {
+    operations.addScreenClip(this.data, targetUrlId, screenClip)
 
     this.saveData();
-    return obsClip.id;
+    return screenClip.id;
   }
 
   public updateScreenClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
@@ -312,7 +296,36 @@ export class Persistence {
     this.data.screen = {};
     this.data.twitchEvents = {};
 
+    this.saveData();
     this._hardRefresh$.next();
+  }
+
+  public addAllClipsToScreen(screenId: string, clipList: Partial<Clip>[]) {
+    console.info('addAllClipsToScreen', {
+      screenId,
+      clipLength: clipList.length
+    });
+
+    // add all clips to state
+    // assign all clips to screen
+    clipList.forEach(clip => {
+      operations.addClip(this.data, clip);
+
+      console.info('Added clip', clip.id, clip.name);
+
+      operations.addScreenClip(this.data, screenId, {
+        id: clip.id,
+        visibility: VisibilityEnum.Play,
+        position: PositionEnum.FullScreen,
+        animationIn: 'random',
+        animationOut: 'random'
+      });
+
+      console.info('Add Clip to screen', clip.id, screenId);
+    });
+
+
+    this.saveData();
   }
 
   /*
@@ -336,18 +349,23 @@ export class Persistence {
     saveFile(this.filePath, this.data, true);
     this.updated$.next();
   }
+
+
 }
 
+// TODO change to promise / async
 function saveFile(filePath: string, data: any, stringify: boolean = false) {
   const getDirOfPath = path.dirname(filePath);
 
   createDirIfNotExists(getDirOfPath);
 
-  fs.writeFile(filePath, stringify ? JSON.stringify(data, null, '  ') : data, err => {
+  fs.writeFileSync(filePath, stringify
+    ? JSON.stringify(data, null, '  ')
+    : data /*, err => {
     if (err) {
       console.error(`Error on Saving File: ${filePath}`, err);
     }
-  });
+  }*/);
 }
 
 export const PersistenceInstance = new Persistence('./settings/settings.json');

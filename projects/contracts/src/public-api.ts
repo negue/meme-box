@@ -7,3 +7,5 @@ export * from './lib/createInitialState';
 export * from './lib/constants';
 export * from './lib/actions';
 export * from './lib/animations';
+export * from './lib/media.types';
+export * from './lib/placeholders';
