@@ -15,6 +15,28 @@
 </mat-toolbar>
 
 <div [style.--item-width-percent.%]="currentColumnSize" class="page-content">
+  <ng-container *ngIf="connectionState$ | async as connectionState">
+    <span class="item item-wide"
+          *ngIf="(connectionState) !== ConnectionState.Connected">
+
+      <mat-card [ngSwitch]="connectionState">
+        <mat-icon svgIcon="wifi_off" class="connectionIcon">
+
+        </mat-icon>
+
+        <ng-container *ngSwitchCase="ConnectionState.Disconnected">
+          Disconnected.
+        </ng-container>
+        <ng-container *ngSwitchCase="ConnectionState.Reconnecting">
+          Reconnecting.
+        </ng-container>
+        <ng-container *ngSwitchCase="ConnectionState.Error">
+          Error.
+        </ng-container>
+      </mat-card>
+   </span>
+  </ng-container>
+
   <span *ngFor="let clip of clipList$|async" class="item">
 
     <mat-card (click)="onPreview(clip)"
@@ -24,4 +46,5 @@
       {{clip.name}}
       </mat-card>
   </span>
+
 </div>
