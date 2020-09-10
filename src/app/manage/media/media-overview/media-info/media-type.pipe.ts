@@ -8,6 +8,7 @@ import {MediaType} from "@memebox/contracts";
 export class MediaTypePipe implements PipeTransform {
 
   transform(value: MediaType): string {
+    // todo use extracted function
     switch (value) {
       case MediaType.Picture:
         return 'Image';
