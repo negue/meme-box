@@ -6,11 +6,13 @@
     "name": ""
   },
   "keywords": [],
-  "main": "main.js",
+  "main": "out-electron/main.js",
   "private": true,
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "ng": "ng",
     "start": "npm-run-all -p ng:serve",
+    "start:electron": "npm-run-all -p electron:serve ng:serve",
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
     "build": "ng build --base-href ./",
@@ -30,7 +32,13 @@
     "build:windows": "npx nexe release/memebox.js -t windows-x64 -r dist -o release/out/memebox.exe",
     "build:linux": "npx  nexe release/memebox.js -t linux-x64 -r dist -o release/out/memebox-linux",
     "build:macos": "npx  nexe release/memebox.js -t mac-x64 -r dist -o release/out/memebox-macos",
-    "build:all": "npm run build:windows && npm run build:linux && npm run build:macos"
+    "build:all": "npm run build:windows && npm run build:linux && npm run build:macos",
+    "build:with-electron": "npm run electron:serve-tsc && npm run build",
+    "electron:serve-tsc:watch": "tsc -p tsconfig-serve.json -w",
+    "electron:serve-tsc": "npm-run-all -p electron:serve-tsc:watch electron:local",
+    "electron:serve": "npx rimraf out-electron &&  wait-on tcp:4200 && npm run electron:serve-tsc",
+    "electron:local": "wait-on out-electron/main.js && npx electron . --serve",
+    "electron:build": "npm run build:prod && tsc -p tsconfig-serve.json &&  electron-builder build"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "9.1.0",
@@ -58,6 +66,7 @@
     "@ngx-translate/core": "12.1.2",
     "@ngx-translate/http-loader": "5.0.0",
     "@types/css": "0.0.31",
+    "@types/express": "4.17.6",
     "@types/jasmine": "3.5.10",
     "@types/jasminewd2": "2.0.8",
     "@types/mocha": "7.0.2",
@@ -70,6 +79,9 @@
     "conventional-changelog-cli": "2.0.34",
     "core-js": "3.6.5",
     "cross-env": "7.0.2",
+    "electron": "9.3.0",
+    "electron-builder": "22.8.0",
+    "electron-reload": "1.5.0",
     "eslint": "7.3.0",
     "eslint-plugin-import": "2.21.2",
     "jasmine-core": "~3.5.0",
@@ -94,7 +106,6 @@
   "dependencies": {
     "@datorama/akita": "5.2.0",
     "@gewd/ng-utils": "0.3.0",
-    "@types/express": "4.17.6",
     "angular-material-css-vars": "1.1.0",
     "angular2-qrcode": "2.0.3",
     "animate.css": "4.1.0",

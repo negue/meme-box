@@ -1,4 +1,5 @@
 import * as express from 'express';
+import {Express} from 'express';
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
@@ -28,18 +29,35 @@ import * as open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 
-const { resolve, basename, extname, sep, normalize } = require('path');
-const { readdir } = require('fs').promises;
+const { resolve, basename, extname, sep, normalize, join } = require('path');
+const { readdir } = fs.promises;
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
 
-var app = express();
+// electron typescript said no to "express()"
+// headless typescript doesn't need default
+// TODO make it better?
+var anyExpress = (express as any);
+// TODO fix, but this is electron
+var hasDefault = !!anyExpress.default;
+
+var app:Express = hasDefault ? anyExpress.default() : anyExpress();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(express.static('dist'))
+const rootPath = hasDefault ? join(__dirname, '/../../dist') : 'dist';
+
+app.use(express.static(rootPath));
+
+app.get(`${API_PREFIX}/debugPaths`, (req, res) => {
+  res.send({
+    ELECTRON: hasDefault,
+    DIR: __dirname,
+    rootPath
+  });
+})
 
 export const ExampleTwitchCommandsSubject = new Subject<TwitchTriggerCommand>();
 
@@ -218,7 +236,10 @@ app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  open(mediaFolder);
+  // electron typescript said no to "open()"
+  // headless typescript doesn't need default
+  // TODO make it better?
+  (open as any).default ? (open as any).default(mediaFolder) : (open as any)(mediaFolder);
 
   res.send({open: true});
 });
