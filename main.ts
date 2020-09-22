@@ -1,6 +1,7 @@
-import {app, BrowserWindow, screen} from 'electron';
+import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import {expressServer} from './server/server-app';
+import {NEW_CONFIG_PATH} from "./server/persistence";
 
 var fs = require("fs");
 
@@ -8,7 +9,7 @@ let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
-var initPath = path.join(app.getAppPath(), "init.json");
+var initPath = path.join(NEW_CONFIG_PATH, "init.json");
 var data = { bounds: { width: 800, height: 600 }};
 try {
   data = JSON.parse(fs.readFileSync(initPath, 'utf8'));
@@ -17,10 +18,6 @@ catch(e) {
 }
 
 function createWindow(): BrowserWindow {
-
-  const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
-
   // Create the browser window.
   win = new BrowserWindow({
     ...data.bounds,
@@ -39,7 +36,6 @@ function createWindow(): BrowserWindow {
       argv: ['--serve']
     });
     win.loadURL('http://localhost:4200');
-    win.title = 'New Title, and rebuild? - Part 3';
   } else {
     win.loadURL(  `http://localhost:${expressServer.get('port')}`);
   }

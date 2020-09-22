@@ -1,5 +1,4 @@
-import * as express from 'express';
-import {Express} from 'express';
+import express, {Express} from 'express';
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
@@ -25,7 +24,7 @@ import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 
-import * as open from 'open';
+import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 
@@ -35,25 +34,22 @@ const { readdir } = fs.promises;
 var cors = require('cors')
 var bodyParser = require('body-parser');
 
-// electron typescript said no to "express()"
-// headless typescript doesn't need default
-// TODO make it better?
-var anyExpress = (express as any);
-// TODO fix, but this is electron
-var hasDefault = !!anyExpress.default;
+const versions = process.versions;
 
-var app:Express = hasDefault ? anyExpress.default() : anyExpress();
+var isInElectron = !!versions['electron'];
+
+var app: Express = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const rootPath = hasDefault ? join(__dirname, '/../../dist') : 'dist';
+const rootPath = isInElectron ? join(__dirname, '/../../dist') : 'dist';
 
 app.use(express.static(rootPath));
 
 app.get(`${API_PREFIX}/debugPaths`, (req, res) => {
   res.send({
-    ELECTRON: hasDefault,
+    ELECTRON: isInElectron,
     DIR: __dirname,
     rootPath
   });
@@ -239,7 +235,7 @@ app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
   // electron typescript said no to "open()"
   // headless typescript doesn't need default
   // TODO make it better?
-  (open as any).default ? (open as any).default(mediaFolder) : (open as any)(mediaFolder);
+  open(mediaFolder);
 
   res.send({open: true});
 });
