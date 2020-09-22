@@ -1,5 +1,18 @@
 ## 0.2 - TBA
 
+### BREAKING CHANGE:
+* Without a `--config=` commandline argument, memebox now uses the user's appdata folder,
+  e.g. 
+  
+  OS X - `/Users/user/Library/Preferences/meme-box`
+  
+  Windows - `C:\Users\user\AppData\Roaming\meme-box`
+  
+  Linux - `/home/user/.local/share/meme-box`
+  
+
+
+### FEATURES:
 * [x] UI / UX overhaul by [whitep4nth3r](https://github.com/whitep4nth3r)
 * [x] Mobile View to trigger clips
 * [x] Custom CSS per Clip / Screen

@@ -14,6 +14,7 @@ import {createInitialState} from "../projects/contracts/src/lib/createInitialSta
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
+import {createDirIfNotExists} from "./path.utils";
 
 
 function uuidv4() {
@@ -30,12 +31,6 @@ const initialScreenObj: Screen = Object.freeze({
 });
 
 let fileBackupToday = false;
-
-function createDirIfNotExists(dir) {
-  if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
-  }
-}
 
 export class Persistence {
 
@@ -335,4 +330,32 @@ function saveFile(filePath: string, data: any, stringify: boolean = false) {
   });
 }
 
-export const PersistenceInstance = new Persistence('./settings/settings.json');
+// Once its a bit refactored, this should be used
+export const PERSISTENCE: {
+  instance: Persistence;
+} = {
+  instance: null
+}
+
+
+// Get the config path (for the settings.json)
+const configPathArgument = process.argv.find(arg => arg.includes('--config'));
+
+// Gets the correct User-AppData Folder
+const userDataFolder = process.env.APPDATA ||
+  (process.platform == 'darwin'
+    ? `${process.env.HOME}/Library/Preferences`
+    : `${process.env.HOME}/.local/share`)
+;
+
+export const NEW_CONFIG_PATH = configPathArgument
+  ? configPathArgument.replace('--config=', '')
+  : path.join(userDataFolder, 'meme-box');
+
+createDirIfNotExists(NEW_CONFIG_PATH);
+
+console.log({NEW_CONFIG_PATH});
+
+
+export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
+PERSISTENCE.instance = PersistenceInstance;

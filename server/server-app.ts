@@ -6,7 +6,10 @@ import {TwitchHandler} from "./twitch.handler";
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
 
+// This file creates the "shared" server logic between headless / electron
+
 // TODO use config values?
+
 const portArgument = process.argv.find(arg => arg.includes('--port'));
 
 export const NEW_PORT = portArgument ? +portArgument.replace('--port=', '') : DEFAULT_PORT;
