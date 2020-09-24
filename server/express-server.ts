@@ -232,10 +232,7 @@ app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  // electron typescript said no to "open()"
-  // headless typescript doesn't need default
-  // TODO make it better?
-  open(mediaFolder);
+  await open(mediaFolder);
 
   res.send({open: true});
 });
