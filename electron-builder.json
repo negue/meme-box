@@ -27,18 +27,21 @@
     "icon": "dist/assets/icons",
     "target": [
       "portable"
-    ]
+    ],
+    "artifactName": "${productName}.${ext}"
   },
   "mac": {
     "icon": "dist/assets/icons",
     "target": [
       "dmg"
-    ]
+    ],
+    "artifactName": "${productName}.${ext}"
   },
   "linux": {
     "icon": "dist/assets/icons",
     "target": [
       "AppImage"
-    ]
+    ],
+    "artifactName": "${productName}.${ext}"
   }
 }
