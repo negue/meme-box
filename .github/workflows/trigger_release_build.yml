@@ -95,7 +95,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./release-electron/memebox-electron.AppImage
-          asset_name: memebox-linux-electron
+          asset_name: memebox-electron.AppImage
           asset_content_type: application/octet-stream
 
   windows:
@@ -135,7 +135,7 @@ jobs:
         with:
           upload_url: ${{ needs.build.outputs.uploadURL }}
           asset_path: ./release-electron/memebox-electron.exe
-          asset_name: memebox-windows-electron
+          asset_name: memebox-windows-electron.exe
           asset_content_type: application/octet-stream
 
   mac:
@@ -173,5 +173,5 @@ jobs:
         with:
           upload_url: ${{ needs.build.outputs.uploadURL }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./release-electron/memebox-electron.dmg
-          asset_name: memebox-mac-electron
+          asset_name: memebox-mac-electron.dmg
           asset_content_type: application/octet-stream
