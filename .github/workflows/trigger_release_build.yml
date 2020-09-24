@@ -14,6 +14,10 @@ jobs:
     name: Upload Release Asset
     runs-on: ubuntu-latest
 
+    # Map a step output to a job output
+    outputs:
+      uploadURL: ${{ steps.create_release.outputs.upload_url }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -93,14 +97,13 @@ jobs:
           asset_path: ./release-electron/memebox-electron.AppImage
           asset_name: memebox-linux-electron
           asset_content_type: application/octet-stream
-    # Map a step output to a job output
-    outputs:
-      uploadURL: ${{ steps.create_release.outputs.upload_url }}
 
   windows:
     name: Build and Upload Windows Electron
-    runs-on: windows-latest
     needs: build
+
+    runs-on: windows-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -130,7 +133,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.build.output.uploadURL }}
+          upload_url: ${{ needs.build.outputs.uploadURL }}
           asset_path: ./release-electron/memebox-electron.exe
           asset_name: memebox-windows-electron
           asset_content_type: application/octet-stream
@@ -168,7 +171,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.build.output.uploadURL }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          upload_url: ${{ needs.build.outputs.uploadURL }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./release-electron/memebox-electron.dmg
           asset_name: memebox-mac-electron
           asset_content_type: application/octet-stream
