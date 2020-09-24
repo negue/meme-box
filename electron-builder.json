@@ -3,6 +3,7 @@
   "directories": {
     "output": "release-electron/"
   },
+  "publish": null,
   "files": [
     "out-electron/**/*",
     "dist/**/*",
