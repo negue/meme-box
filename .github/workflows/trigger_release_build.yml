@@ -114,6 +114,8 @@ jobs:
         with:
           node-version: 12.16.2
 
+      - run: npm install
+
       - name: Download Angular Output from build
         uses: actions/download-artifact@v2
         with:
@@ -149,6 +151,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.16.2
+
+      - run: npm install
 
       - name: Download Angular Output from build
         uses: actions/download-artifact@v2
