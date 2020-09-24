@@ -124,6 +124,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: angular-dist
+          path: dist
 
       - run: npm run electron:build:only
 
@@ -162,6 +163,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: angular-dist
+          path: dist
 
       - run: npm run electron:build:only
 
