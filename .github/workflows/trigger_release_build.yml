@@ -39,16 +39,7 @@ jobs:
           name: angular-dist
           path: dist
 
-      - name: Build Electron Linux app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: false
+      - run: npm run electron:build:only
 
       - name: Create Release
         id: create_release
@@ -128,16 +119,7 @@ jobs:
         with:
           name: angular-dist
 
-      - name: Build Electron Windows app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: false
+      - run: npm run electron:build:only
 
       - name: Upload Release Asset Windows Electron
         id: upload-release-asset-windows-electron
@@ -173,16 +155,7 @@ jobs:
         with:
           name: angular-dist
 
-      - name: Build Electron Mac app
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: false
+      - run: npm run electron:build:only
 
       - name: Upload Release Asset Mac Electron
         id: upload-release-asset-Mac-electron

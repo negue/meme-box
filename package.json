@@ -39,6 +39,7 @@
     "electron:serve": "npx rimraf out-electron &&  wait-on tcp:4200 && npm run electron:serve-tsc",
     "electron:local": "wait-on out-electron/main.js && npx electron . --serve",
     "electron:build": "npm run build:prod && tsc -p tsconfig-electron.json &&  electron-builder build"
+    "electron:build:only": "tsc -p tsconfig-electron.json &&  electron-builder build"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "9.1.0",
