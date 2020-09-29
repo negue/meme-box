@@ -8,6 +8,14 @@ on:
       tag-name:
         description: Tag-Name or Version
         required: true
+      pre-release:
+        description: Pre-release ?
+        required: true
+        default: 'true'
+      draft:
+        description: Draft ?
+        required: true
+        default: 'false'
 
 jobs:
   build:
@@ -51,8 +59,8 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.tag-name }}
           release_name: Release V${{ github.event.inputs.tag-name }}
-          draft: false
-          prerelease: true
+          draft: ${{ github.event.inputs.draft }}
+          prerelease:  ${{ github.event.inputs.pre-release }}
       - name: Upload Release Asset Windows Headless
         id: upload-release-asset-exe
         uses: actions/upload-release-asset@v1
@@ -96,6 +104,17 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./release-electron/memebox-electron.AppImage
           asset_name: memebox-electron.AppImage
+          asset_content_type: application/octet-stream
+
+      - name: Upload Streamdeck Plugin
+        id: upload-streamdeck-plugin
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
+          asset_name: com.memebox.memebox-streamdeck.streamDeckPlugin
           asset_content_type: application/octet-stream
 
   windows:
