@@ -9,6 +9,9 @@ let win: BrowserWindow = null;
 const args = process.argv.slice(1),
   serve = args.some(val => val === '--serve');
 
+// todo add electron "dev"-mode to not use "--serve"
+
+
 var initPath = path.join(NEW_CONFIG_PATH, "init.json");
 var data = { bounds: { width: 800, height: 600 }};
 try {
@@ -22,8 +25,7 @@ function createWindow(): BrowserWindow {
   win = new BrowserWindow({
     ...data.bounds,
     webPreferences: {
-      nodeIntegration: true,
-      allowRunningInsecureContent: (serve) ? true : false,
+      nodeIntegration: true
     },
   });
 
