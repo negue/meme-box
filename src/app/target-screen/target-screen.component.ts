@@ -2,7 +2,7 @@ import * as css from 'css';
 import {Rule} from 'css';
 import {Component, ElementRef, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, Dictionary, ScreenClip} from "@memebox/contracts";
+import {Clip, Dictionary, MediaType, ScreenClip} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../state/app.queries";
 import {AppService} from "../state/app.service";
@@ -58,7 +58,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     })
   );
   mediaClipToShow$ = new BehaviorSubject<string>(null);
-  clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement>();
+  clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement | HTMLIFrameElement>();
 
   connectionState$ = this.wsService.connectionState$;
 
@@ -148,7 +148,20 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
           ? this.toCssAgain(screenClipSettings.clipSetting)
           : '';
 
-        this.addOrUpdateStyleTag(screenClipSettings.clipSetting.id, customCss);
+        this.addOrUpdateStyleTag(document, screenClipSettings.clipSetting.id, customCss);
+
+        if (!screenClipSettings.clip)  {
+          return;
+        }
+
+        if (screenClipSettings.clip.type === MediaType.IFrame) {
+          const item = this.clipToControlMap.get(screenClipSettings.clip.id) as HTMLIFrameElement;
+
+          if (item) {
+            console.info({document: item.contentDocument});
+            this.addOrUpdateStyleTag(item.contentDocument, 'iframe', screenClipSettings.clipSetting.customCss);
+          }
+        }
       }
     });
 
@@ -156,7 +169,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$),
       filter(screen => !!screen)
     ).subscribe(screen => {
-      this.addOrUpdateStyleTag(screen.id, screen.customCss);
+      this.addOrUpdateStyleTag(document, screen.id, screen.customCss);
     });
   }
 
@@ -172,6 +185,26 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
   addToMap(value: Clip, element: any) {
     this.clipToControlMap.set(value.id, element);
+
+    if (value.type === MediaType.IFrame){
+
+      console.warn('Is Iframe');
+      this.mediaClipMap$.pipe(
+        take(1)
+      ).subscribe(map => {
+        const iframeElement = element as HTMLIFrameElement;
+
+        var iframeCss = map[value.id].clipSetting.customCss;
+
+        console.warn({
+          document: iframeElement.contentDocument,
+          iframeCss
+        });
+
+        this.addOrUpdateStyleTag(iframeElement.contentDocument, 'iframe', iframeCss);
+
+      } )
+    }
   }
 
   random_rgba() {
@@ -193,7 +226,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         normalRule.selectors = normalRule.selectors.map(sel => {
           const withSpace = !sel.includes('.clip-holder');
 
-          return `.${screenClip.id}${withSpace ? ' ': ''}${sel}`;
+          return `.clip-${screenClip.id}${withSpace ? ' ': ''}${sel}`;
         });
       }
     })
@@ -201,7 +234,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     return obj;
   }
 
-  addOrUpdateStyleTag(styleId: string, customCss: string) {
+  addOrUpdateStyleTag(document: Document, styleId: string, customCss: string) {
     const head = document.getElementsByTagName('head')[0];
     const allStyles = head.getElementsByTagName('style');
     let style: HTMLStyleElement = null;

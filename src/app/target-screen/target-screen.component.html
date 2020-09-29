@@ -27,7 +27,7 @@ The Loaded Clips need to stay cached?
      #mediaToggleVar="appMediaToggle"
 
      [class.clip-is-visible]="mediaToggleVar.isVisible$ | async"
-     class="clip-holder {{ entry.value.clip.type | mediaTypeClass }} {{ entry.value.clipSetting.id }} "
+     class="clip-holder {{ entry.value.clip.type | mediaTypeClass }} clip-{{ entry.value.clipSetting.id }} "
 >
   <span class="debug-name">{{ entry.value.clip.name }}</span>
 
@@ -64,7 +64,8 @@ The Loaded Clips need to stay cached?
        [src]="entry.value.clip.path"
   />
   <iframe #iFrame *ngSwitchCase="3"  class="media-clip"
-          [class.visible]="mediaToggleVar.isVisible$ | async"
+          (load)="addToMap(entry.value.clip, iFrame)"
+          [class.visible]="(mediaToggleVar.isVisible$ | async)"
           [src]="entry.value.clip.path | safeurl">
   </iframe>
 
