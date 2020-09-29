@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express, {Express} from 'express';
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
@@ -24,22 +24,36 @@ import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 
-import * as open from 'open';
+import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 
-const { resolve, basename, extname, sep, normalize } = require('path');
-const { readdir } = require('fs').promises;
+const { resolve, basename, extname, sep, normalize, join } = require('path');
+const { readdir } = fs.promises;
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
 
-var app = express();
+const versions = process.versions;
+
+var isInElectron = !!versions['electron'];
+
+var app: Express = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(express.static('dist'))
+const rootPath = isInElectron ? join(__dirname, '/../../dist') : 'dist';
+
+app.use(express.static(rootPath));
+
+app.get(`${API_PREFIX}/debugPaths`, (req, res) => {
+  res.send({
+    ELECTRON: isInElectron,
+    DIR: __dirname,
+    rootPath
+  });
+})
 
 export const ExampleTwitchCommandsSubject = new Subject<TwitchTriggerCommand>();
 
@@ -218,7 +232,7 @@ app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  open(mediaFolder);
+  await open(mediaFolder);
 
   res.send({open: true});
 });

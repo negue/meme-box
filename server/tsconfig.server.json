@@ -2,7 +2,9 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../out-tsc/server",
-    "module": "ES2015",
+    "target": "ES6",
+    "module": "CommonJS",
+    "esModuleInterop": true,
     "types": []
   },
   "files": [

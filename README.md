@@ -56,6 +56,22 @@ npm run start:app
 npm run start:server
 ```
 
+## Building the binaries
+
+### Headless
+
+```
+# Builds angular app, server and "prepares it" 
+npm run build:prepare
+
+npm run build:all // or build:windows 
+```
+
+### Electron
+
+```
+npm run electron:build
+```
 
 ### Folders
 Client is in `src/app`

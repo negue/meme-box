@@ -4,8 +4,11 @@
 /dist
 /tmp
 /out-tsc
+/out-electron
+!/out-electron/electron/package.json
 /app-builds
 /release
+/release-electron
 main.js
 **/*.js
 !memebox-streamdeck/**/*.js
@@ -14,6 +17,7 @@ main.js
 /ncc
 .cache
 /release-electron
+init.json
 
 
 # dependencies
