@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, FileInfo, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
 import {AppQueries} from "../../../../state/app.queries";
@@ -61,33 +61,14 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
-  mediaTypeList: MediaTypeButton[] = [
-    {
-      icon: 'insert_photo',
-      name: 'Image',
-      type: MediaType.Picture
-    },
-    {
-      icon: 'audiotrack',
-      name: 'Audio',
-      type: MediaType.Audio
-    },
-    {
-      icon: 'videocam',
-      name: 'Video',
-      type: MediaType.Video
-    },
-    {
-      icon: 'insert_photo', // todo ICON for iframe
-      name: 'IFrame',
-      type: MediaType.IFrame
-    },
-    {
-      icon: 'art_track',
-      name: 'Meta',
-      type: MediaType.Meta
-    }
-  ]
+  mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
+    .map(([mediaType, value]) => {
+      return {
+        icon: value.icon,
+        name: value.label,
+        type: +mediaType
+      }
+    });
 
 
   // region Tag specific

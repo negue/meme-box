@@ -15,14 +15,8 @@ import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
 import {createDirIfNotExists} from "./path.utils";
+import {uuidv4} from "../projects/utils/src/lib/uuid";
 
-
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
 
 const initialScreenObj: Screen = Object.freeze({
   id: '',
@@ -318,6 +312,7 @@ export class Persistence {
   }
 }
 
+// todo extract ?
 function saveFile(filePath: string, data: any, stringify: boolean = false) {
   const getDirOfPath = path.dirname(filePath);
 
