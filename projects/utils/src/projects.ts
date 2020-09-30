@@ -3,3 +3,4 @@
  */
 
 export * from './lib/simple-date-string';
+export * from './lib/uuid';
