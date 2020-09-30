@@ -10,6 +10,7 @@ import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {ConnectionState, WebsocketService} from "../core/services/websocket.service";
 import {CombinedClip} from "./types";
+import {replaceholder} from "../core/pipes/replaceholder.pipe";
 
 
 @Component({
@@ -49,7 +50,10 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       for (const [key, entry] of Object.entries(assignedClips)) {
         result[key] = {
           clipSetting: entry,
-          clip: allClips[key],
+          clip: {
+            ...allClips[key],
+            path: replaceholder(allClips?.[key]?.path)
+          },
           backgroundColor: this.random_rgba()
         }
       }

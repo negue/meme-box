@@ -39,7 +39,7 @@ export function mapFileInformations (
     const splittedPath = convertedPath.split(sep);
 
     const apiUrl = splittedPath.join('/');
-    
+
     return {
       fullPath,
       fileName,

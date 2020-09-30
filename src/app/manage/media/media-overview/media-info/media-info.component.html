@@ -6,7 +6,7 @@
   <mat-card-content>
     <div class="mediaInfo__preview">
         <img *ngIf="info.type === 0 && (info.previewUrl || info.path)"
-             [src]="(info.previewUrl || info.path) | safeurl"
+             [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
              [alt]="info.name"
              class="mediaInfo__preview__img">
 
