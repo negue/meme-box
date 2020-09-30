@@ -10,7 +10,8 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
 
-const DEFAULT_PLAY_LENGTH =  600;
+const DEFAULT_PLAY_LENGTH = 2500;
+const META_DELAY_DEFAULT = 750;
 
 const INITIAL_CLIP: Partial<Clip> = {
   tags: [],
@@ -19,7 +20,7 @@ const INITIAL_CLIP: Partial<Clip> = {
   volumeSetting: 10,
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
-  metaDelay: 750,
+  metaDelay: META_DELAY_DEFAULT,
   metaType: MetaTriggerTypes.Random
 };
 

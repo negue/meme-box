@@ -171,7 +171,7 @@
     </div>
 
     <img *ngIf="form.value.type === MediaType.Picture"
-         [src]="form.value.path || form.value.previewUrl" />
+         [src]="form.value.path | replaceholder" />
     <iframe *ngIf="form.value.type === MediaType.IFrame"
             [src]="form.value.path | safeurl"
     ></iframe>
