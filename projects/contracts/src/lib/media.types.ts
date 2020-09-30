@@ -1,3 +1,5 @@
+import {Dictionary} from "./types";
+
 export enum MediaType {
   Picture = 0,
   Audio = 1,
@@ -14,7 +16,7 @@ export interface MediaTypeInformations {
   icon: string;
 }
 
-export const MEDIA_TYPE_INFORMATION: {[key: number]: MediaTypeInformations} = {
+export const MEDIA_TYPE_INFORMATION: Dictionary<MediaTypeInformations> = {
   [MediaType.Picture]: {
     label: 'Image',
     className: 'image',

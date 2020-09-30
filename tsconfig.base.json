@@ -31,7 +31,12 @@
       "@memebox/utils": [
         "projects/utils/src/public-api.ts"
       ],
-      "*": ["node_modules/*"]
+      "@memebox/state": [
+        "projects/state/src/public-api.ts"
+      ],
+      "*": [
+        "node_modules/*"
+      ]
     }
   },
   "files": [

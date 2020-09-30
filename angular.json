@@ -239,6 +239,46 @@
           }
         }
       }
+    },
+    "state": {
+      "projectType": "library",
+      "root": "projects/state",
+      "sourceRoot": "projects/state/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/state/tsconfig.lib.json",
+            "project": "projects/state/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/state/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/state/src/test.ts",
+            "tsConfig": "projects/state/tsconfig.spec.json",
+            "karmaConfig": "projects/state/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/state/tsconfig.lib.json",
+              "projects/state/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "memebox-app",
