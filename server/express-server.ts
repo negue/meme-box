@@ -22,11 +22,12 @@ import {
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {MediaType, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
+import {TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 
 import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
+import {MediaType} from "../projects/contracts/src/lib/media.types";
 
 const { resolve, basename, extname, sep, normalize, join } = require('path');
 const { readdir } = fs.promises;

@@ -1,14 +1,5 @@
 import {ChatUserstate} from "tmi.js";
-
-export enum MediaType {
-  Picture = 0,
-  Audio = 1,
-  Video = 2,
-  IFrame = 3,
-
-
-  Meta = 100
-}
+import {MediaType} from "./media.types";
 
 export interface HasId {
   id: string;
@@ -162,4 +153,12 @@ export interface TwitchTriggerCommand {
   message: string;
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
+}
+
+export interface FileResult {
+  fullPath: string;
+  ext: string;
+  fileName: string;
+  apiUrl: string;
+  fileType: MediaType
 }
