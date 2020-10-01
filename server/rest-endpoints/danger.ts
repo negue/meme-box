@@ -1,8 +1,8 @@
 import * as express from 'express';
 import {PersistenceInstance} from "../persistence";
-import {listAllFilesFromFolderAsync} from "../utils/media-files";
 import {Clip, FileResult, MediaType, TargetScreenType} from "../../projects/contracts/src/public-api";
 import {mediaToString} from "../../projects/contracts/src/lib/media.types";
+import {getFiles, mapFileInformations} from "../file.utilts";
 
 
 export const DANGER_ROUTES = express.Router();
@@ -18,9 +18,14 @@ DANGER_ROUTES
 
     const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-    const fileInfoList = await listAllFilesFromFolderAsync(mediaFolder);
+    // fullpath as array
+    const files = await getFiles(mediaFolder);
+
+    // files with information
+    const fileInfoList = mapFileInformations(mediaFolder, files);
 
     switch(targetScreenType) {
+      // todo rename enum?
       case TargetScreenType.OneScreen:
       {
         // add a new screen
@@ -42,7 +47,7 @@ DANGER_ROUTES
 
         const groupedByType = groupBy(fileInfoList, 'fileType');
 
-        console.info(groupedByType);
+        console.info({groupedByType});
 
         for (const [key, value] of Object.entries(groupedByType)) {
 
@@ -52,13 +57,10 @@ DANGER_ROUTES
             name: `All ${mediaToString(+key as any)} files`,
           });
 
-          console.info({key, value, screenPerTypeId});
-
-
           const newClips = value.map(fileInfoToClip);
 
           // add all files (add-all in persistence? , or bulk-mode)
-          console.info({newClips, screenPerTypeId});
+          console.info({key, newClips, screenPerTypeId});
           PersistenceInstance.addAllClipsToScreen(screenPerTypeId, newClips)
         }
 

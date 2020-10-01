@@ -26,7 +26,7 @@ export class DialogService {
   }
 
   // any for now, until the confirmation dialog has its own enum
-  showConfirmationDialog(payload: ConfirmationsPayload): Promise<any> {
+  showConfirmationDialog(payload: ConfirmationsPayload): Promise<boolean> {
     const dialogRef = this._dialog.open(SimpleConfirmationDialogComponent, {
       data: payload,
     });

@@ -30,7 +30,6 @@ import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
-import {listAllFilesFromFolderAsync} from "./utils/media-files";
 
 const {  normalize, join } = require('path');
 
@@ -219,7 +218,7 @@ app.get(FILES_ENDPOINT, async (req, res) => {
   const files = await getFiles(mediaFolder);
 
   // files with information
-  const fileInfoList = mapFileInformations(mediaFolder, app.get('port'), files);
+  const fileInfoList = mapFileInformations(mediaFolder, files);
 
   res.send(fileInfoList);
 });

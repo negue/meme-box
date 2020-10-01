@@ -19,8 +19,14 @@ export class PersistenceActionsComponent implements OnInit {
 
   }
 
-  deleteAllConfig() {
-    this.appService.deleteAll();
+  async deleteAllConfig() {
+   const confirmed = await this.dialog.showConfirmationDialog({
+      title: 'Are you sure you want to delete all settings?'
+    })
+
+    if (confirmed) {
+      this.appService.deleteAll();
+    }
   }
 
   importAll() {

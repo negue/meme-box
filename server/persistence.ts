@@ -18,6 +18,7 @@ import {createDirIfNotExists} from "./path.utils";
 import {uuidv4} from "../projects/utils/src/lib/uuid";
 import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
 import {operations} from '../projects/state/src/public-api';
+import {debounceTime} from "rxjs/operators";
 // Todo ts-config paths!!!
 
 // TODO Extract more state operations to shared library and from app
@@ -73,6 +74,13 @@ export class Persistence {
       this.data = Object.assign({}, createInitialState(), dataFromFile);
       this.updated$.next();
     });
+
+    this.updated$.pipe(
+      debounceTime(2000)
+    ).subscribe(() => {
+      console.log('Data saved!');
+      saveFile(this.filePath, this.data, true);
+    });
   }
 
   public dataUpdated$ () : Observable<any> {
@@ -96,7 +104,7 @@ export class Persistence {
    */
 
   public addClip(clip: Clip) {
-    operations.addClip(this.data, clip);
+    operations.addClip(this.data, clip, true);
 
     this.saveData();
     return clip.id;
@@ -298,10 +306,14 @@ export class Persistence {
       clipLength: clipList.length
     });
 
+    const currentScreen = this.data.screen[screenId];
+
+    const prevJson = JSON.stringify(currentScreen);
+
     // add all clips to state
     // assign all clips to screen
     clipList.forEach(clip => {
-      operations.addClip(this.data, clip);
+      operations.addClip(this.data, clip, true);
 
       console.info('Added clip', clip.id, clip.name);
 
@@ -317,6 +329,9 @@ export class Persistence {
     });
 
 
+    const nextJson = JSON.stringify(currentScreen);
+    console.warn({ screenId, prevJson, nextJson });
+
     this.saveData();
   }
 
@@ -325,7 +340,6 @@ export class Persistence {
   */
 
   private saveData() {
-    saveFile(this.filePath, this.data, true);
     this.updated$.next();
   }
 
