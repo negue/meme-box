@@ -24,7 +24,8 @@
             ],
             "scripts": [],
             "customWebpackConfig": {
-              "path": "./angular.webpack.cjs"
+              "path": "./angular.webpack.cjs",
+              "target": "web"
             }
           },
           "configurations": {

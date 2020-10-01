@@ -1,4 +1,4 @@
-import * as express from 'express';
+import express, {Express} from 'express';
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
@@ -25,24 +25,39 @@ import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 import {TwitchTriggerCommand} from "../projects/contracts/src/public-api";
 
-import * as open from 'open';
+import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
+import {getFiles, mapFileInformations} from "./file.utilts";
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {listAllFilesFromFolderAsync} from "./utils/media-files";
 
-const { resolve, basename, extname, sep, normalize } = require('path');
-const { readdir } = require('fs').promises;
+const {  normalize, join } = require('path');
+
 
 var cors = require('cors')
 var bodyParser = require('body-parser');
 
-var app = express();
+const versions = process.versions;
+
+var isInElectron = !!versions['electron'];
+
+var app: Express = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(express.static('dist'))
+const rootPath = isInElectron ? join(__dirname, '/../../dist') : 'dist';
+
+app.use(express.static(rootPath));
+
+app.get(`${API_PREFIX}/debugPaths`, (req, res) => {
+  res.send({
+    ELECTRON: isInElectron,
+    DIR: __dirname,
+    rootPath
+  });
+})
 
 export const ExampleTwitchCommandsSubject = new Subject<TwitchTriggerCommand>();
 
@@ -187,12 +202,11 @@ app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.updateTwitchChannel(req.body.twitchChannel));
 });
 
-
 app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  open(mediaFolder);
+  await open(mediaFolder);
 
   res.send({open: true});
 });
@@ -201,12 +215,17 @@ app.get(FILES_ENDPOINT, async (req, res) => {
 
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  const fileInfoList = await listAllFilesFromFolderAsync(mediaFolder);
+  // fullpath as array
+  const files = await getFiles(mediaFolder);
+
+  // files with information
+  const fileInfoList = mapFileInformations(mediaFolder, app.get('port'), files);
 
   res.send(fileInfoList);
 });
 
-// TODO use IDs instead of names
+// TODO use IDs instead of names ?
+// TODO use express.static ?
 // after the json "database" is done
 // use filename which is under
 // dev mode : "/src/assets"
@@ -246,6 +265,7 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
   // update config
   res.send(listNetworkInterfaces());
 });
+
 
 
 export function createExpress(port) {

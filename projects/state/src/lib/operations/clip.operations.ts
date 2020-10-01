@@ -1,9 +1,14 @@
-// TODO why import-alias not working here?!
+import {deleteItemInDictionary} from "../../../../utils/src/lib/utils";
+import {SettingsState} from "../../../../contracts/src/lib/types";
 
-import {Clip, SettingsState} from "../../../../contracts/src/lib/types";
-import {uuidv4} from "../../../../utils/src/lib/uuid";
+export function deleteClip(data: SettingsState, id: string) {
+  deleteItemInDictionary(data.clips, id);
 
-export function addClip(state: SettingsState, clip: Partial<Clip>) {
-  clip.id = uuidv4();
-  state.clips[clip.id] = clip as Clip;
+  const screenKeys = Object.keys(data.screen);
+
+  for (const screenKey of screenKeys) {
+    const screen = data.screen[screenKey];
+
+    deleteItemInDictionary(screen.clips, id);
+  }
 }

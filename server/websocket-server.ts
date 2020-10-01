@@ -2,7 +2,8 @@ import * as http from "http";
 import * as WebSocket from "ws";
 import {ACTIONS, TriggerClip} from "../projects/contracts/src/lib/actions";
 import {PersistenceInstance} from "./persistence";
-import {MediaType, MetaTriggerTypes} from "../projects/contracts/src/public-api";
+import {MetaTriggerTypes} from "../projects/contracts/src/lib/types";
+import {MediaType} from "../projects/contracts/src/lib/media.types";
 
 // no type ?!
 interface WebSocketType {

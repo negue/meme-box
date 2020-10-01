@@ -1,7 +1,6 @@
 import {ChatUserstate} from "tmi.js";
 import {MediaType} from "./media.types";
 
-
 export interface HasId {
   id: string;
 }
@@ -170,4 +169,12 @@ export interface FileResult {
  fileName: string;
  apiUrl: string;
  fileType: MediaType
+}
+
+export interface FileResult {
+  fullPath: string;
+  ext: string;
+  fileName: string;
+  apiUrl: string;
+  fileType: MediaType
 }

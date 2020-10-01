@@ -12,6 +12,7 @@ import {
 import {SnackbarService} from "../core/services/snackbar.service";
 import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from "./app.dummy.data";
+import {deleteClip} from "../../../projects/state/src/lib/operations/clip.operations";
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -96,7 +97,7 @@ export class AppService {
 
     // remove from state
     this.appStore.update(state => {
-      delete state.clips[clipId];
+      deleteClip(state, clipId);
     });
 
     this.snackbar.normal('Media deleted!');

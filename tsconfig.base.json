@@ -10,6 +10,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
@@ -32,6 +33,9 @@
       ],
       "@memebox/state": [
         "projects/state/src/public-api.ts"
+      ],
+      "*": [
+        "node_modules/*"
       ]
     }
   },

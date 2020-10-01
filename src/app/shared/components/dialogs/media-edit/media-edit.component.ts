@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, FileInfo, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
 import {AppQueries} from "../../../../state/app.queries";
@@ -10,7 +10,8 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
 
-const DEFAULT_PLAY_LENGTH =  600;
+const DEFAULT_PLAY_LENGTH = 2500;
+const META_DELAY_DEFAULT = 750;
 
 const INITIAL_CLIP: Partial<Clip> = {
   tags: [],
@@ -19,7 +20,7 @@ const INITIAL_CLIP: Partial<Clip> = {
   volumeSetting: 10,
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
-  metaDelay: 750,
+  metaDelay: META_DELAY_DEFAULT,
   metaType: MetaTriggerTypes.Random
 };
 
@@ -61,33 +62,14 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
-  mediaTypeList: MediaTypeButton[] = [
-    {
-      icon: 'insert_photo',
-      name: 'Image',
-      type: MediaType.Picture
-    },
-    {
-      icon: 'audiotrack',
-      name: 'Audio',
-      type: MediaType.Audio
-    },
-    {
-      icon: 'videocam',
-      name: 'Video',
-      type: MediaType.Video
-    },
-    {
-      icon: 'insert_photo', // todo ICON for iframe
-      name: 'IFrame',
-      type: MediaType.IFrame
-    },
-    {
-      icon: 'art_track',
-      name: 'Meta',
-      type: MediaType.Meta
-    }
-  ]
+  mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
+    .map(([mediaType, value]) => {
+      return {
+        icon: value.icon,
+        name: value.label,
+        type: +mediaType
+      }
+    });
 
 
   // region Tag specific

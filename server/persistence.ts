@@ -1,34 +1,24 @@
 import * as fs from 'fs';
-import {
-  Clip,
-  Config,
-  Dictionary,
-  HasId,
-  PositionEnum,
-  Screen,
-  ScreenClip,
-  SettingsState,
-  Tag,
-  Twitch,
-  VisibilityEnum
-} from "../projects/contracts/src/lib/types";
+import {Clip, Config, Screen, ScreenClip, SettingsState, Tag, Twitch} from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
+import {createDirIfNotExists} from "./path.utils";
 import {uuidv4} from "../projects/utils/src/lib/uuid";
-import {operations} from "../projects/state/src/public-api";
+import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
+import {deleteClip} from '../projects/state/src/public-api';
+// Todo ts-config paths!!!
 
+// TODO Extract more state operations to shared library and from app
+
+const initialScreenObj: Screen = Object.freeze({
+  id: '',
+  name: '',
+  clips: {}
+});
 
 let fileBackupToday = false;
-
-function createDirIfNotExists(dir) {
-  if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir);
-  }
-}
-
-// TODO Bulk-Insert/Update Mode?
 
 export class Persistence {
 
@@ -106,22 +96,14 @@ export class Persistence {
     console.info({clip});
 
     clip.id = id;
-    this.updateItemInDictionary(this.data.clips, clip);
+    updateItemInDictionary(this.data.clips, clip);
 
     this.saveData();
     return clip;
   }
 
   public deleteClip(id: string) {
-    this.deleteItemInDictionary(this.data.clips, id);
-
-    const screenKeys = Object.keys(this.data.screen);
-
-    for (const screenKey of screenKeys) {
-      const screen = this.data.screen[screenKey];
-
-      this.deleteItemInDictionary(screen.clips, id);
-    }
+    deleteClip(this.data, id);
 
     this.saveData();
   }
@@ -145,7 +127,7 @@ export class Persistence {
 
   public updateTag(id: string, tag: Tag) {
     tag.id = id;
-    this.updateItemInDictionary(this.data.tags, tag);
+    updateItemInDictionary(this.data.tags, tag);
 
     this.saveData();
     return tag;
@@ -153,11 +135,11 @@ export class Persistence {
 
   // TODO Extract shared state logic between app/ server
   public deleteTag(id: string) {
-    this.deleteItemInDictionary(this.data.tags, id);
+    deleteItemInDictionary(this.data.tags, id);
 
     for(const clip of Object.values(this.data.clips)) {
       if (clip.tags && clip.tags.includes(id)) {
-        this.deleteInArray(clip.tags, id);
+        deleteInArray(clip.tags, id);
       }
     }
 
@@ -184,14 +166,14 @@ export class Persistence {
 
     screen.id = id;
 
-    this.updateItemInDictionary(this.data.screen, screen);
+    updateItemInDictionary(this.data.screen, screen);
 
     this.saveData();
     return screen;
   }
 
   public deleteScreen(id: string) {
-    this.deleteItemInDictionary(this.data.screen, id);
+    deleteItemInDictionary(this.data.screen, id);
 
     this.saveData();
   }
@@ -214,14 +196,14 @@ export class Persistence {
   public updateScreenClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
     screenClip.id = id;
 
-    this.updateItemInDictionary(this.data.screen[targetUrlId].clips, screenClip);
+    updateItemInDictionary(this.data.screen[targetUrlId].clips, screenClip);
 
     this.saveData();
     return screenClip;
   }
 
   public deleteScreenClip(targetUrlId: string, id: string) {
-    this.deleteItemInDictionary(this.data.screen[targetUrlId].clips, id);
+    deleteItemInDictionary(this.data.screen[targetUrlId].clips, id);
 
     this.saveData();
   }
@@ -243,14 +225,14 @@ export class Persistence {
   public updateTwitchEvent(id: string, twitchEvent: Twitch) {
     twitchEvent.id = id;
 
-    this.updateItemInDictionary(this.data.twitchEvents, twitchEvent);
+    updateItemInDictionary(this.data.twitchEvents, twitchEvent);
 
     this.saveData();
     return twitchEvent;
   }
 
   public deleteTwitchEvent(id: string) {
-    this.deleteItemInDictionary(this.data.twitchEvents, id);
+    deleteItemInDictionary(this.data.twitchEvents, id);
 
     this.saveData();
   }
@@ -332,19 +314,6 @@ export class Persistence {
   *  Helpers
   */
 
-  private updateItemInDictionary<T extends HasId>(dict: Dictionary<T>, item: T) {
-    dict[item.id] = item;
-  }
-
-  private deleteItemInDictionary<T extends HasId>(dict: Dictionary<T>, id: string) {
-    delete dict[id];
-  }
-
-  private deleteInArray(arr: any[], itemToDelete: any) {
-    const itemIndex = arr.indexOf(itemToDelete);
-    arr.splice(itemIndex, 1);
-  }
-
   private saveData() {
     saveFile(this.filePath, this.data, true);
     this.updated$.next();
@@ -354,6 +323,7 @@ export class Persistence {
 }
 
 // TODO change to promise / async
+// todo extract ?
 function saveFile(filePath: string, data: any, stringify: boolean = false) {
   const getDirOfPath = path.dirname(filePath);
 
@@ -368,4 +338,32 @@ function saveFile(filePath: string, data: any, stringify: boolean = false) {
   }*/);
 }
 
-export const PersistenceInstance = new Persistence('./settings/settings.json');
+// Once its a bit refactored, this should be used
+export const PERSISTENCE: {
+  instance: Persistence;
+} = {
+  instance: null
+}
+
+
+// Get the config path (for the settings.json)
+const configPathArgument = process.argv.find(arg => arg.includes('--config'));
+
+// Gets the correct User-AppData Folder
+const userDataFolder = process.env.APPDATA ||
+  (process.platform == 'darwin'
+    ? `${process.env.HOME}/Library/Preferences`
+    : `${process.env.HOME}/.local/share`)
+;
+
+export const NEW_CONFIG_PATH = configPathArgument
+  ? configPathArgument.replace('--config=', '')
+  : path.join(userDataFolder, 'meme-box');
+
+createDirIfNotExists(NEW_CONFIG_PATH);
+
+console.log({NEW_CONFIG_PATH});
+
+
+export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
+PERSISTENCE.instance = PersistenceInstance;
