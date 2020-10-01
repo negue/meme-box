@@ -1,5 +1,15 @@
 import * as fs from 'fs';
-import {Clip, Config, Screen, ScreenClip, SettingsState, Tag, Twitch} from "../projects/contracts/src/lib/types";
+import {
+  Clip,
+  Config,
+  PositionEnum,
+  Screen,
+  ScreenClip,
+  SettingsState,
+  Tag,
+  Twitch,
+  VisibilityEnum
+} from "../projects/contracts/src/lib/types";
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
@@ -7,7 +17,7 @@ import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
 import {createDirIfNotExists} from "./path.utils";
 import {uuidv4} from "../projects/utils/src/lib/uuid";
 import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
-import {deleteClip} from '../projects/state/src/public-api';
+import {operations} from '../projects/state/src/public-api';
 // Todo ts-config paths!!!
 
 // TODO Extract more state operations to shared library and from app
@@ -103,7 +113,7 @@ export class Persistence {
   }
 
   public deleteClip(id: string) {
-    deleteClip(this.data, id);
+    operations.deleteClip(this.data, id);
 
     this.saveData();
   }
