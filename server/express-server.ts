@@ -20,6 +20,7 @@ import {
   TWITCH_TRIGGER_ENDPOINT
 } from "./constants";
 import * as fs from 'fs';
+import {existsSync} from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 import {TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
@@ -196,6 +197,18 @@ app.put(CONFIG_ENDPOINT, (req, res) => {
 
 // Put = Update Media Folder Path
 app.put(CONFIG_MEDIA_ENDPOINT, (req, res) => {
+  const mediaFolder: string = req.body.mediaFolder;
+
+  if (!allowedFileUrl(mediaFolder)) {
+    res.send({ok: false})
+    return;
+  }
+
+  if (!existsSync(mediaFolder)) {
+    res.send({ok: false})
+    return;
+  }
+
   // update config
   res.send(PersistenceInstance.updateMediaFolder(req.body.mediaFolder));
 });
