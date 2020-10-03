@@ -22,13 +22,13 @@ import {
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {Clip, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
+import {TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 
 import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
-import {isA} from 'ts-type-checked';
+import {objIsClip} from "./validations";
 
 const {  normalize, join } = require('path');
 
@@ -77,7 +77,7 @@ app.get(CLIP_ENDPOINT, (req,res) => {
 app.post(CLIP_ENDPOINT, (req, res) => {
   const newClip = req.body;
 
-  if (isA<Clip>(newClip)) {
+  if (objIsClip(newClip)) {
 
     console.info('New Clip!!', newClip);
 

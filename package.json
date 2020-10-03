@@ -67,6 +67,7 @@
     "@datorama/akita-ngdevtools": "^5.0.1",
     "@ngx-translate/core": "12.1.2",
     "@ngx-translate/http-loader": "5.0.0",
+    "@types/chai": "4.2.12",
     "@types/css": "0.0.31",
     "@types/express": "4.17.6",
     "@types/jasmine": "3.5.10",
@@ -80,6 +81,7 @@
     "chai": "4.2.0",
     "conventional-changelog-cli": "2.0.34",
     "core-js": "3.6.5",
+    "cpy-cli": "3.1.1",
     "cross-env": "7.0.2",
     "electron": "9.3.0",
     "electron-builder": "22.8.0",
@@ -100,8 +102,7 @@
     "wait-for-localhost": "3.3.0",
     "wait-on": "5.0.1",
     "webdriver-manager": "12.1.7",
-    "zone.js": "0.10.3",
-    "cpy-cli": "3.1.1"
+    "zone.js": "0.10.3"
   },
   "engines": {
     "node": ">=10.13.0"
