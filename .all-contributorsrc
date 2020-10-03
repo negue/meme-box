@@ -24,6 +24,16 @@
         "ideas",
         "design"
       ]
+    },
+    {
+      "login": "gigili",
+      "name": "Igor Ilic",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/2153382?v=4",
+      "profile": "https://twitch.tv/gacbl",
+      "contributions": [
+        "bug",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
