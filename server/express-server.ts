@@ -22,12 +22,13 @@ import {
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
+import {Clip, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 
 import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
+import {isA} from 'ts-type-checked';
 
 const {  normalize, join } = require('path');
 
@@ -74,9 +75,21 @@ app.get(CLIP_ENDPOINT, (req,res) => {
 
 // Post = New
 app.post(CLIP_ENDPOINT, (req, res) => {
-  // save the clip
-  // return ID
-  res.send(PersistenceInstance.addClip(req.body));
+  const newClip = req.body;
+
+  if (isA<Clip>(newClip)) {
+
+    console.info('New Clip!!', newClip);
+
+    // save the clip
+    // return ID
+    res.send({
+      ok: true,
+      id: PersistenceInstance.addClip(newClip)
+    });
+  } else {
+    res.send({ok: false});
+  }
 });
 
 // Put = Update

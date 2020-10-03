@@ -25,9 +25,9 @@
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
     "start:app": "npm run ng:serve:web",
-    "start:server": "ts-node --project server/tsconfig.server.json server/server.ts",
+    "start:server": "ts-node --compiler ttypescript --project server/tsconfig.server.json server/server.ts",
     "start:all": "npm-run-all -p start:app start:server",
-    "build:server": "tsc -p server/tsconfig.server.json && npx @zeit/ncc build out-tsc/server/server/server.js -o ncc",
+    "build:server": "ttsc -p server/tsconfig.server.json && npx @zeit/ncc build out-tsc/server/server/server.js -o ncc",
     "build:prepare:folder": "cpy ncc/index.js release --rename=memebox.js ",
     "build:prepare": "npm run build:prod && npm run build:server && npm run build:prepare:folder",
     "build:windows": "npx nexe release/memebox.js -t windows-x64 -r dist -o release/out/memebox.exe",
@@ -35,12 +35,12 @@
     "build:macos": "npx  nexe release/memebox.js -t mac-x64 -r dist -o release/out/memebox-macos",
     "build:all": "npm run build:windows && npm run build:linux && npm run build:macos",
     "build:with-electron": "npm run electron:serve-tsc && npm run build",
-    "electron:serve-tsc:watch": "tsc -p tsconfig-electron.json -w",
+    "electron:serve-tsc:watch": "ttsc -p tsconfig-electron.json -w",
     "electron:serve-tsc": "npm-run-all -p electron:serve-tsc:watch electron:local",
     "electron:serve": "npx rimraf out-electron &&  wait-on tcp:4200 && npm run electron:serve-tsc",
     "electron:local": "wait-on out-electron/main.js && npx electron . --serve",
-    "electron:build": "npm run build:prod && tsc -p tsconfig-electron.json &&  electron-builder build",
-    "electron:build:only": "tsc -p tsconfig-electron.json &&  electron-builder build -p never"
+    "electron:build": "npm run build:prod && ttsc -p tsconfig-electron.json &&  electron-builder build",
+    "electron:build:only": "ttsc -p tsconfig-electron.json &&  electron-builder build -p never"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "9.1.0",
@@ -121,7 +121,9 @@
     "open": "7.1.0",
     "rxjs": "6.6.2",
     "tmi.js": "1.5.0",
+    "ts-type-checked": "0.4.2",
     "tslib": "^2.0.0",
+    "ttypescript": "1.5.12",
     "ws": "6.2.1"
   },
   "browser": {
