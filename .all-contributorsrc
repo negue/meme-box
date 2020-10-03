@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "ageddesi",
+      "name": "Aaron Rackley",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1301564?v=4",
+      "profile": "http://www.twitch.tv/littleheroesspark",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "meme-box",
+  "projectOwner": "negue",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
