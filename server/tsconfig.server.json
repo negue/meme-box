@@ -1,11 +1,7 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "../tsconfig-electron.json",
   "compilerOptions": {
-    "outDir": "../out-tsc/server",
-    "target": "ES6",
-    "module": "CommonJS",
-    "esModuleInterop": true,
-    "types": []
+    "outDir": "../out-tsc/server"
   },
   "files": [
     "server.ts"

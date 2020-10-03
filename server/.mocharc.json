@@ -1,0 +1,4 @@
+{
+  "require": "mocha.setup.js",
+  "spec": "*.spec.ts"
+}
