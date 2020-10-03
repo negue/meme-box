@@ -28,7 +28,8 @@ import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
-import {clipValidations, validOrLeave} from "./validations";
+import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
+
 
 const {  normalize, join } = require('path');
 
@@ -248,21 +249,21 @@ app.get(FILE_ENDPOINT, function(req, res){
 
   // possible "hack" to access some files
   // TODO check for hijacks and stuff
+  if (!allowedFileUrl(firstParam)) {
+    res.send('nope');
+    return;
+  }
 
   // simple solution
   // check one path and then other
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  const pathsArray = [
-    normalize(`${mediaFolder}/${firstParam}`),
-    `./assets/${firstParam}`
-  ];
 
-  for (const path of pathsArray) {
-    if (fs.existsSync(path)) {
-      res.sendFile(path);
-      return;
-    }
+  var filename = normalize(`${mediaFolder}/${firstParam}`);
+
+  if (fs.existsSync(filename)) {
+    res.sendFile(filename);
+    return;
   }
 
   console.error(`file not found: ${firstParam}`);

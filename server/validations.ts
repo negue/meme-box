@@ -31,3 +31,9 @@ export function validOrLeave(req, res, next) {
 
   next();
 }
+
+
+// no ".."
+export function allowedFileUrl(pathToFile: string) {
+  return !pathToFile.includes('..');  // more to add?
+}
