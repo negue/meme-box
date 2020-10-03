@@ -28,7 +28,7 @@ import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
-import {objIsClip} from "./validations";
+import {clipValidations, validOrLeave} from "./validations";
 
 const {  normalize, join } = require('path');
 
@@ -74,22 +74,16 @@ app.get(CLIP_ENDPOINT, (req,res) => {
 });
 
 // Post = New
-app.post(CLIP_ENDPOINT, (req, res) => {
+app.post(CLIP_ENDPOINT, clipValidations, validOrLeave,
+  (req, res) => {
   const newClip = req.body;
 
-  if (objIsClip(newClip)) {
-
-    console.info('New Clip!!', newClip);
-
-    // save the clip
-    // return ID
-    res.send({
-      ok: true,
-      id: PersistenceInstance.addClip(newClip)
-    });
-  } else {
-    res.send({ok: false});
-  }
+  // save the clip
+  // return ID
+  res.send({
+    ok: true,
+    id: PersistenceInstance.addClip(newClip)
+  });
 });
 
 // Put = Update

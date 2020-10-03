@@ -1,11 +1,33 @@
-import {typeCheckFor} from "ts-type-checked";
-import {Clip, ScreenClip, Tag, Twitch} from "../projects/contracts/src/lib/types";
+import {body, validationResult} from "express-validator";
+import {MediaType} from "../projects/contracts/src/lib/media.types";
 
-export const objIsClip = typeCheckFor<Clip>();
-export const objIsClipWithoutId = typeCheckFor<Omit<Clip, 'id'>>();
-export const objIsScreen = typeCheckFor<Screen>();
+export const clipValidations = [
+  body('name').isString(),
+  body('path').isString(),
+  body('type').not().isEmpty(),
+  body('playLength').custom((value, {req }, ...rest) => {
+    const bodyJson = req.body;
 
-export const objIsScreenClip = typeCheckFor<ScreenClip>();
-export const objIsTwitch = typeCheckFor<Twitch>();
-export const objIsTag = typeCheckFor<Tag>();
 
+    const bodyType: MediaType = bodyJson.type;
+
+    const playLengthExists = typeof bodyJson.playLength === 'number';
+
+    // playLength is neede for types Picture / iFrame
+
+    if ([MediaType.Picture, MediaType.IFrame].includes(bodyType) && !playLengthExists) {
+      return false;
+    }
+
+    return true;
+  })
+];
+
+export function validOrLeave(req, res, next) {
+  const errors = validationResult(req).array();
+  if (errors.length) {
+    return res.status(422).json({ errors });
+  }
+
+  next();
+}
