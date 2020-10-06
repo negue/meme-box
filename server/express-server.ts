@@ -117,8 +117,12 @@ app.get(SCREEN_ENDPOINT, (req,res) => {
 // Post = New
 app.post(SCREEN_ENDPOINT, screenValidations, validOrLeave,
   (req, res) => {
-  console.info(req.body);
-  res.send(PersistenceInstance.addScreen(req.body));
+  const newScreenId = PersistenceInstance.addScreen(req.body);
+
+  res.send({
+    ok: true,
+    id: newScreenId
+  });
 });
 
 // Put = Update

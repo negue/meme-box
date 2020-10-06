@@ -157,11 +157,13 @@ export class AppService {
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.SCREEN}`, url, {
-        responseType: 'text' as any
-      }).toPromise();
+      const response = await this.http.post<{ok: boolean, id: string}>(`${API_BASE}${ENDPOINTS.SCREEN}`, url).toPromise();
 
-      url.id = newId;
+      if (!response.ok) {
+        return;
+      }
+
+      newId = url.id = response.id;
       url.clips = {};
     } else {
       // add the clip to api & await
