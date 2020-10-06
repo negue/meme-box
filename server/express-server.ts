@@ -11,7 +11,6 @@ import {
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
-  SCREEN_CLIPS_ENDPOINT,
   SCREEN_CLIPS_ID_ENDPOINT,
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
@@ -30,7 +29,7 @@ import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
-import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
+import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "./validations";
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 
@@ -116,7 +115,9 @@ app.get(SCREEN_ENDPOINT, (req,res) => {
 
 
 // Post = New
-app.post(SCREEN_ENDPOINT, (req, res) => {
+app.post(SCREEN_ENDPOINT, screenValidations, validOrLeave,
+  (req, res) => {
+  console.info(req.body);
   res.send(PersistenceInstance.addScreen(req.body));
 });
 
@@ -129,14 +130,6 @@ app.put(SCREEN_ID_ENDPOINT, (req, res) => {
 app.delete(SCREEN_ID_ENDPOINT, (req, res) => {
 
   res.send(PersistenceInstance.deleteScreen(req.params['screenId']));
-});
-
-
-// Post = New
-app.post(SCREEN_CLIPS_ENDPOINT, (req, res) => {
-  const {screenId} = req.params;
-
-  res.send(PersistenceInstance.addScreenClip(screenId, req.body));
 });
 
 // Put = Update

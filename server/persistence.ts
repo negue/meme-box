@@ -204,13 +204,6 @@ export class Persistence {
    *  Screen Clips Settings
    */
 
-  public addScreenClip(targetUrlId: string, screenClip: ScreenClip) {
-    operations.addScreenClip(this.data, targetUrlId, screenClip)
-
-    this.saveData();
-    return screenClip.id;
-  }
-
   public updateScreenClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
     screenClip.id = id;
 

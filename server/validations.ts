@@ -23,6 +23,14 @@ export const clipValidations = [
   })
 ];
 
+export const screenValidations = [
+  body('name').isString(),
+  body('customCss').optional({
+    nullable: true
+  }).isString()
+];
+
+
 export function validOrLeave(req, res, next) {
   const errors = validationResult(req).array();
   if (errors.length) {
