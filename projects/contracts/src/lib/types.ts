@@ -18,8 +18,8 @@ export enum MetaTriggerTypes {
 // (Media) Clip
 export interface Clip extends HasId {
   name: string;
-  previewUrl: string;
-  volumeSetting: number; //  XX / 100 in percent
+  previewUrl?: string;
+  volumeSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip
   path: string;

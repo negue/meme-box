@@ -21,6 +21,7 @@ import {
   TWITCH_TRIGGER_ENDPOINT
 } from "./constants";
 import * as fs from 'fs';
+import {existsSync} from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 import {TwitchTriggerCommand} from "../projects/contracts/src/public-api";
@@ -29,6 +30,8 @@ import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
+import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
+
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 
 const {  normalize, join } = require('path');
@@ -75,10 +78,16 @@ app.get(CLIP_ENDPOINT, (req,res) => {
 });
 
 // Post = New
-app.post(CLIP_ENDPOINT, (req, res) => {
+app.post(CLIP_ENDPOINT, clipValidations, validOrLeave,
+  (req, res) => {
+  const newClip = req.body;
+
   // save the clip
   // return ID
-  res.send(PersistenceInstance.addClip(req.body));
+  res.send({
+    ok: true,
+    id: PersistenceInstance.addClip(newClip)
+  });
 });
 
 // Put = Update
@@ -191,6 +200,18 @@ app.put(CONFIG_ENDPOINT, (req, res) => {
 
 // Put = Update Media Folder Path
 app.put(CONFIG_MEDIA_ENDPOINT, (req, res) => {
+  const mediaFolder: string = req.body.mediaFolder;
+
+  if (!allowedFileUrl(mediaFolder)) {
+    res.send({ok: false})
+    return;
+  }
+
+  if (!existsSync(mediaFolder)) {
+    res.send({ok: false})
+    return;
+  }
+
   // update config
   res.send(PersistenceInstance.updateMediaFolder(req.body.mediaFolder));
 });
@@ -239,21 +260,21 @@ app.get(FILE_ENDPOINT, function(req, res){
 
   // possible "hack" to access some files
   // TODO check for hijacks and stuff
+  if (!allowedFileUrl(firstParam)) {
+    res.send('nope');
+    return;
+  }
 
   // simple solution
   // check one path and then other
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-  const pathsArray = [
-    normalize(`${mediaFolder}/${firstParam}`),
-    `./assets/${firstParam}`
-  ];
 
-  for (const path of pathsArray) {
-    if (fs.existsSync(path)) {
-      res.sendFile(path);
-      return;
-    }
+  var filename = normalize(`${mediaFolder}/${firstParam}`);
+
+  if (fs.existsSync(filename)) {
+    res.sendFile(filename);
+    return;
   }
 
   console.error(`file not found: ${firstParam}`);
