@@ -128,7 +128,8 @@
             [matAutocomplete]="auto"
             [matChipInputFor]="chipList"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="enterNewTag($event)">
+            (matChipInputTokenEnd)="enterNewTag($event)"
+          (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
           <mat-option *ngFor="let tag of filteredTags$ | async"
