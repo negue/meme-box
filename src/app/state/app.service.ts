@@ -2,7 +2,13 @@ import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
 import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Tag, Twitch, VisibilityEnum} from "@memebox/contracts";
-import {API_PREFIX, FILES_ENDPOINT, FILES_OPEN_ENDPOINT} from "../../../server/constants";
+import {
+  API_PREFIX,
+  DANGER_CLEAN_CONFIG_ENDPOINT,
+  DANGER_IMPORT_ALL_ENDPOINT,
+  FILES_ENDPOINT,
+  FILES_OPEN_ENDPOINT
+} from "../../../server/constants";
 import {SnackbarService} from "../core/services/snackbar.service";
 import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from "./app.dummy.data";
@@ -151,11 +157,13 @@ export class AppService {
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.SCREEN}`, url, {
-        responseType: 'text' as any
-      }).toPromise();
+      const response = await this.http.post<{ok: boolean, id: string}>(`${API_BASE}${ENDPOINTS.SCREEN}`, url).toPromise();
 
-      url.id = newId;
+      if (!response.ok) {
+        return;
+      }
+
+      newId = url.id = response.id;
       url.clips = {};
     } else {
       // add the clip to api & await
@@ -211,29 +219,18 @@ export class AppService {
     this.snackbar.normal('Media saved!');
   }
 
-  public async addOrUpdateScreenClip(screenId: string, obsClip: Partial<ScreenClip>) {
-    let newId = obsClip?.id ?? '';
+  public async addOrUpdateScreenClip(screenId: string, screenClip: Partial<ScreenClip>) {
+    // add the clip to api & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${screenClip.id}`, screenClip).toPromise();
 
-    if (newId === '') {
-      // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}`, obsClip, {
-        responseType: 'text' as any
-      }).toPromise();
-
-      obsClip.id = newId;
-    } else {
-      // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${newId}`, obsClip).toPromise();
-    }
+    const wasAlreadyAdded = !!this.appStore.getValue().screen[screenId].clips[screenClip.id];
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[screenId].clips[newId] = obsClip as ScreenClip;
+      state.screen[screenId].clips[screenClip.id] = screenClip as ScreenClip;
     });
 
-    // todo add added / updated
-    // todo add name?
-    this.snackbar.normal('Media added to screen!');
+    this.snackbar.normal(`Media ${wasAlreadyAdded ? 'Settings updated' : 'added to screen'}!`);
   }
 
   public async deleteScreenClip(screenId: string, id: string) {
@@ -324,5 +321,15 @@ export class AppService {
     this.appStore.update(state => {
       setDummyData(state);
     })
+  }
+
+  async deleteAll() {
+    await this.http.post<any>(`${EXPRESS_BASE}${DANGER_CLEAN_CONFIG_ENDPOINT}`, null).toPromise();
+    location.reload();
+  }
+
+  async importAll(body: any) {
+    await this.http.post<any>(`${EXPRESS_BASE}${DANGER_IMPORT_ALL_ENDPOINT}`, body).toPromise();
+    location.reload();
   }
 }

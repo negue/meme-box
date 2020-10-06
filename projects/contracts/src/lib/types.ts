@@ -34,6 +34,9 @@ export interface Clip extends HasId {
 
 export interface Screen  extends HasId {
   name: string;
+  /**
+   * Key: clip.id == screenClip.id
+   */
   clips: Dictionary<ScreenClip>;
   customCss?: string;
 }
@@ -153,6 +156,19 @@ export interface TwitchTriggerCommand {
   message: string;
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
+}
+
+export enum TargetScreenType {
+  OneScreen,
+  ScreenPerType
+}
+
+export interface FileResult {
+ fullPath: string;
+ ext: string;
+ fileName: string;
+ apiUrl: string;
+ fileType: MediaType
 }
 
 export interface FileResult {

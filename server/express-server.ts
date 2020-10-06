@@ -6,11 +6,11 @@ import {
   CONFIG_ENDPOINT,
   CONFIG_MEDIA_ENDPOINT,
   CONFIG_TWITCH_CHANNEL_ENDPOINT,
+  DANGER_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
-  SCREEN_CLIPS_ENDPOINT,
   SCREEN_CLIPS_ID_ENDPOINT,
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
@@ -23,14 +23,15 @@ import * as fs from 'fs';
 import {existsSync} from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
+import {TwitchTriggerCommand} from "../projects/contracts/src/public-api";
 
 import open from 'open';
 import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
-import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
+import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "./validations";
 
+import {DANGER_ROUTES} from "./rest-endpoints/danger";
 
 const {  normalize, join } = require('path');
 
@@ -101,6 +102,7 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
 });
 
 app.use(TAGS_ENDPOINT, TAG_ROUTES);
+app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 
 /**
  * OBS-Specific API
@@ -113,8 +115,14 @@ app.get(SCREEN_ENDPOINT, (req,res) => {
 
 
 // Post = New
-app.post(SCREEN_ENDPOINT, (req, res) => {
-  res.send(PersistenceInstance.addScreen(req.body));
+app.post(SCREEN_ENDPOINT, screenValidations, validOrLeave,
+  (req, res) => {
+  const newScreenId = PersistenceInstance.addScreen(req.body);
+
+  res.send({
+    ok: true,
+    id: newScreenId
+  });
 });
 
 // Put = Update
@@ -126,14 +134,6 @@ app.put(SCREEN_ID_ENDPOINT, (req, res) => {
 app.delete(SCREEN_ID_ENDPOINT, (req, res) => {
 
   res.send(PersistenceInstance.deleteScreen(req.params['screenId']));
-});
-
-
-// Post = New
-app.post(SCREEN_CLIPS_ENDPOINT, (req, res) => {
-  const {screenId} = req.params;
-
-  res.send(PersistenceInstance.addScreenClip(screenId, req.body));
 });
 
 // Put = Update
@@ -219,11 +219,6 @@ app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.updateTwitchChannel(req.body.twitchChannel));
 });
 
-
-
-
-
-
 app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
@@ -241,7 +236,7 @@ app.get(FILES_ENDPOINT, async (req, res) => {
   const files = await getFiles(mediaFolder);
 
   // files with information
-  const fileInfoList = mapFileInformations(mediaFolder, app.get('port'), files);
+  const fileInfoList = mapFileInformations(mediaFolder, files);
 
   res.send(fileInfoList);
 });

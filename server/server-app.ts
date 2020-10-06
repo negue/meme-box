@@ -23,7 +23,16 @@ server.on('request', expressServer);
 let currentTwitchAccount = '';
 let twitchHandler:TwitchHandler = null;
 
-// todo export to server.ts and then refactor it
+PersistenceInstance.hardRefresh$()
+  .pipe(
+    debounceTime(600),
+    startWith(true)
+  )
+  .subscribe(() => {
+    console.info('Data Hard-Refresh');
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
+  });
+
 PersistenceInstance.dataUpdated$()
   .pipe(
     debounceTime(600),
