@@ -23,9 +23,17 @@
         <mat-label>Custom CSS</mat-label>
         <textarea autocomplete="off"
                formControlName="customCss"
-               matInput >
+               matInput style="display: none">
         </textarea>
+
+
       </mat-form-field>
+
+         <gewd-prism-editor [value]="form.value.customCss"
+                      language="css"
+                      [debounceTime]="250"
+                      [style.--editor-min-height.px]="200">
+   </gewd-prism-editor>
     </div>
   </form>
 </mat-dialog-content>

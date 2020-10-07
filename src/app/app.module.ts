@@ -1,35 +1,42 @@
 import 'reflect-metadata';
 import '../polyfills';
 
-import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {CoreModule} from './core/core.module';
-import {SharedModule} from './shared/shared.module';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
 
-import {AppRoutingModule} from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 // NG Translate
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import {AppComponent} from './app.component';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
-import {AppConfig} from '../environments/environment';
-import {TargetScreenComponent} from "./target-screen/target-screen.component";
-import {MediaTypeClassPipe} from './target-screen/media-type-class.pipe';
-import {ServicesModule} from "./shared/services/services.module";
-import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
-import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
-import {StyleguideColors} from './shared/styleguide/styleguide.component';
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AppConfig } from '../environments/environment';
+import { TargetScreenComponent } from "./target-screen/target-screen.component";
+import { MediaTypeClassPipe } from './target-screen/media-type-class.pipe';
+import { ServicesModule } from "./shared/services/services.module";
+import { DialogsModule } from "./shared/components/dialogs/dialogs.module";
+import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
+import { StyleguideColors } from './shared/styleguide/styleguide.component';
 
-import {PipesModule} from "./core/pipes/pipes.module";
-import {MediaToggleDirective} from './target-screen/media-toggle.directive';
-import {APP_ICONS} from "./app.icons";
-import {ServiceWorkerModule} from '@angular/service-worker';
+import { PipesModule } from "./core/pipes/pipes.module";
+import { MediaToggleDirective } from './target-screen/media-toggle.directive';
+import { APP_ICONS } from "./app.icons";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { HighlightEditorModule, PrismOptionsInjectorToken } from "@gewd/components/highlight-editor";
+import { DEFAULT_PRISM_OPTIONS, PrismServiceOptions } from "@gewd/markdown/contracts";
+
+const prismWorker = () => new Worker('./prism.worker.ts', {
+  name: 'prism',
+  type: "module"
+});
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -70,9 +77,34 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ...AppConfig.ngModules,
     PipesModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: AppConfig.production}),
-    MatIconModule
+    MatIconModule,
+
+    HighlightEditorModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: PrismOptionsInjectorToken,
+      useValue: {
+        getWorker: prismWorker,
+        options: {
+          ...DEFAULT_PRISM_OPTIONS,
+
+          /** if needed **/
+          languageFileType: 'min.js',  // if you want to use the minified assets
+          languageMap: {               // alias to load the real file
+            ts: 'typescript',          // default
+            cs: 'csharp'               // additional
+          },
+          highlightMarkdownCode: true,
+          additionalPluginPaths: [
+            'assets/prism/prism-css-extras.min.js',  // needed for the inline color
+            'assets/prism/prism-plugin-inline-color.worker-func.js',
+            'assets/prism/prism-plugin-bracket-match.worker-func.js'
+          ]
+        }
+      } as PrismServiceOptions
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
