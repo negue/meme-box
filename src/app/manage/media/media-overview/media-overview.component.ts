@@ -1,11 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
-import {Clip, Screen} from "@memebox/contracts";
+import {BehaviorSubject, combineLatest, Observable} from "rxjs";
+import {Clip, MediaType, Screen} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {ScreenAssigningDialogComponent} from "./screen-assigning-dialog/screen-assigning-dialog/screen-assigning-dialog.component";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
+import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "../../../shared/components/filter/filter.component";
+import {map} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-media-overview',
@@ -14,8 +16,83 @@ import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 })
 export class MediaOverviewComponent implements OnInit {
 
-  public mediaList$: Observable<Clip[]> = this.query.clipList$;
-  public screenList$: Observable<Screen[]> = this.query.screensList$
+  public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
+
+  public mediaList$: Observable<Clip[]> = combineLatest([
+    this.query.clipList$,
+    this.filteredItems$
+  ]).pipe(
+    map(([allClips, filteredItems]) => {
+      if (filteredItems.length === 0) {
+        return allClips;
+      }
+
+      const listOfTypes: MediaType[] = filteredItems
+        .filter(f => f.type === MEDIA_FILTER_TYPE)
+        .map(f => f.value);
+
+      const listOfTagIds: string[] = filteredItems
+        .filter(f => f.type === 'TAG')
+        .map(f => f.value);
+
+      return allClips.filter(clip => {
+        let allowedByType = true;
+        let allowedByTag = true;
+
+        if (listOfTypes.length !== 0) {
+          allowedByType = listOfTypes.includes(clip.type);
+        }
+
+
+        if (listOfTagIds.length !== 0) {
+          allowedByTag = listOfTagIds.every(filterTagId => clip.tags.includes(filterTagId) );
+        }
+
+
+        return allowedByType && allowedByTag;
+      })
+
+    })
+  );
+
+  public screenList$: Observable<Screen[]> = this.query.screensList$;
+
+  public filterItems$: Observable<IFilterItem[]> = combineLatest([
+    this.query.clipList$,
+    this.query.tagMap$
+  ]).pipe(
+    map(([allMedia, tagDictionary]) => {
+      const filterItems = [...TYPE_FILTER_ITEMS];
+
+      // todo filter media types if not existing
+
+      const allTags = new Set<string>();
+
+      for (const clip of allMedia) {
+        for (const tagId of clip.tags) {
+          allTags.add(tagId)
+        }
+      }
+
+      allTags.forEach(value => {
+        const tag = tagDictionary[value];
+
+        if (tag) {
+          console.info({ value, tag, tagDictionary });
+
+          filterItems.push({
+            value,
+            icon: 'tag',
+            type: 'TAG',
+            label: tagDictionary[value].name
+          })
+        }
+      })
+
+
+      return filterItems;
+    })
+  )
 
   constructor(public service: AppService,
               public query: AppQueries,

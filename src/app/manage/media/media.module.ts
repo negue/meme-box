@@ -21,6 +21,7 @@ import {ConfigMediaPathModule} from "./media-overview/config-media-path/config-m
 import {MatChipsModule} from "@angular/material/chips";
 import {PipesModule} from "../../core/pipes/pipes.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
+import {FilterModule} from "../../shared/components/filter/filter.module";
 
 const routes: Routes = [
   {
@@ -53,6 +54,7 @@ const routes: Routes = [
     ConfigMediaPathModule,
     MatChipsModule,
     CardOverviewModule,
+    FilterModule,
   ]
 })
 export class MediaModule {}

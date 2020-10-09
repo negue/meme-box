@@ -1,3 +1,6 @@
+<app-filter [items]="filterItems$ | async"
+            (selected)="filteredItems$.next($event)"></app-filter>
+
 <div *ngIf="mediaList$ | async as mediaList">
   <app-card-overview>
     <app-overview-item *ngFor="let item of mediaList">
