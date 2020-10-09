@@ -12,9 +12,18 @@
         </button>
       </mat-list-item>
       <mat-list-item>
-        <div>
-          1. Choose media folder - show media choose component in situ
-        </div>
+        <ng-container *ngIf="!(hasMediaFolder$ | async); else mediaClipAdded">
+          <button (click)="openMediaFolderDialog()" color="primary"
+                  mat-raised-button>
+            <mat-icon svgIcon="edit"></mat-icon>
+            1. Choose Media Folder
+          </button>
+        </ng-container>
+        <ng-template #mediaClipAdded>
+          <span class="strikethrough">
+            1. Choose Media Folder
+          </span>
+        </ng-template>
       </mat-list-item>
       <mat-list-item>
         <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
@@ -26,7 +35,7 @@
         </ng-container>
         <ng-template #mediaClipAdded>
           <span class="strikethrough">
-             3. Add media
+            2. Add media
           </span>
         </ng-template>
       </mat-list-item>
@@ -49,5 +58,3 @@
 
   </mat-card-content>
 </ng-container>
-
-<div>Remove 'add media' block to right right of this when there is no media and we are in onboarding mode</div>

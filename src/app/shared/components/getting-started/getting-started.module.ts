@@ -4,6 +4,7 @@ import {GettingStartedComponent} from './getting-started.component';
 import {MatCardModule} from "@angular/material/card";
 import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -11,12 +12,13 @@ import {MatButtonModule} from "@angular/material/button";
   exports: [
     GettingStartedComponent
   ],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatListModule,
-    MatButtonModule
-  ]
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatListModule,
+        MatButtonModule,
+        MatIconModule
+    ]
 })
 export class GettingStartedModule {
 }

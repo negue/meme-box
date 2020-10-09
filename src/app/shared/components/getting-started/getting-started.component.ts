@@ -4,6 +4,8 @@ import {Clip, Screen} from "@memebox/contracts";
 import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../dialogs/dialog.service";
 import {AppService} from "../../../state/app.service";
+import {ConfigMediaPathComponent} from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
+import {map} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-getting-started',
@@ -15,6 +17,9 @@ export class GettingStartedComponent implements OnInit {
 
   public screenList$: Observable<Screen[]> = this.query.screensList$
   public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;
+  public hasMediaFolder$ =  this.query.config$.pipe(
+    map(config => !!config.mediaFolder)
+  );
 
 
   constructor(private query: AppQueries,
@@ -35,5 +40,11 @@ export class GettingStartedComponent implements OnInit {
 
   fillData() {
     this.appService.fillDummyData();
+  }
+
+  openMediaFolderDialog(): void {
+    this.dialog.open(ConfigMediaPathComponent, {
+      data: {}
+    });
   }
 }
