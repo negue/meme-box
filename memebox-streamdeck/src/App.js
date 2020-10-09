@@ -18,11 +18,34 @@ const useSDAction = createUseSDAction({
   useEffect
 });
 
+function typeNumToString(typeNum){
+  switch(typeNum) {
+    case 0: return 'Picture';
+    case 1: return 'Audio';
+    case 2: return 'Video';
+    case 3: return 'IFrame';
+    case 100: return 'Meta';
+
+    default: return `Unknown: ${typeNum}`;
+  }
+}
+
 export default function App() {
   const getSettings = createGetSettings($SD);
   useEffect(getSettings, []);
 
   const connectedResult = useSDAction("connected");
+
+  const protocolList = [
+    {
+      label: 'ws://',
+      value: 'ws'
+    },
+    {
+      label: 'wss://',
+      value: 'wss'
+    }
+  ]
 
   const [clipList, updateClipList] = useState([]);
 
@@ -33,23 +56,31 @@ export default function App() {
   })(
     {
       clipId: "",
-      port: 4444
+      port: 4444,
+      protocol: 'ws',
+      ip: 'localhost'
     },
     connectedResult
   );
 
-  const [prevPort, setPrevPort] = useState("")
+  // Holds the prev settings for useEffect
+  const [prevSettings, setPrevSettings] = useState({})
 
   useEffect(() => {
-
-    if (settings.port !== prevPort) {
-      setPrevPort(settings.port);
+    if (settings.port !== prevSettings.port ||
+      settings.ip !== prevSettings.ip ||
+      settings.protocol !== prevSettings.protocol) {
+      setPrevSettings(settings);
 
         updateClipList([]);
 
         console.info('Refreshing the List', settings);
 
-        const clipEndpoint = `http://localhost:${settings.port}/api/clips`
+        const clipEndpoint = `${settings.protocol === 'ws' ? 'http' : 'https'}://${settings.ip}:${settings.port}/api/clips`
+
+      console.info({
+        clipEndpoint
+      });
 
         fetch(clipEndpoint)
           .then(response => response.json())
@@ -57,7 +88,7 @@ export default function App() {
             console.info('ALL CLIPS', value);
             const selectionOptions = value.map(v => {
               return {
-                label: v.name,
+                label: `${typeNumToString(v.type)}: ${v.name}`,
                 value: v.id
               }
             });
@@ -69,7 +100,7 @@ export default function App() {
           })
 
     }
-  }, [prevPort, setPrevPort, settings, updateClipList])
+  }, [prevSettings, setPrevSettings, settings, updateClipList])
 
 
 
@@ -80,18 +111,45 @@ export default function App() {
 
   return (
     <div>
+      <SDSelectInput
+        label="Protocol"
+        selectedOption={settings.protocol}
+        options={protocolList}
+        onChange={event => {
+          const newState = {
+            ...settings,
+            clipId: undefined,  // reset current clip selection
+            protocol: event
+          };
+          setSettings(newState);
+        }}
+      />
+      <SDTextInput
+        label="Host / IP"
+        value={settings.ip}
+        onChange={event => {
+          const newState = {
+            ...settings,
+            clipId: undefined,  // reset current clip selection
+            ip: event.target.value
+          };
+          console.info('HOST CHANGED', { event });
+          setSettings(newState);
+        }}
+      />
       <SDTextInput
         label="Port"
         value={settings.port}
         onChange={event => {
           const newState = {
             ...settings,
-            clipId: undefined,
+            clipId: undefined,  // reset current clip selection
             port: event.target.value
           };
           setSettings(newState);
         }}
       />
+
       <SDSelectInput
         label="Clip"
         selectedOption={settings.clipId}

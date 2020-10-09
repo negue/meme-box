@@ -69,13 +69,18 @@ export class AppService {
     let isItNew = !newClipId;
 
 
+    console.info({clip});
+
     if (newClipId === '') {
       // add the clip to api & await
-      newClipId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip, {
-        responseType: 'text' as any
-      }).toPromise();
+      // todo response type
+      const response = await this.http.post<{ok: boolean; id: string}>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip).toPromise();
 
-      clip.id = newClipId;
+      if (!response.ok) {
+        return;
+      }
+
+      clip.id = newClipId = response.id;
     } else {
       // add the clip to api & await
       await this.http.put<string>(`${API_BASE}${ENDPOINTS.CLIPS}/${newClipId}`, clip).toPromise();
@@ -106,6 +111,8 @@ export class AppService {
 
   public async addOrUpdateTag(tag: Tag) {
     let newTagId = tag?.id ?? '';
+
+    console.info({tag});
 
     if (newTagId === '') {
       // add the clip to api & await
