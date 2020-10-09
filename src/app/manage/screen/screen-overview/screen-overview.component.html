@@ -1,8 +1,6 @@
-<div *ngIf="screenList | async as screenList"
-     class="screensList">
-  <div *ngFor="let screen of screenList"
-       class="screensList__item">
-    <mat-card class="screensList__item__card">
+<div *ngIf="screenList | async as screenList">
+  <app-card-overview>
+    <app-overview-item *ngFor="let screen of screenList">
       <app-screen-info (onDelete)="delete(screen)"
                        (onEdit)="showDialog(screen)"
                        (onEditAssignments)="showAssignmentDialog(screen)"
@@ -13,17 +11,20 @@
       >
 
       </app-screen-info>
-    </mat-card>
-  </div>
+    </app-overview-item>
 
-  <div *ngIf="screenList.length === 0" class="obs-item">
+  <app-overview-item *ngIf="screenList.length === 0 ; else hasData ">
     <app-getting-started></app-getting-started>
-  </div>
+  </app-overview-item>
 
-  <div class="screensList__item">
-    <button (click)="addNewItem()" class="screensList__item--addNew">
-      <mat-icon svgIcon="add"></mat-icon>
-      Add new screen
-    </button>
-  </div>
+  <ng-template #hasData>
+
+      <app-overview-add-item label="Add new screen"
+                             (click)="addNewItem()">
+
+      </app-overview-add-item>
+
+  </ng-template>
+  </app-card-overview>
+
 </div>

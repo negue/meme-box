@@ -13,14 +13,18 @@
       </app-media-info>
     </app-overview-item>
 
-    <app-overview-item *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ">
+    <app-overview-item *ngIf="mediaList.length === 0 || (screenList$ | async).length === 0 ; else hasData ">
       <app-getting-started></app-getting-started>
     </app-overview-item>
 
-    <app-overview-add-item label="Add new media"
-    (click)="addNewItem()">
 
-    </app-overview-add-item>
+    <ng-template #hasData>
+      <app-overview-add-item label="Add new media"
+                             (click)="addNewItem()">
+
+      </app-overview-add-item>
+    </ng-template>
+
   </app-card-overview>
 </div>
 

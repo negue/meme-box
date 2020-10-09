@@ -58,10 +58,6 @@
   margin-left: auto;
   margin-right: auto;
   display: block;
-
-  &:not(:last-of-type) {
-    margin-bottom: 1rem;
-  }
 }
 
 .mediaList {
@@ -78,4 +74,8 @@
 .mediaList__settingsCellButton {
   width: 3rem;
   height: 3rem;
+}
+
+.matcard__actions {
+  display: flex;
 }
