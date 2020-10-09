@@ -1,16 +1,16 @@
-
-<div class="eventsList">
-  <mat-card *ngFor="let item of eventsList$ | async"
-       class="eventsList__item">
+<app-card-overview>
+  <app-overview-item *ngFor="let item of eventsList$ | async">
     <app-event-info (onDelete)="deleteEvent(item.id)"
                     (onEdit)="editEvent(item)"
                     (onPreview)="previewEvent(item)"
                     [item]="item"
     >
     </app-event-info>
-  </mat-card>
-  <button class="eventsList__item--addNew">
-    <app-add-event (added)="newEventConfigReceived($event)"></app-add-event>
-  </button>
-</div>
+  </app-overview-item>
+
+  <app-overview-add-item label="Add new twitch event"
+                         (click)="newEventConfigReceived()">
+
+  </app-overview-add-item>
+</app-card-overview>
 

@@ -24,8 +24,8 @@ export class EventsOverviewComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  newEventConfigReceived($event: Twitch) {
-    this.appService.addOrUpdateTwitchEvent($event);
+  newEventConfigReceived() {
+    this.dialogService.showTwitchEditDialog(null);
   }
 
   deleteEvent(id: string) {
