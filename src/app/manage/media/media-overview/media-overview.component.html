@@ -4,8 +4,7 @@
 <div *ngIf="mediaList$ | async as mediaList">
   <app-card-overview>
     <app-overview-item *ngFor="let item of mediaList">
-      <app-media-info (onAssignObs)="onAssignObs(item)"
-                      (onDelete)="onDelete(item.id)"
+      <app-media-info (onDelete)="onDelete(item.id)"
                       (onEdit)="onEdit(item)"
                       (onEditScreenClipOptions)="onClipOptions(item, $event)"
                       (onPreview)="onPreview(item)"
