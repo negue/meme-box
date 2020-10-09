@@ -1,4 +1,4 @@
-<p align="center"><img src="./assets/memebox-optimized.svg"></p>
+<p align="center"><img src="./assets/memebox-optimized.svg" width="128" height="128"></p>
 
 <p align="center">
 
