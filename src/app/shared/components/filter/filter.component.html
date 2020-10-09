@@ -1,0 +1,16 @@
+<div class="filterRow">
+  <mat-icon class="filterRow__icon" matListIcon svgIcon="filter"></mat-icon>
+  <mat-chip-list aria-label="Filter media type">
+    <ng-container *ngFor="let item of items">
+      <mat-chip (click)="toggleFilter(item)"
+                [class.filterChip--selected]="selectedArray.includes(item)"
+                class="filterChip">
+        <mat-icon *ngIf="item.icon" [svgIcon]="item.icon" class="filterEntry__icon"></mat-icon>
+        {{item.label}}
+        <span class="svgContainer">
+        <mat-icon [svgIcon]="selectedArray.includes(item) ? 'check_circle' : 'circle'"></mat-icon>
+      </span>
+      </mat-chip>
+    </ng-container>
+  </mat-chip-list>
+</div>

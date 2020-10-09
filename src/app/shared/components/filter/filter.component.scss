@@ -1,0 +1,40 @@
+@import '~angular-material-css-vars/public-util';
+
+:host {
+  ::ng-deep .mat-chip {
+    &.mat-chip.mat-standard-chip {
+      &.filterChip--selected {
+        background-color: mat-css-color-accent();
+      }
+    }
+  }
+}
+
+.filterRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 1rem 1rem 2rem 0;
+}
+
+.filterRow__icon {
+  margin-right: 1rem;
+}
+
+.filterChip {
+  cursor: pointer;
+}
+
+.svgContainer {
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 50%;
+  margin-left: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.filterEntry__icon {
+  margin-right: 0.5rem;
+}
