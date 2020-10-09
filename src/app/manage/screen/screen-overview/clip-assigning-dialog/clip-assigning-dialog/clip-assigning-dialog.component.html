@@ -2,42 +2,8 @@
 
 <div mat-dialog-content>
   <div class="filterRow">
-    <mat-icon class="filterRow__icon" matListIcon svgIcon="filter"></mat-icon>
-    <mat-chip-list *ngIf="selectedFilters$ | async as selectedFilters" aria-label="Filter media type">
-    <mat-chip (click)="toggleFilter(MediaType.Picture)"
-              [class.filterChip--selected]="selectedFilters.includes(MediaType.Picture)"
-              class="filterChip">
-      Image
-      <span class="svgContainer">
-        <mat-icon *ngIf="selectedFilters.includes(MediaType.Picture)"
-                  svgIcon="check_circle"></mat-icon>
-        <mat-icon *ngIf="!selectedFilters.includes(MediaType.Picture)"
-                  svgIcon="circle"></mat-icon>
-      </span>
-    </mat-chip>
-    <mat-chip (click)="toggleFilter(MediaType.Audio)"
-              [class.filterChip--selected]="selectedFilters.includes(MediaType.Audio)"
-              class="filterChip">
-      Audio
-      <span class="svgContainer">
-        <mat-icon *ngIf="selectedFilters.includes(MediaType.Audio)"
-                  svgIcon="check_circle"></mat-icon>
-       <mat-icon *ngIf="!selectedFilters.includes(MediaType.Audio)"
-                 svgIcon="circle"></mat-icon>
-      </span>
-    </mat-chip>
-    <mat-chip (click)="toggleFilter(MediaType.Video)"
-              [class.filterChip--selected]="selectedFilters.includes(MediaType.Video)"
-              class="filterChip">
-      Video
-      <span class="svgContainer">
-        <mat-icon *ngIf="selectedFilters.includes(MediaType.Video)"
-                  svgIcon="check_circle"></mat-icon>
-        <mat-icon *ngIf="!selectedFilters.includes(MediaType.Video)"
-                  svgIcon="circle"></mat-icon>
-      </span>
-    </mat-chip>
-  </mat-chip-list>
+    <app-filter [items]="filterItems$ | async"
+                (selected)="filteredItems$.next($event)"></app-filter>
   </div>
   <ol class="mediaList">
     <li (click)="clickToSelect(clip)"

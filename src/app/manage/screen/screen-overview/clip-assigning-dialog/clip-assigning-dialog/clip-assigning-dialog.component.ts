@@ -1,10 +1,12 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Clip, Dictionary, MediaType, Screen} from "@memebox/contracts";
-import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {map, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../../../../state/app.queries";
 import {AppService} from "../../../../../state/app.service";
+import {IFilterItem} from "../../../../../shared/components/filter/filter.component";
+import {createCombinedFilterItems$, filterClips$} from "../../../../../shared/components/filter/filter.methods";
 
 @Component({
   selector: 'app-clip-assigning-dialog',
@@ -14,18 +16,18 @@ import {AppService} from "../../../../../state/app.service";
 export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   MediaType = MediaType;
 
+  public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
+    this.appQueries.clipList$,
+    this.appQueries.tagMap$
+  );
+
   checkedMap: Dictionary<boolean>;
 
-  selectedFilters$ = new BehaviorSubject<MediaType[]>([]);
-  clips$: Observable<Clip[]> = combineLatest([
-    this.selectedFilters$,
-    this.appQueries.clipList$
-  ]).pipe(
-    map(([filters, clipList]) => {
-      return filters.length === 0
-        ? clipList
-        : clipList.filter(clip => filters.includes(clip.type))
-    })
+  public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
+
+  public clips$: Observable<Clip[]> = filterClips$(
+    this.appQueries.clipList$,
+    this.filteredItems$
   );
 
   screen$: Observable<Screen> = this.appQueries.screenMap$.pipe(
@@ -71,18 +73,5 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  toggleFilter(type: MediaType) {
-    const currentFilters = [...this.selectedFilters$.getValue()];
-    const currentPosition = currentFilters.indexOf(type);
-
-    if (currentPosition !== -1) {
-      currentFilters.splice(currentPosition, 1);
-    } else {
-      currentFilters.push(type);
-    }
-
-    this.selectedFilters$.next(currentFilters);
   }
 }
