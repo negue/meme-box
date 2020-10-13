@@ -9,7 +9,7 @@
 
 
       <mat-form-field >
-        <mat-label>Account</mat-label>
+        <mat-label>Channel-Name</mat-label>
         <input autocomplete="off" [readonly]="!editMode"
                formControlName="name" (keyup.enter)="save()"
                class="twitchSetting__input"
@@ -29,4 +29,7 @@
 
   </form>
 
+  <div class="explanation">
+    If you want to trigger media clips on Twitch-Events, then you need to provide a Channel-Name in order subscribe to these events.
+  </div>
 </div>
