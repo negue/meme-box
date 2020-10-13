@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, combineLatest, Observable} from "rxjs";
 import {Clip, Screen} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
@@ -7,6 +7,7 @@ import {WebsocketService} from "../../../core/services/websocket.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {IFilterItem} from "../../../shared/components/filter/filter.component";
 import {createCombinedFilterItems$, filterClips$} from "../../../shared/components/filter/filter.methods";
+import {map} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-media-overview',
@@ -28,6 +29,15 @@ export class MediaOverviewComponent implements OnInit {
     this.query.clipList$,
     this.query.tagMap$
   );
+
+  public showGettingStarted$ = combineLatest([
+    this.query.clipList$,
+    this.screenList$
+  ]).pipe(
+    map(([availableClips, availableScreens]) => {
+      return availableClips.length === 0 || availableScreens.length === 0;
+    })
+  )
 
   constructor(public service: AppService,
               public query: AppQueries,

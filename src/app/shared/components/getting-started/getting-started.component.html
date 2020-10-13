@@ -3,20 +3,33 @@
     Getting started:
   </mat-card-title>
   <mat-card-content>
-    <mat-list>
-      <mat-list-item *ngIf="inOfflineMode$ | async">
+
+      <div *ngIf="inOfflineMode$ | async" class="entry">
         <button (click)="fillData()" class="full-width"
                 color="primary"
                 mat-raised-button>
           Offline Mode: Fill with dummy data
         </button>
-      </mat-list-item>
-      <mat-list-item>
-        <div>
-          1. Choose media folder - show media choose component in situ
-        </div>
-      </mat-list-item>
-      <mat-list-item>
+      </div>
+
+        <ng-container *ngIf="!(hasMediaFolder$ | async); else mediaClipAdded">
+          <div class="item-with-padding entry">
+            <button (click)="openMediaFolderDialog()" color="primary"
+                    mat-raised-button class="full-width">
+              <mat-icon svgIcon="edit"></mat-icon>
+              1. Choose Media Folder
+            </button>
+
+            <div class="explanation">You need this "Media Folder" if you want to select local media files from it.</div>
+          </div>
+        </ng-container>
+        <ng-template #mediaClipAdded>
+          <div class="strikethrough entry">
+            1. Choose Media Folder
+          </div>
+        </ng-template>
+
+    <div  class="entry">
         <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
           <button (click)="newMediaClip()" class="full-width"
                   color="primary"
@@ -26,11 +39,11 @@
         </ng-container>
         <ng-template #mediaClipAdded>
           <span class="strikethrough">
-             3. Add media
+            2. Add media
           </span>
         </ng-template>
-      </mat-list-item>
-      <mat-list-item>
+    </div>
+      <div  class="entry">
         <ng-container *ngIf="(screenList$ | async).length  === 0; else screenAdded">
           <button (click)="newScreen()" class="full-width"
                   color="primary"
@@ -44,10 +57,6 @@
           </span>
         </ng-template>
 
-      </mat-list-item>
-    </mat-list>
-
+      </div>
   </mat-card-content>
 </ng-container>
-
-<div>Remove 'add media' block to right right of this when there is no media and we are in onboarding mode</div>

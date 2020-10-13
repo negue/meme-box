@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
-import {AppQueries} from "../../../state/app.queries";
-import {AppService} from "../../../state/app.service";
 import {Subject} from "rxjs";
 import {filter, take} from "rxjs/operators";
+import {AppQueries} from "../../../../state/app.queries";
+import {AppService} from "../../../../state/app.service";
 
 @Component({
   selector: 'app-twitch-setting',

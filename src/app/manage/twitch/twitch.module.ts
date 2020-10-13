@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {EventsOverviewComponent} from './events-overview/events-overview.component';
 import {EventInfoComponent} from './events-overview/event-info/event-info.component';
 import {RouterModule, Routes} from "@angular/router";
-import {AddEventComponent} from './events-overview/add-event/add-event.component';
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonModule} from "@angular/material/button";
 import {ReactiveFormsModule} from "@angular/forms";
@@ -13,6 +12,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
+import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
+import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-setting/twitch-setting.module";
 
 const routes: Routes = [
   {
@@ -22,20 +23,22 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [EventsOverviewComponent, EventInfoComponent, AddEventComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatSelectModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    MatDialogModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatCardModule,
-    MatChipsModule,
-  ]
+  declarations: [EventsOverviewComponent, EventInfoComponent],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatSelectModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        MatDialogModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatCardModule,
+        MatChipsModule,
+        CardOverviewModule,
+        TwitchSettingModule,
+    ]
 })
 export class TwitchModule {
 }
