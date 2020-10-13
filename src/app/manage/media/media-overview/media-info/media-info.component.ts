@@ -40,9 +40,6 @@ export class MediaInfoComponent implements OnInit {
   public onDelete = new EventEmitter();
 
   @Output()
-  public onAssignObs = new EventEmitter();
-
-  @Output()
   public onEditScreenClipOptions = new EventEmitter<Screen>();
 
   constructor(public domSanitizer: DomSanitizer,

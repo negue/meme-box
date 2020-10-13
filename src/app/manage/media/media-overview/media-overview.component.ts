@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {Clip, Screen} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
-import {ScreenAssigningDialogComponent} from "./screen-assigning-dialog/screen-assigning-dialog/screen-assigning-dialog.component";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
+import {IFilterItem} from "../../../shared/components/filter/filter.component";
+import {createCombinedFilterItems$, filterClips$} from "../../../shared/components/filter/filter.methods";
 
 @Component({
   selector: 'app-media-overview',
@@ -14,8 +15,19 @@ import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 })
 export class MediaOverviewComponent implements OnInit {
 
-  public mediaList$: Observable<Clip[]> = this.query.clipList$;
-  public screenList$: Observable<Screen[]> = this.query.screensList$
+  public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
+
+  public mediaList$: Observable<Clip[]> = filterClips$(
+    this.query.clipList$,
+    this.filteredItems$
+  );
+
+  public screenList$: Observable<Screen[]> = this.query.screensList$;
+
+  public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
+    this.query.clipList$,
+    this.query.tagMap$
+  );
 
   constructor(public service: AppService,
               public query: AppQueries,
@@ -51,14 +63,6 @@ export class MediaOverviewComponent implements OnInit {
 
   onPreview(item: Clip): void {
     this._wsService.triggerClipOnScreen(item.id);
-  }
-
-  onAssignObs(item: Clip): void {
-    this._dialog.open(
-      ScreenAssigningDialogComponent, {
-        data: item
-      }
-    )
   }
 
   //TODO - the name and other information should come from the state
