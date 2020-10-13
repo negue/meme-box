@@ -1,5 +1,1 @@
-<ng-container [ngSwitch]="type">
-  <mat-icon *ngSwitchCase="0" svgIcon="insert_photo"></mat-icon>
-  <mat-icon *ngSwitchCase="1" svgIcon="audiotrack"></mat-icon>
-  <mat-icon *ngSwitchCase="2" svgIcon="videocam"></mat-icon>
-</ng-container>
+<mat-icon [svgIcon]="MediaInfoDictionary[type].icon"></mat-icon>

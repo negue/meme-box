@@ -18,6 +18,9 @@ import {PipesModule} from "../../../core/pipes/pipes.module";
 import {TwitchEditComponent} from './twitch-edit/twitch-edit.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {FilterModule} from "../filter/filter.module";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -26,6 +29,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     SimpleConfirmationDialogComponent,
     ScreenClipOptionsComponent,
     TwitchEditComponent,
+    ClipAssigningDialogComponent,
   ],
   imports: [
     PipesModule,
@@ -41,6 +45,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     MatIconModule,
     MatChipsModule,
     MatAutocompleteModule,
+    FilterModule,
+    MatListModule,
   ],
   providers: [DialogService],
 })

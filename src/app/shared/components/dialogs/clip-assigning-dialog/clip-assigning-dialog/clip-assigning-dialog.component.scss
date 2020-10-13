@@ -84,8 +84,9 @@
 }
 
 .iframe-container {
-  .media-iframe-conatiner {
+  .media-iframe-container {
     width: 100%;
+    pointer-events: none;
   }
 }
 
