@@ -11,7 +11,6 @@ import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ScreenOverviewComponent} from "./screen-overview/screen-overview.component";
 import {ScreenInfoComponent} from "./screen-overview/screen-info/screen-info.component";
-import {ClipAssigningDialogModule} from "./screen-overview/clip-assigning-dialog/clip-assigning-dialog.module";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 
@@ -39,7 +38,6 @@ const routes: Routes = [
         MatSelectModule,
         FormsModule,
         ReactiveFormsModule,
-        ClipAssigningDialogModule,
         ClipTypeModule,
         GettingStartedModule,
     ],

@@ -2,12 +2,16 @@ import {Component, OnInit} from '@angular/core';
 import {Clip, Screen, ScreenViewEntry} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 import {AppService, EXPRESS_BASE} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {SnackbarService} from "../../../core/services/snackbar.service";
+import {
+  ClipAssigningDialogComponent,
+  ClipAssigningDialogOptions,
+  ClipAssigningMode
+} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
@@ -70,7 +74,12 @@ export class ScreenOverviewComponent implements OnInit {
   showAssignmentDialog(screen: Partial<Screen>) {
     this._dialog.open(
       ClipAssigningDialogComponent, {
-        data: screen.id,
+        data: {
+          mode: ClipAssigningMode.Multiple,
+          screenId: screen.id,
+
+          dialogTitle: screen.name
+        } as ClipAssigningDialogOptions,
         width: '800px',
 
         panelClass: 'max-height-dialog'

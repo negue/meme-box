@@ -41,20 +41,25 @@
 
 
     <div class="example-container">
-      <mat-form-field appearance="outline">
-        <mat-label>Select media</mat-label>
-        <mat-select [required]="true"
-                    formControlName="clipId">
+      <mat-label>Select media</mat-label>
+<br/>
+        <button mat-raised-button (click)="selectEventClip()"
+        color="accent">
+          <span *ngIf="clipDictionary$ | async as clipDictionary">
+            <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
 
-          <mat-option *ngFor="let item of clipList$ | async"
-                      [value]="item.id">
-            {{ item.name }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="form.controls['clipId'].hasError('required')">
-          You need to select 'A media item'.
-        </mat-error>
-      </mat-form-field>
+            {{ clipDictionary[form.value.clipId]?.name }}
+            </ng-container>
+
+            <ng-template #notSelected>
+              Choose your media-clip to trigger
+            </ng-template>
+          </span>
+
+          <ng-template>
+            Choose
+          </ng-template>
+        </button>
     </div>
 
 

@@ -1,11 +1,17 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {Observable, Subject} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, Twitch, TwitchEventTypes, TwitchTypesArray} from "@memebox/contracts";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {Clip, Dictionary, Twitch, TwitchEventTypes, TwitchTypesArray} from "@memebox/contracts";
 import {AppService} from "../../../../state/app.service";
 import {AppQueries} from "../../../../state/app.queries";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
+import {
+  ClipAssigningDialogComponent,
+  ClipAssigningDialogOptions,
+  ClipAssigningMode
+} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {filter, take} from "rxjs/internal/operators";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {
@@ -32,7 +38,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   twitchEvents = TwitchTypesArray;
 
 
-  clipList$: Observable<Clip[]> = this.appQuery.clipList$;
+  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 
 
   private _destroy$ = new Subject();
@@ -40,6 +46,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Twitch,
     private dialogRef: MatDialogRef<any>,
+    private matDialog: MatDialog,
     private appService: AppService,
     private appQuery: AppQueries,
     private snackBar: SnackbarService
@@ -70,6 +77,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     this.snackBar.normal(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added'}`);
 
     this.dialogRef.close();
+
+
   }
 
   ngOnInit(): void {
@@ -79,5 +88,32 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
+  }
+
+  selectEventClip() {
+    this.matDialog.open(
+      ClipAssigningDialogComponent, {
+        data: {
+          mode: ClipAssigningMode.Single,
+          selectedItemId: this.form.value.clipId,
+
+          dialogTitle: this.data.name
+        } as ClipAssigningDialogOptions,
+        width: '800px',
+
+        panelClass: 'max-height-dialog'
+      }
+    ).afterClosed().pipe(
+      take(1),
+      filter(clipId => !!clipId),
+    ).subscribe(
+      clipId => {
+        console.info({ clipId });
+
+        this.form.patchValue({
+          clipId
+        });
+      }
+    )
   }
 }

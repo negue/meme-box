@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Choose media for "{{ (screen$ | async).name }}"</h1>
+<h1 mat-dialog-title>Choose media for "{{ data.dialogTitle }}"</h1>
 
 <div mat-dialog-content>
   <div class="filterRow">
@@ -55,3 +55,7 @@
     </li>
   </ol>
 </div>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>
