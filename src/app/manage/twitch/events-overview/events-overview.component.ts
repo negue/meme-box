@@ -5,6 +5,7 @@ import {AppQueries} from "../../../state/app.queries";
 import {API_BASE, AppService} from "../../../state/app.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-events-overview',
@@ -14,6 +15,9 @@ import {HttpClient} from "@angular/common/http";
 export class EventsOverviewComponent implements OnInit {
 
   eventsList$: Observable<Twitch[]> = this.queries.twitchEvent$;
+  twitchChannelExist$ = this.queries.config$.pipe(
+    map(cfg => !!cfg.twitchChannel)
+  );
 
   constructor(private queries: AppQueries,
               private appService: AppService,

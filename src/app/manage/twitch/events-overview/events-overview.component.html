@@ -1,4 +1,6 @@
 <app-card-overview>
+
+<ng-container *ngIf="twitchChannelExist$ | async; else noChannel">
   <app-overview-item *ngFor="let item of eventsList$ | async">
     <app-event-info (onDelete)="deleteEvent(item.id)"
                     (onEdit)="editEvent(item)"
@@ -12,5 +14,12 @@
                          (click)="newEventConfigReceived()">
 
   </app-overview-add-item>
+</ng-container>
+  <ng-template #noChannel>
+    <app-overview-item>
+      <app-twitch-setting></app-twitch-setting>
+    </app-overview-item>
+  </ng-template>
+
 </app-card-overview>
 

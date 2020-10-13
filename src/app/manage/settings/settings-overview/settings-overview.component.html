@@ -1,5 +1,5 @@
-<div class="settingsList">
-    <mat-card class="settingsList__item">
+<app-card-overview>
+  <app-overview-item>
     <div class="title-row">
       <h2 class="mat-h2 title-name">Media folder</h2>
       <mat-icon svgIcon="folder"></mat-icon>
@@ -21,23 +21,21 @@
         Change Media Folder
       </button>
     </div>
-  </mat-card>
-    <mat-card class="settingsList__item">
-    <div class="title-row">
-      <h2 class="mat-h2 title-name">Twitch Channel Name</h2>
-      <app-twitch-icon></app-twitch-icon>
-    </div>
+  </app-overview-item>
 
+
+
+  <app-overview-item>
     <app-twitch-setting></app-twitch-setting>
-  </mat-card>
+  </app-overview-item>
 
 
-  <mat-card class="settingsList__item">
+  <app-overview-item>
     <div class="title-row">
       <h2 class="mat-h2 title-name">Danger!!</h2>
 
     </div>
 
     <app-persistence-actions></app-persistence-actions>
-  </mat-card>
-</div>
+  </app-overview-item>
+</app-card-overview>

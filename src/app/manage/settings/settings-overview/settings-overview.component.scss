@@ -1,13 +1,3 @@
-@import '../../../../utils/mixins';
-
-.settingsList {
-  @include gridLayout;
-}
-
-.settingsList__item {
-  @include gridLayout__item;
-}
-
 .title-row {
   display: flex;
   flex-direction: row;
@@ -40,16 +30,6 @@
     }
   }
 }
-
-
-:host {
-  ::ng-deep {
-    .mat-card {
-      padding-bottom: 2rem;
-    }
-  }
-}
-
 
 .explanation {
   margin-bottom: 1rem;

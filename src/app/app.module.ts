@@ -87,6 +87,10 @@ export class AppModule {
       ));
     }
 
+    iconRegistry.addSvgIcon('twitch', sanitizer.bypassSecurityTrustResourceUrl(
+      `./assets/twitch.svg`
+    ));
+
     this.materialCssVarsService.setDarkTheme(true);
     this.materialCssVarsService.setAutoContrastEnabled(true)
     this.materialCssVarsService.setPrimaryColor(StyleguideColors.primary);
