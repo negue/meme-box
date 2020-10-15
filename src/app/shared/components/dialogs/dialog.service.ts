@@ -38,8 +38,8 @@ export class DialogService {
     this._dialog.open(
       MediaEditComponent, {
         data: clipInfo,
-        width: '600px',
-        panelClass: 'max-height-dialog'
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw'
       }
     )
   }

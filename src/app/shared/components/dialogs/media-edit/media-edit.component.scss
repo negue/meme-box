@@ -1,8 +1,5 @@
 :host {
   display: block;
-  min-width: 400px;
-  max-width: 600px;
-
 }
 
 form {
@@ -59,4 +56,34 @@ img {
 
 .hidden {
   display: none;
+}
+
+.two-columns {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 920px) {
+    flex-direction: column;
+  }
+}
+
+.column {
+  flex: 1;
+
+  &:last-child {
+    align-self: center;
+
+    @media screen and (min-width: 920px) {
+      margin-left: 1rem;
+    }
+
+    app-clip-type {
+      // hacky but flex justify doesn't work.
+      float: right;
+    }
+  }
+}
+
+.dialog-content {
+  max-height: 86vh;
 }

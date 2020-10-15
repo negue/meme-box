@@ -51,7 +51,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     metaDelay: 0,
   });
 
-  availableMediaFiles = combineLatest([
+  availableMediaFiles$ = combineLatest([
     this.appQuery.currentMediaFile$.pipe(filter((files) => !!files)),
     this.form.valueChanges.pipe(startWith(INITIAL_CLIP)),
   ]).pipe(
@@ -71,6 +71,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       }
     });
 
+
+  availableScreens$ = this.appQuery.screensList$;
+  selectedScreenId:string = '';
 
   // region Tag specific
 
@@ -191,6 +194,12 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     valueAsClip.tags = tagsToAssign.map(tag => tag.id)
 
     await this.appService.addOrUpdateClip(valueAsClip);
+
+    if (this.selectedScreenId) {
+      this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
+        id: valueAsClip.id,
+      });
+    }
 
     this.dialogRef.close();
   }

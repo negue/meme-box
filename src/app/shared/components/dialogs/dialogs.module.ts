@@ -21,6 +21,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 import {FilterModule} from "../filter/filter.module";
 import {MatListModule} from "@angular/material/list";
+import {ClipTypeModule} from "../clip-type/clip-type.module";
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {MatListModule} from "@angular/material/list";
     MatAutocompleteModule,
     FilterModule,
     MatListModule,
+    ClipTypeModule,
   ],
   providers: [DialogService],
 })
