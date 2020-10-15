@@ -37,14 +37,23 @@
    </span>
   </ng-container>
 
-  <span *ngFor="let clip of clipList$|async" class="item">
+
+  <ng-container *ngFor="let groupedClip of groupedClipList$|async" class="item">
+       <span class="item item-wide">
+          {{ groupedClip.title }}
+       </span>
+
+    <span *ngFor="let clip of groupedClip.clips" class="item">
 
     <mat-card (click)="onPreview(clip)"
               mat-ripple>
 
     <app-clip-type [type]="clip.type"></app-clip-type>
-      {{clip.name}}
+      <span>{{clip.name}}</span>
       </mat-card>
   </span>
+
+  </ng-container>
+
 
 </div>

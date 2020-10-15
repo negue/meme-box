@@ -15,7 +15,7 @@ export class ClipTypeComponent {
 
   @HostBinding('style.--icon-size')
   @Input()
-  public iconSize: string = '16px';
+  public iconSize: string = '24px';
 
   constructor() {
   }

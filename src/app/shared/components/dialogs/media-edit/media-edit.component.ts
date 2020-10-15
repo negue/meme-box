@@ -21,7 +21,9 @@ const INITIAL_CLIP: Partial<Clip> = {
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
   metaDelay: META_DELAY_DEFAULT,
-  metaType: MetaTriggerTypes.Random
+  metaType: MetaTriggerTypes.Random,
+
+  showOnMobile: true
 };
 
 interface MediaTypeButton {
@@ -74,6 +76,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
   availableScreens$ = this.appQuery.screensList$;
   selectedScreenId:string = '';
+  showOnMobile = true;
 
   // region Tag specific
 
@@ -103,6 +106,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     private appQuery: AppQueries
   ) {
     this.data = Object.assign({}, INITIAL_CLIP, this.data);
+
+    this.showOnMobile = this.data.showOnMobile;
   }
 
   get MediaType() {
@@ -192,6 +197,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     }
 
     valueAsClip.tags = tagsToAssign.map(tag => tag.id)
+
+    valueAsClip.showOnMobile = this.showOnMobile;
 
     await this.appService.addOrUpdateClip(valueAsClip);
 

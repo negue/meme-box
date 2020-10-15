@@ -1,5 +1,9 @@
-<h2 mat-dialog-title>
+<h2 mat-dialog-title class="title-wrapper">
   {{ data?.id ? 'Update Media: "' + form.value.name + '"' : "Add media" }}
+
+  <mat-checkbox class="mobile-checkbox"
+                [checked]="showOnMobile"
+  (change)="showOnMobile = $event.checked">Visible on Mobile View</mat-checkbox>
 </h2>
 <mat-dialog-content class="mat-typography two-columns dialog-content">
   <form [formGroup]="form" class="column">

@@ -87,3 +87,13 @@ img {
 .dialog-content {
   max-height: 86vh;
 }
+
+.mobile-checkbox {
+  float: right;
+}
+
+.title-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

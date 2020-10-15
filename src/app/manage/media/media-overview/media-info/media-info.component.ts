@@ -42,6 +42,9 @@ export class MediaInfoComponent implements OnInit {
   @Output()
   public onEditScreenClipOptions = new EventEmitter<Screen>();
 
+  @Output()
+  public onToggleMobileShow = new EventEmitter();
+
   constructor(public domSanitizer: DomSanitizer,
               private appQueries: AppQueries) {
   }

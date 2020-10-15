@@ -83,4 +83,13 @@ export class MediaOverviewComponent implements OnInit {
       name: item.name
     });
   }
+
+  onToggleMobileShow(item: Clip) {
+    const newClip = {
+      ...item,
+      showOnMobile: !item.showOnMobile
+    } as Clip;
+
+    this.service.addOrUpdateClip(newClip);
+  }
 }

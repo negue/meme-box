@@ -30,6 +30,8 @@ export interface Clip extends HasId {
 
   metaType?: MetaTriggerTypes;
   metaDelay?: number; // in ms
+
+  showOnMobile?: boolean;
 }
 
 export interface Screen  extends HasId {
