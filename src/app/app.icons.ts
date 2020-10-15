@@ -13,6 +13,8 @@ export const APP_ICONS = [
   'folder',
   'insert_photo',
   'launch',
+  'mobile_friendly',
+  'mobile_off',
   'playlist_add_check',
   'playlist_add',
   'preview',

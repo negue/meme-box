@@ -85,3 +85,13 @@
     margin-right: 0.2rem;
   }
 }
+
+.mediaInfo__iconWrapper {
+  position: relative;
+
+  button {
+    position: absolute;
+    right: 1rem;
+    top: -0.5rem;
+  }
+}

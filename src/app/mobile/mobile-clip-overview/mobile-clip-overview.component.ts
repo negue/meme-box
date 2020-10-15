@@ -36,17 +36,19 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
     map(allClips => {
       const groupedDictionary = groupBy(allClips, "type");
 
-      return Object.entries(groupedDictionary).map(([key, clips]) => {
+      return Object.entries(groupedDictionary)
+        .map(([key, clips]) => {
         const mediaType = +key;
 
         const typeInfo = MEDIA_TYPE_INFORMATION[mediaType];
 
         return {
-          clips,
+          clips: clips.filter(c => c.showOnMobile),
           icon: typeInfo.icon,
           title: typeInfo.label
         } as IGroupedList;
       })
+        .filter(group => group.clips.length !== 0)
     } )
   );
 

@@ -22,6 +22,7 @@ import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigni
 import {FilterModule} from "../filter/filter.module";
 import {MatListModule} from "@angular/material/list";
 import {ClipTypeModule} from "../clip-type/clip-type.module";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {ClipTypeModule} from "../clip-type/clip-type.module";
     FilterModule,
     MatListModule,
     ClipTypeModule,
+    MatCheckboxModule,
   ],
   providers: [DialogService],
 })
