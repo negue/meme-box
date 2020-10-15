@@ -12,23 +12,29 @@ $toolbarHeight: 64px;
   height: calc(100vh - #{$toolbarHeight});
   max-height: calc(100vh - #{$toolbarHeight});
   overflow-y: auto;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .item {
   width: var(--item-width-percent, 50%);
-  padding: 1rem 1rem 0;
+  padding: 1rem 0.5rem 0;
+
+  .mat-card {
+    height: 100%;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-all;
+
+    app-clip-type {
+      float: left;
+    }
+  }
 
   &-wide {
     width: 100%;
-  }
-
-  // fix 3 / 4 column mode
-  &:nth-of-type(2n+1) {
-    padding-right: 0.5rem;
-  }
-
-  &:nth-of-type(2n+2) {
-    padding-left: 0.5rem;
   }
 
   mat-card {
