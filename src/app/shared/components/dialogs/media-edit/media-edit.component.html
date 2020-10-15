@@ -1,8 +1,8 @@
 <h2 mat-dialog-title>
   {{ data?.id ? 'Update Media: "' + form.value.name + '"' : "Add media" }}
 </h2>
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="form">
+<mat-dialog-content class="mat-typography two-columns dialog-content">
+  <form [formGroup]="form" class="column">
     <mat-form-field>
       <input autocomplete="off"
              formControlName="name"
@@ -170,13 +170,15 @@
         </mat-error>
       </mat-form-field>
     </div>
+  </form>
 
+  <div class="column">
     <img *ngIf="form.value.type === MediaType.Picture"
          [src]="form.value.path | replaceholder" />
     <iframe *ngIf="form.value.type === MediaType.IFrame"
             [src]="form.value.path | safeurl"
     ></iframe>
-  </form>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
