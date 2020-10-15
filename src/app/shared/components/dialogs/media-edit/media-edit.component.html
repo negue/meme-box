@@ -50,7 +50,7 @@
         />
         <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
           <mat-select (valueChange)="onChange($event)"
-                      *ngIf="availableMediaFiles | async as mediaFiles"
+                      *ngIf="availableMediaFiles$ | async as mediaFiles"
           >
             <mat-option *ngFor="let file of mediaFiles" [value]="file">
               {{ file.fileName }}
@@ -170,9 +170,23 @@
         </mat-error>
       </mat-form-field>
     </div>
+
+    <mat-form-field *ngIf="data?.id == null">
+      <mat-select placeholder="Also add to this Screen:"
+                  [(value)]="selectedScreenId">
+        <mat-option value="">None</mat-option>
+        <ng-container *ngIf="availableScreens$ | async as screenList">
+          <mat-option *ngFor="let screen of screenList" [value]="screen.id">{{screen.name}}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
   </form>
 
   <div class="column">
+    <app-clip-type *ngIf="!form.value.path"
+                   [type]="form.value.type"
+                   iconSize="60%"></app-clip-type>
+
     <img *ngIf="form.value.type === MediaType.Picture"
          [src]="form.value.path | replaceholder" />
     <iframe *ngIf="form.value.type === MediaType.IFrame"
