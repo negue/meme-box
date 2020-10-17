@@ -11,6 +11,7 @@
   </div>
   <mat-card-content>
     <div class="mediaInfo__preview">
+      <!--Todo extract this to clip-preview -->
         <img *ngIf="info.type === 0 && (info.previewUrl || info.path)"
              [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
              [alt]="info.name"
@@ -39,18 +40,8 @@
       </button>
     </div>
 
-    <div class="mediaInfo__screensList" *ngIf="combinedTags$ | async as combinedTags">
-      <h4 class="mediaInfo__screensListTitle">Appears in {{combinedTags.screenList.length}}
-        {{combinedTags.screenList.length === 1 ? 'Screen' : 'Screens'}}</h4>
-          <mat-chip-list>
-            <mat-chip class="mediaInfo__screensListChip" *ngFor="let entry of combinedTags.screenList">
-              <mat-icon svgIcon="screen"></mat-icon> {{entry.name}}
-            </mat-chip>
-
-            <mat-chip class="mediaInfo__screensListChip" *ngFor="let entry of combinedTags.tagList">
-              <mat-icon svgIcon="tag"></mat-icon> {{entry.name}}
-            </mat-chip>
-          </mat-chip-list>
+    <div class="mediaInfo__screensList">
+      <app-clip-chips-list [clip]="info" [listTags]="true"></app-clip-chips-list>
     </div>
   </mat-card-content>
   <mat-card-actions>

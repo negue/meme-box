@@ -1,0 +1,15 @@
+<div class="chipList" *ngIf="combinedTags$ | async as combinedTags">
+  <h4 class="chipListTitle">Appears in {{combinedTags.screenList.length}}
+    {{combinedTags.screenList.length === 1 ? 'Screen' : 'Screens'}}</h4>
+  <mat-chip-list>
+    <mat-chip class="chipList__chip" *ngFor="let entry of combinedTags.screenList">
+      <mat-icon svgIcon="screen"></mat-icon> {{entry.name}}
+    </mat-chip>
+
+    <ng-template *ngIf="listTags">
+      <mat-chip class="chipList__chip" *ngFor="let entry of combinedTags.tagList">
+        <mat-icon svgIcon="tag"></mat-icon> {{entry.name}}
+      </mat-chip>
+    </ng-template>
+  </mat-chip-list>
+</div>

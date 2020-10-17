@@ -23,6 +23,8 @@ import {FilterModule} from "../filter/filter.module";
 import {MatListModule} from "@angular/material/list";
 import {ClipTypeModule} from "../clip-type/clip-type.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {CompactClipCardModule} from "../compact-clip-card/compact-clip-card.module";
+import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatListModule,
     ClipTypeModule,
     MatCheckboxModule,
+    CompactClipCardModule,
+    ClipPreviewModule,
   ],
   providers: [DialogService],
 })
