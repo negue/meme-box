@@ -1,7 +1,7 @@
 <app-card-overview>
 
 <ng-container *ngIf="twitchChannelExist$ | async; else noChannel">
-  <app-overview-item *ngFor="let item of eventsList$ | async">
+  <app-overview-item *ngFor="let item of eventsList$ | async; trackBy: trackById">
     <app-event-info (onDelete)="deleteEvent(item.id)"
                     (onEdit)="editEvent(item)"
                     (onPreview)="previewEvent(item)"

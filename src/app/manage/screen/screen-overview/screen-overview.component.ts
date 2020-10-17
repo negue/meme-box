@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Clip, Screen, ScreenViewEntry} from "@memebox/contracts";
+import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {Clip, HasId, Screen, ScreenViewEntry} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {AppService, EXPRESS_BASE} from "../../../state/app.service";
@@ -38,6 +38,10 @@ export class ScreenOverviewComponent implements OnInit {
       url: `${createLocalOrProductionUrlBase()}/#/screen/${screen.id}`
     })))
   )
+
+  public trackById: TrackByFunction<HasId> = (index, item) => {
+    return item.id;
+  }
 
   constructor(
     private _dialog: DialogService,

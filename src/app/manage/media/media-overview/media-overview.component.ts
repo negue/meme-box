@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from "rxjs";
-import {Clip, Screen} from "@memebox/contracts";
+import {Clip, HasId, Screen} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {WebsocketService} from "../../../core/services/websocket.service";
@@ -37,7 +37,11 @@ export class MediaOverviewComponent implements OnInit {
     map(([availableClips, availableScreens]) => {
       return availableClips.length === 0 || availableScreens.length === 0;
     })
-  )
+  );
+
+  public trackById: TrackByFunction<HasId> = (index, item) => {
+    return item.id;
+  }
 
   constructor(public service: AppService,
               public query: AppQueries,
