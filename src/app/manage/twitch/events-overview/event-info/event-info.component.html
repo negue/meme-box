@@ -34,7 +34,9 @@
 
     <p>Clip: {{ information.clip?.name }}</p>
     <!-- Screen: <strong>{{ information.screen.name }}</strong> -->
-    <!-- it would be SUPER AMAZING to have a preview of the media here! -->
+
+    <app-clip-preview [clip]="information.clip"
+                      height="100px" width="200px"></app-clip-preview>
 
   </ng-container>
 </div>

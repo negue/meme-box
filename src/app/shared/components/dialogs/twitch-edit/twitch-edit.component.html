@@ -44,10 +44,13 @@
       <mat-label>Select media</mat-label>
 <br/>
         <button mat-raised-button (click)="selectEventClip()"
+                class="selectClipButton"
         color="accent">
           <span *ngIf="clipDictionary$ | async as clipDictionary">
             <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
 
+              <app-clip-preview [clip]="clipDictionary[form.value.clipId]"
+              height="100px" width="200px"></app-clip-preview>
             {{ clipDictionary[form.value.clipId]?.name }}
             </ng-container>
 

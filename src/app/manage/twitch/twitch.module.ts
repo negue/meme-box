@@ -14,6 +14,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-setting/twitch-setting.module";
+import {ClipPreviewModule} from "../../shared/components/clip-preview/clip-preview.module";
 
 const routes: Routes = [
   {
@@ -24,21 +25,22 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [EventsOverviewComponent, EventInfoComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatSelectModule,
-        MatButtonModule,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatDialogModule,
-        MatInputModule,
-        MatCheckboxModule,
-        MatCardModule,
-        MatChipsModule,
-        CardOverviewModule,
-        TwitchSettingModule,
-    ]
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatSelectModule,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatCardModule,
+    MatChipsModule,
+    CardOverviewModule,
+    TwitchSettingModule,
+    ClipPreviewModule,
+  ]
 })
 export class TwitchModule {
 }
