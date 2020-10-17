@@ -21,6 +21,7 @@ import {MatChipsModule} from "@angular/material/chips";
 import {PipesModule} from "../../core/pipes/pipes.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {FilterModule} from "../../shared/components/filter/filter.module";
+import {ClipChipsListModule} from "../../shared/components/clip-chips-list/clip-chips-list.module";
 
 const routes: Routes = [
   {
@@ -53,6 +54,7 @@ const routes: Routes = [
     MatChipsModule,
     CardOverviewModule,
     FilterModule,
+    ClipChipsListModule,
   ]
 })
 export class MediaModule {}

@@ -1,0 +1,28 @@
+<div [ngSwitch]="clip.type">
+  <!-- Image => Preview -->
+  <img *ngSwitchCase="MediaType.Picture"
+       [style.height]="height"
+       [style.width]="width"
+       [src]="clip.path | replaceholder" />
+
+  <!-- Iframe => Iframe -->
+  <div *ngSwitchCase="MediaType.IFrame">
+    <ng-container *ngIf="height || width; else canShowIframe">
+      <app-clip-type [type]="clip.type"
+                     [iconSize]="height || width"></app-clip-type>
+    </ng-container>
+    <ng-template #canShowIframe>
+
+      <iframe
+        [src]="clip.path | safeurl"
+      ></iframe>
+    </ng-template>
+  </div>
+
+
+  <!-- All others => AppClipType -->
+  <app-clip-type *ngSwitchDefault
+                 [type]="clip.type"
+                 [iconSize]="height || width"></app-clip-type>
+
+</div>

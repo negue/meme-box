@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {ENDPOINTS, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
+import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {ENDPOINTS, HasId, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {AppQueries} from "../../../state/app.queries";
 import {API_BASE, AppService} from "../../../state/app.service";
@@ -18,6 +18,10 @@ export class EventsOverviewComponent implements OnInit {
   twitchChannelExist$ = this.queries.config$.pipe(
     map(cfg => !!cfg.twitchChannel)
   );
+
+  public trackById: TrackByFunction<HasId> = (index, item) => {
+    return item.id;
+  };
 
   constructor(private queries: AppQueries,
               private appService: AppService,

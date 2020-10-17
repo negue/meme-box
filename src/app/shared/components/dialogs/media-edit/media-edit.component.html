@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  {{ data?.id ? 'Update Media: "' + form.value.name + '"' : "Add media" }}
+  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].label +': "' + form.value.name + '"'}}
 
   <mat-checkbox class="mobile-checkbox"
                 [checked]="showOnMobile"
@@ -186,16 +186,21 @@
     </mat-form-field>
   </form>
 
-  <div class="column">
-    <app-clip-type *ngIf="!form.value.path"
-                   [type]="form.value.type"
-                   iconSize="60%"></app-clip-type>
+  <div class="column" [ngSwitch]="form.value.type">
+    <!-- Meta => AppClipType or list all assign clips by tags -->
+    <div *ngSwitchCase="MediaType.Meta">
+      <h3>Assigned Clips by Tags</h3>
+      <app-compact-clip-card *ngFor="let assignedClip of taggedClips$ | async"
+                             [clip]="assignedClip">
 
-    <img *ngIf="form.value.type === MediaType.Picture"
-         [src]="form.value.path | replaceholder" />
-    <iframe *ngIf="form.value.type === MediaType.IFrame"
-            [src]="form.value.path | safeurl"
-    ></iframe>
+      </app-compact-clip-card>
+    </div>
+
+    <!-- All others => AppClipType -->
+    <app-clip-preview *ngSwitchDefault
+                   [clip]="form.value">
+
+    </app-clip-preview>
   </div>
 </mat-dialog-content>
 

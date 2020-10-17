@@ -64,6 +64,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
+  MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
   mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
     .map(([mediaType, value]) => {
       return {
@@ -85,6 +86,22 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
   // Current Tags assigned to this clip
   currentTags$ = new BehaviorSubject<Tag[]>([]);
+
+  // Get all clips that have the assigned tags
+  taggedClips$ = combineLatest([
+    this.currentTags$,
+    this.appQuery.clipList$
+  ]).pipe(
+    map(([currentTags, allClips]) => {
+      if (currentTags.length === 0) {
+        return [];
+      }
+
+      const currentTagsSet = new Set(currentTags.map(t => t.id));
+
+      return allClips.filter(c => c.id !== this.data.id && c.tags?.some(t => currentTagsSet.has(t)));
+    })
+  )
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagFormCtrl = new FormControl();  // needed in form?!
@@ -165,9 +182,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       this.tagFormCtrl.valueChanges.pipe(
         startWith(null)
       ),
-      this.availableTags$
+      this.availableTags$,
+      this.currentTags$
     ]).pipe(
-      map(([tagInputValue, allTags]) => this._filter(tagInputValue, allTags))
+      map(([tagInputValue, allTags, currentTags]) => this._filter(tagInputValue, allTags, currentTags))
     );
   }
 
@@ -281,14 +299,19 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     this.currentTags$.next(currentTags);
   }
 
-  private _filter(value: string, allTags: Tag[]): Tag[] {
+  private _filter(value: string, allTags: Tag[], currentTags: Tag[]): Tag[] {
+    const currentTagsSet = new Set(currentTags.map(t => t.id));
+
+    // Ignore current selected tags
+    const remainingTags = allTags.filter(t => !currentTagsSet.has(t.id))
+
     if (typeof value === 'string') {
       const filterValue = value.toLowerCase();
 
-      return allTags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
+      return remainingTags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
     }
 
-    return allTags;
+    return remainingTags;
   }
 
   // endregion
