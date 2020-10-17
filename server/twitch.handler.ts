@@ -95,7 +95,7 @@ export class TwitchHandler {
         continue;
       }
 
-      if (message.includes(twitchSetting.contains)) {
+      if (message.toLowerCase().includes(twitchSetting.contains.toLowerCase())) {
         if (!foundCommand) {
           foundCommand = twitchSetting;
         } else {
