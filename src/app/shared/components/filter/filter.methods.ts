@@ -19,7 +19,7 @@ export function createCombinedFilterItems$ (
       const allTags = new Set<string>();
 
       for (const clip of allMedia) {
-        for (const tagId of clip.tags) {
+        for (const tagId of (clip?.tags ?? [])) {
           allTags.add(tagId)
         }
       }
@@ -77,7 +77,7 @@ export function filterClips$(
 
 
         if (listOfTagIds.length !== 0) {
-          allowedByTag = listOfTagIds.every(filterTagId => clip.tags.includes(filterTagId) );
+          allowedByTag = listOfTagIds.every(filterTagId => clip.tags?.includes(filterTagId) );
         }
 
 
