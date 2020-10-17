@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  {{ data?.id ? 'Update Media: "' + form.value.name + '"' : "Add media" }}
+  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].label +': "' + form.value.name + '"'}}
 
   <mat-checkbox class="mobile-checkbox"
                 [checked]="showOnMobile"

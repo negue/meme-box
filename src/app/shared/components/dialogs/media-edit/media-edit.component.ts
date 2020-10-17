@@ -64,6 +64,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
+  MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
   mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
     .map(([mediaType, value]) => {
       return {
