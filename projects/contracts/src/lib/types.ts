@@ -108,6 +108,9 @@ export interface Twitch extends HasId {
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
   active: boolean;
+
+  roles: string[]; // maybe enum
+
   // !magic
   // TODO other options per type
 }

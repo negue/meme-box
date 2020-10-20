@@ -18,8 +18,45 @@ const INITIAL_TWITCH: Partial<Twitch> = {
   name: '',
   event: TwitchEventTypes.message,
   contains: '',
-  active: true
+  active: true,
+  roles: []
 };
+
+interface TwitchLevelEntry {
+  label: string;
+  type: string;
+}
+
+const TWITCH_LEVELS: TwitchLevelEntry[] = [
+  {
+    type: 'broadcaster',
+    label: 'Broadcaster'
+  },
+  {
+    type: 'moderator',
+    label: 'Moderator'
+  },
+  {
+    type: 'vip',
+    label: 'VIP'
+  },
+  {
+    type: 'founder',
+    label: 'Founder'
+  },
+  {
+    type: 'sub',
+    label: 'Subscriber'
+  },
+  {
+    type: 'follower',
+    label: 'Follower'
+  },
+  {
+    type: 'viewer',
+    label: 'Viewer'
+  }
+];
 
 @Component({
   selector: 'app-twitch-edit',
@@ -36,6 +73,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   });
 
   twitchEvents = TwitchTypesArray;
+  TWITCH_LEVELS = TWITCH_LEVELS;
 
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
@@ -51,7 +89,11 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     private appQuery: AppQueries,
     private snackBar: SnackbarService
   ) {
-    this.data = this.data ?? (INITIAL_TWITCH as any);
+    // Todo find a better to get defaults & stuff
+    this.data = Object.assign({}, {...INITIAL_TWITCH}, {
+      ...this.data
+    });
+    this.data.roles = [...this.data.roles];
     console.info({data: this.data});
   }
 
@@ -65,7 +107,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
     const {value} = this.form;
 
-    const newTwitchValue = {
+    const newTwitchValue: Twitch = {
       ...this.data,
       ...value
     };
@@ -115,5 +157,17 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
         });
       }
     )
+  }
+
+  toggleRole(role: string) {
+
+
+    if (this.data.roles.includes(role)) {
+      const indexOfRole = this.data.roles.indexOf(role);
+
+      this.data.roles.splice(indexOfRole, 1);
+    } else {
+      this.data.roles.push(role);
+    }
   }
 }

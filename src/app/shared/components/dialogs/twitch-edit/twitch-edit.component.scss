@@ -1,7 +1,10 @@
 :host {
   display: block;
-  min-width: 400px;
-  max-width: 600px;
+}
+
+.min-height-dialog {
+  min-height: 40vh;
+  padding-bottom: 2rem;
 }
 
 .mat-form-field {
@@ -12,4 +15,37 @@
   padding-left: 0;
   padding-right: 0;
   width: 200px;
+}
+
+
+.two-columns {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 920px) {
+    flex-direction: column;
+  }
+}
+
+.column {
+  flex: 1;
+
+  &:last-child {
+    align-self: center;
+
+    @media screen and (min-width: 920px) {
+      margin-left: 1rem;
+    }
+  }
+}
+
+
+.simple-wrap {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  > div {
+    width: 33%;
+  }
 }
