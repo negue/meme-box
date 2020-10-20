@@ -65,6 +65,9 @@ export class DialogService {
     this._dialog.open(
       TwitchEditComponent, {
         data: info,
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw',
+        minHeight: '50vh'
       }
     )
   }

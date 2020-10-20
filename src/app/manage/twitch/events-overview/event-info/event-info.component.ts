@@ -44,11 +44,6 @@ export class EventInfoComponent implements OnInit {
   }
 
   onActiveChanged($event: MatCheckboxChange) {
-    const newItem = {
-      ...this.item,
-      active: $event.checked
-    }
-
-    this.appService.addOrUpdateTwitchEvent(newItem);
+    this.appService.toggleTwitchActiveState(this.item.id);
   }
 }

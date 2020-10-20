@@ -339,4 +339,15 @@ export class AppService {
     await this.http.post<any>(`${EXPRESS_BASE}${DANGER_IMPORT_ALL_ENDPOINT}`, body).toPromise();
     location.reload();
   }
+
+  toggleTwitchActiveState(twitchId: string) {
+    var twitchEvent = this.appStore.getValue().twitchEvents[twitchId];
+
+    const newTwitchEventObject = {
+      ...twitchEvent,
+      active: !twitchEvent.active
+    };
+
+    return this.addOrUpdateTwitchEvent(newTwitchEventObject);
+  }
 }
