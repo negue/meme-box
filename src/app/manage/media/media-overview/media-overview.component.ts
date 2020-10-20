@@ -96,4 +96,8 @@ export class MediaOverviewComponent implements OnInit {
 
     this.service.addOrUpdateClip(newClip);
   }
+
+  onToggleTwitchEvent(item: Clip, twitchId: string) {
+    this.service.toggleTwitchActiveState(twitchId);
+  }
 }

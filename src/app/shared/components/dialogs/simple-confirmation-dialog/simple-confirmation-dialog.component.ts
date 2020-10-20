@@ -4,6 +4,10 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 export interface ConfirmationsPayload {
   title: string;
   content?: string;
+
+  overrideButtons?: boolean;
+  yesButton?: string;
+  noButton?: string;
 }
 
 @Component({
@@ -14,6 +18,10 @@ export interface ConfirmationsPayload {
 export class SimpleConfirmationDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationsPayload) {
+    if (!data.overrideButtons) {
+      data.yesButton = 'Yes';
+      data.noButton = 'No';
+    }
   }
 
   ngOnInit(): void {

@@ -79,5 +79,14 @@
     position: absolute;
     right: 1rem;
     top: -0.5rem;
+
+    &.twitch_icon {
+      right: 3.25rem;
+
+      &:not(.inactive) {
+        // color: #6441A4;
+      }
+    }
   }
 }
+
