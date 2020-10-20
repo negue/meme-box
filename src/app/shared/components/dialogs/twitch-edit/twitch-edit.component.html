@@ -51,7 +51,7 @@
         <h2>Select media</h2>
 
         <button mat-raised-button (click)="selectEventClip()"
-                class="selectClipButton"
+                [class.selectClipButton]="!!form.value.clipId"
                 color="accent">
           <span *ngIf="clipDictionary$ | async as clipDictionary">
             <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">

@@ -45,16 +45,12 @@ const TWITCH_LEVELS: TwitchLevelEntry[] = [
     label: 'Founder'
   },
   {
-    type: 'sub',
+    type: 'subscriber',
     label: 'Subscriber'
   },
   {
-    type: 'follower',
-    label: 'Follower'
-  },
-  {
-    type: 'viewer',
-    label: 'Viewer'
+    type: 'user',
+    label: 'User'
   }
 ];
 

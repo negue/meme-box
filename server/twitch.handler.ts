@@ -5,6 +5,11 @@ import {startWith} from "rxjs/operators";
 import {Twitch, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 import {triggerMediaClipById} from "./websocket-server";
 
+declare module "tmi.js" {
+  export interface Badges {
+    founder?: string;
+  }
+}
 
 export class TwitchHandler {
   private tmiClient: tmi.Client;
@@ -114,14 +119,52 @@ export class TwitchHandler {
     return foundCommand;
   }
 
+  getLevelOfTags(userState: tmi.Userstate): string[]{
+    if (!userState.badges) {
+      return ['user'];
+    }
+
+    if (userState.badges.broadcaster) {
+      return ['broadcaster'];
+    }
+
+    if (userState.badges.moderator) {
+      return ['moderator'];
+    }
+
+    if (userState.badges.founder) {
+      return ['founder', 'subscriber']
+    }
+
+    if (userState.badges.subscriber) {
+      return ['subscriber'];
+    }
+
+    if (userState.badges.vip) {
+      return ['vip'];
+    }
+
+    return ['user'];
+  }
+
   handle(trigger: TwitchTriggerCommand) {
     if (trigger.command) {
       console.info('Contained', trigger.command.contains);
       console.info('Full Message', trigger.message);
       console.info('Tags', trigger.tags);
-      triggerMediaClipById({
-        id: trigger.command.clipId
-      });
+
+      const foundLevels = this.getLevelOfTags(trigger.tags);
+
+      console.info('Found Levels', foundLevels);
+      console.info('Needed Levels', trigger.command?.roles);
+
+      if (foundLevels.includes("broadcaster") || trigger.command?.roles.some(r => foundLevels.includes(r))) {
+        console.info('Triggering Clip: ', trigger.command.clipId);
+
+        triggerMediaClipById({
+          id: trigger.command.clipId
+        });
+      }
     }
   }
 }
