@@ -1,4 +1,6 @@
-<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Twitch Event </h2>
+<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Twitch {{form.value.event}}-Event:
+  <code *ngIf="form.value.contains">{{form.value.contains}}</code>
+</h2>
 <mat-dialog-content class="mat-typography min-height-dialog">
   <div class="two-columns">
     <div class="column">
