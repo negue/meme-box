@@ -5,17 +5,25 @@
   </div>
 
   <div class="formFieldRow">
-    <mat-form-field class="matFormField">
+    <mat-form-field>
       <label class="inputLabel--hidden" for="input-url">Screen URL</label>
-      <input [value]="screen.url" matInput class="inputUrl" id="input-url" readonly type="text"/>
-      <button mat-button
-              matSuffix
-              (click)="copyURL()"
-              [attr.aria-label]="'Copy URL'"
-              class="copyUrlButton">
-        <mat-icon svgIcon="content_copy"></mat-icon>
-        Copy URL
-      </button>
+      <input [value]="screen.url" matInput class="inputUrl" id="input-url" readonly type="text" #networkInput/>
+
+      <div class="screenUrl__buttons" matSuffix>
+        <mat-select (valueChange)="networkInput.value = $event">
+          <mat-option *ngFor="let networkInterface of networkUrl$ | async"
+          [value]="networkInterface.address">
+            {{networkInterface.ifname}}
+          </mat-option>
+        </mat-select>
+        <button mat-button
+                (click)="copyURL(networkInput.value)"
+                [attr.aria-label]="'Copy URL'"
+                class="copyUrlButton">
+          <mat-icon svgIcon="content_copy"></mat-icon>
+          Copy URL
+        </button>
+      </div>
     </mat-form-field>
   </div>
 

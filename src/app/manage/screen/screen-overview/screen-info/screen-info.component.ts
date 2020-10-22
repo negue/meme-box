@@ -6,6 +6,7 @@ import {AppQueries} from "../../../../state/app.queries";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {EXPRESS_BASE} from "../../../../state/app.service";
+import {NetworkInterfacesService} from "../../../../core/services/network-interfaces.service";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
@@ -37,6 +38,7 @@ export class ScreenInfoComponent implements OnInit {
     })
   ),
     tap(screenInfo => {
+      console.info('tap called');
       this._info = screenInfo;
     })
   );
@@ -47,6 +49,15 @@ export class ScreenInfoComponent implements OnInit {
   ]).pipe(
     map(([screen, clipList]) => clipList.filter(clip => !!screen.clips[clip.id]))
   );
+
+  public networkUrl$ = this.networkInterfaceService.networkInterface$.pipe(
+    map(networkInterfaces => networkInterfaces.map(netInterface => {
+      return {
+        ...netInterface,
+        address: `${netInterface.address}/#/screen/${this.screenId}`
+      }
+    }))
+  )
 
   @Output()
   public onEdit = new EventEmitter();
@@ -70,14 +81,15 @@ export class ScreenInfoComponent implements OnInit {
 
   constructor(private appQueries: AppQueries,
               private clipboard: Clipboard,
-              private _snackBar: MatSnackBar) {
+              private _snackBar: MatSnackBar,
+              public networkInterfaceService: NetworkInterfacesService) {
   }
 
   ngOnInit(): void {
   }
 
-  copyURL(): void {
-    if (this.clipboard.copy(this._info.url)) {
+  copyURL(urlToOpen: string): void {
+    if (this.clipboard.copy(urlToOpen)) {
       this._snackBar.open('URL copied to clipboard', null, {
         duration: 5000,
         verticalPosition: 'top'
