@@ -1,13 +1,13 @@
-<div class="infoHolder">
+<div class="infoHolder" *ngIf="info$ | async as screen">
   <div class="titleRow">
-    <h2 class="mat-h2 titleName">{{info.name}}</h2>
+    <h2 class="mat-h2 titleName">{{screen.name}}</h2>
     <mat-icon svgIcon="screen"></mat-icon>
   </div>
 
   <div class="formFieldRow">
     <mat-form-field class="matFormField">
       <label class="inputLabel--hidden" for="input-url">Screen URL</label>
-      <input [value]="info.url" matInput class="inputUrl" id="input-url" readonly type="text"/>
+      <input [value]="screen.url" matInput class="inputUrl" id="input-url" readonly type="text"/>
       <button mat-button
               matSuffix
               (click)="copyURL()"

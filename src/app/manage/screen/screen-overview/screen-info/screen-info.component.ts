@@ -1,11 +1,22 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Clip, ScreenViewEntry} from "@memebox/contracts";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import {combineLatest, Observable} from "rxjs";
+import {filter, map, tap} from "rxjs/operators";
 import {AppQueries} from "../../../../state/app.queries";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {EXPRESS_BASE} from "../../../../state/app.service";
 
+function createLocalOrProductionUrlBase() {
+  const port = location.port;
+  let urlBase = EXPRESS_BASE;
+
+  if (port === '4200') {
+    urlBase = location.host;
+  }
+
+  return urlBase;
+}
 
 @Component({
   selector: 'app-screen-info',
@@ -15,10 +26,28 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class ScreenInfoComponent implements OnInit {
 
   @Input()
-  public info: ScreenViewEntry;
-  public clipList$: Observable<Clip[]> = this.appQueries.clipList$.pipe(
-    map(clipList => clipList.filter(clip => !!this.info.clips[clip.id]))
-  )
+  public screenId: string;
+
+  @Input()
+  public info$: Observable<ScreenViewEntry> = this.appQueries.screenMap$.pipe(
+    filter(screenMap => !!screenMap[this.screenId]),
+    map(screenMap => ({
+      ...screenMap[this.screenId],
+      url: `${createLocalOrProductionUrlBase()}/#/screen/${this.screenId}`
+    })
+  ),
+    tap(screenInfo => {
+      this._info = screenInfo;
+    })
+  );
+
+  public clipList$: Observable<Clip[]> = combineLatest([
+    this.info$,
+    this.appQueries.clipList$
+  ]).pipe(
+    map(([screen, clipList]) => clipList.filter(clip => !!screen.clips[clip.id]))
+  );
+
   @Output()
   public onEdit = new EventEmitter();
 
@@ -37,6 +66,8 @@ export class ScreenInfoComponent implements OnInit {
   @Output()
   public onReload = new EventEmitter();
 
+  private _info: ScreenViewEntry;
+
   constructor(private appQueries: AppQueries,
               private clipboard: Clipboard,
               private _snackBar: MatSnackBar) {
@@ -46,7 +77,7 @@ export class ScreenInfoComponent implements OnInit {
   }
 
   copyURL(): void {
-    if (this.clipboard.copy(this.info.url)) {
+    if (this.clipboard.copy(this._info.url)) {
       this._snackBar.open('URL copied to clipboard', null, {
         duration: 5000,
         verticalPosition: 'top'
