@@ -24,6 +24,9 @@ function createLocalOrProductionUrlBase() {
   return urlBase;
 }
 
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 @Component({
   selector: 'app-screen-overview',
@@ -103,11 +106,14 @@ export class ScreenOverviewComponent implements OnInit {
     });
   }
 
-  onPreview(clipId: string, screen: ScreenViewEntry) {
+  async onPreview(clipId: string, screen: ScreenViewEntry) {
     if (clipId) {
       this.webSocket.triggerClipOnScreen(clipId, screen.id);
-    } else{
-      this.snackbar.sorry('Not implemented yet, sorry.')
+    } else {
+      for (const clipId of Object.keys(screen.clips)) {
+        this.webSocket.triggerClipOnScreen(clipId, screen.id);
+        await timeout(3500)
+      }
     }
 
   }
