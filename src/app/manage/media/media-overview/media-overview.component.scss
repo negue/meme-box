@@ -5,7 +5,29 @@
   height: 100%;
 }
 
-app-filter {
-  display: block;
-  margin: 2rem;
+:host {
+  app-filter {
+    display: block;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+
+    width: 100%;
+    position: sticky;
+    top: 3.05rem;
+    z-index: 10;
+
+    background: var(--palette-background-background) !important;
+
+    ::ng-deep {
+      .filterRow {
+        margin-bottom: 1rem;
+      }
+    }
+
+  }
+
 }
+
+
