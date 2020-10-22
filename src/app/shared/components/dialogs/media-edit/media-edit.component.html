@@ -175,7 +175,7 @@
       </mat-form-field>
     </div>
 
-    <mat-form-field *ngIf="data?.id == null">
+    <mat-form-field *ngIf="data?.id == null && form.value.type !== MediaType.Meta">
       <mat-select placeholder="Also add to this Screen:"
                   [(value)]="selectedScreenId">
         <mat-option value="">None</mat-option>

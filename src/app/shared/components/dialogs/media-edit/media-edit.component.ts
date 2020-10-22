@@ -224,7 +224,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     await this.appService.addOrUpdateClip(valueAsClip);
 
-    if (this.selectedScreenId) {
+    if (this.selectedScreenId && valueAsClip.type !== MediaType.Meta) {
       this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
         id: valueAsClip.id,
       });
