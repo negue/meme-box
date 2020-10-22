@@ -53,13 +53,13 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     metaDelay: 0,
   });
 
+  currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
+
   availableMediaFiles$ = combineLatest([
     this.appQuery.currentMediaFile$.pipe(filter((files) => !!files)),
-    this.form.valueChanges.pipe(startWith(INITIAL_CLIP)),
+    this.currentMediaType$,
   ]).pipe(
-    map(([mediaFiles, currentFormValues]) => {
-      const currentFileType = currentFormValues.type;
-
+    map(([mediaFiles, currentFileType]) => {
       return mediaFiles.filter((m) => m.fileType === currentFileType);
     })
   );
@@ -125,6 +125,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     this.data = Object.assign({}, INITIAL_CLIP, this.data);
 
     this.showOnMobile = this.data.showOnMobile;
+
+    this.currentMediaType$.next(this.data.type);
   }
 
   get MediaType() {
@@ -144,6 +146,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
         takeUntil(this._destroy$)
       )
       .subscribe(([prev, next]) => {
+        this.currentMediaType$.next(next);
+
         this.form.patchValue({
           path: "",
           previewUrl: "",
