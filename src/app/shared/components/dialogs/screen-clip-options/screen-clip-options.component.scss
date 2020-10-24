@@ -1,7 +1,5 @@
 :host {
   display: block;
-  max-width: 600px;
-  min-width: 320px;
 }
 
 form {
@@ -22,4 +20,28 @@ form {
 
 textarea {
   min-height: 15rem;
+}
+
+.two-columns {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 920px) {
+    flex-direction: column;
+  }
+}
+
+.column {
+  flex: 1;
+  align-self: stretch;
+
+  > * {
+    width: 100%;
+  }
+
+  &:last-child {
+    @media screen and (min-width: 920px) {
+      margin-left: 1rem;
+    }
+  }
 }

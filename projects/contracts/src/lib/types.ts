@@ -82,6 +82,8 @@ export interface ScreenClip extends HasId  {
   animationIn?: string|null;
   animationOut?: string|null;
 
+  zIndex?: number;
+
   customCss?: string;
 }
 

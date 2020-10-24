@@ -47,6 +47,8 @@ export class ScreenClipOptionsComponent implements OnInit {
     animationIn: '',
     animationOut: '',
 
+    zIndex: 1,
+
     customCss: ''
   });
 
