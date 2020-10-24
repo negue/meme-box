@@ -56,7 +56,9 @@ export class DialogService {
   showScreenClipOptionsDialog(payload: ScreenClipOptionsPayload) {
     this._dialog.open(
       ScreenClipOptionsComponent, {
-        data: payload
+        data: payload,
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw'
       }
     )
   }
