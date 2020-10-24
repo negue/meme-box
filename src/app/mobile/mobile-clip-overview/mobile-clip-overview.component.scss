@@ -33,6 +33,12 @@ $toolbarHeight: 64px;
     }
   }
 
+  &.reload-item {
+    .mat-card {
+      display: flex;
+    }
+  }
+
   &-wide {
     width: 100%;
   }
@@ -54,8 +60,8 @@ mat-toolbar {
   flex: 1 1 auto;
 }
 
-app-clip-type {
-  display: inline;
+app-clip-type, mat-icon {
+  display: inline-block;
   padding-right: 0.5rem;
 }
 

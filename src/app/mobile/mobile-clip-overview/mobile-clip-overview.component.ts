@@ -98,4 +98,8 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
     this._destroy$.next();
     this._destroy$.complete();
   }
+
+  reloadPage() {
+    location.reload();
+  }
 }

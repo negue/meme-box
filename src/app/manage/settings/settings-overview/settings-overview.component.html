@@ -33,9 +33,26 @@
   <app-overview-item>
     <div class="title-row">
       <h2 class="mat-h2 title-name">Danger!!</h2>
-
+      <mat-icon svgIcon="warning"></mat-icon>
     </div>
 
     <app-persistence-actions></app-persistence-actions>
   </app-overview-item>
+
+<app-overview-item>
+  <div class="title-row">
+    <h2 class="mat-h2 title-name">Reload</h2>
+    <mat-icon svgIcon="replay"></mat-icon>
+  </div>
+
+  In case the view, is used inside OBS Custom Docks, and it maybe not refreshing, you can use this button to reload.
+<br/>
+<br/>
+  <button (click)="reload()" color="primary" mat-flat-button>
+    <mat-icon svgIcon="replay"></mat-icon>
+    Reload Screen
+  </button>
+
+
+</app-overview-item>
 </app-card-overview>

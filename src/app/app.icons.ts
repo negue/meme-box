@@ -27,5 +27,6 @@ export const APP_ICONS = [
   'tag',
   'videocam',
   'video_library',
+  'warning',
   'wifi_off'
 ];

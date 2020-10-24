@@ -31,4 +31,8 @@ export class SettingsOverviewComponent implements OnInit {
   openMediaFolderExplorer(): void {
     this.service.openMediaFolder();
   }
+
+  reload() {
+    location.reload();
+  }
 }
