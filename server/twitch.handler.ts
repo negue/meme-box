@@ -50,7 +50,7 @@ export class TwitchHandler {
       const command = this.getCommandOfMessage(message);
 
       this.handle({
-       // event: TwitchEventTypes.message,
+        // event: TwitchEventTypes.message,
         message,
         command,
         tags
@@ -64,7 +64,7 @@ export class TwitchHandler {
 
       // todo add the correct twitchevent-types?
       this.handle({
-       // event: TwitchEventTypes.message,
+        // event: TwitchEventTypes.message,
         message,
         command,
         tags
@@ -120,31 +120,33 @@ export class TwitchHandler {
   }
 
   getLevelOfTags(userState: tmi.Userstate): string[]{
+    const levels = ['user'];
+
     if (!userState.badges) {
-      return ['user'];
+      return levels;
     }
 
     if (userState.badges.broadcaster) {
-      return ['broadcaster'];
+      levels.push('broadcaster');
     }
 
     if (userState.badges.moderator) {
-      return ['moderator'];
+      levels.push('moderator');
     }
 
     if (userState.badges.founder) {
-      return ['founder', 'subscriber']
+      levels.push('founder', 'subscriber');
     }
 
     if (userState.badges.subscriber) {
-      return ['subscriber'];
+      levels.push('subscriber');
     }
 
     if (userState.badges.vip) {
-      return ['vip'];
+      levels.push('vip');
     }
 
-    return ['user'];
+    return levels;
   }
 
   handle(trigger: TwitchTriggerCommand) {

@@ -1,8 +1,8 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {Clip, HasId, Screen, ScreenViewEntry} from "@memebox/contracts";
+import {Clip, HasId, Screen} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {AppService, EXPRESS_BASE} from "../../../state/app.service";
+import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {WebsocketService} from "../../../core/services/websocket.service";
@@ -13,17 +13,10 @@ import {
   ClipAssigningMode
 } from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
-function createLocalOrProductionUrlBase() {
-  const port = location.port;
-  let urlBase = EXPRESS_BASE;
 
-  if (port === '4200') {
-    urlBase = location.host;
-  }
-
-  return urlBase;
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 
 @Component({
   selector: 'app-screen-overview',
@@ -32,10 +25,9 @@ function createLocalOrProductionUrlBase() {
 })
 export class ScreenOverviewComponent implements OnInit {
 
-  public screenList: Observable<ScreenViewEntry[]> = this._queries.screensList$.pipe(
+  public screenList: Observable<Screen[]> = this._queries.screensList$.pipe(
     map(stateUrlArray => stateUrlArray.map(screen => ({
-      ...screen,
-      url: `${createLocalOrProductionUrlBase()}/#/screen/${screen.id}`
+      ...screen
     })))
   )
 
@@ -63,7 +55,7 @@ export class ScreenOverviewComponent implements OnInit {
     this.showDialog({});
   }
 
-  async delete(obsInfo: ScreenViewEntry) {
+  async delete(obsInfo: Screen) {
     const confirmationResult = await this._dialog.showConfirmationDialog(
       {
         title: 'Are you sure you want to delete this screen?'
@@ -91,7 +83,7 @@ export class ScreenOverviewComponent implements OnInit {
     )
   }
 
-  deleteAssigned(obsInfo: ScreenViewEntry, clipId: string) {
+  deleteAssigned(obsInfo: Screen, clipId: string) {
     this.service.deleteScreenClip(obsInfo.id, clipId);
   }
 
@@ -103,16 +95,19 @@ export class ScreenOverviewComponent implements OnInit {
     });
   }
 
-  onPreview(clipId: string, screen: ScreenViewEntry) {
+  async onPreview(clipId: string, screen: Screen) {
     if (clipId) {
       this.webSocket.triggerClipOnScreen(clipId, screen.id);
-    } else{
-      this.snackbar.sorry('Not implemented yet, sorry.')
+    } else {
+      for (const clipId of Object.keys(screen.clips)) {
+        this.webSocket.triggerClipOnScreen(clipId, screen.id);
+        await timeout(3500)
+      }
     }
 
   }
 
-  onReload(screen: ScreenViewEntry) {
+  onReload(screen: Screen) {
     this.webSocket.triggerReloadScreen(screen.id);
     this.snackbar.normal(`Screen: ${screen.name} reloaded`);
   }

@@ -15,7 +15,6 @@ import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 
-
 const routes: Routes = [
   {
     path: '',
@@ -27,22 +26,22 @@ const routes: Routes = [
 @NgModule({
   // todo finish renaming
   declarations: [ScreenOverviewComponent, ScreenInfoComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        MatListModule,
-        MatInputModule,
-        MatSelectModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ClipTypeModule,
-        GettingStartedModule,
-        CardOverviewModule,
-    ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatListModule,
+    MatInputModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ClipTypeModule,
+    GettingStartedModule,
+    CardOverviewModule,
+  ],
 })
 export class ScreensModule {
 }
