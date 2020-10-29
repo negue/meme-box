@@ -14,7 +14,7 @@ import {createInitialState} from "../projects/contracts/src/lib/createInitialSta
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
-import {createDirIfNotExists} from "./path.utils";
+import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
 import {uuidv4} from "../projects/utils/src/lib/uuid";
 import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
 import {operations} from '../projects/state/src/public-api';
@@ -350,27 +350,6 @@ export const PERSISTENCE: {
 } = {
   instance: null
 }
-
-
-// Get the config path (for the settings.json)
-const configPathArgument = process.argv.find(arg => arg.includes('--config'));
-
-// Gets the correct User-AppData Folder
-const userDataFolder = process.env.APPDATA ||
-  (process.platform == 'darwin'
-    ? `${process.env.HOME}/Library/Preferences`
-    : `${process.env.HOME}/.local/share`)
-;
-
-export const NEW_CONFIG_PATH = configPathArgument
-  ? configPathArgument.replace('--config=', '')
-  : path.join(userDataFolder, 'meme-box');
-
-createDirIfNotExists(NEW_CONFIG_PATH);
-
-export const LOG_PATH = path.join(NEW_CONFIG_PATH, 'logs');
-
-createDirIfNotExists(LOG_PATH);
 
 LOGGER.info({NEW_CONFIG_PATH, LOG_PATH});
 

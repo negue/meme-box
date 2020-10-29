@@ -1,6 +1,6 @@
 import {createLogger, format, transports} from 'winston';
 import DailyRotateFile from "winston-daily-rotate-file";
-import {LOG_PATH} from "./persistence";
+import {LOG_PATH} from "./path.utils";
 
 const { combine, timestamp, printf, colorize, label } = format;
 
