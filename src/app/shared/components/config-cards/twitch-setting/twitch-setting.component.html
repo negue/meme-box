@@ -32,4 +32,8 @@
   <div class="explanation">
     If you want to trigger media clips on Twitch-Events, then you need to provide a Channel-Name in order subscribe to these events.
   </div>
+
+  <ng-container *ngIf="config$ | async as config" >
+    <mat-checkbox [checked]="config?.twitchLog" (change)="onCheckboxChanged($event, config)" >Enable Twitch LOG</mat-checkbox>
+  </ng-container>
 </div>

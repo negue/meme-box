@@ -142,6 +142,7 @@ export interface AppState extends SettingsState {
 export interface Config {
   mediaFolder:   string;
   twitchChannel: string;
+  twitchLog?: boolean;
 }
 
 export interface NetworkInfo {

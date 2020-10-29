@@ -319,6 +319,23 @@ export class AppService {
     this.snackbar.normal('Twitch Channel updated!');
   }
 
+  public async updateTwitchLogs(enabled: boolean) {
+    const newConfig: Partial<Config> = {
+      twitchLog: enabled
+    };
+
+    // update path & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_LOG}`, newConfig).toPromise();
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.twitchLog = enabled;
+    });
+
+
+    this.snackbar.normal(`Twitch ${enabled ? 'enabled' : 'disabled'}!`);
+  }
+
   public async openMediaFolder() {
     // update path & await
     await this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();

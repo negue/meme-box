@@ -6,6 +6,7 @@ import {
   CONFIG_ENDPOINT,
   CONFIG_MEDIA_ENDPOINT,
   CONFIG_TWITCH_CHANNEL_ENDPOINT,
+  CONFIG_TWITCH_LOG_ENDPOINT,
   DANGER_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
@@ -218,6 +219,15 @@ app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
   // update config
   res.send(PersistenceInstance.updateTwitchChannel(req.body.twitchChannel));
 });
+
+// TODO Refactor this config boilerplate !!!
+
+app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
+  // update config
+  res.send(PersistenceInstance.updateTwitchLog(req.body.twitchLog));
+});
+
+
 
 app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
