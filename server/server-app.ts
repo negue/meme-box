@@ -21,7 +21,7 @@ export const {server, wss} = createWebSocketServer(NEW_PORT);
 // Also mount the app here
 server.on('request', expressServer);
 
-let currentConfig = '';
+let currentConfigJsonString = '';
 let twitchHandler:TwitchHandler = null;
 
 PersistenceInstance.hardRefresh$()
@@ -45,8 +45,10 @@ PersistenceInstance.dataUpdated$()
     const config = PersistenceInstance.getConfig();
     const jsonOfConfig = JSON.stringify(config);
 
-    if (currentConfig !== jsonOfConfig) {
-      currentConfig = jsonOfConfig;
+    if (currentConfigJsonString !== jsonOfConfig
+      && !!config.twitchChannel
+    ) {
+      currentConfigJsonString = jsonOfConfig;
 
       LOGGER.info(`Creating the TwitchHandler for: ${config.twitchChannel}`);
 
