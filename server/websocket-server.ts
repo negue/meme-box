@@ -4,6 +4,7 @@ import {ACTIONS, TriggerClip} from "../projects/contracts/src/lib/actions";
 import {PersistenceInstance} from "./persistence";
 import {MetaTriggerTypes} from "../projects/contracts/src/lib/types";
 import {MediaType} from "../projects/contracts/src/lib/media.types";
+import {LOGGER} from "./logger.utils";
 
 // no type ?!
 interface WebSocketType {
@@ -37,6 +38,8 @@ export function sendDataToAllSockets (message: string) {
 }
 
 export async function triggerMediaClipById(payloadObs: TriggerClip) {
+  LOGGER.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen}`, payloadObs);
+
   const allScreens = PersistenceInstance.listScreens();
   const clipConfig = PersistenceInstance.fullState().clips[payloadObs.id];
 
