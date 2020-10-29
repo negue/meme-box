@@ -5,10 +5,12 @@ import {LOG_PATH} from "./persistence";
 const { combine, timestamp, printf, colorize, label } = format;
 
 
-export const textFormat = (space: string = null) => printf(({ level, label, timestamp, ...obj }) => {
+export const textFormat = (space: string = null) => printf(({ level, label, timestamp, message, ...obj }) => {
   label = label ? `[${label}] ` : '';
 
-  return `${timestamp} ${label}${level}: ${obj.message} ${JSON.stringify(obj, null, space)}`;
+  const hasProperties = Object.keys(obj).length !== 0;
+
+  return `${timestamp} ${label}${level}: ${JSON.stringify(message, null, space)} ${hasProperties ? JSON.stringify(obj, null, space) : ''}`;
 });
 
 
@@ -35,9 +37,12 @@ export const consoleFormat = (labelName: string) =>  combine(
   textFormat('  '),
 );
 
-export const fileFormat =  combine(
+export const fileFormat  = (labelName: string) =>   combine(
   timestampInstance,
 
+  label({
+    label: labelName
+  }),
   textFormat()
 );
 
@@ -49,7 +54,7 @@ export function newLogger(label: string, fileName: string) {
         format: consoleFormat(label),
       }),
       new DailyRotateFile({
-        format: fileFormat,
+        format: fileFormat(label),
         dirname: LOG_PATH,
         filename: fileName,
         stream: null,
@@ -60,3 +65,28 @@ export function newLogger(label: string, fileName: string) {
 }
 
 export const LOGGER = newLogger('MemeBox', 'memebox');
+
+LOGGER.info('##########  Started  ##########');
+
+LOGGER.on('error', function (err) { console.error(err)});
+
+function logAndExit (type: string) {
+  process.on(type as any, (err: Error) => {
+
+    if (typeof err === 'string') {
+      LOGGER.error({type, err});
+    } else {
+      LOGGER.error({type, ...err});
+    }
+
+    // Exiting the process on error, doesnt work,
+    // because the Logging-Stream cant work then to write the error...
+
+    return true;
+  });
+}
+
+// log and exit for uncaughtException events.
+logAndExit('uncaughtException');
+// log and exit for unhandledRejection events.
+logAndExit('unhandledRejection');
