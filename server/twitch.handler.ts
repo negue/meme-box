@@ -1,14 +1,30 @@
 import * as tmi from 'tmi.js';
-import {Subscription} from "rxjs";
-import {PersistenceInstance} from "./persistence";
-import {startWith} from "rxjs/operators";
-import {Twitch, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
-import {triggerMediaClipById} from "./websocket-server";
+import { Subscription } from 'rxjs';
+import { PersistenceInstance } from './persistence';
+import { startWith } from 'rxjs/operators';
+import { Twitch, TwitchEventTypes, TwitchTriggerCommand } from '../projects/contracts/src/lib/types';
+import { triggerMediaClipById } from './websocket-server';
 
-declare module "tmi.js" {
+declare module 'tmi.js' {
   export interface Badges {
     founder?: string;
   }
+}
+
+const _DEBUG = true;
+const tmiConfig = {
+  connection: {
+    secure: true,
+    reconnect: true
+  }
+};
+
+if (_DEBUG) {
+  tmiConfig.connection['server'] = 'irc.fdgt.dev';
+  tmiConfig['identity'] = {
+    username: 'meme-box',
+    password: ''
+  };
 }
 
 export class TwitchHandler {
@@ -17,13 +33,8 @@ export class TwitchHandler {
   private twitchSettings: Twitch[] = [];
 
   constructor(twitchAccount: string) {
-    this.tmiClient = tmi.Client({
-      connection: {
-        secure: true,
-        reconnect: true
-      },
-      channels: [ twitchAccount ]
-    });
+    tmiConfig['channels'] = [twitchAccount];
+    this.tmiClient = tmi.Client(tmiConfig);
 
     this.connectAndListen();
   }
@@ -36,15 +47,15 @@ export class TwitchHandler {
     this.tmiClient.disconnect();
   }
 
-  private async connectAndListen () {
+  private async connectAndListen() {
     const connectionResult = await this.tmiClient.connect();
 
     this.persistenceSubscription = PersistenceInstance.dataUpdated$().pipe(
-      startWith(true),
+      startWith(true)
     ).subscribe(value => {
       console.info('Data Updated got the new events');
       this.twitchSettings = PersistenceInstance.listTwitchEvents();
-    })
+    });
 
     this.tmiClient.on('message', (channel, tags, message, self) => {
       const command = this.getCommandOfMessage(message);
@@ -78,6 +89,9 @@ export class TwitchHandler {
       const command = this.getCommandOfMessage(message);
 
       // todo add the correct twitchevent-types!
+
+      //TODO: Review if the user messages should be allowed to play a media. Because someone could send bits with
+      // a message of !wow and trigger 2 clips at the same time that could overlap
       this.handle({
         // event: TwitchEventTypes.message,
         message,
@@ -85,11 +99,33 @@ export class TwitchHandler {
         tags
       });
 
+      //if the amount for bits is present
+      if (tags.bits !== undefined) {
+        this.twitchSettings.forEach((twitchEvent: Twitch) => {
+          //TODO: Review if we should show each event that matches the criteria or only the first one?
+          if (twitchEvent['event'] === TwitchEventTypes.bits && tags.bits <= twitchEvent['bitAmount']) {
+            this.handle({
+              message,
+              command: twitchEvent,
+              tags
+            });
+          }
+        });
+      }
+
       console.log(`TMI-Cheer: ${tags['display-name']}: ${message}`, channel, tags);
     });
+
+    if (_DEBUG) {
+      setTimeout(() => {
+        this.tmiClient.getChannels().forEach((channel) => {
+          this.tmiClient.say(`#${channel}`, 'bits').catch(err => console.log(err));
+        });
+      }, 2000);
+    }
   }
 
-  getCommandOfMessage (message: string): Twitch {
+  getCommandOfMessage(message: string): Twitch {
     if (!message) {
       return null;
     }
@@ -119,7 +155,7 @@ export class TwitchHandler {
     return foundCommand;
   }
 
-  getLevelOfTags(userState: tmi.Userstate): string[]{
+  getLevelOfTags(userState: tmi.Userstate): string[] {
     const levels = ['user'];
 
     if (!userState.badges) {
@@ -160,7 +196,7 @@ export class TwitchHandler {
       console.info('Found Levels', foundLevels);
       console.info('Needed Levels', trigger.command?.roles);
 
-      if (foundLevels.includes("broadcaster") || trigger.command?.roles.some(r => foundLevels.includes(r))) {
+      if (foundLevels.includes('broadcaster') || trigger.command?.roles.some(r => foundLevels.includes(r))) {
         console.info('Triggering Clip: ', trigger.command.clipId);
 
         triggerMediaClipById({

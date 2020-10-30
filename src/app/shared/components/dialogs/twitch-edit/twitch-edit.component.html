@@ -32,7 +32,7 @@
 
         </div>
 
-        <div class="example-container">
+        <div class="example-container" *ngIf="form.value.event === twitchEvents[1]">
           <mat-form-field appearance="outline">
             <mat-label>Message text to trigger event</mat-label>
             <input autocomplete="off"
@@ -42,7 +42,15 @@
           </mat-form-field>
         </div>
 
-
+        <div class="example-container" *ngIf="form.value.event === twitchEvents[0]">
+          <mat-form-field appearance="outline">
+            <mat-label>Maximum amount of bits to trigger the event</mat-label>
+            <input autocomplete="off"
+                   formControlName="bitAmount"
+                   placeholder="100"
+                   matInput>
+          </mat-form-field>
+        </div>
 
       </form>
     </div>

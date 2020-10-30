@@ -1,17 +1,17 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
-import {Observable, Subject} from "rxjs";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {Clip, Dictionary, Twitch, TwitchEventTypes, TwitchTypesArray} from "@memebox/contracts";
-import {AppService} from "../../../../state/app.service";
-import {AppQueries} from "../../../../state/app.queries";
-import {SnackbarService} from "../../../../core/services/snackbar.service";
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Observable, Subject } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Clip, Dictionary, Twitch, TwitchEventTypes, TwitchTypesArray } from '@memebox/contracts';
+import { AppService } from '../../../../state/app.service';
+import { AppQueries } from '../../../../state/app.queries';
+import { SnackbarService } from '../../../../core/services/snackbar.service';
 import {
   ClipAssigningDialogComponent,
   ClipAssigningDialogOptions,
   ClipAssigningMode
-} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
-import {filter, take} from "rxjs/internal/operators";
+} from '../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component';
+import { filter, take } from 'rxjs/internal/operators';
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {
@@ -66,6 +66,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     event: "",
     clipId: "",
     contains: "",
+    bitAmount: 0
   });
 
   twitchEvents = TwitchTypesArray;

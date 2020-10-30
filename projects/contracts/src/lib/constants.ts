@@ -1,4 +1,4 @@
-import {TwitchEventTypes} from "./types";
+import { TwitchEventTypes } from './types';
 
 // TODO merge App / Server Endpoint CONSTANTS
 
@@ -18,9 +18,9 @@ export const ENDPOINTS = {
 export const TwitchTypesArray = [
   // TwitchEventTypes.follow,
   // TwitchEventTypes.sub,
-  // TwitchEventTypes.bits,
+  TwitchEventTypes.bits,
   // TwitchEventTypes.channelPoints,
   // TwitchEventTypes.host,
-  TwitchEventTypes.message,
+  TwitchEventTypes.message
   // TwitchEventTypes.raid,
 ];
