@@ -21,10 +21,9 @@ const tmiConfig = {
 
 if (_DEBUG) {
   tmiConfig.connection['server'] = 'irc.fdgt.dev';
-  tmiConfig['identity'] = {
-    username: 'meme-box',
-    password: ''
-  };
+  tmiConfig['channels'] = ['fdgt'];
+  //Doesn't need password set, but needs to have this object present in order for fdgt to work.
+  tmiConfig['identity'] = { username: 'meme-box', password: '' };
 }
 
 export class TwitchHandler {
@@ -33,7 +32,10 @@ export class TwitchHandler {
   private twitchSettings: Twitch[] = [];
 
   constructor(twitchAccount: string) {
-    tmiConfig['channels'] = [twitchAccount];
+    if (!_DEBUG) {
+      tmiConfig['channels'] = [twitchAccount];
+    }
+
     this.tmiClient = tmi.Client(tmiConfig);
 
     this.connectAndListen();
@@ -118,9 +120,7 @@ export class TwitchHandler {
 
     if (_DEBUG) {
       setTimeout(() => {
-        this.tmiClient.getChannels().forEach((channel) => {
-          this.tmiClient.say(`#${channel}`, 'bits').catch(err => console.log(err));
-        });
+        this.tmiClient.say('fdgt', 'bits').catch(err => console.log(err));
       }, 2000);
     }
   }
