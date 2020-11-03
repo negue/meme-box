@@ -11,36 +11,22 @@ declare module 'tmi.js' {
   }
 }
 
-const _DEBUG = true;
-const tmiConfig = {
-  connection: {
-    secure: true,
-    reconnect: true
-  }
-};
-
-if (_DEBUG) {
-  tmiConfig.connection['server'] = 'irc.fdgt.dev';
-  tmiConfig['channels'] = ['fdgt'];
-  //Doesn't need password set, but needs to have this object present in order for fdgt to work.
-  tmiConfig['identity'] = { username: 'meme-box', password: '' };
-}
-
 export class TwitchHandler {
   private tmiClient: tmi.Client;
   private persistenceSubscription: Subscription;
   private twitchSettings: Twitch[] = [];
 
   constructor(twitchAccount: string) {
-    if (!_DEBUG) {
-      tmiConfig['channels'] = [twitchAccount];
-    }
-
-    this.tmiClient = tmi.Client(tmiConfig);
+    this.tmiClient = tmi.Client({
+      connection: {
+        secure: true,
+        reconnect: true,
+      },
+      channels: [twitchAccount]
+    });
 
     this.connectAndListen();
   }
-
 
   public disconnect() {
     if (this.persistenceSubscription) {
@@ -50,11 +36,11 @@ export class TwitchHandler {
   }
 
   private async connectAndListen() {
-    const connectionResult = await this.tmiClient.connect();
+    await this.tmiClient.connect();
 
     this.persistenceSubscription = PersistenceInstance.dataUpdated$().pipe(
       startWith(true)
-    ).subscribe(value => {
+    ).subscribe(() => {
       console.info('Data Updated got the new events');
       this.twitchSettings = PersistenceInstance.listTwitchEvents();
     });
@@ -86,11 +72,9 @@ export class TwitchHandler {
       console.log(`TMI-Action: ${tags['display-name']}: ${message}`, channel, tags);
     });
 
-
     this.tmiClient.on('cheer', (channel, tags, message) => {
       const command = this.getCommandOfMessage(message, { event: TwitchEventTypes.bits, bitsCount: parseInt(tags.bits) });
       // todo add the correct twitchevent-types!
-      console.log("Command", command);
       this.handle({
         // event: TwitchEventTypes.message,
         message,
@@ -98,17 +82,8 @@ export class TwitchHandler {
         tags
       });
 
-      //console.log(`TMI-Cheer: ${tags['display-name']}: ${message}`, channel, tags);
+      console.log(`TMI-Cheer: ${tags['display-name']}: ${message}`, channel, tags);
     });
-
-    if (_DEBUG) {
-      setTimeout(() => {
-        setTimeout(() => {
-          this.tmiClient.say('fdgt', 'bits').catch(err => console.log(err));
-        }, 5000);
-        this.tmiClient.say('fdgt', '!noice').catch(err => console.log(err));
-      }, 2000);
-    }
   }
 
   getCommandOfMessage(message: string, eventOptions?: TwitchEventOptions ): Twitch {
@@ -202,7 +177,6 @@ export class TwitchHandler {
     }
   }
 }
-
 
 interface TwitchEventOptions {
   event: string,
