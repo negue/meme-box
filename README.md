@@ -63,6 +63,14 @@ npm run start:app
 npm run start:server
 ```
 
+## Commandline Options
+
+|Config|Default|Explanation|
+|--|--|--|
+|`--port=`|`4444`|The Server Port|
+|`--config=`||`Your user appdata folder/meme-box`|
+
+
 ## Building the binaries
 
 ### Headless
@@ -81,8 +89,10 @@ npm run electron:build
 ```
 
 ### Folders
-Client is in `src/app`
+Client is in `src/app` 
+
 Server is in `main.ts` and `server/*`
+
 Streamdeck-Plugin is in `memebox-streamdeck`
 
 ## Based on this Template:

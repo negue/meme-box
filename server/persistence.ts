@@ -14,20 +14,15 @@ import {createInitialState} from "../projects/contracts/src/lib/createInitialSta
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
-import {createDirIfNotExists} from "./path.utils";
+import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
 import {uuidv4} from "../projects/utils/src/lib/uuid";
 import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
 import {operations} from '../projects/state/src/public-api';
 import {debounceTime} from "rxjs/operators";
+import {LOGGER} from "./logger.utils";
 // Todo ts-config paths!!!
 
 // TODO Extract more state operations to shared library and from app
-
-const initialScreenObj: Screen = Object.freeze({
-  id: '',
-  name: '',
-  clips: {}
-});
 
 let fileBackupToday = false;
 
@@ -36,6 +31,8 @@ export class Persistence {
   private updated$ = new Subject();
   private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
+
+  private logger  = LOGGER.child({ label: 'Persistence' });
 
   constructor(private filePath: string) {
     const dir = path.dirname(filePath);
@@ -78,7 +75,7 @@ export class Persistence {
     this.updated$.pipe(
       debounceTime(2000)
     ).subscribe(() => {
-      console.log('Data saved!');
+      this.logger.info('Data saved!');
       saveFile(this.filePath, this.data, true);
     });
   }
@@ -111,8 +108,6 @@ export class Persistence {
   }
 
   public updateClip(id: string, clip: Clip) {
-    console.info({clip});
-
     clip.id = id;
     updateItemInDictionary(this.data.clips, clip);
 
@@ -181,7 +176,6 @@ export class Persistence {
   }
 
   public updateScreen(id: string, screen: Screen) {
-
     screen.id = id;
 
     updateItemInDictionary(this.data.screen, screen);
@@ -264,7 +258,6 @@ export class Persistence {
   }
 
   public updateMediaFolder (newFolder: string) {
-    console.info({newFolder});
     this.data.config = this.data.config || {};
     this.data.config.mediaFolder = newFolder;
 
@@ -275,6 +268,13 @@ export class Persistence {
   public updateTwitchChannel (channel: string) {
     this.data.config = this.data.config || {};
     this.data.config.twitchChannel  = channel;
+
+    this.saveData();
+  }
+
+  public updateTwitchLog (enabled: boolean) {
+    this.data.config = this.data.config || {};
+    this.data.config.twitchLog = enabled;
 
     this.saveData();
   }
@@ -294,11 +294,6 @@ export class Persistence {
   }
 
   public addAllClipsToScreen(screenId: string, clipList: Partial<Clip>[]) {
-    console.info('addAllClipsToScreen', {
-      screenId,
-      clipLength: clipList.length
-    });
-
     const currentScreen = this.data.screen[screenId];
 
     const prevJson = JSON.stringify(currentScreen);
@@ -308,7 +303,7 @@ export class Persistence {
     clipList.forEach(clip => {
       operations.addClip(this.data, clip, true);
 
-      console.info('Added clip', clip.id, clip.name);
+      this.logger.info('Added clip', clip.id, clip.name);
 
       operations.addScreenClip(this.data, screenId, {
         id: clip.id,
@@ -318,12 +313,8 @@ export class Persistence {
         animationOut: 'random'
       });
 
-      console.info('Add Clip to screen', clip.id, screenId);
+      this.logger.info('Add Clip to screen', clip.id, screenId);
     });
-
-
-    const nextJson = JSON.stringify(currentScreen);
-    console.warn({ screenId, prevJson, nextJson });
 
     this.saveData();
   }
@@ -335,8 +326,6 @@ export class Persistence {
   private saveData() {
     this.updated$.next();
   }
-
-
 }
 
 // TODO change to promise / async
@@ -362,25 +351,8 @@ export const PERSISTENCE: {
   instance: null
 }
 
-
-// Get the config path (for the settings.json)
-const configPathArgument = process.argv.find(arg => arg.includes('--config'));
-
-// Gets the correct User-AppData Folder
-const userDataFolder = process.env.APPDATA ||
-  (process.platform == 'darwin'
-    ? `${process.env.HOME}/Library/Preferences`
-    : `${process.env.HOME}/.local/share`)
-;
-
-export const NEW_CONFIG_PATH = configPathArgument
-  ? configPathArgument.replace('--config=', '')
-  : path.join(userDataFolder, 'meme-box');
-
-createDirIfNotExists(NEW_CONFIG_PATH);
-
-console.log({NEW_CONFIG_PATH});
-
+LOGGER.info({NEW_CONFIG_PATH, LOG_PATH});
 
 export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
+
 PERSISTENCE.instance = PersistenceInstance;

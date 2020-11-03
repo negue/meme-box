@@ -1,9 +1,13 @@
 import * as tmi from 'tmi.js';
+import {EmoteObj} from 'tmi.js';
 import {Subscription} from "rxjs";
 import {PersistenceInstance} from "./persistence";
 import {startWith} from "rxjs/operators";
 import {Twitch, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
 import {triggerMediaClipById} from "./websocket-server";
+import {Logger} from 'winston';
+import {newLogger} from "./logger.utils";
+
 
 declare module "tmi.js" {
   export interface Badges {
@@ -15,8 +19,9 @@ export class TwitchHandler {
   private tmiClient: tmi.Client;
   private persistenceSubscription: Subscription;
   private twitchSettings: Twitch[] = [];
+  private logger: Logger;
 
-  constructor(twitchAccount: string) {
+  constructor(twitchAccount: string, private enabledLogger: boolean) {
     this.tmiClient = tmi.Client({
       connection: {
         secure: true,
@@ -26,6 +31,9 @@ export class TwitchHandler {
     });
 
     this.connectAndListen();
+    if (enabledLogger) {
+      this.createLogger();
+    }
   }
 
 
@@ -49,33 +57,29 @@ export class TwitchHandler {
     this.tmiClient.on('message', (channel, tags, message, self) => {
       const command = this.getCommandOfMessage(message);
 
+      this.log({
+        type: 'message',
+        tags,
+        message,
+      });
+
       this.handle({
         // event: TwitchEventTypes.message,
         message,
         command,
         tags
       });
-
-      console.log(`TMI-Message: ${tags['display-name']}: ${message}`, tags);
-    });
-
-    this.tmiClient.on('action', (channel, tags, message, self) => {
-      const command = this.getCommandOfMessage(message);
-
-      // todo add the correct twitchevent-types?
-      this.handle({
-        // event: TwitchEventTypes.message,
-        message,
-        command,
-        tags
-      });
-
-      console.log(`TMI-Action: ${tags['display-name']}: ${message}`, channel, tags);
     });
 
 
     this.tmiClient.on('cheer', (channel, tags, message) => {
       const command = this.getCommandOfMessage(message);
+
+      this.log({
+        type: 'cheer',
+        tags,
+        message,
+      });
 
       // todo add the correct twitchevent-types!
       this.handle({
@@ -84,9 +88,46 @@ export class TwitchHandler {
         command,
         tags
       });
-
-      console.log(`TMI-Cheer: ${tags['display-name']}: ${message}`, channel, tags);
     });
+
+    this.subscribeToUnusedTmiEvents();
+
+    /*
+    *
+
+
+
+    *
+   anongiftpaidupgrade(channel: string, username: string, userstate: AnonSubGiftUpgradeUserstate): void;
+    ban(channel: string, username: string, reason: string): void;
+
+    clearchat(channel: string): void;
+
+    emoteonly(channel: string, enabled: boolean): void;
+
+    followersonly(channel: string, enabled: boolean, length: number): void;
+    giftpaidupgrade(channel: string, username: string, sender: string, userstate: SubGiftUpgradeUserstate): void;
+    hosted(channel: string, username: string, viewers: number, autohost: boolean): void;
+    hosting(channel: string, target: string, viewers: number): void;
+
+    messagedeleted(channel: string, username: string, deletedMessage: string, userstate: DeleteUserstate): void;
+
+    notice(channel: string, msgid: MsgID, message: string): void;
+    raided(channel: string, username: string, viewers: number): void;
+
+    resub(channel: string, username: string, months: number, message: string, userstate: SubUserstate, methods: SubMethods): void;
+    roomstate(channel: string, state: RoomState): void;
+
+    slowmode(channel: string, enabled: boolean, length: number): void;
+    subgift(channel: string, username: string, streakMonths: number, recipient: string, methods: SubMethods, userstate: SubGiftUserstate): void;
+    submysterygift(channel: string, username: string, numbOfSubs: number, methods: SubMethods, userstate: SubMysteryGiftUserstate): void;
+
+    subscription(channel: string, username: string, methods: SubMethods, message: string, userstate: SubUserstate): void;
+    timeout(channel: string, username: string, reason: string, duration: number): void;
+    unhost(channel: string, viewers: number): void;
+
+    *
+    * */
   }
 
   getCommandOfMessage (message: string): Twitch {
@@ -168,5 +209,43 @@ export class TwitchHandler {
         });
       }
     }
+  }
+
+  private createLogger() {
+    this.logger = newLogger('Twitch', 'twitch');
+  }
+
+  private log(data: any) {
+    if(this.enabledLogger) {
+      this.logger.info(data);
+    }
+  }
+
+  private subscribeToUnusedTmiEvents() {
+
+    this.tmiClient.on('emotesets', (sets: string, obj: EmoteObj) => {
+      this.log({
+        type: 'emotesets',
+        sets,
+        obj,
+      });
+    } );
+
+    this.tmiClient.on('subscribers', (channel: string, enabled: boolean) => {
+      this.log({
+        type: 'subscribers',
+        channel,
+        enabled,
+      });
+    } );
+
+
+    this.tmiClient.on('vips', (channel: string, vips: string[]) => {
+      this.log({
+        type: 'vips',
+        channel,
+        vips,
+      });
+    } );
   }
 }

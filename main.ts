@@ -1,7 +1,9 @@
 import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import {expressServer} from './server/server-app';
-import {NEW_CONFIG_PATH} from "./server/persistence";
+import {NEW_CONFIG_PATH} from "./server/path.utils";
+
+// TODO move electron to its own folder / file??
 
 var fs = require("fs");
 
@@ -37,7 +39,7 @@ function createWindow(): BrowserWindow {
       electron: require(`${__dirname}/../node_modules/electron`),
       argv: ['--serve']
     });
-    win.loadURL('http://localhost:4200');
+    win.loadURL(`http://localhost:4200?port=${expressServer.get('port')}`);
   } else {
     win.loadURL(  `http://localhost:${expressServer.get('port')}`);
   }
