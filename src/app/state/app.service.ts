@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Tag, Twitch, VisibilityEnum} from "@memebox/contracts";
 import {
   API_PREFIX,
+  CONFIG_OPEN_ENDPOINT,
   DANGER_CLEAN_CONFIG_ENDPOINT,
   DANGER_IMPORT_ALL_ENDPOINT,
   FILES_ENDPOINT,
@@ -339,6 +340,11 @@ export class AppService {
   public async openMediaFolder() {
     // update path & await
     await this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();
+  }
+
+  public async openConfigFolder() {
+    // update path & await
+    await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_OPEN_ENDPOINT}`).toPromise();
   }
 
   fillDummyData() {

@@ -34,6 +34,7 @@
   </div>
 
   <ng-container *ngIf="config$ | async as config" >
+    <br/>
     <mat-checkbox [checked]="config?.twitchLog" (change)="onCheckboxChanged($event, config)" >Enable Twitch LOG</mat-checkbox>
   </ng-container>
 </div>

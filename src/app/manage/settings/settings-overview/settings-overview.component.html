@@ -55,4 +55,19 @@
 
 
 </app-overview-item>
+
+  <app-overview-item>
+    <div class="title-row">
+      <h2 class="mat-h2 title-name">Config folder</h2>
+      <mat-icon svgIcon="folder"></mat-icon>
+    </div>
+
+    <div class="action-buttons">
+      <button (click)="openConfigFolder()" color="accent"
+              mat-raised-button>
+        <mat-icon svgIcon="launch"></mat-icon>
+        Open Config Folder
+      </button>
+    </div>
+  </app-overview-item>
 </app-card-overview>

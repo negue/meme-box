@@ -1,6 +1,6 @@
 export const DEFAULT_PORT = 4444;
 
-// merge with the other constant file
+// TODO merge with the other constant file
 
 export const API_PREFIX = '/api';
 export const TAGS_ENDPOINT = `${API_PREFIX}/tags`;
@@ -26,6 +26,7 @@ export const CONFIG_TWITCH_CHANNEL_ENDPOINT = `${API_PREFIX}/config/twitchChanne
 export const CONFIG_TWITCH_LOG_ENDPOINT = `${API_PREFIX}/config/twitchLog`;
 export const FILES_ENDPOINT = `/files`;
 export const FILES_OPEN_ENDPOINT = `/files/open`;
+export const CONFIG_OPEN_ENDPOINT = `/config/open`;
 export const FILE_ENDPOINT = `/file/*`;
 export const NETWORK_IP_LIST_ENDPOINT = `/network_ip_list`;
 

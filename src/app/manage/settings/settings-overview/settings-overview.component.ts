@@ -35,4 +35,8 @@ export class SettingsOverviewComponent implements OnInit {
   reload() {
     location.reload();
   }
+
+  openConfigFolder() {
+    this.service.openConfigFolder();
+  }
 }

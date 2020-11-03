@@ -5,6 +5,7 @@ import {
   CLIP_ID_ENDPOINT,
   CONFIG_ENDPOINT,
   CONFIG_MEDIA_ENDPOINT,
+  CONFIG_OPEN_ENDPOINT,
   CONFIG_TWITCH_CHANNEL_ENDPOINT,
   CONFIG_TWITCH_LOG_ENDPOINT,
   DANGER_ENDPOINT,
@@ -33,6 +34,7 @@ import {getFiles, mapFileInformations} from "./file.utilts";
 import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "./validations";
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
+import {NEW_CONFIG_PATH} from "./path.utils";
 
 const {  normalize, join } = require('path');
 
@@ -227,7 +229,11 @@ app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.updateTwitchLog(req.body.twitchLog));
 });
 
+app.get(CONFIG_OPEN_ENDPOINT, async (req, res) => {
+  await open(NEW_CONFIG_PATH);
 
+  res.send({open: true});
+});
 
 app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
