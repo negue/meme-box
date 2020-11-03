@@ -11,7 +11,8 @@ export const ENDPOINTS = {
   TWITCH_TRIGGER: 'twitch_events/trigger',
   NETWORK_LIST: 'network_ip_list',
   CONFIG_MEDIA_PATH: 'config/media',
-  CONFIG_TWITCH_CHANNEL: 'config/twitchChannel'
+  CONFIG_TWITCH_CHANNEL: 'config/twitchChannel',
+  CONFIG_TWITCH_LOG: 'config/twitchLog'
 }
 
 

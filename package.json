@@ -127,6 +127,8 @@
     "tmi.js": "1.5.0",
     "tslib": "^2.0.0",
     "ttypescript": "1.5.12",
+    "winston": "3.3.3",
+    "winston-daily-rotate-file": "4.5.0",
     "ws": "6.2.1"
   },
   "browser": {
