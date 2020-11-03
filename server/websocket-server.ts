@@ -19,11 +19,14 @@ const wss = new WebSocket.Server({ server });
 const obsPages: {[key: string]: WebSocketType} = {};
 let wsToSend: WebSocketType[] = [];
 
+const WSS_LOGGER = LOGGER.child({
+  label: 'WebSocket'
+})
+
 export function sendDataToScreen(targetId: string|null, message: string) {
-  console.info('SENDING DATA TO', targetId, message);
   if (obsPages[targetId] && obsPages[targetId].readyState === WebSocket.OPEN) {
     obsPages[targetId].send(message);
-    console.info('SENT DATA TO', targetId);
+    WSS_LOGGER.info('SENT DATA TO: ', {targetId, message});
   }
 }
 
@@ -38,7 +41,7 @@ export function sendDataToAllSockets (message: string) {
 }
 
 export async function triggerMediaClipById(payloadObs: TriggerClip) {
-  LOGGER.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen}`, payloadObs);
+  WSS_LOGGER.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
 
   const allScreens = PersistenceInstance.listScreens();
   const clipConfig = PersistenceInstance.fullState().clips[payloadObs.id];
@@ -108,13 +111,13 @@ wss.on("connection", (ws: WebSocket) => {
   //connection is up, let's add a simple simple event
   ws.on("message", (message: string) => {
     //log the received message and send it back to the client
-    console.log("received: %s", message);
+    // console.log("received: %s", message);
     // ws.send(`Hello, you sent -> ${message}`);
 
     // ACTION={payload}
     const [action, payload] = message.split('=');
 
-    console.info({action, payload});
+    // console.info({action, payload});
 
     switch (action) {
       case ACTIONS.I_AM_OBS: {
@@ -125,11 +128,10 @@ wss.on("connection", (ws: WebSocket) => {
       case ACTIONS.TRIGGER_CLIP: {
         const payloadObs: TriggerClip = JSON.parse(payload);
 
-        console.info('TRIGGER', payloadObs);
+
+        WSS_LOGGER.info(`TRIGGER DATA TO - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
 
         if (!payloadObs.targetScreen) {
-          console.info('NO TARGET');
-
           triggerMediaClipById(payloadObs);
         } else {
           sendDataToScreen(payloadObs.targetScreen, message);
@@ -152,7 +154,7 @@ wss.on("connection", (ws: WebSocket) => {
 export function createWebSocketServer(port) {
   //start our server
   server.listen(port, () => {
-    console.log(`Server started on port: ${port}`);
+    LOGGER.info(`Server started on port: ${port}`);
   });
 
   return {server, wss};

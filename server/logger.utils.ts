@@ -4,8 +4,28 @@ import {LOG_PATH} from "./path.utils";
 
 const { combine, timestamp, printf, colorize, label } = format;
 
+const MESSAGE_SYMBOL = Symbol.for('message')
 
 export const textFormat = (space: string = null) => printf(({ level, label, timestamp, message, ...obj }) => {
+  const isObject = typeof obj === 'object';
+
+  const symbolKey = Object.getOwnPropertySymbols(obj).find(k => k === MESSAGE_SYMBOL);
+
+  if (isObject) {
+    const restObj = obj as any; // because typescript doesnt allow symbols as index?!
+
+    const messageJson = restObj[symbolKey];
+
+    // The custom labels is inside this "message" object, inside the "obj"-argument
+    // its not added to the current objects.. yay
+
+    if (messageJson) {
+      const messageObj = JSON.parse(messageJson);
+
+      label = messageObj.label ?? label;
+    }
+  }
+
   label = label ? `[${label}] ` : '';
 
   const hasProperties = Object.keys(obj).length !== 0;
