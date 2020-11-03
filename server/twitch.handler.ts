@@ -88,12 +88,9 @@ export class TwitchHandler {
 
 
     this.tmiClient.on('cheer', (channel, tags, message) => {
-      const command = this.getCommandOfMessage(message);
-
+      const command = this.getCommandOfMessage(message, { event: TwitchEventTypes.bits, bitsCount: parseInt(tags.bits) });
       // todo add the correct twitchevent-types!
-
-      //TODO: Review if the user messages should be allowed to play a media. Because someone could send bits with
-      // a message of !wow and trigger 2 clips at the same time that could overlap
+      console.log("Command", command);
       this.handle({
         // event: TwitchEventTypes.message,
         message,
@@ -101,31 +98,20 @@ export class TwitchHandler {
         tags
       });
 
-      //if the amount for bits is present
-      if (tags.bits !== undefined) {
-        this.twitchSettings.forEach((twitchEvent: Twitch) => {
-          //TODO: Review if we should show each event that matches the criteria or only the first one?
-          if (twitchEvent['event'] === TwitchEventTypes.bits && tags.bits <= twitchEvent['bitAmount']) {
-            this.handle({
-              message,
-              command: twitchEvent,
-              tags
-            });
-          }
-        });
-      }
-
-      console.log(`TMI-Cheer: ${tags['display-name']}: ${message}`, channel, tags);
+      //console.log(`TMI-Cheer: ${tags['display-name']}: ${message}`, channel, tags);
     });
 
     if (_DEBUG) {
       setTimeout(() => {
-        this.tmiClient.say('fdgt', 'bits').catch(err => console.log(err));
+        setTimeout(() => {
+          this.tmiClient.say('fdgt', 'bits').catch(err => console.log(err));
+        }, 5000);
+        this.tmiClient.say('fdgt', '!noice').catch(err => console.log(err));
       }, 2000);
     }
   }
 
-  getCommandOfMessage(message: string): Twitch {
+  getCommandOfMessage(message: string, eventOptions?: TwitchEventOptions ): Twitch {
     if (!message) {
       return null;
     }
@@ -136,7 +122,17 @@ export class TwitchHandler {
         continue;
       }
 
-      if (message.toLowerCase().includes(twitchSetting.contains.toLowerCase())) {
+      if(eventOptions && eventOptions.event === twitchSetting['event']){
+        switch(twitchSetting['event']){
+          case TwitchEventTypes.bits:
+            if(eventOptions.bitsCount<=twitchSetting["bitAmount"]){
+              return twitchSetting;
+            }
+            break;
+        }
+      }
+
+      if (message.toLowerCase().includes(twitchSetting.contains.toLowerCase() || null)) {
         if (!foundCommand) {
           foundCommand = twitchSetting;
         } else {
@@ -205,4 +201,10 @@ export class TwitchHandler {
       }
     }
   }
+}
+
+
+interface TwitchEventOptions {
+  event: string,
+  bitsCount?: number
 }
