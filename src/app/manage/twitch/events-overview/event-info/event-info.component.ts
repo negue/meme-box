@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Twitch, TwitchTypesArray } from '@memebox/contracts';
+import { Twitch, TwitchEventTypes, TwitchTypesArray } from '@memebox/contracts';
 import { AppQueries } from '../../../../state/app.queries';
 import { map } from 'rxjs/operators';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -15,17 +15,19 @@ export class EventInfoComponent implements OnInit {
   @Input()
   item: Twitch;
 
+  twitchEventTypes = TwitchEventTypes;
+
   allInformations$ = this.appQueries.state$.pipe(
     map(value => {
       const clip = value.clips[this.item.clipId];
       // const screen = value.screen[this.item.screenId];
 
       return {
-        clip,
+        clip
         // screen
       };
     })
-  )
+  );
 
   @Output()
   onDelete = new EventEmitter<any>();

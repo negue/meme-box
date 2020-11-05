@@ -66,12 +66,14 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     event: "",
     clipId: "",
     contains: "",
-    bitAmount: 0
+    minAmount: undefined,
+    maxAmount: undefined
   });
 
   twitchEvents = TwitchTypesArray;
   TWITCH_LEVELS = TWITCH_LEVELS;
 
+  twitchEventTypes = TwitchEventTypes;
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 

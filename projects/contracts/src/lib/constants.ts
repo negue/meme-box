@@ -22,6 +22,6 @@ export const TwitchTypesArray = [
   TwitchEventTypes.bits,
   // TwitchEventTypes.channelPoints,
   // TwitchEventTypes.host,
-  TwitchEventTypes.message
-  // TwitchEventTypes.raid,
+  TwitchEventTypes.message,
+  TwitchEventTypes.raid,
 ];
