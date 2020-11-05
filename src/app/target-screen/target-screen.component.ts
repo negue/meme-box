@@ -239,6 +239,13 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   addOrUpdateStyleTag(document: Document, styleId: string, customCss: string) {
+    if (!document || !customCss) {
+      // depending on the browser there is no document of an iframe...
+      // or if the css is empty, no need to continue here
+      return;
+    }
+
+    // todo use the @gewd package to add the style
     const head = document.getElementsByTagName('head')[0];
     const allStyles = head.getElementsByTagName('style');
     let style: HTMLStyleElement = null;
