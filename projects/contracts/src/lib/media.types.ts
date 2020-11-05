@@ -35,7 +35,7 @@ export const MEDIA_TYPE_INFORMATION: Dictionary<MediaTypeInformations> = {
   [MediaType.IFrame]: {
     label: 'iFrame', // IFrame , iframe
     className: 'iframe',
-    icon: 'insert_photo', // todo ICON for iframe
+    icon: 'public',
   },
   [MediaType.Meta]: {
     icon: 'art_track',

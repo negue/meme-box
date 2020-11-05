@@ -18,6 +18,7 @@ export const APP_ICONS = [
   'playlist_add_check',
   'playlist_add',
   'preview',
+  'public',
   'qr_code_scanner',
   'queue',
   'replay',
