@@ -30,6 +30,7 @@ import {PipesModule} from "./core/pipes/pipes.module";
 import {MediaToggleDirective} from './target-screen/media-toggle.directive';
 import {APP_ICONS} from "./app.icons";
 import {ServiceWorkerModule} from '@angular/service-worker';
+import {ENVIRONMENT_MODULES} from "@memebox/app/env/modules";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
@@ -67,7 +68,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       // ...
     }),
 
-    ...AppConfig.ngModules,
+    ...ENVIRONMENT_MODULES,
     PipesModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: AppConfig.production}),
     MatIconModule

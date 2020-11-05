@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   TAGS: 'tags',
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
+  ERROR: 'error',
   TWITCH_EVENTS: 'twitch_events',
   TWITCH_TRIGGER: 'twitch_events/trigger',
   NETWORK_LIST: 'network_ip_list',

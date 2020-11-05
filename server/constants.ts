@@ -4,6 +4,7 @@ export const DEFAULT_PORT = 4444;
 
 export const API_PREFIX = '/api';
 export const TAGS_ENDPOINT = `${API_PREFIX}/tags`;
+export const LOG_ENDPOINT = `${API_PREFIX}/error`;
 export const DANGER_ENDPOINT = `${API_PREFIX}/danger`;
 export const CLIP_ENDPOINT = `${API_PREFIX}/clips`;
 export const CLIP_ID_ENDPOINT = `${API_PREFIX}/clips/:clipId`;

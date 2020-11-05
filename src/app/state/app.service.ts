@@ -14,6 +14,7 @@ import {SnackbarService} from "../core/services/snackbar.service";
 import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from "./app.dummy.data";
 import {deleteClip} from "../../../projects/state/src/lib/operations/clip.operations";
+import {take} from "rxjs/internal/operators";
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -373,4 +374,27 @@ export class AppService {
 
     return this.addOrUpdateTwitchEvent(newTwitchEventObject);
   }
+
+  public postErrorToServer(error: Error) {
+    console.error('logged error', error);
+
+    const logPayload: LogPayload = {
+      message: `${error.name} ${error.message}`,
+      stack: error.stack,
+      url: location.href
+    };
+
+    this.http.post<string>(`${API_BASE}${ENDPOINTS.ERROR}`, logPayload).pipe(
+      take(1)
+    ).subscribe();
+  }
+}
+
+// merge types once the tsconfig paths work
+export interface LogPayload {
+  message: string;
+  filename?: string;
+  linenumber?: string;
+  stack: string;
+  url: string;
 }

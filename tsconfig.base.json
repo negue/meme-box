@@ -28,6 +28,9 @@
       "@memebox/app/env": [
         "src/environments/environment.ts"
       ],
+      "@memebox/app/env/modules": [
+        "src/environments/modules/modules.ts"
+      ],
       "@memebox/utils": [
         "projects/utils/src/public-api.ts"
       ],

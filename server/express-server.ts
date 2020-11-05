@@ -12,6 +12,7 @@ import {
   FILE_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT,
+  LOG_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
   SCREEN_CLIPS_ID_ENDPOINT,
   SCREEN_ENDPOINT,
@@ -35,6 +36,7 @@ import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {NEW_CONFIG_PATH} from "./path.utils";
+import {LOG_ROUTES} from "./rest-endpoints/logs";
 
 const {  normalize, join } = require('path');
 
@@ -106,6 +108,7 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
 
 app.use(TAGS_ENDPOINT, TAG_ROUTES);
 app.use(DANGER_ENDPOINT, DANGER_ROUTES);
+app.use(LOG_ENDPOINT, LOG_ROUTES);
 
 /**
  * OBS-Specific API
