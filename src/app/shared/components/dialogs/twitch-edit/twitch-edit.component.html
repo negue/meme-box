@@ -32,7 +32,7 @@
 
         </div>
 
-        <div class="example-container">
+        <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
           <mat-form-field appearance="outline">
             <mat-label>Message text to trigger event</mat-label>
             <input autocomplete="off"
@@ -42,7 +42,23 @@
           </mat-form-field>
         </div>
 
+        <div class="example-container" *ngIf="form.value.event !== twitchEventTypes.message">
+          <mat-form-field appearance="outline">
+            <mat-label>Minimum amount to trigger the media</mat-label>
+            <input autocomplete="off"
+                   formControlName="minAmount"
+                   placeholder="100"
+                   matInput>
+          </mat-form-field>
 
+          <mat-form-field appearance="outline">
+            <mat-label>Maximum amount to trigger the media</mat-label>
+            <input autocomplete="off"
+                   formControlName="maxAmount"
+                   placeholder="100"
+                   matInput>
+          </mat-form-field>
+        </div>
 
       </form>
     </div>
@@ -72,12 +88,12 @@
         </button>
       </div>
 
-      <br/>
+      <br />
 
-      <div class="example-container">
+      <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
         <h2>Select Twitch Roles</h2>
 
-        <div class="simple-wrap" >
+        <div class="simple-wrap">
           <div *ngFor="let levelEntry of TWITCH_LEVELS">
             <mat-checkbox [checked]="data.roles?.includes(levelEntry.type)"
                           (change)="toggleRole(levelEntry.type)">

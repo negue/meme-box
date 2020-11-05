@@ -93,7 +93,7 @@ export interface ScreenViewEntry extends Screen {
 
 // TODO refactor, maybe all messages
 // and then like "yes, but this one only with bits.."
-export const enum TwitchEventTypes {
+export enum TwitchEventTypes {
   message = 'message',
   follow = 'follow',
   sub = 'sub',
@@ -112,6 +112,8 @@ export interface Twitch extends HasId {
   active: boolean;
 
   roles: string[]; // maybe enum
+  minAmount?: number;
+  maxAmount?: number;
 
   // !magic
   // TODO other options per type

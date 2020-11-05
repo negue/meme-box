@@ -1,15 +1,14 @@
 import * as tmi from 'tmi.js';
-import {EmoteObj} from 'tmi.js';
-import {Subscription} from "rxjs";
-import {PersistenceInstance} from "./persistence";
-import {startWith} from "rxjs/operators";
-import {Twitch, TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
-import {triggerMediaClipById} from "./websocket-server";
-import {Logger} from 'winston';
-import {newLogger} from "./logger.utils";
+import { EmoteObj } from 'tmi.js';
+import { Subscription } from 'rxjs';
+import { PersistenceInstance } from './persistence';
+import { startWith } from 'rxjs/operators';
+import { Twitch, TwitchEventTypes, TwitchTriggerCommand } from '../projects/contracts/src/lib/types';
+import { triggerMediaClipById } from './websocket-server';
+import { Logger } from 'winston';
+import { newLogger } from './logger.utils';
 
-
-declare module "tmi.js" {
+declare module 'tmi.js' {
   export interface Badges {
     founder?: string;
   }
@@ -25,9 +24,9 @@ export class TwitchHandler {
     this.tmiClient = tmi.Client({
       connection: {
         secure: true,
-        reconnect: true
+        reconnect: true,
       },
-      channels: [ twitchAccount ]
+      channels: [twitchAccount]
     });
 
     this.connectAndListen();
@@ -36,7 +35,6 @@ export class TwitchHandler {
     }
   }
 
-
   public disconnect() {
     if (this.persistenceSubscription) {
       this.persistenceSubscription.unsubscribe();
@@ -44,23 +42,23 @@ export class TwitchHandler {
     this.tmiClient.disconnect();
   }
 
-  private async connectAndListen () {
-    const connectionResult = await this.tmiClient.connect();
+  private async connectAndListen() {
+    await this.tmiClient.connect();
 
     this.persistenceSubscription = PersistenceInstance.dataUpdated$().pipe(
-      startWith(true),
-    ).subscribe(value => {
+      startWith(true)
+    ).subscribe(() => {
       console.info('Data Updated got the new events');
       this.twitchSettings = PersistenceInstance.listTwitchEvents();
-    })
+    });
 
     this.tmiClient.on('message', (channel, tags, message, self) => {
-      const command = this.getCommandOfMessage(message);
+      const command = this.getCommandOfMessage(message, TwitchEventTypes.message);
 
       this.log({
         type: 'message',
         tags,
-        message,
+        message
       });
 
       this.handle({
@@ -71,14 +69,15 @@ export class TwitchHandler {
       });
     });
 
-
     this.tmiClient.on('cheer', (channel, tags, message) => {
-      const command = this.getCommandOfMessage(message);
+      const command = this.getCommandOfMessage(message, TwitchEventTypes.bits, {
+        amount: parseInt(tags.bits)
+      });
 
       this.log({
         type: 'cheer',
         tags,
-        message,
+        message
       });
 
       // todo add the correct twitchevent-types!
@@ -87,6 +86,30 @@ export class TwitchHandler {
         message,
         command,
         tags
+      });
+    });
+
+    setTimeout(() => {
+      this.tmiClient.say("gacbl", "raid");
+    }, 2500);
+
+    this.tmiClient.on('raided', (channel: string, username: string, viewers: number) => {
+      const command = this.getCommandOfMessage("", TwitchEventTypes.raid,{
+        amount: viewers
+      });
+
+      this.log({
+        type: 'raid',
+        username,
+        viewers
+      });
+
+      // todo add the correct twitchevent-types!
+      this.handle({
+        // event: TwitchEventTypes.message,
+        message: "",
+        command,
+        tags:{}
       });
     });
 
@@ -130,8 +153,8 @@ export class TwitchHandler {
     * */
   }
 
-  getCommandOfMessage (message: string): Twitch {
-    if (!message) {
+  getCommandOfMessage(message: string, event : TwitchEventTypes, eventOptions?: TwitchEventOptions): Twitch {
+    if (!message && !eventOptions) {
       return null;
     }
 
@@ -141,7 +164,19 @@ export class TwitchHandler {
         continue;
       }
 
-      if (message.toLowerCase().includes(twitchSetting.contains.toLowerCase())) {
+      if (eventOptions && event === twitchSetting.event) {
+        const minAmount = twitchSetting.minAmount || 0;
+        const maxAmount = twitchSetting.maxAmount || Infinity;
+        if (eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount) {
+          return twitchSetting;
+        }
+      }
+
+      if (event !== TwitchEventTypes.message){
+        continue;
+      }
+
+      if(message.toLowerCase().includes(twitchSetting.contains.toLowerCase())) {
         if (!foundCommand) {
           foundCommand = twitchSetting;
         } else {
@@ -160,7 +195,7 @@ export class TwitchHandler {
     return foundCommand;
   }
 
-  getLevelOfTags(userState: tmi.Userstate): string[]{
+  getLevelOfTags(userState: tmi.Userstate): string[] {
     const levels = ['user'];
 
     if (!userState.badges) {
@@ -201,7 +236,7 @@ export class TwitchHandler {
       console.info('Found Levels', foundLevels);
       console.info('Needed Levels', trigger.command?.roles);
 
-      if (foundLevels.includes("broadcaster") || trigger.command?.roles.some(r => foundLevels.includes(r))) {
+      if (foundLevels.includes('broadcaster') || trigger.command?.roles.some(r => foundLevels.includes(r)) || trigger.command.event !== TwitchEventTypes.message) {
         console.info('Triggering Clip: ', trigger.command.clipId);
 
         triggerMediaClipById({
@@ -216,7 +251,7 @@ export class TwitchHandler {
   }
 
   private log(data: any) {
-    if(this.enabledLogger) {
+    if (this.enabledLogger) {
       this.logger.info(data);
     }
   }
@@ -227,25 +262,29 @@ export class TwitchHandler {
       this.log({
         type: 'emotesets',
         sets,
-        obj,
+        obj
       });
-    } );
+    });
 
     this.tmiClient.on('subscribers', (channel: string, enabled: boolean) => {
       this.log({
         type: 'subscribers',
         channel,
-        enabled,
+        enabled
       });
-    } );
+    });
 
 
     this.tmiClient.on('vips', (channel: string, vips: string[]) => {
       this.log({
         type: 'vips',
         channel,
-        vips,
+        vips
       });
-    } );
+    });
   }
+}
+
+interface TwitchEventOptions {
+  amount: number
 }
