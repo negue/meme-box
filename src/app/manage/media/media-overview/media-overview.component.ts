@@ -1,11 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
-import {Clip, Screen} from "@memebox/contracts";
+import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable} from "rxjs";
+import {Clip, HasId, Screen} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
-import {ScreenAssigningDialogComponent} from "./screen-assigning-dialog/screen-assigning-dialog/screen-assigning-dialog.component";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
+import {IFilterItem} from "../../../shared/components/filter/filter.component";
+import {createCombinedFilterItems$, filterClips$} from "../../../shared/components/filter/filter.methods";
+import {map} from "rxjs/internal/operators";
 
 @Component({
   selector: 'app-media-overview',
@@ -14,8 +16,32 @@ import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 })
 export class MediaOverviewComponent implements OnInit {
 
-  public mediaList$: Observable<Clip[]> = this.query.clipList$;
-  public screenList$: Observable<Screen[]> = this.query.screensList$
+  public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
+
+  public mediaList$: Observable<Clip[]> = filterClips$(
+    this.query.clipList$,
+    this.filteredItems$
+  );
+
+  public screenList$: Observable<Screen[]> = this.query.screensList$;
+
+  public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
+    this.query.clipList$,
+    this.query.tagMap$
+  );
+
+  public showGettingStarted$ = combineLatest([
+    this.query.clipList$,
+    this.screenList$
+  ]).pipe(
+    map(([availableClips, availableScreens]) => {
+      return availableClips.length === 0 || availableScreens.length === 0;
+    })
+  );
+
+  public trackById: TrackByFunction<HasId> = (index, item) => {
+    return item.id;
+  }
 
   constructor(public service: AppService,
               public query: AppQueries,
@@ -53,14 +79,6 @@ export class MediaOverviewComponent implements OnInit {
     this._wsService.triggerClipOnScreen(item.id);
   }
 
-  onAssignObs(item: Clip): void {
-    this._dialog.open(
-      ScreenAssigningDialogComponent, {
-        data: item
-      }
-    )
-  }
-
   //TODO - the name and other information should come from the state
   onClipOptions(item: Clip, screen: Screen): void {
     this._dialog.showScreenClipOptionsDialog({
@@ -68,5 +86,18 @@ export class MediaOverviewComponent implements OnInit {
       screenId: screen.id,
       name: item.name
     });
+  }
+
+  onToggleMobileShow(item: Clip) {
+    const newClip = {
+      ...item,
+      showOnMobile: !item.showOnMobile
+    } as Clip;
+
+    this.service.addOrUpdateClip(newClip);
+  }
+
+  onToggleTwitchEvent(item: Clip, twitchId: string) {
+    this.service.toggleTwitchActiveState(twitchId);
   }
 }

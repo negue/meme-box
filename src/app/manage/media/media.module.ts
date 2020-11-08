@@ -13,7 +13,6 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSliderModule} from "@angular/material/slider";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatDividerModule} from "@angular/material/divider";
-import {ScreenAssigningDialogModule} from "./media-overview/screen-assigning-dialog/screen-assigning-dialog.module";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {MatListModule} from "@angular/material/list";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
@@ -21,6 +20,8 @@ import {ConfigMediaPathModule} from "./media-overview/config-media-path/config-m
 import {MatChipsModule} from "@angular/material/chips";
 import {PipesModule} from "../../core/pipes/pipes.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
+import {FilterModule} from "../../shared/components/filter/filter.module";
+import {ClipChipsListModule} from "../../shared/components/clip-chips-list/clip-chips-list.module";
 
 const routes: Routes = [
   {
@@ -46,13 +47,14 @@ const routes: Routes = [
     MatSliderModule,
     ReactiveFormsModule,
     MatDividerModule,
-    ScreenAssigningDialogModule,
     ClipTypeModule,
     MatListModule,
     GettingStartedModule,
     ConfigMediaPathModule,
     MatChipsModule,
     CardOverviewModule,
+    FilterModule,
+    ClipChipsListModule,
   ]
 })
 export class MediaModule {}

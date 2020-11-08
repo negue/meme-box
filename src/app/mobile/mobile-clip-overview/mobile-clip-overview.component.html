@@ -2,8 +2,7 @@
   <mat-toolbar-row>
     <span>MemeBox</span>
 
-    <span class="toolbar-spacer">
-  </span>
+    <span class="toolbar-spacer"></span>
 
     <mat-select (valueChange)="onColumnSizeChanged($event)" [value]="currentColumnSize"
                 placeholder="Columns">
@@ -37,14 +36,36 @@
    </span>
   </ng-container>
 
-  <span *ngFor="let clip of clipList$|async" class="item">
+
+  <ng-container *ngFor="let groupedClip of groupedClipList$|async" class="item">
+       <span class="item item-wide">
+          {{ groupedClip.title }}
+       </span>
+
+    <span *ngFor="let clip of groupedClip.clips" class="item">
 
     <mat-card (click)="onPreview(clip)"
               mat-ripple>
 
-    <app-clip-type [type]="clip.type"></app-clip-type>
-      {{clip.name}}
-      </mat-card>
+      <app-clip-type [type]="clip.type"></app-clip-type>
+      <span>{{clip.name}}</span>
+    </mat-card>
   </span>
 
+  </ng-container>
+
+
+  <span class="item item-wide">
+    Mobile View:
+  </span>
+
+  <span class="item reload-item">
+
+    <mat-card (click)="reloadPage()"
+              mat-ripple>
+
+       <mat-icon svgIcon="replay"></mat-icon>
+      <span> Reload View</span>
+    </mat-card>
+  </span>
 </div>

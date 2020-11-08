@@ -1,3 +1,5 @@
+@import '~angular-material-css-vars/public-util';
+
 :host {
   width: 100%;
   display: block;
@@ -26,9 +28,30 @@
   width: 100%;
   display: block;
 
-  ::ng-deep .mat-form-field {
-    display: block;
+  &:hover {
+    ::ng-deep {
+      .mat-form-field-underline {
+        background: mat-css-color-accent();
+      }
+    }
   }
+
+  ::ng-deep {
+    .mat-form-field {
+      display: block;
+    }
+
+    .screenUrl__buttons {
+      .mat-select {
+        width: unset;
+      }
+      .mat-button {
+        padding: 0 4px;
+      }
+    }
+  }
+
+
 }
 
 .inputLabel--hidden {
@@ -58,10 +81,6 @@
   margin-left: auto;
   margin-right: auto;
   display: block;
-
-  &:not(:last-of-type) {
-    margin-bottom: 1rem;
-  }
 }
 
 .mediaList {
@@ -79,3 +98,8 @@
   width: 3rem;
   height: 3rem;
 }
+
+.matcard__actions {
+  display: flex;
+}
+

@@ -17,7 +17,6 @@ export async function getFiles(dir: string): Promise<string[]> {
 
 export function mapFileInformations (
   mediaFolder: string,
-  currentAppPort: string,
   files: string[]): FileInfo[] {
 
   // remove path separator at the end

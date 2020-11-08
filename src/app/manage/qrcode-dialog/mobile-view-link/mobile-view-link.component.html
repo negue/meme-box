@@ -1,12 +1,11 @@
-<div *ngIf="networkInterface$ | async as mobileViewUrlList"
-
->
+<div *ngIf="networkInterfacesService.networkInterface$ | async as mobileViewUrlList">
   <div *ngFor="let networkInfo of mobileViewUrlList"
        class="holder">
     <button (click)="openInTab(networkInfo.address)" color="accent"
             mat-raised-button>
       Open Mobile View on <br />
-      {{ networkInfo.ifname }}
+      {{ networkInfo.ifname }} <br/>
+      <i>{{networkInfo.address}}</i>
     </button>
 
     <qr-code [size]="140" [value]="networkInfo.address"></qr-code>

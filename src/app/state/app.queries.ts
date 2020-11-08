@@ -19,6 +19,7 @@ export class AppQueries extends Query<AppState> {
 
 
   clipMap$ = this.select(store => store.clips);
+  tagMap$ = this.select(store => store.tags);
   screenMap$ = this.select(store => store.screen);
   config$ = this.select(store => store.config);
   currentMediaFile$ = this.select(store => store.currentMediaFiles);

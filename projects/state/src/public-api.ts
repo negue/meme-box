@@ -2,4 +2,7 @@
  * Public API Surface of state
  */
 
-export * from './lib/operations/clip.operations';
+import * as operations from './lib/operations';
+
+export * from './lib/operations';
+export {operations};

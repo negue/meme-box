@@ -4,3 +4,30 @@
 .mediaList__appMediaInfo {
   height: 100%;
 }
+
+:host {
+  app-filter {
+    display: block;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+
+    width: calc(100% - 2rem);
+    position: sticky;
+    top: 3.05rem;
+    z-index: 10;
+
+    background: var(--palette-background-background) !important;
+
+    ::ng-deep {
+      .filterRow {
+        margin-bottom: 1rem;
+      }
+    }
+
+  }
+
+}
+
+

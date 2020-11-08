@@ -26,18 +26,17 @@ import { DialogsModule } from "./shared/components/dialogs/dialogs.module";
 import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
 import { StyleguideColors } from './shared/styleguide/styleguide.component';
 
-import { PipesModule } from "./core/pipes/pipes.module";
-import { MediaToggleDirective } from './target-screen/media-toggle.directive';
-import { APP_ICONS } from "./app.icons";
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { HighlightEditorModule, PrismOptionsInjectorToken } from "@gewd/components/highlight-editor";
+import {PipesModule} from "./core/pipes/pipes.module";
+import {MediaToggleDirective} from './target-screen/media-toggle.directive';
+import {APP_ICONS} from "./app.icons";
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {ENVIRONMENT_MODULES} from "@memebox/app/env/modules";
 import { DEFAULT_PRISM_OPTIONS, PrismServiceOptions } from "@gewd/markdown/contracts";
 
 const prismWorker = () => new Worker('./prism.worker.ts', {
   name: 'prism',
   type: "module"
 });
-
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -74,7 +73,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       // ...
     }),
 
-    ...AppConfig.ngModules,
+    ...ENVIRONMENT_MODULES,
     PipesModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: AppConfig.production}),
     MatIconModule,
@@ -118,6 +117,10 @@ export class AppModule {
         `./assets/material-icons/${icon}.svg`
       ));
     }
+
+    iconRegistry.addSvgIcon('twitch', sanitizer.bypassSecurityTrustResourceUrl(
+      `./assets/twitch.svg`
+    ));
 
     this.materialCssVarsService.setDarkTheme(true);
     this.materialCssVarsService.setAutoContrastEnabled(true)

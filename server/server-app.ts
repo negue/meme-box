@@ -5,6 +5,7 @@ import {debounceTime, startWith} from "rxjs/operators";
 import {TwitchHandler} from "./twitch.handler";
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
+import {LOGGER} from "./logger.utils";
 
 // This file creates the "shared" server logic between headless / electron
 
@@ -20,33 +21,42 @@ export const {server, wss} = createWebSocketServer(NEW_PORT);
 // Also mount the app here
 server.on('request', expressServer);
 
-let currentTwitchAccount = '';
+let currentConfigJsonString = '';
 let twitchHandler:TwitchHandler = null;
 
-// todo export to server.ts and then refactor it
+PersistenceInstance.hardRefresh$()
+  .pipe(
+    debounceTime(600),
+    startWith(true)
+  )
+  .subscribe(() => {
+    console.info('Data Hard-Refresh');
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
+  });
+
 PersistenceInstance.dataUpdated$()
   .pipe(
     debounceTime(600),
     startWith(true)
   )
   .subscribe(() => {
-    console.info('Data Updated');
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
 
     const config = PersistenceInstance.getConfig();
-    const twitchChannelInConfig = config.twitchChannel;
+    const jsonOfConfig = JSON.stringify(config);
 
-    console.info({config, twitchChannelInConfig});
-    if (currentTwitchAccount !== twitchChannelInConfig) {
-      currentTwitchAccount = twitchChannelInConfig;
+    if (currentConfigJsonString !== jsonOfConfig
+      && !!config.twitchChannel
+    ) {
+      currentConfigJsonString = jsonOfConfig;
 
-      console.info(`Creating the TwitchHandler for: ${currentTwitchAccount}`);
+      LOGGER.info(`Creating the TwitchHandler for: ${config.twitchChannel}`);
 
       if (twitchHandler != null) {
         twitchHandler.disconnect();
       }
 
-      twitchHandler = new TwitchHandler(currentTwitchAccount);
+      twitchHandler = new TwitchHandler(config.twitchChannel, config.twitchLog ?? false);
     }
   });
 

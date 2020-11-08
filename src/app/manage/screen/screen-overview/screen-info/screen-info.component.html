@@ -1,21 +1,29 @@
-<div class="infoHolder">
+<div class="infoHolder" *ngIf="info$ | async as screen">
   <div class="titleRow">
-    <h2 class="mat-h2 titleName">{{info.name}}</h2>
+    <h2 class="mat-h2 titleName">{{screen.name}}</h2>
     <mat-icon svgIcon="screen"></mat-icon>
   </div>
 
   <div class="formFieldRow">
-    <mat-form-field class="matFormField">
+    <mat-form-field>
       <label class="inputLabel--hidden" for="input-url">Screen URL</label>
-      <input [value]="info.url" matInput class="inputUrl" id="input-url" readonly type="text"/>
-      <button mat-button
-              matSuffix
-              (click)="copyURL()"
-              [attr.aria-label]="'Copy URL'"
-              class="copyUrlButton">
-        <mat-icon svgIcon="content_copy"></mat-icon>
-        Copy URL
-      </button>
+      <input [value]="screen.url" matInput class="inputUrl" id="input-url" readonly type="text" #networkInput/>
+
+      <div class="screenUrl__buttons" matSuffix>
+        <mat-select (valueChange)="networkInput.value = $event">
+          <mat-option *ngFor="let networkInterface of networkUrl$ | async"
+          [value]="networkInterface.address">
+            {{networkInterface.ifname}}
+          </mat-option>
+        </mat-select>
+        <button mat-button
+                (click)="copyURL(networkInput.value)"
+                [attr.aria-label]="'Copy URL'"
+                class="copyUrlButton">
+          <mat-icon svgIcon="content_copy"></mat-icon>
+          Copy URL
+        </button>
+      </div>
     </mat-form-field>
   </div>
 
@@ -26,7 +34,7 @@
     </button>
     <button (click)="onPreview.emit()" color="primary" mat-button>
       <mat-icon svgIcon="preview"></mat-icon>
-      Preview
+      Preview all
     </button>
   </div>
 
@@ -68,7 +76,7 @@
       </table>
     </div>
   </ng-container>
-  <mat-card-actions>
+  <mat-card-actions class="matcard__actions">
     <button (click)="onReload.emit()" class="centeredScreenButton" color="primary" mat-flat-button>
       <mat-icon svgIcon="replay"></mat-icon>
       Reload Screen

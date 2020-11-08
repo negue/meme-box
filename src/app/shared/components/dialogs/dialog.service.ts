@@ -26,7 +26,7 @@ export class DialogService {
   }
 
   // any for now, until the confirmation dialog has its own enum
-  showConfirmationDialog(payload: ConfirmationsPayload): Promise<any> {
+  showConfirmationDialog(payload: ConfirmationsPayload): Promise<boolean> {
     const dialogRef = this._dialog.open(SimpleConfirmationDialogComponent, {
       data: payload,
     });
@@ -38,8 +38,8 @@ export class DialogService {
     this._dialog.open(
       MediaEditComponent, {
         data: clipInfo,
-        width: '600px',
-        panelClass: 'max-height-dialog'
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw'
       }
     )
   }
@@ -56,7 +56,9 @@ export class DialogService {
   showScreenClipOptionsDialog(payload: ScreenClipOptionsPayload) {
     this._dialog.open(
       ScreenClipOptionsComponent, {
-        data: payload
+        data: payload,
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw'
       }
     )
   }
@@ -65,6 +67,9 @@ export class DialogService {
     this._dialog.open(
       TwitchEditComponent, {
         data: info,
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw',
+        minHeight: '50vh'
       }
     )
   }

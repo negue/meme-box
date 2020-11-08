@@ -59,6 +59,31 @@ async function connected(jsn) {
 
 let memeBoxSocket;
 
+// onDidReceiveSettings
+// onWillAppear
+
+// create socket
+// if disconnect, try again after X seconds
+// on key up , if its still on "interval" / get socket
+
+function createOrGetSocket(portNumber) {
+  return new Promise((resolve, reject) => {
+
+  if (!memeBoxSocket || memeBoxSocket.readyState !== WebSocket.OPEN) {
+    memeBoxSocket = new WebSocket(`ws://localhost:${portNumber}`);
+
+    memeBoxSocket.onopen = function () {
+      console.info('Socket connected!!');
+      resolve(memeBoxSocket);
+    };
+
+    return;
+  }
+
+  resolve(memeBoxSocket);
+
+  });
+}
 
 /** ACTIONS */
 
@@ -78,8 +103,8 @@ const action = {
       console.info('did receive config', this.settings);
 
       if (this.settings.port) {
-        console.info('Creating a WS');
-        memeBoxSocket = new WebSocket(`ws://localhost:${this.settings.port}`)
+       // console.info('Creating a WS');
+       // memeBoxSocket = new WebSocket(`ws://localhost:${this.settings.port}`)
       }
     }
     catch  {
@@ -115,8 +140,8 @@ const action = {
       console.info('will appear', jsn.payload.settings);
 
       if (jsn.payload.settings.port) {
-        console.info('Creating a WS');
-        memeBoxSocket = new WebSocket(`ws://localhost:${jsn.payload.settings.port}`)
+       // console.info('Creating a WS');
+       // memeBoxSocket = new WebSocket(`ws://localhost:${jsn.payload.settings.port}`)
       }
     }
     catch  {
@@ -136,9 +161,12 @@ const action = {
     }
 
 
+    var currentConnection = await createOrGetSocket(settings.port);
+
     const message = `TRIGGER_CLIP=${JSON.stringify(triggerObj)}`;
 
-    memeBoxSocket.send(message);
+    // Triggers the clip
+    currentConnection.send(message);
 
 		console.log("onKeyUp", jsn, settings, message);
 	},

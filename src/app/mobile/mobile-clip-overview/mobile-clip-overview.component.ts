@@ -2,10 +2,25 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
 import {Observable, Subject} from "rxjs";
-import {Clip} from "@memebox/contracts";
+import {Clip, MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
 import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
 import {SettingsService} from "../../core/services/settings.service";
-import {take, takeUntil} from "rxjs/operators";
+import {map, take, takeUntil} from "rxjs/operators";
+
+// once the tsconfig paths are working for server/app
+// extract this to its own "library"
+function groupBy<T>(xs: T[], key: keyof T): {[key: string]: T[]} {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key] as any] = rv[x[key] as any] || []).push(x);
+    return rv;
+  }, {});
+}
+
+interface IGroupedList {
+  title: string;
+  icon: string;
+  clips: Clip[];
+}
 
 const SettingMobileColumnSize = 'MOBILE_COLUMN_SIZE';
 
@@ -17,7 +32,25 @@ const SettingMobileColumnSize = 'MOBILE_COLUMN_SIZE';
 export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   public currentColumnSize = 50;
-  public clipList$: Observable<Clip[]> = this.appQueries.clipList$;
+  public groupedClipList$: Observable<IGroupedList[]> = this.appQueries.clipList$.pipe(
+    map(allClips => {
+      const groupedDictionary = groupBy(allClips, "type");
+
+      return Object.entries(groupedDictionary)
+        .map(([key, clips]) => {
+        const mediaType = +key;
+
+        const typeInfo = MEDIA_TYPE_INFORMATION[mediaType];
+
+        return {
+          clips: clips.filter(c => c.showOnMobile),
+          icon: typeInfo.icon,
+          title: typeInfo.label
+        } as IGroupedList;
+      })
+        .filter(group => group.clips.length !== 0)
+    } )
+  );
 
   connectionState$ = this._wsService.connectionState$;
 
@@ -64,5 +97,9 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
+  }
+
+  reloadPage() {
+    location.reload();
   }
 }

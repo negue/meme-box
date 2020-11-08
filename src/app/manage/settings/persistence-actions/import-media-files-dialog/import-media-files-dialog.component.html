@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Choose type of new screens</h1>
+
+<div mat-dialog-content>
+  <form [formGroup]="form">
+
+  <mat-select formControlName="targetScreenType">
+    <mat-option [value]="TargetScreenType.OneScreen">All into one Screen</mat-option>
+    <mat-option [value]="TargetScreenType.ScreenPerType">One Screen per Type</mat-option>
+  </mat-select>
+  </form>
+</div>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="executeImport()" cdkFocusInitial
+          color="primary"
+          mat-raised-button>Import All</button>
+</mat-dialog-actions>

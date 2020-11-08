@@ -23,6 +23,30 @@ export const clipValidations = [
   })
 ];
 
+export const screenValidations = [
+  body('name').isString(),
+  body('customCss').optional({
+    nullable: true
+  }).isString()
+];
+
+export interface LogPayload {
+  message: string;
+  filename: string;
+  linenumber: string;
+  stack: string;
+  url: string;
+}
+
+export const logValidations = [
+  body('message').isString(),
+  body('filename').isString().optional(),
+  body('linenumber').isString().optional(),
+  body('stack').isString(),
+  body('url').isString()
+];
+
+
 export function validOrLeave(req, res, next) {
   const errors = validationResult(req).array();
   if (errors.length) {

@@ -1,8 +1,12 @@
-<h2 mat-dialog-title>
-  {{ data?.id ? 'Update Media: "' + form.value.name + '"' : "Add media" }}
+<h2 mat-dialog-title class="title-wrapper">
+  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].label +': "' + form.value.name + '"'}}
+
+  <mat-checkbox class="mobile-checkbox"
+                [checked]="showOnMobile"
+  (change)="showOnMobile = $event.checked">Visible on Mobile View</mat-checkbox>
 </h2>
-<mat-dialog-content class="mat-typography">
-  <form [formGroup]="form">
+<mat-dialog-content class="mat-typography two-columns dialog-content">
+  <form [formGroup]="form" class="column">
     <mat-form-field>
       <input autocomplete="off"
              formControlName="name"
@@ -50,7 +54,7 @@
         />
         <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
           <mat-select (valueChange)="onChange($event)"
-                      *ngIf="availableMediaFiles | async as mediaFiles"
+                      *ngIf="availableMediaFiles$ | async as mediaFiles"
           >
             <mat-option *ngFor="let file of mediaFiles" [value]="file">
               {{ file.fileName }}
@@ -128,7 +132,8 @@
             [matAutocomplete]="auto"
             [matChipInputFor]="chipList"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="enterNewTag($event)">
+            (matChipInputTokenEnd)="enterNewTag($event)"
+          (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
         </mat-chip-list>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
           <mat-option *ngFor="let tag of filteredTags$ | async"
@@ -170,12 +175,33 @@
       </mat-form-field>
     </div>
 
-    <img *ngIf="form.value.type === MediaType.Picture"
-         [src]="form.value.path | replaceholder" />
-    <iframe *ngIf="form.value.type === MediaType.IFrame"
-            [src]="form.value.path | safeurl"
-    ></iframe>
+    <mat-form-field *ngIf="data?.id == null && form.value.type !== MediaType.Meta">
+      <mat-select placeholder="Also add to this Screen:"
+                  [(value)]="selectedScreenId">
+        <mat-option value="">None</mat-option>
+        <ng-container *ngIf="availableScreens$ | async as screenList">
+          <mat-option *ngFor="let screen of screenList" [value]="screen.id">{{screen.name}}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
   </form>
+
+  <div class="column" [ngSwitch]="form.value.type">
+    <!-- Meta => AppClipType or list all assign clips by tags -->
+    <div *ngSwitchCase="MediaType.Meta">
+      <h3>Assigned Clips by Tags</h3>
+      <app-compact-clip-card *ngFor="let assignedClip of taggedClips$ | async"
+                             [clip]="assignedClip">
+
+      </app-compact-clip-card>
+    </div>
+
+    <!-- All others => AppClipType -->
+    <app-clip-preview *ngSwitchDefault
+                   [clip]="form.value">
+
+    </app-clip-preview>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

@@ -11,10 +11,9 @@ import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ScreenOverviewComponent} from "./screen-overview/screen-overview.component";
 import {ScreenInfoComponent} from "./screen-overview/screen-info/screen-info.component";
-import {ClipAssigningDialogModule} from "./screen-overview/clip-assigning-dialog/clip-assigning-dialog.module";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
-
+import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 
 const routes: Routes = [
   {
@@ -27,22 +26,22 @@ const routes: Routes = [
 @NgModule({
   // todo finish renaming
   declarations: [ScreenOverviewComponent, ScreenInfoComponent],
-    imports: [
-        CommonModule,
-        RouterModule.forChild(routes),
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDialogModule,
-        MatListModule,
-        MatInputModule,
-        MatSelectModule,
-        FormsModule,
-        ReactiveFormsModule,
-        ClipAssigningDialogModule,
-        ClipTypeModule,
-        GettingStartedModule,
-    ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    MatListModule,
+    MatInputModule,
+    MatSelectModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ClipTypeModule,
+    GettingStartedModule,
+    CardOverviewModule,
+  ],
 })
 export class ScreensModule {
 }

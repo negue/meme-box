@@ -13,9 +13,12 @@ export const APP_ICONS = [
   'folder',
   'insert_photo',
   'launch',
+  'mobile_friendly',
+  'mobile_off',
   'playlist_add_check',
   'playlist_add',
   'preview',
+  'public',
   'qr_code_scanner',
   'queue',
   'replay',
@@ -25,5 +28,6 @@ export const APP_ICONS = [
   'tag',
   'videocam',
   'video_library',
+  'warning',
   'wifi_off'
 ];

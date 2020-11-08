@@ -21,7 +21,9 @@ const INITIAL_CLIP: Partial<Clip> = {
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
   metaDelay: META_DELAY_DEFAULT,
-  metaType: MetaTriggerTypes.Random
+  metaType: MetaTriggerTypes.Random,
+
+  showOnMobile: true
 };
 
 interface MediaTypeButton {
@@ -51,17 +53,18 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     metaDelay: 0,
   });
 
-  availableMediaFiles = combineLatest([
-    this.appQuery.currentMediaFile$.pipe(filter((files) => !!files)),
-    this.form.valueChanges.pipe(startWith(INITIAL_CLIP)),
-  ]).pipe(
-    map(([mediaFiles, currentFormValues]) => {
-      const currentFileType = currentFormValues.type;
+  currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
 
+  availableMediaFiles$ = combineLatest([
+    this.appQuery.currentMediaFile$.pipe(filter((files) => !!files)),
+    this.currentMediaType$,
+  ]).pipe(
+    map(([mediaFiles, currentFileType]) => {
       return mediaFiles.filter((m) => m.fileType === currentFileType);
     })
   );
 
+  MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
   mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
     .map(([mediaType, value]) => {
       return {
@@ -72,6 +75,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     });
 
 
+  availableScreens$ = this.appQuery.screensList$;
+  selectedScreenId:string = '';
+  showOnMobile = true;
+
   // region Tag specific
 
   // current available tags in memebox / state
@@ -79,6 +86,22 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
   // Current Tags assigned to this clip
   currentTags$ = new BehaviorSubject<Tag[]>([]);
+
+  // Get all clips that have the assigned tags
+  taggedClips$ = combineLatest([
+    this.currentTags$,
+    this.appQuery.clipList$
+  ]).pipe(
+    map(([currentTags, allClips]) => {
+      if (currentTags.length === 0) {
+        return [];
+      }
+
+      const currentTagsSet = new Set(currentTags.map(t => t.id));
+
+      return allClips.filter(c => c.id !== this.data.id && c.tags?.some(t => currentTagsSet.has(t)));
+    })
+  )
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagFormCtrl = new FormControl();  // needed in form?!
@@ -100,6 +123,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     private appQuery: AppQueries
   ) {
     this.data = Object.assign({}, INITIAL_CLIP, this.data);
+
+    this.showOnMobile = this.data.showOnMobile;
+
+    this.currentMediaType$.next(this.data.type);
   }
 
   get MediaType() {
@@ -119,6 +146,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
         takeUntil(this._destroy$)
       )
       .subscribe(([prev, next]) => {
+        this.currentMediaType$.next(next);
+
         this.form.patchValue({
           path: "",
           previewUrl: "",
@@ -157,9 +186,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       this.tagFormCtrl.valueChanges.pipe(
         startWith(null)
       ),
-      this.availableTags$
+      this.availableTags$,
+      this.currentTags$
     ]).pipe(
-      map(([tagInputValue, allTags]) => this._filter(tagInputValue, allTags))
+      map(([tagInputValue, allTags, currentTags]) => this._filter(tagInputValue, allTags, currentTags))
     );
   }
 
@@ -190,7 +220,15 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     valueAsClip.tags = tagsToAssign.map(tag => tag.id)
 
+    valueAsClip.showOnMobile = this.showOnMobile;
+
     await this.appService.addOrUpdateClip(valueAsClip);
+
+    if (this.selectedScreenId && valueAsClip.type !== MediaType.Meta) {
+      this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
+        id: valueAsClip.id,
+      });
+    }
 
     this.dialogRef.close();
   }
@@ -265,14 +303,19 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     this.currentTags$.next(currentTags);
   }
 
-  private _filter(value: string, allTags: Tag[]): Tag[] {
+  private _filter(value: string, allTags: Tag[], currentTags: Tag[]): Tag[] {
+    const currentTagsSet = new Set(currentTags.map(t => t.id));
+
+    // Ignore current selected tags
+    const remainingTags = allTags.filter(t => !currentTagsSet.has(t.id))
+
     if (typeof value === 'string') {
       const filterValue = value.toLowerCase();
 
-      return allTags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
+      return remainingTags.filter(tag => tag.name.toLowerCase().indexOf(filterValue) === 0);
     }
 
-    return allTags;
+    return remainingTags;
   }
 
   // endregion

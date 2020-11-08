@@ -72,16 +72,21 @@
   overflow-x: hidden;
 }
 
-.mediaInfo__screensListTitle {
-  margin-bottom: 1rem;
-}
+.mediaInfo__iconWrapper {
+  position: relative;
 
-.mediaInfo__screensListChip {
-  background-color: #2f3640 !important;
-  color: #ffffff !important;
-  pointer-events: none;
+  button {
+    position: absolute;
+    right: 1rem;
+    top: -0.5rem;
 
-  .mat-icon {
-    margin-right: 0.2rem;
+    &.twitch_icon {
+      right: 3.25rem;
+
+      &:not(.inactive) {
+        // color: #6441A4;
+      }
+    }
   }
 }
+

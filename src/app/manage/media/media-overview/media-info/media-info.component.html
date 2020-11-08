@@ -1,10 +1,35 @@
 <div class="mediaInfo">
   <div class="mediaInfo__titleRow">
     <h2 class="mat-h2 mediaInfo__titleRow__name">{{info.name}}</h2>
-    <app-clip-type [type]="info.type"></app-clip-type>
+    <span class="mediaInfo__iconWrapper">
+      <ng-container *ngIf="twitchEvents$ | async as twitchEvents">
+        <ng-container *ngIf="twitchEvents.length === 1">
+          <button mat-icon-button (click)="onToggleTwitchEvent.emit(twitchEvents[0].id)"
+                  [class.inactive]="!twitchEvents[0].active"
+                  [color]="twitchEvents[0].active ? 'primary' : 'warn' "
+          class="twitch_icon">
+          <mat-icon svgIcon="twitch"></mat-icon>
+        </button>
+        </ng-container>
+            <ng-container *ngIf="twitchEvents.length > 1">
+              <button mat-icon-button (click)="onlyWithOneEventPossible()"
+                      color="primary"
+                      class="twitch_icon">
+          <mat-icon svgIcon="twitch"></mat-icon>
+        </button>
+            </ng-container>
+      </ng-container>
+
+      <button mat-icon-button (click)="onToggleMobileShow.emit()"
+              [color]="info.showOnMobile ? 'primary' : 'warn' ">
+        <mat-icon [svgIcon]="info.showOnMobile ? 'mobile_friendly' : 'mobile_off'"></mat-icon>
+      </button>
+      <app-clip-type [type]="info.type"></app-clip-type>
+    </span>
   </div>
   <mat-card-content>
     <div class="mediaInfo__preview">
+      <!--Todo extract this to clip-preview -->
         <img *ngIf="info.type === 0 && (info.previewUrl || info.path)"
              [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
              [alt]="info.name"
@@ -33,18 +58,8 @@
       </button>
     </div>
 
-    <div class="mediaInfo__screensList" *ngIf="combinedTags$ | async as combinedTags">
-      <h4 class="mediaInfo__screensListTitle">Appears in {{combinedTags.screenList.length}}
-        {{combinedTags.screenList.length === 1 ? 'Screen' : 'Screens'}}</h4>
-          <mat-chip-list>
-            <mat-chip class="mediaInfo__screensListChip" *ngFor="let entry of combinedTags.screenList">
-              <mat-icon svgIcon="screen"></mat-icon> {{entry.name}}
-            </mat-chip>
-
-            <mat-chip class="mediaInfo__screensListChip" *ngFor="let entry of combinedTags.tagList">
-              <mat-icon svgIcon="tag"></mat-icon> {{entry.name}}
-            </mat-chip>
-          </mat-chip-list>
+    <div class="mediaInfo__screensList">
+      <app-clip-chips-list [clip]="info" [listTags]="true"></app-clip-chips-list>
     </div>
   </mat-card-content>
   <mat-card-actions>

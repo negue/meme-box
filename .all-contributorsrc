@@ -32,7 +32,17 @@
       "profile": "https://twitch.tv/gacbl",
       "contributions": [
         "bug",
-        "ideas"
+        "ideas",
+        "code"
+      ]
+    },
+    {
+      "login": "CrypticEngima",
+      "name": "CrypticEngima",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/30286773?v=4",
+      "profile": "https://github.com/CrypticEngima",
+      "contributions": [
+        "design"
       ]
     }
   ],

@@ -30,10 +30,15 @@ export interface Clip extends HasId {
 
   metaType?: MetaTriggerTypes;
   metaDelay?: number; // in ms
+
+  showOnMobile?: boolean;
 }
 
 export interface Screen  extends HasId {
   name: string;
+  /**
+   * Key: clip.id == screenClip.id
+   */
   clips: Dictionary<ScreenClip>;
   customCss?: string;
 }
@@ -77,6 +82,8 @@ export interface ScreenClip extends HasId  {
   animationIn?: string|null;
   animationOut?: string|null;
 
+  zIndex?: number;
+
   customCss?: string;
 }
 
@@ -86,7 +93,7 @@ export interface ScreenViewEntry extends Screen {
 
 // TODO refactor, maybe all messages
 // and then like "yes, but this one only with bits.."
-export const enum TwitchEventTypes {
+export enum TwitchEventTypes {
   message = 'message',
   follow = 'follow',
   sub = 'sub',
@@ -103,6 +110,11 @@ export interface Twitch extends HasId {
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
   active: boolean;
+
+  roles: string[]; // maybe enum
+  minAmount?: number;
+  maxAmount?: number;
+
   // !magic
   // TODO other options per type
 }
@@ -132,6 +144,7 @@ export interface AppState extends SettingsState {
 export interface Config {
   mediaFolder:   string;
   twitchChannel: string;
+  twitchLog?: boolean;
 }
 
 export interface NetworkInfo {
@@ -153,6 +166,19 @@ export interface TwitchTriggerCommand {
   message: string;
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
+}
+
+export enum TargetScreenType {
+  OneScreen,
+  ScreenPerType
+}
+
+export interface FileResult {
+ fullPath: string;
+ ext: string;
+ fileName: string;
+ apiUrl: string;
+ fileType: MediaType
 }
 
 export interface FileResult {
