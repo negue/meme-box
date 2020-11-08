@@ -111,13 +111,21 @@
     </mat-form-field>
 
 
-    <mat-form-field >
-      <mat-label>Custom CSS</mat-label>
-      <textarea autocomplete="off"
-                formControlName="customCss"
-                matInput >
-      </textarea>
-    </mat-form-field>
+     <mat-form-field>
+        <mat-label>Custom CSS</mat-label>
+
+        <gewd-custom-form-control formControlName="customCss"
+                                  #customFormControl
+        >
+          <gewd-prism-editor [value]="customFormControl.value"
+                             language="css"
+                             [debounceTime]="50"
+                             [style.--editor-min-height.px]="200"
+                             (value$)="customFormControl.value = $event"
+                             (focussed$)="customFormControl.focused = $event" #editoe>
+          </gewd-prism-editor>
+        </gewd-custom-form-control>
+      </mat-form-field>
   </form>
 
 </mat-dialog-content>

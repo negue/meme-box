@@ -19,6 +19,7 @@ import { TwitchEditComponent } from './twitch-edit/twitch-edit.component';
 import { MatChipsModule } from "@angular/material/chips";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { HighlightEditorModule } from "@gewd/components/highlight-editor";
+import { CustomFormControlModule } from "@gewd/components/custom-form-control";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { HighlightEditorModule } from "@gewd/components/highlight-editor";
     MatChipsModule,
     MatAutocompleteModule,
     HighlightEditorModule,
+    CustomFormControlModule,
   ],
   providers: [DialogService],
 })
