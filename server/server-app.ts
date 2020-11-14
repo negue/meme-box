@@ -1,4 +1,4 @@
-import {createExpress, ExampleTwitchCommandsSubject} from "./express-server";
+import {createExpress} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT} from "./constants";
 import {debounceTime, startWith} from "rxjs/operators";
@@ -6,6 +6,7 @@ import {TwitchHandler} from "./twitch.handler";
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
 import {LOGGER} from "./logger.utils";
+import {ExampleTwitchCommandsSubject} from "./shared";
 
 // This file creates the "shared" server logic between headless / electron
 
