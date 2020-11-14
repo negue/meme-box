@@ -19,11 +19,11 @@ TIMER_ROUTES
 })
 
 // Put = Update
-.put(':eventId', (req, res) => {
+.put('/:eventId', (req, res) => {
   res.send(PersistenceInstance.updateTimedEvent(req.params['eventId'], req.body));
 })
 // Delete
-.delete(':eventId', (req, res) => {
+.delete('/:eventId', (req, res) => {
   res.send(PersistenceInstance.deleteTimedEvent(req.params['eventId']));
 });
 

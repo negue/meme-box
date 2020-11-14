@@ -11,6 +11,7 @@ import {DialogService} from "../dialog.service";
 // TODO better class/interface name?
 const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
   clipId:  '',
+  active: true,
   everyXms: 1000 * 60  // 1min
 };
 

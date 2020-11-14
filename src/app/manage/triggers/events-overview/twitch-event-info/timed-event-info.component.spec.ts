@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {EventInfoComponent} from './event-info.component';
+import {TimedEventInfoComponent} from './timed-event-info.component';
 
 describe('EventInfoComponent', () => {
-  let component: EventInfoComponent;
-  let fixture: ComponentFixture<EventInfoComponent>;
+  let component: TimedEventInfoComponent;
+  let fixture: ComponentFixture<TimedEventInfoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EventInfoComponent]
+      declarations: [TimedEventInfoComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EventInfoComponent);
+    fixture = TestBed.createComponent(TimedEventInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

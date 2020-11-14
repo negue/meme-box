@@ -298,7 +298,7 @@ export class AppService {
 
     // remove from state
     this.appStore.update(state => {
-      delete state.twitchEvents[timerId];
+      delete state.timers[timerId];
     });
 
     this.snackbar.normal('Timer removed!');
@@ -422,6 +422,17 @@ export class AppService {
     };
 
     return this.addOrUpdateTwitchEvent(newTwitchEventObject);
+  }
+
+  toggleTimedClipActiveState(twitchId: string) {
+    var timedEvent = this.appStore.getValue().timers[twitchId];
+
+    const newTimedEventObject = {
+      ...timedEvent,
+      active: !timedEvent.active
+    };
+
+    return this.addOrUpdateTimedEvent(newTimedEventObject);
   }
 
   public postErrorToServer(error: Error) {

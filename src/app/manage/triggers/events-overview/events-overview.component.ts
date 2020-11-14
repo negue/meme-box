@@ -40,12 +40,20 @@ export class EventsOverviewComponent implements OnInit {
     this.dialogService.showTimedEditDialog(null);
   }
 
-  deleteEvent(id: string) {
+  deleteTwitchEvent(id: string) {
     this.appService.deleteTwitchEvent(id);
   }
 
-  editEvent(twitchEventItem: Twitch) {
+  editTwitchEvent(twitchEventItem: Twitch) {
     this.dialogService.showTwitchEditDialog( twitchEventItem);
+  }
+
+  deleteTimedEvent(id: string) {
+    this.appService.deleteTimedEvent(id);
+  }
+
+  editTimedEvent(twitchEventItem: TimedClip) {
+    this.dialogService.showTimedEditDialog( twitchEventItem);
   }
 
   previewEvent(item: Twitch) {

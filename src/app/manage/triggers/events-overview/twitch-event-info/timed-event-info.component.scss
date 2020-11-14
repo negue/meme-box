@@ -1,0 +1,73 @@
+@import '~angular-material-css-vars/public-util';
+
+:host {
+  width: 100%;
+
+  ::ng-deep .mat-checkbox-background {
+    background-color: transparent !important;
+  }
+
+  ::ng-deep .mat-chip {
+    &.mat-chip.mat-standard-chip {
+      background-color: #2f3640;
+      &.eventInfo__chip--selected {
+        background-color: #0be881; //TODO - make a var
+        color: #2f3640; //TODO - make a var
+
+        .mat-checkbox-frame {
+          border-color: #2f3640;
+        }
+      }
+    }
+  }
+}
+
+.eventInfo__checkbox {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.eventInfo__titleRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.eventInfo__titleRow__name {
+  margin-bottom: 0;
+}
+
+.eventInfo__chip {
+  cursor: pointer;
+}
+
+.eventInfo__titleRow__event {
+  text-transform: capitalize;
+}
+
+.eventInfo__meta {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.eventInfo__actionButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  button {
+    width: 45%;
+  }
+}
+
+.eventInfo__delete {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+

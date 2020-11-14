@@ -1,0 +1,43 @@
+<div class="eventInfo__titleRow">
+  <h2 class="mat-h2 eventInfo__titleRow__name">
+    <code>{{item.everyXms}}ms</code>
+  </h2>
+</div>
+
+<div class="eventInfo__checkbox">
+  <mat-chip-list>
+    <mat-chip class="eventInfo__chip"
+              [class.eventInfo__chip--selected]="item.active">
+      <mat-checkbox [checked]="item.active" (change)="onActiveChanged($event)">
+        {{item.active ? 'Event active' : 'Event inactive'}}
+      </mat-checkbox>
+    </mat-chip>
+  </mat-chip-list>
+</div>
+
+<div class="eventInfo__actionButtons">
+  <button (click)="onEdit.emit()" color="accent" mat-flat-button>
+    <mat-icon svgIcon="edit"></mat-icon>
+    Edit
+  </button>
+</div>
+
+<div class="eventInfo__meta">
+  <ng-container *ngIf="allInformations$ | async as information">
+
+    <p>Clip: {{ information.clip?.name }}</p>
+    <!-- Screen: <strong>{{ information.screen.name }}</strong> -->
+
+    <app-clip-preview [clip]="information.clip"
+                      height="100px" width="200px"></app-clip-preview>
+
+  </ng-container>
+</div>
+
+<mat-card-actions>
+  <button (click)="onDelete.emit()" class="eventInfo__delete" color="warn" mat-flat-button>
+    <mat-icon svgIcon="delete"></mat-icon>
+    Delete trigger
+  </button>
+</mat-card-actions>
+

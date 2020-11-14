@@ -108,6 +108,7 @@ export interface TimedClip extends HasId {
   clipId: string;
   screenId?: string;
   everyXms: number;
+  active: boolean;
 }
 
 export interface Twitch extends HasId {

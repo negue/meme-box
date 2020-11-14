@@ -1,21 +1,20 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
+import {TimedClip, TwitchTypesArray} from '@memebox/contracts';
 import {AppQueries} from '../../../../state/app.queries';
 import {map} from 'rxjs/operators';
 import {MatCheckboxChange} from '@angular/material/checkbox';
 import {AppService} from '../../../../state/app.service';
 
 @Component({
-  selector: 'app-event-info',
-  templateUrl: './event-info.component.html',
-  styleUrls: ['./event-info.component.scss']
+  selector: 'app-timed-info',
+  templateUrl: './timed-event-info.component.html',
+  styleUrls: ['./timed-event-info.component.scss']
 })
-export class EventInfoComponent implements OnInit {
+export class TimedEventInfoComponent implements OnInit {
   twitchEvents = TwitchTypesArray;
   @Input()
-  item: Twitch;
+  item: TimedClip;
 
-  twitchEventTypes = TwitchEventTypes;
 
   allInformations$ = this.appQueries.state$.pipe(
     map(value => {
@@ -35,9 +34,6 @@ export class EventInfoComponent implements OnInit {
   @Output()
   onEdit = new EventEmitter<any>();
 
-  @Output()
-  onPreview = new EventEmitter<any>();
-
   constructor(private appQueries: AppQueries,
               private appService: AppService) {
   }
@@ -46,6 +42,6 @@ export class EventInfoComponent implements OnInit {
   }
 
   onActiveChanged($event: MatCheckboxChange) {
-    this.appService.toggleTwitchActiveState(this.item.id);
+    this.appService.toggleTimedClipActiveState(this.item.id);
   }
 }

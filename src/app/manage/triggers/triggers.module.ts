@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EventsOverviewComponent} from './events-overview/events-overview.component';
-import {EventInfoComponent} from './events-overview/event-info/event-info.component';
 import {RouterModule, Routes} from "@angular/router";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonModule} from "@angular/material/button";
@@ -15,6 +14,8 @@ import {MatChipsModule} from "@angular/material/chips";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-setting/twitch-setting.module";
 import {ClipPreviewModule} from "../../shared/components/clip-preview/clip-preview.module";
+import {TimedEventInfoComponent} from "./events-overview/twitch-event-info/timed-event-info.component";
+import {TwitchEventInfoComponent} from "./events-overview/timed-event-info/twitch-event-info.component";
 
 const routes: Routes = [
   {
@@ -24,7 +25,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [EventsOverviewComponent, EventInfoComponent],
+  declarations: [EventsOverviewComponent, TimedEventInfoComponent, TwitchEventInfoComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

@@ -3,12 +3,12 @@
 
 <ng-container *ngIf="twitchChannelExist$ | async; else noChannel">
   <app-overview-item *ngFor="let item of twitchEventsList$ | async; trackBy: trackById">
-    <app-event-info (onDelete)="deleteEvent(item.id)"
-                    (onEdit)="editEvent(item)"
+    <app-twitch-info (onDelete)="deleteTwitchEvent(item.id)"
+                    (onEdit)="editTwitchEvent(item)"
                     (onPreview)="previewEvent(item)"
                     [item]="item"
     >
-    </app-event-info>
+    </app-twitch-info>
   </app-overview-item>
 
   <app-overview-add-item label="Add new twitch event"
@@ -28,7 +28,11 @@
 <app-card-overview>
 
     <app-overview-item *ngFor="let item of timedEventsList$ | async; trackBy: trackById">
-      {{ item | json }}
+      <app-timed-info (onDelete)="deleteTimedEvent(item.id)"
+                       (onEdit)="editTimedEvent(item)"
+                       [item]="item"
+      >
+      </app-timed-info>
     </app-overview-item>
 
     <app-overview-add-item label="Add new timed event"
