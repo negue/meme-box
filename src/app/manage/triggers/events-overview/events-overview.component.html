@@ -1,3 +1,4 @@
+<h2 class="type_header">Twitch</h2>
 <app-card-overview>
 
 <ng-container *ngIf="twitchChannelExist$ | async; else noChannel">
@@ -21,5 +22,23 @@
     </app-overview-item>
   </ng-template>
 
+</app-card-overview>
+
+<h2 class="type_header">Timers</h2>
+<app-card-overview>
+
+    <app-overview-item *ngFor="let item of eventsList$ | async; trackBy: trackById">
+      <app-event-info (onDelete)="deleteEvent(item.id)"
+                      (onEdit)="editEvent(item)"
+                      (onPreview)="previewEvent(item)"
+                      [item]="item"
+      >
+      </app-event-info>
+    </app-overview-item>
+
+    <app-overview-add-item label="Add new twitch event"
+                           (click)="newEventConfigReceived()">
+
+    </app-overview-add-item>
 </app-card-overview>
 

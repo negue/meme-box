@@ -42,5 +42,5 @@ const routes: Routes = [
     ClipPreviewModule,
   ]
 })
-export class TwitchModule {
+export class TriggersModule {
 }

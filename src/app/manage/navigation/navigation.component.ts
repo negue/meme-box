@@ -11,7 +11,7 @@ export class NavigationComponent implements OnInit {
   links = [
     {path: './media', displayName: 'Media'},
     {path: './screens', displayName: 'Screens'},
-    {path: './twitch', displayName: 'Twitch'}
+    {path: './triggers', displayName: 'Triggers'}
   ]
 
   constructor(private dialogService: DialogService) {

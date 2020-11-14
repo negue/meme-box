@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Twitch, TwitchEventTypes, TwitchTypesArray } from '@memebox/contracts';
-import { AppQueries } from '../../../../state/app.queries';
-import { map } from 'rxjs/operators';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { AppService } from '../../../../state/app.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
+import {AppQueries} from '../../../../state/app.queries';
+import {map} from 'rxjs/operators';
+import {MatCheckboxChange} from '@angular/material/checkbox';
+import {AppService} from '../../../../state/app.service';
 
 @Component({
   selector: 'app-event-info',
