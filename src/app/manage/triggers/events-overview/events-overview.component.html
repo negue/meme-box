@@ -1,8 +1,8 @@
-<h2 class="type_header">Twitch</h2>
+<h2 class="type_header">Twitch [{{ (twitchEventsList$ | async).length}}]</h2>
 <app-card-overview>
 
 <ng-container *ngIf="twitchChannelExist$ | async; else noChannel">
-  <app-overview-item *ngFor="let item of eventsList$ | async; trackBy: trackById">
+  <app-overview-item *ngFor="let item of twitchEventsList$ | async; trackBy: trackById">
     <app-event-info (onDelete)="deleteEvent(item.id)"
                     (onEdit)="editEvent(item)"
                     (onPreview)="previewEvent(item)"
@@ -12,7 +12,7 @@
   </app-overview-item>
 
   <app-overview-add-item label="Add new twitch event"
-                         (click)="newEventConfigReceived()">
+                         (click)="newTwitchEventConfigReceived()">
 
   </app-overview-add-item>
 </ng-container>
@@ -24,20 +24,15 @@
 
 </app-card-overview>
 
-<h2 class="type_header">Timers</h2>
+<h2 class="type_header">Timers [{{ (timedEventsList$ | async).length}}] </h2>
 <app-card-overview>
 
-    <app-overview-item *ngFor="let item of eventsList$ | async; trackBy: trackById">
-      <app-event-info (onDelete)="deleteEvent(item.id)"
-                      (onEdit)="editEvent(item)"
-                      (onPreview)="previewEvent(item)"
-                      [item]="item"
-      >
-      </app-event-info>
+    <app-overview-item *ngFor="let item of timedEventsList$ | async; trackBy: trackById">
+      {{ item | json }}
     </app-overview-item>
 
-    <app-overview-add-item label="Add new twitch event"
-                           (click)="newEventConfigReceived()">
+    <app-overview-add-item label="Add new timed event"
+                           (click)="newTimedEventConfigReceived()">
 
     </app-overview-add-item>
 </app-card-overview>

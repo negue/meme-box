@@ -1,5 +1,5 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {ENDPOINTS, HasId, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
+import {ENDPOINTS, HasId, TimedClip, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {AppQueries} from "../../../state/app.queries";
 import {API_BASE, AppService} from "../../../state/app.service";
@@ -14,7 +14,8 @@ import {map} from "rxjs/internal/operators";
 })
 export class EventsOverviewComponent implements OnInit {
 
-  eventsList$: Observable<Twitch[]> = this.queries.twitchEvent$;
+  twitchEventsList$: Observable<Twitch[]> = this.queries.twitchEvent$;
+  timedEventsList$: Observable<TimedClip[]> = this.queries.timedEvents$;
   twitchChannelExist$ = this.queries.config$.pipe(
     map(cfg => !!cfg.twitchChannel)
   );
@@ -32,8 +33,11 @@ export class EventsOverviewComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  newEventConfigReceived() {
+  newTwitchEventConfigReceived() {
     this.dialogService.showTwitchEditDialog(null);
+  }
+  newTimedEventConfigReceived() {
+    this.dialogService.showTimedEditDialog(null);
   }
 
   deleteEvent(id: string) {

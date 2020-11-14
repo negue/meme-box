@@ -2,73 +2,29 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Clip, Dictionary, Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
+import {Clip, Dictionary, TimedClip} from '@memebox/contracts';
 import {AppService} from '../../../../state/app.service';
 import {AppQueries} from '../../../../state/app.queries';
 import {SnackbarService} from '../../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
 
 // TODO better class/interface name?
-const INITIAL_TWITCH: Partial<Twitch> = {
-  name: '',
-  event: TwitchEventTypes.message,
-  contains: '',
-  active: true,
-  roles: []
+const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
+  clipId:  '',
+  everyXms: 1000 * 60  // 1min
 };
 
-interface TwitchLevelEntry {
-  label: string;
-  type: string;
-}
-
-const TWITCH_LEVELS: TwitchLevelEntry[] = [
-  {
-    type: 'broadcaster',
-    label: 'Broadcaster'
-  },
-  {
-    type: 'moderator',
-    label: 'Moderator'
-  },
-  {
-    type: 'vip',
-    label: 'VIP'
-  },
-  {
-    type: 'founder',
-    label: 'Founder'
-  },
-  {
-    type: 'subscriber',
-    label: 'Subscriber'
-  },
-  {
-    type: 'user',
-    label: 'User'
-  }
-];
-
 @Component({
-  selector: 'app-twitch-edit',
-  templateUrl: './twitch-edit.component.html',
-  styleUrls: ['./twitch-edit.component.scss']
+  selector: 'app-timed-edit',
+  templateUrl: './timed-edit.component.html',
+  styleUrls: ['./timed-edit.component.scss']
 })
-export class TwitchEditComponent implements OnInit, OnDestroy {
+export class TimedEditComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
     id: "",
-    name: "",
-    event: "",
     clipId: "",
-    contains: "",
-    minAmount: undefined,
-    maxAmount: undefined
+    everyXms: undefined
   });
-
-  twitchEvents = TwitchTypesArray;
-  TWITCH_LEVELS = TWITCH_LEVELS;
-
-  twitchEventTypes = TwitchEventTypes;
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 
@@ -76,7 +32,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Twitch,
+    @Inject(MAT_DIALOG_DATA) public data: TimedClip,
     private dialogRef: MatDialogRef<any>,
     private matDialog: MatDialog,
     private appService: AppService,
@@ -85,10 +41,9 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     private dialogService: DialogService
   ) {
     // Todo find a better to get defaults & stuff
-    this.data = Object.assign({}, {...INITIAL_TWITCH}, {
+    this.data = Object.assign({}, {...INITIAL_TIMED_CLIP}, {
       ...this.data
     });
-    this.data.roles = [...this.data.roles];
     console.info({data: this.data});
   }
 
@@ -102,16 +57,15 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
     const {value} = this.form;
 
-    const newTwitchValue: Twitch = {
+    const newTimedValue: TimedClip = {
       ...this.data,
       ...value
     };
 
-    console.info(newTwitchValue);
-    await this.appService.addOrUpdateTwitchEvent(newTwitchValue);
+    console.info(newTimedValue);
+    await this.appService.addOrUpdateTimedEvent(newTimedValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.normal(`Twitch "${newTwitchValue.name}" ${newTwitchValue.id ? 'updated' : 'added'}`);
 
     this.dialogRef.close();
 
@@ -129,7 +83,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   async selectEventClip() {
     const clipId = await this.dialogService.showClipSelectionDialog(
-      this.form.value.clipId, this.data.name
+      this.form.value.clipId, 'Select a clip: '
     )
 
     if (clipId) {
@@ -138,18 +92,6 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         clipId
       });
-    }
-  }
-
-  toggleRole(role: string) {
-
-
-    if (this.data.roles.includes(role)) {
-      const indexOfRole = this.data.roles.indexOf(role);
-
-      this.data.roles.splice(indexOfRole, 1);
-    } else {
-      this.data.roles.push(role);
     }
   }
 }
