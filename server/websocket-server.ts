@@ -2,7 +2,7 @@ import * as http from "http";
 import * as WebSocket from "ws";
 import {ACTIONS, TriggerClip} from "../projects/contracts/src/lib/actions";
 import {PersistenceInstance} from "./persistence";
-import {MetaTriggerTypes} from "../projects/contracts/src/lib/types";
+import {Dictionary, MetaTriggerTypes} from "../projects/contracts/src/lib/types";
 import {MediaType} from "../projects/contracts/src/lib/media.types";
 import {LOGGER} from "./logger.utils";
 
@@ -16,7 +16,8 @@ const server = http.createServer();
 
 const wss = new WebSocket.Server({ server });
 
-const obsPages: {[key: string]: WebSocketType} = {};
+// value => socket => array?
+const obsPages: Dictionary<WebSocketType[]> = {};
 let wsToSend: WebSocketType[] = [];
 
 const WSS_LOGGER = LOGGER.child({
@@ -24,9 +25,13 @@ const WSS_LOGGER = LOGGER.child({
 })
 
 export function sendDataToScreen(targetId: string|null, message: string) {
-  if (obsPages[targetId] && obsPages[targetId].readyState === WebSocket.OPEN) {
-    obsPages[targetId].send(message);
-    WSS_LOGGER.info('SENT DATA TO: ', {targetId, message});
+  if (obsPages[targetId]) {
+    for (const targetScreenSocket of obsPages[targetId]) {
+      if (targetScreenSocket.readyState === WebSocket.OPEN) {
+        targetScreenSocket.send(message);
+        WSS_LOGGER.info('SENT DATA TO: ', {targetId, message});
+      }
+    }
   }
 }
 
@@ -121,7 +126,12 @@ wss.on("connection", (ws: WebSocket) => {
 
     switch (action) {
       case ACTIONS.I_AM_OBS: {
-        obsPages[payload] = ws;
+        if (obsPages[payload]) {
+          obsPages[payload].push(ws);
+        } else {
+          obsPages[payload] = [ws];
+        }
+
         wsToSend.push(ws);
         break;
       }
