@@ -7,6 +7,7 @@ import {
   ScreenClip,
   SettingsState,
   Tag,
+  TimedClip,
   Twitch,
   VisibilityEnum
 } from "../projects/contracts/src/lib/types";
@@ -244,6 +245,38 @@ export class Persistence {
 
   public listTwitchEvents(): Twitch[] {
     return Object.values(this.data.twitchEvents);
+  }
+
+
+  /*
+   *  Timed Clips Settings
+   */
+
+  public addTimedEvent(timedEvent: TimedClip) {
+    timedEvent.id = uuidv4();
+    this.data.timers[timedEvent.id] = timedEvent;
+
+    this.saveData();
+    return timedEvent.id;
+  }
+
+  public updateTimedEvent(id: string, timedEvent: TimedClip) {
+    timedEvent.id = id;
+
+    updateItemInDictionary(this.data.timers, timedEvent);
+
+    this.saveData();
+    return timedEvent;
+  }
+
+  public deleteTimedEvent(id: string) {
+    deleteItemInDictionary(this.data.timers, id);
+
+    this.saveData();
+  }
+
+  public listTimedEvents(): TimedClip[] {
+    return Object.values(this.data.timers);
   }
 
   /*
