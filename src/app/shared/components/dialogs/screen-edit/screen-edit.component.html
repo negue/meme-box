@@ -27,7 +27,7 @@
         >
           <gewd-prism-editor [value]="customFormControl.value"
                              language="css"
-                             [debounceTime]="50"
+                             [debounceTime]="450"
                              [style.--editor-min-height.px]="200"
                              (value$)="customFormControl.value = $event"
                              (focussed$)="customFormControl.focused = $event" #editoe>
