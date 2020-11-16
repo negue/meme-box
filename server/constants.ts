@@ -15,8 +15,7 @@ export const SCREEN_CLIPS_ID_ENDPOINT = `${API_PREFIX}/screen/:screenId/clips/:c
 
 
 export const TWITCH_ENDPOINT = `${API_PREFIX}/twitch_events`;
-export const TWITCH_ID_ENDPOINT = `${API_PREFIX}/twitch_events/:eventId`;
-export const TWITCH_TRIGGER_ENDPOINT = `${API_PREFIX}/twitch_events/trigger`;
+export const TIMED_ENDPOINT = `${API_PREFIX}/timed_events`;
 
 
 export const CONFIG_ENDPOINT = `${API_PREFIX}/config`;

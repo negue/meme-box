@@ -103,6 +103,14 @@ export enum TwitchEventTypes {
   channelPoints = 'channelPoints'
 }
 
+export interface TimedClip extends HasId {
+  // id => has nothing to do with clipID
+  clipId: string;
+  screenId?: string;
+  everyXms: number;
+  active: boolean;
+}
+
 export interface Twitch extends HasId {
   name: string;
   // screenId:      string; // TODO
@@ -130,6 +138,7 @@ export interface Tag extends HasId {
 export interface SettingsState {
   clips: Dictionary<Clip>;
   twitchEvents: Dictionary<Twitch>;
+  timers: Dictionary<TimedClip>;
   screen: Dictionary<Screen>;
   tags: Dictionary<Tag>;
 

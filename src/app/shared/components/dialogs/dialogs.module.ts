@@ -27,6 +27,7 @@ import { CompactClipCardModule } from "../compact-clip-card/compact-clip-card.mo
 import { ClipPreviewModule } from "../clip-preview/clip-preview.module";
 import { HighlightEditorModule } from "@gewd/components/highlight-editor";
 import { CustomFormControlModule } from "@gewd/components/custom-form-control";
+import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { CustomFormControlModule } from "@gewd/components/custom-form-control";
     ScreenClipOptionsComponent,
     TwitchEditComponent,
     ClipAssigningDialogComponent,
+    TimedEditComponent
   ],
   imports: [
     PipesModule,

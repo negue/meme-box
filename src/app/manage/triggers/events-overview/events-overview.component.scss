@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  overflow-y: scroll;
+  height: calc(100vh - 3.1rem);
+}
+
+
+.type_header {
+  padding-top: 1rem;
+  display: block;
+  padding-bottom: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  width: calc(100% - 2rem);
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0rem;
+  z-index: 10;
+  background: var(--palette-background-background) !important;
+}
+

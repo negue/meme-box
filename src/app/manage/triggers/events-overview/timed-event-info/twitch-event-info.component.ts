@@ -1,16 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Twitch, TwitchEventTypes, TwitchTypesArray } from '@memebox/contracts';
-import { AppQueries } from '../../../../state/app.queries';
-import { map } from 'rxjs/operators';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { AppService } from '../../../../state/app.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
+import {AppQueries} from '../../../../state/app.queries';
+import {map} from 'rxjs/operators';
+import {MatCheckboxChange} from '@angular/material/checkbox';
+import {AppService} from '../../../../state/app.service';
 
 @Component({
-  selector: 'app-event-info',
-  templateUrl: './event-info.component.html',
-  styleUrls: ['./event-info.component.scss']
+  selector: 'app-twitch-info',
+  templateUrl: './twitch-event-info.component.html',
+  styleUrls: ['./twitch-event-info.component.scss']
 })
-export class EventInfoComponent implements OnInit {
+export class TwitchEventInfoComponent implements OnInit {
   twitchEvents = TwitchTypesArray;
   @Input()
   item: Twitch;

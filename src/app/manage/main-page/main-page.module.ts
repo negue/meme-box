@@ -23,8 +23,8 @@ const mainRoutes: Routes = [
     loadChildren: () => import('../settings/settings.module').then(module => module.SettingsModule)
   },
   {
-    path: 'twitch',
-    loadChildren: () => import('../twitch/twitch.module').then(module => module.TwitchModule)
+    path: 'triggers',
+    loadChildren: () => import('../triggers/triggers.module').then(module => module.TriggersModule)
   },
   {
     path: '',
