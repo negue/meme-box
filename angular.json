@@ -17,16 +17,30 @@
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "assets": [
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "prism-@(c|csharp|css-extras|json|typescript|markdown).min.js",
+                "input": "./node_modules/prismjs/components",
+                "output": "/assets/prism/"
+              },
+              {
+                "glob": "prism-plugin-(inline-color|bracket-match).worker-func.js",
+                "input": "./node_modules/@gewd/components/highlight-editor",
+                "output": "/assets/prism/"
+              }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/prismjs/themes/prism-okaidia.css",
+              "node_modules/prismjs/plugins/inline-color/prism-inline-color.css",
+              "node_modules/@gewd/components/highlight-editor/bracket-match.css"
             ],
             "scripts": [],
             "customWebpackConfig": {
               "path": "./angular.webpack.cjs",
               "target": "web"
-            }
+            },
+            "webWorkerTsConfig": "tsconfig.worker.json"
           },
           "configurations": {
             "dev": {
@@ -137,7 +151,8 @@
             "eslintConfig": ".eslintrc.json",
             "tsConfig": [
               "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "src/tsconfig.spec.json",
+              "tsconfig.worker.json"
             ],
             "exclude": [
               "**/node_modules/**"
