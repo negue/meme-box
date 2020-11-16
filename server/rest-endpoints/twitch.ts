@@ -2,6 +2,21 @@ import {PersistenceInstance} from "../persistence";
 
 import * as express from 'express';
 import {ExampleTwitchCommandsSubject} from "../shared";
+import {body} from "express-validator";
+import {validOrLeave} from "../validations";
+
+const twitchPostValidator = [
+  body('clipId').isString(),
+  body('name').isString(),
+  body('active').isBoolean()
+];
+
+
+const twitchPutValidator = [
+  ...twitchPostValidator,
+  body('id').isString(),
+];
+
 
 /**
  * Twitch Trigger Config API
@@ -15,12 +30,12 @@ TWITCH_ROUTES
 
 
 // Post = New
-.post('/', (req, res) => {
+.post('/', twitchPostValidator, validOrLeave, (req, res) => {
   res.send(PersistenceInstance.addTwitchEvent(req.body));
 })
 
 // Put = Update
-.put('/:eventId', (req, res) => {
+.put('/:eventId', twitchPutValidator, validOrLeave, (req, res) => {
   res.send(PersistenceInstance.updateTwitchEvent(req.params['eventId'], req.body));
 })
 // Delete
