@@ -1,4 +1,4 @@
-import {createExpress, ExampleTwitchCommandsSubject} from "./express-server";
+import {createExpress} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT} from "./constants";
 import {debounceTime, startWith} from "rxjs/operators";
@@ -6,6 +6,8 @@ import {TwitchHandler} from "./twitch.handler";
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
 import {LOGGER} from "./logger.utils";
+import {ExampleTwitchCommandsSubject} from "./shared";
+import {TimedHandler} from "./timed.handler";
 
 // This file creates the "shared" server logic between headless / electron
 
@@ -22,6 +24,7 @@ export const {server, wss} = createWebSocketServer(NEW_PORT);
 server.on('request', expressServer);
 
 let currentConfigJsonString = '';
+let currentTimers = '';
 let twitchHandler:TwitchHandler = null;
 
 PersistenceInstance.hardRefresh$()
@@ -33,6 +36,9 @@ PersistenceInstance.hardRefresh$()
     console.info('Data Hard-Refresh');
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
   });
+
+const timedHandler = new TimedHandler();
+timedHandler.startTimers();
 
 PersistenceInstance.dataUpdated$()
   .pipe(
@@ -57,6 +63,15 @@ PersistenceInstance.dataUpdated$()
       }
 
       twitchHandler = new TwitchHandler(config.twitchChannel, config.twitchLog ?? false);
+    }
+
+    const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
+
+    if (currentTimers != jsonOfTimers) {
+      timedHandler.refreshTimers();
+      currentTimers = jsonOfTimers;
+
+      LOGGER.info(`Refreshing TimedHandler`);
     }
   });
 

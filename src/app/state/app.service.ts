@@ -1,7 +1,18 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
-import {Clip, Config, ENDPOINTS, FileInfo, Screen, ScreenClip, Tag, Twitch, VisibilityEnum} from "@memebox/contracts";
+import {
+  Clip,
+  Config,
+  ENDPOINTS,
+  FileInfo,
+  Screen,
+  ScreenClip,
+  Tag,
+  TimedClip,
+  Twitch,
+  VisibilityEnum
+} from "@memebox/contracts";
 import {
   API_PREFIX,
   CONFIG_OPEN_ENDPOINT,
@@ -19,6 +30,7 @@ import {take} from "rxjs/internal/operators";
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
+// TODO split up service per module??
 
 @Injectable({
   providedIn: 'root'
@@ -255,6 +267,43 @@ export class AppService {
     this.snackbar.normal('Media removed from screen!');
   }
 
+  public async addOrUpdateTimedEvent(event: TimedClip) {
+    let newId = event?.id ?? '';
+    const newEntry = !newId;
+
+    if (newId === '') {
+      // add the clip to api & await
+      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}`, event, {
+        responseType: 'text' as any
+      }).toPromise();
+
+      event.id = newId;
+    } else {
+      // add the clip to api & await
+      await this.http.put<string>(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}/${newId}`, event).toPromise();
+    }
+
+    // add to the state
+    this.appStore.update(state => {
+      state.timers[newId] = event;
+    });
+
+    // TODO improve snackbar titles
+    this.snackbar.normal(`Timer ${newEntry ? 'added' :  'updated' }`);
+  }
+
+  public async deleteTimedEvent(timerId: string) {
+    // send the api call
+    await this.http.delete(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}/${timerId}`).toPromise();
+
+    // remove from state
+    this.appStore.update(state => {
+      delete state.timers[timerId];
+    });
+
+    this.snackbar.normal('Timer removed!');
+  }
+
   public async addOrUpdateTwitchEvent(event: Twitch) {
     let newId = event?.id ?? '';
 
@@ -373,6 +422,17 @@ export class AppService {
     };
 
     return this.addOrUpdateTwitchEvent(newTwitchEventObject);
+  }
+
+  toggleTimedClipActiveState(twitchId: string) {
+    var timedEvent = this.appStore.getValue().timers[twitchId];
+
+    const newTimedEventObject = {
+      ...timedEvent,
+      active: !timedEvent.active
+    };
+
+    return this.addOrUpdateTimedEvent(newTimedEventObject);
   }
 
   public postErrorToServer(error: Error) {

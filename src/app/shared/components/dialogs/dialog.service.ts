@@ -1,6 +1,6 @@
 import {Injectable, TemplateRef} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {Clip, Screen, Twitch} from "@memebox/contracts";
+import {Clip, Screen, TimedClip, Twitch} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
 import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
@@ -15,6 +15,13 @@ import {
   ScreenClipOptionsPayload
 } from "./screen-clip-options/screen-clip-options.component";
 import {TwitchEditComponent} from "./twitch-edit/twitch-edit.component";
+import {
+  ClipAssigningDialogComponent,
+  ClipAssigningDialogOptions,
+  ClipAssigningMode
+} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {take} from "rxjs/internal/operators";
+import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 
 @Injectable()
 export class DialogService {
@@ -72,6 +79,35 @@ export class DialogService {
         minHeight: '50vh'
       }
     )
+  }
+
+  showTimedEditDialog(info: Partial<TimedClip>) {
+    this._dialog.open(
+      TimedEditComponent, {
+        data: info,
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw',
+        minHeight: '50vh'
+      }
+    )
+  }
+
+  showClipSelectionDialog(currentClipId: string, dialogTitle: string) {
+    return this.open(
+      ClipAssigningDialogComponent, {
+        data: {
+          mode: ClipAssigningMode.Single,
+          selectedItemId: currentClipId,
+
+          dialogTitle
+        } as ClipAssigningDialogOptions,
+        width: '800px',
+
+        panelClass: 'max-height-dialog'
+      }
+    ).afterClosed().pipe(
+      take(1),
+    ).toPromise()
   }
 
   open<T, D = any, R = any>(

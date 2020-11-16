@@ -18,18 +18,15 @@ import {
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
   TAGS_ENDPOINT,
+  TIMED_ENDPOINT,
   TWITCH_ENDPOINT,
-  TWITCH_ID_ENDPOINT,
-  TWITCH_TRIGGER_ENDPOINT
 } from "./constants";
 import * as fs from 'fs';
 import {existsSync} from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
-import {TwitchTriggerCommand} from "../projects/contracts/src/public-api";
 
 import open from 'open';
-import {Subject} from "rxjs";
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
 import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "./validations";
@@ -37,6 +34,8 @@ import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {NEW_CONFIG_PATH} from "./path.utils";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
+import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
+import {TIMER_ROUTES} from "./rest-endpoints/timers";
 
 const {  normalize, join } = require('path');
 
@@ -65,7 +64,6 @@ app.get(`${API_PREFIX}/debugPaths`, (req, res) => {
   });
 })
 
-export const ExampleTwitchCommandsSubject = new Subject<TwitchTriggerCommand>();
 
 app.get(API_PREFIX, (req,res) => {
   res.send(PersistenceInstance.fullState());
@@ -109,6 +107,8 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
 app.use(TAGS_ENDPOINT, TAG_ROUTES);
 app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 app.use(LOG_ENDPOINT, LOG_ROUTES);
+app.use(TWITCH_ENDPOINT, TWITCH_ROUTES);
+app.use(TIMED_ENDPOINT, TIMER_ROUTES);
 
 /**
  * OBS-Specific API
@@ -156,35 +156,6 @@ app.delete(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
 });
 
 
-/**
- * Twitch API
- */
-
-app.get(TWITCH_ENDPOINT, (req,res) => {
-  res.send(PersistenceInstance.listTwitchEvents());
-});
-
-
-// Post = New
-app.post(TWITCH_ENDPOINT, (req, res) => {
-  res.send(PersistenceInstance.addTwitchEvent(req.body));
-});
-
-// Put = Update
-app.put(TWITCH_ID_ENDPOINT, (req, res) => {
-  res.send(PersistenceInstance.updateTwitchEvent(req.params['eventId'], req.body));
-});
-// Delete
-app.delete(TWITCH_ID_ENDPOINT, (req, res) => {
-  res.send(PersistenceInstance.deleteTwitchEvent(req.params['eventId']));
-});
-
-// Trigger Twitch Command
-app.post(TWITCH_TRIGGER_ENDPOINT, (req, res) => {
-  ExampleTwitchCommandsSubject.next(req.body);
-
-  res.send({ok: true});
-});
 
 
 /**

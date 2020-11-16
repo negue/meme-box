@@ -25,6 +25,7 @@ import {ClipTypeModule} from "../clip-type/clip-type.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {CompactClipCardModule} from "../compact-clip-card/compact-clip-card.module";
 import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
+import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
     ScreenClipOptionsComponent,
     TwitchEditComponent,
     ClipAssigningDialogComponent,
+    TimedEditComponent
   ],
   imports: [
     PipesModule,

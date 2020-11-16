@@ -1,12 +1,12 @@
 import * as tmi from 'tmi.js';
-import { EmoteObj } from 'tmi.js';
-import { Subscription } from 'rxjs';
-import { PersistenceInstance } from './persistence';
-import { startWith } from 'rxjs/operators';
-import { Twitch, TwitchEventTypes, TwitchTriggerCommand } from '../projects/contracts/src/lib/types';
-import { triggerMediaClipById } from './websocket-server';
-import { Logger } from 'winston';
-import { newLogger } from './logger.utils';
+import {EmoteObj} from 'tmi.js';
+import {Subscription} from 'rxjs';
+import {PersistenceInstance} from './persistence';
+import {startWith} from 'rxjs/operators';
+import {Twitch, TwitchEventTypes, TwitchTriggerCommand} from '../projects/contracts/src/lib/types';
+import {triggerMediaClipById} from './websocket-server';
+import {Logger} from 'winston';
+import {newLogger} from './logger.utils';
 
 declare module 'tmi.js' {
   export interface Badges {
@@ -88,10 +88,6 @@ export class TwitchHandler {
         tags
       });
     });
-
-    setTimeout(() => {
-      this.tmiClient.say("gacbl", "raid");
-    }, 2500);
 
     this.tmiClient.on('raided', (channel: string, username: string, viewers: number) => {
       const command = this.getCommandOfMessage("", TwitchEventTypes.raid,{
