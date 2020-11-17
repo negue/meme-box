@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Clip, Dictionary, Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
@@ -7,6 +7,7 @@ import {AppService} from '../../../../state/app.service';
 import {AppQueries} from '../../../../state/app.queries';
 import {SnackbarService} from '../../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
+import {distinctUntilChanged, map, pairwise, startWith, takeUntil} from "rxjs/operators";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {
@@ -14,7 +15,7 @@ const INITIAL_TWITCH: Partial<Twitch> = {
   event: TwitchEventTypes.message,
   contains: '',
   active: true,
-  roles: []
+  roles: ['user']
 };
 
 interface TwitchLevelEntry {
@@ -72,6 +73,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 
+  showWarningClipSelection = false;
 
   private _destroy$ = new Subject();
 
@@ -96,11 +98,20 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
+
+      for (const [ctrlName, ctrl] of Object.entries(this.form.controls)) {
+        console.info(ctrlName, ctrl.valid);
+      }
+
       return;
     }
 
-
     const {value} = this.form;
+
+    if (!value.clipId) {
+      this.showWarningClipSelection = true;
+      return;
+    }
 
     const newTwitchValue: Twitch = {
       ...this.data,
@@ -119,6 +130,36 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.form.valueChanges
+      .pipe(
+        map((value) => value.event as TwitchEventTypes),
+        startWith(this.form.value.type),
+        distinctUntilChanged(),
+        pairwise(),
+        takeUntil(this._destroy$)
+      )
+      .subscribe(([prev, next]) => {
+        console.info({prev, next});
+
+        var containsControl = this.form.controls['contains'];
+        if (next === TwitchEventTypes.message) {
+          console.info('adding validators');
+          containsControl.setValidators(Validators.required);
+        }
+
+        if (prev == TwitchEventTypes.message){
+          console.info('clearing validators');
+          containsControl.clearValidators();
+          containsControl.setErrors(null);
+          containsControl.markAsPristine();
+          containsControl.markAsUntouched();
+        }
+
+        console.info({containsControl});
+      });
+
+    console.info({ data: this.data, form: this.form.value });
+
     this.form.reset(this.data);
   }
 
