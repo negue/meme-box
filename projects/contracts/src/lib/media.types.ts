@@ -54,6 +54,6 @@ export function mediaToString (mediaType: MediaType) {
   return MEDIA_TYPE_INFORMATION[mediaType]?.label ?? '';
 }
 
-export function sortOrderByType(mediaType: MediaType) {
+export function getSortOrderByType(mediaType: MediaType) {
   return MEDIA_TYPE_INFORMATION[mediaType]?.sortOrder;
 }
