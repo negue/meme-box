@@ -1,4 +1,4 @@
-<div [ngSwitch]="clip.type">
+<div [ngSwitch]="clip?.type">
   <!-- Image => Preview -->
   <img *ngSwitchCase="MediaType.Picture"
        [style.height]="height"
@@ -22,7 +22,7 @@
 
   <!-- All others => AppClipType -->
   <app-clip-type *ngSwitchDefault
-                 [type]="clip.type"
+                 [type]="clip?.type"
                  [iconSize]="height || width"></app-clip-type>
 
 </div>

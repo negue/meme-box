@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Clip, Dictionary, TimedClip} from '@memebox/contracts';
@@ -24,11 +24,12 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
     id: "",
     clipId: "",
-    everyXms: undefined
+    everyXms: [undefined, Validators.max(19_999_999)]
   });
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 
+  showWarningClipSelection = false;
 
   private _destroy$ = new Subject();
 
@@ -57,6 +58,11 @@ export class TimedEditComponent implements OnInit, OnDestroy {
 
 
     const {value} = this.form;
+
+    if (!value.clipId) {
+      this.showWarningClipSelection = true;
+      return;
+    }
 
     const newTimedValue: TimedClip = {
       ...this.data,
@@ -94,5 +100,17 @@ export class TimedEditComponent implements OnInit, OnDestroy {
         clipId
       });
     }
+  }
+
+  set10Seconds() {
+    this.form.patchValue({
+      'everyXms': 10_000
+    });
+  }
+
+  setXMinutes(number: number) {
+    this.form.patchValue({
+      'everyXms': 60_000 * number
+    });
   }
 }

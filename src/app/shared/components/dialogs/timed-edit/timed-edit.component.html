@@ -1,5 +1,5 @@
 <h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Timer-Event:
-  <code *ngIf="form.value.everyXms">{{form.value.everyXms}}ms</code>
+  <code *ngIf="form.value.everyXms">{{form.value.everyXms | readableMs}}</code>
 </h2>
 <mat-dialog-content class="mat-typography min-height-dialog">
   <div class="two-columns">
@@ -11,10 +11,18 @@
             <input autocomplete="off"
                    formControlName="everyXms"
                    placeholder="100"
+                   type="number"
+                   required
                    matInput>
+            <mat-error *ngIf="form.controls['everyXms'].errors?.max">
+              Above the max value
+            </mat-error>
           </mat-form-field>
         </div>
-
+        <button mat-raised-button class="example-button" (click)="set10Seconds()">Every 10 seconds</button>
+        <button mat-raised-button class="example-button" (click)="setXMinutes(1)">Every 1 minute</button>
+        <button mat-raised-button class="example-button" (click)="setXMinutes(10)">Every 10 minutes</button>
+        <button mat-raised-button class="example-button" (click)="setXMinutes(30)">Every 30 minutes</button>
       </form>
     </div>
     <div class="column">
@@ -23,7 +31,7 @@
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
-                color="accent">
+                [color]="showWarningClipSelection ? 'warn' : 'accent'">
           <span *ngIf="clipDictionary$ | async as clipDictionary">
             <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
 

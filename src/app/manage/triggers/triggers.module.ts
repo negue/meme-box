@@ -16,6 +16,7 @@ import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-s
 import {ClipPreviewModule} from "../../shared/components/clip-preview/clip-preview.module";
 import {TimedEventInfoComponent} from "./events-overview/twitch-event-info/timed-event-info.component";
 import {TwitchEventInfoComponent} from "./events-overview/timed-event-info/twitch-event-info.component";
+import {PipesModule} from "../../core/pipes/pipes.module";
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
     CardOverviewModule,
     TwitchSettingModule,
     ClipPreviewModule,
+    PipesModule,
   ]
 })
 export class TriggersModule {

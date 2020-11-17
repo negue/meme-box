@@ -8,7 +8,15 @@
     <br />
 
     <code *ngIf="item.event === twitchEventTypes.message">{{item.contains}}</code>
-    <code *ngIf="item.event !== twitchEventTypes.message">{{item.minAmount}} - {{item.maxAmount}}</code>
+    <code *ngIf="item.event !== twitchEventTypes.message">
+      <ng-container *ngIf="item.minAmount || item.maxAmount">
+        {{item.minAmount}} - {{item.maxAmount}}
+      </ng-container>
+
+      <ng-container *ngIf="!item.minAmount && !item.maxAmount">
+        any range
+      </ng-container>
+    </code>
   </h2>
 </div>
 
