@@ -5,7 +5,9 @@ import {Observable, Subject} from "rxjs";
 import {Clip, MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
 import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
 import {SettingsService} from "../../core/services/settings.service";
-import {map, take, takeUntil} from "rxjs/operators";
+import {map, take, takeUntil, tap} from "rxjs/operators";
+import {sortClips} from "../../../../projects/utils/src/lib/sort-clips";
+import orderBy from 'lodash/orderBy';
 
 // once the tsconfig paths are working for server/app
 // extract this to its own "library"
@@ -20,6 +22,7 @@ interface IGroupedList {
   title: string;
   icon: string;
   clips: Clip[];
+  order: number;
 }
 
 const SettingMobileColumnSize = 'MOBILE_COLUMN_SIZE';
@@ -33,22 +36,29 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   public currentColumnSize = 50;
   public groupedClipList$: Observable<IGroupedList[]> = this.appQueries.clipList$.pipe(
+    tap(allClips => console.info('PRE',{allClips})),
+    map(allClips => sortClips(allClips.filter(c => c.showOnMobile))),
+    tap(allClips => console.info('POST', {allClips})),
     map(allClips => {
       const groupedDictionary = groupBy(allClips, "type");
 
-      return Object.entries(groupedDictionary)
+      console.info({groupedDictionary});
+
+      const groupedEntries = Object.entries(groupedDictionary)
         .map(([key, clips]) => {
         const mediaType = +key;
 
         const typeInfo = MEDIA_TYPE_INFORMATION[mediaType];
 
         return {
-          clips: clips.filter(c => c.showOnMobile),
+          clips: clips,
           icon: typeInfo.icon,
-          title: typeInfo.label
+          title: typeInfo.label,
+          order: typeInfo.sortOrder
         } as IGroupedList;
-      })
-        .filter(group => group.clips.length !== 0)
+      });
+
+      return orderBy(groupedEntries, 'order');
     } )
   );
 
