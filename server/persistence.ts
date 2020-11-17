@@ -21,6 +21,7 @@ import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../
 import {operations} from '../projects/state/src/public-api';
 import {debounceTime} from "rxjs/operators";
 import {LOGGER} from "./logger.utils";
+import {sortClips} from "../projects/utils/src/lib/sort-clips";
 // Todo ts-config paths!!!
 
 // TODO Extract more state operations to shared library and from app
@@ -123,7 +124,7 @@ export class Persistence {
   }
 
   public listClips(): Clip[] {
-    return Object.values(this.data.clips);
+    return sortClips(Object.values(this.data.clips));
   }
 
 
