@@ -11,6 +11,7 @@
             <input autocomplete="off"
                    formControlName="everyXms"
                    placeholder="100"
+                   required
                    matInput>
           </mat-form-field>
         </div>
@@ -23,7 +24,7 @@
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
-                color="accent">
+                [color]="showWarningClipSelection ? 'warn' : 'accent'">
           <span *ngIf="clipDictionary$ | async as clipDictionary">
             <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
 

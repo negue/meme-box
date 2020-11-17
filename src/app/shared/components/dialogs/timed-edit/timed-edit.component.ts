@@ -29,6 +29,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 
+  showWarningClipSelection = false;
 
   private _destroy$ = new Subject();
 
@@ -57,6 +58,11 @@ export class TimedEditComponent implements OnInit, OnDestroy {
 
 
     const {value} = this.form;
+
+    if (!value.clipId) {
+      this.showWarningClipSelection = true;
+      return;
+    }
 
     const newTimedValue: TimedClip = {
       ...this.data,
