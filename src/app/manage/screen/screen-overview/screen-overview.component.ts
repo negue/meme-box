@@ -13,7 +13,9 @@ import {
   ClipAssigningMode
 } from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
+import orderBy from 'lodash/orderBy';
 
+// todo use @gewd npm package
 function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -26,9 +28,7 @@ function timeout(ms) {
 export class ScreenOverviewComponent implements OnInit {
 
   public screenList: Observable<Screen[]> = this._queries.screensList$.pipe(
-    map(stateUrlArray => stateUrlArray.map(screen => ({
-      ...screen
-    })))
+    map(stateUrlArray => orderBy(stateUrlArray, 'name'))
   )
 
   public trackById: TrackByFunction<HasId> = (index, item) => {
