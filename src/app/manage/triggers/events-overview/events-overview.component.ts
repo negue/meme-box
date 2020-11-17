@@ -6,6 +6,7 @@ import {API_BASE, AppService} from "../../../state/app.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/internal/operators";
+import orderBy from 'lodash/orderBy';
 
 @Component({
   selector: 'app-events-overview',
@@ -14,8 +15,12 @@ import {map} from "rxjs/internal/operators";
 })
 export class EventsOverviewComponent implements OnInit {
 
-  twitchEventsList$: Observable<Twitch[]> = this.queries.twitchEvent$;
-  timedEventsList$: Observable<TimedClip[]> = this.queries.timedEvents$;
+  twitchEventsList$: Observable<Twitch[]> = this.queries.twitchEvent$.pipe(
+    map(allEvents => orderBy(allEvents, e => e.name.toLowerCase()))
+  );
+  timedEventsList$: Observable<TimedClip[]> = this.queries.timedEvents$.pipe(
+    map(allTimers => orderBy(allTimers, 'everyXms'))
+);
   twitchChannelExist$ = this.queries.config$.pipe(
     map(cfg => !!cfg.twitchChannel)
   );

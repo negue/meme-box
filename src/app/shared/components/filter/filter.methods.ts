@@ -2,6 +2,7 @@ import {combineLatest, Observable} from "rxjs";
 import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
 import {map} from "rxjs/internal/operators";
 import {Clip, Dictionary, MediaType, Tag} from "@memebox/contracts";
+import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
 
 export function createCombinedFilterItems$ (
   clip$: Observable<Clip[]>,
@@ -84,6 +85,7 @@ export function filterClips$(
         return allowedByType && allowedByTag;
       })
 
-    })
+    }),
+    map(clipsToList => sortClips(clipsToList))
   );
 }

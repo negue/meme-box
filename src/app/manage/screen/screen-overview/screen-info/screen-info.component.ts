@@ -7,6 +7,7 @@ import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {EXPRESS_BASE} from "../../../../state/app.service";
 import {NetworkInterfacesService} from "../../../../core/services/network-interfaces.service";
+import {sortClips} from "../../../../../../projects/utils/src/lib/sort-clips";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
@@ -47,7 +48,9 @@ export class ScreenInfoComponent implements OnInit {
     this.info$,
     this.appQueries.clipList$
   ]).pipe(
-    map(([screen, clipList]) => clipList.filter(clip => !!screen.clips[clip.id]))
+    map(([screen, clipList]) => sortClips(
+      clipList.filter(clip => !!screen.clips[clip.id])
+    ))
   );
 
   public networkUrl$ = this.networkInterfaceService.networkInterface$.pipe(
