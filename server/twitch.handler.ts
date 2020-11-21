@@ -72,7 +72,7 @@ export class TwitchHandler {
     this.tmiClient.on('message', (channel, tags, message, self) => {
       if(self) return;
 
-      if (message === '!commands') {
+      if (this.config.bot && this.config.botName && message === '!commands') {
         //this.tmiClient.whisper(tags.username, "This is a test response for the !commands message");
         this.tmiClient.say(channel, 'This is a test response for the !commands message')
           .catch(console.error);
