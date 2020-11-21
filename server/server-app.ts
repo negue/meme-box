@@ -2,7 +2,7 @@ import {createExpress} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT} from "./constants";
 import {debounceTime, startWith} from "rxjs/operators";
-import {TwitchHandler} from "./twitch.handler";
+import { TwitchHandler, TwitchHandlerConfig } from './twitch.handler';
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
 import {LOGGER} from "./logger.utils";
@@ -62,7 +62,15 @@ PersistenceInstance.dataUpdated$()
         twitchHandler.disconnect();
       }
 
-      twitchHandler = new TwitchHandler(config.twitchChannel, config.twitchLog ?? false);
+      const data : TwitchHandlerConfig = {
+        channel : config.twitchChannel,
+        log: config.twitchLog ?? false,
+        bot: config.twitchBot ?? false,
+        botName: config.twitchBotName,
+        botToken: config.twitchBotToken
+      };
+
+      twitchHandler = new TwitchHandler(data);
     }
 
     const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());

@@ -1,17 +1,25 @@
 import * as tmi from 'tmi.js';
-import {EmoteObj} from 'tmi.js';
-import {Subscription} from 'rxjs';
-import {PersistenceInstance} from './persistence';
-import {startWith} from 'rxjs/operators';
-import {Twitch, TwitchEventTypes, TwitchTriggerCommand} from '../projects/contracts/src/lib/types';
-import {triggerMediaClipById} from './websocket-server';
-import {Logger} from 'winston';
-import {newLogger} from './logger.utils';
+import { EmoteObj, Options } from 'tmi.js';
+import { Subscription } from 'rxjs';
+import { PersistenceInstance } from './persistence';
+import { startWith } from 'rxjs/operators';
+import { Twitch, TwitchEventTypes, TwitchTriggerCommand } from '../projects/contracts/src/lib/types';
+import { triggerMediaClipById } from './websocket-server';
+import { Logger } from 'winston';
+import { newLogger } from './logger.utils';
 
 declare module 'tmi.js' {
   export interface Badges {
     founder?: string;
   }
+}
+
+export type TwitchHandlerConfig = {
+  channel: string,
+  log: boolean,
+  bot?: boolean
+  botName?: string,
+  botToken?: string
 }
 
 export class TwitchHandler {
@@ -20,17 +28,26 @@ export class TwitchHandler {
   private twitchSettings: Twitch[] = [];
   private logger: Logger;
 
-  constructor(twitchAccount: string, private enabledLogger: boolean) {
-    this.tmiClient = tmi.Client({
+  constructor(private config: TwitchHandlerConfig) {
+    const tmiConfig: Options = {
+      //options: {debug: true},
       connection: {
         secure: true,
-        reconnect: true,
+        reconnect: true
       },
-      channels: [twitchAccount]
-    });
+      channels: [config.channel]
+    };
+
+    if (config.bot && config.botName && config.botToken) {
+      tmiConfig.identity = {
+        username: config.botName,
+        password: config.botToken
+      };
+    }
+    this.tmiClient = tmi.Client(tmiConfig);
 
     this.connectAndListen();
-    if (enabledLogger) {
+    if (config.log) {
       this.createLogger();
     }
   }
@@ -53,6 +70,15 @@ export class TwitchHandler {
     });
 
     this.tmiClient.on('message', (channel, tags, message, self) => {
+      if(self) return;
+
+      if (message === '!commands') {
+        //this.tmiClient.whisper(tags.username, "This is a test response for the !commands message");
+        this.tmiClient.say(channel, 'This is a test response for the !commands message')
+          .catch(console.error);
+        return false;
+      }
+
       const command = this.getCommandOfMessage(message, TwitchEventTypes.message);
 
       this.log({
@@ -90,7 +116,7 @@ export class TwitchHandler {
     });
 
     this.tmiClient.on('raided', (channel: string, username: string, viewers: number) => {
-      const command = this.getCommandOfMessage("", TwitchEventTypes.raid,{
+      const command = this.getCommandOfMessage('', TwitchEventTypes.raid, {
         amount: viewers
       });
 
@@ -103,9 +129,9 @@ export class TwitchHandler {
       // todo add the correct twitchevent-types!
       this.handle({
         // event: TwitchEventTypes.message,
-        message: "",
+        message: '',
         command,
-        tags:{}
+        tags: {}
       });
     });
 
@@ -149,7 +175,7 @@ export class TwitchHandler {
     * */
   }
 
-  getCommandOfMessage(message: string, event : TwitchEventTypes, eventOptions?: TwitchEventOptions): Twitch {
+  getCommandOfMessage(message: string, event: TwitchEventTypes, eventOptions?: TwitchEventOptions): Twitch {
     if (!message && !eventOptions) {
       return null;
     }
@@ -168,11 +194,11 @@ export class TwitchHandler {
         }
       }
 
-      if (event !== TwitchEventTypes.message){
+      if (event !== TwitchEventTypes.message) {
         continue;
       }
 
-      if(message.toLowerCase().includes(twitchSetting.contains.toLowerCase())) {
+      if (message.toLowerCase().includes(twitchSetting.contains.toLowerCase())) {
         if (!foundCommand) {
           foundCommand = twitchSetting;
         } else {
@@ -247,7 +273,7 @@ export class TwitchHandler {
   }
 
   private log(data: any) {
-    if (this.enabledLogger) {
+    if (this.config.log) {
       this.logger.info(data);
     }
   }
