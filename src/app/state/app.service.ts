@@ -370,6 +370,27 @@ export class AppService {
     this.snackbar.normal('Twitch Channel updated!');
   }
 
+  public async updateTwitchBotData(bot: boolean, botName: string, botToken: string) {
+    const newConfig: Partial<Config> = {
+      twitchBot: bot,
+      twitchBotName: botName,
+      twitchBotToken: botToken
+    };
+
+    // update path & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT}`, newConfig).toPromise();
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.twitchBot = bot;
+      state.config.twitchBotName = botName;
+      state.config.twitchBotToken = botToken;
+    });
+
+
+    this.snackbar.normal('Twitch Bot settings updated!');
+  }
+
   public async updateTwitchLogs(enabled: boolean) {
     const newConfig: Partial<Config> = {
       twitchLog: enabled
@@ -385,6 +406,23 @@ export class AppService {
 
 
     this.snackbar.normal(`Twitch ${enabled ? 'enabled' : 'disabled'}!`);
+  }
+
+  public async updateTwitchBot(enabled: boolean) {
+    const newConfig: Partial<Config> = {
+      twitchBot: enabled
+    };
+
+    // update path & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT}`, newConfig).toPromise();
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.twitchBot = enabled;
+    });
+
+
+    this.snackbar.normal(`Twitch bot integration ${enabled ? 'enabled' : 'disabled'}!`);
   }
 
   public async openMediaFolder() {

@@ -8,33 +8,67 @@
   <form [formGroup]="form">
 
 
-      <mat-form-field >
-        <mat-label>Channel-Name</mat-label>
-        <input autocomplete="off" [readonly]="!editMode"
-               formControlName="name" (keyup.enter)="save()"
-               class="twitchSetting__input"
-               matInput required>
+    <mat-form-field>
+      <mat-label>Channel-Name</mat-label>
+      <input autocomplete="off" [readonly]="!editMode"
+             formControlName="name" (keyup.enter)="save()"
+             class="twitchSetting__input"
+             matInput required>
 
-        <mat-error *ngIf="form.controls['name'].hasError('required')">
-          Please enter your Twitch channel name
-        </mat-error>
+      <mat-error *ngIf="form.controls['name'].hasError('required')">
+        Please enter your Twitch channel name
+      </mat-error>
 
-        <button (click)="toggleOrSave()" matSuffix
-                color="primary"
-                class="twitchSetting__button"
-                mat-raised-button>{{editMode ? 'Update' : 'Edit'}}</button>
+      <button (click)="toggleOrSave()" matSuffix
+              color="primary"
+              class="twitchSetting__button"
+              mat-raised-button>{{editMode ? 'Update' : 'Edit'}}</button>
 
-      </mat-form-field>
+    </mat-form-field>
 
+    <div class="explanation">
+      If you want to trigger media clips on Twitch-Events, then you need to provide a Channel-Name in order subscribe to
+      these events.
+    </div>
 
+    <ng-container *ngIf="config$ | async as config">
+      <br />
+      <mat-checkbox [checked]="config?.twitchLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
+      </mat-checkbox>
+      <br />
+    </ng-container>
+
+    <ng-container *ngIf="config$ | async as config">
+      <br />
+      <mat-checkbox [checked]="config?.twitchBot" (change)="onCheckboxChangedBot($event, config)">Enable Twitch Bot integration
+      </mat-checkbox>
+      <br />
+    </ng-container>
+
+    <p><br/>To obtain the bot token, login into twitch with your bot account, open <a href="https://twitchapps.com/tmi/">this URL</a> and click on the connect button.<br/><br/></p>
+
+    <mat-form-field *ngIf="config$ | async as config">
+      <mat-label>Bot name</mat-label>
+      <input autocomplete="off" [readonly]="!config?.twitchBot"
+             formControlName="botName" (keyup.enter)="saveBotData()"
+             class="twitchSetting__input"
+             matInput required>
+
+      <mat-error *ngIf="form.controls['botName'].hasError('required')">
+        Please enter both name
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="config$ | async as config">
+      <mat-label>Bot token</mat-label>
+      <input autocomplete="off" [readonly]="!config?.twitchBot"
+             formControlName="botToken" (keyup.enter)="saveBotData()"
+             class="twitchSetting__input" type="password"
+             matInput required>
+
+      <mat-error *ngIf="form.controls['botToken'].hasError('required')">
+        Please enter both oAuth token
+      </mat-error>
+    </mat-form-field>
   </form>
-
-  <div class="explanation">
-    If you want to trigger media clips on Twitch-Events, then you need to provide a Channel-Name in order subscribe to these events.
-  </div>
-
-  <ng-container *ngIf="config$ | async as config" >
-    <br/>
-    <mat-checkbox [checked]="config?.twitchLog" (change)="onCheckboxChanged($event, config)" >Enable Twitch LOG</mat-checkbox>
-  </ng-container>
 </div>

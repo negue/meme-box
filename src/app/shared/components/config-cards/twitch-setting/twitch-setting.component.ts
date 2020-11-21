@@ -14,7 +14,9 @@ import {Config} from "@memebox/contracts";
 })
 export class TwitchSettingComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
-    name: ''
+    name: '',
+    botName: '',
+    botToken: '',
   });
 
   public editMode = false;
@@ -30,7 +32,9 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form.reset({
-      name: 'my-channel'
+      name: 'my-channel',
+      botName: '',
+      botToken: '',
     });
 
     this.appQuery.config$.pipe(
@@ -38,7 +42,9 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
       take(1),
     ).subscribe(value => {
       this.form.reset({
-        name: value.twitchChannel
+        name: value.twitchChannel,
+        botName: value.twitchBotName,
+        botToken: value.twitchBotToken
       });
     });
 
@@ -61,6 +67,16 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
     await this.appService.updateTwitchChannel(this.form.value.name);
   }
 
+  async saveBotData() {
+    if (!this.form.valid) {
+      // highlight hack
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    await this.appService.updateTwitchBotData(this.form.value.twitchBot, this.form.value.botName, this.form.value.botToken);
+  }
+
   toggleOrSave() {
     if (this.editMode) {
       this.save();
@@ -71,5 +87,9 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
 
   onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>) {
     this.appService.updateTwitchLogs($event.checked);
+  }
+
+  onCheckboxChangedBot($event: MatCheckboxChange, config: Partial<Config>) {
+    this.appService.updateTwitchBotData($event.checked, this.form.value.botName, this.form.value.botToken);
   }
 }

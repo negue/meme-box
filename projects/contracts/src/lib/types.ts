@@ -154,6 +154,9 @@ export interface Config {
   mediaFolder:   string;
   twitchChannel: string;
   twitchLog?: boolean;
+  twitchBot?: boolean;
+  twitchBotName?: string;
+  twitchBotToken?: string;
 }
 
 export interface NetworkInfo {

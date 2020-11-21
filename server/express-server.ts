@@ -8,6 +8,7 @@ import {
   CONFIG_OPEN_ENDPOINT,
   CONFIG_TWITCH_CHANNEL_ENDPOINT,
   CONFIG_TWITCH_LOG_ENDPOINT,
+  CONFIG_TWITCH_BOT_ENDPOINT,
   DANGER_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
@@ -201,6 +202,12 @@ app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
 app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
   // update config
   res.send(PersistenceInstance.updateTwitchLog(req.body.twitchLog));
+});
+
+app.put(CONFIG_TWITCH_BOT_ENDPOINT, (req, res) => {
+  // update config
+  const {twitchBot, twitchBotName, twitchBotToken} = req.body;
+  res.send(PersistenceInstance.updateTwitchBot(twitchBot, twitchBotName, twitchBotToken));
 });
 
 app.get(CONFIG_OPEN_ENDPOINT, async (req, res) => {
