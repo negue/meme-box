@@ -40,7 +40,7 @@
 
     <ng-container *ngIf="config$ | async as config">
       <br />
-      <mat-checkbox [checked]="config?.twitchBot" (change)="onCheckboxChangedBot($event, config)">Enable Twitch Bot integration
+      <mat-checkbox [checked]="config?.twitch?.bot" (change)="onCheckboxChangedBot($event, config)">Enable Twitch Bot integration
       </mat-checkbox>
       <br />
     </ng-container>
@@ -49,7 +49,7 @@
 
     <mat-form-field *ngIf="config$ | async as config">
       <mat-label>Bot name</mat-label>
-      <input autocomplete="off" [readonly]="!config?.twitchBot"
+      <input autocomplete="off" [readonly]="!config?.twitch?.bot"
              formControlName="botName" (keyup.enter)="saveBotData()"
              class="twitchSetting__input"
              matInput required>
@@ -61,7 +61,7 @@
 
     <mat-form-field *ngIf="config$ | async as config">
       <mat-label>Bot token</mat-label>
-      <input autocomplete="off" [readonly]="!config?.twitchBot"
+      <input autocomplete="off" [readonly]="!config?.twitch?.bot"
              formControlName="botToken" (keyup.enter)="saveBotData()"
              class="twitchSetting__input" type="password"
              matInput required>

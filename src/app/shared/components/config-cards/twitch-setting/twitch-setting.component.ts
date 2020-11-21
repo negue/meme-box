@@ -43,8 +43,8 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
     ).subscribe(value => {
       this.form.reset({
         name: value.twitchChannel,
-        botName: value.twitchBotName,
-        botToken: value.twitchBotToken
+        botName: value.twitch ? value.twitch.botName : '',
+        botToken: value.twitch ? value.twitch.botToken : ''
       });
     });
 

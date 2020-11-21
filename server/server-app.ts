@@ -65,9 +65,9 @@ PersistenceInstance.dataUpdated$()
       const data : TwitchHandlerConfig = {
         channel : config.twitchChannel,
         log: config.twitchLog ?? false,
-        bot: config.twitchBot ?? false,
-        botName: config.twitchBotName,
-        botToken: config.twitchBotToken
+        bot: config.twitch.bot ?? false,
+        botName: config.twitch.botName,
+        botToken: config.twitch.botToken
       };
 
       twitchHandler = new TwitchHandler(data);

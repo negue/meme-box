@@ -372,9 +372,11 @@ export class AppService {
 
   public async updateTwitchBotData(bot: boolean, botName: string, botToken: string) {
     const newConfig: Partial<Config> = {
-      twitchBot: bot,
-      twitchBotName: botName,
-      twitchBotToken: botToken
+      twitch: {
+        bot,
+        botName,
+        botToken
+      }
     };
 
     // update path & await
@@ -382,9 +384,9 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitchBot = bot;
-      state.config.twitchBotName = botName;
-      state.config.twitchBotToken = botToken;
+      state.config.twitch.bot = bot;
+      state.config.twitch.botName = botName;
+      state.config.twitch.botToken = botToken;
     });
 
 
@@ -410,7 +412,9 @@ export class AppService {
 
   public async updateTwitchBot(enabled: boolean) {
     const newConfig: Partial<Config> = {
-      twitchBot: enabled
+      twitch: {
+        bot: enabled
+      }
     };
 
     // update path & await
@@ -418,7 +422,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitchBot = enabled;
+      state.config.twitch.bot = enabled;
     });
 
 

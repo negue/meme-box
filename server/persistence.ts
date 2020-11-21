@@ -315,9 +315,12 @@ export class Persistence {
 
   public updateTwitchBot (enabled: boolean, botName: string, botToken : string) {
     this.data.config = this.data.config || {};
-    this.data.config.twitchBot = enabled;
-    this.data.config.twitchBotName = botName;
-    this.data.config.twitchBotToken = botToken;
+
+    if(!this.data.config.twitch) this.data.config.twitch = {};
+
+    this.data.config.twitch.bot = enabled;
+    this.data.config.twitch.botName = botName;
+    this.data.config.twitch.botToken = botToken;
 
     this.saveData();
   }

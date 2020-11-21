@@ -206,8 +206,8 @@ app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
 
 app.put(CONFIG_TWITCH_BOT_ENDPOINT, (req, res) => {
   // update config
-  const {twitchBot, twitchBotName, twitchBotToken} = req.body;
-  res.send(PersistenceInstance.updateTwitchBot(twitchBot, twitchBotName, twitchBotToken));
+  const {bot, botName, botToken} = req.body.twitch;
+  res.send(PersistenceInstance.updateTwitchBot(bot, botName, botToken));
 });
 
 app.get(CONFIG_OPEN_ENDPOINT, async (req, res) => {
