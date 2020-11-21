@@ -8,29 +8,30 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
 import {Config} from "@memebox/contracts";
 
 @Component({
-  selector: 'app-twitch-setting',
-  templateUrl: './twitch-setting.component.html',
-  styleUrls: ['./twitch-setting.component.scss']
+  selector: 'app-twitchbot-config',
+  templateUrl: './twitchbot-config.component.html',
+  styleUrls: ['./twitchbot-config.component.scss']
 })
-export class TwitchSettingComponent implements OnInit, OnDestroy {
-  public form = new FormBuilder().group({
-    name: '',
-  });
+export class TwitchbotConfigComponent implements OnInit {
 
-  public editMode = false;
+  public form = new FormBuilder().group({
+    bot: false,
+    botName: '',
+    botToken: '',
+  });
 
   public config$ = this.appQuery.config$;
 
   private _destroy$ = new Subject();
 
   constructor(private appQuery: AppQueries,
-              private appService: AppService) {
-
-  }
+              private appService: AppService) { }
 
   ngOnInit(): void {
     this.form.reset({
-      name: 'my-channel',
+      bot: false,
+      botName: '',
+      botToken: '',
     });
 
     this.appQuery.config$.pipe(
@@ -38,7 +39,9 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
       take(1),
     ).subscribe(value => {
       this.form.reset({
-        name: value.twitchChannel
+        bot: value.twitch ? value.twitch.bot: false,
+        botName: value.twitch ? value.twitch.botName : '',
+        botToken: value.twitch ? value.twitch.botToken : ''
       });
     });
   }
@@ -48,26 +51,19 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  async save() {
+  async saveBotData() {
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
       return;
     }
-
-    this.editMode = false;
-    await this.appService.updateTwitchChannel(this.form.value.name);
+    console.log(this.form.value);
+    await this.appService.updateTwitchBotData(this.form.value.bot, this.form.value.botName, this.form.value.botToken);
   }
 
-  toggleOrSave() {
-    if (this.editMode) {
-      this.save();
-    } else {
-      this.editMode = true;
-    }
+  onCheckboxChangedBot($event: MatCheckboxChange, config: Partial<Config>) {
+    this.form.value.bot = $event.checked;
+    this.appService.updateTwitchBotData($event.checked, this.form.value.botName, this.form.value.botToken);
   }
 
-  onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>) {
-    this.appService.updateTwitchLogs($event.checked);
-  }
 }

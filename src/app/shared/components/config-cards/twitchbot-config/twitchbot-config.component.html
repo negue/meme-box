@@ -1,0 +1,48 @@
+<div class="title-row">
+  <h2 class="mat-h2 title-name">Twitch Bot Config</h2>
+
+  <mat-icon svgIcon="twitch"></mat-icon>
+</div>
+
+<div>
+  <form [formGroup]="form">
+    <p>To obtain the bot token, login into twitch with your bot account, open <a href="https://twitchapps.com/tmi/">this URL</a> and click on the connect button.<br/></p>
+
+    <ng-container *ngIf="config$ | async as config">
+      <br />
+      <mat-checkbox [checked]="config?.twitch?.bot" (change)="onCheckboxChangedBot($event, config)">Enable Twitch Bot integration
+      </mat-checkbox>
+      <br /><br />
+    </ng-container>
+
+    <mat-form-field *ngIf="config$ | async as config">
+      <mat-label>Bot name</mat-label>
+      <input autocomplete="off" [readonly]="!config?.twitch?.bot"
+             formControlName="botName"
+             class="twitchSetting__input"
+             matInput required>
+
+      <mat-error *ngIf="form.controls['botName'].hasError('required')">
+        Please enter both name
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="config$ | async as config">
+      <mat-label>Bot token</mat-label>
+      <input autocomplete="off" [readonly]="!config?.twitch?.bot"
+             formControlName="botToken"
+             class="twitchSetting__input" type="password"
+             matInput required>
+
+      <mat-error *ngIf="form.controls['botToken'].hasError('required')">
+        Please enter both oAuth token
+      </mat-error>
+    </mat-form-field>
+
+    <button (click)="saveBotData()" matSuffix
+            *ngIf="config$ | async as config"
+            color="primary"
+            class="twitchSetting__button"
+            mat-raised-button>{{config?.twitch?.bot ? 'Save' : ''}}</button>
+  </form>
+</div>
