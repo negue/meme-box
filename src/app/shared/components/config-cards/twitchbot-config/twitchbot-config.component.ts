@@ -51,19 +51,19 @@ export class TwitchbotConfigComponent implements OnInit {
     this._destroy$.complete();
   }
 
-  async saveBotData() {
+  async saveBotData(): Promise<void> {
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
       return;
     }
-    console.log(this.form.value);
+
     await this.appService.updateTwitchBotData(this.form.value.bot, this.form.value.botName, this.form.value.botToken);
   }
 
-  onCheckboxChangedBot($event: MatCheckboxChange, config: Partial<Config>) {
+  async onCheckboxChangedBot($event: MatCheckboxChange, config: Partial<Config>): Promise<void> {
     this.form.value.bot = $event.checked;
-    this.appService.updateTwitchBotData($event.checked, this.form.value.botName, this.form.value.botToken);
+    await this.appService.updateTwitchBotData($event.checked, this.form.value.botName, this.form.value.botToken);
   }
 
 }

@@ -384,6 +384,8 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
+      if(!state.config.twitch) state.config.twitch = {};
+
       state.config.twitch.bot = bot;
       state.config.twitch.botName = botName;
       state.config.twitch.botToken = botToken;
@@ -408,25 +410,6 @@ export class AppService {
 
 
     this.snackbar.normal(`Twitch ${enabled ? 'enabled' : 'disabled'}!`);
-  }
-
-  public async updateTwitchBot(enabled: boolean) {
-    const newConfig: Partial<Config> = {
-      twitch: {
-        bot: enabled
-      }
-    };
-
-    // update path & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT}`, newConfig).toPromise();
-
-    // add to the state
-    this.appStore.update(state => {
-      state.config.twitch.bot = enabled;
-    });
-
-
-    this.snackbar.normal(`Twitch bot integration ${enabled ? 'enabled' : 'disabled'}!`);
   }
 
   public async openMediaFolder() {

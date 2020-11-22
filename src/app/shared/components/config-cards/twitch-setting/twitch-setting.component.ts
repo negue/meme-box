@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
-import {Subject} from "rxjs";
-import {filter, take} from "rxjs/operators";
-import {AppQueries} from "../../../../state/app.queries";
-import {AppService} from "../../../../state/app.service";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {Config} from "@memebox/contracts";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
+import { AppQueries } from '../../../../state/app.queries';
+import { AppService } from '../../../../state/app.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Config } from '@memebox/contracts';
 
 @Component({
   selector: 'app-twitch-setting',
@@ -14,7 +14,7 @@ import {Config} from "@memebox/contracts";
 })
 export class TwitchSettingComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
-    name: '',
+    name: ''
   });
 
   public editMode = false;
@@ -30,12 +30,12 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form.reset({
-      name: 'my-channel',
+      name: 'my-channel'
     });
 
     this.appQuery.config$.pipe(
       filter(config => !!config.twitchChannel),
-      take(1),
+      take(1)
     ).subscribe(value => {
       this.form.reset({
         name: value.twitchChannel
