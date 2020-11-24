@@ -3,7 +3,7 @@ import {EmoteObj} from 'tmi.js';
 import {Subscription} from 'rxjs';
 import {PersistenceInstance} from './persistence';
 import {startWith} from 'rxjs/operators';
-import {Twitch, TwitchEventTypes, TwitchTriggerCommand} from '../projects/contracts/src/lib/types';
+import {Dictionary, Twitch, TwitchEventTypes, TwitchTriggerCommand} from '../projects/contracts/src/lib/types';
 import {triggerMediaClipById} from './websocket-server';
 import {Logger} from 'winston';
 import {newLogger} from './logger.utils';
@@ -19,6 +19,7 @@ export class TwitchHandler {
   private persistenceSubscription: Subscription;
   private twitchSettings: Twitch[] = [];
   private logger: Logger;
+  private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
 
   constructor(twitchAccount: string, private enabledLogger: boolean) {
     this.tmiClient = tmi.Client({
@@ -242,11 +243,22 @@ export class TwitchHandler {
         neededLevels: trigger.command?.roles
       });
 
-      const allowedByRole = foundLevels.includes('broadcaster')
-        || trigger.command?.roles.some(r => foundLevels.includes(r));
+      const isBroadcaster = foundLevels.includes('broadcaster');
 
-      if (allowedByRole || trigger.command.event !== TwitchEventTypes.message) {
+      const allowedByRole = trigger.command?.roles.some(r => foundLevels.includes(r))
+        || trigger.command.event !== TwitchEventTypes.message; // all other types don't have roles
+
+      const cooldownEntry = this.cooldownDictionary[trigger.command.id];
+      const allowedByCooldown = cooldownEntry && trigger.command.cooldown
+       ? (Date.now() - cooldownEntry) > trigger.command.cooldown
+      : true;
+
+      const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
+
+      if (allowedToTrigger) {
         this.log(`Triggering Clip from Twitch: ${trigger.command.clipId}`);
+
+        this.cooldownDictionary[trigger.command.id] = Date.now();
 
         triggerMediaClipById({
           id: trigger.command.clipId
