@@ -25,6 +25,11 @@
 .eventInfo__checkbox {
   margin-top: 1rem;
   margin-bottom: 1rem;
+
+  div {
+    display: inline-block;
+    padding-left: 1rem;
+  }
 }
 
 .eventInfo__titleRow {

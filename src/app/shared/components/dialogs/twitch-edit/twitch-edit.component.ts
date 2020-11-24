@@ -64,7 +64,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     clipId: "",
     contains: "",
     minAmount: undefined,
-    maxAmount: undefined
+    maxAmount: undefined,
+    cooldown: [undefined, Validators.max(1000*60*60*10)]
   });
 
   twitchEvents = TwitchTypesArray;
