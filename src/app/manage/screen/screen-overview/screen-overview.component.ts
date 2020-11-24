@@ -7,11 +7,7 @@ import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {SnackbarService} from "../../../core/services/snackbar.service";
-import {
-  ClipAssigningDialogComponent,
-  ClipAssigningDialogOptions,
-  ClipAssigningMode
-} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {ClipAssigningMode} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 import orderBy from 'lodash/orderBy';
 
@@ -68,19 +64,12 @@ export class ScreenOverviewComponent implements OnInit {
   }
 
   showAssignmentDialog(screen: Partial<Screen>) {
-    this._dialog.open(
-      ClipAssigningDialogComponent, {
-        data: {
-          mode: ClipAssigningMode.Multiple,
-          screenId: screen.id,
+    this._dialog.showClipSelectionDialog({
+      mode: ClipAssigningMode.Multiple,
+      screenId: screen.id,
 
-          dialogTitle: screen.name
-        } as ClipAssigningDialogOptions,
-        width: '800px',
-
-        panelClass: 'max-height-dialog'
-      }
-    )
+      dialogTitle: screen.name
+    });
   }
 
   deleteAssigned(obsInfo: Screen, clipId: string) {

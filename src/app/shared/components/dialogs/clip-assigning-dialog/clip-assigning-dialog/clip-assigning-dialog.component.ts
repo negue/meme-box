@@ -1,12 +1,13 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Clip, Dictionary, MediaType, Screen} from "@memebox/contracts";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {map, takeUntil} from "rxjs/operators";
+import {BehaviorSubject, Observable, of, Subject} from "rxjs";
+import {map, switchMap, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../../../../state/app.queries";
 import {AppService} from "../../../../../state/app.service";
 import {IFilterItem} from "../../../../../shared/components/filter/filter.component";
 import {createCombinedFilterItems$, filterClips$} from "../../../../../shared/components/filter/filter.methods";
+import {lazyArray} from "../../../../../../../projects/utils/src/lib/lazyArray";
 
 export enum ClipAssigningMode {
   Multiple,
@@ -43,12 +44,17 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   public clips$: Observable<Clip[]> = filterClips$(
     this.appQueries.clipList$,
     this.filteredItems$
+  ).pipe(
+    switchMap(clips => of(clips).pipe(
+      lazyArray(30, 3)
+    ))
   );
 
   screen$: Observable<Screen> = this.appQueries.screenMap$.pipe(
     map(screenMap => screenMap[this.data.screenId])
   );
 
+  trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   private destroy$ = new Subject();
 
