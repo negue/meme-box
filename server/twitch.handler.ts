@@ -163,12 +163,13 @@ export class TwitchHandler {
       if (eventOptions && event === twitchSetting.event) {
         const minAmount = twitchSetting.minAmount || 0;
         const maxAmount = twitchSetting.maxAmount || Infinity;
+
         if (eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount) {
           return twitchSetting;
         }
       }
 
-      if (event !== TwitchEventTypes.message){
+      if (twitchSetting.event !== TwitchEventTypes.message){
         continue;
       }
 
@@ -223,17 +224,29 @@ export class TwitchHandler {
 
   handle(trigger: TwitchTriggerCommand) {
     if (trigger.command) {
-      console.info('Contained', trigger.command.contains);
-      console.info('Full Message', trigger.message);
-      console.info('Tags', trigger.tags);
+      this.log(`Trigger "${trigger.command.name}" Type - ${trigger.command.event}`);
+      if (trigger.message) {
+        this.log(`Trigger Message - ${trigger.message}`);
+      }
+
+      this.log({
+        message: 'Trigger Tags',
+        tags: trigger.tags
+      });
 
       const foundLevels = this.getLevelOfTags(trigger.tags);
 
-      console.info('Found Levels', foundLevels);
-      console.info('Needed Levels', trigger.command?.roles);
+      this.log({
+        message: 'Trigger Levels',
+        foundLevels,
+        neededLevels: trigger.command?.roles
+      });
 
-      if (foundLevels.includes('broadcaster') || trigger.command?.roles.some(r => foundLevels.includes(r)) || trigger.command.event !== TwitchEventTypes.message) {
-        console.info('Triggering Clip: ', trigger.command.clipId);
+      const allowedByRole = foundLevels.includes('broadcaster')
+        || trigger.command?.roles.some(r => foundLevels.includes(r));
+
+      if (allowedByRole || trigger.command.event !== TwitchEventTypes.message) {
+        this.log(`Triggering Clip from Twitch: ${trigger.command.clipId}`);
 
         triggerMediaClipById({
           id: trigger.command.clipId
