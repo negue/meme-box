@@ -123,6 +123,8 @@ export interface Twitch extends HasId {
   minAmount?: number;
   maxAmount?: number;
 
+  cooldown?: number;
+
   // !magic
   // TODO other options per type
 }

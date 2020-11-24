@@ -61,6 +61,20 @@
           </mat-form-field>
         </div>
 
+        <div class="example-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Cooldown between triggers</mat-label>
+            <input autocomplete="off"
+                   formControlName="cooldown"
+                   placeholder="0"
+                   matInput>
+            <span matSuffix>ms</span>
+            <mat-hint>{{ form.value.cooldown ? (form.value.cooldown | readableMs) : 'Never' }}</mat-hint>
+            <mat-error *ngIf="form.controls['cooldown'].errors?.max">
+              Above the max value (10h)
+            </mat-error>
+          </mat-form-field>
+        </div>
       </form>
     </div>
     <div class="column">
