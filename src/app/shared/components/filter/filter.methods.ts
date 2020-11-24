@@ -1,8 +1,10 @@
-import {combineLatest, Observable} from "rxjs";
+import {combineLatest, Observable, of} from "rxjs";
 import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
 import {map} from "rxjs/internal/operators";
 import {Clip, Dictionary, MediaType, Tag} from "@memebox/contracts";
 import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
+import {switchMap} from "rxjs/operators";
+import {lazyArray} from "../../../../../projects/utils/src/lib/lazyArray";
 
 export function createCombinedFilterItems$ (
   clip$: Observable<Clip[]>,
@@ -86,6 +88,9 @@ export function filterClips$(
       })
 
     }),
-    map(clipsToList => sortClips(clipsToList))
+    map(clipsToList => sortClips(clipsToList)),
+    switchMap(clips => of(clips).pipe(
+      lazyArray(10, 3)
+    ))
   );
 }
