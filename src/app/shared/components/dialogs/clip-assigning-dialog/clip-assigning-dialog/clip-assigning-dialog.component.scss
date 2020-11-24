@@ -18,7 +18,7 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin: 1rem 1rem 2rem 0;
+  margin: 0;
 
   position: sticky;
   top: 0;
@@ -34,6 +34,7 @@
   @include gridLayout;
   width: 100%;
   list-style: none;
+  padding-top: 0;
 }
 
 .mediaList__option {
@@ -92,6 +93,10 @@
   .media-iframe-container {
     width: 100%;
     pointer-events: none;
+
+    iframe {
+      width: 100%;
+    }
   }
 }
 

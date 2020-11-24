@@ -50,6 +50,12 @@ $custom-typography: mat-typography-config(
   }
 }
 
+.dialog-without-right-padding {
+  .mat-dialog-content {
+    padding-right: 0;
+  }
+}
+
 :root {
   @include list-colors();
 }
