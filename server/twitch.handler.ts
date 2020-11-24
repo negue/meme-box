@@ -255,9 +255,15 @@ export class TwitchHandler {
 
       const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
 
-      if (allowedToTrigger) {
-        this.log(`Triggering Clip from Twitch: ${trigger.command.clipId}`);
+      this.log({
+        message: `Allowed to trigger: ${trigger.command.clipId}`,
+        isBroadcaster,
+        allowedByRole,
+        allowedByCooldown,
+        allowedToTrigger
+      });
 
+      if (allowedToTrigger) {
         this.cooldownDictionary[trigger.command.id] = Date.now();
 
         triggerMediaClipById({
