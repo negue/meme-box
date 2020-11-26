@@ -5,7 +5,7 @@ import orderBy from 'lodash/orderBy';
 export interface IFilterItem {
   label: string;
   icon: string;
-  type: any;
+  type: any; // string type to see / filter what kind of filter-item-type it is
   value: any; // todo change to generic?
 }
 
