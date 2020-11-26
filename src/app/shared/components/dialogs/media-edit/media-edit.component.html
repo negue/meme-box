@@ -43,7 +43,7 @@
       <span matSuffix>ms</span>
     </mat-form-field>
 
-    <div class="form-field-row" [class.hidden]="form.value.type === MediaType.Meta">
+    <div class="form-field-row" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
       <mat-form-field>
         <input autocomplete="off"
                formControlName="path"
@@ -71,11 +71,11 @@
          *ngIf="form.value.type !== MediaType.Meta">
       <mat-form-field>
         <input [placeholder]="
-                 form.value.type === 0
+                 MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)
                    ? 'Visible screen time (ms)'
                    : 'Play time on screen (ms)'
                "
-               [required]="form.value.type === MediaType.Picture"
+               [required]="MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)"
                autocomplete="off"
                formControlName="playLength"
                matInput

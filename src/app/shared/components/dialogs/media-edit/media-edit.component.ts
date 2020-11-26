@@ -32,6 +32,9 @@ interface MediaTypeButton {
   icon: string;
 }
 
+const MEDIA_TYPES_WITHOUT_PATH = [MediaType.HTML, MediaType.Meta];
+const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.HTML, MediaType.Picture, MediaType.IFrame];
+
 @Component({
   selector: "app-media-edit",
   templateUrl: "./media-edit.component.html",
@@ -64,6 +67,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
+  MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
+  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
   mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
     .map(([mediaType, value]) => {
@@ -159,18 +164,18 @@ export class MediaEditComponent implements OnInit, OnDestroy {
           });
         }
 
-        if ([MediaType.Picture, MediaType.IFrame].includes(next)) {
+        if (MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(next)) {
           this.form.patchValue({
             playLength: DEFAULT_PLAY_LENGTH
           });
         }
 
-        if (prev === MediaType.Meta) {
+        if (MEDIA_TYPES_WITHOUT_PATH.includes(prev)) {
           console.info('adding validators');
           this.form.controls['path'].setValidators(Validators.required);
         }
 
-        if (next == MediaType.Meta){
+        if (MEDIA_TYPES_WITHOUT_PATH.includes(next)){
           console.info('clearing validators');
           this.form.controls['path'].clearValidators();
         }
