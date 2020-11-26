@@ -26,6 +26,7 @@ export const APP_ICONS = [
   'settings',
   'speaker',
   'tag',
+  'tune',
   'videocam',
   'video_library',
   'warning',
