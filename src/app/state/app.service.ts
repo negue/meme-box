@@ -420,6 +420,14 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
+      if (!state.config.twitch) {
+        state.config.twitch = {
+          bot: enabled,
+          botName: '',
+          botToken: '',
+          botResponse: ''
+        };
+      }
       state.config.twitch.bot = enabled;
     });
 

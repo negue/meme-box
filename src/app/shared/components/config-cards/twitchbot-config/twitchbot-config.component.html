@@ -45,7 +45,7 @@
           <textarea autocomplete="off" [readonly]="!config?.twitch?.bot"
                     formControlName="botResponse"
                     class="twitchSetting__textarea"
-                    matInput required></textarea>
+                    matInput></textarea>
 
           <mat-error *ngIf="form.controls['botResponse'].hasError('required')">
             Please enter bot response message.

@@ -41,7 +41,7 @@ export class TwitchbotConfigComponent implements OnInit {
     });
 
     this.appQuery.config$.pipe(
-      filter(config => !!config.twitchChannel),
+      filter(config => !!config.twitch),
       take(1),
     ).subscribe(value => {
       this.form.reset({
