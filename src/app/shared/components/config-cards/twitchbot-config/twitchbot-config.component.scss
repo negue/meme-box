@@ -3,8 +3,7 @@
 }
 
 .twitchSetting__button {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+  margin-top: 2rem;
 }
 
 .mat-form-field {
@@ -22,4 +21,26 @@
 
 .title-name {
   margin-bottom: 0;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  margin-top: 1.5rem;
+}
+
+:host {
+  display: block;
+  min-height: 465px;
+}
+
+
+.twitchSetting__textarea {
+  min-height: 7rem;
+}
+
+:host ::ng-deep mat-tab-body {
+  min-height: 260px;
+}
+
+.twitchSetting__token-button {
+  margin-bottom: 1rem;
 }

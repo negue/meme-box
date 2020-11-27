@@ -36,6 +36,10 @@
       <mat-checkbox [checked]="config?.twitchLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
       </mat-checkbox>
       <br />
+      <br />
+      <mat-checkbox [checked]="config?.twitch?.bot" (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
+      </mat-checkbox>
+      <br />
     </ng-container>
   </form>
 </div>

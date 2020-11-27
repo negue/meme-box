@@ -8,9 +8,9 @@ import {
   SettingsState,
   Tag,
   TimedClip,
-  Twitch,
+  Twitch, TwitchBotConfig,
   VisibilityEnum
-} from "../projects/contracts/src/lib/types";
+} from '../projects/contracts/src/lib/types';
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
@@ -313,15 +313,25 @@ export class Persistence {
     this.saveData();
   }
 
-  public updateTwitchBot (enabled: boolean, botName: string, botToken : string) {
+  public updateTwitchBotIntegration (enabled: boolean) {
     this.data.config = this.data.config || {};
 
-    if(!this.data.config.twitch) this.data.config.twitch = {};
+    if(!this.data.config.twitch) {
+      this.data.config.twitch = {
+        bot: false,
+        botName: '',
+        botToken: '',
+        botResponse: ''
+      };
+    }
 
     this.data.config.twitch.bot = enabled;
-    this.data.config.twitch.botName = botName;
-    this.data.config.twitch.botToken = botToken;
+    this.saveData();
+  }
 
+  public updateTwitchBot (twitchBotConfig: TwitchBotConfig) {
+    this.data.config = this.data.config || {};
+    this.data.config.twitch = twitchBotConfig;
     this.saveData();
   }
 

@@ -20,8 +20,8 @@ import {
   SCREEN_ID_ENDPOINT,
   TAGS_ENDPOINT,
   TIMED_ENDPOINT,
-  TWITCH_ENDPOINT,
-} from "./constants";
+  TWITCH_ENDPOINT, CONFIG_TWITCH_BOT_INTEGRATION_ENDPOINT
+} from './constants';
 import * as fs from 'fs';
 import {existsSync} from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
@@ -41,14 +41,14 @@ import {TIMER_ROUTES} from "./rest-endpoints/timers";
 const {  normalize, join } = require('path');
 
 
-var cors = require('cors')
-var bodyParser = require('body-parser');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const versions = process.versions;
 
-var isInElectron = !!versions['electron'];
+const isInElectron = !!versions['electron'];
 
-var app: Express = express();
+const app: Express = express();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -81,8 +81,7 @@ app.get(CLIP_ENDPOINT, (req,res) => {
 });
 
 // Post = New
-app.post(CLIP_ENDPOINT, clipValidations, validOrLeave,
-  (req, res) => {
+app.post(CLIP_ENDPOINT, clipValidations, validOrLeave, (req, res) => {
   const newClip = req.body;
 
   // save the clip
@@ -122,8 +121,7 @@ app.get(SCREEN_ENDPOINT, (req,res) => {
 
 
 // Post = New
-app.post(SCREEN_ENDPOINT, screenValidations, validOrLeave,
-  (req, res) => {
+app.post(SCREEN_ENDPOINT, screenValidations, validOrLeave, (req, res) => {
   const newScreenId = PersistenceInstance.addScreen(req.body);
 
   res.send({
@@ -204,10 +202,15 @@ app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.updateTwitchLog(req.body.twitchLog));
 });
 
+app.put(CONFIG_TWITCH_BOT_INTEGRATION_ENDPOINT, (req, res) => {
+  // update config
+  const {bot} = req.body.twitch;
+  res.send(PersistenceInstance.updateTwitchBotIntegration(bot));
+});
+
 app.put(CONFIG_TWITCH_BOT_ENDPOINT, (req, res) => {
   // update config
-  const {bot, botName, botToken} = req.body.twitch;
-  res.send(PersistenceInstance.updateTwitchBot(bot, botName, botToken));
+  res.send(PersistenceInstance.updateTwitchBot(req.body.twitch));
 });
 
 app.get(CONFIG_OPEN_ENDPOINT, async (req, res) => {
@@ -264,7 +267,7 @@ app.get(FILE_ENDPOINT, function(req, res){
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
 
-  var filename = normalize(`${mediaFolder}/${firstParam}`);
+  const filename = normalize(`${mediaFolder}/${firstParam}`);
 
   if (fs.existsSync(filename)) {
     res.sendFile(filename);

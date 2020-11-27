@@ -6,6 +6,7 @@ import {AppQueries} from "../../../../state/app.queries";
 import {AppService} from "../../../../state/app.service";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {Config} from "@memebox/contracts";
+import { TwitchBotConfig } from '../../../../../../projects/contracts/src/lib/types';
 
 @Component({
   selector: 'app-twitchbot-config',
@@ -14,10 +15,15 @@ import {Config} from "@memebox/contracts";
 })
 export class TwitchbotConfigComponent implements OnInit {
 
+  private botIntegrationEnabled = false;
+  public commandsFlagMessage = '{{commands}}'
+  public userFlagMessage = '{{user}}'
+
   public form = new FormBuilder().group({
     bot: false,
     botName: '',
     botToken: '',
+    botResponse: ''
   });
 
   public config$ = this.appQuery.config$;
@@ -29,9 +35,9 @@ export class TwitchbotConfigComponent implements OnInit {
 
   ngOnInit(): void {
     this.form.reset({
-      bot: false,
       botName: '',
       botToken: '',
+      botResponse: ''
     });
 
     this.appQuery.config$.pipe(
@@ -39,10 +45,11 @@ export class TwitchbotConfigComponent implements OnInit {
       take(1),
     ).subscribe(value => {
       this.form.reset({
-        bot: value.twitch ? value.twitch.bot: false,
         botName: value.twitch ? value.twitch.botName : '',
-        botToken: value.twitch ? value.twitch.botToken : ''
+        botToken: value.twitch ? value.twitch.botToken : '',
+        botResponse: value.twitch ? value.twitch.botResponse : '',
       });
+      this.botIntegrationEnabled = value.twitch.bot
     });
   }
 
@@ -58,12 +65,13 @@ export class TwitchbotConfigComponent implements OnInit {
       return;
     }
 
-    await this.appService.updateTwitchBotData(this.form.value.bot, this.form.value.botName, this.form.value.botToken);
-  }
+    const twitchBot : TwitchBotConfig = {
+      bot: this.botIntegrationEnabled,
+      botName: this.form.value.botName,
+      botToken: this.form.value.botToken,
+      botResponse: this.form.value.botResponse
+    }
 
-  async onCheckboxChangedBot($event: MatCheckboxChange, config: Partial<Config>): Promise<void> {
-    this.form.value.bot = $event.checked;
-    await this.appService.updateTwitchBotData($event.checked, this.form.value.botName, this.form.value.botToken);
+    await this.appService.updateTwitchBotData(twitchBot);
   }
-
 }

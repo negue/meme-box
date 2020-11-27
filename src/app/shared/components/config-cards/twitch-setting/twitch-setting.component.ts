@@ -14,7 +14,7 @@ import { Config } from '@memebox/contracts';
 })
 export class TwitchSettingComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
-    name: ''
+    name: '',
   });
 
   public editMode = false;
@@ -69,5 +69,9 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
 
   onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>) {
     this.appService.updateTwitchLogs($event.checked);
+  }
+
+  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>){
+    this.appService.updateTwitchBotIntegration($event.checked);
   }
 }

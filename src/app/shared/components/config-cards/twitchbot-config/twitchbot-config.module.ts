@@ -7,6 +7,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { TwitchbotConfigComponent } from './twitchbot-config.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -22,7 +23,8 @@ import { TwitchbotConfigComponent } from './twitchbot-config.component';
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTabsModule
   ]
 })
 export class TwitchbotConfigModule { }

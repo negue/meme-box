@@ -1,5 +1,5 @@
-import {ChatUserstate} from "tmi.js";
-import {MediaType} from "./media.types";
+import { ChatUserstate } from 'tmi.js';
+import { MediaType } from './media.types';
 
 export interface HasId {
   id: string;
@@ -26,7 +26,7 @@ export interface Clip extends HasId {
   type: MediaType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"
-                    // the Meta Type will use that to trigger all clips of that tagId
+  // the Meta Type will use that to trigger all clips of that tagId
 
   metaType?: MetaTriggerTypes;
   metaDelay?: number; // in ms
@@ -34,7 +34,7 @@ export interface Clip extends HasId {
   showOnMobile?: boolean;
 }
 
-export interface Screen  extends HasId {
+export interface Screen extends HasId {
   name: string;
   /**
    * Key: clip.id == screenClip.id
@@ -61,7 +61,7 @@ export enum HideAfterType {
   Repeats // maybe?
 }
 
-export interface ScreenClip extends HasId  {
+export interface ScreenClip extends HasId {
   visibility: VisibilityEnum;
   loop?: boolean;
 
@@ -79,8 +79,8 @@ export interface ScreenClip extends HasId  {
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
 
-  animationIn?: string|null;
-  animationOut?: string|null;
+  animationIn?: string | null;
+  animationOut?: string | null;
 
   zIndex?: number;
 
@@ -114,7 +114,7 @@ export interface TimedClip extends HasId {
 export interface Twitch extends HasId {
   name: string;
   // screenId:      string; // TODO
-  clipId:     string;
+  clipId: string;
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
   active: boolean;
@@ -144,7 +144,7 @@ export interface SettingsState {
   screen: Dictionary<Screen>;
   tags: Dictionary<Tag>;
 
-  config:  Partial<Config>;
+  config: Partial<Config>;
 }
 
 export interface AppState extends SettingsState {
@@ -153,14 +153,17 @@ export interface AppState extends SettingsState {
 }
 
 export interface Config {
-  mediaFolder:   string;
+  mediaFolder: string;
   twitchChannel: string;
   twitchLog?: boolean;
-  twitch: {
-    bot?: boolean;
-    botName?: string;
-    botToken?: string;
-  }
+  twitch?: TwitchBotConfig
+}
+
+export interface TwitchBotConfig {
+  bot: boolean;
+  botName: string;
+  botToken: string;
+  botResponse: string;
 }
 
 export interface NetworkInfo {
@@ -190,11 +193,11 @@ export enum TargetScreenType {
 }
 
 export interface FileResult {
- fullPath: string;
- ext: string;
- fileName: string;
- apiUrl: string;
- fileType: MediaType
+  fullPath: string;
+  ext: string;
+  fileName: string;
+  apiUrl: string;
+  fileType: MediaType
 }
 
 export interface FileResult {

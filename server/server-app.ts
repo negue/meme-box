@@ -62,15 +62,7 @@ PersistenceInstance.dataUpdated$()
         twitchHandler.disconnect();
       }
 
-      const data : TwitchHandlerConfig = {
-        channel : config.twitchChannel,
-        log: config.twitchLog ?? false,
-        bot: config.twitch.bot ?? false,
-        botName: config.twitch.botName,
-        botToken: config.twitch.botToken
-      };
-
-      twitchHandler = new TwitchHandler(data);
+      twitchHandler = new TwitchHandler(config);
     }
 
     const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
