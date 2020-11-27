@@ -7,9 +7,9 @@
   </div>
   <ol class="mediaList">
     <li (click)="clickToSelect(clip)"
-        *ngFor="let clip of clips$|async"
+        *ngFor="let clip of clips$|async; trackBy: trackByClip"
         [class.mediaList__option--selected]="checkedMap[clip.id]"
-        class="mediaList__option">
+        class="mediaList__option animate__animated  animate__fadeIn">
       <figure *ngIf="clip.type === 0">
         <figcaption class="mediaList__name">
           <app-clip-type [type]="clip.type"

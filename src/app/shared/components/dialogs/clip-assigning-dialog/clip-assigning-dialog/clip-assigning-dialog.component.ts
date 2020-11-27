@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Clip, Dictionary, MediaType, Screen} from "@memebox/contracts";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
@@ -49,6 +49,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
     map(screenMap => screenMap[this.data.screenId])
   );
 
+  trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   private destroy$ = new Subject();
 

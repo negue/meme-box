@@ -7,13 +7,15 @@
       <form [formGroup]="form">
         <div class="example-container">
           <mat-form-field appearance="outline">
-            <mat-label>Trigger every MS</mat-label>
+            <mat-label>Trigger</mat-label>
             <input autocomplete="off"
                    formControlName="everyXms"
                    placeholder="100"
                    type="number"
                    required
                    matInput>
+
+            <span matSuffix>every ms</span>
             <mat-error *ngIf="form.controls['everyXms'].errors?.max">
               Above the max value
             </mat-error>

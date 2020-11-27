@@ -17,8 +17,7 @@ import {
 import {TwitchEditComponent} from "./twitch-edit/twitch-edit.component";
 import {
   ClipAssigningDialogComponent,
-  ClipAssigningDialogOptions,
-  ClipAssigningMode
+  ClipAssigningDialogOptions
 } from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 import {take} from "rxjs/internal/operators";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
@@ -92,18 +91,13 @@ export class DialogService {
     )
   }
 
-  showClipSelectionDialog(currentClipId: string, dialogTitle: string) {
+  showClipSelectionDialog(data: ClipAssigningDialogOptions) {
     return this.open(
       ClipAssigningDialogComponent, {
-        data: {
-          mode: ClipAssigningMode.Single,
-          selectedItemId: currentClipId,
-
-          dialogTitle
-        } as ClipAssigningDialogOptions,
+        data,
         width: '800px',
 
-        panelClass: 'max-height-dialog'
+        panelClass: ['max-height-dialog', 'dialog-without-right-padding']
       }
     ).afterClosed().pipe(
       take(1),

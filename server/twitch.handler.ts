@@ -1,12 +1,12 @@
 import * as tmi from 'tmi.js';
-import { EmoteObj, Options } from 'tmi.js';
-import { Subscription } from 'rxjs';
-import { PersistenceInstance } from './persistence';
-import { startWith } from 'rxjs/operators';
-import { Twitch, TwitchEventTypes, TwitchTriggerCommand } from '../projects/contracts/src/lib/types';
-import { triggerMediaClipById } from './websocket-server';
-import { Logger } from 'winston';
-import { newLogger } from './logger.utils';
+import {EmoteObj} from 'tmi.js';
+import {Subscription} from 'rxjs';
+import {PersistenceInstance} from './persistence';
+import {startWith} from 'rxjs/operators';
+import {Dictionary, Twitch, TwitchEventTypes, TwitchTriggerCommand} from '../projects/contracts/src/lib/types';
+import {triggerMediaClipById} from './websocket-server';
+import {Logger} from 'winston';
+import {newLogger} from './logger.utils';
 
 declare module 'tmi.js' {
   export interface Badges {
@@ -27,6 +27,7 @@ export class TwitchHandler {
   private persistenceSubscription: Subscription;
   private twitchSettings: Twitch[] = [];
   private logger: Logger;
+  private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
 
   constructor(private config: TwitchHandlerConfig) {
     const tmiConfig: Options = {
@@ -47,7 +48,7 @@ export class TwitchHandler {
     this.tmiClient = tmi.Client(tmiConfig);
 
     this.connectAndListen();
-    if (config.log) {
+    if (enabledLogger) {
       this.createLogger();
     }
   }
@@ -175,7 +176,7 @@ export class TwitchHandler {
     * */
   }
 
-  getCommandOfMessage(message: string, event: TwitchEventTypes, eventOptions?: TwitchEventOptions): Twitch {
+  getCommandOfMessage(message: string, event : TwitchEventTypes, eventOptions?: TwitchEventOptions): Twitch {
     if (!message && !eventOptions) {
       return null;
     }
@@ -189,12 +190,13 @@ export class TwitchHandler {
       if (eventOptions && event === twitchSetting.event) {
         const minAmount = twitchSetting.minAmount || 0;
         const maxAmount = twitchSetting.maxAmount || Infinity;
+
         if (eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount) {
           return twitchSetting;
         }
       }
 
-      if (event !== TwitchEventTypes.message) {
+      if (twitchSetting.event !== TwitchEventTypes.message){
         continue;
       }
 
@@ -249,17 +251,46 @@ export class TwitchHandler {
 
   handle(trigger: TwitchTriggerCommand) {
     if (trigger.command) {
-      console.info('Contained', trigger.command.contains);
-      console.info('Full Message', trigger.message);
-      console.info('Tags', trigger.tags);
+      this.log(`Trigger "${trigger.command.name}" Type - ${trigger.command.event}`);
+      if (trigger.message) {
+        this.log(`Trigger Message - ${trigger.message}`);
+      }
+
+      this.log({
+        message: 'Trigger Tags',
+        tags: trigger.tags
+      });
 
       const foundLevels = this.getLevelOfTags(trigger.tags);
 
-      console.info('Found Levels', foundLevels);
-      console.info('Needed Levels', trigger.command?.roles);
+      this.log({
+        message: 'Trigger Levels',
+        foundLevels,
+        neededLevels: trigger.command?.roles
+      });
 
-      if (foundLevels.includes('broadcaster') || trigger.command?.roles.some(r => foundLevels.includes(r)) || trigger.command.event !== TwitchEventTypes.message) {
-        console.info('Triggering Clip: ', trigger.command.clipId);
+      const isBroadcaster = foundLevels.includes('broadcaster');
+
+      const allowedByRole = trigger.command?.roles.some(r => foundLevels.includes(r))
+        || trigger.command.event !== TwitchEventTypes.message; // all other types don't have roles
+
+      const cooldownEntry = this.cooldownDictionary[trigger.command.id];
+      const allowedByCooldown = cooldownEntry && trigger.command.cooldown
+       ? (Date.now() - cooldownEntry) > trigger.command.cooldown
+      : true;
+
+      const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
+
+      this.log({
+        message: `Allowed to trigger: ${trigger.command.clipId}`,
+        isBroadcaster,
+        allowedByRole,
+        allowedByCooldown,
+        allowedToTrigger
+      });
+
+      if (allowedToTrigger) {
+        this.cooldownDictionary[trigger.command.id] = Date.now();
 
         triggerMediaClipById({
           id: trigger.command.clipId
@@ -273,7 +304,7 @@ export class TwitchHandler {
   }
 
   private log(data: any) {
-    if (this.config.log) {
+    if (this.enabledLogger) {
       this.logger.info(data);
     }
   }
