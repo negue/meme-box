@@ -1,7 +1,7 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {debounceTime} from "rxjs/internal/operators";
-import {dynamicIframe, HtmlExternalFile} from "../../../../projects/utils/src/lib/dynamicIframe";
+import {DynamicIframeContent, HtmlExternalFile} from "../../../../projects/utils/src/lib/dynamicIframe";
 
 @Component({
   selector: 'app-test',
@@ -19,10 +19,7 @@ export class TestComponent implements OnInit {
 
   public externalFiles: HtmlExternalFile[] = [];
 
-  @ViewChild('targetIframe', {static: true})
-  targetIframe: ElementRef<HTMLIFrameElement>;
-
-  jqueryAdded = false;
+  iframeContent: DynamicIframeContent;
 
   constructor() { }
 
@@ -60,12 +57,12 @@ export class TestComponent implements OnInit {
         ${this.customHTMLForm.value.js}
       </script>
     `);*/
-    dynamicIframe(this.targetIframe.nativeElement, {
+    this.iframeContent = {
       html: this.customHTMLForm.value.html,
       css: this.customHTMLForm.value.css,
       js: this.customHTMLForm.value.js,
       libraries: this.externalFiles
-    })
+    };
   }
 
   addNewExternal() {

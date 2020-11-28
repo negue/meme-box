@@ -10,6 +10,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {DynamicIframeModule} from "../shared/components/dynamic-iframe/dynamic-iframe.module";
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
     FormsModule,
     MatButtonModule,
     MatIconModule,
+    DynamicIframeModule,
   ]
 })
 export class TestpageModule { }
