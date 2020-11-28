@@ -45,6 +45,10 @@
       <div *ngIf="info.type === 3 && (info.previewUrl || info.path)">
         <iframe [src]="info.path | safeurl"></iframe>
       </div>
+
+      <div *ngIf="info.type === 4">
+        <app-dynamic-iframe [content]="info | clipToIframe"></app-dynamic-iframe>
+      </div>
     </div>
 
     <div class="mediaInfo__actionButtons">

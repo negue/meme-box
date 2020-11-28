@@ -22,6 +22,7 @@ import {PipesModule} from "../../core/pipes/pipes.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {FilterModule} from "../../shared/components/filter/filter.module";
 import {ClipChipsListModule} from "../../shared/components/clip-chips-list/clip-chips-list.module";
+import {DynamicIframeModule} from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
 
 const routes: Routes = [
   {
@@ -55,6 +56,7 @@ const routes: Routes = [
     CardOverviewModule,
     FilterModule,
     ClipChipsListModule,
+    DynamicIframeModule,
   ]
 })
 export class MediaModule {}

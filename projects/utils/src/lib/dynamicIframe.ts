@@ -1,3 +1,5 @@
+import {Clip} from "@memebox/contracts";
+
 export interface HtmlExternalFile {
   type: 'css'|'script';
   src: string;
@@ -18,7 +20,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   // clean up the previous external files
   let allExistingScripts = iframeDocument.body.getElementsByTagName('script');
 
-  for (var scriptIndex = 0; scriptIndex<allExistingScripts.length; scriptIndex++) {
+  for (var scriptIndex = 0; scriptIndex < allExistingScripts.length; scriptIndex++) {
     const script = allExistingScripts.item(scriptIndex);
     console.info({script});
     script.remove();
@@ -26,7 +28,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   let allExistingStyleLinks = iframeDocument.body.getElementsByTagName('link');
 
-  for (var styleLinkIndex = 0; styleLinkIndex<allExistingStyleLinks.length; styleLinkIndex++) {
+  for (var styleLinkIndex = 0; styleLinkIndex < allExistingStyleLinks.length; styleLinkIndex++) {
     const style = allExistingStyleLinks.item(styleLinkIndex);
     console.info({style, length: allExistingStyleLinks.length});
     style.remove();
@@ -34,17 +36,21 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   // re-add
 
+  if (!content) {
+    return;
+  }
+
   for (const externalFile of content.libraries) {
     if (externalFile.type === 'css') {
-      const newStyle  = iframeDocument.createElement("link");
+      const newStyle = iframeDocument.createElement("link");
       newStyle.rel = 'stylesheet'
       newStyle.href = externalFile.src;
 
       iframeDocument.head.appendChild(newStyle);
-    }  else {
+    } else {
       // Script
 
-      const newScript   = iframeDocument.createElement("script");
+      const newScript = iframeDocument.createElement("script");
       newScript.src = externalFile.src;
 
       iframeDocument.head.appendChild(newScript);
@@ -83,14 +89,31 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   targetElement.innerHTML = elementsToReplace.join('');
 
 
-
-if (content.js) {
-  const customScript = iframeDocument.createElement("script");
-
-
-  iframeDocument.body.appendChild(customScript);
+  if (content.js) {
+    const customScript = iframeDocument.createElement("script");
 
 
-  customScript.text = content.js;
+    iframeDocument.body.appendChild(customScript);
+
+
+    customScript.text = content.js;
+  }
 }
+
+export function clipDataToDynamicIframeContent (clip: Clip) {
+  if (!clip.extended) {
+    return null;
+  }
+
+  const dynamicContent: DynamicIframeContent = {
+    html: clip.extended['html'],
+    css: clip.extended['css'],
+    js: clip.extended['js']
+  };
+
+  // JSON
+  const externalFiles: HtmlExternalFile[] = JSON.parse(clip.extended['external'] ?? '[]');
+  dynamicContent.libraries = externalFiles;
+
+  return dynamicContent;
 }

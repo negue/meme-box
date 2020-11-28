@@ -196,6 +196,12 @@
       </app-compact-clip-card>
     </div>
 
+    <div *ngSwitchCase="MediaType.HTML">
+      <h3>Custom HTML</h3>
+      <app-dynamic-iframe [content]="data | clipToIframe"></app-dynamic-iframe>
+
+    </div>
+
     <!-- All others => AppClipType -->
     <app-clip-preview *ngSwitchDefault
                    [clip]="form.value">
