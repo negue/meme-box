@@ -48,7 +48,7 @@
         <input autocomplete="off"
                formControlName="path"
                matInput
-               [required]="form.value.type !== MediaType.Meta"
+               [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
                [placeholder]="form.value.type !== MediaType.IFrame ? 'File' : 'URL'"
                type="text"
         />
@@ -200,6 +200,7 @@
       <h3>Custom HTML</h3>
       <app-dynamic-iframe [content]="data | clipToIframe"></app-dynamic-iframe>
 
+      <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
     </div>
 
     <!-- All others => AppClipType -->

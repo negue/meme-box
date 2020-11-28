@@ -1,0 +1,111 @@
+<h2 mat-dialog-title class="title-wrapper">
+  HTML
+</h2>
+<mat-dialog-content class="mat-typography">
+
+<form class="padding" >
+  <mat-form-field>
+    <mat-label>CSS</mat-label>
+
+    <gewd-custom-form-control #customFormControlCss
+                              [value]="workingValue.css">
+      <gewd-prism-editor [value]="workingValue.css"
+
+                         language="css"
+                         [debounceTime]="450"
+                         [style.--editor-min-height.px]="200"
+                         (value$)="workingValue.css = $event; markForCheck()"
+                         (focussed$)="customFormControlCss.focused = $event">
+      </gewd-prism-editor>
+    </gewd-custom-form-control>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>HTML</mat-label>
+
+    <gewd-custom-form-control #customFormControlHtml
+                              [value]="workingValue.html"
+    >
+      <gewd-prism-editor [value]="workingValue.html"
+                         language="html"
+                         [debounceTime]="450"
+                         [style.--editor-min-height.px]="200"
+                         (value$)="workingValue.html = $event; markForCheck()"
+                         (focussed$)="customFormControlHtml.focused = $event">
+      </gewd-prism-editor>
+    </gewd-custom-form-control>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>JS</mat-label>
+
+    <gewd-custom-form-control #customFormControlJs
+                              [value]="workingValue.js"
+    >
+      <gewd-prism-editor [value]="workingValue.js"
+                         language="js"
+                         [debounceTime]="450"
+                         [style.--editor-min-height.px]="200"
+                         (value$)="workingValue.js = $event; markForCheck()"
+                         (focussed$)="customFormControlJs.focused = $event">
+      </gewd-prism-editor>
+    </gewd-custom-form-control>
+  </mat-form-field>
+</form>
+
+  <pre>
+    {{ iframeContent$ | async | json }}
+  </pre>
+
+<br />
+
+<div class="padding">
+  External Files:
+  <button mat-icon-button (click)="addNewExternal()" color="primary">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+  <br/>
+
+  <div *ngFor="let externalFile of workingValue.libraries; let index = index;"
+       class="external-file-row">
+
+    <mat-form-field>
+      <mat-select [(value)]="externalFile.type"
+                  placeholder="Type"
+                  (change)="saveExternalArray()">
+        <mat-option value="css">CSS</mat-option>
+        <mat-option value="script">Script</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [(ngModel)]="externalFile.src"
+             placeholder="Source"
+             (change)="saveExternalArray()"
+             autocomplete="off"/>
+    </mat-form-field>
+
+    <button mat-icon-button color="warn" (click)="deleteExternalFile(index)">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </div>
+
+
+</div>
+<br/>
+
+<div class="padding">
+
+  <h4> Iframe </h4>
+
+  <app-dynamic-iframe [content]="iframeContent$ | async"></app-dynamic-iframe>
+</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()" cdkFocusInitial
+          color="accent"
+          mat-raised-button>Update</button>
+</mat-dialog-actions>

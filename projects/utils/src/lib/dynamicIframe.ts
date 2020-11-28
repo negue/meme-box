@@ -111,9 +111,28 @@ export function clipDataToDynamicIframeContent (clip: Clip) {
     js: clip.extended['js']
   };
 
+  console.info({extended: clip.extended});
+
   // JSON
   const externalFiles: HtmlExternalFile[] = JSON.parse(clip.extended['external'] ?? '[]');
   dynamicContent.libraries = externalFiles;
 
+  console.info('json', JSON.stringify(dynamicContent));
+
   return dynamicContent;
+}
+
+
+export function applyDynamicIframeContentToClipData (iframeContent: DynamicIframeContent, targetClip: Clip) {
+ console.info('PRE CHANGE', JSON.stringify(targetClip));
+
+ console.info({iframeContent});
+
+  targetClip.extended['html'] = iframeContent.html;
+  targetClip.extended['css'] = iframeContent.css;
+  targetClip.extended['js'] = iframeContent.js;
+
+  targetClip.extended['external'] = JSON.stringify(iframeContent.libraries);
+
+  console.info('POST CHANGE', JSON.stringify(targetClip));
 }

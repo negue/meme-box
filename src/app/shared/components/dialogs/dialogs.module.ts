@@ -6,7 +6,7 @@ import {ScreenEditComponent} from "./screen-edit/screen-edit.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {SimpleConfirmationDialogComponent} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatInputModule} from "@angular/material/input";
@@ -29,6 +29,7 @@ import {HighlightEditorModule} from "@gewd/components/highlight-editor";
 import {CustomFormControlModule} from "@gewd/components/custom-form-control";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeModule} from "../dynamic-iframe/dynamic-iframe.module";
+import {DynamicIframeEditComponent} from './dynamic-iframe-edit/dynamic-iframe-edit.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {DynamicIframeModule} from "../dynamic-iframe/dynamic-iframe.module";
     ScreenClipOptionsComponent,
     TwitchEditComponent,
     ClipAssigningDialogComponent,
-    TimedEditComponent
+    TimedEditComponent,
+    DynamicIframeEditComponent
   ],
   imports: [
     PipesModule,
@@ -63,6 +65,7 @@ import {DynamicIframeModule} from "../dynamic-iframe/dynamic-iframe.module";
     HighlightEditorModule,
     CustomFormControlModule,
     DynamicIframeModule,
+    FormsModule,
   ],
   providers: [DialogService],
 })

@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
@@ -9,6 +18,12 @@ import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
+import {DialogService} from "../dialog.service";
+import {
+  applyDynamicIframeContentToClipData,
+  clipDataToDynamicIframeContent,
+  DynamicIframeContent
+} from "../../../../../../projects/utils/src/lib/dynamicIframe";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -125,9 +140,17 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: Clip,
     private dialogRef: MatDialogRef<any>,
     private appService: AppService,
-    private appQuery: AppQueries
+    private appQuery: AppQueries,
+    private dialogService: DialogService,
+    private cd: ChangeDetectorRef
   ) {
-    this.data = Object.assign({}, INITIAL_CLIP, this.data);
+    this.data = Object.assign({}, INITIAL_CLIP, {
+      // maybe helps for writeable propeties?! TODO refactor
+      ...this.data,
+      extended: {
+        ...this.data.extended
+      }
+    });
 
     this.showOnMobile = this.data.showOnMobile;
 
@@ -213,7 +236,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     const { value } = this.form;
 
-    const valueAsClip: Clip = value;
+    const valueAsClip: Clip = {
+      ...this.data,
+      ...value
+    };
 
     const tagsToAssign = this.currentTags$.value;
 
@@ -324,4 +350,23 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   }
 
   // endregion
+  async editHTML() {
+    const dynamicIframeContent = clipDataToDynamicIframeContent(this.data);
+
+    console.info({data: this.data, iframe: dynamicIframeContent});
+
+    const matDialogResult = this.dialogService.showDynamicIframeEdit(dynamicIframeContent);
+
+    const dialogResult: DynamicIframeContent = await matDialogResult.afterClosed().pipe(
+      take(1)
+    ).toPromise();
+
+    if (dialogResult) {
+      console.info({ dialogResult });
+      applyDynamicIframeContentToClipData(dialogResult, this.data);
+
+      console.warn({data: this.data});
+      this.cd.detectChanges();
+    }
+  }
 }
