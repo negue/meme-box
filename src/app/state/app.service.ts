@@ -432,7 +432,7 @@ export class AppService {
     });
 
 
-    this.snackbar.normal(`Twitch ${enabled ? 'enabled' : 'disabled'}!`);
+    this.snackbar.normal(`Twitch bot ${enabled ? 'enabled' : 'disabled'}!`);
   }
 
   public async openMediaFolder() {

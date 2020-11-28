@@ -20,15 +20,6 @@ declare module 'tmi.js' {
   }
 }
 
-export type TwitchHandlerConfig = {
-  channel: string,
-  log: boolean,
-  bot?: boolean
-  botName?: string,
-  botToken?: string,
-  botResponse?: string
-}
-
 export class TwitchHandler {
   private tmiClient: tmi.Client;
   private persistenceSubscription: Subscription;

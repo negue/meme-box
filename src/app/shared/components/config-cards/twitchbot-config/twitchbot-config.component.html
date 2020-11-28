@@ -5,7 +5,7 @@
 </div>
 
 <div>
-  <form [formGroup]="form">
+  <form [formGroup]="form" *ngIf="config$ | async as config">
     <mat-tab-group>
       <mat-tab label="Authentication">
 
@@ -15,7 +15,7 @@
                     class="twitchSetting__token-button">
           <mat-icon svgIcon="launch"></mat-icon> &nbsp;Get Twitch Token</a></p>
 
-        <mat-form-field *ngIf="config$ | async as config">
+        <mat-form-field>
           <mat-label>Bot name</mat-label>
           <input autocomplete="off" [readonly]="!config?.twitch?.bot"
                  formControlName="botName"
@@ -27,7 +27,7 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field *ngIf="config$ | async as config">
+        <mat-form-field>
           <mat-label>Bot token</mat-label>
           <input autocomplete="off" [readonly]="!config?.twitch?.bot"
                  formControlName="botToken"
@@ -40,7 +40,7 @@
         </mat-form-field>
       </mat-tab>
       <mat-tab label="Bot settings">
-        <mat-form-field *ngIf="config$ | async as config">
+        <mat-form-field>
           <mat-label>Bot response</mat-label>
           <textarea autocomplete="off" [readonly]="!config?.twitch?.bot"
                     formControlName="botResponse"
@@ -63,7 +63,6 @@
     </mat-tab-group>
 
     <button (click)="saveBotData()" matSuffix
-            *ngIf="config$ | async as config"
             color="primary"
             class="twitchSetting__button"
             [disabled]="!config?.twitch?.bot"

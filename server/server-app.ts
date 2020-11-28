@@ -2,7 +2,7 @@ import {createExpress} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT} from "./constants";
 import {debounceTime, startWith} from "rxjs/operators";
-import { TwitchHandler, TwitchHandlerConfig } from './twitch.handler';
+import { TwitchHandler } from './twitch.handler';
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
 import {LOGGER} from "./logger.utils";

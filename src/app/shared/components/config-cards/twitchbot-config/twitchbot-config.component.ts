@@ -72,6 +72,6 @@ export class TwitchbotConfigComponent implements OnInit {
       botResponse: this.form.value.botResponse
     }
 
-    await this.appService.updateTwitchBotData(twitchBot);
+    this.appService.updateTwitchBotData(twitchBot);
   }
 }
