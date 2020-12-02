@@ -107,6 +107,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   // Current Tags assigned to this clip
   currentTags$ = new BehaviorSubject<Tag[]>([]);
 
+  // Current custom HTML Content?
+  currentHtml$ = new BehaviorSubject<DynamicIframeContent>(null);
+
   // Get all clips that have the assigned tags
   taggedClips$ = combineLatest([
     this.currentTags$,
@@ -152,6 +155,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
     this.showOnMobile = this.data.showOnMobile;
 
     this.currentMediaType$.next(this.data.type);
@@ -362,10 +366,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     ).toPromise();
 
     if (dialogResult) {
-      console.info({ dialogResult });
       applyDynamicIframeContentToClipData(dialogResult, this.data);
 
-      console.warn({data: this.data});
+      this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
       this.cd.detectChanges();
     }
   }

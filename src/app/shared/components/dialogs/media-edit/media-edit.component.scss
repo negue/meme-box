@@ -71,7 +71,9 @@ img {
   flex: 1;
 
   &:last-child {
-    align-self: center;
+    &:not(.custom-html-preview) {
+      align-self: center;
+    }
 
     @media screen and (min-width: 920px) {
       margin-left: 1rem;
@@ -96,4 +98,11 @@ img {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.custom-html-holder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }

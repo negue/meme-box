@@ -186,7 +186,8 @@
     </mat-form-field>
   </form>
 
-  <div class="column" [ngSwitch]="form.value.type">
+  <div class="column" [ngSwitch]="form.value.type"
+       [class.custom-html-preview]="form.value.type === MediaType.HTML">
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
       <h3>Assigned Clips by Tags</h3>
@@ -196,11 +197,12 @@
       </app-compact-clip-card>
     </div>
 
-    <div *ngSwitchCase="MediaType.HTML">
-      <h3>Custom HTML</h3>
-      <app-dynamic-iframe [content]="data | clipToIframe"></app-dynamic-iframe>
-
+    <div *ngSwitchCase="MediaType.HTML" class="custom-html-holder">
       <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
+      <app-dynamic-iframe *ngIf="currentHtml$ | async as currentHtml"
+                          [content]="currentHtml">
+
+      </app-dynamic-iframe>
     </div>
 
     <!-- All others => AppClipType -->
