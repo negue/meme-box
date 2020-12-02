@@ -209,6 +209,16 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
       } )
     }
+
+    if (value.type === MediaType.HTML){
+
+      console.warn('Is HTML (iframe)');
+      this.mediaClipMap$.pipe(
+        take(1)
+      ).subscribe(map => {
+        // custom css for custom html?!
+      } )
+    }
   }
 
   random_rgba() {

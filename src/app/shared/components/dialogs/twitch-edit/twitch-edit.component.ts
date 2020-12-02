@@ -7,7 +7,7 @@ import {AppService} from '../../../../state/app.service';
 import {AppQueries} from '../../../../state/app.queries';
 import {SnackbarService} from '../../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
-import {distinctUntilChanged, map, pairwise, startWith, takeUntil} from "rxjs/operators";
+import {distinctUntilChanged, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
 import {ClipAssigningMode} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 // TODO better class/interface name?
@@ -97,6 +97,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   }
 
   async save() {
+    // Check if the form is valid
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
@@ -110,6 +111,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
     const {value} = this.form;
 
+    // check if a media item was selected
     if (!value.clipId) {
       this.showWarningClipSelection = true;
       return;
@@ -120,7 +122,27 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
       ...value
     };
 
-    console.info(newTwitchValue);
+
+    // does already the same command exists?
+    if (newTwitchValue.event === TwitchEventTypes.message) {
+      // check state of current commands?
+      const currentTwitchEvents = await this.appQuery.twitchEvents$.pipe(
+        take(1)
+      ).toPromise();
+
+      if (currentTwitchEvents.some(t => t.event === TwitchEventTypes.message
+        && t.contains === newTwitchValue.contains)) {
+        const dialogResult = await this.dialogService.showConfirmationDialog({
+          title: 'You already have the same command',
+          content: 'Do you want to add the new one anyway?'
+        });
+
+        if (!dialogResult) {
+          return;
+        }
+      }
+    }
+
     await this.appService.addOrUpdateTwitchEvent(newTwitchValue);
 
     // todo refactor "better way?" to trigger those snackbars
@@ -187,8 +209,6 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   }
 
   toggleRole(role: string) {
-
-
     if (this.data.roles.includes(role)) {
       const indexOfRole = this.data.roles.indexOf(role);
 

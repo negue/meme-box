@@ -8,23 +8,33 @@ import {lazyArray} from "../../../../../projects/utils/src/lib/lazyArray";
 
 export function createCombinedFilterItems$ (
   clip$: Observable<Clip[]>,
-  tagMap$: Observable<Dictionary<Tag>>
+  tagMap$: Observable<Dictionary<Tag>>,
+  showOnlyAvailableTypes: boolean
 ): Observable<IFilterItem[]> {
   return combineLatest([
     clip$,
     tagMap$
   ]).pipe(
     map(([allMedia, tagDictionary]) => {
-      const filterItems = [...TYPE_FILTER_ITEMS];
+      const filterItems = [];
 
       // todo filter media types if not existing
 
       const allTags = new Set<string>();
+      const allTypes = new Set<MediaType>();
 
       for (const clip of allMedia) {
+        allTypes.add(clip.type);
+
         for (const tagId of (clip?.tags ?? [])) {
           allTags.add(tagId)
         }
+      }
+
+      if (showOnlyAvailableTypes) {
+        filterItems.push(...TYPE_FILTER_ITEMS.filter(filterItem => allTypes.has(filterItem.value)));
+      } else {
+        filterItems.push(...TYPE_FILTER_ITEMS);
       }
 
       allTags.forEach(value => {

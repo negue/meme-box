@@ -18,7 +18,7 @@ export enum MetaTriggerTypes {
 // (Media) Clip
 export interface Clip extends HasId {
   name: string;
-  previewUrl?: string;
+  previewUrl?: string;   // TODO generate dataurl as preview
   volumeSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip
@@ -32,6 +32,14 @@ export interface Clip extends HasId {
   metaDelay?: number; // in ms
 
   showOnMobile?: boolean;
+
+  extended?: Dictionary<string>; // only used for HTML - Type
+}
+
+export const enum EXTENDED_KEYS {
+  HTML = 'HTML',
+  CSS = 'CSS',
+  JS = 'JS'
 }
 
 export interface Screen  extends HasId {

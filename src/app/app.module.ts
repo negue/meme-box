@@ -1,38 +1,39 @@
 import 'reflect-metadata';
 import '../polyfills';
 
-import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CoreModule } from './core/core.module';
-import { SharedModule } from './shared/shared.module';
+import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {CoreModule} from './core/core.module';
+import {SharedModule} from './shared/shared.module';
 
-import { AppRoutingModule } from './app-routing.module';
+import {AppRoutingModule} from './app-routing.module';
 // NG Translate
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
-import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
-import { AppConfig } from '../environments/environment';
-import { TargetScreenComponent } from "./target-screen/target-screen.component";
-import { MediaTypeClassPipe } from './target-screen/media-type-class.pipe';
-import { ServicesModule } from "./shared/services/services.module";
-import { DialogsModule } from "./shared/components/dialogs/dialogs.module";
-import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
-import { StyleguideColors } from './shared/styleguide/styleguide.component';
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
+import {AppConfig} from '../environments/environment';
+import {TargetScreenComponent} from "./target-screen/target-screen.component";
+import {MediaTypeClassPipe} from './target-screen/media-type-class.pipe';
+import {ServicesModule} from "./shared/services/services.module";
+import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
+import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
+import {StyleguideColors} from './shared/styleguide/styleguide.component';
 
-import { PipesModule } from "./core/pipes/pipes.module";
-import { MediaToggleDirective } from './target-screen/media-toggle.directive';
-import { APP_ICONS } from "./app.icons";
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { ENVIRONMENT_MODULES } from "@memebox/app/env/modules";
-import { DEFAULT_PRISM_OPTIONS, PrismServiceOptions } from "@gewd/markdown/contracts";
-import { HighlightEditorModule, PrismOptionsInjectorToken } from "@gewd/components/highlight-editor";
+import {PipesModule} from "./core/pipes/pipes.module";
+import {MediaToggleDirective} from './target-screen/media-toggle.directive';
+import {APP_ICONS} from "./app.icons";
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {ENVIRONMENT_MODULES} from "@memebox/app/env/modules";
+import {DEFAULT_PRISM_OPTIONS, PrismServiceOptions} from "@gewd/markdown/contracts";
+import {HighlightEditorModule, PrismOptionsInjectorToken} from "@gewd/components/highlight-editor";
+import {DynamicIframeModule} from "./shared/components/dynamic-iframe/dynamic-iframe.module";
 
 const prismWorker = () => new Worker('./prism.worker.ts', {
   name: 'prism',
@@ -80,6 +81,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatIconModule,
 
     HighlightEditorModule,
+    DynamicIframeModule,
   ],
   providers: [
     {

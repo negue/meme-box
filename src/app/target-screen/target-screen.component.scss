@@ -11,7 +11,7 @@ audio {
   display: none;
 }
 
-video, img, iframe {
+video, img, iframe, app-dynamic-iframe {
   display: none;
 
   &.visible {

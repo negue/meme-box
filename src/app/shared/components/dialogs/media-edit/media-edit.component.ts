@@ -1,4 +1,13 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
@@ -9,6 +18,12 @@ import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatChipInputEvent} from "@angular/material/chips";
+import {DialogService} from "../dialog.service";
+import {
+  applyDynamicIframeContentToClipData,
+  clipDataToDynamicIframeContent,
+  DynamicIframeContent
+} from "../../../../../../projects/utils/src/lib/dynamicIframe";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -31,6 +46,9 @@ interface MediaTypeButton {
   name: string;
   icon: string;
 }
+
+const MEDIA_TYPES_WITHOUT_PATH = [MediaType.HTML, MediaType.Meta];
+const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.HTML, MediaType.Picture, MediaType.IFrame];
 
 @Component({
   selector: "app-media-edit",
@@ -64,6 +82,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
+  MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
+  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
   mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
     .map(([mediaType, value]) => {
@@ -86,6 +106,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
   // Current Tags assigned to this clip
   currentTags$ = new BehaviorSubject<Tag[]>([]);
+
+  // Current custom HTML Content?
+  currentHtml$ = new BehaviorSubject<DynamicIframeContent>(null);
 
   // Get all clips that have the assigned tags
   taggedClips$ = combineLatest([
@@ -120,10 +143,19 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: Clip,
     private dialogRef: MatDialogRef<any>,
     private appService: AppService,
-    private appQuery: AppQueries
+    private appQuery: AppQueries,
+    private dialogService: DialogService,
+    private cd: ChangeDetectorRef
   ) {
-    this.data = Object.assign({}, INITIAL_CLIP, this.data);
+    this.data = Object.assign({}, INITIAL_CLIP, {
+      // maybe helps for writeable propeties?! TODO refactor
+      ...this.data,
+      extended: {
+        ...this.data.extended
+      }
+    });
 
+    this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
     this.showOnMobile = this.data.showOnMobile;
 
     this.currentMediaType$.next(this.data.type);
@@ -159,18 +191,18 @@ export class MediaEditComponent implements OnInit, OnDestroy {
           });
         }
 
-        if ([MediaType.Picture, MediaType.IFrame].includes(next)) {
+        if (MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(next)) {
           this.form.patchValue({
             playLength: DEFAULT_PLAY_LENGTH
           });
         }
 
-        if (prev === MediaType.Meta) {
+        if (MEDIA_TYPES_WITHOUT_PATH.includes(prev)) {
           console.info('adding validators');
           this.form.controls['path'].setValidators(Validators.required);
         }
 
-        if (next == MediaType.Meta){
+        if (MEDIA_TYPES_WITHOUT_PATH.includes(next)){
           console.info('clearing validators');
           this.form.controls['path'].clearValidators();
         }
@@ -208,7 +240,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     const { value } = this.form;
 
-    const valueAsClip: Clip = value;
+    const valueAsClip: Clip = {
+      ...this.data,
+      ...value
+    };
 
     const tagsToAssign = this.currentTags$.value;
 
@@ -319,4 +354,22 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   }
 
   // endregion
+  async editHTML() {
+    const dynamicIframeContent = clipDataToDynamicIframeContent(this.data);
+
+    console.info({data: this.data, iframe: dynamicIframeContent});
+
+    const matDialogResult = this.dialogService.showDynamicIframeEdit(dynamicIframeContent);
+
+    const dialogResult: DynamicIframeContent = await matDialogResult.afterClosed().pipe(
+      take(1)
+    ).toPromise();
+
+    if (dialogResult) {
+      applyDynamicIframeContentToClipData(dialogResult, this.data);
+
+      this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
+      this.cd.detectChanges();
+    }
+  }
 }

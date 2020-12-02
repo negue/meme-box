@@ -33,7 +33,8 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.appQueries.clipList$,
-    this.appQueries.tagMap$
+    this.appQueries.tagMap$,
+    true
   );
 
   checkedMap: Dictionary<boolean>;
