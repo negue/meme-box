@@ -88,15 +88,16 @@ export const LOGGER = newLogger('MemeBox', 'memebox');
 
 LOGGER.info('##########  Started  ##########');
 
-LOGGER.on('error', function (err) { console.error(err)});
+LOGGER.on('error', function (err) { console.error('LOGGER-ERROR', err)});
 
 function logAndExit (type: string) {
   process.on(type as any, (err: Error) => {
-
     if (typeof err === 'string') {
       LOGGER.error({type, err});
     } else {
-      LOGGER.error({type, ...err});
+      const message = err.message;
+      const stack = err.stack;
+      LOGGER.error({type, ...err, message, stack});
     }
 
     // Exiting the process on error, doesnt work,

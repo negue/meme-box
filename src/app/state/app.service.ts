@@ -3,7 +3,6 @@ import {AppStore} from "./app.store";
 import {HttpClient} from "@angular/common/http";
 import {
   Clip,
-  Config,
   ENDPOINTS,
   FileInfo,
   Screen,
@@ -11,6 +10,7 @@ import {
   Tag,
   TimedClip,
   Twitch,
+  TwitchConfig,
   VisibilityEnum
 } from "@memebox/contracts";
 import {
@@ -354,8 +354,8 @@ export class AppService {
   }
 
   public async updateTwitchChannel(twitchChannel: string) {
-    const newConfig: Partial<Config> = {
-      twitchChannel: twitchChannel
+    const newConfig: Partial<TwitchConfig> = {
+      channel: twitchChannel
     };
 
     // update path & await
@@ -363,7 +363,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitchChannel = twitchChannel;
+      state.config.twitch.channel = twitchChannel;
     });
 
 
@@ -371,8 +371,8 @@ export class AppService {
   }
 
   public async updateTwitchLogs(enabled: boolean) {
-    const newConfig: Partial<Config> = {
-      twitchLog: enabled
+    const newConfig: Partial<TwitchConfig> = {
+      enableLog: enabled
     };
 
     // update path & await
@@ -380,11 +380,11 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitchLog = enabled;
+      state.config.twitch.enableLog = enabled;
     });
 
 
-    this.snackbar.normal(`Twitch ${enabled ? 'enabled' : 'disabled'}!`);
+    this.snackbar.normal(`Twitch Logging ${enabled ? 'enabled' : 'disabled'}!`);
   }
 
   public async openMediaFolder() {

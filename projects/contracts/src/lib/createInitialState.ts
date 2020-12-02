@@ -2,7 +2,12 @@ import {SettingsState} from "./types";
 
 export function createInitialState (): SettingsState {
   return {
-    config: {},
+    version: 0,
+    config: {
+      twitch: {
+        channel: '',
+      }
+    },
     twitchEvents: {},
     screen: {},
     clips: {},
