@@ -3,7 +3,13 @@ import {EmoteObj} from 'tmi.js';
 import {Subscription} from 'rxjs';
 import {PersistenceInstance} from './persistence';
 import {startWith} from 'rxjs/operators';
-import {Dictionary, Twitch, TwitchEventTypes, TwitchTriggerCommand} from '../projects/contracts/src/lib/types';
+import {
+  Dictionary,
+  Twitch,
+  TwitchConfig,
+  TwitchEventTypes,
+  TwitchTriggerCommand
+} from '../projects/contracts/src/lib/types';
 import {triggerMediaClipById} from './websocket-server';
 import {Logger} from 'winston';
 import {newLogger} from './logger.utils';
@@ -21,17 +27,17 @@ export class TwitchHandler {
   private logger: Logger;
   private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
 
-  constructor(twitchAccount: string, private enabledLogger: boolean) {
+  constructor(private twitchConfig: TwitchConfig) {
     this.tmiClient = tmi.Client({
       connection: {
         secure: true,
         reconnect: true,
       },
-      channels: [twitchAccount]
+      channels: [twitchConfig.channel]
     });
 
     this.connectAndListen();
-    if (enabledLogger) {
+    if (twitchConfig.enableLog) {
       this.createLogger();
     }
   }
@@ -278,7 +284,7 @@ export class TwitchHandler {
   }
 
   private log(data: any) {
-    if (this.enabledLogger) {
+    if (this.twitchConfig.enableLog) {
       this.logger.info(data);
     }
   }

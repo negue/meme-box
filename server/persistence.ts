@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import {
   Clip,
   Config,
+  ConfigV0,
   PositionEnum,
   Screen,
   ScreenClip,
@@ -29,6 +30,8 @@ import {sortClips} from "../projects/utils/src/lib/sort-clips";
 let fileBackupToday = false;
 
 export class Persistence {
+
+  private version = 1;
 
   private updated$ = new Subject();
   private _hardRefresh$ = new Subject();
@@ -70,7 +73,7 @@ export class Persistence {
       }
       // execute upgrade , changing names or other stuff
 
-      this.data = Object.assign({}, createInitialState(), dataFromFile);
+      this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
       this.updated$.next();
     });
 
@@ -80,6 +83,31 @@ export class Persistence {
       this.logger.info('Data saved!');
       saveFile(this.filePath, this.data, true);
     });
+  }
+
+
+
+  public upgradeConfigFile(configFromFile: SettingsState): SettingsState {
+
+    if (!configFromFile.version) {
+      // new twitch config state
+      const configV0 = configFromFile.config as ConfigV0;
+
+      configFromFile.config.twitch = {
+        channel: configV0.twitchChannel,
+        enableLog: configV0.twitchLog,
+        bot: {
+          enabled: false
+        }
+      };
+
+      delete configV0.twitchLog;
+      delete configV0.twitchChannel;
+    }
+
+    configFromFile.version = this.version;
+
+    return configFromFile;
   }
 
   public dataUpdated$ () : Observable<any> {
@@ -301,14 +329,14 @@ export class Persistence {
 
   public updateTwitchChannel (channel: string) {
     this.data.config = this.data.config || {};
-    this.data.config.twitchChannel  = channel;
+    this.data.config.twitch.channel  = channel;
 
     this.saveData();
   }
 
   public updateTwitchLog (enabled: boolean) {
     this.data.config = this.data.config || {};
-    this.data.config.twitchLog = enabled;
+    this.data.config.twitch.enableLog = enabled;
 
     this.saveData();
   }

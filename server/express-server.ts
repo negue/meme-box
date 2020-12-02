@@ -36,6 +36,7 @@ import {NEW_CONFIG_PATH} from "./path.utils";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
 import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
+import {TwitchConfig} from "../projects/contracts/src/lib/types";
 
 const {  normalize, join } = require('path');
 
@@ -192,15 +193,19 @@ app.put(CONFIG_MEDIA_ENDPOINT, (req, res) => {
 
 // Put = Update Media Folder Path
 app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
+  const twitchConfigBody: TwitchConfig = req.body;
+
   // update config
-  res.send(PersistenceInstance.updateTwitchChannel(req.body.twitchChannel));
+  res.send(PersistenceInstance.updateTwitchChannel(twitchConfigBody.channel));
 });
 
 // TODO Refactor this config boilerplate !!!
 
 app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
+  const twitchConfigBody: TwitchConfig = req.body;
+
   // update config
-  res.send(PersistenceInstance.updateTwitchLog(req.body.twitchLog));
+  res.send(PersistenceInstance.updateTwitchLog(twitchConfigBody.enableLog));
 });
 
 app.get(CONFIG_OPEN_ENDPOINT, async (req, res) => {

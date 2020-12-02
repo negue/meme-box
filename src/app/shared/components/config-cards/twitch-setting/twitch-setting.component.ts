@@ -34,11 +34,11 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
     });
 
     this.appQuery.config$.pipe(
-      filter(config => !!config.twitchChannel),
+      filter(config => !!config.twitch.channel),
       take(1),
     ).subscribe(value => {
       this.form.reset({
-        name: value.twitchChannel
+        name: value.twitch.channel
       });
     });
 

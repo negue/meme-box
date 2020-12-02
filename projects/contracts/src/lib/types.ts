@@ -138,6 +138,7 @@ export interface Tag extends HasId {
  * Settings.json - State
  */
 export interface SettingsState {
+  version: number;
   clips: Dictionary<Clip>;
   twitchEvents: Dictionary<Twitch>;
   timers: Dictionary<TimedClip>;
@@ -153,6 +154,23 @@ export interface AppState extends SettingsState {
 }
 
 export interface Config {
+  mediaFolder:   string;
+  twitch: TwitchConfig;
+}
+
+export interface TwitchConfig {
+  channel: string;
+  enableLog?: boolean;
+  bot?: {
+    enabled: boolean;
+    auth?: {
+      name: string;
+      token: string;
+    }
+  }
+}
+
+export interface ConfigV0 {
   mediaFolder:   string;
   twitchChannel: string;
   twitchLog?: boolean;

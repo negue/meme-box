@@ -22,7 +22,7 @@ export class EventsOverviewComponent implements OnInit {
     map(allTimers => orderBy(allTimers, 'everyXms'))
 );
   twitchChannelExist$ = this.queries.config$.pipe(
-    map(cfg => !!cfg.twitchChannel)
+    map(cfg => !!cfg.twitch.channel)
   );
 
   public trackById: TrackByFunction<HasId> = (index, item) => {
