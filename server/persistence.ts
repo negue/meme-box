@@ -93,16 +93,18 @@ export class Persistence {
       // new twitch config state
       const configV0 = configFromFile.config as ConfigV0;
 
-      configFromFile.config.twitch = {
-        channel: configV0.twitchChannel,
-        enableLog: configV0.twitchLog,
-        bot: {
-          enabled: false
-        }
-      };
+      if (configV0) {
+        configFromFile.config.twitch = {
+          channel: configV0.twitchChannel,
+          enableLog: configV0.twitchLog,
+          bot: {
+            enabled: false
+          }
+        };
 
-      delete configV0.twitchLog;
-      delete configV0.twitchChannel;
+        delete configV0.twitchLog;
+        delete configV0.twitchChannel;
+      }
     }
 
     configFromFile.version = this.version;
