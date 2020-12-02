@@ -30,6 +30,7 @@ import {CustomFormControlModule} from "@gewd/components/custom-form-control";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeModule} from "../dynamic-iframe/dynamic-iframe.module";
 import {DynamicIframeEditComponent} from './dynamic-iframe-edit/dynamic-iframe-edit.component';
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {DynamicIframeEditComponent} from './dynamic-iframe-edit/dynamic-iframe-e
     CustomFormControlModule,
     DynamicIframeModule,
     FormsModule,
+    MatExpansionModule,
   ],
   providers: [DialogService],
 })
