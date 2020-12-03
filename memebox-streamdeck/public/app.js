@@ -66,21 +66,27 @@ let memeBoxSocket;
 // if disconnect, try again after X seconds
 // on key up , if its still on "interval" / get socket
 
-function createOrGetSocket(portNumber) {
+function createOrGetSocket(protocol, host, portNumber) {
   return new Promise((resolve, reject) => {
 
-  if (!memeBoxSocket || memeBoxSocket.readyState !== WebSocket.OPEN) {
-    memeBoxSocket = new WebSocket(`ws://localhost:${portNumber}`);
+    const newUrl = `${protocol}://${host}:${portNumber}`;
 
-    memeBoxSocket.onopen = function () {
-      console.info('Socket connected!!');
-      resolve(memeBoxSocket);
-    };
+    if (!memeBoxSocket
+      || memeBoxSocket.readyState !== WebSocket.OPEN
+      || memeBoxSocket.url !== newUrl) {
+      memeBoxSocket = new WebSocket(newUrl);
 
-    return;
-  }
+      memeBoxSocket.onopen = function () {
+        console.info('Socket connected!!', {
+          protocol, host, portNumber
+        });
+        resolve(memeBoxSocket);
+      };
 
-  resolve(memeBoxSocket);
+      return;
+    }
+
+    resolve(memeBoxSocket);
 
   });
 }
@@ -97,19 +103,6 @@ const action = {
 		);
 		this.settings[jsonObj.context] = Utils.getProp(jsonObj, "payload.settings", {});
 		this.doSomeThing(this.settings, "onDidReceiveSettings", "orange");
-
-
-    try {
-      console.info('did receive config', this.settings);
-
-      if (this.settings.port) {
-       // console.info('Creating a WS');
-       // memeBoxSocket = new WebSocket(`ws://localhost:${this.settings.port}`)
-      }
-    }
-    catch  {
-
-    }
 	},
 
 	/**
@@ -161,7 +154,7 @@ const action = {
     }
 
 
-    var currentConnection = await createOrGetSocket(settings.port);
+    var currentConnection = await createOrGetSocket(settings.protocol, settings.ip, settings.port);
 
     const message = `TRIGGER_CLIP=${JSON.stringify(triggerObj)}`;
 
