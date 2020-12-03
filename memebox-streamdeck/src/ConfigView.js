@@ -1,7 +1,7 @@
 /* global $SD */
 import React, {useEffect, useReducer, useState} from "react";
 
-import {createUsePluginSettings, createUseSDAction, SDSelectInput, SDTextInput} from "react-streamdeck";
+import {createUsePluginSettings, createUseSDAction, SDCheckbox, SDSelectInput, SDTextInput} from "react-streamdeck";
 // Slightly modified sdpi.css file. Adds 'data-' prefixes where needed.
 import "react-streamdeck/dist/css/sdpi.css";
 
@@ -30,7 +30,7 @@ function typeNumToString(typeNum){
   }
 }
 
-export default function App() {
+export default function ConfigView() {
   const getSettings = createGetSettings($SD);
   useEffect(getSettings, []);
 
@@ -56,6 +56,7 @@ export default function App() {
   })(
     {
       clipId: "",
+      advanced: false,
       port: 4444,
       protocol: 'ws',
       ip: 'localhost'
@@ -112,45 +113,6 @@ export default function App() {
   return (
     <div>
       <SDSelectInput
-        label="Protocol"
-        selectedOption={settings.protocol}
-        options={protocolList}
-        onChange={event => {
-          const newState = {
-            ...settings,
-            clipId: undefined,  // reset current clip selection
-            protocol: event
-          };
-          setSettings(newState);
-        }}
-      />
-      <SDTextInput
-        label="Host / IP"
-        value={settings.ip}
-        onChange={event => {
-          const newState = {
-            ...settings,
-            clipId: undefined,  // reset current clip selection
-            ip: event.target.value
-          };
-          console.info('HOST CHANGED', { event });
-          setSettings(newState);
-        }}
-      />
-      <SDTextInput
-        label="Port"
-        value={settings.port}
-        onChange={event => {
-          const newState = {
-            ...settings,
-            clipId: undefined,  // reset current clip selection
-            port: event.target.value
-          };
-          setSettings(newState);
-        }}
-      />
-
-      <SDSelectInput
         label="Clip"
         selectedOption={settings.clipId}
         options={clipList}
@@ -163,6 +125,62 @@ export default function App() {
         }}
       />
 
+      <SDCheckbox
+        label="Advanced"
+        checkboxLabel="Enable Advanced Connection"
+        value={settings.advanced}
+        onChange={(event, value) => {
+          const newState = {
+            ...settings,
+            advanced: value
+          };
+          setSettings(newState);
+        }}
+      />
+
+      {settings.advanced &&
+        <SDSelectInput
+          label="Protocol"
+          selectedOption={settings.protocol}
+          options={protocolList}
+          onChange={event => {
+            const newState = {
+              ...settings,
+              clipId: undefined,  // reset current clip selection
+              protocol: event
+            };
+            setSettings(newState);
+            console.info('new protocol', settings);
+          }}
+        />}
+      {settings.advanced &&
+        <SDTextInput
+          label="Host / IP"
+          value={settings.ip}
+          onChange={event => {
+            const newState = {
+              ...settings,
+              clipId: undefined,  // reset current clip selection
+              ip: event.target.value
+            };
+            console.info('HOST CHANGED', {event});
+            setSettings(newState);
+          }}
+        />}
+      {settings.advanced &&
+        <SDTextInput
+          label="Port"
+          value={settings.port}
+          onChange={event => {
+            const newState = {
+              ...settings,
+              clipId: undefined,  // reset current clip selection
+              port: event.target.value
+            };
+            setSettings(newState);
+          }}
+        />
+      }
     </div>
   );
 }
