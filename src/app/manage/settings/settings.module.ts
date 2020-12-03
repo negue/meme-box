@@ -14,6 +14,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-setting/twitch-setting.module";
+import {VersionCardModule} from "../../shared/components/config-cards/version-card/version-card.module";
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
     MatSelectModule,
     CardOverviewModule,
     TwitchSettingModule,
+    VersionCardModule,
   ],
 })
 export class SettingsModule {

@@ -39,6 +39,30 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.16.2
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Get current time
+        uses: gerred/actions/current-time@master
+        id: current-time
+      - name: Create version_info.json
+        uses: schdck/create-env-json@v1
+        id: create-env
+        with:
+          file-name: './src/version_info.json'
+          VERSION_TAG: ${{ github.event.inputs.tag-name }}
+          COMMIT: ${{ steps.vars.outputs.sha_short }}
+          BUILD_TIME: ${{ steps.current-time.outputs.time }}
+
+      - name: Uploading Version Info Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: version_info
+          path: './src/version_info.json'
+
       - run: npm install
       - run: npm run build:prepare
       - run: npm run build:all
