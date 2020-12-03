@@ -29,7 +29,7 @@
     <app-twitch-setting></app-twitch-setting>
   </app-overview-item>
 
-  <app-overview-item *ngIf="(config$ | async)?.twitch?.bot">
+  <app-overview-item *ngIf="(config$ | async)?.twitch?.bot?.enabled">
     <app-twitchbot-config></app-twitchbot-config>
   </app-overview-item>
 

@@ -1,8 +1,8 @@
 import * as tmi from 'tmi.js';
-import {EmoteObj} from 'tmi.js';
-import {Subscription} from 'rxjs';
-import {PersistenceInstance} from './persistence';
-import {startWith} from 'rxjs/operators';
+import { EmoteObj, Options } from 'tmi.js';
+import { Subscription } from 'rxjs';
+import { PersistenceInstance } from './persistence';
+import { startWith } from 'rxjs/operators';
 import {
   Dictionary,
   Twitch,
@@ -10,9 +10,9 @@ import {
   TwitchEventTypes,
   TwitchTriggerCommand
 } from '../projects/contracts/src/lib/types';
-import {triggerMediaClipById} from './websocket-server';
-import {Logger} from 'winston';
-import {newLogger} from './logger.utils';
+import { triggerMediaClipById } from './websocket-server';
+import { Logger } from 'winston';
+import { newLogger } from './logger.utils';
 
 declare module 'tmi.js' {
   export interface Badges {
@@ -37,10 +37,10 @@ export class TwitchHandler {
       channels: [twitchConfig.channel]
     };
 
-    if (config.twitch.bot && config.twitch.botName && config.twitch.botToken) {
+    if (twitchConfig.bot && twitchConfig.bot.enabled && twitchConfig.bot.auth && twitchConfig.bot.auth.name && twitchConfig.bot.auth.token) {
       tmiConfig.identity = {
-        username: config.twitch.botName,
-        password: config.twitch.botToken
+        username: twitchConfig.bot.auth.name,
+        password: twitchConfig.bot.auth.token
       };
     }
     this.tmiClient = tmi.Client(tmiConfig);
@@ -71,7 +71,7 @@ export class TwitchHandler {
     this.tmiClient.on('message', (channel, tags, message, self) => {
       if (self) return;
 
-      if (this.config.twitch.bot && this.config.twitch.botName && message === '!commands') {
+      if (this.twitchConfig.bot.enabled && this.twitchConfig.bot.auth && message === '!commands') {
         const foundLevels = this.getLevelOfTags(tags);
         const commands = this.twitchSettings.filter((event) => {
           const trigger: TwitchTriggerCommand = { message, command: event, tags };
@@ -89,9 +89,9 @@ export class TwitchHandler {
           );
         }).map(e => e.contains);
 
-        const botResponse = this.config.twitch.botResponse
+        const botResponse = this.twitchConfig.bot.response
           .replace('{{commands}}', commands.join(' | '))
-          .replace("{{user}}", `${tags.username}`);
+          .replace('{{user}}', `${tags.username}`);
         this.tmiClient.say(channel, botResponse)
           .catch(console.error);
         return false;

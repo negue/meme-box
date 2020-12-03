@@ -1,12 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
-import {Subject} from "rxjs";
-import {filter, take} from "rxjs/operators";
-import {AppQueries} from "../../../../state/app.queries";
-import {AppService} from "../../../../state/app.service";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {Config} from "@memebox/contracts";
-import { TwitchBotConfig } from '../../../../../../projects/contracts/src/lib/types';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
+import { AppQueries } from '../../../../state/app.queries';
+import { AppService } from '../../../../state/app.service';
+import { TwitchBotConfig, TwitchConfig } from '@memebox/contracts';
 
 @Component({
   selector: 'app-twitchbot-config',
@@ -16,8 +14,8 @@ import { TwitchBotConfig } from '../../../../../../projects/contracts/src/lib/ty
 export class TwitchbotConfigComponent implements OnInit {
 
   private botIntegrationEnabled = false;
-  public commandsFlagMessage = '{{commands}}'
-  public userFlagMessage = '{{user}}'
+  public commandsFlagMessage = '{{commands}}';
+  public userFlagMessage = '{{user}}';
 
   public form = new FormBuilder().group({
     bot: false,
@@ -31,7 +29,8 @@ export class TwitchbotConfigComponent implements OnInit {
   private _destroy$ = new Subject();
 
   constructor(private appQuery: AppQueries,
-              private appService: AppService) { }
+              private appService: AppService) {
+  }
 
   ngOnInit(): void {
     this.form.reset({
@@ -42,14 +41,14 @@ export class TwitchbotConfigComponent implements OnInit {
 
     this.appQuery.config$.pipe(
       filter(config => !!config.twitch),
-      take(1),
+      take(1)
     ).subscribe(value => {
       this.form.reset({
-        botName: value.twitch ? value.twitch.botName : '',
-        botToken: value.twitch ? value.twitch.botToken : '',
-        botResponse: value.twitch ? value.twitch.botResponse : '',
+        botName: value.twitch && value.twitch.bot && value.twitch.bot.auth ? value.twitch.bot.auth.name : '',
+        botToken: value.twitch && value.twitch.bot && value.twitch.bot.auth ? value.twitch.bot.auth.token : '',
+        botResponse: value.twitch && value.twitch.bot ? value.twitch.bot.response : ''
       });
-      this.botIntegrationEnabled = value.twitch.bot
+      this.botIntegrationEnabled = value.twitch.bot.enabled;
     });
   }
 
@@ -58,19 +57,24 @@ export class TwitchbotConfigComponent implements OnInit {
     this._destroy$.complete();
   }
 
-  async saveBotData(): Promise<void> {
+  saveBotData(): Promise<void> {
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
       return;
     }
 
-    const twitchBot : TwitchBotConfig = {
-      bot: this.botIntegrationEnabled,
-      botName: this.form.value.botName,
-      botToken: this.form.value.botToken,
-      botResponse: this.form.value.botResponse
-    }
+    const twitchBot: TwitchConfig = {
+      channel: '',
+      bot:{
+        response: this.form.value.botResponse,
+        enabled: this.botIntegrationEnabled,
+        auth: {
+          name: this.form.value.botName,
+          token: this.form.value.botToken
+        }
+      }
+    };
 
     this.appService.updateTwitchBotData(twitchBot);
   }

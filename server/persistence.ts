@@ -9,7 +9,7 @@ import {
   SettingsState,
   Tag,
   TimedClip,
-  Twitch, TwitchBotConfig,
+  Twitch, TwitchBotConfig, TwitchConfig,
   VisibilityEnum
 } from '../projects/contracts/src/lib/types';
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
@@ -98,7 +98,8 @@ export class Persistence {
           channel: configV0.twitchChannel,
           enableLog: configV0.twitchLog,
           bot: {
-            enabled: false
+            enabled: false,
+            response: ''
           }
         };
 
@@ -343,25 +344,27 @@ export class Persistence {
     this.saveData();
   }
 
-  public updateTwitchBotIntegration (enabled: boolean) {
+  public updateTwitchBotIntegration (twitchBotConfig: TwitchBotConfig) {
     this.data.config = this.data.config || {};
 
-    if(!this.data.config.twitch) {
-      this.data.config.twitch = {
-        bot: false,
-        botName: '',
-        botToken: '',
-        botResponse: ''
+    if(!this.data.config.twitch.bot) {
+      this.data.config.twitch.bot = {
+        enabled: twitchBotConfig.enabled,
+        response: twitchBotConfig.response,
       };
     }
 
-    this.data.config.twitch.bot = enabled;
+    this.data.config.twitch.bot.enabled = twitchBotConfig.enabled;
     this.saveData();
   }
 
-  public updateTwitchBot (twitchBotConfig: TwitchBotConfig) {
+  public updateTwitchBot (twitchConfig: TwitchConfig) {
+    console.log(twitchConfig);
     this.data.config = this.data.config || {};
-    this.data.config.twitch = twitchBotConfig;
+    twitchConfig.channel = this.data.config.twitch.channel || "";
+    twitchConfig.bot.enabled = this.data.config.twitch.bot.enabled || false;
+    //twitchConfig.bot.response = this.data.config.twitch.bot.response || "";
+    this.data.config.twitch = twitchConfig;
     this.saveData();
   }
 
@@ -416,7 +419,7 @@ export class Persistence {
 
 // TODO change to promise / async
 // todo extract ?
-function saveFile(filePath: string, data: any, stringify: boolean = false) {
+function saveFile(filePath: string, data: any, stringify = false) {
   const getDirOfPath = path.dirname(filePath);
 
   createDirIfNotExists(getDirOfPath);

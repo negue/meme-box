@@ -209,13 +209,14 @@ app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
 
 app.put(CONFIG_TWITCH_BOT_INTEGRATION_ENDPOINT, (req, res) => {
   // update config
-  const {bot} = req.body.twitch;
+  const {bot} = req.body;
   res.send(PersistenceInstance.updateTwitchBotIntegration(bot));
 });
 
 app.put(CONFIG_TWITCH_BOT_ENDPOINT, (req, res) => {
   // update config
-  res.send(PersistenceInstance.updateTwitchBot(req.body.twitch));
+  const {twitch} = req.body;
+  res.send(PersistenceInstance.updateTwitchBot(twitch));
 });
 
 app.get(CONFIG_OPEN_ENDPOINT, async (req, res) => {

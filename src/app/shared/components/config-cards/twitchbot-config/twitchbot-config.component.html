@@ -17,7 +17,7 @@
 
         <mat-form-field>
           <mat-label>Bot name</mat-label>
-          <input autocomplete="off" [readonly]="!config?.twitch?.bot"
+          <input autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
                  formControlName="botName"
                  class="twitchSetting__input"
                  matInput required>
@@ -29,7 +29,7 @@
 
         <mat-form-field>
           <mat-label>Bot token</mat-label>
-          <input autocomplete="off" [readonly]="!config?.twitch?.bot"
+          <input autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
                  formControlName="botToken"
                  class="twitchSetting__input" type="password"
                  matInput required>
@@ -42,7 +42,7 @@
       <mat-tab label="Bot settings">
         <mat-form-field>
           <mat-label>Bot response</mat-label>
-          <textarea autocomplete="off" [readonly]="!config?.twitch?.bot"
+          <textarea autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
                     formControlName="botResponse"
                     class="twitchSetting__textarea"
                     matInput></textarea>
@@ -65,7 +65,7 @@
     <button (click)="saveBotData()" matSuffix
             color="primary"
             class="twitchSetting__button"
-            [disabled]="!config?.twitch?.bot"
+            [disabled]="!config?.twitch?.bot.enabled"
             mat-raised-button>Save
     </button>
   </form>

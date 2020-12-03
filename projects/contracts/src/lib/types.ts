@@ -169,12 +169,15 @@ export interface Config {
 export interface TwitchConfig {
   channel: string;
   enableLog?: boolean;
-  bot?: {
-    enabled: boolean;
-    auth?: {
-      name: string;
-      token: string;
-    }
+  bot?: TwitchBotConfig
+}
+
+export interface TwitchBotConfig {
+  enabled: boolean;
+  response: string,
+  auth?: {
+    name: string;
+    token: string;
   }
 }
 

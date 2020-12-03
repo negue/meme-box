@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {AppStore} from "./app.store";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { AppStore } from './app.store';
+import { HttpClient } from '@angular/common/http';
 import {
-  Clip,
+  Clip, Config,
   ENDPOINTS,
   FileInfo,
   Screen,
@@ -10,6 +10,7 @@ import {
   Tag,
   TimedClip,
   Twitch,
+  TwitchBotConfig,
   TwitchConfig,
   VisibilityEnum
 } from '@memebox/contracts';
@@ -62,7 +63,7 @@ export class AppService {
         }
 
       }
-    )
+    );
   }
 
   public listFiles() {
@@ -75,7 +76,7 @@ export class AppService {
           state.currentMediaFiles = value;
         });
       }
-    )
+    );
   }
 
   public async addOrUpdateClip(clip: Clip) {
@@ -156,7 +157,7 @@ export class AppService {
     this.appStore.update(state => {
       delete state.tags[tagId];
 
-      for(const clip of Object.values(state.clips)) {
+      for (const clip of Object.values(state.clips)) {
         if (clip.tags && clip.tags.includes(tagId)) {
           this.deleteInArray(clip.tags, tagId);
         }
@@ -233,7 +234,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[screenId].clips[clipId] = screenClip as ScreenClip;
+      state.screen[screenId].clips[clipId] = screenClip;
     });
 
 
@@ -370,9 +371,9 @@ export class AppService {
     this.snackbar.normal('Twitch Channel updated!');
   }
 
-  public async updateTwitchBotData(twitchBot: TwitchBotConfig) {
+  public async updateTwitchBotData(twitchBotConfig: TwitchConfig) {
     const newConfig: Partial<Config> = {
-      twitch: twitchBot
+      twitch: twitchBotConfig
     };
 
     // update path & await
@@ -380,9 +381,8 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitch = twitchBot;
+      state.config.twitch = twitchBotConfig;
     });
-
 
     this.snackbar.normal('Twitch Bot settings updated!');
   }
@@ -405,12 +405,10 @@ export class AppService {
   }
 
   public async updateTwitchBotIntegration(enabled: boolean) {
-    const newConfig: Partial<Config> = {
-      twitch: {
-        bot: enabled,
-        botName: '',
-        botToken: '',
-        botResponse: ''
+    const newConfig: Partial<TwitchConfig> = {
+      bot: {
+        response: '',
+        enabled: enabled
       }
     };
 
@@ -419,17 +417,15 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      if (!state.config.twitch) {
-        state.config.twitch = {
-          bot: enabled,
-          botName: '',
-          botToken: '',
-          botResponse: ''
+      if (!state.config.twitch.bot) {
+        state.config.twitch.bot = {
+          response: '',
+          enabled: enabled
         };
       }
-      state.config.twitch.bot = enabled;
-    });
 
+      state.config.twitch.bot.enabled = enabled;
+    });
 
     this.snackbar.normal(`Twitch bot ${enabled ? 'enabled' : 'disabled'}!`);
   }
@@ -447,7 +443,7 @@ export class AppService {
   fillDummyData() {
     this.appStore.update(state => {
       setDummyData(state);
-    })
+    });
   }
 
   async deleteAll() {
