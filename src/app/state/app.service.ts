@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
-import { AppStore } from './app.store';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {AppStore} from "./app.store";
+import {HttpClient} from "@angular/common/http";
 import {
   Clip,
-  Config,
   ENDPOINTS,
   FileInfo,
   Screen,
@@ -11,7 +10,7 @@ import {
   Tag,
   TimedClip,
   Twitch,
-  TwitchBotConfig,
+  TwitchConfig,
   VisibilityEnum
 } from '@memebox/contracts';
 import {
@@ -48,7 +47,7 @@ export class AppService {
     this.http.get(API_BASE).pipe(
       // delay(5000)
     ).subscribe(
-      (value) => {
+      value => {
         console.info('LOADED STATE', value);
         this.appStore.update(state => value);
 
@@ -63,7 +62,7 @@ export class AppService {
         }
 
       }
-    );
+    )
   }
 
   public listFiles() {
@@ -76,7 +75,7 @@ export class AppService {
           state.currentMediaFiles = value;
         });
       }
-    );
+    )
   }
 
   public async addOrUpdateClip(clip: Clip) {
@@ -157,7 +156,7 @@ export class AppService {
     this.appStore.update(state => {
       delete state.tags[tagId];
 
-      for (const clip of Object.values(state.clips)) {
+      for(const clip of Object.values(state.clips)) {
         if (clip.tags && clip.tags.includes(tagId)) {
           this.deleteInArray(clip.tags, tagId);
         }
@@ -234,7 +233,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[screenId].clips[clipId] = screenClip;
+      state.screen[screenId].clips[clipId] = screenClip as ScreenClip;
     });
 
 
@@ -355,8 +354,8 @@ export class AppService {
   }
 
   public async updateTwitchChannel(twitchChannel: string) {
-    const newConfig: Partial<Config> = {
-      twitchChannel: twitchChannel
+    const newConfig: Partial<TwitchConfig> = {
+      channel: twitchChannel
     };
 
     // update path & await
@@ -364,7 +363,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitchChannel = twitchChannel;
+      state.config.twitch.channel = twitchChannel;
     });
 
 
@@ -389,8 +388,8 @@ export class AppService {
   }
 
   public async updateTwitchLogs(enabled: boolean) {
-    const newConfig: Partial<Config> = {
-      twitchLog: enabled
+    const newConfig: Partial<TwitchConfig> = {
+      enableLog: enabled
     };
 
     // update path & await
@@ -398,11 +397,11 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitchLog = enabled;
+      state.config.twitch.enableLog = enabled;
     });
 
 
-    this.snackbar.normal(`Twitch ${enabled ? 'enabled' : 'disabled'}!`);
+    this.snackbar.normal(`Twitch Logging ${enabled ? 'enabled' : 'disabled'}!`);
   }
 
   public async updateTwitchBotIntegration(enabled: boolean) {
@@ -448,7 +447,7 @@ export class AppService {
   fillDummyData() {
     this.appStore.update(state => {
       setDummyData(state);
-    });
+    })
   }
 
   async deleteAll() {

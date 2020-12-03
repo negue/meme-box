@@ -1,0 +1,57 @@
+:host {
+  ::ng-deep {
+    .mat-expansion-panel-header-description {
+      flex-grow: 0;
+    }
+  }
+}
+
+
+.padding {
+  margin: 2rem;
+  width: calc(100% - 4rem);
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.external-file-panel ::ng-deep .mat-expansion-panel-body {
+  padding-right: 0.5rem;
+}
+
+.external-file-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+
+  .file-type-select {
+    width: 100px;
+  }
+
+  .file-url {
+    flex: 1;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: row;
+  height: 500px;
+}
+
+mat-accordion {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.iframe-preview {
+  flex: 1;
+  padding-left: 1rem;
+}

@@ -5,6 +5,7 @@ export enum MediaType {
   Audio = 1,
   Video = 2,
   IFrame = 3,
+  HTML = 4,
 
 
   Meta = 100
@@ -42,11 +43,17 @@ export const MEDIA_TYPE_INFORMATION: Dictionary<MediaTypeInformations> = {
     icon: 'public',
     sortOrder: 4,
   },
+  [MediaType.HTML]: {
+    label: 'HTML', // IFrame , iframe
+    className: 'html',
+    icon: 'code',
+    sortOrder: 5,
+  },
   [MediaType.Meta]: {
     icon: 'art_track',
     label: 'Meta',
     className: '', // not visible in target-screen-component
-    sortOrder: 5
+    sortOrder: 100
   }
 }
 

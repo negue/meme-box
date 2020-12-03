@@ -43,12 +43,12 @@
       <span matSuffix>ms</span>
     </mat-form-field>
 
-    <div class="form-field-row" [class.hidden]="form.value.type === MediaType.Meta">
+    <div class="form-field-row" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
       <mat-form-field>
         <input autocomplete="off"
                formControlName="path"
                matInput
-               [required]="form.value.type !== MediaType.Meta"
+               [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
                [placeholder]="form.value.type !== MediaType.IFrame ? 'File' : 'URL'"
                type="text"
         />
@@ -71,11 +71,11 @@
          *ngIf="form.value.type !== MediaType.Meta">
       <mat-form-field>
         <input [placeholder]="
-                 form.value.type === 0
+                 MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)
                    ? 'Visible screen time (ms)'
                    : 'Play time on screen (ms)'
                "
-               [required]="form.value.type === MediaType.Picture"
+               [required]="MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)"
                autocomplete="off"
                formControlName="playLength"
                matInput
@@ -186,7 +186,8 @@
     </mat-form-field>
   </form>
 
-  <div class="column" [ngSwitch]="form.value.type">
+  <div class="column" [ngSwitch]="form.value.type"
+       [class.custom-html-preview]="form.value.type === MediaType.HTML">
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
       <h3>Assigned Clips by Tags</h3>
@@ -194,6 +195,14 @@
                              [clip]="assignedClip">
 
       </app-compact-clip-card>
+    </div>
+
+    <div *ngSwitchCase="MediaType.HTML" class="custom-html-holder">
+      <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
+      <app-dynamic-iframe *ngIf="currentHtml$ | async as currentHtml"
+                          [content]="currentHtml">
+
+      </app-dynamic-iframe>
     </div>
 
     <!-- All others => AppClipType -->

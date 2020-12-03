@@ -14,7 +14,7 @@ import { Config } from '@memebox/contracts';
 })
 export class TwitchSettingComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
-    name: '',
+    name: ''
   });
 
   public editMode = false;
@@ -34,11 +34,11 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
     });
 
     this.appQuery.config$.pipe(
-      filter(config => !!config.twitchChannel),
-      take(1)
+      filter(config => !!config.twitch.channel),
+      take(1),
     ).subscribe(value => {
       this.form.reset({
-        name: value.twitchChannel
+        name: value.twitch.channel
       });
     });
   }

@@ -33,11 +33,11 @@
 
     <ng-container *ngIf="config$ | async as config">
       <br />
-      <mat-checkbox [checked]="config?.twitchLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
+      <mat-checkbox [checked]="config?.twitch?.enableLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
       </mat-checkbox>
       <br />
       <br />
-      <mat-checkbox [checked]="config?.twitch?.bot" (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
+      <mat-checkbox [checked]="config?.twitch?.bot?.enabled" (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
       </mat-checkbox>
       <br />
     </ng-container>

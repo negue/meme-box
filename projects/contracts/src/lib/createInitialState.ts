@@ -2,12 +2,10 @@ import {SettingsState} from "./types";
 
 export function createInitialState (): SettingsState {
   return {
+    version: 0,
     config: {
       twitch: {
-        bot: false,
-        botName: '',
-        botToken: '',
-        botResponse: 'Hey {{user}} the commands are: {{commands}}'
+        channel: '',
       }
     },
     twitchEvents: {},

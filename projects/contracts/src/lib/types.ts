@@ -1,5 +1,5 @@
-import { ChatUserstate } from 'tmi.js';
-import { MediaType } from './media.types';
+import {ChatUserstate} from "tmi.js";
+import {MediaType} from "./media.types";
 
 export interface HasId {
   id: string;
@@ -18,7 +18,7 @@ export enum MetaTriggerTypes {
 // (Media) Clip
 export interface Clip extends HasId {
   name: string;
-  previewUrl?: string;
+  previewUrl?: string;   // TODO generate dataurl as preview
   volumeSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip
@@ -26,12 +26,20 @@ export interface Clip extends HasId {
   type: MediaType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"
-  // the Meta Type will use that to trigger all clips of that tagId
+                    // the Meta Type will use that to trigger all clips of that tagId
 
   metaType?: MetaTriggerTypes;
   metaDelay?: number; // in ms
 
   showOnMobile?: boolean;
+
+  extended?: Dictionary<string>; // only used for HTML - Type
+}
+
+export const enum EXTENDED_KEYS {
+  HTML = 'HTML',
+  CSS = 'CSS',
+  JS = 'JS'
 }
 
 export interface Screen extends HasId {
@@ -138,6 +146,7 @@ export interface Tag extends HasId {
  * Settings.json - State
  */
 export interface SettingsState {
+  version: number;
   clips: Dictionary<Clip>;
   twitchEvents: Dictionary<Twitch>;
   timers: Dictionary<TimedClip>;
@@ -154,16 +163,25 @@ export interface AppState extends SettingsState {
 
 export interface Config {
   mediaFolder: string;
-  twitchChannel: string;
-  twitchLog?: boolean;
-  twitch?: TwitchBotConfig
+  twitch: TwitchConfig;
 }
 
-export interface TwitchBotConfig {
-  bot: boolean;
-  botName: string;
-  botToken: string;
-  botResponse: string;
+export interface TwitchConfig {
+  channel: string;
+  enableLog?: boolean;
+  bot?: {
+    enabled: boolean;
+    auth?: {
+      name: string;
+      token: string;
+    }
+  }
+}
+
+export interface ConfigV0 {
+  mediaFolder: string;
+  twitchChannel: string;
+  twitchLog?: boolean;
 }
 
 export interface NetworkInfo {

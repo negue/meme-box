@@ -21,6 +21,8 @@ import {
 } from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 import {take} from "rxjs/internal/operators";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
+import {DynamicIframeContent} from "../../../../../projects/utils/src/lib/dynamicIframe";
+import {DynamicIframeEditComponent} from "./dynamic-iframe-edit/dynamic-iframe-edit.component";
 
 @Injectable()
 export class DialogService {
@@ -78,6 +80,17 @@ export class DialogService {
         minHeight: '50vh'
       }
     )
+  }
+
+  showDynamicIframeEdit(info: DynamicIframeContent) {
+    return this._dialog.open(
+      DynamicIframeEditComponent, {
+        data: info,
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw',
+        minHeight: '50vh'
+      }
+    );
   }
 
   showTimedEditDialog(info: Partial<TimedClip>) {

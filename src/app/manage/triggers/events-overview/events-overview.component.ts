@@ -15,14 +15,14 @@ import orderBy from 'lodash/orderBy';
 })
 export class EventsOverviewComponent implements OnInit {
 
-  twitchEventsList$: Observable<Twitch[]> = this.queries.twitchEvent$.pipe(
+  twitchEventsList$: Observable<Twitch[]> = this.queries.twitchEvents$.pipe(
     map(allEvents => orderBy(allEvents, e => e.name.toLowerCase()))
   );
   timedEventsList$: Observable<TimedClip[]> = this.queries.timedEvents$.pipe(
     map(allTimers => orderBy(allTimers, 'everyXms'))
 );
   twitchChannelExist$ = this.queries.config$.pipe(
-    map(cfg => !!cfg.twitchChannel)
+    map(cfg => !!cfg.twitch.channel)
   );
 
   public trackById: TrackByFunction<HasId> = (index, item) => {
@@ -38,10 +38,10 @@ export class EventsOverviewComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  newTwitchEventConfigReceived() {
+  createNewTwitchCommand() {
     this.dialogService.showTwitchEditDialog(null);
   }
-  newTimedEventConfigReceived() {
+  createNewTimer() {
     this.dialogService.showTimedEditDialog(null);
   }
 

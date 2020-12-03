@@ -49,20 +49,20 @@ PersistenceInstance.dataUpdated$()
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
 
     const config = PersistenceInstance.getConfig();
-    const jsonOfConfig = JSON.stringify(config);
+    const jsonOfConfig = JSON.stringify(config.twitch);
 
     if (currentConfigJsonString !== jsonOfConfig
-      && !!config.twitchChannel
+      && !!config.twitch?.channel
     ) {
       currentConfigJsonString = jsonOfConfig;
 
-      LOGGER.info(`Creating the TwitchHandler for: ${config.twitchChannel}`);
+      LOGGER.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
 
       if (twitchHandler != null) {
         twitchHandler.disconnect();
       }
 
-      twitchHandler = new TwitchHandler(config);
+      twitchHandler = new TwitchHandler(config.twitch);
     }
 
     const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());

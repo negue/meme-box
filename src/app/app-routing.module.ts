@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {TargetScreenComponent} from "./target-screen/target-screen.component";
 
-
 // root
 // | main page (with sidebar)
 //   | media, obs , twitch
@@ -16,6 +15,10 @@ const rootRoutes: Routes = [
   {
     path: 'screen/:guid',
     component: TargetScreenComponent
+  },
+  {
+    path: 'test',
+    loadChildren: () => import('./testpage/testpage.module').then(module => module.TestpageModule)
   },
   {
     path: 'mobile',

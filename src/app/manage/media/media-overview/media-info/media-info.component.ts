@@ -23,7 +23,7 @@ export class MediaInfoComponent implements OnInit {
     map(tagList => tagList.filter(tag => this.info.tags && this.info.tags.includes(tag.id)))
   );
 
-  public twitchEvents$: Observable<Twitch[]> = this.appQueries.twitchEvent$.pipe(
+  public twitchEvents$: Observable<Twitch[]> = this.appQueries.twitchEvents$.pipe(
     map(twitchEvents => twitchEvents.filter(twitchEvent => twitchEvent.clipId == this.info.id))
   );
 

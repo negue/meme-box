@@ -27,7 +27,8 @@ export class MediaOverviewComponent implements OnInit {
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.query.clipList$,
-    this.query.tagMap$
+    this.query.tagMap$,
+    true
   );
 
   public showGettingStarted$ = combineLatest([

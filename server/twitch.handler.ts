@@ -1,18 +1,18 @@
 import * as tmi from 'tmi.js';
-import { EmoteObj, Options } from 'tmi.js';
-import { Subscription } from 'rxjs';
-import { PersistenceInstance } from './persistence';
-import { startWith } from 'rxjs/operators';
+import {EmoteObj} from 'tmi.js';
+import {Subscription} from 'rxjs';
+import {PersistenceInstance} from './persistence';
+import {startWith} from 'rxjs/operators';
 import {
-  Config,
   Dictionary,
   Twitch,
+  TwitchConfig,
   TwitchEventTypes,
   TwitchTriggerCommand
 } from '../projects/contracts/src/lib/types';
-import { triggerMediaClipById } from './websocket-server';
-import { Logger } from 'winston';
-import { newLogger } from './logger.utils';
+import {triggerMediaClipById} from './websocket-server';
+import {Logger} from 'winston';
+import {newLogger} from './logger.utils';
 
 declare module 'tmi.js' {
   export interface Badges {
@@ -26,16 +26,15 @@ export class TwitchHandler {
   private twitchSettings: Twitch[] = [];
   private logger: Logger;
   private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
-  private jsonOfConfig;
 
-  constructor(private config: Partial<Config>) {
+  constructor(private twitchConfig: TwitchConfig) {
     const tmiConfig: Options = {
       //options: {debug: true},
       connection: {
         secure: true,
         reconnect: true
       },
-      channels: [config.twitchChannel]
+      channels: [twitchConfig.channel]
     };
 
     if (config.twitch.bot && config.twitch.botName && config.twitch.botToken) {
@@ -47,12 +46,9 @@ export class TwitchHandler {
     this.tmiClient = tmi.Client(tmiConfig);
 
     this.connectAndListen();
-    if (this.config.twitchLog) {
+    if (twitchConfig.enableLog) {
       this.createLogger();
     }
-
-    const allConfig = PersistenceInstance.getConfig();
-    this.jsonOfConfig = JSON.stringify(allConfig);
   }
 
   public disconnect() {
@@ -322,6 +318,14 @@ export class TwitchHandler {
         allowedByCooldown,
         allowedToTrigger
       });
+
+      if (allowedToTrigger) {
+        this.cooldownDictionary[trigger.command.id] = Date.now();
+
+        triggerMediaClipById({
+          id: trigger.command.clipId
+        });
+      }
     }
 
     return allowedToTrigger;
@@ -332,7 +336,7 @@ export class TwitchHandler {
   }
 
   private log(data: any) {
-    if (this.config.twitchLog) {
+    if (this.twitchConfig.enableLog) {
       this.logger.info(data);
     }
   }
