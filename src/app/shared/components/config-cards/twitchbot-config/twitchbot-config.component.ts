@@ -44,9 +44,9 @@ export class TwitchbotConfigComponent implements OnInit {
       take(1)
     ).subscribe(value => {
       this.form.reset({
-        botName: value.twitch && value.twitch.bot && value.twitch.bot.auth ? value.twitch.bot.auth.name : '',
-        botToken: value.twitch && value.twitch.bot && value.twitch.bot.auth ? value.twitch.bot.auth.token : '',
-        botResponse: value.twitch && value.twitch.bot ? value.twitch.bot.response : ''
+        botName: value.twitch?.bot?.auth?.name ?? '',
+        botToken: value.twitch?.bot?.auth?.token ?? '',
+        botResponse: value.twitch?.bot?.auth?.response ?? ''
       });
       this.botIntegrationEnabled = value.twitch.bot.enabled;
     });

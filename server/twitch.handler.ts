@@ -37,12 +37,13 @@ export class TwitchHandler {
       channels: [twitchConfig.channel]
     };
 
-    if (twitchConfig.bot && twitchConfig.bot.enabled && twitchConfig.bot.auth && twitchConfig.bot.auth.name && twitchConfig.bot.auth.token) {
+    if (twitchConfig.bot?.enabled && twitchConfig.bot?.auth?.name && twitchConfig.bot?.auth?.token){
       tmiConfig.identity = {
         username: twitchConfig.bot.auth.name,
         password: twitchConfig.bot.auth.token
       };
     }
+
     this.tmiClient = tmi.Client(tmiConfig);
 
     this.connectAndListen();
