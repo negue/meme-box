@@ -1,0 +1,46 @@
+.twitchSetting__input[readonly] {
+  opacity: 0.3;
+}
+
+.twitchSetting__button {
+  margin-top: 2rem;
+}
+
+.mat-form-field {
+  display: block;
+}
+
+.title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.title-name {
+  margin-bottom: 0;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  margin-top: 1.5rem;
+}
+
+:host {
+  display: block;
+  min-height: 465px;
+}
+
+
+.twitchSetting__textarea {
+  min-height: 7rem;
+}
+
+:host ::ng-deep mat-tab-body {
+  min-height: 260px;
+}
+
+.twitchSetting__token-button {
+  margin-bottom: 1rem;
+}

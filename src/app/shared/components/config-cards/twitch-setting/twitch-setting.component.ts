@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
-import {Subject} from "rxjs";
-import {filter, take} from "rxjs/operators";
-import {AppQueries} from "../../../../state/app.queries";
-import {AppService} from "../../../../state/app.service";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {Config} from "@memebox/contracts";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
+import { AppQueries } from '../../../../state/app.queries';
+import { AppService } from '../../../../state/app.service';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Config } from '@memebox/contracts';
 
 @Component({
   selector: 'app-twitch-setting',
@@ -41,8 +41,6 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
         name: value.twitch.channel
       });
     });
-
-
   }
 
   ngOnDestroy(): void {
@@ -71,5 +69,9 @@ export class TwitchSettingComponent implements OnInit, OnDestroy {
 
   onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>) {
     this.appService.updateTwitchLogs($event.checked);
+  }
+
+  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>){
+    this.appService.updateTwitchBotIntegration($event.checked);
   }
 }

@@ -1,0 +1,72 @@
+<div class="title-row">
+  <h2 class="mat-h2 title-name">Twitch Bot Config</h2>
+
+  <mat-icon svgIcon="twitch"></mat-icon>
+</div>
+
+<div>
+  <form [formGroup]="form" *ngIf="config$ | async as config">
+    <mat-tab-group>
+      <mat-tab label="Authentication">
+
+        <p>To obtain the bot token, login into twitch with your bot account, click on the "Get Twitch Token" button and
+          follow the steps in the window that opens.<br /></p>
+        <p><br /><a mat-button mat-raised-button href="https://twitchapps.com/tmi/" target="_blank"
+                    class="twitchSetting__token-button">
+          <mat-icon svgIcon="launch"></mat-icon> &nbsp;Get Twitch Token</a></p>
+
+        <mat-form-field>
+          <mat-label>Bot name</mat-label>
+          <input autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
+                 formControlName="botName"
+                 class="twitchSetting__input"
+                 matInput required>
+
+          <mat-error *ngIf="form.controls['botName'].hasError('required')">
+            Please enter bot name
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Bot token</mat-label>
+          <input autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
+                 formControlName="botToken"
+                 class="twitchSetting__input" type="password"
+                 matInput required>
+
+          <mat-error *ngIf="form.controls['botToken'].hasError('required')">
+            Please enter bot oAuth token
+          </mat-error>
+        </mat-form-field>
+      </mat-tab>
+      <mat-tab label="Bot settings">
+        <mat-form-field>
+          <mat-label>Bot response</mat-label>
+          <textarea autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
+                    formControlName="botResponse"
+                    class="twitchSetting__textarea"
+                    matInput></textarea>
+
+          <mat-error *ngIf="form.controls['botResponse'].hasError('required')">
+            Please enter bot response message.
+          </mat-error>
+        </mat-form-field>
+
+        <p>
+          The message that will be outputted the the chat when someone writes !commands. Use
+          <code>{{commandsFlagMessage}}</code>
+          to print out the whole list of twitch commands available in memebox and
+          <code>{{userFlagMessage}}</code>
+          to reference the user that asked for commands.
+        </p>
+      </mat-tab>
+    </mat-tab-group>
+
+    <button (click)="saveBotData()" matSuffix
+            color="primary"
+            class="twitchSetting__button"
+            [disabled]="!config?.twitch?.bot.enabled"
+            mat-raised-button>Save
+    </button>
+  </form>
+</div>

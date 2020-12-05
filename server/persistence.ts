@@ -9,9 +9,9 @@ import {
   SettingsState,
   Tag,
   TimedClip,
-  Twitch,
+  Twitch, TwitchBotConfig, TwitchConfig,
   VisibilityEnum
-} from "../projects/contracts/src/lib/types";
+} from '../projects/contracts/src/lib/types';
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
@@ -98,7 +98,8 @@ export class Persistence {
           channel: configV0.twitchChannel,
           enableLog: configV0.twitchLog,
           bot: {
-            enabled: false
+            enabled: false,
+            response: ''
           }
         };
 
@@ -343,6 +344,30 @@ export class Persistence {
     this.saveData();
   }
 
+  public updateTwitchBotIntegration (twitchBotConfig: TwitchBotConfig) {
+    this.data.config = this.data.config || {};
+
+    if(!this.data.config.twitch.bot) {
+      this.data.config.twitch.bot = {
+        enabled: twitchBotConfig.enabled,
+        response: twitchBotConfig.response,
+      };
+    }
+
+    this.data.config.twitch.bot.enabled = twitchBotConfig.enabled;
+    this.saveData();
+  }
+
+  public updateTwitchBot (twitchConfig: TwitchConfig) {
+    console.log(twitchConfig);
+    this.data.config = this.data.config || {};
+    twitchConfig.channel = this.data.config.twitch.channel || "";
+    twitchConfig.bot.enabled = this.data.config.twitch.bot.enabled || false;
+    //twitchConfig.bot.response = this.data.config.twitch.bot.response || "";
+    this.data.config.twitch = twitchConfig;
+    this.saveData();
+  }
+
   public getConfig() {
     return this.data.config;
   }
@@ -394,7 +419,7 @@ export class Persistence {
 
 // TODO change to promise / async
 // todo extract ?
-function saveFile(filePath: string, data: any, stringify: boolean = false) {
+function saveFile(filePath: string, data: any, stringify = false) {
   const getDirOfPath = path.dirname(filePath);
 
   createDirIfNotExists(getDirOfPath);
