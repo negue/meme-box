@@ -14,6 +14,8 @@ export const ENDPOINTS = {
   NETWORK_LIST: 'network_ip_list',
   CONFIG_MEDIA_PATH: 'config/media',
   CONFIG_TWITCH_CHANNEL: 'config/twitchChannel',
+  CONFIG_TWITCH_BOT_INTEGRATION: 'config/twitchBotIntegration',
+  CONFIG_TWITCH_BOT: 'config/twitchBot',
   CONFIG_TWITCH_LOG: 'config/twitchLog'
 }
 

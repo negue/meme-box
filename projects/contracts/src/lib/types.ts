@@ -42,7 +42,7 @@ export const enum EXTENDED_KEYS {
   JS = 'JS'
 }
 
-export interface Screen  extends HasId {
+export interface Screen extends HasId {
   name: string;
   /**
    * Key: clip.id == screenClip.id
@@ -69,7 +69,7 @@ export enum HideAfterType {
   Repeats // maybe?
 }
 
-export interface ScreenClip extends HasId  {
+export interface ScreenClip extends HasId {
   visibility: VisibilityEnum;
   loop?: boolean;
 
@@ -87,8 +87,8 @@ export interface ScreenClip extends HasId  {
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
 
-  animationIn?: string|null;
-  animationOut?: string|null;
+  animationIn?: string | null;
+  animationOut?: string | null;
 
   zIndex?: number;
 
@@ -122,7 +122,7 @@ export interface TimedClip extends HasId {
 export interface Twitch extends HasId {
   name: string;
   // screenId:      string; // TODO
-  clipId:     string;
+  clipId: string;
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
   active: boolean;
@@ -153,7 +153,7 @@ export interface SettingsState {
   screen: Dictionary<Screen>;
   tags: Dictionary<Tag>;
 
-  config:  Partial<Config>;
+  config: Partial<Config>;
 }
 
 export interface AppState extends SettingsState {
@@ -162,24 +162,27 @@ export interface AppState extends SettingsState {
 }
 
 export interface Config {
-  mediaFolder:   string;
+  mediaFolder: string;
   twitch: TwitchConfig;
 }
 
 export interface TwitchConfig {
   channel: string;
   enableLog?: boolean;
-  bot?: {
-    enabled: boolean;
-    auth?: {
-      name: string;
-      token: string;
-    }
+  bot?: TwitchBotConfig
+}
+
+export interface TwitchBotConfig {
+  enabled: boolean;
+  response: string,
+  auth?: {
+    name: string;
+    token: string;
   }
 }
 
 export interface ConfigV0 {
-  mediaFolder:   string;
+  mediaFolder: string;
   twitchChannel: string;
   twitchLog?: boolean;
 }
@@ -211,11 +214,11 @@ export enum TargetScreenType {
 }
 
 export interface FileResult {
- fullPath: string;
- ext: string;
- fileName: string;
- apiUrl: string;
- fileType: MediaType
+  fullPath: string;
+  ext: string;
+  fileName: string;
+  apiUrl: string;
+  fileType: MediaType
 }
 
 export interface FileResult {

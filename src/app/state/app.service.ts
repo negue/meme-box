@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {AppStore} from "./app.store";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { AppStore } from './app.store';
+import { HttpClient } from '@angular/common/http';
 import {
-  Clip,
+  Clip, Config,
   ENDPOINTS,
   FileInfo,
   Screen,
@@ -10,9 +10,10 @@ import {
   Tag,
   TimedClip,
   Twitch,
+  TwitchBotConfig,
   TwitchConfig,
   VisibilityEnum
-} from "@memebox/contracts";
+} from '@memebox/contracts';
 import {
   API_PREFIX,
   CONFIG_OPEN_ENDPOINT,
@@ -20,12 +21,12 @@ import {
   DANGER_IMPORT_ALL_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT
-} from "../../../server/constants";
-import {SnackbarService} from "../core/services/snackbar.service";
-import {AppConfig} from '@memebox/app/env';
-import {setDummyData} from "./app.dummy.data";
-import {deleteClip} from "../../../projects/state/src/lib/operations/clip.operations";
-import {take} from "rxjs/internal/operators";
+} from '../../../server/constants';
+import { SnackbarService } from '../core/services/snackbar.service';
+import { AppConfig } from '@memebox/app/env';
+import { setDummyData } from './app.dummy.data';
+import { deleteClip } from '../../../projects/state/src/lib/operations/clip.operations';
+import { take } from 'rxjs/internal/operators';
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -55,14 +56,14 @@ export class AppService {
         this.appStore.setLoading(false);
       }, (error: Error) => {
         if (error.name === 'HttpErrorResponse') {
-        this.appStore.update(state => {
-          state.offlineMode = true;
-        });
+          this.appStore.update(state => {
+            state.offlineMode = true;
+          });
           console.error('Changing into offline mode', error);
         }
 
       }
-    )
+    );
   }
 
   public listFiles() {
@@ -75,20 +76,20 @@ export class AppService {
           state.currentMediaFiles = value;
         });
       }
-    )
+    );
   }
 
   public async addOrUpdateClip(clip: Clip) {
     let newClipId = clip?.id ?? '';
-    let isItNew = !newClipId;
+    const isItNew = !newClipId;
 
 
-    console.info({clip});
+    console.info({ clip });
 
     if (newClipId === '') {
       // add the clip to api & await
       // todo response type
-      const response = await this.http.post<{ok: boolean; id: string}>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip).toPromise();
+      const response = await this.http.post<{ ok: boolean; id: string }>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip).toPromise();
 
       if (!response.ok) {
         return;
@@ -106,7 +107,7 @@ export class AppService {
     });
 
     this.snackbar.normal(
-      `Clip "${clip.name}"  ${isItNew ? "added" : "updated"}`
+      `Clip "${clip.name}"  ${isItNew ? 'added' : 'updated'}`
     );
   }
 
@@ -126,7 +127,7 @@ export class AppService {
   public async addOrUpdateTag(tag: Tag) {
     let newTagId = tag?.id ?? '';
 
-    console.info({tag});
+    console.info({ tag });
 
     if (newTagId === '') {
       // add the clip to api & await
@@ -156,7 +157,7 @@ export class AppService {
     this.appStore.update(state => {
       delete state.tags[tagId];
 
-      for(const clip of Object.values(state.clips)) {
+      for (const clip of Object.values(state.clips)) {
         if (clip.tags && clip.tags.includes(tagId)) {
           this.deleteInArray(clip.tags, tagId);
         }
@@ -173,12 +174,12 @@ export class AppService {
   }
 
   public async addOrUpdateScreen(url: Screen) {
-    let screensAvailable = Object.keys(this.appStore.getValue().screen).length > 0;
+    const screensAvailable = Object.keys(this.appStore.getValue().screen).length > 0;
     let newId = url?.id ?? '';
 
     if (newId === '') {
       // add the clip to api & await
-      const response = await this.http.post<{ok: boolean, id: string}>(`${API_BASE}${ENDPOINTS.SCREEN}`, url).toPromise();
+      const response = await this.http.post<{ ok: boolean, id: string }>(`${API_BASE}${ENDPOINTS.SCREEN}`, url).toPromise();
 
       if (!response.ok) {
         return;
@@ -233,7 +234,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[screenId].clips[clipId] = screenClip as ScreenClip;
+      state.screen[screenId].clips[clipId] = screenClip;
     });
 
 
@@ -289,7 +290,7 @@ export class AppService {
     });
 
     // TODO improve snackbar titles
-    this.snackbar.normal(`Timer ${newEntry ? 'added' :  'updated' }`);
+    this.snackbar.normal(`Timer ${newEntry ? 'added' : 'updated'}`);
   }
 
   public async deleteTimedEvent(timerId: string) {
@@ -370,6 +371,22 @@ export class AppService {
     this.snackbar.normal('Twitch Channel updated!');
   }
 
+  public async updateTwitchBotData(twitchBotConfig: TwitchConfig) {
+    const newConfig: Partial<Config> = {
+      twitch: twitchBotConfig
+    };
+
+    // update path & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT}`, newConfig).toPromise();
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.twitch = twitchBotConfig;
+    });
+
+    this.snackbar.normal('Twitch Bot settings updated!');
+  }
+
   public async updateTwitchLogs(enabled: boolean) {
     const newConfig: Partial<TwitchConfig> = {
       enableLog: enabled
@@ -387,6 +404,32 @@ export class AppService {
     this.snackbar.normal(`Twitch Logging ${enabled ? 'enabled' : 'disabled'}!`);
   }
 
+  public async updateTwitchBotIntegration(enabled: boolean) {
+    const newConfig: Partial<TwitchConfig> = {
+      bot: {
+        response: '',
+        enabled: enabled
+      }
+    };
+
+    // update path & await
+    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT_INTEGRATION}`, newConfig).toPromise();
+
+    // add to the state
+    this.appStore.update(state => {
+      if (!state.config.twitch.bot) {
+        state.config.twitch.bot = {
+          response: '',
+          enabled: enabled
+        };
+      }
+
+      state.config.twitch.bot.enabled = enabled;
+    });
+
+    this.snackbar.normal(`Twitch bot ${enabled ? 'enabled' : 'disabled'}!`);
+  }
+
   public async openMediaFolder() {
     // update path & await
     await this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();
@@ -400,7 +443,7 @@ export class AppService {
   fillDummyData() {
     this.appStore.update(state => {
       setDummyData(state);
-    })
+    });
   }
 
   async deleteAll() {
@@ -414,7 +457,7 @@ export class AppService {
   }
 
   toggleTwitchActiveState(twitchId: string) {
-    var twitchEvent = this.appStore.getValue().twitchEvents[twitchId];
+    const twitchEvent = this.appStore.getValue().twitchEvents[twitchId];
 
     const newTwitchEventObject = {
       ...twitchEvent,
@@ -425,7 +468,7 @@ export class AppService {
   }
 
   toggleTimedClipActiveState(twitchId: string) {
-    var timedEvent = this.appStore.getValue().timers[twitchId];
+    const timedEvent = this.appStore.getValue().timers[twitchId];
 
     const newTimedEventObject = {
       ...timedEvent,
