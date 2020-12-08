@@ -1,0 +1,12 @@
+.title-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.title-name {
+  margin-bottom: 0;
+}
