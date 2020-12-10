@@ -151,7 +151,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       // maybe helps for writeable propeties?! TODO refactor
       ...this.data,
       extended: {
-        ...this.data.extended
+        ...this.data?.extended
       }
     });
 
