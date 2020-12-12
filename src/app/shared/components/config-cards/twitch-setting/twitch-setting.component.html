@@ -31,15 +31,17 @@
       these events.
     </div>
 
-    <ng-container *ngIf="config$ | async as config">
-      <br />
-      <mat-checkbox [checked]="config?.twitch?.enableLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
-      </mat-checkbox>
-      <br />
-      <br />
-      <mat-checkbox [checked]="config?.twitch?.bot?.enabled" (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
-      </mat-checkbox>
-      <br />
+    <ng-container *ngIf="showAdvancedOptions">
+      <ng-container *ngIf="config$ | async as config">
+        <br />
+        <mat-checkbox [checked]="config?.twitch?.enableLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
+        </mat-checkbox>
+        <br />
+        <br />
+        <mat-checkbox [checked]="config?.twitch?.bot?.enabled" (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
+        </mat-checkbox>
+        <br />
+      </ng-container>
     </ng-container>
   </form>
 </div>

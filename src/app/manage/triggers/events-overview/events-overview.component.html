@@ -2,6 +2,11 @@
 <app-card-overview>
 
 <ng-container *ngIf="twitchChannelExist$ | async; else noChannel">
+  <app-overview-add-item label="Add new twitch event"
+                         (click)="createNewTwitchCommand()">
+
+  </app-overview-add-item>
+
   <app-overview-item *ngFor="let item of twitchEventsList$ | async; trackBy: trackById">
     <app-twitch-info (onDelete)="deleteTwitchEvent(item.id)"
                     (onEdit)="editTwitchEvent(item)"
@@ -10,15 +15,11 @@
     >
     </app-twitch-info>
   </app-overview-item>
-
-  <app-overview-add-item label="Add new twitch event"
-                         (click)="createNewTwitchCommand()">
-
-  </app-overview-add-item>
 </ng-container>
+
   <ng-template #noChannel>
     <app-overview-item>
-      <app-twitch-setting></app-twitch-setting>
+      <app-twitch-setting [showAdvancedOptions]="false"></app-twitch-setting>
     </app-overview-item>
   </ng-template>
 
@@ -26,6 +27,10 @@
 
 <h2 class="type_header">Timers [{{ (timedEventsList$ | async).length}}] </h2>
 <app-card-overview>
+  <app-overview-add-item label="Add new timed event"
+                         (click)="createNewTimer()">
+
+  </app-overview-add-item>
 
     <app-overview-item *ngFor="let item of timedEventsList$ | async; trackBy: trackById">
       <app-timed-info (onDelete)="deleteTimedEvent(item.id)"
@@ -35,9 +40,6 @@
       </app-timed-info>
     </app-overview-item>
 
-    <app-overview-add-item label="Add new timed event"
-                           (click)="createNewTimer()">
 
-    </app-overview-add-item>
 </app-card-overview>
 

@@ -11,6 +11,8 @@ export const APP_ICONS = [
   'edit',
   'filter',
   'folder',
+  'help',
+  'help_center',
   'info',
   'insert_photo',
   'launch',

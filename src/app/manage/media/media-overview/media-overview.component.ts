@@ -101,4 +101,8 @@ export class MediaOverviewComponent implements OnInit {
   onToggleTwitchEvent(item: Clip, twitchId: string) {
     this.service.toggleTwitchActiveState(twitchId);
   }
+
+  openHelpOverview() {
+    this._dialog.showHelpOverview();
+  }
 }

@@ -4,6 +4,17 @@
 
 <div *ngIf="mediaList$ | async as mediaList">
   <app-card-overview>
+    <app-overview-item *ngIf="showGettingStarted$ | async ; else hasData ">
+      <app-getting-started></app-getting-started>
+    </app-overview-item>
+
+    <ng-template #hasData>
+      <app-overview-add-item label="Add new media"
+                             (click)="addNewItem()">
+
+      </app-overview-add-item>
+    </ng-template>
+
     <app-overview-item *ngFor="let item of mediaList; trackBy: trackById">
       <app-media-info (onDelete)="onDelete(item.id)"
                       (onEdit)="onEdit(item)"
@@ -18,23 +29,19 @@
       </app-media-info>
     </app-overview-item>
 
-    <app-overview-item *ngIf="showGettingStarted$ | async ; else hasData ">
-      <app-getting-started></app-getting-started>
-    </app-overview-item>
-
-
-    <ng-template #hasData>
-      <app-overview-add-item label="Add new media"
-                             (click)="addNewItem()">
-
-      </app-overview-add-item>
-    </ng-template>
-
   </app-card-overview>
 </div>
 
 <div class="floating-action-button">
-  <button (click)="addNewItem()" aria-label="Add a new meme/media"
+  <button mat-mini-fab
+          aria-label="Opening the Help-Overview"
+          matTooltip="Opening the Help-Overview"
+          (click)="openHelpOverview()">
+    <mat-icon svgIcon="help_center"></mat-icon>
+  </button>
+  <button (click)="addNewItem()"
+          aria-label="Add a new meme/media"
+          matTooltip="Add a new meme/media"
           color="warn"
           mat-fab
   >

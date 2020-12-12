@@ -99,8 +99,16 @@ export function filterClips$(
 
     }),
     map(clipsToList => sortClips(clipsToList)),
-    switchMap(clips => of(clips).pipe(
-      lazyArray(10, 3)
-    ))
+    switchMap(clips => {
+      console.info({clips});
+
+      return clips.length === 0
+          ? of([])
+          : of(clips).pipe(
+            // lazyArray cant work with zero items...
+            lazyArray(10, 3) // todo refactor / rebuild this lazyArray pipe
+          );
+      }
+    )
   );
 }

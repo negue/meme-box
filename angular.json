@@ -27,6 +27,11 @@
                 "glob": "prism-plugin-(inline-color|bracket-match).worker-func.js",
                 "input": "./node_modules/@gewd/components/highlight-editor",
                 "output": "/assets/prism/"
+              },
+              {
+                "glob": "*.md",
+                "input": "./tutorials",
+                "output": "/assets/tutorials/"
               }
             ],
             "styles": [

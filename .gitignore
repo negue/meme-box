@@ -60,3 +60,4 @@ Thumbs.db
  !angular.webpack.cjs
 **/settings.json
 **/settings.json*.backup
+*.log

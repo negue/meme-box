@@ -1,0 +1,11 @@
+<h2 mat-dialog-title> {{ data.name }} </h2>
+<mat-dialog-content class="mat-typography">
+  <gewd-markdown [markdown]="markdownFile$|async">
+  </gewd-markdown>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
+
