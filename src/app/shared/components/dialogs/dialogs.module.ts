@@ -31,6 +31,8 @@ import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeModule} from "../dynamic-iframe/dynamic-iframe.module";
 import {DynamicIframeEditComponent} from './dynamic-iframe-edit/dynamic-iframe-edit.component';
 import {MatExpansionModule} from "@angular/material/expansion";
+import {MarkdownComponent} from './markdown/markdown.component';
+import {MarkdownModule} from "@gewd/markdown/module";
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
     TwitchEditComponent,
     ClipAssigningDialogComponent,
     TimedEditComponent,
-    DynamicIframeEditComponent
+    DynamicIframeEditComponent,
+    MarkdownComponent
   ],
   imports: [
     PipesModule,
@@ -68,6 +71,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
     DynamicIframeModule,
     FormsModule,
     MatExpansionModule,
+    MarkdownModule,
   ],
   providers: [DialogService],
 })

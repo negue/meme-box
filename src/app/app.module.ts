@@ -31,14 +31,18 @@ import {MediaToggleDirective} from './target-screen/media-toggle.directive';
 import {APP_ICONS} from "./app.icons";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {ENVIRONMENT_MODULES} from "@memebox/app/env/modules";
-import {DEFAULT_PRISM_OPTIONS, PrismServiceOptions} from "@gewd/markdown/contracts";
-import {HighlightEditorModule, PrismOptionsInjectorToken} from "@gewd/components/highlight-editor";
+import {DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions} from "@gewd/markdown/contracts";
+import {HighlightEditorModule} from "@gewd/components/highlight-editor";
 import {DynamicIframeModule} from "./shared/components/dynamic-iframe/dynamic-iframe.module";
+import {MarkdownModule} from "@gewd/markdown/module";
+import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
+import {HotkeysModule} from "@ngneat/hotkeys";
 
-const prismWorker = () => new Worker('./prism.worker.ts', {
-  name: 'prism',
+const markdownWorker = () => new Worker('./markdown.worker.ts', {
+  name: 'markdown',
   type: "module"
 });
+
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -80,32 +84,36 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: AppConfig.production}),
     MatIconModule,
 
+    MarkdownModule,
     HighlightEditorModule,
     DynamicIframeModule,
+    HotkeysModule,
   ],
   providers: [
     {
-      provide: PrismOptionsInjectorToken,
+      provide: MarkdownOptionsInjectorToken,
       useValue: {
-        getWorker: prismWorker,
+        getWorker: markdownWorker,
         options: {
-          ...DEFAULT_PRISM_OPTIONS,
+          prism: {
+            ...DEFAULT_PRISM_OPTIONS,
 
-          /** if needed **/
-          languageFileType: 'min.js',  // if you want to use the minified assets
-          languageMap: {               // alias to load the real file
-            ts: 'typescript',          // default
-            cs: 'csharp'               // additional
-          },
-          highlightMarkdownCode: true,
-          additionalPluginPaths: [
-            'assets/prism/prism-css-extras.min.js',  // needed for the inline color
-            'assets/prism/prism-plugin-inline-color.worker-func.js',
-            'assets/prism/prism-plugin-bracket-match.worker-func.js'
-          ]
+            /** if needed **/
+            languageFileType: 'min.js',  // if you want to use the minified assets
+            languageMap: {               // alias to load the real file
+              ts: 'typescript',          // default
+              cs: 'csharp'               // additional
+            },
+            highlightMarkdownCode: true,
+            additionalPluginPaths: [
+              'assets/prism/prism-css-extras.min.js',  // needed for the inline color
+              'assets/prism/prism-plugin-inline-color.worker-func.js',
+              'assets/prism/prism-plugin-bracket-match.worker-func.js'
+            ]
+          }
         }
-      } as PrismServiceOptions
-    },
+      } as MarkdownServiceOptions
+    }
   ],
   bootstrap: [AppComponent]
 })

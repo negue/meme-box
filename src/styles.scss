@@ -117,3 +117,10 @@ iframe {
     pointer-events: none;
   }
 }
+
+gewd-markdown {
+  @import "~@gewd/markdown/markdown.mixin";
+
+  @include markdownCss();
+  @include markdownDefaultDarkColor();
+}
