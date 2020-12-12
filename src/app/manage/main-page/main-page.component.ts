@@ -19,10 +19,7 @@ export class MainPageComponent implements OnInit {
     this.appService.loadState();
     this.hotkeys.addShortcut({ keys: 'f1' })
       .subscribe(e => {
-        this.dialogService.showMarkdownFile({
-          name: 'Help',
-          url: './assets/tutorials/getting_started.md'
-        });
+        this.dialogService.showHelpOverview();
       });
   }
 

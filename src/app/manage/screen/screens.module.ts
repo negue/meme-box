@@ -14,6 +14,7 @@ import {ScreenInfoComponent} from "./screen-overview/screen-info/screen-info.com
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const routes: Routes = [
   {
@@ -41,6 +42,7 @@ const routes: Routes = [
     ClipTypeModule,
     GettingStartedModule,
     CardOverviewModule,
+    MatTooltipModule,
   ],
 })
 export class ScreensModule {

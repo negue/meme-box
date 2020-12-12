@@ -33,6 +33,7 @@ import {DynamicIframeEditComponent} from './dynamic-iframe-edit/dynamic-iframe-e
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MarkdownComponent} from './markdown/markdown.component';
 import {MarkdownModule} from "@gewd/markdown/module";
+import {HelpOverviewComponent} from './help-overview/help-overview.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {MarkdownModule} from "@gewd/markdown/module";
     ClipAssigningDialogComponent,
     TimedEditComponent,
     DynamicIframeEditComponent,
-    MarkdownComponent
+    MarkdownComponent,
+    HelpOverviewComponent
   ],
   imports: [
     PipesModule,

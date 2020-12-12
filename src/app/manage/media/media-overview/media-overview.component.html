@@ -34,7 +34,15 @@
 </div>
 
 <div class="floating-action-button">
-  <button (click)="addNewItem()" aria-label="Add a new meme/media"
+  <button mat-mini-fab
+          aria-label="Opening the Help-Overview"
+          matTooltip="Opening the Help-Overview"
+          (click)="openHelpOverview()">
+    <mat-icon svgIcon="help_center"></mat-icon>
+  </button>
+  <button (click)="addNewItem()"
+          aria-label="Add a new meme/media"
+          matTooltip="Add a new meme/media"
           color="warn"
           mat-fab
   >

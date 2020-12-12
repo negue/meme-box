@@ -23,6 +23,7 @@ import {CardOverviewModule} from "../../shared/components/card-overview/card-ove
 import {FilterModule} from "../../shared/components/filter/filter.module";
 import {ClipChipsListModule} from "../../shared/components/clip-chips-list/clip-chips-list.module";
 import {DynamicIframeModule} from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const routes: Routes = [
   {
@@ -57,6 +58,7 @@ const routes: Routes = [
     FilterModule,
     ClipChipsListModule,
     DynamicIframeModule,
+    MatTooltipModule,
   ]
 })
 export class MediaModule {}

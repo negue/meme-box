@@ -24,6 +24,7 @@ import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeContent} from "../../../../../projects/utils/src/lib/dynamicIframe";
 import {DynamicIframeEditComponent} from "./dynamic-iframe-edit/dynamic-iframe-edit.component";
 import {MarkdownComponent, MarkdownDialogPayload} from "./markdown/markdown.component";
+import {HelpOverviewComponent} from "./help-overview/help-overview.component";
 
 @Injectable()
 export class DialogService {
@@ -116,6 +117,16 @@ export class DialogService {
     ).afterClosed().pipe(
       take(1),
     ).toPromise()
+  }
+
+  showHelpOverview() {
+    this._dialog.open(
+      HelpOverviewComponent, {
+        width: 'calc(min(1000px, 96%))',
+        maxWidth: '96vw',
+        minHeight: '50vh'
+      }
+    )
   }
 
   showMarkdownFile(info: MarkdownDialogPayload) {

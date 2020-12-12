@@ -37,6 +37,7 @@ import {DynamicIframeModule} from "./shared/components/dynamic-iframe/dynamic-if
 import {MarkdownModule} from "@gewd/markdown/module";
 import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
 import {HotkeysModule} from "@ngneat/hotkeys";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 const markdownWorker = () => new Worker('./markdown.worker.ts', {
   name: 'markdown',
@@ -88,6 +89,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HighlightEditorModule,
     DynamicIframeModule,
     HotkeysModule,
+    MatTooltipModule
   ],
   providers: [
     {
