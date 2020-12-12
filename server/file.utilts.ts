@@ -7,6 +7,10 @@ import {SERVER_URL} from "../projects/contracts/src/lib/placeholders";
 const { readdir } = fs.promises;
 
 export async function getFiles(dir: string): Promise<string[]> {
+  if (!fs.existsSync(dir)) {
+    return [];
+  }
+
   const dirents = await readdir(dir, { withFileTypes: true });
   const files = await Promise.all(dirents.map(async (dirent) => {
     const res = resolve(dir, dirent.name);
@@ -18,6 +22,10 @@ export async function getFiles(dir: string): Promise<string[]> {
 export function mapFileInformations (
   mediaFolder: string,
   files: string[]): FileInfo[] {
+
+  if (files.length === 0) {
+    return [];
+  }
 
   // remove path separator at the end
   if (mediaFolder.endsWith(sep)) {

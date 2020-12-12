@@ -13,7 +13,7 @@ import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../../state/app.service";
 import {AppQueries} from "../../../../state/app.queries";
-import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil,} from "rxjs/operators";
+import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
@@ -151,7 +151,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       // maybe helps for writeable propeties?! TODO refactor
       ...this.data,
       extended: {
-        ...this.data.extended
+        ...this.data?.extended
       }
     });
 
