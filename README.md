@@ -63,14 +63,6 @@ npm run start:app
 npm run start:server
 ```
 
-## Commandline Options
-
-|Config|Default|Explanation|
-|--|--|--|
-|`--port=`|`4444`|The Server Port|
-|`--config=`||`Your user appdata folder/meme-box`|
-
-
 ## Building the binaries
 
 ### Headless
