@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {MarkdownDialogPayload} from "../markdown/markdown.component";
+import {DialogService} from "../dialog.service";
 
 @Component({
   selector: 'app-help-overview',
@@ -7,9 +9,19 @@ import {Component, OnInit} from '@angular/core';
 })
 export class HelpOverviewComponent implements OnInit {
 
-  constructor() { }
+  public helpItems: MarkdownDialogPayload[] = [
+    {
+      name: 'Getting Started',
+      url: './assets/tutorials/getting_started.md'
+    }
+  ];
+
+  constructor(private dialogService: DialogService) { }
 
   ngOnInit(): void {
   }
 
+  openDialog(item: MarkdownDialogPayload) {
+    this.dialogService.showMarkdownFile(item)
+  }
 }
