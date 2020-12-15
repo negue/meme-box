@@ -33,6 +33,8 @@ let fileBackupToday = false;
 
 export class Persistence {
 
+  public configLoaded$ = new Subject();
+
   private version = 1;
 
   private updated$ = new Subject();
@@ -77,6 +79,7 @@ export class Persistence {
 
       this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
       this.updated$.next();
+      this.configLoaded$.next();
     });
 
     this.updated$.pipe(

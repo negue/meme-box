@@ -2,5 +2,5 @@
   "BUILD_TIME": "Some time",
   "COMMIT": "commit dummy",
   "BRANCH": "this branch",
-  "VERSION_TAG": "When its done"
+  "VERSION_TAG": "0.0.0"
 }

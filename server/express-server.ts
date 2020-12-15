@@ -13,6 +13,7 @@ import {
   SCREEN_CLIPS_ID_ENDPOINT,
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
+  STATE_ENDPOINT,
   TAGS_ENDPOINT,
   TIMED_ENDPOINT,
   TWITCH_ENDPOINT
@@ -31,6 +32,7 @@ import {LOG_ROUTES} from "./rest-endpoints/logs";
 import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
 import {CONFIG_ROUTES} from "./rest-endpoints/config";
+import {STATE_ROUTES} from "./rest-endpoints/state";
 
 const {  normalize, join } = require('path');
 
@@ -104,6 +106,7 @@ app.use(LOG_ENDPOINT, LOG_ROUTES);
 app.use(TWITCH_ENDPOINT, TWITCH_ROUTES);
 app.use(TIMED_ENDPOINT, TIMER_ROUTES);
 app.use(CONFIG_ENDPOINT, CONFIG_ROUTES);
+app.use(STATE_ENDPOINT, STATE_ROUTES);
 
 /**
  * OBS-Specific API
@@ -207,9 +210,8 @@ app.get(FILE_ENDPOINT, function(req, res){
   console.error(`file not found: ${firstParam}`);
 });
 
-// Put = Update
+// List Network IP Entries
 app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
-  // update config
   res.send(listNetworkInterfaces());
 });
 

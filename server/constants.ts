@@ -1,5 +1,8 @@
 export const DEFAULT_PORT = 4444;
 
+export const REMOTE_VERSION_FILE = 'https://raw.githubusercontent.com/negue/meme-box/master/package.json';
+export const RELEASE_PAGE = 'https://github.com/negue/meme-box/releases';
+
 // TODO merge with the other constant file
 
 export const API_PREFIX = '/api';
@@ -17,6 +20,7 @@ export const SCREEN_CLIPS_ID_ENDPOINT = `${API_PREFIX}/screen/:screenId/clips/:c
 export const TWITCH_ENDPOINT = `${API_PREFIX}/twitch_events`;
 export const TIMED_ENDPOINT = `${API_PREFIX}/timed_events`;
 
+export const STATE_ENDPOINT = `${API_PREFIX}/state`;
 
 export const CONFIG_ENDPOINT = `${API_PREFIX}/config`;
 export const CONFIG_TWITCH_CHANNEL_PATH = '/twitchChannel';
