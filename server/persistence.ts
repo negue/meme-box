@@ -9,7 +9,9 @@ import {
   SettingsState,
   Tag,
   TimedClip,
-  Twitch, TwitchBotConfig, TwitchConfig,
+  Twitch,
+  TwitchBotConfig,
+  TwitchConfig,
   VisibilityEnum
 } from '../projects/contracts/src/lib/types';
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
@@ -318,6 +320,12 @@ export class Persistence {
   // TODO maybe key/value safety / validations
   public updateConfig(config: Config) {
     this.data.config = config;
+
+    this.saveData();
+  }
+
+  public updatePartialConfig(config: Partial<Config>) {
+    this.data.config = Object.assign({}, this.data.config, config);
 
     this.saveData();
   }

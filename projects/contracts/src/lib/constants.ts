@@ -8,11 +8,12 @@ export const ENDPOINTS = {
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
   ERROR: 'error',
+  CONFIG: 'config',
+
   TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',
   TWITCH_TRIGGER: 'twitch_events/trigger',
   NETWORK_LIST: 'network_ip_list',
-  CONFIG_MEDIA_PATH: 'config/media',
   CONFIG_TWITCH_CHANNEL: 'config/twitchChannel',
   CONFIG_TWITCH_BOT_INTEGRATION: 'config/twitchBotIntegration',
   CONFIG_TWITCH_BOT: 'config/twitchBot',

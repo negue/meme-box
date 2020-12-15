@@ -19,16 +19,16 @@ export const TIMED_ENDPOINT = `${API_PREFIX}/timed_events`;
 
 
 export const CONFIG_ENDPOINT = `${API_PREFIX}/config`;
+export const CONFIG_TWITCH_CHANNEL_PATH = '/twitchChannel';
+export const CONFIG_TWITCH_LOG_PATH = '/twitchLog';
+export const CONFIG_TWITCH_BOT_INTEGRATION_PATH = '/twitchBotIntegration';
+export const CONFIG_TWITCH_BOT_PATH = '/twitchBot';
+export const CONFIG_OPEN_PATH = `/open`;
+
 export const DANGER_CLEAN_CONFIG_ENDPOINT = `${API_PREFIX}/danger/clean_config`;
 export const DANGER_IMPORT_ALL_ENDPOINT = `${API_PREFIX}/danger/add_all`;
-export const CONFIG_MEDIA_ENDPOINT = `${API_PREFIX}/config/media`;
-export const CONFIG_TWITCH_CHANNEL_ENDPOINT = `${API_PREFIX}/config/twitchChannel`;
-export const CONFIG_TWITCH_LOG_ENDPOINT = `${API_PREFIX}/config/twitchLog`;
-export const CONFIG_TWITCH_BOT_INTEGRATION_ENDPOINT = `${API_PREFIX}/config/twitchBotIntegration`;
-export const CONFIG_TWITCH_BOT_ENDPOINT = `${API_PREFIX}/config/twitchBot`;
 export const FILES_ENDPOINT = `/files`;
 export const FILES_OPEN_ENDPOINT = `/files/open`;
-export const CONFIG_OPEN_ENDPOINT = `/config/open`;
 export const FILE_ENDPOINT = `/file/*`;
 export const NETWORK_IP_LIST_ENDPOINT = `/network_ip_list`;
 
