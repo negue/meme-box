@@ -164,6 +164,7 @@ export interface AppState extends SettingsState {
 export interface Config {
   mediaFolder: string;
   twitch: TwitchConfig;
+  enableVersionCheck?: boolean;
 }
 
 export interface TwitchConfig {
