@@ -1,5 +1,5 @@
 <div class="title-row">
-  <h2 class="mat-h2 title-name">Version</h2>
+  <h2 class="mat-h2 title-name">Version: {{VERSION_JSON.VERSION_TAG}}</h2>
 
   <mat-icon svgIcon="info"></mat-icon>
 </div>
@@ -11,7 +11,9 @@
     Enable Version Update Check
   </mat-checkbox>
   </ng-container>
-  <div class="mat-title">{{VERSION_JSON.VERSION_TAG}}</div>
+
+  <br/>
+  <br/>
   <div class="mat-subheader">Built at: {{VERSION_JSON.BUILD_TIME}}</div>
   <div class="mat-subheader">branch: {{VERSION_JSON.BRANCH}} - commit: {{VERSION_JSON.COMMIT}}</div>
 </div>

@@ -26,6 +26,8 @@ export class VersionCardComponent implements OnInit {
   onVersionCheckChanged($event: MatCheckboxChange,
                         config: Partial<Config>) {
 
-    this.appService.updateTwitchBotIntegration($event.checked);
+    this.appService.updateConfig({
+      enableVersionCheck: $event.checked
+    });
   }
 }
