@@ -1,6 +1,6 @@
 export const DEFAULT_PORT = 4444;
 
-export const REMOTE_VERSION_FILE = 'https://raw.githubusercontent.com/negue/meme-box/master/package.json';
+export const REMOTE_VERSION_FILE = 'https://raw.githubusercontent.com/negue/meme-box/master/version_update.json';
 export const RELEASE_PAGE = 'https://github.com/negue/meme-box/releases';
 
 // TODO merge with the other constant file

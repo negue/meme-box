@@ -9,6 +9,7 @@ export const ENDPOINTS = {
   OBS_CLIPS: 'clips',
   ERROR: 'error',
   CONFIG: 'config',
+  STATE: 'state',
 
   TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',

@@ -28,6 +28,7 @@ import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from './app.dummy.data';
 import {deleteClip} from '../../../projects/state/src/lib/operations/clip.operations';
 import {take} from 'rxjs/internal/operators';
+import {map} from "rxjs/operators";
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -492,6 +493,14 @@ export class AppService {
     this.http.post<string>(`${API_BASE}${ENDPOINTS.ERROR}`, logPayload).pipe(
       take(1)
     ).subscribe();
+  }
+
+  public checkVersionUpdateAvailable (): Promise<boolean> {
+    return this.http.get<{update:boolean}>(`${API_BASE}${ENDPOINTS.STATE}/update_available`)
+      .pipe(
+        take(1),
+        map(value => value.update)
+      ).toPromise();
   }
 }
 
