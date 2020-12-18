@@ -52,7 +52,7 @@
     "@angular-eslint/template-parser": "0.0.1-alpha.32",
     "@angular/animations": "10.0.7",
     "@angular/cdk": "10.1.2",
-    "@angular/cli": "10.0.5",
+    "@angular/cli": "10.2.1",
     "@angular/common": "10.0.7",
     "@angular/compiler": "10.0.7",
     "@angular/compiler-cli": "10.0.7",
