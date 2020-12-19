@@ -1,11 +1,27 @@
 <div class="title-row">
-  <h2 class="mat-h2 title-name">Version</h2>
+  <h2 class="mat-h2 title-name">
+
+      {{updateAvailableBadgeLabel$ | async}}
+
+    <button (click)="openGitubPage()" color="primary"
+            mat-icon-button>
+      <mat-icon svgIcon="launch"></mat-icon>
+    </button>
+  </h2>
 
   <mat-icon svgIcon="info"></mat-icon>
 </div>
 
 <div>
-  <div class="mat-title">{{VERSION_JSON.VERSION_TAG}}</div>
+  <ng-container *ngIf="config$ | async as config">
+  <mat-checkbox [checked]="config?.enableVersionCheck"
+                (change)="onVersionCheckChanged($event, config)">
+    Enable Version Update Check
+  </mat-checkbox>
+  </ng-container>
+
+  <br/>
+  <br/>
   <div class="mat-subheader">Built at: {{VERSION_JSON.BUILD_TIME}}</div>
   <div class="mat-subheader">branch: {{VERSION_JSON.BRANCH}} - commit: {{VERSION_JSON.COMMIT}}</div>
 </div>

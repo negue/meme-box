@@ -1,13 +1,18 @@
 import {createExpress} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
-import {DEFAULT_PORT} from "./constants";
+import {DEFAULT_PORT, REMOTE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith} from "rxjs/operators";
-import { TwitchHandler } from './twitch.handler';
+import {TwitchHandler} from './twitch.handler';
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
 import {LOGGER} from "./logger.utils";
 import {ExampleTwitchCommandsSubject} from "./shared";
 import {TimedHandler} from "./timed.handler";
+
+import https from 'https';
+import {take} from "rxjs/internal/operators";
+import currentVersionJson from '../src/version_info.json';
+import {STATE_OBJECT} from "./rest-endpoints/state";
 
 // This file creates the "shared" server logic between headless / electron
 
@@ -79,4 +84,56 @@ ExampleTwitchCommandsSubject.subscribe(value => {
   if (twitchHandler) {
     twitchHandler.handle(value);
   }
-})
+});
+
+// Check Version & Log it
+
+function cmpVersions (a, b) {
+  var i, diff;
+  var regExStrip0 = /(\.0+)+$/;
+  var segmentsA = a.replace(regExStrip0, '').split('.');
+  var segmentsB = b.replace(regExStrip0, '').split('.');
+  var l = Math.min(segmentsA.length, segmentsB.length);
+
+  for (i = 0; i < l; i++) {
+    diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
+    if (diff) {
+      return diff;
+    }
+  }
+  return segmentsA.length - segmentsB.length;
+}
+
+
+PersistenceInstance.configLoaded$.pipe(
+  take(1)
+).subscribe(() => {
+
+  const versionCheckEnabled = PersistenceInstance.getConfig().enableVersionCheck;
+  console.info({ versionCheckEnabled });
+
+  if (versionCheckEnabled) {
+    https.get(REMOTE_VERSION_FILE, function(res){
+      var body = '';
+
+      res.on('data', function(chunk){
+        body += chunk;
+      });
+
+      res.on('end', function(){
+        const {version} = JSON.parse(body);
+
+        const local = currentVersionJson.VERSION_TAG;
+
+        const isRemoteNewer = cmpVersions(version, local) > 0;
+
+        LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, { remote: version, local });
+
+        STATE_OBJECT.update.available = isRemoteNewer;
+        STATE_OBJECT.update.version = version;
+      });
+    }).on('error', function(e){
+      LOGGER.error("Error loading version json: ", e);
+    });
+  }
+});

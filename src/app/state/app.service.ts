@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { AppStore } from './app.store';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {AppStore} from './app.store';
+import {HttpClient} from '@angular/common/http';
 import {
-  Clip, Config,
+  Clip,
+  Config,
   ENDPOINTS,
   FileInfo,
   Screen,
@@ -10,28 +11,34 @@ import {
   Tag,
   TimedClip,
   Twitch,
-  TwitchBotConfig,
   TwitchConfig,
+  UpdateState,
   VisibilityEnum
 } from '@memebox/contracts';
 import {
   API_PREFIX,
-  CONFIG_OPEN_ENDPOINT,
+  CONFIG_ENDPOINT,
+  CONFIG_OPEN_PATH,
   DANGER_CLEAN_CONFIG_ENDPOINT,
   DANGER_IMPORT_ALL_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT
 } from '../../../server/constants';
-import { SnackbarService } from '../core/services/snackbar.service';
-import { AppConfig } from '@memebox/app/env';
-import { setDummyData } from './app.dummy.data';
-import { deleteClip } from '../../../projects/state/src/lib/operations/clip.operations';
-import { take } from 'rxjs/internal/operators';
+import {SnackbarService} from '../core/services/snackbar.service';
+import {AppConfig} from '@memebox/app/env';
+import {setDummyData} from './app.dummy.data';
+import {deleteClip} from '../../../projects/state/src/lib/operations/clip.operations';
+import {take} from 'rxjs/internal/operators';
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 // TODO split up service per module??
+
+export interface Response {
+  ok: boolean;
+  id?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -89,7 +96,7 @@ export class AppService {
     if (newClipId === '') {
       // add the clip to api & await
       // todo response type
-      const response = await this.http.post<{ ok: boolean; id: string }>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip).toPromise();
+      const response = await this.http.post<Response>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip).toPromise();
 
       if (!response.ok) {
         return;
@@ -340,17 +347,13 @@ export class AppService {
     this.snackbar.normal('Twitch event removed!');
   }
 
-  public async updateMediaFolder(newFolder: string) {
-    const newConfig = {
-      mediaFolder: newFolder
-    };
-
+  public async updateConfig(newConfig: Partial<Config>) {
     // update path & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_MEDIA_PATH}`, newConfig).toPromise();
+    await this.http.put<Response>(`${API_BASE}${ENDPOINTS.CONFIG}`, newConfig).toPromise();
 
-    // add to the state
+    // update state
     this.appStore.update(state => {
-      state.config.mediaFolder = newFolder;
+      state.config = Object.assign({}, state.config, newConfig);
     });
   }
 
@@ -437,7 +440,7 @@ export class AppService {
 
   public async openConfigFolder() {
     // update path & await
-    await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_OPEN_ENDPOINT}`).toPromise();
+    await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT}${CONFIG_OPEN_PATH}`).toPromise();
   }
 
   fillDummyData() {
@@ -490,6 +493,19 @@ export class AppService {
     this.http.post<string>(`${API_BASE}${ENDPOINTS.ERROR}`, logPayload).pipe(
       take(1)
     ).subscribe();
+  }
+
+  public async checkVersionUpdateAvailable (): Promise<UpdateState> {
+    const newVersionResponse = await this.http.get<UpdateState>(`${API_BASE}${ENDPOINTS.STATE}/update_available`)
+      .pipe(
+        take(1),
+      ).toPromise();
+
+    this.appStore.update(state => {
+      state.update = newVersionResponse;
+    });
+
+    return newVersionResponse;
   }
 }
 

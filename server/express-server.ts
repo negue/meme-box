@@ -4,11 +4,6 @@ import {
   CLIP_ENDPOINT,
   CLIP_ID_ENDPOINT,
   CONFIG_ENDPOINT,
-  CONFIG_MEDIA_ENDPOINT,
-  CONFIG_OPEN_ENDPOINT,
-  CONFIG_TWITCH_CHANNEL_ENDPOINT,
-  CONFIG_TWITCH_LOG_ENDPOINT,
-  CONFIG_TWITCH_BOT_ENDPOINT,
   DANGER_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
@@ -18,12 +13,12 @@ import {
   SCREEN_CLIPS_ID_ENDPOINT,
   SCREEN_ENDPOINT,
   SCREEN_ID_ENDPOINT,
+  STATE_ENDPOINT,
   TAGS_ENDPOINT,
   TIMED_ENDPOINT,
-  TWITCH_ENDPOINT, CONFIG_TWITCH_BOT_INTEGRATION_ENDPOINT
+  TWITCH_ENDPOINT
 } from './constants';
 import * as fs from 'fs';
-import {existsSync} from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 
@@ -33,11 +28,11 @@ import {getFiles, mapFileInformations} from "./file.utilts";
 import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "./validations";
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
-import {NEW_CONFIG_PATH} from "./path.utils";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
 import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
-import {TwitchConfig} from "../projects/contracts/src/lib/types";
+import {CONFIG_ROUTES} from "./rest-endpoints/config";
+import {STATE_ROUTES} from "./rest-endpoints/state";
 
 const {  normalize, join } = require('path');
 
@@ -110,6 +105,8 @@ app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 app.use(LOG_ENDPOINT, LOG_ROUTES);
 app.use(TWITCH_ENDPOINT, TWITCH_ROUTES);
 app.use(TIMED_ENDPOINT, TIMER_ROUTES);
+app.use(CONFIG_ENDPOINT, CONFIG_ROUTES);
+app.use(STATE_ENDPOINT, STATE_ROUTES);
 
 /**
  * OBS-Specific API
@@ -153,76 +150,6 @@ app.delete(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
   const {screenId, clipId} = req.params;
 
   res.send(PersistenceInstance.deleteScreenClip(screenId, clipId));
-});
-
-
-
-
-/**
- * Config API
- */
-
-app.get(CONFIG_ENDPOINT, (req,res) => {
-  res.send(PersistenceInstance.getConfig());
-});
-
-// Put = Update
-app.put(CONFIG_ENDPOINT, (req, res) => {
-  // update config
-  res.send(PersistenceInstance.updateConfig(req.body));
-});
-
-// Put = Update Media Folder Path
-app.put(CONFIG_MEDIA_ENDPOINT, (req, res) => {
-  const mediaFolder: string = req.body.mediaFolder;
-
-  if (!allowedFileUrl(mediaFolder)) {
-    res.send({ok: false})
-    return;
-  }
-
-  if (!existsSync(mediaFolder)) {
-    res.send({ok: false})
-    return;
-  }
-
-  // update config
-  res.send(PersistenceInstance.updateMediaFolder(req.body.mediaFolder));
-});
-
-// Put = Update Media Folder Path
-app.put(CONFIG_TWITCH_CHANNEL_ENDPOINT, (req, res) => {
-  const twitchConfigBody: TwitchConfig = req.body;
-
-  // update config
-  res.send(PersistenceInstance.updateTwitchChannel(twitchConfigBody.channel));
-});
-
-// TODO Refactor this config boilerplate !!!
-
-app.put(CONFIG_TWITCH_LOG_ENDPOINT, (req, res) => {
-  const twitchConfigBody: TwitchConfig = req.body;
-
-  // update config
-  res.send(PersistenceInstance.updateTwitchLog(twitchConfigBody.enableLog));
-});
-
-app.put(CONFIG_TWITCH_BOT_INTEGRATION_ENDPOINT, (req, res) => {
-  // update config
-  const {bot} = req.body;
-  res.send(PersistenceInstance.updateTwitchBotIntegration(bot));
-});
-
-app.put(CONFIG_TWITCH_BOT_ENDPOINT, (req, res) => {
-  // update config
-  const {twitch} = req.body;
-  res.send(PersistenceInstance.updateTwitchBot(twitch));
-});
-
-app.get(CONFIG_OPEN_ENDPOINT, async (req, res) => {
-  await open(NEW_CONFIG_PATH);
-
-  res.send({open: true});
 });
 
 app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
@@ -283,9 +210,8 @@ app.get(FILE_ENDPOINT, function(req, res){
   console.error(`file not found: ${firstParam}`);
 });
 
-// Put = Update
+// List Network IP Entries
 app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
-  // update config
   res.send(listNetworkInterfaces());
 });
 

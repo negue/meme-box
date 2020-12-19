@@ -9,7 +9,9 @@ import {
   SettingsState,
   Tag,
   TimedClip,
-  Twitch, TwitchBotConfig, TwitchConfig,
+  Twitch,
+  TwitchBotConfig,
+  TwitchConfig,
   VisibilityEnum
 } from '../projects/contracts/src/lib/types';
 import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
@@ -31,6 +33,9 @@ let fileBackupToday = false;
 
 export class Persistence {
 
+  public configLoaded$ = new Subject();
+
+  // This is the CONFIG-Version, not the App Version
   private version = 1;
 
   private updated$ = new Subject();
@@ -75,6 +80,7 @@ export class Persistence {
 
       this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
       this.updated$.next();
+      this.configLoaded$.next();
     });
 
     this.updated$.pipe(
@@ -86,7 +92,11 @@ export class Persistence {
   }
 
 
-
+  /**
+   * If you need to move values from config version to a new one
+   *
+   * @param configFromFile
+   */
   public upgradeConfigFile(configFromFile: SettingsState): SettingsState {
 
     if (!configFromFile.version) {
@@ -318,6 +328,12 @@ export class Persistence {
   // TODO maybe key/value safety / validations
   public updateConfig(config: Config) {
     this.data.config = config;
+
+    this.saveData();
+  }
+
+  public updatePartialConfig(config: Partial<Config>) {
+    this.data.config = Object.assign({}, this.data.config, config);
 
     this.saveData();
   }

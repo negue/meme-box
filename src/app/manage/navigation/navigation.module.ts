@@ -7,6 +7,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {QrcodeDialogModule} from "../qrcode-dialog/qrcode-dialog.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatBadgeModule} from "@angular/material/badge";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     MatButtonModule,
     MatIconModule,
     QrcodeDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatBadgeModule
   ]
 })
 export class NavigationModule {

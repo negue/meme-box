@@ -23,6 +23,8 @@ export class AppQueries extends Query<AppState> {
   tagMap$ = this.select(store => store.tags);
   screenMap$ = this.select(store => store.screen);
   config$ = this.select(store => store.config);
+  version$ = this.select(store => store.version);
+  update$ = this.select(store => store.update);
   currentMediaFile$ = this.select(store => store.currentMediaFiles);
   inOfflineMode$ = this.select(store => store.offlineMode);
 

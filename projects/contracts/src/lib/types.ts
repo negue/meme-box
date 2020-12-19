@@ -144,6 +144,8 @@ export interface Tag extends HasId {
 
 /**
  * Settings.json - State
+ *
+ * Persistent State
  */
 export interface SettingsState {
   version: number;
@@ -156,14 +158,25 @@ export interface SettingsState {
   config: Partial<Config>;
 }
 
+export interface UpdateState {
+  available: boolean,
+  version: string;
+}
+
+export interface ServerState {
+  update: UpdateState;
+}
+
 export interface AppState extends SettingsState {
   currentMediaFiles: FileInfo[];
   offlineMode: boolean;
+  update: UpdateState;
 }
 
 export interface Config {
   mediaFolder: string;
   twitch: TwitchConfig;
+  enableVersionCheck?: boolean;
 }
 
 export interface TwitchConfig {
