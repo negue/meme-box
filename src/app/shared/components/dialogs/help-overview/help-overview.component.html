@@ -11,7 +11,13 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions align="end">
+
+<mat-dialog-actions>
+  <button mat-button color="primary"
+  (click)="openGithubRepo()">
+    Edit / Improve on GitHub
+  </button>
+  <span class="space"></span>
   <button mat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>
 
