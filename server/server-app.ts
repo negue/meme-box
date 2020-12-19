@@ -129,7 +129,8 @@ PersistenceInstance.configLoaded$.pipe(
 
         LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, { remote: version, local });
 
-        STATE_OBJECT.updateAvailable = isRemoteNewer;
+        STATE_OBJECT.update.available = isRemoteNewer;
+        STATE_OBJECT.update.version = version;
       });
     }).on('error', function(e){
       LOGGER.error("Error loading version json: ", e);

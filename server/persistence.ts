@@ -35,6 +35,7 @@ export class Persistence {
 
   public configLoaded$ = new Subject();
 
+  // This is the CONFIG-Version, not the App Version
   private version = 1;
 
   private updated$ = new Subject();
@@ -91,7 +92,11 @@ export class Persistence {
   }
 
 
-
+  /**
+   * If you need to move values from config version to a new one
+   *
+   * @param configFromFile
+   */
   public upgradeConfigFile(configFromFile: SettingsState): SettingsState {
 
     if (!configFromFile.version) {
