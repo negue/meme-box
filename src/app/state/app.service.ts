@@ -12,6 +12,7 @@ import {
   TimedClip,
   Twitch,
   TwitchConfig,
+  UpdateState,
   VisibilityEnum
 } from '@memebox/contracts';
 import {
@@ -28,7 +29,6 @@ import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from './app.dummy.data';
 import {deleteClip} from '../../../projects/state/src/lib/operations/clip.operations';
 import {take} from 'rxjs/internal/operators';
-import {map} from "rxjs/operators";
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -495,12 +495,17 @@ export class AppService {
     ).subscribe();
   }
 
-  public checkVersionUpdateAvailable (): Promise<boolean> {
-    return this.http.get<{update:boolean}>(`${API_BASE}${ENDPOINTS.STATE}/update_available`)
+  public async checkVersionUpdateAvailable (): Promise<UpdateState> {
+    const newVersionResponse = await this.http.get<UpdateState>(`${API_BASE}${ENDPOINTS.STATE}/update_available`)
       .pipe(
         take(1),
-        map(value => value.update)
       ).toPromise();
+
+    this.appStore.update(state => {
+      state.update = newVersionResponse;
+    });
+
+    return newVersionResponse;
   }
 }
 

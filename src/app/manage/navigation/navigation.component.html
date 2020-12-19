@@ -16,7 +16,9 @@
     <span>
        <button mat-icon-button routerLink="./settings"
                routerLinkActive="mat-primary"
-               matTooltip="Settings">
+               matTooltip="Settings"
+               [matBadge]="(update$ | async)?.available ? 'U' : null"
+               matBadgePosition="below after">
         <mat-icon svgIcon="settings"></mat-icon>
       </button>
     </span>

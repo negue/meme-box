@@ -1,5 +1,13 @@
 <div class="title-row">
-  <h2 class="mat-h2 title-name">Version: {{VERSION_JSON.VERSION_TAG}}</h2>
+  <h2 class="mat-h2 title-name">
+
+      {{updateAvailableBadgeLabel$ | async}}
+
+    <button (click)="openGitubPage()" color="primary"
+            mat-icon-button>
+      <mat-icon svgIcon="launch"></mat-icon>
+    </button>
+  </h2>
 
   <mat-icon svgIcon="info"></mat-icon>
 </div>

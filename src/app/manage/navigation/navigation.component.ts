@@ -5,6 +5,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {take} from "rxjs/operators";
 import {AppService} from "../../state/app.service";
 import {RELEASE_PAGE} from "../../../../server/constants";
+import {AppQueries} from "../../state/app.queries";
 
 @Component({
   selector: 'app-navigation',
@@ -18,9 +19,12 @@ export class NavigationComponent implements OnInit {
     {path: './triggers', displayName: 'Triggers'}
   ]
 
+  public update$ = this.appQuery.update$;
+
   constructor(private dialogService: DialogService,
               private snackbar: MatSnackBar,
-              private appService: AppService) {
+              private appService: AppService,
+              private appQuery: AppQueries) {
 
 
 
@@ -31,7 +35,9 @@ export class NavigationComponent implements OnInit {
     setTimeout(async () => {
       const updateAvailable = await this.appService.checkVersionUpdateAvailable();
 
-      if (updateAvailable) {
+      console.info({updateAvailable});
+
+      if (updateAvailable.available) {
         this.snackbar.open('Update available', 'Open GitHub', {
           horizontalPosition: "center",
           verticalPosition: "bottom",
