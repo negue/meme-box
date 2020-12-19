@@ -28,7 +28,9 @@ Click on `Add new media`
 
 1. There you enter your clip name to see it in every config-part / streamdeck plugin
 2. the type of this new clip
-> table or link to the type overview
+
+  See [Type Overview](./type_overview.md)
+
 3. Depending on the type you'd have a filename / url
 > if you choose file type the dropdown at the right of file-input will list all files of this specified type
 

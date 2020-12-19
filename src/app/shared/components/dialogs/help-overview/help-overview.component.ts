@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {MarkdownDialogPayload} from "../markdown/markdown.component";
 import {DialogService} from "../dialog.service";
-import {TUTORIALS_GITHUB_PAGE} from "../../../../../../server/constants";
+import {MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE} from "../../../../../../server/constants";
 
 @Component({
   selector: 'app-help-overview',
@@ -10,12 +9,7 @@ import {TUTORIALS_GITHUB_PAGE} from "../../../../../../server/constants";
 })
 export class HelpOverviewComponent implements OnInit {
 
-  public helpItems: MarkdownDialogPayload[] = [
-    {
-      name: 'Getting Started',
-      githubName: 'getting_started.md'
-    }
-  ];
+  public helpItems = MARKDOWN_FILES
 
   constructor(private dialogService: DialogService) { }
 
