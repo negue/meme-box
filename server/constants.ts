@@ -1,5 +1,3 @@
-import {MarkdownDialogPayload} from "../src/app/shared/components/dialogs/markdown/markdown.component";
-
 export const DEFAULT_PORT = 4444;
 
 export const REMOTE_VERSION_FILE = 'https://raw.githubusercontent.com/negue/meme-box/master/version_update.json';

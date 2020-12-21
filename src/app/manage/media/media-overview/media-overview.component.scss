@@ -18,15 +18,17 @@
     z-index: 1;
     background: var(--palette-background-background) !important;
 
-
     ::ng-deep {
       .filterRow {
         margin-bottom: 1rem;
       }
     }
-
   }
-
 }
 
-
+.floating-action-button {
+  .mat-icon {
+    // wonder why the current style is pushing the icon down?!
+    height: initial;
+  }
+}

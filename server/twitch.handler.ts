@@ -73,28 +73,8 @@ export class TwitchHandler {
       if (self) return;
 
       if (this.twitchConfig.bot.enabled && this.twitchConfig.bot.auth && message === '!commands') {
-        const foundLevels = this.getLevelOfTags(tags);
-        const commands = this.twitchSettings.filter((event) => {
-          const trigger: TwitchTriggerCommand = { message, command: event, tags };
+        this.handleCommandsRequest(tags, message);
 
-          return (
-            event.event === TwitchEventTypes.message &&
-            event.contains.startsWith('!') &&
-            event.active &&
-            this.isAllowedToTrigger(
-              trigger,
-              foundLevels,
-              false,
-              false
-            )
-          );
-        }).map(e => e.contains);
-
-        const botResponse = this.twitchConfig.bot.response
-          .replace('{{commands}}', commands.join(' | '))
-          .replace('{{user}}', `${tags.username}`);
-        this.tmiClient.say(channel, botResponse)
-          .catch(console.error);
         return false;
       }
 
@@ -192,6 +172,31 @@ export class TwitchHandler {
 
     *
     * */
+  }
+
+  handleCommandsRequest(tags: tmi.ChatUserstate, message: string): void {
+    const foundLevels = this.getLevelOfTags(tags);
+    const commands = this.twitchSettings.filter((event) => {
+      const trigger: TwitchTriggerCommand = {message, command: event, tags};
+
+      return (
+        event.event === TwitchEventTypes.message &&
+        event.contains.startsWith('!') &&
+        event.active &&
+        this.isAllowedToTrigger(
+          trigger,
+          foundLevels,
+          false,
+          false
+        )
+      );
+    }).map(e => e.contains);
+
+    const botResponse = this.twitchConfig.bot.response
+      .replace('{{commands}}', commands.join(' | '))
+      .replace('{{user}}', `${tags.username}`);
+    this.tmiClient.say(this.twitchConfig.channel, botResponse)
+      .catch(console.error);
   }
 
   getCommandOfMessage(message: string, event: TwitchEventTypes, eventOptions?: TwitchEventOptions): Twitch {

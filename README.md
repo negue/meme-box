@@ -7,20 +7,18 @@
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 </p>
 
-A complete management app for image / audio / video / iframe clips to be used inside OBS.
+A complete management app for image / audio / video / iframe / custom HTML "clips" to be used inside OBS.
 
 ## Working Features
 
-* [x] Add / Edit / Delete Clips
 * [x] Custom CSS per Clip / Screen
 * [x] Custom Position per Clip / Screen
 * [x] Custom Visibility States: Play, Toggle and Static
+* [x] Trigger clips by twitch messages / bits / raids
+* [x] Trigger clips by timers
+* [x] Trigger clips by mobile view (to use your phone / tablet)
 * [x] Trigger clips by streamdeck-plugin
-* [x] Trigger clips twitch messages
-* [x] Simple WebSocket/Rest API to save/serve the data
-* [x] clip can be hidden by `Play Time` or once a clip has ended
-* [x] mobile-view can be opened by qr-code, and trigger clips from it
-* [x] `Meta-Clip` to trigger random other clips
+* [x] `Meta-Clip` to trigger random/multiple other clips
 
 -----
 
