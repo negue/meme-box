@@ -29,7 +29,7 @@ Click on `Add new media`
 1. There you enter your clip name to see it in every config-part / streamdeck plugin
 2. the type of this new clip
 
-  See [Type Overview](./type_overview.md)
+  See [`Type Overview`](./type_overview.md)
 
 3. Depending on the type you'd have a filename / url
 > if you choose file type the dropdown at the right of file-input will list all files of this specified type
@@ -64,7 +64,7 @@ Inside this dialog you can assign the clips by clicking on them.
   or enable in your browser to play media files without user events :)                                                    
   > not needed for OBS itself :tada:
 
-If you add to OBS - better use your usual stream/screen size, and then move the clips around by the `link to advanced options`.
+If you add to OBS - better use your usual stream/screen size, and then move the clips around using the [`advanced options`](./screen_clip_advanced_settings.md).
 
 - Go to `Media` page, press `Preview` this will trigger the selected URL targets
   

@@ -17,6 +17,14 @@ export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
   {
     name: 'Type Overview',
     githubName: 'type_overview.md'
+  },
+  {
+    name: 'Meta Clips',
+    githubName: 'meta_clips.md'
+  },
+  {
+    name: 'Screen / Clip Advanced Settings',
+    githubName: 'screen_clip_advanced_settings.md'
   }
 ];
 
