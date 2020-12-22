@@ -1,9 +1,10 @@
-import { PersistenceInstance } from "../persistence";
+import {PersistenceInstance} from "../persistence";
 
 import * as express from 'express';
-import { ExampleTwitchCommandsSubject } from "../shared";
-import { body } from "express-validator";
-import { validOrLeave } from "../validations";
+import {ExampleTwitchCommandsSubject} from "../shared";
+import {body} from "express-validator";
+import {validOrLeave} from "../validations";
+import {Twitch} from "../../projects/contracts/src/lib/types";
 
 const twitchPostValidator = [
   body('clipId').isString(),
@@ -36,7 +37,13 @@ TWITCH_ROUTES
 
 // Put = Update
   .put('/:eventId', twitchPutValidator, validOrLeave, (req, res) => {
-    res.send(PersistenceInstance.updateTwitchEvent(req.params['eventId'], req.body));
+    const updatedTwitchObject: Twitch = req.body;
+
+    PersistenceInstance.updateTwitchEvent(req.params['eventId'], updatedTwitchObject)
+
+    res.send({
+      ok: true
+    });
   })
 // Delete
   .delete('/:eventId', (req, res) => {
