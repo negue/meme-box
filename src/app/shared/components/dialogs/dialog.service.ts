@@ -23,8 +23,9 @@ import {take} from "rxjs/internal/operators";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeContent} from "../../../../../projects/utils/src/lib/dynamicIframe";
 import {DynamicIframeEditComponent} from "./dynamic-iframe-edit/dynamic-iframe-edit.component";
-import {MarkdownComponent, MarkdownDialogPayload} from "./markdown/markdown.component";
+import {MarkdownComponent} from "./markdown/markdown.component";
 import {HelpOverviewComponent} from "./help-overview/help-overview.component";
+import {MarkdownDialogPayload} from "../../../../../server/constants";
 
 @Injectable()
 export class DialogService {
@@ -132,6 +133,7 @@ export class DialogService {
   showMarkdownFile(info: MarkdownDialogPayload) {
     this._dialog.open(
       MarkdownComponent, {
+        autoFocus: false,
         data: info,
         width: 'calc(min(1000px, 96%))',
         maxWidth: '96vw',

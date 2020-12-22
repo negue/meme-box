@@ -323,6 +323,8 @@ export class AppService {
 
       event.id = newId;
     } else {
+      // TODO see if api call worked?
+
       // add the clip to api & await
       await this.http.put<string>(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}/${newId}`, event).toPromise();
     }

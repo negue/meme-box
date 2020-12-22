@@ -7,20 +7,18 @@
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 </p>
 
-A complete management app for image / audio / video / iframe clips to be used inside OBS.
+A complete management app for [`image / audio / video / iframe / custom HTML`](/tutorials/type_overview.md) "clips" to be used inside OBS.
 
 ## Working Features
 
-* [x] Add / Edit / Delete Clips
 * [x] Custom CSS per Clip / Screen
 * [x] Custom Position per Clip / Screen
 * [x] Custom Visibility States: Play, Toggle and Static
+* [x] Trigger clips by twitch messages / bits / raids
+* [x] Trigger clips by timers
+* [x] Trigger clips by mobile view (to use your phone / tablet)
 * [x] Trigger clips by streamdeck-plugin
-* [x] Trigger clips twitch messages
-* [x] Simple WebSocket/Rest API to save/serve the data
-* [x] clip can be hidden by `Play Time` or once a clip has ended
-* [x] mobile-view can be opened by qr-code, and trigger clips from it
-* [x] `Meta-Clip` to trigger random other clips
+* [x] `Meta-Clip` to trigger random/multiple other clips
 
 -----
 
@@ -30,48 +28,14 @@ A complete management app for image / audio / video / iframe clips to be used in
 
 [`2. Getting Started`](./tutorials/getting_started.md)
 
+`3. Advanced`:
+
+- [`Meta-Clips`](./tutorials/meta_clips.md)
+- [`Screen / Clip Settings`](./tutorials/screen_clip_advanced_settings.md)
 
 ___
 
-## Getting Started with development
-
-1. Clone this repo
-2. Run the following commands in the root to start both the server and web app.
-http://localhost:4200 opens automatically.
-
-```sh
-npm install
-npm run start:all
-
-# if you want to work on the server, its easier to start client / server separately
-# that way you only have to restart the server alone
-npm run start:app
-npm run start:server
-```
-
-## Building the binaries
-
-### Headless
-
-```
-# Builds angular app, server and "prepares it" 
-npm run build:prepare
-
-npm run build:all // or build:windows 
-```
-
-### Electron
-
-```
-npm run electron:build
-```
-
-### Folders
-Client is in `src/app` 
-
-Server is in `main.ts` and `server/*`
-
-Streamdeck-Plugin is in `memebox-streamdeck`
+[`Getting started with Development`](README_DEV.md)
 
 ## Based on this Template:
 https://github.com/maximegris/angular-electron
