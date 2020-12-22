@@ -100,4 +100,8 @@ export class ScreenOverviewComponent implements OnInit {
     this.webSocket.triggerReloadScreen(screen.id);
     this.snackbar.normal(`Screen: ${screen.name} reloaded`);
   }
+
+  openHelpOverview() {
+    this._dialog.showHelpOverview();
+  }
 }
