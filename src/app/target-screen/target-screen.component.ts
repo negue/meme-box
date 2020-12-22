@@ -124,8 +124,6 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(clip => {
       if (clip.targetScreen === thisScreenId) {
-        console.error('YES TRIGGERING IT', {clip});
-
         this.mediaClipToShow$.next(clip.id);
       }
     });
