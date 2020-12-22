@@ -37,6 +37,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   @HostListener('animationend', ['$event'])
   onAnimationEnd(event: any) {
+    console.info('animationend', event);
     if (this.currentState === MediaState.ANIMATE_IN) {
       this.triggerState(MediaState.VISIBLE);
 
@@ -109,8 +110,12 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
     this.triggerState(targetState);
 
-    if (targetState === MediaState.HIDDEN) {
-      this.stopMedia();
+    if (targetState === MediaState.ANIMATE_OUT) {
+      setTimeout(() => {
+        this.triggerState(MediaState.HIDDEN);
+      }, 1000);
+      // 1s is the default duration of animate.style animations
+      // todo add ability to change those durations
     }
   }
 
@@ -182,6 +187,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       {
         this.removeAnimation(this.selectedOutAnimation);
         this.isVisible$.next(false);
+
+        this.stopMedia();
+
         break;
       }
       case MediaState.ANIMATE_IN:
