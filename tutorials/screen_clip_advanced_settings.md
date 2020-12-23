@@ -26,4 +26,5 @@ The Visibility will be applied like that:
 - **Centered**: 
   - If there are no `Width/Height` applied, it will be just "fullscreen"
   - But with `Width/Height` it will be centered
-- **Manual Position**: Here you can use your own values for `left`/`right`/`top`/`bottom`
+- **Fixed**: Here you can use your own values for `left`/`right`/`top`/`bottom`
+- **Random**: On each trigger, It creates new `left`/`top` values but also tries to calculate sizes so that its "always" visible
