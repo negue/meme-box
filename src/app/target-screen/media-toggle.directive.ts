@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, MediaType, VisibilityEnum} from "@memebox/contracts";
+import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, MediaType, PositionEnum, VisibilityEnum} from "@memebox/contracts";
 import {CombinedClip} from "./types";
 import {KeyValue} from "@angular/common";
 import {BehaviorSubject, Subject} from "rxjs";
@@ -90,6 +90,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
           this.animateOutOrHide();
         } else {
+          this.applyPositions();
+
           // Trigger Play
           this.triggerState(
             this.combinedClip.clipSetting.animationIn
@@ -101,6 +103,38 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     });
 
     this.updateNeededVariables();
+  }
+
+  private applyPositions() {
+    const clipSettings = this.combinedClip.clipSetting;
+    const currentPosition = clipSettings.position;
+
+    console.info({
+      clipSettings: this.combinedClip.clipSetting
+    });
+    if (currentPosition === PositionEnum.Absolute) {
+      this.element.nativeElement.style.setProperty('--clip-setting-left', clipSettings.left);
+      this.element.nativeElement.style.setProperty('--clip-setting-top', clipSettings.top);
+      this.element.nativeElement.style.setProperty('--clip-setting-right', clipSettings.right);
+      this.element.nativeElement.style.setProperty('--clip-setting-bottom', clipSettings.bottom);
+
+      console.info({clipSettings});
+    }
+
+    if (currentPosition === PositionEnum.Random) {
+      const {height, width} = this.combinedClip.clipSetting;
+
+      const randomPosition = () => Math.floor(Math.random()*100);
+
+      // both types work :D
+      const left = `max(0px, calc(${randomPosition()}% - ${width}))`;
+      const top = `calc(max(0px, ${randomPosition()}% - ${height}))`;
+
+      this.element.nativeElement.style.setProperty('--clip-setting-left', left);
+      this.element.nativeElement.style.setProperty('--clip-setting-top', top);
+
+      console.info({left, top, element: this.element});
+    }
   }
 
   private animateOutOrHide() {

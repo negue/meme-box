@@ -42,7 +42,7 @@ video, img, iframe, app-dynamic-iframe {
   position: absolute;
 }
 
-.absolute {
+.absolute, .random {
   position: absolute;
   bottom: var(--clip-setting-bottom, unset);
   right: var(--clip-setting-right, unset);

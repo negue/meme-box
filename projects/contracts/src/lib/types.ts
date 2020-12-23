@@ -54,7 +54,8 @@ export interface Screen extends HasId {
 export enum PositionEnum {
   FullScreen,
   Absolute,
-  // others...
+  Centered,
+  Random
 }
 
 export enum VisibilityEnum {
