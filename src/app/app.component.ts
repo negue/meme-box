@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {SwUpdate} from "@angular/service-worker";
 
 @Component({
   selector: 'app-root',
@@ -6,7 +7,14 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor() {
+  constructor(updates: SwUpdate) {
+    if (updates.isEnabled)   {
+      updates.checkForUpdate();
 
+      updates.available.subscribe(() => {
+        console.info('update available');
+        window.location.reload();
+      });
+    }
   }
 }
