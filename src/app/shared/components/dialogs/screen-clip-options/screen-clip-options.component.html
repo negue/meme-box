@@ -60,6 +60,13 @@
       </mat-form-field>
 
       <mat-form-field>
+        <input autocomplete="off" formControlName="animationInDuration"
+               matInput
+               placeholder="Animate In - Duration"
+               type="text">
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-select formControlName="animationOut"
                     placeholder="Animate OUT">
           <mat-option value="">None</mat-option>
@@ -67,6 +74,13 @@
 
           <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation}}</mat-option>
         </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input autocomplete="off" formControlName="animationOutDuration"
+               matInput
+               placeholder="Animate Out - Duration"
+               type="text">
       </mat-form-field>
     </div>
 

@@ -228,7 +228,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.ANIMATE_IN:
       {
-        this.startAnimation(this.selectedInAnimation);
+        this.startAnimation(this.selectedInAnimation, this.combinedClip.clipSetting.animationInDuration);
 
         this.isVisible$.next(true);
 
@@ -248,7 +248,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       {
         this.selectedOutAnimation = this.getAnimationName(false);
         console.warn('Animation OUT', this.selectedOutAnimation, this.combinedClip.clipSetting);
-        this.startAnimation(this.selectedOutAnimation);
+        this.startAnimation(this.selectedOutAnimation, this.combinedClip.clipSetting.animationOutDuration);
 
         this.stopMedia();
         break;
@@ -258,8 +258,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.currentState = newState;
   }
 
-  private startAnimation(animationName: string) {
+  private startAnimation(animationName: string, animationDuration: number) {
     this.element.nativeElement.classList.add('animate__animated', animationName);
+    this.element.nativeElement.style.setProperty('--animate-duration', `${animationDuration ?? 777}ms`);
   }
   private removeAnimation(animationName: string) {
     this.element.nativeElement.classList.remove('animate__animated');

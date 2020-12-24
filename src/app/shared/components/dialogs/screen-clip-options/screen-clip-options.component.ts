@@ -45,7 +45,9 @@ export class ScreenClipOptionsComponent implements OnInit {
     imgFit: '', // todo image fit setting as enum
 
     animationIn: '',
+    animationInDuration: 0,
     animationOut: '',
+    animationOutDuration: 0,
 
     zIndex: 1,
 
