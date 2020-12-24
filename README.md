@@ -17,7 +17,7 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 * [x] Trigger clips by twitch messages / bits / raids
 * [x] Trigger clips by timers
 * [x] Trigger clips by mobile view (to use your phone / tablet)
-* [x] Trigger clips by streamdeck-plugin
+* [x] Trigger clips by [`streamdeck-plugin`](https://github.com/negue/meme-box/raw/master/memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
 * [x] `Meta-Clip` to trigger random/multiple other clips
 
 -----

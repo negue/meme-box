@@ -60,6 +60,13 @@
       </mat-form-field>
 
       <mat-form-field>
+        <input autocomplete="off" formControlName="animationInDuration"
+               matInput
+               placeholder="Animate In - Duration"
+               type="text">
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-select formControlName="animationOut"
                     placeholder="Animate OUT">
           <mat-option value="">None</mat-option>
@@ -67,6 +74,13 @@
 
           <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation}}</mat-option>
         </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input autocomplete="off" formControlName="animationOutDuration"
+               matInput
+               placeholder="Animate Out - Duration"
+               type="text">
       </mat-form-field>
     </div>
 
@@ -133,9 +147,15 @@
                              [debounceTime]="450"
                              [style.--editor-min-height.px]="200"
                              (value$)="customFormControl.value = $event"
-                             (focussed$)="customFormControl.focused = $event" #editoe>
+                             (focussed$)="customFormControl.focused = $event">
           </gewd-prism-editor>
         </gewd-custom-form-control>
+
+        <mat-hint>
+          Hints: <br/>
+          <strong>.clip-holder</strong> can be used to style the holding element of the clip itself. <br/>
+          Everything else will be applied inside the holder itself.
+        </mat-hint>
       </mat-form-field>
     </div>
   </form>

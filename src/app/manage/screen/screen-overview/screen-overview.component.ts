@@ -68,7 +68,8 @@ export class ScreenOverviewComponent implements OnInit {
       mode: ClipAssigningMode.Multiple,
       screenId: screen.id,
 
-      dialogTitle: screen.name
+      dialogTitle: screen.name,
+      showMetaItems: false
     });
   }
 
