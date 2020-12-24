@@ -240,6 +240,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.removeAnimation(this.selectedInAnimation);
 
         // "once its done"
+        this.stopMedia();
         this.playMedia();
 
         break;
