@@ -196,7 +196,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     const clipId = await this.dialogService.showClipSelectionDialog({
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
-      dialogTitle: this.data.name
+      dialogTitle: this.data.name,
+      showMetaItems: true
     });
 
     if (clipId) {

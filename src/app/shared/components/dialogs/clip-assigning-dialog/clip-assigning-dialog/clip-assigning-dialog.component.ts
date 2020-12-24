@@ -21,6 +21,8 @@ export interface ClipAssigningDialogOptions {
   selectedItemId?: string;
 
   dialogTitle: string;
+
+  showMetaItems: boolean;
 }
 
 @Component({
@@ -35,6 +37,14 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
     this.appQueries.clipList$,
     this.appQueries.tagMap$,
     true
+  ).pipe(
+    map(value => {
+      if (this.data.showMetaItems) {
+        return value;
+      } else {
+        return value.filter(c => c.type === 'TAG' || c.value !== MediaType.Meta)
+      }
+    })
   );
 
   checkedMap: Dictionary<boolean>;
@@ -44,6 +54,14 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   public clips$: Observable<Clip[]> = filterClips$(
     this.appQueries.clipList$,
     this.filteredItems$
+  ).pipe(
+    map(value => {
+      if (this.data.showMetaItems) {
+        return value;
+      } else {
+        return value.filter(c => c.type !== MediaType.Meta)
+      }
+    })
   );
 
   screen$: Observable<Screen> = this.appQueries.screenMap$.pipe(
