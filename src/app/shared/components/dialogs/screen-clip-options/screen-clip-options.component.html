@@ -147,9 +147,15 @@
                              [debounceTime]="450"
                              [style.--editor-min-height.px]="200"
                              (value$)="customFormControl.value = $event"
-                             (focussed$)="customFormControl.focused = $event" #editoe>
+                             (focussed$)="customFormControl.focused = $event">
           </gewd-prism-editor>
         </gewd-custom-form-control>
+
+        <mat-hint>
+          Hints: <br/>
+          <strong>.clip-holder</strong> can be used to style the holding element of the clip itself. <br/>
+          Everything else will be applied inside the holder itself.
+        </mat-hint>
       </mat-form-field>
     </div>
   </form>
