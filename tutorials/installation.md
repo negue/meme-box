@@ -14,7 +14,7 @@ Start the downloaded Executable File
 |Config|Default|Explanation|
 |--|--|--|
 |`--port=`|`4444`|The Server Port|
-|`--config=`| `Default Config Path` |`Your path to folder/meme-box config`|
+|`--config=`| see `Default Config Path` |`Your path to folder/meme-box config`|
 
 ### Default Config Path
 
