@@ -14,8 +14,15 @@ Start the downloaded Executable File
 |Config|Default|Explanation|
 |--|--|--|
 |`--port=`|`4444`|The Server Port|
-|`--config=`||`Your user appdata folder/meme-box`|
+|`--config=`| `Default Config Path` |`Your path to folder/meme-box config`|
 
+### Default Config Path
+
+ OS X - `/Users/user/Library/Preferences/meme-box`
+  
+  Windows - `C:\Users\user\AppData\Roaming\meme-box`
+  
+  Linux - `/home/user/.local/share/meme-box`
 
 ## Media-Folder
 - the selected media-folder (inside memebox) needs to be readable for this process
