@@ -183,6 +183,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       $event,
       time: new Date()
     });
+
+    console.info({log: this.log});
   }
 
   addToMap(value: Clip, element: any) {

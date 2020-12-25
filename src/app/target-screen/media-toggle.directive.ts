@@ -118,7 +118,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       this.element.nativeElement.style.setProperty('--clip-setting-right', clipSettings.right);
       this.element.nativeElement.style.setProperty('--clip-setting-bottom', clipSettings.bottom);
 
-      console.info({clipSettings});
+      console.info('Applied Positions', {clipSettings});
     }
 
     if (currentPosition === PositionEnum.Random) {
@@ -143,14 +143,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       : MediaState.HIDDEN;
 
     this.triggerState(targetState);
-
-    if (targetState === MediaState.ANIMATE_OUT) {
-      setTimeout(() => {
-        this.triggerState(MediaState.HIDDEN);
-      }, 1000);
-      // 1s is the default duration of animate.style animations
-      // todo add ability to change those durations
-    }
   }
 
   private updateNeededVariables() {
@@ -188,7 +180,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     if (control instanceof HTMLAudioElement
       || control instanceof HTMLVideoElement) {
       control.currentTime = 0;
-      control.play();
+      console.info('Media Play triggered');
+      control.play().then(() => {
+        console.info('Media Play done');
+      });
     }
 
     if (control instanceof HTMLImageElement) {
@@ -252,6 +247,17 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.startAnimation(this.selectedOutAnimation, this.combinedClip.clipSetting.animationOutDuration);
 
         this.stopMedia();
+
+        // Fallback if the animation hasn't ended yet
+        setTimeout(() => {
+          if (this.currentState !== MediaState.HIDDEN) {
+            console.info('State is still not hidden, forcing hidden.');
+            this.stopMedia();
+            this.removeAnimation(this.selectedOutAnimation);
+            this.triggerState(MediaState.HIDDEN);
+          }
+        }, this.combinedClip.clipSetting.animationOutDuration ?? 777);
+
         break;
       }
     }
@@ -260,14 +266,19 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private startAnimation(animationName: string, animationDuration: number) {
+    console.info('Adding Animation to Element: ', animationName);
     this.element.nativeElement.classList.add('animate__animated', animationName);
     this.element.nativeElement.style.setProperty('--animate-duration', `${animationDuration ?? 777}ms`);
+
+    console.info('After Adding', this.element.nativeElement.classList.toString());
   }
   private removeAnimation(animationName: string) {
     this.element.nativeElement.classList.remove('animate__animated');
 
     if (animationName) {
+      console.info('Removing Animation from Element: ', animationName);
       this.element.nativeElement.classList.remove(animationName);
+      console.info('After Remove', this.element.nativeElement.classList.toString());
     }
   }
 
@@ -286,7 +297,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private randomAnimation(animations: string[]) {
     var randomIndex = Math.floor(Math.random() * animations.length);     // returns a random integer from 0 to 9
 
-  return animations[randomIndex];
+    return animations[randomIndex];
   }
-
 }

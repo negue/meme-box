@@ -1,8 +1,8 @@
 import * as tmi from 'tmi.js';
-import { EmoteObj, Options } from 'tmi.js';
-import { Subscription } from 'rxjs';
-import { PersistenceInstance } from './persistence';
-import { startWith } from 'rxjs/operators';
+import {EmoteObj, Options} from 'tmi.js';
+import {Subscription} from 'rxjs';
+import {PersistenceInstance} from './persistence';
+import {startWith} from 'rxjs/operators';
 import {
   Dictionary,
   Twitch,
@@ -10,9 +10,9 @@ import {
   TwitchEventTypes,
   TwitchTriggerCommand
 } from '../projects/contracts/src/lib/types';
-import { triggerMediaClipById } from './websocket-server';
-import { Logger } from 'winston';
-import { newLogger } from './logger.utils';
+import {triggerMediaClipById} from './websocket-server';
+import {Logger} from 'winston';
+import {newLogger} from './logger.utils';
 
 declare module 'tmi.js' {
   export interface Badges {
@@ -324,14 +324,6 @@ export class TwitchHandler {
         allowedByCooldown,
         allowedToTrigger
       });
-
-      if (allowedToTrigger) {
-        this.cooldownDictionary[trigger.command.id] = Date.now();
-
-        triggerMediaClipById({
-          id: trigger.command.clipId
-        });
-      }
     }
 
     return allowedToTrigger;
