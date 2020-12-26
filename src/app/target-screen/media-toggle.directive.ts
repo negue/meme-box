@@ -122,18 +122,29 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     }
 
     if (currentPosition === PositionEnum.Random) {
+      console.warn('RAMDOM');
       const {height, width} = this.combinedClip.clipSetting;
 
       const randomPosition = () => Math.floor(Math.random()*100);
 
-      // both types work :D
-      const left = `max(0px, calc(${randomPosition()}% - ${width}))`;
-      const top = `calc(max(0px, ${randomPosition()}% - ${height}))`;
+      const randomLeft = `calc(${randomPosition()}% - ${width})`;
+      const randomTop = `calc(${randomPosition()}% - ${height})`;
 
-      this.element.nativeElement.style.setProperty('--clip-setting-left', left);
-      this.element.nativeElement.style.setProperty('--clip-setting-top', top);
+      this.element.nativeElement.style.setProperty('--clip-setting-left', randomLeft);
+      this.element.nativeElement.style.setProperty('--clip-setting-top', randomTop);
 
-      console.info({left, top, element: this.element});
+      var computedStyle = getComputedStyle(this.element.nativeElement);
+      const {left, top} = computedStyle;
+
+      console.info({randomLeft, left, randomTop,  top, element: this.element});
+
+      if (left.includes("-")) {
+        this.element.nativeElement.style.setProperty('--clip-setting-left', '0px');
+      }
+
+      if (top.includes("-")) {
+        this.element.nativeElement.style.setProperty('--clip-setting-top', '0px');
+      }
     }
   }
 
