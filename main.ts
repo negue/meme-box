@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron';
+import {app, BrowserWindow, shell} from 'electron';
 import * as path from 'path';
 import {expressServer} from './server/server-app';
 import {NEW_CONFIG_PATH} from "./server/path.utils";
@@ -58,6 +58,17 @@ function createWindow(): BrowserWindow {
     // when you should delete the corresponding element.
     win = null;
   });
+
+  // fix https://github.com/electron/electron/issues/1344#issuecomment-464480796
+
+  const openExternalLinksInOSBrowser = (event, url) => {
+    if (url.match(/.*localhost.*/gi) === null && (url.startsWith('http:') || url.startsWith('https:'))) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  };
+  win.webContents.on('new-window', openExternalLinksInOSBrowser);
+  win.webContents.on('will-navigate', openExternalLinksInOSBrowser);
 
   return win;
 }
