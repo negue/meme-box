@@ -130,7 +130,9 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
         take(1)
       ).toPromise();
 
-      if (currentTwitchEvents.some(t => t.event === TwitchEventTypes.message
+      if (currentTwitchEvents.some(t =>
+        t.event === TwitchEventTypes.message
+        && t.id !== newTwitchValue.id
         && t.contains === newTwitchValue.contains)) {
         const dialogResult = await this.dialogService.showConfirmationDialog({
           title: 'You already have the same command',
