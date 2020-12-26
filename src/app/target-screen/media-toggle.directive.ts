@@ -28,6 +28,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private currentState = MediaState.HIDDEN;
   private selectedInAnimation = '';
   private selectedOutAnimation = '';
+  private queueCounter = 0;
+  private queueTrigger = new Subject();
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
 
@@ -37,14 +39,16 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   @HostListener('animationend', ['$event'])
   onAnimationEnd(event: any) {
-    console.info('animationend', event);
+    console.info(this.currentState, 'animationend', event);
     if (this.currentState === MediaState.ANIMATE_IN) {
+      console.warn('Change to Visible');
       this.triggerState(MediaState.VISIBLE);
 
       return;
     }
 
     if (this.currentState === MediaState.ANIMATE_OUT) {
+      console.warn('Change to Hidden');
       this.triggerState(MediaState.HIDDEN);
 
       return;
@@ -81,23 +85,48 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.queueTrigger.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(() => {
+
+      console.info('Queue Trigger - Subscribe', this.queueCounter);
+
+      if (this.queueCounter <= 0) {
+        return;
+      }
+
+      this.getAnimationValues();
+
+      if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
+        this.animateOutOrHide();
+      } else {
+        this.applyPositions();
+
+        // Trigger Play
+        this.triggerState(
+          this.combinedClip.clipSetting.animationIn
+            ? MediaState.ANIMATE_IN
+            : MediaState.VISIBLE
+        );
+      }
+    })
+
+    // this.parentComp.mediaClipToShow$  => fill up a queue
+
+    // trigger only if one isnt currently running
+    // once done it should trigger the next one
+
     this.parentComp.mediaClipToShow$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(toShow => {
       if (toShow === this.combinedClip.clip.id) {
-        this.getAnimationValues();
+        this.queueCounter++;
 
-        if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
-          this.animateOutOrHide();
-        } else {
-          this.applyPositions();
+        if (this.queueCounter === 1) {
 
-          // Trigger Play
-          this.triggerState(
-            this.combinedClip.clipSetting.animationIn
-              ? MediaState.ANIMATE_IN
-              : MediaState.VISIBLE
-          );
+          console.info('No Queue - Triggering', this.queueCounter);
+          this.queueTrigger.next();
         }
       }
     });
@@ -225,12 +254,26 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     switch (newState) {
       case MediaState.HIDDEN:
       {
-        this.removeAnimation(this.selectedOutAnimation);
+        console.info('HIDDEN TRIGGERED');
+        if (newState === this.currentState) {
+          console.warn('ALREADY HIDDEN');
+          return;
+        }
+
+        this.cleanAllAnimationClasses();
         this.isVisible$.next(false);
+
+        this.currentState = MediaState.HIDDEN;
+
 
         this.stopMedia();
 
-        break;
+        this.queueCounter--;
+        this.queueTrigger.next();
+
+        console.info('MEDIA DONE - Queue Counter', this.queueCounter);
+
+        return;
       }
       case MediaState.ANIMATE_IN:
       {
@@ -259,16 +302,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
         this.stopMedia();
 
-        // Fallback if the animation hasn't ended yet
-        setTimeout(() => {
-          if (this.currentState !== MediaState.HIDDEN) {
-            console.info('State is still not hidden, forcing hidden.');
-            this.stopMedia();
-            this.removeAnimation(this.selectedOutAnimation);
-            this.triggerState(MediaState.HIDDEN);
-          }
-        }, this.combinedClip.clipSetting.animationOutDuration ?? 777);
-
         break;
       }
     }
@@ -291,6 +324,22 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       this.element.nativeElement.classList.remove(animationName);
       console.info('After Remove', this.element.nativeElement.classList.toString());
     }
+  }
+
+  private cleanAllAnimationClasses() {
+    const currentAnimateClasses: string[] = [];
+
+    const classes = this.element.nativeElement.classList;
+
+    for (let i = 0; i < classes.length; i++){
+      const classItem = classes.item(i);
+
+      if (classItem.includes('animate_')) {
+        currentAnimateClasses.push(classItem);
+      }
+    }
+
+    classes.remove(...currentAnimateClasses);
   }
 
   private getAnimationName (animateIn: boolean) {
