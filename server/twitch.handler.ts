@@ -72,7 +72,7 @@ export class TwitchHandler {
     this.tmiClient.on('message', (channel, tags, message, self) => {
       if (self) return;
 
-      if (this.twitchConfig.bot.enabled && this.twitchConfig.bot.auth && message === '!commands') {
+      if (this.twitchConfig.bot?.enabled && this.twitchConfig.bot.auth && message === '!commands') {
         this.handleCommandsRequest(tags, message);
 
         return false;

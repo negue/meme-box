@@ -9,6 +9,9 @@
 
 A complete management app for [`image / audio / video / iframe / custom HTML`](/tutorials/type_overview.md) "clips" to be used inside OBS.
 
+![memebox example setup gif](./assets/memebox_example_mobile_view.gif)
+![memebox example twitch trigger gif](./assets/memebox_example_twitch.gif)
+
 ## Working Features
 
 * [x] Custom CSS per Clip / Screen
