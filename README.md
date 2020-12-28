@@ -9,8 +9,9 @@
 
 A complete management app for [`image / audio / video / iframe / custom HTML`](/tutorials/type_overview.md) "clips" to be used inside OBS.
 
-![memebox example setup gif](./assets/memebox_example_mobile_view.gif)
-![memebox example twitch trigger gif](./assets/memebox_example_twitch.gif)
+|**Media Setup Example + Mobile View**|**Setup a Twitch-Trigger**|
+|--|--|
+|![memebox example setup gif](./assets/memebox_example_mobile_view.gif)|![memebox example twitch trigger gif](./assets/memebox_example_twitch.gif)|
 
 ## Working Features
 
@@ -25,7 +26,7 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 
 -----
 
-## Tutorial
+## Getting Started
 
 [`1. Installation`](./tutorials/installation.md)
 
@@ -39,6 +40,14 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 ___
 
 [`Getting started with Development`](README_DEV.md)
+
+___
+
+## Roadmap
+
+* [ ] Change media options by triggered variables (e.g. different style, or something)
+* [ ] Labels on or around the Media
+* [ ] more to be added :)
 
 ## Based on this Template:
 https://github.com/maximegris/angular-electron
