@@ -1,17 +1,17 @@
 import * as css from 'css';
-import { Rule } from 'css';
-import { Component, ElementRef, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { Clip, Dictionary, MediaType, ScreenClip } from "@memebox/contracts";
-import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
-import { AppQueries } from "../state/app.queries";
-import { AppService } from "../state/app.service";
-import { ActivatedRoute } from "@angular/router";
-import { KeyValue } from "@angular/common";
-import { ConnectionState, WebsocketService } from "../core/services/websocket.service";
-import { CombinedClip } from "./types";
-import { replaceholder } from "../core/pipes/replaceholder.pipe";
-import { Title } from "@angular/platform-browser";
+import {Rule} from 'css';
+import {Component, ElementRef, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import {Clip, Dictionary, MediaType, ScreenClip} from "@memebox/contracts";
+import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
+import {AppQueries} from "../../state/app.queries";
+import {AppService} from "../../state/app.service";
+import {ActivatedRoute} from "@angular/router";
+import {KeyValue} from "@angular/common";
+import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
+import {CombinedClip} from "./types";
+import {replaceholder} from "../../core/pipes/replaceholder.pipe";
+import {Title} from "@angular/platform-browser";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -83,6 +83,9 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     return item.key;
   }
 
+  @Input()
+  public screenId : string;
+
   private _destroy$ = new Subject();
 
 
@@ -109,12 +112,11 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       }
     })
 
-    const thisScreenId = this.route.snapshot.params.guid;
 
     this.wsService.onOpenConnection$.pipe(
       take(1)
     ).subscribe(value => {
-      this.wsService.sendI_Am_OBS(thisScreenId);
+      this.wsService.sendI_Am_OBS(this.screenId);
     })
 
     this.wsService.onUpdateData$.pipe(
@@ -126,7 +128,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     this.wsService.onTriggerClip$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(clip => {
-      if (clip.targetScreen === thisScreenId) {
+      if (clip.targetScreen === this.screenId) {
         this.mediaClipToShow$.next(clip.id);
       }
     });
@@ -143,7 +145,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       location.reload();
     });
 
-    this.screenId$.next(this.route.snapshot.params.guid);
+    this.screenId$.next(this.screenId);
 
     this.mediaClipMap$.pipe(
       takeUntil(this._destroy$)
