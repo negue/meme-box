@@ -19,15 +19,12 @@ import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
 import {AppConfig} from '../environments/environment';
-import {TargetScreenComponent} from "./target-screen/target-screen.component";
-import {MediaTypeClassPipe} from './target-screen/media-type-class.pipe';
 import {ServicesModule} from "./shared/services/services.module";
 import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
 import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
 import {StyleguideColors} from './shared/styleguide/styleguide.component';
 
 import {PipesModule} from "./core/pipes/pipes.module";
-import {MediaToggleDirective} from './target-screen/media-toggle.directive';
 import {APP_ICONS} from "./app.icons";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {ENVIRONMENT_MODULES} from "@memebox/app/env/modules";
@@ -40,6 +37,12 @@ import {HotkeysModule} from "@ngneat/hotkeys";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
 
+import {ScreenRouteComponent} from './screens/screen-route/screen-route.component';
+import {ScreensRouteComponent} from './screens/screens-route/screens-route.component';
+import {TargetScreenComponent} from "./screens/target-screen/target-screen.component";
+import {MediaTypeClassPipe} from "./screens/target-screen/media-type-class.pipe";
+import {MediaToggleDirective} from "./screens/target-screen/media-toggle.directive";
+
 const markdownWorker = () => new Worker('./markdown.worker.ts', {
   name: 'markdown',
   type: "module"
@@ -51,7 +54,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, TargetScreenComponent, MediaTypeClassPipe, MediaToggleDirective ],
+  declarations: [
+    AppComponent, TargetScreenComponent,
+    MediaTypeClassPipe, MediaToggleDirective,
+    ScreenRouteComponent, ScreensRouteComponent,
+    TargetScreenComponent
+  ],
   imports: [
     BrowserModule,
     FormsModule,

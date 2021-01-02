@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {TargetScreenComponent} from "./target-screen/target-screen.component";
+import {ScreenRouteComponent} from "./screens/screen-route/screen-route.component";
+import {ScreensRouteComponent} from "./screens/screens-route/screens-route.component";
 
 // root
 // | main page (with sidebar)
@@ -14,7 +15,11 @@ const rootRoutes: Routes = [
   },
   {
     path: 'screen/:guid',
-    component: TargetScreenComponent
+    component: ScreenRouteComponent
+  },
+  {
+    path: 'screens',
+    component: ScreensRouteComponent
   },
   {
     path: 'test',
