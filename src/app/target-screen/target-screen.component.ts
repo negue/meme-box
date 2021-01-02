@@ -1,17 +1,19 @@
 import * as css from 'css';
-import {Rule} from 'css';
-import {Component, ElementRef, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, Dictionary, MediaType, ScreenClip} from "@memebox/contracts";
-import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
-import {AppQueries} from "../state/app.queries";
-import {AppService} from "../state/app.service";
-import {ActivatedRoute} from "@angular/router";
-import {KeyValue} from "@angular/common";
-import {ConnectionState, WebsocketService} from "../core/services/websocket.service";
-import {CombinedClip} from "./types";
-import {replaceholder} from "../core/pipes/replaceholder.pipe";
+import { Rule } from 'css';
+import { Component, ElementRef, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { Clip, Dictionary, MediaType, ScreenClip } from "@memebox/contracts";
+import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
+import { AppQueries } from "../state/app.queries";
+import { AppService } from "../state/app.service";
+import { ActivatedRoute } from "@angular/router";
+import { KeyValue } from "@angular/common";
+import { ConnectionState, WebsocketService } from "../core/services/websocket.service";
+import { CombinedClip } from "./types";
+import { replaceholder } from "../core/pipes/replaceholder.pipe";
+import { Title } from "@angular/platform-browser";
 
+// TODO Extract Target-Screen Component from the PAGE itself
 
 @Component({
   selector: 'app-target-screen',
@@ -88,7 +90,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
               private appService: AppService,
               private route: ActivatedRoute,
               private wsService: WebsocketService,
-              private element: ElementRef<HTMLElement>) {
+              private element: ElementRef<HTMLElement>,
+              private title: Title) {
   }
 
 
@@ -172,6 +175,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       filter(screen => !!screen)
     ).subscribe(screen => {
       this.addOrUpdateStyleTag(document, screen.id, screen.customCss);
+      this.title.setTitle(`Screen: ${screen.name}`);
     });
   }
 
@@ -198,7 +202,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       ).subscribe(map => {
         const iframeElement = element as HTMLIFrameElement;
 
-        var iframeCss = map[value.id].clipSetting.customCss;
+        const iframeCss = map[value.id].clipSetting.customCss;
 
         console.warn({
           document: iframeElement.contentDocument,
@@ -222,13 +226,13 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   random_rgba() {
-    var o = Math.round, r = Math.random, s = 255;
-    return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',0.34)';
+    const o = Math.round, r = Math.random, s = 255;
+    return `rgba(${o(r() * s)},${o(r() * s)},${o(r() * s)},0.34)`;
   }
 
   parseCss(screenClip: ScreenClip) {
 
-    var obj = css.parse(screenClip.customCss, {
+    const obj = css.parse(screenClip.customCss, {
       silent: true
     });
     // css.stringify(obj, options);

@@ -1,6 +1,6 @@
 {
   "BUILD_TIME": "Some time",
   "COMMIT": "commit dummy",
-  "BRANCH": "this branch",
+  "BRANCH": "release",
   "VERSION_TAG": "0.0.0"
 }

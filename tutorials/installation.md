@@ -28,6 +28,6 @@ Start the downloaded Executable File
 - the selected media-folder (inside memebox) needs to be readable for this process
 
 ## If you want to use the StreamDeck-Plugin
-1. [Download Streamdeck Plugin](https://github.com/negue/meme-box/raw/master/memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
+1. [Download Streamdeck Plugin](../memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
 2. Double click to install it
 
