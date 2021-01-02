@@ -92,11 +92,16 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
       console.info('Queue Trigger - Subscribe', this.queueCounter);
 
-      if (this.queueCounter <= 0) {
+      if (this.clipVisibility !== VisibilityEnum.Toggle && this.queueCounter <= 0) {
         return;
       }
 
       this.getAnimationValues();
+
+      console.info({
+        visibility: this.clipVisibility,
+        currentState: this.currentState
+      });
 
       if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
         this.animateOutOrHide();
@@ -121,11 +126,17 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe(toShow => {
       if (toShow === this.combinedClip.clip.id) {
+        if (this.clipVisibility === VisibilityEnum.Toggle) {
+          this.queueTrigger.next();
+          return;
+        }
+
         this.queueCounter++;
 
         if (this.queueCounter === 1) {
 
           console.info('No Queue - Triggering', this.queueCounter);
+
           this.queueTrigger.next();
         }
       }
@@ -268,8 +279,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
         this.stopMedia();
 
-        this.queueCounter--;
-        this.queueTrigger.next();
+        if (this.clipVisibility !== VisibilityEnum.Toggle) {
+          this.queueCounter--;
+          this.queueTrigger.next();
+        }
 
         console.info('MEDIA DONE - Queue Counter', this.queueCounter);
 
