@@ -33,14 +33,14 @@ jobs:
         with:
           node-version: 12.16.2
       - name: Get current date
-        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        run: echo "date=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
       - name: Declare some variables
         id: vars
         shell: bash
         run: |
           echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-          echo "::set-output name=TAG_NAME::nightly-tag-${date}"
+          echo "::set-output name=TAG_NAME::nightly${date}"
           echo "::set-output name=RELEASE_NAME::nightly-release-${date}"
 
       - name: Get current time
