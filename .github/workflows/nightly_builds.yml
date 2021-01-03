@@ -38,7 +38,7 @@ jobs:
         run: |
           echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-          echo "::set-output name=NOW::v$(date +'%Y-%m-%d')
+          echo "::set-output name=NOW::v$(date +'%Y-%m-%d')"
       - name: Get current time
         uses: gerred/actions/current-time@master
         id: current-time
