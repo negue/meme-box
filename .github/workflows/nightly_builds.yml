@@ -74,6 +74,7 @@ jobs:
           branch: main
           directory: nightly_repo
           tags: true 
+          repository: https://github.com/negue/meme-box-nightly.git
 
       - name: Create Release
         id: create_release
