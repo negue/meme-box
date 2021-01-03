@@ -74,7 +74,7 @@ jobs:
           branch: main
           directory: nightly_repo
           tags: true
-          repository: meme-box-nightly   
+          repository: negue/meme-box-nightly   
 
       - name: Create Release
         id: create_release
