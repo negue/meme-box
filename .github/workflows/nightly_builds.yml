@@ -22,6 +22,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: develop
+      # Create Tag by https://stackoverflow.com/a/64970393  
+      - name: Checkout nightly build-repo
+        uses: actions/checkout@v2
+        with:
+          repository: negue/meme-box-nightly
+          path: nightly_repo 
       - name: Cache multiple paths
         uses: actions/cache@v2
         with:
@@ -55,6 +61,14 @@ jobs:
           COMMIT: ${{ steps.vars.outputs.sha_short }}
           BUILD_TIME: ${{ steps.current-time.outputs.time }}
           BRANCH: ${{ steps.vars.outputs.branch }}
+
+      - name: Create tag in public repository
+        run: |
+          cd ${{github.workspace}}/nightly_repo
+          git tag ${{ steps.vars.outputs.TAG_NAME }}
+          git push --tags --porcelain
+        env:
+          GITHUB_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
 
       - name: Create Release
         id: create_release
