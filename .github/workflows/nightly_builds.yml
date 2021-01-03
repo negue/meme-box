@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: 12.16.2
       - name: Get current date
-        run: echo "date=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_ENV
       - name: Declare some variables
         id: vars
         shell: bash
