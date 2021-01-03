@@ -66,8 +66,7 @@ jobs:
           release_name: ${{ steps.vars.outputs.RELEASE_NAME }}
           draft: false
           prerelease:  true
-          owner: 'meme-box'
-          repo: 'nightly-builds'
+          repo: meme-box-nightly
       - name: Upload Release Asset Windows Headless
         id: upload-release-asset-exe
         uses: actions/upload-release-asset@v1
