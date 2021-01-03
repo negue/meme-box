@@ -73,8 +73,7 @@ jobs:
           github_token: ${{ secrets.NIGHTLY_TOKEN }}
           branch: main
           directory: nightly_repo
-          tags: true
-          repository: negue/meme-box-nightly   
+          tags: true 
 
       - name: Create Release
         id: create_release
