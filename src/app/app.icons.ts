@@ -18,6 +18,7 @@ export const APP_ICONS = [
   'launch',
   'mobile_friendly',
   'mobile_off',
+  'network_wifi',
   'playlist_add_check',
   'playlist_add',
   'preview',

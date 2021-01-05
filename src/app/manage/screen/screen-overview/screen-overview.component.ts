@@ -10,6 +10,7 @@ import {SnackbarService} from "../../../core/services/snackbar.service";
 import {ClipAssigningMode} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 import orderBy from 'lodash/orderBy';
+import {ScreenUrlDialogComponent} from "./screen-url-dialog/screen-url-dialog.component";
 
 // todo use @gewd npm package
 function timeout(ms) {
@@ -104,5 +105,14 @@ export class ScreenOverviewComponent implements OnInit {
 
   openHelpOverview() {
     this._dialog.showHelpOverview();
+  }
+
+  onGetUrl(screen: Screen) {
+    this._dialog.open(ScreenUrlDialogComponent,{
+      autoFocus: false,
+      data: screen,
+      maxWidth: '96vw',
+      minHeight: '50vh'
+    });
   }
 }
