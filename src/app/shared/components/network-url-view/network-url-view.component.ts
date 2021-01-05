@@ -1,9 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges
+} from '@angular/core';
 import {map, tap} from "rxjs/operators";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NetworkInterfacesService} from "../../../core/services/network-interfaces.service";
 import {NetworkInfo} from "@memebox/contracts";
+import {BehaviorSubject, combineLatest} from "rxjs";
 
 @Component({
   selector: 'app-network-url-view',
@@ -11,17 +20,24 @@ import {NetworkInfo} from "@memebox/contracts";
   styleUrls: ['./network-url-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NetworkUrlViewComponent implements OnInit {
+export class NetworkUrlViewComponent implements OnInit, OnChanges {
+  private _currentPath$ = new BehaviorSubject('');
+
   @Input()
   public urlPath = '';
 
   public selectedItem: NetworkInfo|null = null;
 
-  public networkUrl$ = this.networkInterfaceService.networkInterface$.pipe(
-    map(networkInterfaces => networkInterfaces.map(netInterface => {
+  public networkUrl$ =
+    combineLatest([
+      this._currentPath$,
+      this.networkInterfaceService.networkInterface$
+    ])
+    .pipe(
+    map(([currentPath, networkInterfaces]) => networkInterfaces.map(netInterface => {
       return {
         ...netInterface,
-        address: `${netInterface.address}/#/${this.urlPath}`
+        address: `${netInterface.address}/#/${currentPath}`
       }
     })),
     tap(items => {
@@ -29,6 +45,7 @@ export class NetworkUrlViewComponent implements OnInit {
       this.cd.markForCheck();
     })
   )
+
 
   constructor(
     private clipboard: Clipboard,
@@ -40,6 +57,13 @@ export class NetworkUrlViewComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._currentPath$.next(this.urlPath);
+  }
+
+  ngOnChanges({urlPath}: SimpleChanges) {
+    if (urlPath) {
+      this._currentPath$.next(urlPath.currentValue);
+    }
   }
 
   copyURL(urlToOpen: string): void {
