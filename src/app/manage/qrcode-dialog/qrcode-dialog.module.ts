@@ -5,6 +5,7 @@ import {MobileViewLinkComponent} from "./mobile-view-link/mobile-view-link.compo
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {QRCodeModule} from "angular2-qrcode";
+import {NetworkUrlViewModule} from "../../shared/components/network-url-view/network-url-view.module";
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import {QRCodeModule} from "angular2-qrcode";
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-    QRCodeModule
+    QRCodeModule,
+    NetworkUrlViewModule
   ]
 })
 export class QrcodeDialogModule { }
