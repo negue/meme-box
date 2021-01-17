@@ -50,7 +50,7 @@ jobs:
 
       - name: Stop if the same commit
         if: ${{steps.get-last-commit.outputs.prop == steps.vars.outputs.sha_short }}
-        run: exit 1
+        run: exit 0
 
       - name: Cache multiple paths
         uses: actions/cache@v2
