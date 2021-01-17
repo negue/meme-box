@@ -66,7 +66,7 @@ jobs:
 
       - name: Create last_commit.json
         uses: schdck/create-env-json@v1
-        id: create-env
+        id: create-last-commit
         with:
           file-name: './nightly_repo/last_commit.json'
           VERSION_TAG: ${{ steps.vars.outputs.TAG_NAME }}
