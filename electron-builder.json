@@ -27,7 +27,7 @@
   "win": {
     "icon": "dist/assets/icons",
     "target": [
-      "portable", "zip", "Squirrel.Windows"
+      "portable", "zip"
     ],
     "artifactName": "${productName}.${ext}"
   },
