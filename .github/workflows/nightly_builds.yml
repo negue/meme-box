@@ -92,6 +92,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Commit last_commit.json
+          directory: nightly_repo
 
       - name: Push changes
         uses: ad-m/github-push-action@master
