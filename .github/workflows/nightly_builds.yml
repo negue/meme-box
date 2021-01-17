@@ -209,7 +209,7 @@ jobs:
           asset_content_type: application/octet-stream
 
       - name: Upload Release Asset Windows Electron ZIP
-        id: upload-release-asset-windows-electron
+        id: upload-release-asset-windows-electron-zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
