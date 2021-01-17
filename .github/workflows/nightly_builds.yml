@@ -30,6 +30,28 @@ jobs:
           path: nightly_repo
           fetch-depth: 0 # otherwise, you will failed to push refs to dest repo:
           token: ${{ secrets.NIGHTLY_TOKEN }}
+
+      - name: get last commit
+        id: get-last-commit
+        uses: notiz-dev/github-action-json-property@release
+        with:
+          path: 'nightly_repo/last_commit.json'
+          prop_path: 'COMMIT'
+      - run: echo ${{steps.format_script.outputs.prop}}
+
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          echo "::set-output name=TAG_NAME::nightly${date}"
+          echo "::set-output name=RELEASE_NAME::nightly-release-${date}"
+
+      - name: Stop if the same commit
+        if: ${{steps.get-last-commit.outputs.prop == steps.vars.outputs.sha_short }}
+        run: exit 1
+
       - name: Cache multiple paths
         uses: actions/cache@v2
         with:
@@ -42,14 +64,7 @@ jobs:
           node-version: 12.16.2
       - name: Get current date
         run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_ENV
-      - name: Declare some variables
-        id: vars
-        shell: bash
-        run: |
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-          echo "::set-output name=TAG_NAME::nightly${date}"
-          echo "::set-output name=RELEASE_NAME::nightly-release-${date}"
+
 
       - name: Get current time
         uses: gerred/actions/current-time@master
