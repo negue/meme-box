@@ -92,7 +92,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Commit last_commit.json
-          directory: nightly_repo
+          repository: nightly_repo
 
       - name: Push changes
         uses: ad-m/github-push-action@master
@@ -175,6 +175,7 @@ jobs:
   windows:
     name: Build and Upload Windows Electron
     needs: build
+    if: false
 
     runs-on: windows-latest
 
@@ -228,6 +229,8 @@ jobs:
     name: Build and Upload MacOS Electron
     runs-on: macos-latest
     needs: build
+    if: false
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
