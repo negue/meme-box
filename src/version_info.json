@@ -1,1 +1,6 @@
-{"VERSION_TAG":"nightly20210117","COMMIT":"40ee01b","BUILD_TIME":"2021-01-17T16:37:34.099Z","BRANCH":"daily/build-changes"}
+{
+  "BUILD_TIME": "Some time",
+  "COMMIT": "commit dummy",
+  "BRANCH": "release",
+  "VERSION_TAG": "0.0.0"
+}
