@@ -34,6 +34,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MarkdownComponent} from './markdown/markdown.component';
 import {MarkdownModule} from "@gewd/markdown/module";
 import {HelpOverviewComponent} from './help-overview/help-overview.component';
+import {AutoScaleModule} from "@gewd/components/auto-scale";
 
 @NgModule({
   declarations: [
@@ -74,6 +75,7 @@ import {HelpOverviewComponent} from './help-overview/help-overview.component';
     FormsModule,
     MatExpansionModule,
     MarkdownModule,
+    AutoScaleModule,
   ],
   providers: [DialogService],
 })

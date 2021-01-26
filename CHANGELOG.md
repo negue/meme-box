@@ -1,7 +1,9 @@
 ## 2021.1.2
 
 - FIX: Wrong Mediapaths with a different path separator than the system-one, 
-  will be checked and prevented to be saved. #192  
+  will be checked and prevented to be saved. #192
+  
+- FIX: Oversized Images / Preview are now scaled down. #193
 
 - CHANGE: Currently the Previews of iFrames has been changed to be only visible
   in the edit dialog #197

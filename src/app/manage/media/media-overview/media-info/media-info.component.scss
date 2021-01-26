@@ -38,7 +38,6 @@
 
 .mediaInfo__preview {
   margin-bottom: 2rem;
-  width: 10rem;
 }
 
 .mediaInfo__preview__img {
@@ -47,6 +46,11 @@
   margin-right: auto;
   display: block;
 }
+
+app-clip-type {
+   display: flex !important;
+   justify-content: center;
+ }
 
 .mediaInfo__preview__audio, .mediaInfo__preview__video {
   height: 100%;

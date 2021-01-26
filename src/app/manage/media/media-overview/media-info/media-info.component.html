@@ -33,15 +33,19 @@
   <mat-card-content>
     <div class="mediaInfo__preview">
       <!--Todo extract this to clip-preview -->
-        <img *ngIf="info.type === 0 && (info.previewUrl || info.path)"
-             [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
-             [alt]="info.name"
-             class="mediaInfo__preview__img">
+      <gewd-auto-scale *ngIf="info.type === 0 && (info.previewUrl || info.path)"
+                       width="300" height="188"
+                       class="mediaInfo__preview__img">
+        <img [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
+             [alt]="info.name">
+      </gewd-auto-scale>
+
+
 
       <app-clip-type *ngIf="info.type !== 0"
                      [type]="info.type"
-                     iconSize="10rem"
-      class="mediaInfo__preview">
+                     iconSize="12rem"
+                     class="mediaInfo__preview__img">
 
       </app-clip-type>
 
