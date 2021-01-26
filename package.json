@@ -112,6 +112,7 @@
   "dependencies": {
     "@datorama/akita": "5.2.0",
     "@gewd/markdown": "0.4.2",
+    "@gewd/mat-utils": "0.1.0",
     "@gewd/ng-utils": "0.4.1",
     "@ngneat/hotkeys": "1.1.1",
     "angular-material-css-vars": "1.1.0",

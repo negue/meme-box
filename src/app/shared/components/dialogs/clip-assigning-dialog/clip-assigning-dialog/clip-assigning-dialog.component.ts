@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/co
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Clip, Dictionary, MediaType, Screen} from "@memebox/contracts";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {map, takeUntil} from "rxjs/operators";
+import {map, takeUntil, withLatestFrom} from "rxjs/operators";
 import {AppQueries} from "../../../../../state/app.queries";
 import {AppService} from "../../../../../state/app.service";
 import {IFilterItem} from "../../../../../shared/components/filter/filter.component";
@@ -11,6 +11,12 @@ import {createCombinedFilterItems$, filterClips$} from "../../../../../shared/co
 export enum ClipAssigningMode {
   Multiple,
   Single
+}
+
+export enum UnassignedFilterEnum {
+  Screens,
+  Twitch,
+  Timers
 }
 
 export interface ClipAssigningDialogOptions {
@@ -23,6 +29,19 @@ export interface ClipAssigningDialogOptions {
   dialogTitle: string;
 
   showMetaItems: boolean;
+
+  showOnlyUnassignedFilter: boolean;
+  unassignedFilterType: UnassignedFilterEnum;
+}
+
+function unassignedFilterToString(  unassignedFilterType: UnassignedFilterEnum) {
+  switch (unassignedFilterType) {
+    case UnassignedFilterEnum.Timers: return 'timers';
+    case UnassignedFilterEnum.Twitch: return 'twitch';
+    case UnassignedFilterEnum.Screens: return 'screens';
+  }
+
+  return '';
 }
 
 @Component({
@@ -32,6 +51,10 @@ export interface ClipAssigningDialogOptions {
 })
 export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   MediaType = MediaType;
+
+  // Media - is assigned to - Screen
+  //                        - Triggers (Twitch, Timers)
+  //                        -
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.appQueries.clipList$,
@@ -43,6 +66,19 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
         return value;
       } else {
         return value.filter(c => c.type === 'TAG' || c.value !== MediaType.Meta)
+      }
+    }),
+    map(filterItems => {
+      if (this.data.showOnlyUnassignedFilter) {
+
+        return [...filterItems, {
+          type: 'SPECIAL',
+          value: 'onlyUnassigned',
+          label: `not assigned to ${unassignedFilterToString(this.data.unassignedFilterType)}`,
+          icon: ''
+        }];
+      } else {
+        return filterItems;
       }
     })
   );
@@ -60,6 +96,47 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
         return value;
       } else {
         return value.filter(c => c.type !== MediaType.Meta)
+      }
+    }),
+    withLatestFrom(this.appQueries.state$, this.filteredItems$),
+    map(([items, state, filterItems]) => {
+      if (this.data.showOnlyUnassignedFilter && filterItems.some(f => f.value === 'onlyUnassigned')) {
+        let isClipAssigned: (str: string) => boolean = null;
+
+        // filter by unassigned
+        switch(this.data.unassignedFilterType) {
+          case UnassignedFilterEnum.Screens: {
+            isClipAssigned = str =>  {
+              return Object.values(state.screen).some(s => !!s.clips[str]);
+            };
+
+            break;
+          }
+          case UnassignedFilterEnum.Twitch: {
+
+
+            isClipAssigned = str =>  {
+              return Object.values(state.twitchEvents).some(t => t.clipId === str);
+            };
+            break;
+          }
+          case UnassignedFilterEnum.Timers: {
+            isClipAssigned = str =>  {
+              return Object.values(state.timers).some(t => t.clipId === str);
+            };
+            break;
+          }
+        }
+
+
+        return items.filter(item => {
+          const alreadyAssigned = isClipAssigned(item.id);
+
+          return !alreadyAssigned;
+        });
+      }
+       else {
+         return items;
       }
     })
   );

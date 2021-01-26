@@ -26,7 +26,6 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {CompactClipCardModule} from "../compact-clip-card/compact-clip-card.module";
 import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
 import {HighlightEditorModule} from "@gewd/components/highlight-editor";
-import {CustomFormControlModule} from "@gewd/components/custom-form-control";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeModule} from "../dynamic-iframe/dynamic-iframe.module";
 import {DynamicIframeEditComponent} from './dynamic-iframe-edit/dynamic-iframe-edit.component';
@@ -35,6 +34,7 @@ import {MarkdownComponent} from './markdown/markdown.component';
 import {MarkdownModule} from "@gewd/markdown/module";
 import {HelpOverviewComponent} from './help-overview/help-overview.component';
 import {AutoScaleModule} from "@gewd/components/auto-scale";
+import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
 
 @NgModule({
   declarations: [
