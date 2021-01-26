@@ -38,18 +38,18 @@
              [alt]="info.name"
              class="mediaInfo__preview__img">
 
-      <div *ngIf="info.type === 1" class="mediaInfo__preview__audio">
-        <mat-icon matListIcon svgIcon="speaker"></mat-icon>
-      </div>
+      <app-clip-type *ngIf="info.type !== 0"
+                     [type]="info.type"
+                     iconSize="10rem"
+      class="mediaInfo__preview">
 
-      <div *ngIf="info.type === 2" class="mediaInfo__preview__video">
-        <mat-icon matListIcon svgIcon="videocam"></mat-icon>
-      </div>
-      <div *ngIf="info.type === 3 && (info.previewUrl || info.path)">
+      </app-clip-type>
+
+      <div *ngIf="info.type === 3 && (info.previewUrl || info.path) && false">
         <iframe [src]="info.path | safeurl"></iframe>
       </div>
 
-      <div *ngIf="info.type === 4">
+      <div *ngIf="info.type === 4 && false">
         <app-dynamic-iframe [content]="info | clipToIframe"></app-dynamic-iframe>
       </div>
     </div>
