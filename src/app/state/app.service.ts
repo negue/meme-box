@@ -82,6 +82,13 @@ export class AppService {
         this.appStore.update(state => {
           state.currentMediaFiles = value;
         });
+      }, error => {
+        this.snackbar.sorry(error.error.error, {
+          config: {
+            duration: 50000,
+            verticalPosition: "top"
+          }
+        });
       }
     );
   }
