@@ -57,8 +57,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   //                        -
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
-    this.appQueries.clipList$,
-    this.appQueries.tagMap$,
+    this.appQueries.state$,
     true
   ).pipe(
     map(value => {
@@ -88,7 +87,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
   public clips$: Observable<Clip[]> = filterClips$(
-    this.appQueries.clipList$,
+    this.appQueries.state$,
     this.filteredItems$
   ).pipe(
     map(value => {

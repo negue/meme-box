@@ -59,6 +59,9 @@
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
+
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .mediaList__icon {
