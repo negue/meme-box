@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatSnackBarConfig} from "@angular/material/snack-bar/snack-bar-config";
+import merge from 'lodash/merge';
 
 const EMOTES = [
   '🎉', '🙌','😎', '🤩',
@@ -30,6 +31,16 @@ const DEFAULT_OPTIONS: SnackbarOptions = {
   }
 }
 
+const DEFAULT_ERROR_OPTIONS: SnackbarOptions = {
+  config: {
+    duration: SNACKBAR_DURATION,
+    verticalPosition: 'top',
+    horizontalPosition: "end",
+    panelClass: ['danger']
+  }
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -49,7 +60,7 @@ export class SnackbarService {
   }
 
   sorry(text: string, options: SnackbarOptions = null) {
-    options = options ?? DEFAULT_OPTIONS;
+    options = merge(DEFAULT_ERROR_OPTIONS, options);
 
     this.matSnackBar.open(text, options.action, options.config);
   }

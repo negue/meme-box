@@ -33,23 +33,27 @@
   <mat-card-content>
     <div class="mediaInfo__preview">
       <!--Todo extract this to clip-preview -->
-        <img *ngIf="info.type === 0 && (info.previewUrl || info.path)"
-             [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
-             [alt]="info.name"
-             class="mediaInfo__preview__img">
+      <gewd-auto-scale *ngIf="info.type === 0 && (info.previewUrl || info.path)"
+                       width="300" height="188"
+                       class="mediaInfo__preview__img">
+        <img [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
+             [alt]="info.name">
+      </gewd-auto-scale>
 
-      <div *ngIf="info.type === 1" class="mediaInfo__preview__audio">
-        <mat-icon matListIcon svgIcon="speaker"></mat-icon>
-      </div>
 
-      <div *ngIf="info.type === 2" class="mediaInfo__preview__video">
-        <mat-icon matListIcon svgIcon="videocam"></mat-icon>
-      </div>
-      <div *ngIf="info.type === 3 && (info.previewUrl || info.path)">
+
+      <app-clip-type *ngIf="info.type !== 0"
+                     [type]="info.type"
+                     iconSize="12rem"
+                     class="mediaInfo__preview__img">
+
+      </app-clip-type>
+
+      <div *ngIf="info.type === 3 && (info.previewUrl || info.path) && false">
         <iframe [src]="info.path | safeurl"></iframe>
       </div>
 
-      <div *ngIf="info.type === 4">
+      <div *ngIf="info.type === 4 && false">
         <app-dynamic-iframe [content]="info | clipToIframe"></app-dynamic-iframe>
       </div>
     </div>
