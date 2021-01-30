@@ -44,6 +44,7 @@ jobs:
         id: vars
         shell: bash
         run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
           echo "::set-output name=TAG_NAME::nightly${date}"    # only in the nightly build trigger action
           echo "::set-output name=RELEASE_NAME::nightly-release-${date}" # only in the nightly build trigger action
@@ -85,7 +86,7 @@ jobs:
         with:
           workflow: Build & Publish to Repo
           token: ${{ secrets.NIGHTLY_TOKEN }}
-          ref: develop
+          ref: ${{ steps.vars.outputs.branch }}
           inputs: |
             {
               "nightly": "true",
