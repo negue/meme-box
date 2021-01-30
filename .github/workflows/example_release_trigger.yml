@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Test Release on Webhook
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag-name:
+        description: Tag-Name or Version
+        required: true
+      pre-release:
+        description: Pre-release ?
+        required: true
+        default: 'true'
+      draft:
+        description: Draft ?
+        required: true
+        default: 'false'
+
+jobs:
+  check:
+    name: Check and Trigger the "Build/ Publish" Action
+    runs-on: ubuntu-latest
+
+    # Map a step output to a job output
+    outputs:
+      uploadURL: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - run: echo ${{ github.ref }}
+      - name: Invoke workflow "build_and_publish" with inputs
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Build & Publish to Repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ steps.vars.outputs.branch }}
+          inputs: |
+            {
+              "nightly": "false",
+              "tag-name": "${{ github.event.inputs.tag-name }}",
+              "commitish": "${{ steps.vars.outputs.sha_short }}",
+              "release-name": "Release V${{ github.event.inputs.tag-name }}",
+              "pre-release": "${{ github.event.inputs.pre-release }}",
+              "draft": "${{ github.event.inputs.draft }}"
+            }
