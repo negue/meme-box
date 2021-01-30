@@ -7,7 +7,10 @@ import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {SnackbarService} from "../../../core/services/snackbar.service";
-import {ClipAssigningMode} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {
+  ClipAssigningMode,
+  UnassignedFilterEnum
+} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 import orderBy from 'lodash/orderBy';
 import {ScreenUrlDialogComponent} from "./screen-url-dialog/screen-url-dialog.component";
@@ -70,7 +73,9 @@ export class ScreenOverviewComponent implements OnInit {
       screenId: screen.id,
 
       dialogTitle: screen.name,
-      showMetaItems: false
+      showMetaItems: false,
+      showOnlyUnassignedFilter: true,
+      unassignedFilterType: UnassignedFilterEnum.Screens
     });
   }
 

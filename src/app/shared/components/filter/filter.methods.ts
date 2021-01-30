@@ -1,29 +1,27 @@
 import {combineLatest, Observable, of} from "rxjs";
 import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
 import {map} from "rxjs/internal/operators";
-import {Clip, Dictionary, MediaType, Tag} from "@memebox/contracts";
+import {AppState, Clip, MediaType} from "@memebox/contracts";
 import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
 import {switchMap} from "rxjs/operators";
 import {lazyArray} from "../../../../../projects/utils/src/lib/lazyArray";
 
 export function createCombinedFilterItems$ (
-  clip$: Observable<Clip[]>,
-  tagMap$: Observable<Dictionary<Tag>>,
+  state$: Observable<AppState>,
   showOnlyAvailableTypes: boolean
 ): Observable<IFilterItem[]> {
-  return combineLatest([
-    clip$,
-    tagMap$
-  ]).pipe(
-    map(([allMedia, tagDictionary]) => {
+  return state$.pipe(
+    map((state) => {
       const filterItems = [];
+      const tagDictionary = state.tags;
+      const screenDictionary = state.screen;
 
       // todo filter media types if not existing
 
       const allTags = new Set<string>();
       const allTypes = new Set<MediaType>();
 
-      for (const clip of allMedia) {
+      for (const clip of Object.values(state.clips)) {
         allTypes.add(clip.type);
 
         for (const tagId of (clip?.tags ?? [])) {
@@ -52,6 +50,16 @@ export function createCombinedFilterItems$ (
         }
       })
 
+      for (const screen of Object.values(screenDictionary)) {
+        if(Object.values(screen.clips).length > 0) {
+          filterItems.push({
+            value: screen.id,
+            icon: 'screen',
+            type: 'SCREEN',
+            label: screenDictionary[screen.id].name
+          })
+        }
+      }
 
       return filterItems;
     })
@@ -60,14 +68,16 @@ export function createCombinedFilterItems$ (
 
 
 export function filterClips$(
-  allClips$: Observable<Clip[]>,
+  state$: Observable<AppState>,
   selectedFilters$: Observable<IFilterItem[]>
 ): Observable<Clip[]> {
   return combineLatest([
-    allClips$,
+    state$,
     selectedFilters$
   ]).pipe(
-    map(([allClips, filteredItems]) => {
+    map(([state, filteredItems]) => {
+      const allClips = Object.values(state.clips);
+
       if (filteredItems.length === 0) {
         return allClips;
       }
@@ -80,21 +90,39 @@ export function filterClips$(
         .filter(f => f.type === 'TAG')
         .map(f => f.value);
 
-      return allClips.filter(clip => {
-        let allowedByType = true;
-        let allowedByTag = true;
+      const listOfScreenIds: string[] = filteredItems
+        .filter(f => f.type === 'SCREEN')  // TODO extract filterTag consts
+        .map(f => f.value);
 
+
+      return allClips.filter(clip => {
         if (listOfTypes.length !== 0) {
-          allowedByType = listOfTypes.includes(clip.type);
+          const allowedByType = listOfTypes.includes(clip.type);
+
+          if (!allowedByType) {
+            return false;
+          }
+        }
+
+
+        if (listOfScreenIds.length !== 0) {
+          const allowedByScreen = listOfScreenIds.some(screenId => !!state.screen[screenId].clips[clip.id]);
+
+          if (!allowedByScreen) {
+            return false;
+          }
         }
 
 
         if (listOfTagIds.length !== 0) {
-          allowedByTag = listOfTagIds.every(filterTagId => clip.tags?.includes(filterTagId) );
+          const allowedByTag = listOfTagIds.every(filterTagId => clip.tags?.includes(filterTagId) );
+
+          if (!allowedByTag) {
+            return false;
+          }
         }
 
-
-        return allowedByType && allowedByTag;
+        return true;
       })
 
     }),
