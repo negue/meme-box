@@ -27,6 +27,17 @@ jobs:
       uploadURL: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - run: echo ${{ github.ref }}
       - name: Invoke workflow "build_and_publish" with inputs
         uses: benc-uk/workflow-dispatch@v1
         with:
