@@ -19,15 +19,14 @@ export class MediaOverviewComponent implements OnInit {
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
   public mediaList$: Observable<Clip[]> = filterClips$(
-    this.query.clipList$,
+    this.query.state$,
     this.filteredItems$
   );
 
   public screenList$: Observable<Screen[]> = this.query.screensList$;
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
-    this.query.clipList$,
-    this.query.tagMap$,
+    this.query.state$,
     true
   );
 

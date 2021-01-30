@@ -32,6 +32,10 @@ export function mapFileInformations (
     mediaFolder = mediaFolder.substring(0, mediaFolder.length - sep.length);
   }
 
+  if (mediaFolder.includes('/') && sep === '\\') {
+    mediaFolder = mediaFolder.replace(/[/]/gm, sep);
+  }
+
   // files with information
   return files.map((fullPath: string) => {
     const ext = extname(fullPath);
@@ -41,6 +45,10 @@ export function mapFileInformations (
 
     const convertedPath = fullPath
       .replace(mediaFolder, `${SERVER_URL}/file`);
+
+    if (!convertedPath.includes(SERVER_URL)) {
+      throw new Error('The converted file path had an issue, maybe check your Media-Path.');
+    }
 
     // path separator, not URL
     const splittedPath = convertedPath.split(sep);

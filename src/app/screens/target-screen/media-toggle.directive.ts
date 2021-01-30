@@ -58,6 +58,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   ngOnChanges({combinedClip}: SimpleChanges): void {
     if (combinedClip) {
       this.updateNeededVariables();
+      this.applyPositions();
     }
   }
 
@@ -93,6 +94,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       console.info('Queue Trigger - Subscribe', this.queueCounter);
 
       if (this.clipVisibility !== VisibilityEnum.Toggle && this.queueCounter <= 0) {
+        console.info('not toggle - no queue - exiting');
         return;
       }
 
@@ -143,6 +145,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     });
 
     this.updateNeededVariables();
+    this.applyPositions();
   }
 
   private applyPositions() {

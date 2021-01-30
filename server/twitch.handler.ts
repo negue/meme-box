@@ -32,7 +32,7 @@ export class TwitchHandler {
       //options: {debug: true},
       connection: {
         secure: true,
-        reconnect: true
+        reconnect: true,
       },
       channels: [twitchConfig.channel]
     };
@@ -46,10 +46,11 @@ export class TwitchHandler {
 
     this.tmiClient = tmi.Client(tmiConfig);
 
-    this.connectAndListen();
     if (twitchConfig.enableLog) {
       this.createLogger();
     }
+
+    this.connectAndListen();
   }
 
   public disconnect() {
@@ -60,12 +61,30 @@ export class TwitchHandler {
   }
 
   private async connectAndListen() {
-    await this.tmiClient.connect();
+    for (let tryOut = 0; tryOut < 3; tryOut++) {
+      try {
+        await this.tmiClient.connect();
+        this.log({
+          message: 'Connected to Twitch!'
+        });
+        break;
+      } catch (ex) {
+        this.error({
+          ex,
+          message: `Error trying to connect to twitch - ${ex.message}`
+        });
+
+        // TODO sent state to Dashboard
+      }
+    }
 
     this.persistenceSubscription = PersistenceInstance.dataUpdated$().pipe(
       startWith(true)
     ).subscribe(() => {
-      console.info('Data Updated got the new events');
+      this.log({
+        message: 'Data Updated got the new events'
+      });
+
       this.twitchSettings = PersistenceInstance.listTwitchEvents();
     });
 
@@ -336,6 +355,12 @@ export class TwitchHandler {
   private log(data: any) {
     if (this.twitchConfig.enableLog) {
       this.logger.info(data);
+    }
+  }
+
+  private error(data: any) {
+    if (this.twitchConfig.enableLog) {
+      this.logger.error(data);
     }
   }
 

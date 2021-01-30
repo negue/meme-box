@@ -168,10 +168,17 @@ app.get(FILES_ENDPOINT, async (req, res) => {
   // fullpath as array
   const files = await getFiles(mediaFolder);
 
-  // files with information
-  const fileInfoList = mapFileInformations(mediaFolder, files);
+  try {
+    // files with information
+    const fileInfoList = mapFileInformations(mediaFolder, files);
 
-  res.send(fileInfoList);
+    res.send(fileInfoList);
+  }
+  catch(error)
+  {
+    res.status(500)
+      .send({error: error.message});
+  }
 });
 
 // TODO use IDs instead of names ?

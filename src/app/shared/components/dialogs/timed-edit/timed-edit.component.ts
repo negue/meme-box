@@ -7,7 +7,10 @@ import {AppService} from '../../../../state/app.service';
 import {AppQueries} from '../../../../state/app.queries';
 import {SnackbarService} from '../../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
-import {ClipAssigningMode} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {
+  ClipAssigningMode,
+  UnassignedFilterEnum
+} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 // TODO better class/interface name?
 const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
@@ -94,7 +97,9 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
       dialogTitle: 'Select a clip: ',
-      showMetaItems: true
+      showMetaItems: true,
+      showOnlyUnassignedFilter: true,
+      unassignedFilterType: UnassignedFilterEnum.Timers
     });
 
     if (clipId) {

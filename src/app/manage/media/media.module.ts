@@ -7,11 +7,6 @@ import {MediaInfoComponent} from './media-overview/media-info/media-info.compone
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatDialogModule} from "@angular/material/dialog";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatSelectModule} from "@angular/material/select";
-import {MatSliderModule} from "@angular/material/slider";
-import {ReactiveFormsModule} from "@angular/forms";
 import {MatDividerModule} from "@angular/material/divider";
 import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
 import {MatListModule} from "@angular/material/list";
@@ -24,6 +19,7 @@ import {FilterModule} from "../../shared/components/filter/filter.module";
 import {ClipChipsListModule} from "../../shared/components/clip-chips-list/clip-chips-list.module";
 import {DynamicIframeModule} from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {AutoScaleModule} from "@gewd/components/auto-scale";
 
 const routes: Routes = [
   {
@@ -43,11 +39,6 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSliderModule,
-    ReactiveFormsModule,
     MatDividerModule,
     ClipTypeModule,
     MatListModule,
@@ -59,6 +50,7 @@ const routes: Routes = [
     ClipChipsListModule,
     DynamicIframeModule,
     MatTooltipModule,
+    AutoScaleModule
   ]
 })
 export class MediaModule {}
