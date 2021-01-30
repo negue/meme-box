@@ -43,7 +43,7 @@ jobs:
         with:
           workflow: Build & Publish to Repo
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.ref }}
+          ref: ${{ steps.vars.outputs.branch }}
           inputs: |
             {
               "nightly": "false",
