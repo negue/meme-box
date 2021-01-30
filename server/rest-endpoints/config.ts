@@ -10,6 +10,7 @@ import {
 } from "../constants";
 import {allowedFileUrl} from "../validations";
 import {existsSync} from "fs";
+import {sep} from 'path';
 import open from "open";
 import {NEW_CONFIG_PATH} from "../path.utils";
 
@@ -21,8 +22,6 @@ CONFIG_ROUTES
     res.send(PersistenceInstance.getConfig());
   })
 
-
-// Put = Update Media Folder Path
 .put(CONFIG_TWITCH_CHANNEL_PATH, (req, res) => {
   const twitchConfigBody: TwitchConfig = req.body;
 
@@ -58,6 +57,11 @@ CONFIG_ROUTES
     if (mediaFolder) {
       if (!allowedFileUrl(mediaFolder)) {
         res.send({ok: false})
+        return;
+      }
+
+      if (!mediaFolder.includes(sep)) {
+        res.send({ok: false});
         return;
       }
 

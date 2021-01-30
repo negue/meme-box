@@ -206,10 +206,13 @@
     </div>
 
     <!-- All others => AppClipType -->
-    <app-clip-preview *ngSwitchDefault
-                   [clip]="form.value">
+    <gewd-auto-scale width="500" height="500"
+                     *ngSwitchDefault>
+      <app-clip-preview [clip]="form.value">
 
-    </app-clip-preview>
+      </app-clip-preview>
+    </gewd-auto-scale>
+
   </div>
 </mat-dialog-content>
 

@@ -5,6 +5,10 @@ export interface HasId {
   id: string;
 }
 
+export interface HasClipId {
+  clipId: string;
+}
+
 export interface Dictionary<T> {
   [key: string]: T
 }
@@ -115,18 +119,16 @@ export enum TwitchEventTypes {
   channelPoints = 'channelPoints'
 }
 
-export interface TimedClip extends HasId {
+export interface TimedClip extends HasId, HasClipId {
   // id => has nothing to do with clipID
-  clipId: string;
   screenId?: string;
   everyXms: number;
   active: boolean;
 }
 
-export interface Twitch extends HasId {
+export interface Twitch extends HasId, HasClipId {
   name: string;
   // screenId:      string; // TODO
-  clipId: string;
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
   active: boolean;

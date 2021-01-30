@@ -8,7 +8,10 @@ import {AppQueries} from '../../../../state/app.queries';
 import {SnackbarService} from '../../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
 import {distinctUntilChanged, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
-import {ClipAssigningMode} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {
+  ClipAssigningMode,
+  UnassignedFilterEnum
+} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {
@@ -199,7 +202,10 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
       dialogTitle: this.data.name,
-      showMetaItems: true
+      showMetaItems: true,
+
+      unassignedFilterType: UnassignedFilterEnum.Twitch,
+      showOnlyUnassignedFilter: true
     });
 
     if (clipId) {

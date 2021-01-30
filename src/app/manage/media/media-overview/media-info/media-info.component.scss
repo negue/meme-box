@@ -21,6 +21,9 @@
 
 .mediaInfo__titleRow__name {
   margin-bottom: 0;
+  height: 2rem;
+  overflow: hidden;
+  margin-right: 2rem;
 }
 
 .mediaInfo__actionButtons {
@@ -35,7 +38,6 @@
 
 .mediaInfo__preview {
   margin-bottom: 2rem;
-  height: 10rem;
 }
 
 .mediaInfo__preview__img {
@@ -44,6 +46,11 @@
   margin-right: auto;
   display: block;
 }
+
+app-clip-type {
+   display: flex !important;
+   justify-content: center;
+ }
 
 .mediaInfo__preview__audio, .mediaInfo__preview__video {
   height: 100%;

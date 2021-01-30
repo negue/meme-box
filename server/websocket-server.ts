@@ -163,7 +163,7 @@ wss.on("connection", (ws: WebSocket) => {
 
 export function createWebSocketServer(port) {
   //start our server
-  server.listen(port, () => {
+  server.listen(port, '0.0.0.0',() => {
     LOGGER.info(`Server started on port: ${port}`);
   });
 
