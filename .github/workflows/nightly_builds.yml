@@ -38,7 +38,8 @@ jobs:
           path: 'nightly_repo/last_commit.json'
           prop_path: 'COMMIT'
       - run: echo ${{steps.format_script.outputs.prop}}
-
+      - name: Get current date
+        run: echo "date=$(date +'%Y%m%d')" >> $GITHUB_ENV
       - name: Declare some variables  # needed ?
         id: vars
         shell: bash
@@ -50,27 +51,27 @@ jobs:
       - name: Create last_commit.json
         uses: schdck/create-env-json@v1
         id: create-last-commit
-        if: ${{steps.get-last-commit.outputs.prop == steps.vars.outputs.sha_short }}
+        if: ${{steps.get-last-commit.outputs.prop != steps.vars.outputs.sha_short }}
         with:
           file-name: './nightly_repo/last_commit.json'
           VERSION_TAG: ${{ steps.vars.outputs.TAG_NAME }}
           COMMIT: ${{ steps.vars.outputs.sha_short }}
 
       - name: Create tag in public repository
-        if: ${{steps.get-last-commit.outputs.prop == steps.vars.outputs.sha_short }}
+        if: ${{steps.get-last-commit.outputs.prop != steps.vars.outputs.sha_short }}
         run: |
           cd ${{github.workspace}}/nightly_repo
           git tag ${{ steps.vars.outputs.TAG_NAME }}
 
       - uses: stefanzweifel/git-auto-commit-action@v4
-        if: ${{steps.get-last-commit.outputs.prop == steps.vars.outputs.sha_short }}
+        if: ${{steps.get-last-commit.outputs.prop != steps.vars.outputs.sha_short }}
         with:
           commit_message: Commit last_commit.json
           repository: nightly_repo
 
       - name: Push changes
         uses: ad-m/github-push-action@master
-        if: ${{steps.get-last-commit.outputs.prop == steps.vars.outputs.sha_short }}
+        if: ${{steps.get-last-commit.outputs.prop != steps.vars.outputs.sha_short }}
         with:
           github_token: ${{ secrets.NIGHTLY_TOKEN }}
           branch: main
@@ -80,7 +81,7 @@ jobs:
 
       - name: Invoke workflow "build_and_publish" with inputs
         uses: benc-uk/workflow-dispatch@v1
-        if: ${{steps.get-last-commit.outputs.prop == steps.vars.outputs.sha_short }}
+        if: ${{steps.get-last-commit.outputs.prop != steps.vars.outputs.sha_short }}
         with:
           workflow: Build & Publish to Repo
           token: ${{ secrets.NIGHTLY_TOKEN }}
