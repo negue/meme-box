@@ -44,4 +44,4 @@ jobs:
           workflow: Build & Publish to Repo
           token: ${{ secrets.NIGHTLY_TOKEN }}
           ref: ${{ steps.vars.outputs.branch }}
-          inputs: '{"nightly": "false", "tag-name": "${{ github.event.inputs.tag-name }}", "commitish": "${{ steps.vars.outputs.sha_short }}", "release-name": "Release V${{ github.event.inputs.tag-name }}", "pre-release": "${{ github.event.inputs.pre-release }}", "draft": "${{ github.event.inputs.draft }}" }'
+          inputs: '{"nightly": "false", "tag-name": "${{ github.event.inputs.tag-name }}", "commitish": "${{ github.sha }}", "release-name": "Release V${{ github.event.inputs.tag-name }}", "pre-release": "${{ github.event.inputs.pre-release }}", "draft": "${{ github.event.inputs.draft }}" }'
