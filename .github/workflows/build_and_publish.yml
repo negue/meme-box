@@ -37,6 +37,7 @@ jobs:
       uploadURL: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
+      - run: echo ${{ commitish 
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Cache multiple paths
