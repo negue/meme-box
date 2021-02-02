@@ -13,6 +13,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {NetworkInterfacesService} from "../../../core/services/network-interfaces.service";
 import {NetworkInfo} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest} from "rxjs";
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'app-network-url-view',
@@ -41,7 +42,12 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
       }
     })),
     tap(items => {
-      this.selectedItem = items[0];
+      if (this.selectedItem) {
+        this.selectedItem = items.find(i => i.ifname === this.selectedItem.ifname);
+      } else {
+        this.selectedItem = items[0];
+      }
+
       this.cd.markForCheck();
     })
   )
@@ -85,5 +91,11 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
   openUrl(value: string) {
     // TODO fix open new window in electron
     window.open(value, '_blank');
+  }
+
+  selectItem($event: MatSelectChange,
+             networkInterfaces: NetworkInfo[]
+  ) {
+    this.selectedItem = networkInterfaces.find(i => i.address === $event.value);
   }
 }

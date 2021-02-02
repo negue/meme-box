@@ -19,6 +19,8 @@ import {ScreensArrayToUrlPipe} from './screen-overview/screen-url-dialog/screens
 import {ScreenUrlDialogComponent} from "./screen-overview/screen-url-dialog/screen-url-dialog.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NetworkUrlViewModule} from "../../shared/components/network-url-view/network-url-view.module";
+import {SelectedScreenAmountPipe} from "./screen-overview/screen-url-dialog/selected-screen-amount.pipe";
+import {ClipsInScreenAmountPipe} from "./screen-overview/screen-url-dialog/clips-in-screen-amount.pipe";
 
 const routes: Routes = [
   {
@@ -34,7 +36,9 @@ const routes: Routes = [
     ScreenOverviewComponent,
     ScreenInfoComponent,
     ScreenUrlDialogComponent,
-    ScreensArrayToUrlPipe
+    ScreensArrayToUrlPipe,
+    SelectedScreenAmountPipe,
+    ClipsInScreenAmountPipe
   ],
   imports: [
     CommonModule,
