@@ -1,0 +1,58 @@
+<div class="media-list">
+  Much Media - Such Wow
+</div>
+
+<div class="media-options">
+
+</div>
+
+<div class="drag-drop-area">
+
+  THis Module will be fullscreen in the browser
+  Screen Title
+
+  Column 1: Media Files
+  Column 2: Media Config ?
+  Rest of the Screen: Drag&Drop Area
+
+  - if random - hide this area?
+
+
+
+  Column 2: Media Config ?   extract config from the dialog into multiple components???
+  or into one which accepts a screen-clip entry?
+
+
+  Also TODO:
+  - Rotating on the media ? => new feature
+  - Callbacks on change to update the column2 media config?
+  - new absolute position type (because this drag/drop uses all 4 positions, left right top bottom)
+  - split up the current screen clip config into expandable panels
+  -
+  <div style="">
+
+    <deckgo-drr style="--width: 100px; --height: 100px; "
+                unit="px" >
+      <div class="dragging-content" style="background: green"></div>
+
+    </deckgo-drr>
+
+
+
+    <deckgo-drr style="--width: 100px; --height: 100px; "
+                unit="px" >
+      <div style="background: red"></div>
+
+    </deckgo-drr>
+
+
+    <deckgo-drr style="--width: 100px; --height: 100px; "
+                unit="px" >
+      <div style="background: blue"></div>
+
+    </deckgo-drr>
+  </div>
+
+  <app-screen-clip-config></app-screen-clip-config>
+
+</div>

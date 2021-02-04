@@ -111,6 +111,7 @@
   },
   "dependencies": {
     "@datorama/akita": "5.2.0",
+    "@deckdeckgo/drag-resize-rotate": "2.0.1",
     "@gewd/markdown": "0.4.2",
     "@gewd/mat-utils": "0.1.0",
     "@gewd/ng-utils": "0.4.1",
