@@ -110,7 +110,8 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "memebox-app:build"
+            "browserTarget": "memebox-app:build",
+            "hmr": true
           },
           "configurations": {
             "dev": {
