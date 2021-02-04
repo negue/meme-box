@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {NetworkUrlViewComponent} from './network-url-view.component';
 
@@ -6,7 +6,7 @@ describe('NetworkUrlViewComponent', () => {
   let component: NetworkUrlViewComponent;
   let fixture: ComponentFixture<NetworkUrlViewComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ NetworkUrlViewComponent ]
     })

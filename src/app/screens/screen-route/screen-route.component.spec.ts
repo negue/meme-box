@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {ScreenRouteComponent} from './screen-route.component';
 
@@ -6,7 +6,7 @@ describe('ScreenRouteComponent', () => {
   let component: ScreenRouteComponent;
   let fixture: ComponentFixture<ScreenRouteComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ScreenRouteComponent ]
     })

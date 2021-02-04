@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {ScreenInfoComponent} from './screen-info.component';
 
@@ -6,7 +6,7 @@ describe('ObsInfoComponent', () => {
   let component: ScreenInfoComponent;
   let fixture: ComponentFixture<ScreenInfoComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ScreenInfoComponent]
     })
