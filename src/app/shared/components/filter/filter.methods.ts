@@ -1,9 +1,8 @@
 import {combineLatest, Observable, of} from "rxjs";
 import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
-import {map} from "rxjs/internal/operators";
+import {map, switchMap} from "rxjs/operators";
 import {AppState, Clip, MediaType} from "@memebox/contracts";
 import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
-import {switchMap} from "rxjs/operators";
 import {lazyArray} from "../../../../../projects/utils/src/lib/lazyArray";
 
 export function createCombinedFilterItems$ (

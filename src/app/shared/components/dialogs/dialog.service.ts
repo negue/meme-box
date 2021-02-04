@@ -19,7 +19,7 @@ import {
   ClipAssigningDialogComponent,
   ClipAssigningDialogOptions
 } from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
-import {take} from "rxjs/internal/operators";
+import {take} from "rxjs/operators";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeContent} from "../../../../../projects/utils/src/lib/dynamicIframe";
 import {DynamicIframeEditComponent} from "./dynamic-iframe-edit/dynamic-iframe-edit.component";

@@ -28,7 +28,7 @@ import {SnackbarService} from '../core/services/snackbar.service';
 import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from './app.dummy.data';
 import {deleteClip} from '../../../projects/state/src/lib/operations/clip.operations';
-import {take} from 'rxjs/internal/operators';
+import {take} from 'rxjs/operators';
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;

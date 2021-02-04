@@ -1,12 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { OverviewItemComponent } from './overview-item.component';
+import {OverviewItemComponent} from './overview-item.component';
 
 describe('OverviewItemComponent', () => {
   let component: OverviewItemComponent;
   let fixture: ComponentFixture<OverviewItemComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ OverviewItemComponent ]
     })

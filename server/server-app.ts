@@ -1,7 +1,7 @@
 import {createExpress} from "./express-server";
 import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT, REMOTE_VERSION_FILE} from "./constants";
-import {debounceTime, startWith} from "rxjs/operators";
+import {debounceTime, startWith, take} from "rxjs/operators";
 import {TwitchHandler} from './twitch.handler';
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "../projects/contracts/src/lib/actions";
@@ -10,7 +10,6 @@ import {ExampleTwitchCommandsSubject} from "./shared";
 import {TimedHandler} from "./timed.handler";
 
 import https from 'https';
-import {take} from "rxjs/internal/operators";
 import currentVersionJson from '../src/version_info.json';
 import {STATE_OBJECT} from "./rest-endpoints/state";
 

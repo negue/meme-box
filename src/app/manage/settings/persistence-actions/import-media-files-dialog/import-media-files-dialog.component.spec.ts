@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {ImportMediaFilesDialogComponent} from './import-media-files-dialog.component';
 
@@ -6,7 +6,7 @@ describe('ImportMediaFilesDialogComponent', () => {
   let component: ImportMediaFilesDialogComponent;
   let fixture: ComponentFixture<ImportMediaFilesDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ImportMediaFilesDialogComponent ]
     })

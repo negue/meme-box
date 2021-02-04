@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {ClipTypeComponent} from './clip-type.component';
 
@@ -6,7 +6,7 @@ describe('ClipTypeComponent', () => {
   let component: ClipTypeComponent;
   let fixture: ComponentFixture<ClipTypeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ClipTypeComponent]
     })

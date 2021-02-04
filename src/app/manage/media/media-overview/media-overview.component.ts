@@ -7,7 +7,7 @@ import {WebsocketService} from "../../../core/services/websocket.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {IFilterItem} from "../../../shared/components/filter/filter.component";
 import {createCombinedFilterItems$, filterClips$} from "../../../shared/components/filter/filter.methods";
-import {map} from "rxjs/internal/operators";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-media-overview',

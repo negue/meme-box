@@ -1,3 +1,9 @@
+## 2021.2.0
+
+### Development Changelog
+
+- Upgrade to Angular 11
+
 ## 2021.1.2
 
 - FIX: Wrong Mediapaths with a different path separator than the system-one, 
