@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {PersistenceActionsComponent} from './persistence-actions.component';
 
@@ -6,7 +6,7 @@ describe('PersistenceActionsComponent', () => {
   let component: PersistenceActionsComponent;
   let fixture: ComponentFixture<PersistenceActionsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PersistenceActionsComponent ]
     })

@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {ScreenClipOptionsComponent} from './screen-clip-options.component';
 
@@ -6,7 +6,7 @@ describe('ScreenClipOptionsComponent', () => {
   let component: ScreenClipOptionsComponent;
   let fixture: ComponentFixture<ScreenClipOptionsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ScreenClipOptionsComponent]
     })
