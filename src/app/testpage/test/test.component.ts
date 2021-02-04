@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
-import {debounceTime} from "rxjs/internal/operators";
+import {debounceTime} from "rxjs/operators";
 import {DynamicIframeContent, HtmlExternalFile} from "../../../../projects/utils/src/lib/dynamicIframe";
 
 @Component({

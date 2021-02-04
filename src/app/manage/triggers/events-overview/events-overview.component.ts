@@ -5,7 +5,7 @@ import {AppQueries} from "../../../state/app.queries";
 import {API_BASE, AppService} from "../../../state/app.service";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {HttpClient} from "@angular/common/http";
-import {map} from "rxjs/internal/operators";
+import {map} from "rxjs/operators";
 import orderBy from 'lodash/orderBy';
 
 @Component({
