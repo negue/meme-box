@@ -1,6 +1,12 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, MediaType, PositionEnum, VisibilityEnum} from "@memebox/contracts";
-import {CombinedClip} from "./types";
+import {
+  ANIMATION_IN_ARRAY,
+  ANIMATION_OUT_ARRAY,
+  CombinedClip,
+  MediaType,
+  PositionEnum,
+  VisibilityEnum
+} from "@memebox/contracts";
 import {KeyValue} from "@angular/common";
 import {BehaviorSubject, Subject} from "rxjs";
 import {TargetScreenComponent} from "./target-screen.component";

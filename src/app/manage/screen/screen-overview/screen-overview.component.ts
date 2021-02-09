@@ -120,4 +120,8 @@ export class ScreenOverviewComponent implements OnInit {
       minHeight: '50vh'
     });
   }
+
+  onOpenArrangeDialog(screen: Screen) {
+    this._dialog.arrangeMediaInScreen(screen);
+  }
 }

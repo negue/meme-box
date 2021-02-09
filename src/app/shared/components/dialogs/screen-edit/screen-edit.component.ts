@@ -15,7 +15,9 @@ export class ScreenEditComponent implements OnInit {
   public form = new FormBuilder().group({
     name: '',
     id: '',
-    customCss: ''
+    customCss: '',
+    height: 1080,
+    width: 1920
   })
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Screen,
@@ -25,7 +27,9 @@ export class ScreenEditComponent implements OnInit {
     this.form.patchValue({
       name: data.name,
       id: data.id,
-      customCss: data.customCss
+      customCss: data.customCss,
+      height: data.height,
+      width: data.width
     })
   }
 

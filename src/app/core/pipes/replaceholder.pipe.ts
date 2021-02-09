@@ -13,6 +13,7 @@ export class ReplaceholderPipe implements PipeTransform {
 
 }
 
+// todo use url by clip id
 export function replaceholder (value: string): string{
   if (value) {
     return value.replace(SERVER_URL, EXPRESS_BASE);

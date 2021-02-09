@@ -60,6 +60,9 @@ export class ScreenInfoComponent implements OnInit {
   public onGetUrl = new EventEmitter();
 
   @Output()
+  public onOpenArrangeDialog = new EventEmitter();
+
+  @Output()
   public onPreview = new EventEmitter<string>()
 
   @Output()
