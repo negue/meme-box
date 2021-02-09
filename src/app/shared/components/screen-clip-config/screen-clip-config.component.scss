@@ -1,0 +1,41 @@
+:host {
+  height: 100%;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.media-list {
+  width: 20%;
+}
+
+.media-options {
+  width: 20%;
+}
+
+.drag-drop-area-holder {
+  flex: 1;
+}
+
+.drag-drop-area {
+  position: relative;
+  overflow: hidden;
+
+background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
+}
+
+
+mat-expansion-panel, .settings-content {
+  margin: 1rem 1rem;
+}
+
+.settings-content {
+  height: 10rem;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+

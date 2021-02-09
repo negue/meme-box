@@ -7,7 +7,7 @@
 
   <!-- Iframe => Iframe -->
   <div *ngSwitchCase="MediaType.IFrame">
-    <ng-container *ngIf="height || width; else canShowIframe">
+    <ng-container *ngIf="(height || width) || !showIframe; else canShowIframe">
       <app-clip-type [type]="clip.type"
                      [iconSize]="height || width"></app-clip-type>
     </ng-container>

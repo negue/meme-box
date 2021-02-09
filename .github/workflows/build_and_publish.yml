@@ -94,7 +94,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.tag-name }}
-          release_name: ${{ github.event.inputs.release_name }}
+          release_name: ${{ github.event.inputs.release-name }}
           draft: ${{ github.event.inputs.draft }}
           prerelease:  ${{ github.event.inputs.pre-release }}
           commitish: ${{ github.event.inputs.commitish }}
@@ -196,6 +196,17 @@ jobs:
           asset_path: ./release-electron/memebox-electron.exe
           asset_name: memebox-windows-electron.exe
           asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset Windows Electron ZIP
+        id: upload-release-asset-windows-electron-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.build.outputs.uploadURL }}
+          asset_path: ./release-electron/memebox-electron.zip
+          asset_name: memebox-windows-electron.zip
+          asset_content_type: application/zip
 
   mac:
     name: Build and Upload MacOS Electron

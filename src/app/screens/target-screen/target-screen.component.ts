@@ -2,14 +2,13 @@ import * as css from 'css';
 import {Rule} from 'css';
 import {Component, ElementRef, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, Dictionary, MediaType, ScreenClip} from "@memebox/contracts";
+import {Clip, CombinedClip, Dictionary, MediaType, ScreenClip} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
-import {CombinedClip} from "./types";
 import {replaceholder} from "../../core/pipes/replaceholder.pipe";
 import {Title} from "@angular/platform-browser";
 

@@ -8,7 +8,9 @@ function createInitialScreenObj(): Screen {
   return {
     id: '',
     name: '',
-    clips: {}
+    clips: {},
+    height: 1080,
+    width: 1920
   };
 }
 

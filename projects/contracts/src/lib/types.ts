@@ -53,6 +53,9 @@ export interface Screen extends HasId {
    */
   clips: Dictionary<ScreenClip>;
   customCss?: string;
+
+  height: number;
+  width: number;
 }
 
 export enum PositionEnum {
@@ -82,6 +85,7 @@ export interface ScreenClip extends HasId {
   width?: string; // 60%, 720px
   height?: string;
 
+  // todo extract position to its own object
   position?: PositionEnum;
   left?: string;
   right?: string;
@@ -246,4 +250,10 @@ export interface FileResult {
   fileName: string;
   apiUrl: string;
   fileType: MediaType
+}
+
+export interface CombinedClip {
+  clip: Clip;
+  clipSetting: ScreenClip;
+  backgroundColor?: string;
 }

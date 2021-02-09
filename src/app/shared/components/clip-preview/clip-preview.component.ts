@@ -17,6 +17,9 @@ export class ClipPreviewComponent implements OnInit {
   @Input()
   public clip: Clip;
 
+  @Input()
+  public showIframe = true;
+
   constructor() { }
 
   ngOnInit(): void {

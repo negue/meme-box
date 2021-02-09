@@ -26,6 +26,7 @@ import {DynamicIframeEditComponent} from "./dynamic-iframe-edit/dynamic-iframe-e
 import {MarkdownComponent} from "./markdown/markdown.component";
 import {HelpOverviewComponent} from "./help-overview/help-overview.component";
 import {MarkdownDialogPayload} from "../../../../../server/constants";
+import {ScreenClipConfigComponent} from "../screen-clip-config/screen-clip-config.component";
 
 @Injectable()
 export class DialogService {
@@ -141,6 +142,21 @@ export class DialogService {
       }
     )
   }
+
+
+  arrangeMediaInScreen(info: Screen) {
+    this._dialog.open(
+      ScreenClipConfigComponent, {
+        autoFocus: false,
+        data: info,
+        minWidth: '100vw',
+        maxWidth: '100vw',
+        minHeight: '100vh',
+        maxHeight: '100vh'
+      }
+    )
+  }
+
 
   open<T, D = any, R = any>(
     componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,

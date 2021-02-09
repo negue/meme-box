@@ -1,0 +1,313 @@
+<h2 mat-dialog-title>Arrange the Media on this Screen
+
+
+  <button mat-button mat-dialog-close>Close</button>
+</h2>
+<mat-dialog-content class="mat-typography">
+
+<div class="media-list">
+  <mat-selection-list [multiple]="false" #mediaList (selectionChange)="onSelectMedia($event)">
+    <mat-list-option *ngFor="let pair of  clipList$|async" [value]="pair">
+      <app-clip-type [type]="pair.clip.type"
+                     iconSize="20px"
+                     mat-list-icon>
+
+      </app-clip-type>
+      <div mat-line>{{pair.clip.name}}</div>
+      <div mat-line> {{pair.clipSetting.position | positionToString }} </div>
+    </mat-list-option>
+  </mat-selection-list>
+
+  Todo split items in moveable and static (like audio)
+</div>
+
+<div class="media-options">
+  <form class="two-columns" *ngIf="currentSelectedClip">
+    <button mat-raised-button (click)="saveScreenClip()">
+      Save
+    </button>
+    <div class="settings-content">
+
+
+    <mat-form-field>
+      <mat-select placeholder="Visibility" (valueChange)="triggerChangedetection()"
+                  [(value)]="currentSelectedClip.clipSetting.visibility">
+        <mat-option [value]="0">Play</mat-option>
+        <mat-option [value]="1">Always Visible</mat-option>
+        <mat-option [value]="2">Toggle</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-hint [ngSwitch]="currentSelectedClip.clipSetting.visibility">
+          <span *ngSwitchCase="0">
+            Once this media was triggered it'll be played and then <b>hidden again</b>.
+          </span>
+      <span *ngSwitchCase="2">
+          Once this media was triggered it'll <b>stay visible unless triggered</b> again.
+          </span>
+    </mat-hint>
+    </div>
+    <mat-expansion-panel *ngIf="currentSelectedClip.clipSetting.visibility !== 1">
+      <mat-expansion-panel-header>
+        Animation Options
+      </mat-expansion-panel-header>
+
+      <mat-form-field>
+        <mat-select placeholder="Animate IN"
+                    [(value)]="currentSelectedClip?.clipSetting.animationIn"
+                    (selectionChange)="triggerChangedetection()">
+          <mat-option value="">None</mat-option>
+          <mat-option value="random">Random</mat-option>
+          <mat-option *ngFor="let animation of animateInList" [value]="animation">{{animation}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input autocomplete="off"  [(ngModel)]="currentSelectedClip.clipSetting.animationInDuration"
+               matInput [ngModelOptions]="{standalone: true}"
+               placeholder="Animate In - Duration"
+               type="text" (change)="triggerChangedetection()">
+      </mat-form-field>
+
+      TODO Trigger animation example
+
+      <mat-form-field>
+        <mat-select placeholder="Animate OUT"
+                    [(value)]="currentSelectedClip.clipSetting.animationOut"
+                    (selectionChange)="triggerChangedetection()">
+          <mat-option value="">None</mat-option>
+          <mat-option value="random">Random</mat-option>
+
+          <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input autocomplete="off" [(ngModel)]="currentSelectedClip.clipSetting.animationOutDuration"
+               matInput [ngModelOptions]="{standalone: true}"
+               placeholder="Animate Out - Duration"
+               type="text" (change)="triggerChangedetection()">
+      </mat-form-field>
+
+      TODO Trigger animation example
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        Type Specific Settings
+      </mat-expansion-panel-header>
+
+      <mat-form-field *ngIf="currentSelectedClip.clip.type === MediaType.Video">
+        <mat-select placeholder="Loop Media Clip" [(value)]="currentSelectedClip.clipSetting.loop"
+                    (selectionChange)="triggerChangedetection()">
+          <mat-option [value]="false">No</mat-option>
+          <mat-option [value]="true">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="currentSelectedClip.clip.type === MediaType.Picture">
+        <mat-select placeholder="Image-Fit" [(value)]="currentSelectedClip.clipSetting.imgFit"
+                    (selectionChange)="triggerChangedetection()">
+          <mat-option value="contain">Contain</mat-option>
+          <mat-option value="fill">Fill</mat-option>
+          <mat-option value="cover">Cover</mat-option>
+          <mat-option value="scale-down">Scale down</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        Position Settings
+      </mat-expansion-panel-header>
+
+      <mat-form-field>
+        <mat-select #positionSelection (selectionChange)="triggerChangedetection()"
+                    [(value)]="currentSelectedClip.clipSetting.position"
+                    placeholder="Position">
+          <mat-option [value]="0">{{0 | positionToString}}</mat-option>
+          <mat-option [value]="1">{{1 | positionToString}}</mat-option>
+          <mat-option [value]="2">{{2 | positionToString}}</mat-option>
+          <mat-option [value]="3">{{3 | positionToString}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <ng-container *ngIf="positionSelection.value !== 3">
+      <mat-form-field>
+        <input autocomplete="off"
+               matInput
+               [(ngModel)]="currentSelectedClip.clipSetting.width"
+               [ngModelOptions]="{standalone: true}"
+               placeholder="Width (px, %, rem, em)"
+               type="text"  (change)="triggerChangedetection()">
+      </mat-form-field>
+
+      <mat-form-field>
+        <input autocomplete="off" matInput
+               [(ngModel)]="currentSelectedClip.clipSetting.height"
+               [ngModelOptions]="{standalone: true}"
+               placeholder="Height (px, %, rem, em)"
+               type="text" (change)="triggerChangedetection()">
+      </mat-form-field>
+      </ng-container>
+
+      <ng-container *ngIf="positionSelection.value === 1">
+        <mat-form-field>
+          <input autocomplete="off" [(ngModel)]="currentSelectedClip.clipSetting.left"
+                 matInput [ngModelOptions]="{standalone: true}"
+                 placeholder="Left (px, %, rem, em)"
+                 type="text" (change)="triggerChangedetection()">
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <input autocomplete="off" [(ngModel)]="currentSelectedClip.clipSetting.right"
+                 matInput [ngModelOptions]="{standalone: true}"
+                 placeholder="Right (px, %, rem, em)"
+                 type="text" (change)="triggerChangedetection()">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input autocomplete="off" [(ngModel)]="currentSelectedClip.clipSetting.top"
+                 matInput [ngModelOptions]="{standalone: true}"
+                 placeholder="Top (px, %, rem, em)"
+                 type="text" (change)="triggerChangedetection()">
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <input autocomplete="off" [(ngModel)]="currentSelectedClip.clipSetting.bottom"
+                 matInput [ngModelOptions]="{standalone: true}"
+                 placeholder="Bottom (px, %, rem, em)"
+                 type="text" (change)="triggerChangedetection()">
+        </mat-form-field>
+      </ng-container>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        Advanced Settings
+      </mat-expansion-panel-header>
+
+      <mat-form-field>
+        <input autocomplete="off"  [(ngModel)]="currentSelectedClip.clipSetting.zIndex"
+               matInput  [ngModelOptions]="{standalone: true}"
+               placeholder="z-index"
+               type="number" (change)="triggerChangedetection()">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Custom CSS</mat-label>
+
+        <gewd-custom-form-control #customFormControl
+                                  [value]="currentSelectedClip.clipSetting.customCss">
+          <gewd-prism-editor [value]="currentSelectedClip.clipSetting.customCss"
+                             language="css"
+                             [debounceTime]="450"
+                             [style.--editor-min-height.px]="200"
+                             (value$)="currentSelectedClip.clipSetting.customCss = $event; triggerChangedetection()"
+                             (focussed$)="customFormControl.focused = $event">
+          </gewd-prism-editor>
+        </gewd-custom-form-control>
+
+        <mat-hint>
+          Hints: <br/>
+          <strong>.clip-holder</strong> can be used to style the holding element of the clip itself. <br/>
+          Everything else will be applied inside the holder itself.
+        </mat-hint>
+      </mat-form-field>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        Debug
+      </mat-expansion-panel-header>
+
+      {{currentSelectedClip | json }}
+    </mat-expansion-panel>
+  </form>
+
+
+</div>
+
+<div class="drag-drop-area-holder" #holdingElement>
+ Screen Size {{screen?.width}}x{{screen?.height}}
+
+  <mat-checkbox [checked]="true" #dragCheckbox>Drag</mat-checkbox>
+  <mat-checkbox [checked]="true" #resizeCheckbox
+                (change)="onCheckedToggle($event, warpingCheckbox)">Resizing</mat-checkbox>
+  <mat-checkbox #rotateCheckbox style="display: none">Rotating</mat-checkbox>
+  <mat-checkbox #warpingCheckbox style="display: none"
+                (change)="onCheckedToggle($event, resizeCheckbox)">Warping</mat-checkbox>
+<gewd-auto-scale [width]="holdingElement.clientWidth"
+                 [height]="holdingElement.clientHeight"
+
+>
+  <div class="drag-drop-area" (click)="clickedOutside()"
+       [style.width.px]="screen?.width || 1920"
+       [style.height.px]="screen?.height || 1080"
+  >
+
+    <!--
+      THis Module will be fullscreen in the browser
+      Screen Title
+
+      Column 1: Media Files
+      Column 2: Media Config ?
+      Rest of the Screen: Drag&Drop Area
+
+      - if random - hide this area?
+
+
+
+      Column 2: Media Config ?   extract config from the dialog into multiple components???
+      or into one which accepts a screen-clip entry?
+
+
+      Also TODO:
+      - Rotating on the media ? => new feature
+      - Callbacks on change to update the column2 media config?
+      - new absolute position type (because this drag/drop uses all 4 positions, left right top bottom)
+      - split up the current screen clip config into expandable panels
+      -
+
+      [style.--width]="pair.clipSetting.width || '200px'"
+                    [style.--height]="pair.clipSetting.height || '200px'"
+                    [style.--top]="pair.clipSetting.top"
+                    [style.--left]="pair.clipSetting.left"
+
+      -->
+
+    Todo show fullscreen items when selected or mark an area for the "random" positions
+
+    <ng-container *ngFor="let pair of clipList$|async; trackBy: trackByClip">
+
+      <ng-container *ngIf="pair.clipSetting.position === 1">
+        <app-drag-resize-media
+          [clip]="pair.clip"
+          [showResizeBorder]="pair === currentSelectedClip"
+          (elementClicked)="elementClicked(dragResizeMediaComponent, pair, mediaList)"
+          [settings]="pair.clipSetting" #dragResizeMediaComponent
+          (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
+
+          [draggingEnabled]="dragCheckbox.checked"
+          [resizeEnabled]="resizeCheckbox.checked"
+          [rotateEnabled]="rotateCheckbox.checked"
+          [warpEnabled]="warpingCheckbox.checked"
+        >
+
+        </app-drag-resize-media>
+      </ng-container>
+
+    </ng-container>
+
+
+
+
+  </div>
+
+</gewd-auto-scale>
+
+</div>
+</mat-dialog-content>
+

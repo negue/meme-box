@@ -11,6 +11,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {DynamicIframeModule} from "../shared/components/dynamic-iframe/dynamic-iframe.module";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
+import {ScreenClipConfigModule} from "../shared/components/screen-clip-config/screen-clip-config.module";
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     DynamicIframeModule,
+    ScreenClipConfigModule
   ]
 })
 export class TestpageModule { }

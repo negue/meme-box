@@ -26,5 +26,5 @@ export class ScreensArrayToUrlPipe implements PipeTransform {
 
     return `screens?${allEnabledScreens.map(screenId => `${screenId}=${value[screenId].zIndex}`).join('&')}`
   }
-
 }
+
