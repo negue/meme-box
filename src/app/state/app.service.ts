@@ -29,6 +29,7 @@ import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from './app.dummy.data';
 import {deleteClip} from '../../../projects/state/src/lib/operations/clip.operations';
 import {take} from 'rxjs/operators';
+import {addScreenClip} from "@memebox/state";
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -263,7 +264,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[screenId].clips[screenClip.id] = screenClip as ScreenClip;
+      addScreenClip(state, screenId, screenClip);
     });
 
     this.snackbar.normal(`Media ${wasAlreadyAdded ? 'Settings updated' : 'added to screen'}!`);
