@@ -17,9 +17,11 @@ import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
+import {VisibilityToStringPipe} from "./visibility-to-string.pipe";
+import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
 
 @NgModule({
-  declarations: [ScreenClipConfigComponent, PositionToStringPipe],
+  declarations: [ScreenClipConfigComponent, PositionToStringPipe, VisibilityToStringPipe],
   exports: [
     ScreenClipConfigComponent
   ],
@@ -39,7 +41,8 @@ import {MatDialogModule} from "@angular/material/dialog";
     AutoScaleModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    ClipPreviewModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

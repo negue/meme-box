@@ -24,12 +24,18 @@ export class ScreenClipConfigComponent implements OnInit {
       const result: CombinedClip[] = [];
 
       for (const [key, entry] of Object.entries(this.screen.clips)) {
+        const clip = clipMap[key];
+
+        if (clip.type === MediaType.Audio ) {
+          continue;
+        }
+
         result.push({
           clipSetting: {
             ...entry
           },
           clip: {
-            ...clipMap[key],
+            ...clip,
             path: replaceholder(clipMap?.[key]?.path)
           }
         });
@@ -39,7 +45,7 @@ export class ScreenClipConfigComponent implements OnInit {
     }),
     publishReplay(),
     refCount()
-  )
+  );
 
   public trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 

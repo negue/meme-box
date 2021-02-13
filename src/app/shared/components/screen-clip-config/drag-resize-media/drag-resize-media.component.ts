@@ -26,10 +26,18 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   public showResizeBorder = false;
 
   @Input()
+  public screen: Screen;
+
+  @Input()
   public clip: Clip;
 
   @Input()
   public settings: ScreenClip;
+
+  @Input()
+  public sizeType: 'px';
+
+
 
   @Input()
   public draggingEnabled: boolean;
@@ -68,9 +76,18 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   constructor(public element: ElementRef<HTMLElement>,
               private cd: ChangeDetectorRef) {
 
+    // Yes its weird but the auto-scale sometimes doesn't
+    // get the inner content sizes to resize its own
+    setTimeout(() => {
+      this.cd.detectChanges();
+    }, 10);
     setTimeout(() => {
       this.cd.detectChanges();
     }, 50);
+
+    setTimeout(() => {
+      this.cd.detectChanges();
+    }, 100);
   }
 
   ngAfterViewInit(): void {
@@ -102,21 +119,24 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     console.info( this.frame);
   }
   onDrag({ target, left, top }) {
-    this.element.nativeElement.style.top = `${top}px`;
-    this.element.nativeElement.style.left = `${left}px`;
+    const newPosition = this.translatePixelToTarget(left, top);
+
+
+    this.element.nativeElement.style.top = newPosition.y;
+    this.element.nativeElement.style.left = newPosition.x;
 
     this.element.nativeElement.style.right = null;
     this.element.nativeElement.style.bottom = null;
 
     // TODO Update on DragEnd
-    this.settings.top = `${top}px`;
-    this.settings.left = `${left}px`;
+    this.settings.top = newPosition.y;
+    this.settings.left = newPosition.x;
     this.settings.right = null;
     this.settings.bottom = null;
 
   }
   onDragEnd({ target, isDrag, clientX, clientY }) {
-    console.log("onDragEnd", target, isDrag);
+    console.log("onDragEnd", target, isDrag, { clientX, clientY });
   }
 
   onResizeStart({ target, set, setOrigin, dragStart }) {
@@ -133,8 +153,10 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     dragStart && dragStart.set(this.frame.translate);
   }
   onResize({ target, width, height, drag }) {
-    target.style.width = `${width}px`;
-    target.style.height = `${height}px`;
+    const newPosition = this.translatePixelToTarget(width, height);
+
+    target.style.width = newPosition.x;
+    target.style.height = newPosition.y;
   }
   onResizeEnd({ target, isDrag, clientX, clientY }) {
     console.log("onResizeEnd", target, isDrag);
@@ -179,19 +201,37 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     this.elementClicked.emit();
   }
 
+  private translatePixelToTarget(x: number, y: number): ({x: string, y: string}) {
+    if (this.sizeType === 'px') {
+      return {
+        x: `${x}px`,
+        y: `${y}px`
+      };
+    }
+
+    return {
+      x: `${x / this.screen.width * 100}%`,
+      y: `${y / this.screen.height * 100}%`
+    }
+  }
+
   private applyPositionBySetting () {
-    if (this.settings.position === PositionEnum.Absolute) {
-
-      this.element.nativeElement.style.top = this.settings.top;
-      this.element.nativeElement.style.left = this.settings.left;
-      this.element.nativeElement.style.right = this.settings.right;
-      this.element.nativeElement.style.bottom = this.settings.bottom;
-
-
+    if (this.settings.position !== PositionEnum.FullScreen){
       this.element.nativeElement.style.width = this.settings.width;
       this.element.nativeElement.style.height = this.settings.height;
     }
 
+    if (this.settings.position === PositionEnum.Absolute) {
+      this.element.nativeElement.style.top = this.settings.top;
+      this.element.nativeElement.style.left = this.settings.left;
+      this.element.nativeElement.style.right = this.settings.right;
+      this.element.nativeElement.style.bottom = this.settings.bottom;
+    }
+
+    if (this.settings.position === PositionEnum.Random) {
+      this.element.nativeElement.style.top = '10%';
+      this.element.nativeElement.style.left = '10%';
+    }
 
     console.info('Update Rect');
     this.moveableInstance?.updateRect();

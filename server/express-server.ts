@@ -1,3 +1,4 @@
+// @ts-ignore
 import express, {Express} from 'express';
 import {
   API_PREFIX,
@@ -22,6 +23,7 @@ import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 
+// @ts-ignore
 import open from 'open';
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";

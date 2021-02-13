@@ -1,10 +1,31 @@
 :host {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 mat-dialog-content {
   display: flex;
   flex-direction: row;
+  overflow-y: hidden;
+  max-height: unset;
+  width: 99vw;
+}
+
+h2 {
+  display: flex;
+
+  span {
+    flex: 1;
+  }
+}
+
+.hover-background:hover {
+  background: #555;
+}
+
+.overflow-y {
+  overflow-y: auto;
 }
 
 .media-list {
@@ -23,11 +44,11 @@ mat-dialog-content {
   position: relative;
   overflow: hidden;
 
-background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
+  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
 }
 
 
-mat-expansion-panel, .settings-content {
+mat-expansion-panel, .settings-content, .settings-stuff {
   margin: 1rem 1rem;
 }
 
