@@ -1,13 +1,16 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction} from '@angular/core';
 import {AppQueries} from "../../../state/app.queries";
-import {map, publishReplay, refCount} from "rxjs/operators";
+import {map, publishReplay, refCount, startWith} from "rxjs/operators";
 import {ANIMATION_IN_ARRAY, ANIMATION_OUT_ARRAY, Clip, CombinedClip, MediaType, Screen} from "@memebox/contracts";
 import {replaceholder} from "../../../core/pipes/replaceholder.pipe";
 import {AppService} from "../../../state/app.service";
-import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
 import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {DragResizeMediaComponent} from "./drag-resize-media/drag-resize-media.component";
+import {FormControl} from "@angular/forms";
+import {combineLatest} from "rxjs";
+import {AutoScaleComponent} from "@gewd/components/auto-scale";
+import {WebsocketService} from "../../../core/services/websocket.service";
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -49,6 +52,25 @@ export class ScreenClipConfigComponent implements OnInit {
 
   public trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
+  selectedItems = new FormControl([]);
+
+  items: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+
+  public visibleItems$ = combineLatest([
+    this.clipList$,
+    this.selectedItems.valueChanges.pipe(
+      startWith([])
+    )
+  ]).pipe(
+    map(([clipList, selectedItems]) => {
+      if (selectedItems.length === 0) {
+        return clipList;
+      }
+
+      return clipList.filter(clip => selectedItems.includes(clip.clip.id));
+    })
+  )
+
   public animateInList = ANIMATION_IN_ARRAY;
 
   public animateOutList = ANIMATION_OUT_ARRAY;
@@ -62,6 +84,7 @@ export class ScreenClipConfigComponent implements OnInit {
   constructor(private appQueries: AppQueries,
               private appService: AppService,
               private cd: ChangeDetectorRef,
+              private wsService: WebsocketService,
               @Inject(MAT_DIALOG_DATA) public screen: Screen) { }
 
   ngOnInit(): void {
@@ -76,13 +99,11 @@ export class ScreenClipConfigComponent implements OnInit {
     console.info('NEW LEFT', newLeft);
   }
 
-  elementClicked(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip, mediaList: MatSelectionList) {
+  elementClicked(dragResizeMediaComponent: DragResizeMediaComponent,
+                 pair: CombinedClip) {
     this.resetTheResizeBorder();
 
     this.currentSelectedClip = pair;
-    var listItemOfPair = mediaList.options.find(o => o.value === pair);
-
-    mediaList.selectedOptions.select(listItemOfPair);
 
     // todo select the item in the left list
     this.previouslyClickedComponent = dragResizeMediaComponent;
@@ -94,6 +115,7 @@ export class ScreenClipConfigComponent implements OnInit {
   }
 
   clickedOutside() {
+    this.currentSelectedClip = null;
     this.resetTheResizeBorder();
 
     console.info('clicked outside');
@@ -107,8 +129,8 @@ export class ScreenClipConfigComponent implements OnInit {
     }
   }
 
-  onSelectMedia($event: MatSelectionListChange) {
-    this.currentSelectedClip = $event.options[0].value;
+  onSelectMedia($event: CombinedClip) {
+    this.currentSelectedClip = $event;
   }
 
   triggerChangedetection() {
@@ -139,5 +161,19 @@ export class ScreenClipConfigComponent implements OnInit {
 
   saveScreenClip() {
     this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.clipSetting);
+  }
+
+  resizeScaling(scaleContent: AutoScaleComponent, parentElement: HTMLDivElement) {
+    scaleContent.width = parentElement.clientWidth;
+    scaleContent.height = parentElement.clientHeight;
+
+    console.info('resize called');
+  }
+
+  onPreview(visibleItem: CombinedClip) {
+    this.wsService.onTriggerClip$.next({
+      id: visibleItem.clip.id,
+      targetScreen: this.screen.id
+    });
   }
 }

@@ -4,12 +4,17 @@
   flex: 1;
 }
 
+.hidden {
+  display: none !important;
+}
+
 mat-dialog-content {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   overflow-y: hidden;
   max-height: unset;
   width: 99vw;
+  height: 100%;
 }
 
 h2 {
@@ -28,16 +33,9 @@ h2 {
   overflow-y: auto;
 }
 
-.media-list {
-  width: 20%;
-}
-
-.media-options {
-  width: 20%;
-}
-
 .drag-drop-area-holder {
-  flex: 1;
+  height: 100%;
+  width: 100%;
 }
 
 .drag-drop-area {
@@ -60,3 +58,94 @@ mat-expansion-panel, .settings-content, .settings-stuff {
   }
 }
 
+.selected-item {
+  grid-area: selected-item;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.media-config {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.dragging-config {
+  height: 4rem;
+  display: flex;
+  flex-direction: row;
+
+  .left {
+    flex: 1;
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .right {
+    flex: 1;
+    justify-content: flex-end;
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.rows {
+  display: grid;
+  // grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-rows: 200px minmax(0, 1fr);
+  gap: 1rem;
+  grid-template-areas:
+    "media-list media-list"
+    "drag-content drag-content"
+  ;
+
+  flex: 1;
+
+  /**
+   * in order to achieve a MAX HEIGHT  you need a MIN HEIGHT ... obviously
+   */
+  min-height: 0;
+}
+
+.row_content {
+  grid-area: drag-content;
+}
+
+.row_media_items {
+  grid-area: media-list;
+  position: relative;
+}
+
+.visible-media-items {
+  padding-right: 11rem;
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  height: 100%;
+  align-items: flex-start;
+  align-content: flex-start;
+
+  ::ng-deep {
+    .mat-card {
+      padding: 10px;
+      border: 3px solid transparent;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .mat-card-subtitle {
+      margin-bottom: 0;
+    }
+  }
+
+  .selected {
+    border: 3px purple solid;
+  }
+}

@@ -1,5 +1,6 @@
 export const APP_ICONS = [
   'add',
+  'arrow_drop_down',
   'art_track',
   'audiotrack',
   'cancel',

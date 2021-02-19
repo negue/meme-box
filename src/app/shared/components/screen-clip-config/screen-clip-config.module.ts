@@ -11,7 +11,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
 import {HighlightEditorModule} from "@gewd/components/highlight-editor";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -19,6 +19,10 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatDialogModule} from "@angular/material/dialog";
 import {VisibilityToStringPipe} from "./visibility-to-string.pipe";
 import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
+import {MatCardModule} from "@angular/material/card";
+import {MatRippleModule} from "@angular/material/core";
+import {MatTabsModule} from "@angular/material/tabs";
+import {AppModule} from "../../../app.module";
 
 @NgModule({
   declarations: [ScreenClipConfigComponent, PositionToStringPipe, VisibilityToStringPipe],
@@ -42,7 +46,12 @@ import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
     MatCheckboxModule,
     MatButtonModule,
     MatDialogModule,
-    ClipPreviewModule
+    ClipPreviewModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatRippleModule,
+    MatTabsModule,
+    AppModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

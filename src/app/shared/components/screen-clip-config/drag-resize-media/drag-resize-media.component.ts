@@ -15,6 +15,11 @@ import {Clip, PositionEnum, ScreenClip} from "@memebox/contracts";
 import {NgxMoveableComponent} from "ngx-moveable";
 import {AutoScaleComponent} from "@gewd/components/auto-scale";
 
+export interface TranslatedSize {
+  x: string;
+  y: string;
+}
+
 @Component({
   selector: 'app-drag-resize-media',
   templateUrl: './drag-resize-media.component.html',
@@ -67,9 +72,16 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   @ViewChild('autoScale', {static: true})
   public autoScale: AutoScaleComponent;
 
-  frame = {
-    translate: [0, 0],
-
+  frame: {
+    translate: [number, number],
+    currentDraggingPosition: TranslatedSize | null,
+    rotate: number
+  } = {
+    currentDraggingPosition: {
+      x: null,
+      y: null
+    },
+    translate: [0,0],
     rotate: 0,
   };
 
@@ -78,6 +90,9 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
     // Yes its weird but the auto-scale sometimes doesn't
     // get the inner content sizes to resize its own
+
+    // TODO Fix the autoscaling component somehow to "auto" scale on size changes
+    // until then let the timeouts begin...
     setTimeout(() => {
       this.cd.detectChanges();
     }, 10);
@@ -88,6 +103,10 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     setTimeout(() => {
       this.cd.detectChanges();
     }, 100);
+
+    setTimeout(() => {
+      this.cd.detectChanges();
+    }, 200);
   }
 
   ngAfterViewInit(): void {
@@ -115,28 +134,28 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
 
   onDragStart({ set }) {
-    set(this.frame.translate);
     console.info( this.frame);
   }
   onDrag({ target, left, top }) {
     const newPosition = this.translatePixelToTarget(left, top);
 
 
-    this.element.nativeElement.style.top = newPosition.y;
-    this.element.nativeElement.style.left = newPosition.x;
+    this.updateCSSVar('top', newPosition.y);
+    this.updateCSSVar('left', newPosition.x);
 
-    this.element.nativeElement.style.right = null;
-    this.element.nativeElement.style.bottom = null;
+    this.updateCSSVar('right',  null);
+    this.updateCSSVar('bottom',  null);
 
-    // TODO Update on DragEnd
-    this.settings.top = newPosition.y;
-    this.settings.left = newPosition.x;
-    this.settings.right = null;
-    this.settings.bottom = null;
-
+    this.frame.currentDraggingPosition = newPosition;
   }
+
   onDragEnd({ target, isDrag, clientX, clientY }) {
     console.log("onDragEnd", target, isDrag, { clientX, clientY });
+    // TODO Update on DragEnd
+    this.settings.top = this.frame.currentDraggingPosition.y;
+    this.settings.left = this.frame.currentDraggingPosition.x;
+    this.settings.right = null;
+    this.settings.bottom = null;
   }
 
   onResizeStart({ target, set, setOrigin, dragStart }) {
@@ -155,14 +174,14 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   onResize({ target, width, height, drag }) {
     const newPosition = this.translatePixelToTarget(width, height);
 
-    target.style.width = newPosition.x;
-    target.style.height = newPosition.y;
+    this.updateCSSVar('width', newPosition.x);
+    this.updateCSSVar('height', newPosition.y);
   }
   onResizeEnd({ target, isDrag, clientX, clientY }) {
     console.log("onResizeEnd", target, isDrag);
 
-    this.settings.width = target.style.width;
-    this.settings.height = target.style.height;
+    this.settings.width = this.getCSSVar('width');
+    this.settings.height = this.getCSSVar('height');
   }
 
   onRotateStart({ set }) {
@@ -201,7 +220,19 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     this.elementClicked.emit();
   }
 
-  private translatePixelToTarget(x: number, y: number): ({x: string, y: string}) {
+  private updateCSSVar(name: string, value: string) {
+    this.element.nativeElement.style[name] = value;
+    this.element.nativeElement.style.setProperty(`--resize-${name}`, value);
+  }
+
+
+  private getCSSVar(name: string) {
+    return this.element.nativeElement.style.getPropertyValue(`--resize-${name}`);
+  }
+  private translatePixelToTarget(x: number, y: number): TranslatedSize {
+    x = Math.floor(x);
+    y = Math.floor(y);
+
     if (this.sizeType === 'px') {
       return {
         x: `${x}px`,
@@ -209,31 +240,42 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
       };
     }
 
+    x = Math.floor(x / this.screen.width * 100);
+    y = Math.floor(y / this.screen.height * 100);
+
     return {
-      x: `${x / this.screen.width * 100}%`,
-      y: `${y / this.screen.height * 100}%`
+      x: `${x}%`,
+      y: `${y}%`
     }
   }
 
   private applyPositionBySetting () {
+    const {nativeElement} = this.element;
+
     if (this.settings.position !== PositionEnum.FullScreen){
-      this.element.nativeElement.style.width = this.settings.width;
-      this.element.nativeElement.style.height = this.settings.height;
+      nativeElement.style.width = this.settings.width;
+      nativeElement.style.height = this.settings.height;
     }
 
     if (this.settings.position === PositionEnum.Absolute) {
-      this.element.nativeElement.style.top = this.settings.top;
-      this.element.nativeElement.style.left = this.settings.left;
-      this.element.nativeElement.style.right = this.settings.right;
-      this.element.nativeElement.style.bottom = this.settings.bottom;
+      nativeElement.style.top = this.settings.top;
+      nativeElement.style.left = this.settings.left;
+      nativeElement.style.right = this.settings.right;
+      nativeElement.style.bottom = this.settings.bottom;
     }
 
     if (this.settings.position === PositionEnum.Random) {
-      this.element.nativeElement.style.top = '10%';
-      this.element.nativeElement.style.left = '10%';
+      nativeElement.style.top = '10%';
+      nativeElement.style.left = '10%';
     }
 
-    console.info('Update Rect');
-    this.moveableInstance?.updateRect();
+    try {
+      if (this.moveableInstance?.isMoveableElement(nativeElement)) {
+        console.info('Update Rect');
+        this.moveableInstance.updateRect();
+      }
+    } catch {
+      // moveableInstance has some inner issue that cant be checked before
+    }
   }
 }

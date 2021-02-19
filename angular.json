@@ -115,13 +115,16 @@
           },
           "configurations": {
             "dev": {
-              "browserTarget": "memebox-app:build:dev"
+              "browserTarget": "memebox-app:build:dev",
+              "hmr": true
             },
             "web": {
-              "browserTarget": "memebox-app:build:web"
+              "browserTarget": "memebox-app:build:web",
+              "hmr": true
             },
             "production": {
-              "browserTarget": "memebox-app:build:production"
+              "browserTarget": "memebox-app:build:production",
+              "hmr": true
             }
           }
         },

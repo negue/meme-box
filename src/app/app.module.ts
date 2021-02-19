@@ -125,10 +125,16 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         }
       } as MarkdownServiceOptions
     },
-    {provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {
-      color: 'primary'
-    } as MatCheckboxDefaultOptions}
+    {
+      provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {
+        color: 'primary'
+      } as MatCheckboxDefaultOptions
+    }
 
+  ],
+  exports: [
+    TargetScreenComponent,
+    TargetScreenComponent
   ],
   bootstrap: [AppComponent]
 })

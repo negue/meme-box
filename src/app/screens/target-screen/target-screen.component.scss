@@ -1,13 +1,7 @@
-::ng-deep {
-  position: relative;
+:host {
   display: block;
-  height: 100vh;
-
-  // target-screens needs to be transparent for OBS
-  .mat-app-background {
-    background-color: transparent !important;
-    overflow: hidden;
-  }
+  width: 100%;
+  height: 100%;
 }
 
 audio {
