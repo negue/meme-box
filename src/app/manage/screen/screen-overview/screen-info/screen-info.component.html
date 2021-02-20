@@ -11,14 +11,6 @@
     </button>
   </div>
 
-
-  <div class="actionButtons">
-    <button (click)="onOpenArrangeDialog.emit()" color="accent" mat-flat-button>
-      Arrange Media
-    </button>
-  </div>
-
-
   <div class="actionButtons">
     <button (click)="onEdit.emit()" color="accent" mat-flat-button>
       <mat-icon svgIcon="edit"></mat-icon>
@@ -34,12 +26,12 @@
   <ng-container *ngIf="clipList$ | async as clipList">
 
     <div class="actionButtons">
-      <button (click)="onEditAssignments.next()"
+      <button (click)="onOpenArrangeDialog.emit()"
               class="actionButtons--single"
               color="accent"
               mat-flat-button>
         <mat-icon svgIcon="playlist_add"></mat-icon>
-        {{ clipList.length === 0 ? 'Assign Media' : 'Edit Media' }}
+        Assign / arrange media
       </button>
     </div>
 
