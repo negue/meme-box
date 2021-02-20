@@ -29,7 +29,7 @@ import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from './app.dummy.data';
 import {deleteClip} from '../../../projects/state/src/lib/operations/clip.operations';
 import {take} from 'rxjs/operators';
-import {addScreenClip} from "@memebox/state";
+import {addOrUpdateScreenClip, fillDefaultsScreenClip} from "@memebox/state";
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
@@ -257,6 +257,8 @@ export class AppService {
   }
 
   public async addOrUpdateScreenClip(screenId: string, screenClip: Partial<ScreenClip>) {
+    screenClip = fillDefaultsScreenClip(screenClip);
+
     // add the clip to api & await
     await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${screenClip.id}`, screenClip).toPromise();
 
@@ -264,7 +266,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      addScreenClip(state, screenId, screenClip);
+      addOrUpdateScreenClip(state, screenId, screenClip);
     });
 
     this.snackbar.normal(`Media ${wasAlreadyAdded ? 'Settings updated' : 'added to screen'}!`);

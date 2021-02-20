@@ -244,7 +244,7 @@ export class Persistence {
   public updateScreenClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
     screenClip.id = id;
 
-    updateItemInDictionary(this.data.screen[targetUrlId].clips, screenClip);
+    operations.addOrUpdateScreenClip(this.data, targetUrlId, screenClip);
 
     this.saveData();
     return screenClip;
@@ -410,7 +410,7 @@ export class Persistence {
 
       this.logger.info('Added clip', clip.id, clip.name);
 
-      operations.addScreenClip(this.data, screenId, {
+      operations.addOrUpdateScreenClip(this.data, screenId, {
         id: clip.id,
         visibility: VisibilityEnum.Play,
         position: PositionEnum.FullScreen,
