@@ -1,9 +1,10 @@
-<div [ngSwitch]="clip?.type">
+<ng-container [ngSwitch]="clip?.type">
   <!-- Image => Preview -->
   <img *ngSwitchCase="MediaType.Picture"
        [style.height]="height"
        [style.width]="width"
-       [src]="clip.path | replaceholder" />
+       [src]="clip.path | replaceholder"
+       draggable="false"/>
 
   <!-- Iframe => Iframe -->
   <div *ngSwitchCase="MediaType.IFrame">
@@ -14,6 +15,7 @@
     <ng-template #canShowIframe>
 
       <iframe
+        [style.pointer-events]="'none'"
         [src]="clip.path | safeurl"
       ></iframe>
     </ng-template>
@@ -25,4 +27,4 @@
                  [type]="clip?.type"
                  [iconSize]="height || width"></app-clip-type>
 
-</div>
+</ng-container>

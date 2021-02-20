@@ -16,25 +16,28 @@ export class ScreenEditComponent implements OnInit {
     name: '',
     id: '',
     customCss: '',
-    height: 1080,
-    width: 1920
+    height: 0,
+    width: 0
   })
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Screen,
               private dialogRef: MatDialogRef<any>,
               private appService: AppService,
               private snackBar: SnackbarService) {
-    this.form.patchValue({
-      name: data.name,
-      id: data.id,
-      customCss: data.customCss,
-      height: data.height,
-      width: data.width
-    })
+
+
   }
 
   ngOnInit(): void {
-    this.form.reset(this.data);
+    this.form.patchValue({
+      name: this.data.name,
+      id: this.data.id,
+      customCss: this.data.customCss,
+      height: this.data.height || 1080,
+      width: this.data.width || 1920
+    });
+
+    console.info({ data: this.data });
   }
 
   async save() {

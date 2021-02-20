@@ -39,7 +39,6 @@ export class ScreenInfoComponent implements OnInit {
     })
   ),
     tap(screenInfo => {
-      console.info('tap called');
       this._info = screenInfo;
     })
   );
@@ -67,9 +66,6 @@ export class ScreenInfoComponent implements OnInit {
 
   @Output()
   public onDelete = new EventEmitter();
-
-  @Output()
-  public onEditAssignments = new EventEmitter();
 
   @Output()
   public onEditScreenClipOptions = new EventEmitter<Clip>();

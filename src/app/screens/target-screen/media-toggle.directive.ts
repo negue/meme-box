@@ -68,8 +68,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-
-
   stopIfStillPlaying(entry: KeyValue<string, CombinedClip>) {
     console.info('stopifPlaying', {
       animationOut: this.selectedOutAnimation,
@@ -331,10 +329,15 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.currentState = newState;
   }
 
-  private startAnimation(animationName: string, animationDuration: number) {
+  private startAnimation(animationName: string, animationDurationValue: number) {
     console.info('Adding Animation to Element: ', animationName);
     this.element.nativeElement.classList.add('animate__animated', animationName);
-    this.element.nativeElement.style.setProperty('--animate-duration', `${animationDuration ?? 777}ms`);
+
+    const animationDuration = animationDurationValue || 777;
+
+    console.info('duration', animationDurationValue);
+
+    this.element.nativeElement.style.setProperty('--animate-duration', `${animationDuration}ms`);
 
     console.info('After Adding', this.element.nativeElement.classList.toString());
   }

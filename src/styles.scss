@@ -44,9 +44,20 @@ $custom-typography: mat-typography-config(
   }
 };
 
+.cdk-global-scrollblock {
+  overflow-y: hidden;
+}
+
 .max-height-dialog {
   .mat-dialog-content {
     height: 600px;
+  }
+}
+
+.fullscreen-dialog {
+  .mat-dialog-container {
+    display: flex;
+    height: unset;
   }
 }
 
