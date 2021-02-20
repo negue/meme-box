@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
+import {Title} from "@angular/platform-browser";
 
 export interface ScreenWithZIndex {
   screenId: string;
@@ -15,7 +16,8 @@ export class ScreensRouteComponent implements OnInit {
   public alLScreens: ScreenWithZIndex[] = [];
 
   constructor(
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private title: Title,
   ) { }
 
   ngOnInit(): void {
@@ -33,6 +35,8 @@ export class ScreensRouteComponent implements OnInit {
     console.info({
       keys, screens: this.alLScreens
     });
+
+    this.title.setTitle('Multiple Screens - TODO Names :)');
   }
 
 }

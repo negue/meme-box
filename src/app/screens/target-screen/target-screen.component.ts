@@ -10,7 +10,6 @@ import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
 import {replaceholder} from "../../core/pipes/replaceholder.pipe";
-import {Title} from "@angular/platform-browser";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -92,8 +91,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
               private appService: AppService,
               private route: ActivatedRoute,
               private wsService: WebsocketService,
-              private element: ElementRef<HTMLElement>,
-              private title: Title) {
+              private element: ElementRef<HTMLElement>) {
   }
 
 
@@ -176,7 +174,6 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       filter(screen => !!screen)
     ).subscribe(screen => {
       this.addOrUpdateStyleTag(document, screen.id, screen.customCss);
-      this.title.setTitle(`Screen: ${screen.name}`);
     });
   }
 
