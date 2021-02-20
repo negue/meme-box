@@ -23,6 +23,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatRippleModule} from "@angular/material/core";
 import {MatTabsModule} from "@angular/material/tabs";
 import {AppModule} from "../../../app.module";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [ScreenClipConfigComponent, PositionToStringPipe, VisibilityToStringPipe],
@@ -51,7 +52,8 @@ import {AppModule} from "../../../app.module";
     MatCardModule,
     MatRippleModule,
     MatTabsModule,
-    AppModule
+    AppModule,
+    MatTooltipModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

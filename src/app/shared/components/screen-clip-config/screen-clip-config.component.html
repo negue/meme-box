@@ -13,12 +13,114 @@
     <mat-tab label="Preview"></mat-tab>
   </mat-tab-group>
 
-  <div class="rows" [class.hidden]="tabGroup.selectedIndex !== 0">
-    <div class="row_content">
+  <div class="tab_content" [class.hidden]="tabGroup.selectedIndex !== 0">
+
+    <div class="sidebar" *ngIf="clipList$|async as allItems">
+      <div class="sidebar__title">
+        <h3>Visible Media</h3>
+
+        <div class="actionButtons">
+          <button mat-button (click)="hiddenSelect.open()"
+                  matTooltip="Select Media to be listed / previewed">
+            <ng-container *ngIf="items.length === selectedItems.value?.length || selectedItems.value?.length === 0">
+              All media visible
+            </ng-container>
+            <ng-container *ngIf="![items.length, 0].includes(selectedItems.value?.length)">
+              {{selectedItems.value?.length}} visible
+            </ng-container>
+            <mat-icon svgIcon="arrow_drop_down"></mat-icon>
+          </button>
+
+          <mat-select multiple [formControl]="selectedItems"
+                      style="visibility:hidden;width: 0"
+                      #hiddenSelect>
+            <mat-option *ngFor="let item of allItems" [value]="item.clip.id">
+              {{item.clip.name}}
+            </mat-option>
+            <mat-select-trigger>
+
+            </mat-select-trigger>
+          </mat-select>
+
+          <button (click)="assignMedia()"
+                  class="actionButtons--single"
+                  color="accent"
+                  mat-flat-button>
+            <mat-icon svgIcon="playlist_add"></mat-icon>
+            Edit Media
+          </button>
+
+        </div>
+
+
+      </div>
+
+      <div class="sidebar__items">
+        <mat-card *ngFor="let visibleItem of visibleItems$ | async"
+                  (click)="onSelectMedia($event, matRippleInstance, visibleItem)"
+                  [class.selected]="currentSelectedClip?.clip?.id === visibleItem.clip.id"
+                  matRipple [matRippleDisabled]="true"
+
+                  #matRippleInstance="matRipple">
+          <mat-card-header>
+            <div mat-card-avatar>
+              <app-clip-type [type]="visibleItem.clip.type"
+                             iconSize="36px"
+                             mat-list-icon>
+
+              </app-clip-type>
+            </div>
+            <mat-card-title>{{visibleItem.clip.name}}</mat-card-title>
+            <mat-card-subtitle>
+              {{visibleItem.clipSetting.visibility | visibilityToString}} / {{visibleItem.clipSetting.position | positionToString }}
+            </mat-card-subtitle>
+            <div style="width: 40px; height: 40px">
+            <button (click)="openMediaSettingsDialog($event, visibleItem)"
+                    mat-icon-button>
+              <mat-icon svgIcon="settings"></mat-icon>
+            </button>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content>
+            Size:
+
+            <ng-container *ngIf="visibleItem.clipSetting.position === 0">
+              {{visibleItem.clipSetting.position | positionToString }}
+            </ng-container>
+            <ng-container *ngIf="visibleItem.clipSetting.position">
+              {{visibleItem.clipSetting.width}}x{{visibleItem.clipSetting.height}}
+            </ng-container>
+            <br>
+
+            Pos:
+            <ng-container *ngIf="visibleItem.clipSetting.left">
+              L: {{visibleItem.clipSetting.left}}
+            </ng-container>
+
+            <ng-container *ngIf="visibleItem.clipSetting.top">
+              T: {{visibleItem.clipSetting.top}}
+            </ng-container>
+
+            <ng-container *ngIf="visibleItem.clipSetting.right">
+              R: {{visibleItem.clipSetting.right}}
+            </ng-container>
+
+            <ng-container *ngIf="visibleItem.clipSetting.bottom">
+              B: {{visibleItem.clipSetting.bottom}}
+            </ng-container>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+    <div class="preview-area">
       <div class="dragging-config">
-        <div class="left">
+        <div class="left" [class.hidden]="!currentSelectedClip">
+          <h3>Dragging Settings</h3>
+          <div>
           <mat-form-field>
-            <mat-select #sizeType value="px">
+            <mat-select #sizeType value="px"
+                        placeholder="Sizing Type">
               <mat-option value="px">PX</mat-option>
               <mat-option value="%">%</mat-option>
             </mat-select>
@@ -30,8 +132,11 @@
           <mat-checkbox #rotateCheckbox style="display: none">Rotating</mat-checkbox>
           <mat-checkbox #warpingCheckbox style="display: none"
                         (change)="onCheckedToggle($event, resizeCheckbox)">Warping</mat-checkbox>
-        </div>
+          </div>
+          </div>
         <div class="right" *ngIf="currentSelectedClip">
+          <h3>Media Position Type</h3>
+          <div>
           <mat-form-field >
             <mat-select (selectionChange)="triggerChangedetection()"
                         [(value)]="currentSelectedClip.clipSetting.position"
@@ -46,6 +151,7 @@
           <button mat-raised-button (click)="saveScreenClip()" color="accent">
             Save Clip Settings
           </button>
+          </div>
         </div>
 
 
@@ -62,53 +168,24 @@
                [style.width.px]="screen?.width || 1920"
                [style.height.px]="screen?.height || 1080"
           >
+            <ng-container *ngFor="let pair of visibleItems$|async; trackBy: trackByClip">
 
-            <!--
-              THis Module will be fullscreen in the browser
-              Screen Title
-
-              Column 1: Media Files
-              Column 2: Media Config ?
-              Rest of the Screen: Drag&Drop Area
-
-              - if random - hide this area?
-
-
-
-              Column 2: Media Config ?   extract config from the dialog into multiple components???
-              or into one which accepts a screen-clip entry?
-
-
-              Also TODO:
-              - Rotating on the media ? => new feature
-              - Callbacks on change to update the column2 media config?
-              - new absolute position type (because this drag/drop uses all 4 positions, left right top bottom)
-              - split up the current screen clip config into expandable panels
-              -
-
-              [style.--width]="pair.clipSetting.width || '200px'"
-                            [style.--height]="pair.clipSetting.height || '200px'"
-                            [style.--top]="pair.clipSetting.top"
-                            [style.--left]="pair.clipSetting.left"
-
-              -->
-
-            <ng-container *ngIf="currentSelectedClip">
-              <ng-container *ngIf="currentSelectedClip.clipSetting.position === 0">
-                <app-clip-preview [clip]="currentSelectedClip.clip"
-                                  [style.--object-fit]="currentSelectedClip.clipSetting.imgFit"
-                                  [style.z-index]="currentSelectedClip.clipSetting.zIndex"
+              <ng-container *ngIf="pair.clipSetting.position === 0">
+                <app-clip-preview [clip]="pair.clip"
+                                  [style.--object-fit]="pair.clipSetting.imgFit"
+                                  [style.z-index]="pair.clipSetting.zIndex"
                                   [style.position]="'absolute'"
                                   draggable="false"></app-clip-preview>
               </ng-container>
-
-              <app-drag-resize-media *ngIf="currentSelectedClip.clipSetting.position === 3"
-                                     [clip]="currentSelectedClip.clip"
-                                     [style.z-index]="currentSelectedClip.clipSetting.zIndex"
+              <app-drag-resize-media *ngIf="pair.clipSetting.position === 2"
+                                     [clip]="pair.clip"
+                                     [style.z-index]="pair.clipSetting.zIndex"
                                      [screen]="screen"
                                      [sizeType]="sizeType.value"
-                                     [showResizeBorder]="true"
-                                     [settings]="currentSelectedClip.clipSetting"
+                                     [showResizeBorder]="pair === currentSelectedClip"
+                                     [settings]="pair.clipSetting" #dragResizeMediaComponent
+                                     (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
+                                     (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
 
                                      [draggingEnabled]="false"
                                      [resizeEnabled]="true"
@@ -117,12 +194,25 @@
               >
 
               </app-drag-resize-media>
-            </ng-container>
+              <app-drag-resize-media *ngIf="pair.clipSetting.position === 3"
+                                     [clip]="pair.clip"
+                                     [style.z-index]="pair.clipSetting.zIndex"
+                                     [screen]="screen"
+                                     [sizeType]="sizeType.value"
+                                     [showResizeBorder]="pair === currentSelectedClip"
+                                     [settings]="pair.clipSetting" #dragResizeMediaComponent
+                                     (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
+                                     (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
+                                     [draggingEnabled]="false"
+                                     [resizeEnabled]="true"
+                                     [rotateEnabled]="rotateCheckbox.checked"
+                                     [warpEnabled]="warpingCheckbox.checked"
+              >
 
-            <ng-container *ngFor="let pair of visibleItems$|async; trackBy: trackByClip">
+              </app-drag-resize-media>
 
-              <ng-container *ngIf="pair.clipSetting.position === 1">
                 <app-drag-resize-media
+                  *ngIf="pair.clipSetting.position === 1"
                   [clip]="pair.clip"
                   [screen]="screen"
                   [sizeType]="sizeType.value"
@@ -140,12 +230,6 @@
 
                 </app-drag-resize-media>
               </ng-container>
-
-            </ng-container>
-
-
-
-
           </div>
 
         </gewd-auto-scale>
@@ -154,6 +238,8 @@
     </div>
 
     <div class="selected-item" *ngIf="false">
+      <!-- TODO
+      Move back to the Media Settings Dialog -->
       <div class="media-config overflow-y">
           Selected media:
 
@@ -316,38 +402,19 @@
 
 
     </div>
-    <div class="row_media_items" *ngIf="clipList$|async as allItems">
-      <div style="position: absolute; right: 1rem; top: 1rem">
+  </div>
 
-        <button mat-button (click)="hiddenSelect.open()"
-                matTooltip="Borders">
-          <ng-container *ngIf="items.length === selectedItems.value?.length || selectedItems.value?.length === 0">
-            All media visible?
-          </ng-container>
-          <ng-container *ngIf="![items.length, 0].includes(selectedItems.value?.length)">
-            {{selectedItems.value?.length}} visible
-          </ng-container>
-          <mat-icon svgIcon="arrow_drop_down"></mat-icon>
-        </button>
-
-        <mat-select multiple [formControl]="selectedItems"
-                    style="visibility:hidden;width: 0"
-                    #hiddenSelect>
-          <mat-option *ngFor="let item of allItems" [value]="item.clip.id">
-            {{item.clip.name}}
-          </mat-option>
-          <mat-select-trigger>
-
-          </mat-select-trigger>
-        </mat-select>
-
+  <!-- Preview -->
+  <div class="tab_content" *ngIf="tabGroup.selectedIndex === 1">
+    <div class="sidebar">
+      <div class="sidebar__title" style="justify-content: center">
+        <h3 class="preview-label">Click to preview Media</h3>
       </div>
 
-      <div class="visible-media-items">
-        <mat-card *ngFor="let visibleItem of visibleItems$ | async"
-                  (click)="onSelectMedia(visibleItem)"
-                  [class.selected]="currentSelectedClip?.clip?.id === visibleItem.clip.id"
-                  matRipple>
+      <div class="sidebar__items">
+        <mat-card *ngFor="let visibleItem of clipList$ | async"
+                  class="small"
+                  (click)="onPreview(visibleItem)">
           <mat-card-header>
             <div mat-card-avatar>
               <app-clip-type [type]="visibleItem.clip.type"
@@ -361,42 +428,11 @@
               {{visibleItem.clipSetting.visibility | visibilityToString}} / {{visibleItem.clipSetting.position | positionToString }}
             </mat-card-subtitle>
           </mat-card-header>
-
-          <mat-card-content>
-            Size:
-
-            <ng-container *ngIf="visibleItem.clipSetting.position === 0">
-              {{visibleItem.clipSetting.position | positionToString }}
-            </ng-container>
-            <ng-container *ngIf="visibleItem.clipSetting.position">
-              {{visibleItem.clipSetting.width}}x{{visibleItem.clipSetting.height}}
-            </ng-container>
-            <br>
-
-            Pos:
-            <ng-container *ngIf="visibleItem.clipSetting.left">
-              L: {{visibleItem.clipSetting.left}}
-            </ng-container>
-
-            <ng-container *ngIf="visibleItem.clipSetting.top">
-              T: {{visibleItem.clipSetting.top}}
-            </ng-container>
-
-            <ng-container *ngIf="visibleItem.clipSetting.right">
-              R: {{visibleItem.clipSetting.right}}
-            </ng-container>
-
-            <ng-container *ngIf="visibleItem.clipSetting.bottom">
-              B: {{visibleItem.clipSetting.bottom}}
-            </ng-container>
-          </mat-card-content>
         </mat-card>
       </div>
     </div>
-  </div>
 
-  <div class="rows" *ngIf="tabGroup.selectedIndex === 1">
-    <div class="row_content">
+    <div class="preview-area">
       <div class="drag-drop-area-holder"
            #holdingElement
       >
@@ -405,8 +441,9 @@
 
         >
 
-          <div   [style.width.px]="screen.width"
-                 [style.height.px]="screen.height">
+          <div [style.width.px]="screen.width"
+               [style.height.px]="screen.height"
+               class="drag-drop-area">
             <app-target-screen [screenId]="screen.id"
 
             >
@@ -419,26 +456,7 @@
     </div>
 
 
-    <div class="row_media_items">
-    <div class="visible-media-items">
-      <mat-card *ngFor="let visibleItem of clipList$ | async"
-                (click)="onPreview(visibleItem)">
-        <mat-card-header>
-          <div mat-card-avatar>
-            <app-clip-type [type]="visibleItem.clip.type"
-                           iconSize="36px"
-                           mat-list-icon>
 
-            </app-clip-type>
-          </div>
-          <mat-card-title>{{visibleItem.clip.name}}</mat-card-title>
-          <mat-card-subtitle>
-            {{visibleItem.clipSetting.visibility | visibilityToString}} / {{visibleItem.clipSetting.position | positionToString }}
-          </mat-card-subtitle>
-        </mat-card-header>
-      </mat-card>
-    </div>
-    </div>
   </div>
 </mat-dialog-content>
 

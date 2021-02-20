@@ -1,7 +1,15 @@
+@import '~angular-material-css-vars/public-util';
+
 :host {
   display: flex;
   flex-direction: column;
   flex: 1;
+
+  ::ng-deep {
+    .mat-card-header-text {
+      flex: 1;
+    }
+  }
 }
 
 .hidden {
@@ -34,8 +42,7 @@ h2 {
 }
 
 .drag-drop-area-holder {
-  height: 100%;
-  width: 100%;
+  flex: 1;
 }
 
 .drag-drop-area {
@@ -73,35 +80,42 @@ mat-expansion-panel, .settings-content, .settings-stuff {
 }
 
 .dragging-config {
-  height: 4rem;
+  height: 6rem;
   display: flex;
   flex-direction: row;
 
   .left {
     flex: 1;
-    align-items: center;
+    align-items: flex-start;
     display: flex;
+    flex-direction: column;
     gap: 1rem;
   }
 
   .right {
     flex: 1;
-    justify-content: flex-end;
-    align-items: center;
+    align-items: flex-end;
     display: flex;
+    flex-direction: column;
     gap: 1rem;
   }
 }
 
-.rows {
-  display: grid;
-  // grid-template-columns: minmax(0, 1fr) 300px;
-  grid-template-rows: 200px minmax(0, 1fr);
+h3 {
+  margin-bottom: 0 !important;
+}
+
+mat-card-title {
+  overflow-y: hidden;
+  height: 20px;
+  word-break: break-all;
+}
+
+
+.tab_content {
+  display: flex;
+  flex-direction: row;
   gap: 1rem;
-  grid-template-areas:
-    "media-list media-list"
-    "drag-content drag-content"
-  ;
 
   flex: 1;
 
@@ -111,30 +125,52 @@ mat-expansion-panel, .settings-content, .settings-stuff {
   min-height: 0;
 }
 
-.row_content {
-  grid-area: drag-content;
+.preview-area {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
 }
 
-.row_media_items {
-  grid-area: media-list;
+.sidebar {
+  width: 300px;
+  min-width: 300px; // since sometimes width alone is ignored.
   position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    height: 5rem;
+
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-.visible-media-items {
-  padding-right: 11rem;
+.preview-label {
+  justify-self: center;
+  font-weight: bold;
+}
+
+.sidebar__items {
   display: flex;
   gap: 5px;
   margin-top: 5px;
   flex-wrap: wrap;
   overflow-y: auto;
   height: 100%;
-  align-items: flex-start;
   align-content: flex-start;
 
   ::ng-deep {
     .mat-card {
       padding: 10px;
       border: 3px solid transparent;
+      &:not(.small) {
+        height: 126px;
+      }
+
+      width: 100%;
+      margin-right: 5px;
 
       &:hover {
         cursor: pointer;
@@ -146,6 +182,6 @@ mat-expansion-panel, .settings-content, .settings-stuff {
   }
 
   .selected {
-    border: 3px purple solid;
+    border: 3px mat-css-color-accent() solid;
   }
 }

@@ -11,6 +11,12 @@ import {FormControl} from "@angular/forms";
 import {combineLatest} from "rxjs";
 import {AutoScaleComponent} from "@gewd/components/auto-scale";
 import {WebsocketService} from "../../../core/services/websocket.service";
+import {
+  ClipAssigningMode,
+  UnassignedFilterEnum
+} from "../dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import {DialogService} from "../dialogs/dialog.service";
+import {MatRipple} from "@angular/material/core";
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -22,11 +28,18 @@ export class ScreenClipConfigComponent implements OnInit {
 
   MediaType = MediaType;
 
-  clipList$ = this.appQueries.clipMap$.pipe(
-    map((clipMap) => {
+  screen$ = this.appQueries.screenMap$.pipe(
+    map(screenMap => screenMap[this.screen.id])
+  );
+
+  clipList$ = combineLatest([
+    this.screen$,
+    this.appQueries.clipMap$
+  ]).pipe(
+    map(([screen, clipMap]) => {
       const result: CombinedClip[] = [];
 
-      for (const [key, entry] of Object.entries(this.screen.clips)) {
+      for (const [key, entry] of Object.entries(screen.clips)) {
         const clip = clipMap[key];
 
         if (clip.type === MediaType.Audio ) {
@@ -85,6 +98,7 @@ export class ScreenClipConfigComponent implements OnInit {
               private appService: AppService,
               private cd: ChangeDetectorRef,
               private wsService: WebsocketService,
+              private dialogs: DialogService,
               @Inject(MAT_DIALOG_DATA) public screen: Screen) { }
 
   ngOnInit(): void {
@@ -129,8 +143,10 @@ export class ScreenClipConfigComponent implements OnInit {
     }
   }
 
-  onSelectMedia($event: CombinedClip) {
+  onSelectMedia(mouseEvent: MouseEvent, matRippleInstance: MatRipple, $event: CombinedClip) {
     this.currentSelectedClip = $event;
+
+    matRippleInstance.launch(mouseEvent.x, mouseEvent.y);
   }
 
   triggerChangedetection() {
@@ -174,6 +190,33 @@ export class ScreenClipConfigComponent implements OnInit {
     this.wsService.onTriggerClip$.next({
       id: visibleItem.clip.id,
       targetScreen: this.screen.id
+    });
+  }
+
+  assignMedia() {
+    this.showAssignmentDialog(this.screen);
+  }
+
+  showAssignmentDialog(screen: Partial<Screen>) {
+    this.dialogs.showClipSelectionDialog({
+      mode: ClipAssigningMode.Multiple,
+      screenId: screen.id,
+
+      dialogTitle: screen.name,
+      showMetaItems: false,
+      showOnlyUnassignedFilter: true,
+      unassignedFilterType: UnassignedFilterEnum.Screens
+    });
+  }
+
+  openMediaSettingsDialog($event: MouseEvent, visibleItem: CombinedClip) {
+    $event.stopImmediatePropagation();
+    $event.stopPropagation();
+
+    this.dialogs.showScreenClipOptionsDialog({
+      clipId: visibleItem.clip.id,
+      screenId: this.screen.id,
+      name: visibleItem.clip.name
     });
   }
 }
