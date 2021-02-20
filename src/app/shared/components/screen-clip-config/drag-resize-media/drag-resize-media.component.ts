@@ -252,6 +252,9 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   private applyPositionBySetting () {
     const {nativeElement} = this.element;
 
+    // todo warp / rotation reset
+    nativeElement.style.transform = null;
+
     if (this.settings.position !== PositionEnum.FullScreen){
       nativeElement.style.width = this.settings.width;
       nativeElement.style.height = this.settings.height;
@@ -267,6 +270,12 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     if (this.settings.position === PositionEnum.Random) {
       nativeElement.style.top = '10%';
       nativeElement.style.left = '10%';
+    }
+
+    if (this.settings.position === PositionEnum.Centered) {
+      nativeElement.style.top = '50%';
+      nativeElement.style.left = '50%';
+      nativeElement.style.transform = 'translate(-50%, -50%)';
     }
 
     try {
