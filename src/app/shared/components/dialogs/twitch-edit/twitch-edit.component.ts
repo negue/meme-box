@@ -2,16 +2,20 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Clip, Dictionary, Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
+import {
+  Clip,
+  ClipAssigningMode,
+  Dictionary,
+  Twitch,
+  TwitchEventTypes,
+  TwitchTypesArray,
+  UnassignedFilterEnum
+} from '@memebox/contracts';
 import {AppService} from '../../../../state/app.service';
 import {AppQueries} from '../../../../state/app.queries';
 import {SnackbarService} from '../../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
 import {distinctUntilChanged, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
-import {
-  ClipAssigningMode,
-  UnassignedFilterEnum
-} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {

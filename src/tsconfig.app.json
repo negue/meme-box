@@ -5,8 +5,9 @@
     "module": "esnext",
     "types": []
   },
-  "include": [
-    "**/*.ts"
+  "files": [
+    "main.ts",
+    "polyfills.ts"
   ],
   "exclude": [
     "**/*.spec.ts",

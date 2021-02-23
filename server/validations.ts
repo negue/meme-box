@@ -1,5 +1,5 @@
 import {body, validationResult} from "express-validator";
-import {MediaType} from "../projects/contracts/src/lib/media.types";
+import {MediaType} from "@memebox/contracts";
 
 export const clipValidations = [
   body('name').isString(),

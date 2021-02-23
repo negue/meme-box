@@ -359,11 +359,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     console.info({data: this.data, iframe: dynamicIframeContent});
 
-    const matDialogResult = this.dialogService.showDynamicIframeEdit(dynamicIframeContent);
-
-    const dialogResult: DynamicIframeContent = await matDialogResult.afterClosed().pipe(
-      take(1)
-    ).toPromise();
+    const dialogResult = await this.dialogService.showDynamicIframeEdit(dynamicIframeContent);
 
     if (dialogResult) {
       applyDynamicIframeContentToClipData(dialogResult, this.data);

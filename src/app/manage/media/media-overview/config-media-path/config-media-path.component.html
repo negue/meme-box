@@ -10,12 +10,23 @@
                type="text"/>
 
 
+        <button (click)="openNativeFolderPicker()" matSuffix
+                color="primary" *ngIf="isElectron"
+                mat-icon-button>
+          <mat-icon svgIcon="folder"></mat-icon>
+        </button>
+
         <mat-error *ngIf="form.controls['path'].hasError('required')">
           You need to select a media folder.
         </mat-error>
       </mat-form-field>
+
+      <div *ngIf="!isElectron">
+        Currently the Media-Folder Path can be only selected with the Electron Version. In a normal browser you need to enter it manually.
+      </div>
     </div>
   </form>
+
 </mat-dialog-content>
 
 

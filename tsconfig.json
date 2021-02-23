@@ -24,32 +24,25 @@
     ],
     "paths": {
       "@memebox/contracts": [
-        "projects/contracts/src/public-api.ts"
+        "projects/contracts/src/public-api"
       ],
       "@memebox/app/env": [
-        "src/environments/environment.ts"
+        "src/environments/environment"
       ],
       "@memebox/app/env/modules": [
-        "src/environments/modules/modules.ts"
+        "src/environments/modules/modules"
       ],
       "@memebox/utils": [
-        "projects/utils/src/public-api.ts"
+        "projects/utils/src/public-api"
       ],
       "@memebox/state": [
-        "projects/state/src/public-api.ts"
+        "projects/state/src/public-api"
       ],
-      "*": [
-        "node_modules/*"
+      "@memebox/version": [
+        "src/version_info.json"
       ]
     }
   },
-  "files": [
-    "src/main.ts",
-    "src/polyfills.ts"
-  ],
-  "include": [
-    "src/**/* .d.ts"
-  ],
   "exclude": [
     "node_modules"
   ]

@@ -55,8 +55,6 @@ ___
 
 ## Roadmap
 
-* [ ] Open multiple target screens with one URL
-* [ ] QR-Code to scan a target screen url to open it easier on tablets
 * [ ] Change media options by triggered variables (e.g. different style, or something)
 * [ ] Labels on or around the Media
 * [ ] more to be added :)
