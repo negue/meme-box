@@ -4,7 +4,6 @@ import {DialogService} from "./dialog.service";
 import {MediaEditComponent} from "./media-edit/media-edit.component";
 import {ScreenEditComponent} from "./screen-edit/screen-edit.component";
 import {MatDialogModule} from "@angular/material/dialog";
-import {SimpleConfirmationDialogComponent} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatSelectModule} from "@angular/material/select";
@@ -40,7 +39,6 @@ import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
   declarations: [
     MediaEditComponent,
     ScreenEditComponent,
-    SimpleConfirmationDialogComponent,
     ScreenClipOptionsComponent,
     TwitchEditComponent,
     ClipAssigningDialogComponent,

@@ -1,13 +1,10 @@
-import {Injectable, TemplateRef} from '@angular/core';
+import {Compiler, Injectable, Injector, TemplateRef} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {Clip, Screen, TimedClip, Twitch} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
 import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
-import {
-  ConfirmationsPayload,
-  SimpleConfirmationDialogComponent
-} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
+import type {ConfirmationsPayload} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
 import {MediaEditComponent} from "./media-edit/media-edit.component";
 import {ScreenEditComponent} from "./screen-edit/screen-edit.component";
 import {
@@ -32,18 +29,23 @@ import {ScreenClipConfigComponent} from "../screen-clip-config/screen-clip-confi
 export class DialogService {
 
   constructor(
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private compiler: Compiler,
+    private injector: Injector
   ) {
 
   }
 
   // any for now, until the confirmation dialog has its own enum
-  showConfirmationDialog(payload: ConfirmationsPayload): Promise<boolean> {
-    const dialogRef = this._dialog.open(SimpleConfirmationDialogComponent, {
-      data: payload,
-    });
+  async showConfirmationDialog(payload: ConfirmationsPayload): Promise<boolean> {
+    const module = await import('./simple-confirmation-dialog/simple-confirmation.dialog.module')
+      .then(mod => mod.SimpleConfirmationDialogModule);
 
-    return dialogRef.afterClosed().toPromise();
+    const factory = await this.compiler.compileModuleAsync(module);
+
+    const factoryInstance = factory.create(this.injector);
+
+    return factoryInstance.instance.openDialog(payload);
   }
 
   showMediaEditDialog(clipInfo: Partial<Clip>) {
