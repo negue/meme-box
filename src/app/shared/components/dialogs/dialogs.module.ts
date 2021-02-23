@@ -17,7 +17,6 @@ import {PipesModule} from "../../../core/pipes/pipes.module";
 import {TwitchEditComponent} from './twitch-edit/twitch-edit.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {ClipAssigningDialogComponent} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 import {FilterModule} from "../filter/filter.module";
 import {MatListModule} from "@angular/material/list";
 import {ClipTypeModule} from "../clip-type/clip-type.module";
@@ -27,7 +26,6 @@ import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
 import {HighlightEditorModule} from "@gewd/components/highlight-editor";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeModule} from "../dynamic-iframe/dynamic-iframe.module";
-import {DynamicIframeEditComponent} from './dynamic-iframe-edit/dynamic-iframe-edit.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MarkdownComponent} from './markdown/markdown.component';
 import {MarkdownModule} from "@gewd/markdown/module";
@@ -41,9 +39,7 @@ import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
     ScreenEditComponent,
     ScreenClipOptionsComponent,
     TwitchEditComponent,
-    ClipAssigningDialogComponent,
     TimedEditComponent,
-    DynamicIframeEditComponent,
     MarkdownComponent,
     HelpOverviewComponent
   ],

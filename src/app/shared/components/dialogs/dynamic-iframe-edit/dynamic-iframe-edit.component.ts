@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {DynamicIframeContent} from "../../../../../../projects/utils/src/lib/dynamicIframe";
+import {DynamicIframeContent} from "@memebox/utils";
 import {BehaviorSubject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
 

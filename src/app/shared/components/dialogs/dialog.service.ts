@@ -12,18 +12,14 @@ import {
   ScreenClipOptionsPayload
 } from "./screen-clip-options/screen-clip-options.component";
 import {TwitchEditComponent} from "./twitch-edit/twitch-edit.component";
-import {
-  ClipAssigningDialogComponent,
-  ClipAssigningDialogOptions
-} from "./clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
-import {take} from "rxjs/operators";
+import type {ClipAssigningDialogOptions} from "./clip-assigning-dialog/clip-assigning-dialog.component";
 import {TimedEditComponent} from "./timed-edit/timed-edit.component";
 import {DynamicIframeContent} from "../../../../../projects/utils/src/lib/dynamicIframe";
-import {DynamicIframeEditComponent} from "./dynamic-iframe-edit/dynamic-iframe-edit.component";
 import {MarkdownComponent} from "./markdown/markdown.component";
 import {HelpOverviewComponent} from "./help-overview/help-overview.component";
 import {MarkdownDialogPayload} from "../../../../../server/constants";
 import {ScreenClipConfigComponent} from "../screen-clip-config/screen-clip-config.component";
+import {DialogContract} from "./dialog.contract";
 
 @Injectable()
 export class DialogService {
@@ -38,15 +34,14 @@ export class DialogService {
 
   // any for now, until the confirmation dialog has its own enum
   async showConfirmationDialog(payload: ConfirmationsPayload): Promise<boolean> {
-    const module = await import('./simple-confirmation-dialog/simple-confirmation.dialog.module')
-      .then(mod => mod.SimpleConfirmationDialogModule);
+    const dialogRef = await this.loadAndOpen(
+      import('./simple-confirmation-dialog/simple-confirmation.dialog.module'),
+      payload
+    );
 
-    const factory = await this.compiler.compileModuleAsync(module);
-
-    const factoryInstance = factory.create(this.injector);
-
-    return factoryInstance.instance.openDialog(payload);
+    return dialogRef.afterClosed().toPromise();
   }
+
 
   showMediaEditDialog(clipInfo: Partial<Clip>) {
     this._dialog.open(
@@ -88,15 +83,13 @@ export class DialogService {
     )
   }
 
-  showDynamicIframeEdit(info: DynamicIframeContent) {
-    return this._dialog.open(
-      DynamicIframeEditComponent, {
-        data: info,
-        width: 'calc(min(1000px, 96%))',
-        maxWidth: '96vw',
-        minHeight: '50vh'
-      }
+  async showDynamicIframeEdit(payload: DynamicIframeContent) {
+    const dialogRef = await this.loadAndOpen(
+      import('./dynamic-iframe-edit/dynamic-iframe-edit.module'),
+      payload
     );
+
+    return dialogRef.afterClosed().toPromise();
   }
 
   showTimedEditDialog(info: Partial<TimedClip>) {
@@ -110,17 +103,13 @@ export class DialogService {
     )
   }
 
-  showClipSelectionDialog(data: ClipAssigningDialogOptions) {
-    return this.open(
-      ClipAssigningDialogComponent, {
-        data,
-        width: '800px',
+  async showClipSelectionDialog(payload: ClipAssigningDialogOptions) {
+    const dialogRef = await this.loadAndOpen(
+      import('./clip-assigning-dialog/clip-assigning-dialog.module'),
+      payload
+    );
 
-        panelClass: ['max-height-dialog', 'dialog-without-right-padding']
-      }
-    ).afterClosed().pipe(
-      take(1),
-    ).toPromise()
+    return dialogRef.afterClosed().toPromise();
   }
 
   showHelpOverview() {
@@ -160,6 +149,20 @@ export class DialogService {
     )
   }
 
+  async loadAndOpen<TPayload, TDialogModule extends DialogContract<TPayload>>(
+    lazyDialogImport: Promise<any>, payload: TPayload
+  ): Promise<MatDialogRef<any>> {
+    const imported = await lazyDialogImport;
+    const keys = Object.keys(imported);
+
+    // get the first object of the imported js-module
+    const theModule = imported[keys[0]];
+    const factory = await this.compiler.compileModuleAsync<TDialogModule>(theModule);
+
+    const factoryInstance = factory.create(this.injector);
+
+    return factoryInstance.instance.openDialog(payload);
+  }
 
   open<T, D = any, R = any>(
     componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,

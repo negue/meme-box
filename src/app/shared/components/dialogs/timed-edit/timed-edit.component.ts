@@ -2,15 +2,11 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Clip, Dictionary, TimedClip} from '@memebox/contracts';
+import {Clip, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppService} from '../../../../state/app.service';
 import {AppQueries} from '../../../../state/app.queries';
 import {SnackbarService} from '../../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
-import {
-  ClipAssigningMode,
-  UnassignedFilterEnum
-} from "../clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 // TODO better class/interface name?
 const INITIAL_TIMED_CLIP: Partial<TimedClip> = {

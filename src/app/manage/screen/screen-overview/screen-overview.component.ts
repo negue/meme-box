@@ -1,5 +1,5 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {Clip, HasId, Screen} from "@memebox/contracts";
+import {Clip, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map, take} from "rxjs/operators";
 import {AppService} from "../../../state/app.service";
@@ -7,10 +7,6 @@ import {AppQueries} from "../../../state/app.queries";
 import {DialogService} from "../../../shared/components/dialogs/dialog.service";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {SnackbarService} from "../../../core/services/snackbar.service";
-import {
-  ClipAssigningMode,
-  UnassignedFilterEnum
-} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
 
 import orderBy from 'lodash/orderBy';
 import {ScreenUrlDialogComponent} from "./screen-url-dialog/screen-url-dialog.component";

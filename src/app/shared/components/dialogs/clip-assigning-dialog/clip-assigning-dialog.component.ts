@@ -1,23 +1,13 @@
 import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, Dictionary, MediaType, Screen} from "@memebox/contracts";
+import {Clip, ClipAssigningMode, Dictionary, MediaType, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {map, takeUntil, withLatestFrom} from "rxjs/operators";
-import {AppQueries} from "../../../../../state/app.queries";
-import {AppService} from "../../../../../state/app.service";
-import {IFilterItem} from "../../../../../shared/components/filter/filter.component";
-import {createCombinedFilterItems$, filterClips$} from "../../../../../shared/components/filter/filter.methods";
+import {IFilterItem} from "../../filter/filter.component";
+import {createCombinedFilterItems$, filterClips$} from "../../filter/filter.methods";
+import {AppQueries} from "../../../../state/app.queries";
+import {AppService} from "../../../../state/app.service";
 
-export enum ClipAssigningMode {
-  Multiple,
-  Single
-}
-
-export enum UnassignedFilterEnum {
-  Screens,
-  Twitch,
-  Timers
-}
 
 export interface ClipAssigningDialogOptions {
   mode: ClipAssigningMode;
