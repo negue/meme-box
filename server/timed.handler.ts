@@ -1,4 +1,4 @@
-import {Dictionary} from "../projects/contracts/src/lib/types";
+import {Dictionary} from "@memebox/contracts";
 import {PersistenceInstance} from "./persistence";
 import {triggerMediaClipById} from "./websocket-server";
 import Timeout = NodeJS.Timeout;

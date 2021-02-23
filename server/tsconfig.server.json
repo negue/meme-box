@@ -1,14 +1,12 @@
 {
   "extends": "../tsconfig-electron.json",
   "compilerOptions": {
-    "outDir": "../out-tsc/server"
+    "outDir": "../out-tsc/server",
+    "target": "ES6",
+    "module": "CommonJS"
   },
   "files": [
     "server.ts"
-  ],
-  "include": [
-    "projects/contracts/**/*.ts",
-    "server/**/*.ts"
   ],
   "exclude": [
     "**/*.spec.ts"

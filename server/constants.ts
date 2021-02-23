@@ -1,4 +1,4 @@
-import { BRANCH } from '../src/version_info.json';
+import {BRANCH} from '@memebox/version';
 
 export const DEFAULT_PORT = 4444;
 

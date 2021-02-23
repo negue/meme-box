@@ -1,4 +1,4 @@
 import {Subject} from "rxjs";
-import {TwitchTriggerCommand} from "../projects/contracts/src/lib/types";
+import {TwitchTriggerCommand} from "@memebox/contracts";
 
 export const ExampleTwitchCommandsSubject = new Subject<TwitchTriggerCommand>();
