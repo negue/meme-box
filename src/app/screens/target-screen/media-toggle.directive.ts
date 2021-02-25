@@ -335,8 +335,20 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.currentState = newState;
   }
 
+
+  private getElementToAddAnimation() {
+    return this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+
+    // return this.mediaHoldingElement;
+  }
+
   private startAnimation(animationName: string, animationDurationValue: number) {
-    const elementToAnimate = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+    const elementToAnimate = this.getElementToAddAnimation();
+
+    if (!elementToAnimate) {
+      console.info('no element available?!', this.combinedClip, this.parentComp.clipToControlMap);
+      return;
+    }
 
     console.info('Adding Animation to Element: ', animationName);
     elementToAnimate.classList.add('animate__animated', animationName);

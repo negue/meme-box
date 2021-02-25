@@ -60,6 +60,7 @@ The Loaded Clips need to stay cached?
   ></audio>
   <img #img *ngSwitchCase="0"  class="media-clip"
        (loadstart)="addToMap(entry.value.clip, img)"
+       (load)="addToMap(entry.value.clip, img)"
        [class.visible]="mediaToggleVar.isVisible$ | async"
        [src]="entry.value.clip.path"
   />
