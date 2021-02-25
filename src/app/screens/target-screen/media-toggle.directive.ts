@@ -193,6 +193,12 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.element.nativeElement.style.setProperty('--clip-setting-top', '0px');
       }
     }
+
+    const transformToApply = clipSettings.transform;
+
+    console.info({transformToApply});
+
+    this.element.nativeElement.style.setProperty('--clip-setting-transform', transformToApply);
   }
 
   private animateOutOrHide() {
@@ -330,31 +336,37 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private startAnimation(animationName: string, animationDurationValue: number) {
+    const elementToAnimate = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+
     console.info('Adding Animation to Element: ', animationName);
-    this.element.nativeElement.classList.add('animate__animated', animationName);
+    elementToAnimate.classList.add('animate__animated', animationName);
 
     const animationDuration = animationDurationValue || 777;
 
     console.info('duration', animationDurationValue);
 
-    this.element.nativeElement.style.setProperty('--animate-duration', `${animationDuration}ms`);
+    elementToAnimate.style.setProperty('--animate-duration', `${animationDuration}ms`);
 
-    console.info('After Adding', this.element.nativeElement.classList.toString());
+    console.info('After Adding', elementToAnimate.classList.toString());
   }
   private removeAnimation(animationName: string) {
-    this.element.nativeElement.classList.remove('animate__animated');
+    const elementToAnimate = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+
+    elementToAnimate.classList.remove('animate__animated');
 
     if (animationName) {
       console.info('Removing Animation from Element: ', animationName);
-      this.element.nativeElement.classList.remove(animationName);
-      console.info('After Remove', this.element.nativeElement.classList.toString());
+      elementToAnimate.classList.remove(animationName);
+      console.info('After Remove', elementToAnimate.classList.toString());
     }
   }
 
   private cleanAllAnimationClasses() {
+    const elementToAnimate = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+
     const currentAnimateClasses: string[] = [];
 
-    const classes = this.element.nativeElement.classList;
+    const classes = elementToAnimate.classList;
 
     for (let i = 0; i < classes.length; i++){
       const classItem = classes.item(i);

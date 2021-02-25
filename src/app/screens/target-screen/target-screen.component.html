@@ -76,12 +76,6 @@ The Loaded Clips need to stay cached?
 
   </app-dynamic-iframe>
 
-  <iframe #iFrameHTML *ngSwitchCase="4"  class="media-clip"
-          (load)="addToMap(entry.value.clip, iFrameHTML)"
-          [class.visible]="(mediaToggleVar.isVisible$ | async)"
-          [src]="entry.value.clip.path | safeurl">
-  </iframe>
-
   <div *ngIf="false && entry.value.clipSetting.customCss as customCss"
   class="custom-css-debug">
     {{  customCss }} <br/>

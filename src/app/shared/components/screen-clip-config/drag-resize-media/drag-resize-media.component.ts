@@ -42,7 +42,8 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   @Input()
   public sizeType: 'px';
 
-
+  @Input()
+  public transformOrigin = '';
 
   @Input()
   public draggingEnabled: boolean;
@@ -184,15 +185,21 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     this.settings.height = this.getCSSVar('height');
   }
 
-  onRotateStart({ set }) {
+  onRotateStart({ target, set }) {
+
     set(this.frame.rotate);
+
+    console.info('onRotateStart', this.frame.rotate);
   }
   onRotate({ target, beforeRotate }) {
     this.frame.rotate = beforeRotate;
-    target.style.transform = `rotate(${beforeRotate}deg)`;
+  //  target.style.transform = `rotate(${beforeRotate}deg)`;
+    this.applyTransform(target);
   }
   onRotateEnd({ target, isDrag, clientX, clientY }) {
     console.log("onRotateEnd", target, isDrag);
+
+    this.applyTransformToSettings();
   }
 
   warpMatrix = [
@@ -208,16 +215,54 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     this.warpMatrix = matrix;
 
     // target.style.transform = transform;
-    target.style.transform = `matrix3d(${matrix.join(",")})`;
+    this.applyTransform(target);
+    //target.style.transform = `matrix3d(${matrix.join(",")})`;
   }
   onWarpEnd({ target, isDrag, clientX, clientY }) {
     console.log("onWarpEnd", target, isDrag);
+
+    this.applyTransformToSettings();
   }
 
   previewClicked($event: MouseEvent) {
     $event.stopPropagation();
 
     this.elementClicked.emit();
+  }
+
+  private generateTransformString() {
+    const transformOperations = [];
+
+    if (this.rotateEnabled) {
+      transformOperations.push(`rotate(${this.frame.rotate}deg)`);
+    }
+
+    if (this.warpEnabled) {
+      transformOperations.push(`matrix3d(${this.warpMatrix.join(",")})`);
+    }
+
+    return transformOperations.join(' ');
+  }
+
+  private applyTransform (target: HTMLElement) {
+    let transformToApply = '';
+
+    if (this.settings.position === PositionEnum.Centered) {
+      transformToApply += ' translate(-50%, -50%) ';
+    }
+
+    transformToApply += this.generateTransformString();
+
+    target.style.transform = transformToApply;
+
+    if (this.transformOrigin) {
+      target.style.transformOrigin = this.transformOrigin;
+    }
+
+  }
+
+  private applyTransformToSettings () {
+    this.settings.transform = this.generateTransformString();
   }
 
   private updateCSSVar(name: string, value: string) {
@@ -252,9 +297,6 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   private applyPositionBySetting () {
     const {nativeElement} = this.element;
 
-    // todo warp / rotation reset
-    nativeElement.style.transform = null;
-
     if (this.settings.position !== PositionEnum.FullScreen){
       nativeElement.style.width = this.settings.width;
       nativeElement.style.height = this.settings.height;
@@ -272,10 +314,48 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
       nativeElement.style.left = '10%';
     }
 
+    let transformToApply = '';
+
     if (this.settings.position === PositionEnum.Centered) {
       nativeElement.style.top = '50%';
       nativeElement.style.left = '50%';
-      nativeElement.style.transform = 'translate(-50%, -50%)';
+      transformToApply += 'translate(-50%, -50%) ';
+    }
+
+    transformToApply += this.settings.transform ?? "";
+
+
+    // todo warp / rotation reset
+    nativeElement.style.transform = transformToApply;
+    nativeElement.style.transformOrigin = this.transformOrigin;
+
+
+    const cssTransformRegex  = /(\w+)\(([^)]*)\)/g;
+    const names = [];
+    const vals = [];
+
+    let m = null;
+
+    while (m = cssTransformRegex.exec(nativeElement.style.transform)) {
+      names.push(m[1]);
+      vals.push(m[2]);
+    }
+
+    console.log({names, vals});
+
+    const indexOfRotation = names.findIndex(name => name === 'rotate');
+    const rotationValue = +vals[indexOfRotation].replace('deg', '');
+
+    this.frame.rotate = rotationValue;
+
+    const indexOfMatrix3d = names.findIndex(name => name === 'matrix3d');
+
+    if (indexOfMatrix3d !== -1) {
+      const matrixValue = vals[indexOfMatrix3d].split(',').map(num => +num);
+
+      this.warpMatrix = matrixValue;
+
+      console.info('Should apply warpMatrix', this.warpMatrix);
     }
 
     try {

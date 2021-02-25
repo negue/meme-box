@@ -129,11 +129,13 @@
           <mat-checkbox [checked]="true" #dragCheckbox>Drag</mat-checkbox>
           <mat-checkbox [checked]="true" #resizeCheckbox
                         (change)="onCheckedToggle($event, warpingCheckbox)">Resizing</mat-checkbox>
-          <mat-checkbox #rotateCheckbox style="display: none">Rotating</mat-checkbox>
-          <mat-checkbox #warpingCheckbox style="display: none"
+          <mat-checkbox #rotateCheckbox
+                        [checked]="true">Rotating</mat-checkbox>
+          <mat-checkbox #warpingCheckbox
                         (change)="onCheckedToggle($event, resizeCheckbox)">Warping</mat-checkbox>
           </div>
           </div>
+        <div class="spacer" *ngIf="!currentSelectedClip"></div>
         <div class="right" *ngIf="currentSelectedClip">
           <h3>Media Position Type</h3>
           <div>
@@ -187,8 +189,9 @@
                                      (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                                      (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
 
+                                     transformOrigin="center center"
                                      [draggingEnabled]="false"
-                                     [resizeEnabled]="true"
+                                     [resizeEnabled]="resizeCheckbox.checked"
                                      [rotateEnabled]="rotateCheckbox.checked"
                                      [warpEnabled]="warpingCheckbox.checked"
               >

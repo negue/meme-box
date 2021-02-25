@@ -19,7 +19,7 @@ export enum MetaTriggerTypes {
   AllDelay
 }
 
-// (Media) Clip
+// TODO RENAME? (Media) Clip
 export interface Clip extends HasId {
   name: string;
   previewUrl?: string;   // TODO generate dataurl as preview
@@ -91,6 +91,7 @@ export interface ScreenClip extends HasId {
   right?: string;
   bottom?: string;
   top?: string;
+  transform?: string;
   imgFit?: string;
 
   hideAfter?: HideAfterType;
