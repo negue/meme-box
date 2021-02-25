@@ -72,15 +72,16 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
       ipcRenderer.send('select-dirs')
 
       ipcRenderer.on('dir-selected', (event, args) => {
-        console.info({event, args});
-
-        this.form.patchValue({
-          path: args
-        });
+        if (args) {
+          this.form.patchValue({
+            path: args
+          });
+        }
       });
     }
   }
 
+  // todo extract that to a service
   get isElectron(): boolean {
     const windowAny = window as any;
 
