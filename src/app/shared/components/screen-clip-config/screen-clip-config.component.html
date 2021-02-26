@@ -129,11 +129,13 @@
           <mat-checkbox [checked]="true" #dragCheckbox>Drag</mat-checkbox>
           <mat-checkbox [checked]="true" #resizeCheckbox
                         (change)="onCheckedToggle($event, warpingCheckbox)">Resizing</mat-checkbox>
-          <mat-checkbox #rotateCheckbox style="display: none">Rotating</mat-checkbox>
-          <mat-checkbox #warpingCheckbox style="display: none"
+          <mat-checkbox #rotateCheckbox
+                        [checked]="true">Rotating</mat-checkbox>
+          <mat-checkbox #warpingCheckbox
                         (change)="onCheckedToggle($event, resizeCheckbox)">Warping</mat-checkbox>
           </div>
           </div>
+        <div class="spacer" *ngIf="!currentSelectedClip"></div>
         <div class="right" *ngIf="currentSelectedClip">
           <h3>Media Position Type</h3>
           <div>
@@ -169,17 +171,17 @@
                [style.height.px]="screen?.height || 1080"
           >
             <ng-container *ngFor="let pair of visibleItems$|async; trackBy: trackByClip">
-
+              <!-- improve the duplicate settings -->
               <ng-container *ngIf="pair.clipSetting.position === 0">
                 <app-clip-preview [clip]="pair.clip"
                                   [style.--object-fit]="pair.clipSetting.imgFit"
-                                  [style.z-index]="pair.clipSetting.zIndex"
+                                  [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                   [style.position]="'absolute'"
                                   draggable="false"></app-clip-preview>
               </ng-container>
               <app-drag-resize-media *ngIf="pair.clipSetting.position === 2"
                                      [clip]="pair.clip"
-                                     [style.z-index]="pair.clipSetting.zIndex"
+                                     [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                      [screen]="screen"
                                      [sizeType]="sizeType.value"
                                      [showResizeBorder]="pair === currentSelectedClip"
@@ -187,8 +189,9 @@
                                      (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                                      (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
 
+                                     transformOrigin="center center"
                                      [draggingEnabled]="false"
-                                     [resizeEnabled]="true"
+                                     [resizeEnabled]="resizeCheckbox.checked"
                                      [rotateEnabled]="rotateCheckbox.checked"
                                      [warpEnabled]="warpingCheckbox.checked"
               >
@@ -196,7 +199,7 @@
               </app-drag-resize-media>
               <app-drag-resize-media *ngIf="pair.clipSetting.position === 3"
                                      [clip]="pair.clip"
-                                     [style.z-index]="pair.clipSetting.zIndex"
+                                     [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                      [screen]="screen"
                                      [sizeType]="sizeType.value"
                                      [showResizeBorder]="pair === currentSelectedClip"
@@ -216,7 +219,7 @@
                   [clip]="pair.clip"
                   [screen]="screen"
                   [sizeType]="sizeType.value"
-                  [style.z-index]="pair.clipSetting.zIndex"
+                  [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                   [showResizeBorder]="pair === currentSelectedClip"
                   (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                   [settings]="pair.clipSetting" #dragResizeMediaComponent

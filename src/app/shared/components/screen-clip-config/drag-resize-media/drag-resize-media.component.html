@@ -38,6 +38,8 @@
   (rotate)="onRotate($event)"
   (rotateEnd)="onRotateEnd($event)"
 
+  [transformOrigin]="transformOrigin"
+
   [warpable]="warpEnabled"
   (warpStart)="onWarpStart($event)"
   (warp)="onWarp($event)"

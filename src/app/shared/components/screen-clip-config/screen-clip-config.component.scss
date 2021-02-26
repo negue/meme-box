@@ -80,11 +80,15 @@ mat-expansion-panel, .settings-content, .settings-stuff {
 }
 
 .dragging-config {
-  height: 6rem;
   display: flex;
   flex-direction: row;
 
+  .spacer {
+    min-height: 7rem;
+  }
+
   .left {
+    min-height: 7rem;
     flex: 1;
     align-items: flex-start;
     display: flex;

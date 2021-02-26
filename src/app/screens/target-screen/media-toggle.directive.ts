@@ -29,6 +29,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
   public combinedClip: CombinedClip;
 
+  @Input()
+  public mediaHoldingElement: HTMLElement;
+
   public isVisible$ = new BehaviorSubject<boolean>(false);
 
   private currentState = MediaState.HIDDEN;
@@ -193,6 +196,18 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.element.nativeElement.style.setProperty('--clip-setting-top', '0px');
       }
     }
+
+    let transformToApply = '';
+
+    if (currentPosition === PositionEnum.Centered) {
+      transformToApply = 'translate(-50%, -50%) ';
+    }
+
+    transformToApply += clipSettings.transform;
+
+    console.info({transformToApply});
+
+    this.element.nativeElement.style.setProperty('--clip-setting-transform', transformToApply);
   }
 
   private animateOutOrHide() {
@@ -329,32 +344,49 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.currentState = newState;
   }
 
+  private getElementToAddAnimation() {
+    // this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+
+    return this.mediaHoldingElement;
+  }
+
   private startAnimation(animationName: string, animationDurationValue: number) {
+    const elementToAnimate = this.getElementToAddAnimation();
+
+    if (!elementToAnimate) {
+      console.info('no element available?!', this.combinedClip, this.parentComp.clipToControlMap);
+      return;
+    }
+
     console.info('Adding Animation to Element: ', animationName);
-    this.element.nativeElement.classList.add('animate__animated', animationName);
+    elementToAnimate.classList.add('animate__animated', animationName);
 
     const animationDuration = animationDurationValue || 777;
 
     console.info('duration', animationDurationValue);
 
-    this.element.nativeElement.style.setProperty('--animate-duration', `${animationDuration}ms`);
+    elementToAnimate.style.setProperty('--animate-duration', `${animationDuration}ms`);
 
-    console.info('After Adding', this.element.nativeElement.classList.toString());
+    console.info('After Adding', elementToAnimate.classList.toString());
   }
   private removeAnimation(animationName: string) {
-    this.element.nativeElement.classList.remove('animate__animated');
+    const elementToAnimate =  this.getElementToAddAnimation();
+
+    elementToAnimate.classList.remove('animate__animated');
 
     if (animationName) {
       console.info('Removing Animation from Element: ', animationName);
-      this.element.nativeElement.classList.remove(animationName);
-      console.info('After Remove', this.element.nativeElement.classList.toString());
+      elementToAnimate.classList.remove(animationName);
+      console.info('After Remove', elementToAnimate.classList.toString());
     }
   }
 
   private cleanAllAnimationClasses() {
+    const elementToAnimate = this.getElementToAddAnimation();
+
     const currentAnimateClasses: string[] = [];
 
-    const classes = this.element.nativeElement.classList;
+    const classes = elementToAnimate.classList;
 
     for (let i = 0; i < classes.length; i++){
       const classItem = classes.item(i);

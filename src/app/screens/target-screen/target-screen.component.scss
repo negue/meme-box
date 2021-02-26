@@ -19,6 +19,11 @@ video, img, iframe, app-dynamic-iframe {
 .clip-holder {
   width: var(--clip-setting-width, 100%);
   height: var(--clip-setting-height, 100%);
+  transform: var(--clip-setting-transform) !important;
+
+  .media-clip-holder {
+    position: relative;
+  }
 
   *:not(pre) {
     width: 100%;
