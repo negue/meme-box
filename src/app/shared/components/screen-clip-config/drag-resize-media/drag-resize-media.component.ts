@@ -86,6 +86,8 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     rotate: 0,
   };
 
+  private warpExist = false;
+
   constructor(public element: ElementRef<HTMLElement>,
               private cd: ChangeDetectorRef) {
 
@@ -210,6 +212,7 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   ];
   onWarpStart({ set }) {
     set(this.warpMatrix);
+    this.warpExist = true;
   }
   onWarp({ target, matrix, transform }) {
     this.warpMatrix = matrix;
@@ -233,27 +236,29 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   private generateTransformString() {
     const transformOperations = [];
 
-    if (this.rotateEnabled) {
+    if (this.frame.rotate) {
       transformOperations.push(`rotate(${this.frame.rotate}deg)`);
     }
 
-    if (this.warpEnabled) {
+    if (this.warpExist) {
       transformOperations.push(`matrix3d(${this.warpMatrix.join(",")})`);
     }
 
     return transformOperations.join(' ');
   }
 
-  private applyTransform (target: HTMLElement) {
-    let transformToApply = '';
-
+  private appendTranslatePosition(transformString: string) {
     if (this.settings.position === PositionEnum.Centered) {
-      transformToApply += ' translate(-50%, -50%) ';
+      return ' translate(-50%, -50%) ' + transformString;
     }
 
-    transformToApply += this.generateTransformString();
+    return transformString;
+  }
 
-    target.style.transform = transformToApply;
+  private applyTransform (target: HTMLElement) {
+    target.style.transform = this.appendTranslatePosition(
+      this.generateTransformString()
+    );
 
     if (this.transformOrigin) {
       target.style.transformOrigin = this.transformOrigin;
@@ -314,19 +319,13 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
       nativeElement.style.left = '10%';
     }
 
-    let transformToApply = '';
-
     if (this.settings.position === PositionEnum.Centered) {
       nativeElement.style.top = '50%';
       nativeElement.style.left = '50%';
-      transformToApply += 'translate(-50%, -50%) ';
     }
 
-    transformToApply += this.settings.transform ?? "";
-
-
     // todo warp / rotation reset
-    nativeElement.style.transform = transformToApply;
+    nativeElement.style.transform = this.appendTranslatePosition(this.settings.transform);
     nativeElement.style.transformOrigin = this.transformOrigin;
 
 
@@ -344,9 +343,12 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     console.log({names, vals});
 
     const indexOfRotation = names.findIndex(name => name === 'rotate');
-    const rotationValue = +vals[indexOfRotation].replace('deg', '');
 
-    this.frame.rotate = rotationValue;
+    if (indexOfRotation !== -1) {
+      const rotationValue = +vals[indexOfRotation].replace('deg', '');
+
+      this.frame.rotate = rotationValue;
+    }
 
     const indexOfMatrix3d = names.findIndex(name => name === 'matrix3d');
 
@@ -354,6 +356,7 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
       const matrixValue = vals[indexOfMatrix3d].split(',').map(num => +num);
 
       this.warpMatrix = matrixValue;
+      this.warpExist = true;
 
       console.info('Should apply warpMatrix', this.warpMatrix);
     }

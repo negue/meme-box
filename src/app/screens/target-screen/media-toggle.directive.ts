@@ -29,6 +29,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
   public combinedClip: CombinedClip;
 
+  @Input()
+  public mediaHoldingElement: HTMLElement;
+
   public isVisible$ = new BehaviorSubject<boolean>(false);
 
   private currentState = MediaState.HIDDEN;
@@ -194,7 +197,13 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
     }
 
-    const transformToApply = clipSettings.transform;
+    let transformToApply = '';
+
+    if (currentPosition === PositionEnum.Centered) {
+      transformToApply = 'translate(-50%, -50%) ';
+    }
+
+    transformToApply += clipSettings.transform;
 
     console.info({transformToApply});
 
@@ -335,11 +344,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.currentState = newState;
   }
 
-
   private getElementToAddAnimation() {
-    return this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+    // this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
 
-    // return this.mediaHoldingElement;
+    return this.mediaHoldingElement;
   }
 
   private startAnimation(animationName: string, animationDurationValue: number) {
@@ -362,7 +370,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     console.info('After Adding', elementToAnimate.classList.toString());
   }
   private removeAnimation(animationName: string) {
-    const elementToAnimate = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+    const elementToAnimate =  this.getElementToAddAnimation();
 
     elementToAnimate.classList.remove('animate__animated');
 
@@ -374,7 +382,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private cleanAllAnimationClasses() {
-    const elementToAnimate = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+    const elementToAnimate = this.getElementToAddAnimation();
 
     const currentAnimateClasses: string[] = [];
 
