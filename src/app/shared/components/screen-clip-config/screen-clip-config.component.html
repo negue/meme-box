@@ -116,10 +116,17 @@
     <div class="preview-area">
       <div class="dragging-config">
         <div class="left" [class.hidden]="!currentSelectedClip">
-          <h3>Dragging Settings</h3>
+          <h3>
+            Dragging Settings
+
+
+            <button mat-raised-button (click)="reset()" color="warn">
+              Reset
+            </button>
+          </h3>
           <div>
           <mat-form-field>
-            <mat-select #sizeType value="px"
+            <mat-select #sizeType [value]="currentSelectedClip?.clipSetting | settingsToSizingType"
                         placeholder="Sizing Type">
               <mat-option value="px">PX</mat-option>
               <mat-option value="%">%</mat-option>
@@ -174,7 +181,6 @@
               <!-- improve the duplicate settings -->
               <ng-container *ngIf="pair.clipSetting.position === 0">
                 <app-clip-preview [clip]="pair.clip"
-                                  [style.--object-fit]="pair.clipSetting.imgFit"
                                   [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                   [style.position]="'absolute'"
                                   draggable="false"></app-clip-preview>

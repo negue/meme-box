@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Clip, MediaType} from "@memebox/contracts";
+import {Clip, MediaType, ScreenClip} from "@memebox/contracts";
 
 @Component({
   selector: 'app-clip-preview',
@@ -16,6 +16,9 @@ export class ClipPreviewComponent implements OnInit {
 
   @Input()
   public clip: Clip;
+
+  @Input()
+  public setting: ScreenClip;
 
   @Input()
   public showIframe = true;

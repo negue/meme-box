@@ -8,6 +8,7 @@ import {
   ClipAssigningMode,
   CombinedClip,
   MediaType,
+  PositionEnum,
   Screen,
   UnassignedFilterEnum
 } from "@memebox/contracts";
@@ -223,5 +224,27 @@ export class ScreenClipConfigComponent implements OnInit {
       screenId: this.screen.id,
       name: visibleItem.clip.name
     });
+  }
+
+  reset() {
+    const {clipSetting} = this.currentSelectedClip;
+
+    clipSetting.transform = null;
+    clipSetting.width = '50%';
+    clipSetting.height = '50%';
+
+    if (clipSetting.position === PositionEnum.Absolute) {
+      clipSetting.top = '10%';
+      clipSetting.left = '10%';
+      clipSetting.right = null;
+      clipSetting.bottom = null;
+    }
+
+    if (clipSetting.position === PositionEnum.Centered) {
+      clipSetting.top = null;
+      clipSetting.left = null;
+    }
+
+    this.appService.addOrUpdateScreenClip(this.screen.id, clipSetting);
   }
 }

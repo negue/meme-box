@@ -24,9 +24,15 @@ import {MatRippleModule} from "@angular/material/core";
 import {MatTabsModule} from "@angular/material/tabs";
 import {AppModule} from "../../../app.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {SettingsToSizingTypePipe} from "./settings-to-sizing-type.pipe";
 
 @NgModule({
-  declarations: [ScreenClipConfigComponent, PositionToStringPipe, VisibilityToStringPipe],
+  declarations: [
+    ScreenClipConfigComponent,
+    PositionToStringPipe,
+    VisibilityToStringPipe,
+    SettingsToSizingTypePipe
+  ],
   exports: [
     ScreenClipConfigComponent
   ],

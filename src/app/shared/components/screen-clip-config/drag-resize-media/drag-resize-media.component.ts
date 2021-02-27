@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import {Clip, PositionEnum, ScreenClip} from "@memebox/contracts";
 import {NgxMoveableComponent} from "ngx-moveable";
-import {AutoScaleComponent} from "@gewd/components/auto-scale";
 
 export interface TranslatedSize {
   x: string;
@@ -70,9 +69,6 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   @ViewChild('moveableInstance')
   public moveableInstance: NgxMoveableComponent;
 
-  @ViewChild('autoScale', {static: true})
-  public autoScale: AutoScaleComponent;
-
   frame: {
     translate: [number, number],
     currentDraggingPosition: TranslatedSize | null,
@@ -114,9 +110,6 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
   ngAfterViewInit(): void {
 
-    console.info('resize of drag-resize triggered');
-   // this.autoScale.width = this.element.nativeElement.clientWidth;
-   // this.autoScale.height = this.element.nativeElement.clientHeight;
     }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -249,7 +242,7 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
   private appendTranslatePosition(transformString: string) {
     if (this.settings.position === PositionEnum.Centered) {
-      return ' translate(-50%, -50%) ' + transformString;
+      return ' translate(-50%, -50%) ' + (transformString ?? '');
     }
 
     return transformString;

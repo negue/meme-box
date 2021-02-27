@@ -3,6 +3,8 @@
   <img *ngSwitchCase="MediaType.Picture"
        [style.height]="height"
        [style.width]="width"
+
+       [style.--clip-setting-img-fit]="setting?.imgFit"
        [src]="clip.path | replaceholder"
        draggable="false"/>
 

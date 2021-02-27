@@ -9,7 +9,8 @@ The Loaded Clips need to stay cached?
 
 </mat-icon>
 
-<div *ngFor="let entry of mediaClipMap$ | async | keyvalue; trackBy: trackByKeyValue"
+<ng-container *ngIf="mediaClipMap$ | async as mediaClipMap">
+<div *ngFor="let entry of mediaClipMap | keyvalue; trackBy: trackByKeyValue"
      [class.absolute]="entry.value.clipSetting.position === 1"
      [class.centered]="entry.value.clipSetting.position === 2"
      [class.random]="entry.value.clipSetting.position === 3"
@@ -79,6 +80,8 @@ The Loaded Clips need to stay cached?
 
   </div>
 </div>
+
+</ng-container>
 
 <pre style="display: none;">
   {{ log | json }}
