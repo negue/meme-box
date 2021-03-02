@@ -1,15 +1,15 @@
-import type { Rule } from 'css';
+import type {Rule} from 'css';
 import * as css from 'css';
-import { Component, ElementRef, Input, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { Clip, CombinedClip, Dictionary, MediaType, ScreenClip } from "@memebox/contracts";
-import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
-import { AppQueries } from "../../state/app.queries";
-import { AppService } from "../../state/app.service";
-import { ActivatedRoute } from "@angular/router";
-import { KeyValue } from "@angular/common";
-import { ConnectionState, WebsocketService } from "../../core/services/websocket.service";
-import { replaceholder } from "../../core/pipes/replaceholder.pipe";
+import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import {Clip, CombinedClip, Dictionary, MediaType, Screen, ScreenClip} from "@memebox/contracts";
+import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
+import {AppQueries} from "../../state/app.queries";
+import {AppService} from "../../state/app.service";
+import {ActivatedRoute} from "@angular/router";
+import {KeyValue} from "@angular/common";
+import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
+import {replaceholder} from "../../core/pipes/replaceholder.pipe";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -84,6 +84,11 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   @Input()
   public screenId : string;
 
+  @HostBinding('id')
+  public get cssId() {
+    return `screen-${this.screenId}`;
+  }
+
   private _destroy$ = new Subject();
 
 
@@ -149,7 +154,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     ).subscribe(mediaClipMap => {
       for(const screenClipSettings of Object.values(mediaClipMap)){
         const customCss = screenClipSettings.clipSetting.customCss
-          ? this.toCssAgain(screenClipSettings.clipSetting)
+          ? this.toScreenClipCssAgain(screenClipSettings.clipSetting)
           : '';
 
         this.addOrUpdateStyleTag(document, screenClipSettings.clipSetting.id, customCss);
@@ -170,10 +175,17 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     });
 
     this.screen$.pipe(
-      takeUntil(this._destroy$),
-      filter(screen => !!screen)
+      filter(screen => !!screen),
+
+      takeUntil(this._destroy$)
     ).subscribe(screen => {
-      this.addOrUpdateStyleTag(document, screen.id, screen.customCss);
+      const customCss = screen.customCss
+        ? this.toScreenCssAgain(screen)
+        : '';
+
+      console.info('ADDING SCreen Custom CSS', customCss);
+
+      this.addOrUpdateStyleTag(document, screen.id, customCss);
     });
   }
 
@@ -228,7 +240,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     return `rgba(${o(r() * s)},${o(r() * s)},${o(r() * s)},0.34)`;
   }
 
-  parseCss(screenClip: ScreenClip) {
+  parseAndApplyClipCssRules(screenClip: ScreenClip) {
 
     const obj = css.parse(screenClip.customCss, {
       silent: true
@@ -249,6 +261,27 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     return obj;
   }
+
+
+  parseAndApplyScreenCssRules(screen: Screen) {
+    const obj = css.parse(screen.customCss, {
+      silent: true
+    });
+    // css.stringify(obj, options);
+
+    obj.stylesheet.rules.forEach(rule => {
+      if (rule.type === 'rule') {
+        const normalRule = rule as Rule;
+
+        normalRule.selectors = normalRule.selectors.map(sel => {
+          return `#screen-${screen.id} ${sel}`;
+        });
+      }
+    })
+
+    return obj;
+  }
+
 
   addOrUpdateStyleTag(document: Document, styleId: string, customCss: string) {
     if (!document || !customCss) {
@@ -296,8 +329,14 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  toCssAgain(screenClip: ScreenClip) {
-    const obj = this.parseCss(screenClip);
+  toScreenClipCssAgain(screenClip: ScreenClip) {
+    const obj = this.parseAndApplyClipCssRules(screenClip);
+
+    return css.stringify(obj);
+  }
+
+  toScreenCssAgain(screen: Screen) {
+    const obj = this.parseAndApplyScreenCssRules(screen);
 
     return css.stringify(obj);
   }
