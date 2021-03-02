@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { PositionEnum } from "@memebox/contracts";
+import {Pipe, PipeTransform} from '@angular/core';
+import {PositionEnum} from "@memebox/contracts";
 
 @Pipe({
   name: 'positionToString'
