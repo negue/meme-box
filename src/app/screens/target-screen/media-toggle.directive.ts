@@ -203,9 +203,11 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       transformToApply = 'translate(-50%, -50%) ';
     }
 
-    transformToApply += clipSettings.transform;
+    if (clipSettings.transform) {
+      transformToApply += clipSettings.transform;
+    }
 
-    console.info({transformToApply});
+    console.info({transformToApply, clipSettings});
 
     this.element.nativeElement.style.setProperty('--clip-setting-transform', transformToApply);
   }
