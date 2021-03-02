@@ -1,15 +1,15 @@
+import type { Rule } from 'css';
 import * as css from 'css';
-import {Rule} from 'css';
-import {Component, ElementRef, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, CombinedClip, Dictionary, MediaType, ScreenClip} from "@memebox/contracts";
-import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
-import {AppQueries} from "../../state/app.queries";
-import {AppService} from "../../state/app.service";
-import {ActivatedRoute} from "@angular/router";
-import {KeyValue} from "@angular/common";
-import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
-import {replaceholder} from "../../core/pipes/replaceholder.pipe";
+import { Component, ElementRef, Input, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { Clip, CombinedClip, Dictionary, MediaType, ScreenClip } from "@memebox/contracts";
+import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
+import { AppQueries } from "../../state/app.queries";
+import { AppService } from "../../state/app.service";
+import { ActivatedRoute } from "@angular/router";
+import { KeyValue } from "@angular/common";
+import { ConnectionState, WebsocketService } from "../../core/services/websocket.service";
+import { replaceholder } from "../../core/pipes/replaceholder.pipe";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 

@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {DialogService} from "../../shared/components/dialogs/dialog.service";
-import {QrcodeDialogComponent} from "../qrcode-dialog/qrcode-dialog.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {take} from "rxjs/operators";
-import {AppService} from "../../state/app.service";
-import {RELEASE_PAGE} from "../../../../server/constants";
-import {AppQueries} from "../../state/app.queries";
+import { Component, OnInit } from '@angular/core';
+import { DialogService } from "../../shared/dialogs/dialog.service";
+import { QrcodeDialogComponent } from "../qrcode-dialog/qrcode-dialog.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { take } from "rxjs/operators";
+import { AppService } from "../../state/app.service";
+import { RELEASE_PAGE } from "../../../../server/constants";
+import { AppQueries } from "../../state/app.queries";
 
 @Component({
   selector: 'app-navigation',

@@ -1,0 +1,193 @@
+@import '~angular-material-css-vars/public-util';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  ::ng-deep {
+    .mat-card-header-text {
+      flex: 1;
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+  max-height: unset;
+  width: 99vw;
+  height: 100%;
+}
+
+.mat-dialog-title {
+  display: flex;
+
+  span {
+    flex: 1;
+  }
+}
+
+.hover-background:hover {
+  background: #555;
+}
+
+.overflow-y {
+  overflow-y: auto;
+}
+
+.drag-drop-area-holder {
+  flex: 1;
+}
+
+.drag-drop-area {
+  position: relative;
+  overflow: hidden;
+
+  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
+}
+
+
+mat-expansion-panel, .settings-content, .settings-stuff {
+  margin: 1rem 1rem;
+}
+
+.settings-content {
+  height: 10rem;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.selected-item {
+  grid-area: selected-item;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.media-config {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.dragging-config {
+  display: flex;
+  flex-direction: row;
+
+  .spacer {
+    min-height: 7rem;
+  }
+
+  .left {
+    min-height: 7rem;
+    flex: 1;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .right {
+    flex: 1;
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+h3 {
+  margin-bottom: 0 !important;
+}
+
+mat-card-title {
+  overflow-y: hidden;
+  height: 20px;
+  word-break: break-all;
+}
+
+
+.tab_content {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  flex: 1;
+
+  /**
+   * in order to achieve a MAX HEIGHT  you need a MIN HEIGHT ... obviously
+   */
+  min-height: 0;
+}
+
+.preview-area {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar {
+  width: 300px;
+  min-width: 300px; // since sometimes width alone is ignored.
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    height: 5rem;
+
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.preview-label {
+  justify-self: center;
+  font-weight: bold;
+}
+
+.sidebar__items {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  height: 100%;
+  align-content: flex-start;
+
+  ::ng-deep {
+    .mat-card {
+      padding: 10px;
+      &:not(.selectable) {
+        border: 3px solid transparent;
+      }
+      &:not(.small) {
+        height: 126px;
+      }
+
+      width: 100%;
+      margin-right: 5px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .mat-card-subtitle {
+      margin-bottom: 0;
+    }
+  }
+
+  .selected {
+    border: 3px mat-css-color-accent() solid;
+  }
+}

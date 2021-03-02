@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {WebsocketService} from "../../../core/services/websocket.service";
-import {AppService} from "../../../state/app.service";
-import {DialogService} from "../../../shared/components/dialogs/dialog.service";
-import {ImportMediaFilesDialogComponent} from "./import-media-files-dialog/import-media-files-dialog.component";
+import { Component, OnInit } from '@angular/core';
+import { WebsocketService } from "../../../core/services/websocket.service";
+import { AppService } from "../../../state/app.service";
+import { DialogService } from "../../../shared/dialogs/dialog.service";
+import { ImportMediaFilesDialogComponent } from "./import-media-files-dialog/import-media-files-dialog.component";
 
 @Component({
   selector: 'app-persistence-actions',

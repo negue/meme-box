@@ -1,12 +1,15 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from "@angular/router";
-import {MainPageComponent} from "./main-page.component";
-import {MatSidenavModule} from "@angular/material/sidenav";
-import {MatListModule} from "@angular/material/list";
-import {QRCodeModule} from "angular2-qrcode";
-import {MatButtonModule} from "@angular/material/button";
-import {NavigationModule} from "../navigation/navigation.module";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from "@angular/router";
+import { MainPageComponent } from "./main-page.component";
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatListModule } from "@angular/material/list";
+import { QRCodeModule } from "angular2-qrcode";
+import { MatButtonModule } from "@angular/material/button";
+import { NavigationModule } from "../navigation/navigation.module";
+import { StateModule } from "../../state/state.module";
+import { ServicesModule } from "../../core/services/services.module";
+import { DialogsModule } from "../../shared/dialogs/dialogs.module";
 
 
 const mainRoutes: Routes = [
@@ -53,6 +56,9 @@ const routes: Routes = [
     QRCodeModule,
     MatButtonModule,
     NavigationModule,
+    StateModule,
+    ServicesModule,
+    DialogsModule
   ]
 })
 export class MainPageModule {
