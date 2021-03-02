@@ -1,4 +1,4 @@
-import { PositionToStringPipe } from './position-to-string.pipe';
+import {PositionToStringPipe} from './position-to-string.pipe';
 
 describe('PositionToStringPipe', () => {
   it('create an instance', () => {

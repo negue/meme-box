@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction } from '@angular/core';
 import { AppQueries } from "../../../state/app.queries";
-import { map, publishReplay, refCount, startWith } from "rxjs/operators";
+import { map, publishReplay, refCount, startWith , take} from "rxjs/operators";
 import {
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
@@ -8,6 +8,7 @@ import {
   ClipAssigningMode,
   CombinedClip,
   MediaType,
+  PositionEnum,
   Screen,
   UnassignedFilterEnum
 } from "@memebox/contracts";
@@ -218,10 +219,45 @@ export class ScreenArrangeComponent implements OnInit {
     $event.stopImmediatePropagation();
     $event.stopPropagation();
 
+    this.currentSelectedClip = null;
+
     this.dialogs.showScreenClipOptionsDialog({
       clipId: visibleItem.clip.id,
       screenId: this.screen.id,
       name: visibleItem.clip.name
     });
+  }
+
+  reset() {
+    const {clipSetting} = this.currentSelectedClip;
+
+    clipSetting.transform = null;
+    clipSetting.width = '50%';
+    clipSetting.height = '50%';
+
+    if (clipSetting.position === PositionEnum.Absolute) {
+      clipSetting.top = '10%';
+      clipSetting.left = '10%';
+      clipSetting.right = null;
+      clipSetting.bottom = null;
+    }
+
+    if (clipSetting.position === PositionEnum.Centered) {
+      clipSetting.top = null;
+      clipSetting.left = null;
+    }
+
+    this.appService.addOrUpdateScreenClip(this.screen.id, clipSetting);
+  }
+
+  async saveAllSettings() {
+    const allVisibleItems = await this.visibleItems$.pipe(
+      take(1)
+    ).toPromise();
+
+    for (const item of allVisibleItems) {
+      // TODO replace with a bulk update
+      await this.appService.addOrUpdateScreenClip(this.screen.id, item.clipSetting);
+    }
   }
 }

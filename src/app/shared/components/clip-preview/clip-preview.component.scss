@@ -5,7 +5,7 @@
 }
 
 img {
-  object-fit: var(--object-fit, cover);
+  object-fit: var(--clip-setting-img-fit, contain);
 
   height: 100%;
   width: 100%;

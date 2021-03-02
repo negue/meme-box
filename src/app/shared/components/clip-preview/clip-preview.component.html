@@ -3,7 +3,9 @@
   <img *ngSwitchCase="MediaType.Picture"
        [style.height]="height"
        [style.width]="width"
-       [src]="clip.path | replaceholder"
+
+       [style.--clip-setting-img-fit]="setting?.imgFit"
+       [src]="clip.id | mediaToUrl"
        draggable="false"/>
 
   <!-- Iframe => Iframe -->

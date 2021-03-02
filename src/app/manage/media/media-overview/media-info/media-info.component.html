@@ -36,7 +36,7 @@
       <gewd-auto-scale *ngIf="info.type === 0 && (info.previewUrl || info.path)"
                        width="300" height="188"
                        class="mediaInfo__preview__img">
-        <img [src]="(info.previewUrl || info.path) | replaceholder | safeurl"
+        <img [src]="info.id | mediaToUrl | safeurl"
              [alt]="info.name">
       </gewd-auto-scale>
 

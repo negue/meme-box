@@ -33,6 +33,22 @@ mat-dialog-content {
   }
 }
 
+.inline {
+  display: flex;
+  flex-direction: row;
+  min-height: 4rem;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #444;
+  padding-right: 1rem;
+  padding-left: 1rem;
+
+  mat-checkbox {
+    margin-left: 1rem;
+  }
+}
+
 .hover-background:hover {
   background: #555;
 }
@@ -43,6 +59,7 @@ mat-dialog-content {
 
 .drag-drop-area-holder {
   flex: 1;
+  min-height: 0;
 }
 
 .drag-drop-area {
@@ -84,24 +101,7 @@ mat-expansion-panel, .settings-content, .settings-stuff {
   flex-direction: row;
 
   .spacer {
-    min-height: 7rem;
-  }
-
-  .left {
-    min-height: 7rem;
-    flex: 1;
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .right {
-    flex: 1;
-    align-items: flex-end;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    min-height: 4rem;
   }
 }
 

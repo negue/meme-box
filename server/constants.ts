@@ -61,5 +61,6 @@ export const DANGER_IMPORT_ALL_ENDPOINT = `${API_PREFIX}/danger/add_all`;
 export const FILES_ENDPOINT = `/files`;
 export const FILES_OPEN_ENDPOINT = `/files/open`;
 export const FILE_ENDPOINT = `/file/*`;
+export const FILE_BY_ID_ENDPOINT = `/fileById/:mediaId`;
 export const NETWORK_IP_LIST_ENDPOINT = `/network_ip_list`;
 
