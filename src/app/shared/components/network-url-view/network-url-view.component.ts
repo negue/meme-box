@@ -7,13 +7,13 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import {map, tap} from "rxjs/operators";
-import {Clipboard} from "@angular/cdk/clipboard";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {NetworkInterfacesService} from "../../../core/services/network-interfaces.service";
-import {NetworkInfo} from "@memebox/contracts";
-import {BehaviorSubject, combineLatest} from "rxjs";
-import {MatSelectChange} from "@angular/material/select";
+import { map, tap } from "rxjs/operators";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { NetworkInterfacesService } from "../../../core/services/network-interfaces.service";
+import { NetworkInfo } from "@memebox/contracts";
+import { BehaviorSubject, combineLatest } from "rxjs";
+import { MatSelectChange } from "@angular/material/select";
 
 @Component({
   selector: 'app-network-url-view',
@@ -27,14 +27,12 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
   @Input()
   public urlPath = '';
 
-  public selectedItem: NetworkInfo|null = null;
+  public selectedItem: NetworkInfo | null = null;
 
-  public networkUrl$ =
-    combineLatest([
-      this._currentPath$,
-      this.networkInterfaceService.networkInterface$
-    ])
-    .pipe(
+  public networkUrl$ = combineLatest([
+    this._currentPath$,
+    this.networkInterfaceService.networkInterface$
+  ]).pipe(
     map(([currentPath, networkInterfaces]) => networkInterfaces.map(netInterface => {
       return {
         ...netInterface,
@@ -50,10 +48,10 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
 
       this.cd.markForCheck();
     })
-  )
+  );
 
 
-  constructor(
+  constructor (
     private clipboard: Clipboard,
     private _snackBar: MatSnackBar,
     public networkInterfaceService: NetworkInterfacesService,
@@ -62,17 +60,17 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
 
   }
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     this._currentPath$.next(this.urlPath);
   }
 
-  ngOnChanges({urlPath}: SimpleChanges) {
+  ngOnChanges ({urlPath}: SimpleChanges) {
     if (urlPath) {
       this._currentPath$.next(urlPath.currentValue);
     }
   }
 
-  copyURL(urlToOpen: string): void {
+  copyURL (urlToOpen: string): void {
     if (this.clipboard.copy(urlToOpen)) {
       this._snackBar.open('URL copied to clipboard', null, {
         duration: 5000,
@@ -88,13 +86,13 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
     }
   }
 
-  openUrl(value: string) {
+  openUrl (value: string) {
     // TODO fix open new window in electron
     window.open(value, '_blank');
   }
 
-  selectItem($event: MatSelectChange,
-             networkInterfaces: NetworkInfo[]
+  selectItem ($event: MatSelectChange,
+              networkInterfaces: NetworkInfo[]
   ) {
     this.selectedItem = networkInterfaces.find(i => i.address === $event.value);
   }
