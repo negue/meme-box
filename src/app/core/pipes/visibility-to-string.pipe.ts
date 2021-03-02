@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { VisibilityEnum } from "@memebox/contracts";
+import {Pipe, PipeTransform} from "@angular/core";
+import {VisibilityEnum} from "@memebox/contracts";
 
 @Pipe({
   name: 'visibilityToString'

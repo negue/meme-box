@@ -1,9 +1,7 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ScreenArrangeComponent} from './screen-arrange.component';
-import {PositionToStringPipe} from './position-to-string.pipe';
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {VisibilityToStringPipe} from "./visibility-to-string.pipe";
 import {DialogContract} from "../dialog.contract";
 import {Screen} from "@memebox/contracts";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
@@ -21,14 +19,11 @@ import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.module";
 import {DragResizeMediaModule} from "./drag-resize-media/drag-resize-media.module";
 import {TargetScreenModule} from "../../../screens/target-screen/target-screen.module";
-import {SettingsToSizingTypePipe} from "./settings-to-sizing-type.pipe";
+import {PipesModule} from "../../../core/pipes/pipes.module";
 
 @NgModule({
   declarations: [
     ScreenArrangeComponent,
-    PositionToStringPipe,
-    VisibilityToStringPipe,
-    SettingsToSizingTypePipe
   ],
   exports: [
     ScreenArrangeComponent
@@ -50,6 +45,7 @@ import {SettingsToSizingTypePipe} from "./settings-to-sizing-type.pipe";
     ClipPreviewModule,
     DragResizeMediaModule,
     TargetScreenModule,
+    PipesModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

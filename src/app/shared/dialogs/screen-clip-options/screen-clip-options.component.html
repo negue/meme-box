@@ -11,26 +11,22 @@
                     placeholder="Visibility"
                     #visibilitySelect
                     value="0">
-          <mat-option [value]="0">Play</mat-option>
-          <mat-option [value]="1">Static</mat-option>
-          <mat-option [value]="2">Toggle</mat-option>
+          <mat-option [value]="0">{{0 | visibilityToString}}</mat-option>
+          <mat-option [value]="1">{{1 | visibilityToString}}</mat-option>
+          <mat-option [value]="2">{{2 | visibilityToString}}</mat-option>
         </mat-select>
+        <mat-hint [ngSwitch]="visibilitySelect.value">
+          <span *ngSwitchCase="0">
+            Once this media was triggered it'll be played and then <b>hidden again</b>.
+          </span>
+          <span *ngSwitchCase="2">
+          Once this media was triggered it'll <b>stay visible unless triggered</b> again.
+          </span>
+        </mat-hint>
       </mat-form-field>
 
-
-      <mat-form-field>
-        <input autocomplete="off" formControlName="width"
-               matInput
-               placeholder="Width (px, %, rem, em)"
-               type="text">
-      </mat-form-field>
-
-      <mat-form-field>
-        <input autocomplete="off" formControlName="height"
-               matInput
-               placeholder="Height (px, %, rem, em)"
-               type="text">
-      </mat-form-field>
+<br/>
+<br/>
 
             <mat-expansion-panel appPreventAnimationOnFirstView
             class="stretched">
@@ -140,12 +136,69 @@
                     [value]="clipInfo?.position || 0"
                     formControlName="position"
                     placeholder="Position">
-          <mat-option [value]="0">Full screen</mat-option>
-          <mat-option [value]="1">Fixed</mat-option>
-          <mat-option [value]="2">Centered</mat-option>
-          <mat-option [value]="3">Random</mat-option>
+          <mat-option [value]="0">{{0 | positionToString}}</mat-option>
+          <mat-option [value]="1">{{1 | positionToString}}</mat-option>
+          <mat-option [value]="2">{{2 | positionToString}}</mat-option>
+          <mat-option [value]="3">{{3 | positionToString}}</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <br/>
+      <br/>
+
+      <mat-expansion-panel *ngIf="positionSelection.value !== 0"
+                           appPreventAnimationOnFirstView
+                           class="stretched">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Size / Position Settings
+
+          </mat-panel-title>
+          <mat-panel-description>
+
+            <ng-container *ngIf="positionSelection.value">
+              Size:
+              [{{form.value.width}}] x [{{form.value.height}}]
+              <br>
+            </ng-container>
+
+
+
+            <ng-container *ngIf="positionSelection.value === 1 ">
+              Pos:
+              <ng-container *ngIf="form.value.left">
+                L: {{form.value.left}}
+              </ng-container>
+
+              <ng-container *ngIf="form.value.top">
+                T: {{form.value.top}}
+              </ng-container>
+
+              <ng-container *ngIf="form.value.right">
+                R: {{form.value.right}}
+              </ng-container>
+
+              <ng-container *ngIf="form.value.bottom">
+                B: {{form.value.bottom}}
+              </ng-container>
+            </ng-container>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+        <mat-form-field>
+          <input autocomplete="off" formControlName="width"
+                 matInput
+                 placeholder="Width (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input autocomplete="off" formControlName="height"
+                 matInput
+                 placeholder="Height (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
 
       <ng-container *ngIf="positionSelection.value === 1">
         <mat-form-field>
@@ -178,8 +231,24 @@
                  type="text">
         </mat-form-field>
       </ng-container>
+      </mat-expansion-panel>
 
-      <mat-form-field>
+      <mat-expansion-panel class="stretched"
+                           appPreventAnimationOnFirstView
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Advanced
+          </mat-panel-title>
+          <mat-panel-description>
+            <ng-container *ngIf="form.value.zIndex">
+              Z: {{form.value.zIndex}} -
+            </ng-container>
+              CSS: {{form.value.customCss ? 'Yes' : 'No' }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
         <input autocomplete="off" formControlName="zIndex"
                matInput
                placeholder="z-index"
@@ -207,6 +276,10 @@
           Everything else will be applied inside the holder itself.
         </mat-hint>
       </mat-form-field>
+
+        <br>
+        <br>
+      </mat-expansion-panel>
     </div>
   </form>
 

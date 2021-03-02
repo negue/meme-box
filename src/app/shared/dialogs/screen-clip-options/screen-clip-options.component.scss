@@ -2,6 +2,10 @@
   display: block;
 }
 
+mat-dialog-content {
+  min-height: 40vh;
+}
+
 form {
   display: flex;
   flex-direction: column;
