@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {AppStore} from './app.store';
-import {HttpClient} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AppStore } from './app.store';
+import { HttpClient } from '@angular/common/http';
 import {
   Clip,
   Config,
@@ -44,9 +44,7 @@ export interface Response {
   id?: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class AppService {
   constructor(private appStore: AppStore,
               private http: HttpClient,
@@ -511,16 +509,24 @@ export class AppService {
   }
 
   public async checkVersionUpdateAvailable (): Promise<UpdateState> {
-    const newVersionResponse = await this.http.get<UpdateState>(`${API_BASE}${ENDPOINTS.STATE}/update_available`)
-      .pipe(
-        take(1),
-      ).toPromise();
+    try {
+      const newVersionResponse = await this.http.get<UpdateState>(`${API_BASE}${ENDPOINTS.STATE}/update_available`)
+        .pipe(
+          take(1),
+        ).toPromise();
 
-    this.appStore.update(state => {
-      state.update = newVersionResponse;
-    });
 
-    return newVersionResponse;
+      this.appStore.update(state => {
+        state.update = newVersionResponse;
+      });
+
+      return newVersionResponse;
+    } catch {
+      return {
+        available: false,
+        version: 'none'
+      };
+    }
   }
 }
 

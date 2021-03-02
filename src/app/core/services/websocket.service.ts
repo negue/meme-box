@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ACTIONS, TriggerClip } from "@memebox/contracts";
 import { BehaviorSubject, Subject } from "rxjs";
-import { AppConfig } from "@memebox/app/env";
-import { SnackbarService } from "./snackbar.service";
+import {  SnackbarService } from "./snackbar.service";import { AppConfig } from "../../../environments/environment";
 
 
 console.warn('WEBSOCKET - AppConfig', AppConfig);
@@ -15,9 +14,7 @@ export enum ConnectionState{
   Error
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class WebsocketService {
   public onOpenConnection$ = new Subject();
   public onReconnection$ = new Subject();
@@ -32,7 +29,7 @@ export class WebsocketService {
   private intervalId = 0;
 
   constructor(private snackbar: SnackbarService) {
-   setTimeout(() => this.connect(), 150);
+    setTimeout(() => this.connect(), 150);
   }
 
   public sendI_Am_OBS(guid: string) {
@@ -136,7 +133,7 @@ export class WebsocketService {
 
       if (this.intervalId === 0) {
         console.info('new interval');
-        this.intervalId = setInterval(() => {
+        this.intervalId = window.setInterval(() => {
           this.connect();
         }, 2000);
 

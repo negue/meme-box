@@ -1,0 +1,132 @@
+<h2 mat-dialog-title> {{ data.id ? 'Update ' : 'Add ' }} a Twitch {{form.value.event}}-Event:
+  <code *ngIf="form.value.contains">{{form.value.contains}}</code>
+</h2>
+<mat-dialog-content class="mat-typography min-height-dialog">
+  <div class="two-columns">
+    <div class="column">
+      <form [formGroup]="form">
+
+        <div class="example-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Event Name</mat-label>
+            <input autocomplete="off"
+                   formControlName="name"
+                   placeholder="Raided by whitep4nth3r"
+                   required
+                   matInput>
+          </mat-form-field>
+
+
+        </div>
+
+        <div class="example-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Twitch Event Type</mat-label>
+            <mat-select [required]="true"
+                        formControlName="event">
+              <mat-option *ngFor="let item of twitchEvents"
+                          [value]="item">
+                {{ item }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+
+        <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
+          <mat-form-field appearance="outline">
+            <mat-label>Message text to trigger event</mat-label>
+            <input autocomplete="off"
+                   formControlName="contains"
+                   placeholder="!wow"
+                   matInput>
+          </mat-form-field>
+        </div>
+
+        <div class="example-container" *ngIf="form.value.event !== twitchEventTypes.message">
+          <mat-form-field appearance="outline">
+            <mat-label>Minimum amount to trigger the media</mat-label>
+            <input autocomplete="off"
+                   formControlName="minAmount"
+                   placeholder="100"
+                   matInput>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Maximum amount to trigger the media</mat-label>
+            <input autocomplete="off"
+                   formControlName="maxAmount"
+                   placeholder="100"
+                   matInput>
+          </mat-form-field>
+        </div>
+
+        <div class="example-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Cooldown between triggers</mat-label>
+            <input autocomplete="off"
+                   formControlName="cooldown"
+                   placeholder="0"
+                   matInput>
+            <span matSuffix>ms</span>
+            <mat-hint>{{ form.value.cooldown ? (form.value.cooldown | readableMs) : 'Never' }}</mat-hint>
+            <mat-error *ngIf="form.controls['cooldown'].errors?.max">
+              Above the max value (10h)
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
+    <div class="column">
+      <div class="example-container">
+        <h2>Select media</h2>
+
+        <button mat-raised-button (click)="selectEventClip()"
+                [class.selectClipButton]="!!form.value.clipId"
+                [color]="showWarningClipSelection ? 'warn' : 'accent'">
+          <span *ngIf="clipDictionary$ | async as clipDictionary">
+            <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
+
+              <app-clip-preview [clip]="clipDictionary[form.value.clipId]"
+                                height="100px" width="200px"></app-clip-preview>
+              {{ clipDictionary[form.value.clipId]?.name }}
+            </ng-container>
+
+            <ng-template #notSelected>
+              Choose your media-clip to trigger
+            </ng-template>
+          </span>
+
+          <ng-template>
+            Choose
+          </ng-template>
+        </button>
+      </div>
+
+      <br />
+
+      <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
+        <h2>Select Twitch Roles</h2>
+
+        <div class="simple-wrap">
+          <div *ngFor="let levelEntry of TWITCH_LEVELS">
+            <mat-checkbox [checked]="data.roles?.includes(levelEntry.type)"
+                          (change)="toggleRole(levelEntry.type)">
+              {{levelEntry.label}}
+            </mat-checkbox>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()"
+          color="primary"
+          mat-raised-button>{{ data.id ? 'Update Event' : 'Add Event' }}</button>
+</mat-dialog-actions>
+

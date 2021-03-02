@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
-import {Title} from "@angular/platform-browser";
-import {filter, map} from "rxjs/operators";
-import {AppQueries} from "../../state/app.queries";
-import {take} from "rxjs/internal/operators";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { Title } from "@angular/platform-browser";
+import { filter, map, take } from "rxjs/operators";
+import { AppQueries } from "../../state/app.queries";
 
 @Component({
   selector: 'app-screen-route',
@@ -26,6 +25,7 @@ export class ScreenRouteComponent implements OnInit {
     this.appQuery.screenMap$.pipe(
       filter(screens => screens && Object.keys(screens).length > 0),
       map(screensMap => screensMap[this.screenId]),
+      filter(screen => !screen),
       take(1)
     ).subscribe(screen => {
       this.title.setTitle(`Screen: ${screen.name}`);

@@ -3,7 +3,7 @@
 // `ng build --env=prod` then `index.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-import {DEFAULT_PORT} from "../../server/constants";
+import { DEFAULT_PORT } from "../../server/constants";
 
 const splitSearch = location.search
   ?.replace('?', '')
@@ -20,5 +20,7 @@ export const AppConfig = {
   expressBase: `http://${location.hostname}:${NEW_PORT}`,
   wsBase: `ws://${location.hostname}:${NEW_PORT}`
 };
+
+console.info({AppConfig});
 
 console.info('APP CONFIG DEV', AppConfig);

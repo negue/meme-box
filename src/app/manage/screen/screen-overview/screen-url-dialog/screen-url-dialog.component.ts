@@ -1,12 +1,11 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {Observable} from "rxjs";
-import {Screen} from "@memebox/contracts";
-import {map} from "rxjs/operators";
-import {AppQueries} from "../../../../state/app.queries";
+import { Component, Inject, OnInit } from '@angular/core';
+import { Observable } from "rxjs";
+import { Screen } from "@memebox/contracts";
+import { map, take } from "rxjs/operators";
+import { AppQueries } from "../../../../state/app.queries";
 
 import orderBy from 'lodash/orderBy';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {take} from "rxjs/internal/operators";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 
 export interface SelectionStateDictionary {
   [key: string]: {
