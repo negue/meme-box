@@ -5,7 +5,7 @@
        [style.width]="width"
 
        [style.--clip-setting-img-fit]="setting?.imgFit"
-       [src]="clip.path | replaceholder"
+       [src]="clip.id | mediaToUrl"
        draggable="false"/>
 
   <!-- Iframe => Iframe -->

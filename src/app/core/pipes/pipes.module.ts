@@ -8,17 +8,18 @@ import {ClipToIframePipe} from './clip-to-iframe.pipe';
 import {PositionToStringPipe} from "./position-to-string.pipe";
 import {SettingsToSizingTypePipe} from "./settings-to-sizing-type.pipe";
 import {VisibilityToStringPipe} from "./visibility-to-string.pipe";
+import {MediaToUrlPipe} from "./media-to-url.pipe";
 
 const PIPES = [
   SafePipe, ReplaceholderPipe,
   ReadableMsPipe, ClipToIframePipe,
   PositionToStringPipe, SettingsToSizingTypePipe,
-  VisibilityToStringPipe
+  VisibilityToStringPipe, MediaToUrlPipe
 ];
 
 @NgModule({
   imports: [CommonModule],
   declarations: PIPES,
-  exports: PIPES,
+  exports: [...PIPES],
 })
 export class PipesModule {}

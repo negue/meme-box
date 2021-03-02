@@ -44,7 +44,7 @@ The Loaded Clips need to stay cached?
            (playing)="addLog('playing', $event)"
            (progress)="addLog('progress', $event)"
            [class.visible]="mediaToggleVar.isVisible$ | async"
-           [src]="entry.value.clip.path"
+           [src]="entry.value.clip.id | mediaToUrl"
            [loop]="entry.value.clipSetting.loop"
            [volume]="entry.value.clip.volumeSetting / 100"
     ></video>
@@ -54,7 +54,7 @@ The Loaded Clips need to stay cached?
            (play)="addLog('play', $event)"
            (playing)="addLog('playing', $event)"
            [class.visible]="mediaToggleVar.isVisible$ | async"
-           [src]="entry.value.clip.path"
+           [src]="entry.value.clip.id | mediaToUrl"
            [volume]="entry.value.clip.volumeSetting / 100"
            [loop]="entry.value.clipSetting.loop"
            controls
@@ -63,7 +63,7 @@ The Loaded Clips need to stay cached?
     <img #img *ngSwitchCase="0"  class="media-clip"
          (loadstart)="addToMap(entry.value.clip, img)"
          [class.visible]="mediaToggleVar.isVisible$ | async"
-         [src]="entry.value.clip.path"
+         [src]="entry.value.clip.id | mediaToUrl"
     />
     <iframe #iFrame *ngSwitchCase="3"  class="media-clip"
             (load)="addToMap(entry.value.clip, iFrame)"
