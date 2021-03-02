@@ -27,9 +27,12 @@ import {
 import {SnackbarService} from '../core/services/snackbar.service';
 import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from './app.dummy.data';
-import {deleteClip} from '../../../projects/state/src/lib/operations/clip.operations';
+import {deleteClip} from '@memebox/state';
 import {take} from 'rxjs/operators';
 import {addOrUpdateScreenClip, fillDefaultsScreenClip} from "@memebox/state";
+
+
+console.warn('APP.SERVICE.TS - AppConfig', AppConfig);
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;

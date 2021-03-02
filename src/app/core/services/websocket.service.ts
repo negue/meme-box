@@ -1,8 +1,11 @@
-import {Injectable} from '@angular/core';
-import {ACTIONS, TriggerClip} from "@memebox/contracts";
-import {BehaviorSubject, Subject} from "rxjs";
-import {AppConfig} from "@memebox/app/env";
-import {SnackbarService} from "./snackbar.service";
+import { Injectable } from '@angular/core';
+import { ACTIONS, TriggerClip } from "@memebox/contracts";
+import { BehaviorSubject, Subject } from "rxjs";
+import { AppConfig } from "@memebox/app/env";
+import { SnackbarService } from "./snackbar.service";
+
+
+console.warn('WEBSOCKET - AppConfig', AppConfig);
 
 export enum ConnectionState{
   NONE,

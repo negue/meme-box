@@ -18,7 +18,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
-import {AppConfig} from '../environments/environment';
+import {AppConfig} from '@memebox/app/env';
 import {ServicesModule} from "./shared/services/services.module";
 import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
 import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
@@ -42,6 +42,9 @@ import {ScreensRouteComponent} from './screens/screens-route/screens-route.compo
 import {TargetScreenComponent} from "./screens/target-screen/target-screen.component";
 import {MediaTypeClassPipe} from "./screens/target-screen/media-type-class.pipe";
 import {MediaToggleDirective} from "./screens/target-screen/media-toggle.directive";
+
+
+console.warn('APP.MODULE.TS - AppConfig', AppConfig);
 
 const markdownWorker = () => new Worker('./markdown.worker.ts', {
   name: 'markdown',
