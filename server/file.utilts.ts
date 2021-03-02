@@ -1,8 +1,7 @@
 import {fileEndingToType} from "../projects/utils/src/lib/files";
 import {basename, extname, resolve, sep} from "path";
-import {FileInfo} from "../projects/contracts/src/lib/types";
+import {FileInfo, SERVER_URL} from '@memebox/contracts';
 import fs from "fs";
-import {SERVER_URL} from "../projects/contracts/src/lib/placeholders";
 
 const { readdir } = fs.promises;
 

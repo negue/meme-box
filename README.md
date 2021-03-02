@@ -1,11 +1,18 @@
-<p align="center"><img src="./assets/memebox-optimized.svg" width="128" height="128"></p>
+# Meme-Box
 
 <p align="center">
+  
+<img src="./assets/memebox-optimized.svg" width="128" height="128">
+
+</p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
-</p>
+
+## [Download latest release!](https://github.com/negue/meme-box/releases)
+
+[Nightly Builds](https://github.com/negue/meme-box-nightly/releases)
 
 A complete management app for [`image / audio / video / iframe / custom HTML`](/tutorials/type_overview.md) "clips" to be used inside OBS.
 
@@ -48,8 +55,6 @@ ___
 
 ## Roadmap
 
-* [ ] Open multiple target screens with one URL
-* [ ] QR-Code to scan a target screen url to open it easier on tablets
 * [ ] Change media options by triggered variables (e.g. different style, or something)
 * [ ] Labels on or around the Media
 * [ ] more to be added :)

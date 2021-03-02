@@ -1,0 +1,248 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build & Publish to Repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      nightly:
+        description: Is it a nightly build?
+        required: true
+        default: 'false'
+      tag-name:
+        description: Tag-Name
+        required: true
+      commitish:
+        description: Commit for the Release
+        required: true
+      release-name:
+        description: Release-Name
+        required: true
+      pre-release:
+        description: Pre-release ?
+        required: true
+        default: 'true'
+      draft:
+        description: Draft ?
+        required: true
+        default: 'false'
+
+jobs:
+  build:
+    name: Upload Release Asset
+    runs-on: ubuntu-latest
+
+    # Map a step output to a job output
+    outputs:
+      uploadURL: ${{ steps.create_release.outputs.upload_url }}
+
+    steps:
+      - run: echo ${{ github.event.inputs.commitish }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
+      - name: Use Node.js 12.16.2
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.16.2
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Get current time
+        uses: gerred/actions/current-time@master
+        id: current-time
+      - name: Create version_info.json
+        uses: schdck/create-env-json@v1
+        id: create-env
+        with:
+          file-name: './src/version_info.json'
+          VERSION_TAG: ${{ github.event.inputs.tag-name }}
+          COMMIT: ${{ steps.vars.outputs.sha_short }}
+          BUILD_TIME: ${{ steps.current-time.outputs.time }}
+          BRANCH: ${{ steps.vars.outputs.branch }}
+
+      - name: Uploading Version Info Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: version_info
+          path: './src/version_info.json'
+
+      - run: npm install
+      - run: npm run build:prepare
+      - run: npm run build:all
+
+      - name: Uploading Angular Dist Files
+        uses: actions/upload-artifact@v2
+        with:
+          name: angular-dist
+          path: dist
+
+      - run: npm run electron:build:only
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.tag-name }}
+          release_name: ${{ github.event.inputs.release-name }}
+          draft: ${{ github.event.inputs.draft }}
+          prerelease:  ${{ github.event.inputs.pre-release }}
+          commitish: ${{ github.event.inputs.commitish }}
+          repo: ${{ github.event.inputs.nightly  == 'true' && 'meme-box-nightly' || 'meme-box' }}
+
+      - name: Upload Release Asset Windows Headless
+        id: upload-release-asset-exe
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./release/out/memebox.exe
+          asset_name: memebox-headless.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
+
+      - name: Upload Release Asset Linux Headless
+        id: upload-release-asset-linux
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./release/out/memebox-linux
+          asset_name: memebox-linux-headless
+          asset_content_type: application/octet-stream
+
+
+      - name: Upload Release Asset Mac Headless
+        id: upload-release-asset-mac
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./release/out/memebox-macos
+          asset_name: memebox-macos-headless
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset Linux Electron
+        id: upload-release-asset-linux-electron
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./release-electron/memebox-electron.AppImage
+          asset_name: memebox-electron.AppImage
+          asset_content_type: application/octet-stream
+
+      - name: Upload Streamdeck Plugin
+        id: upload-streamdeck-plugin
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
+          asset_name: com.memebox.memebox-streamdeck.streamDeckPlugin
+          asset_content_type: application/octet-stream
+
+  windows:
+    name: Build and Upload Windows Electron
+    needs: build
+
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
+      - name: Use Node.js 12.16.2
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.16.2
+
+      - run: npm install
+
+      - name: Download Angular Output from build
+        uses: actions/download-artifact@v2
+        with:
+          name: angular-dist
+          path: dist
+
+      - run: npm run electron:build:only
+
+      - name: Upload Release Asset Windows Electron
+        id: upload-release-asset-windows-electron
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.build.outputs.uploadURL }}
+          asset_path: ./release-electron/memebox-electron.exe
+          asset_name: memebox-windows-electron.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Release Asset Windows Electron ZIP
+        id: upload-release-asset-windows-electron-zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.build.outputs.uploadURL }}
+          asset_path: ./release-electron/memebox-electron.zip
+          asset_name: memebox-windows-electron.zip
+          asset_content_type: application/zip
+
+  mac:
+    name: Build and Upload MacOS Electron
+    runs-on: macos-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
+      - name: Use Node.js 12.16.2
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.16.2
+
+      - run: npm install
+
+      - name: Download Angular Output from build
+        uses: actions/download-artifact@v2
+        with:
+          name: angular-dist
+          path: dist
+
+      - run: npm run electron:build:only
+
+      - name: Upload Release Asset Mac Electron
+        id: upload-release-asset-Mac-electron
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.event.inputs.nightly  == 'true' && secrets.NIGHTLY_TOKEN || secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.build.outputs.uploadURL }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./release-electron/memebox-electron.dmg
+          asset_name: memebox-mac-electron.dmg
+          asset_content_type: application/octet-stream

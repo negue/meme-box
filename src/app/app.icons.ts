@@ -1,5 +1,6 @@
 export const APP_ICONS = [
   'add',
+  'arrow_drop_down',
   'art_track',
   'audiotrack',
   'cancel',
@@ -18,6 +19,7 @@ export const APP_ICONS = [
   'launch',
   'mobile_friendly',
   'mobile_off',
+  'network_wifi',
   'playlist_add_check',
   'playlist_add',
   'preview',

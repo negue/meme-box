@@ -1,0 +1,52 @@
+<app-clip-preview [clip]="clip" (click)="previewClicked($event)"
+                  [setting]="settings"
+                  draggable="false"></app-clip-preview>
+
+<!--
+
+<gewd-auto-scale [width]="element?.nativeElement.clientWidth  || 200"
+              [height]="element?.nativeElement.clientHeight || 100"
+                 #autoScale
+>
+
+
+</gewd-auto-scale>
+
+<div class="title-element mat-caption">
+  {{ clip.name }}
+</div>
+-->
+<ngx-moveable
+  #moveableInstance
+  [target]="showResizeBorder ? element?.nativeElement : null"
+  [origin]="true"
+  [edge]="false"
+
+  [draggable]="draggingEnabled"
+  [throttleDrag]="10"
+  (dragStart)="onDragStart($event)"
+  (drag)="onDrag($event)"
+  (dragEnd)="onDragEnd($event)"
+
+
+  [keepRatio]="false"
+
+  [resizable]="resizeEnabled"
+  [throttleResize]="10"
+  (resizeStart)="onResizeStart($event)"
+  (resize)="onResize($event)"
+  (resizeEnd)="onResizeEnd($event)"
+
+  [rotatable]="rotateEnabled"
+  [throttleRotate]="10"
+  (rotateStart)="onRotateStart($event)"
+  (rotate)="onRotate($event)"
+  (rotateEnd)="onRotateEnd($event)"
+
+  [transformOrigin]="transformOrigin"
+
+  [warpable]="warpEnabled"
+  (warpStart)="onWarpStart($event)"
+  (warp)="onWarp($event)"
+  (warpEnd)="onWarpEnd($event)"
+></ngx-moveable>

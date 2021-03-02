@@ -14,10 +14,11 @@
     <app-overview-item *ngFor="let screen of screenList; trackBy: trackById">
       <app-screen-info (onDelete)="delete(screen)"
                        (onEdit)="showDialog(screen)"
-                       (onEditAssignments)="showAssignmentDialog(screen)"
                        (onEditScreenClipOptions)="onClipOptions($event, screen)"
                        (onPreview)="onPreview($event, screen)"
                        (onReload)="onReload(screen)"
+                       (onGetUrl)="onGetUrl(screen)"
+                       (onOpenArrangeDialog)="onOpenArrangeDialog(screen)"
                        [screenId]="screen.id"
       >
 

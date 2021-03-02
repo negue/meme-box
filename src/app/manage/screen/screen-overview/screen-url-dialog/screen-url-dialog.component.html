@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Selected Screens: {{ selectionState | selectedScreensAmount }}</h1>
+
+<div mat-dialog-content class="columns">
+  <div class="column">
+    <table>
+      <tr>
+        <th>        </th>
+        <th> Higher Number is above <br/> the previous one </th>
+      </tr>
+      <ng-container *ngFor="let screenEntry of screenList$ | async">
+        <tr>
+          <td>
+            <mat-checkbox [checked]="selectionState[screenEntry.id].checked"
+                          (change)="selectionState[screenEntry.id].checked = $event.checked">
+              {{ screenEntry.name }}
+            </mat-checkbox>
+          </td>
+          <td>
+            <mat-form-field>
+              <input matInput [(ngModel)]="selectionState[screenEntry.id].zIndex"
+                     placeholder="View-Order (zIndex)"
+                     type="number"
+                     autocomplete="off"/>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            Clips: {{ screenEntry | clipsInScreenAmount }}
+          </td>
+        </tr>
+      </ng-container>
+    </table>
+  </div>
+  <div class="column">
+    <app-network-url-view *ngIf="selectionState | screensArrayToUrl as screensUrl"
+                          [urlPath]="screensUrl"></app-network-url-view>
+  </div>
+
+</div>

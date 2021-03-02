@@ -1,3 +1,10 @@
+## Unreleased
+
+* [x] Drag&Drop Media in a preview Area
+* [x] Select the media folder in Electron with a dialog
+* [x] Open multiple target screens with one URL
+* [x] QR-Code to scan a target screen url to open it easier on tablets
+
 ## 2021.1.2
 
 - FIX: Wrong Mediapaths with a different path separator than the system-one, 

@@ -1,4 +1,4 @@
-import {AppState, VisibilityEnum} from "@memebox/contracts";
+import { AppState, VisibilityEnum } from "@memebox/contracts";
 
 export function setDummyData(state: AppState) {
   state.screen["356a0f2f-6d3a-4fbd-b2db-45b0fd97546a"] = {
@@ -29,7 +29,9 @@ export function setDummyData(state: AppState) {
         "imgFit": null,
         visibility: VisibilityEnum.Play
       },
-    }
+    },
+    height: 1080,
+    width: 1920
   };
 
   state.clips = {

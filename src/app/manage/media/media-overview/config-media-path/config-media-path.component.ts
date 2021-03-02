@@ -62,4 +62,29 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
     this._destroy$.next();
     this._destroy$.complete();
   }
+
+  openNativeFolderPicker() {
+    if (this.isElectron) {
+
+      const windowAny = window as any;
+      const ipcRenderer = windowAny.require('electron').ipcRenderer;
+
+      ipcRenderer.send('select-dirs')
+
+      ipcRenderer.on('dir-selected', (event, args) => {
+        if (args) {
+          this.form.patchValue({
+            path: args
+          });
+        }
+      });
+    }
+  }
+
+  // todo extract that to a service
+  get isElectron(): boolean {
+    const windowAny = window as any;
+
+    return !!(windowAny && windowAny.process && windowAny.process.type);
+  }
 }

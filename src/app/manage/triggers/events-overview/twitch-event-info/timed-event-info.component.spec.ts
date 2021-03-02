@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
 import {TimedEventInfoComponent} from './timed-event-info.component';
 
@@ -6,7 +6,7 @@ describe('EventInfoComponent', () => {
   let component: TimedEventInfoComponent;
   let fixture: ComponentFixture<TimedEventInfoComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [TimedEventInfoComponent]
     })

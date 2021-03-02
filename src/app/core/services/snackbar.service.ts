@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatSnackBarConfig} from "@angular/material/snack-bar/snack-bar-config";
+import { Injectable } from '@angular/core';
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBarConfig } from "@angular/material/snack-bar/snack-bar-config";
 import merge from 'lodash/merge';
 
 const EMOTES = [
@@ -41,9 +41,7 @@ const DEFAULT_ERROR_OPTIONS: SnackbarOptions = {
 }
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SnackbarService {
 
   constructor(private matSnackBar: MatSnackBar) {

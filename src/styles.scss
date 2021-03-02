@@ -44,9 +44,20 @@ $custom-typography: mat-typography-config(
   }
 };
 
+.cdk-global-scrollblock {
+  overflow-y: hidden;
+}
+
 .max-height-dialog {
   .mat-dialog-content {
     height: 600px;
+  }
+}
+
+.fullscreen-dialog {
+  .mat-dialog-container {
+    display: flex;
+    height: unset;
   }
 }
 
@@ -145,4 +156,77 @@ gewd-markdown {
 .mat-snack-bar-container.danger {
   background: darkred;
   color: white;
+}
+
+
+/** Moveable CSS */
+.moveable-line {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: #4af;
+  transform-origin: 0px 0.5px;
+}
+
+.moveable-line.moveable-rotation-line {
+  height: 40px;
+  width: 1px;
+  transform-origin: 0.5px 39.5px;
+}
+
+.moveable-control {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-sizing: border-box;
+  background: #4af;
+  margin-top: -7px;
+  margin-left: -7px;
+  z-index: 10;
+}
+
+/* moveable-rotation */
+.moveable-line.moveable-rotation-line .moveable-control {
+  border-color: #4af;
+  background:#fff;
+  cursor: alias;
+}
+
+.moveable-control.moveable-origin {
+  display: none;
+  border-color: #f55;
+  background: #fff;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  margin-left: -6px;
+  pointer-events: none;
+}
+
+.moveable-direction.moveable-e, .moveable-direction.moveable-w {
+  cursor: ew-resize;
+}
+.moveable-direction.moveable-s, .moveable-direction.moveable-n {
+  cursor: ns-resize;
+}
+.moveable-direction.moveable-nw, .moveable-direction.moveable-se, .moveable-reverse .moveable-direction.moveable-ne, .moveable-reverse .moveable-direction.moveable-sw {
+  cursor: nwse-resize;
+}
+.moveable-direction.moveable-ne, .moveable-direction.moveable-sw, .rCSckyn7i.moveable-reverse .moveable-direction.moveable-nw, moveable-reverse .moveable-direction.moveable-se {
+  cursor: nesw-resize;
+}
+
+
+.moveable {
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  width: 250px;
+  height: 200px;
+  text-align: center;
+  font-size: 40px;
+  margin: 0px auto;
+  font-weight: 100;
+  letter-spacing: 1px;
 }

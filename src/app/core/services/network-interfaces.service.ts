@@ -6,7 +6,7 @@ import {map, shareReplay} from "rxjs/operators";
 import {Observable} from "rxjs";
 
 const CURRENT_NETWORK_INFO: NetworkInfo = {
-  ifname: 'current location',
+  ifname: `Current Location (${location.protocol}//${location.host})`,
   address: `${location.protocol}//${location.host}`
 }
 
@@ -24,16 +24,19 @@ export class NetworkInterfacesService {
     this.networkInterface$ = this.http.get<NetworkInfo[]>(`${EXPRESS_BASE}/${ENDPOINTS.NETWORK_LIST}`).pipe(
       map(networkInfos => {
         const networkInfoResult: NetworkInfo[] = [
-          CURRENT_NETWORK_INFO,
           ...networkInfos.map(networkInfo => {
             let urlBase = `${networkInfo.address}:${port}`;
 
             return {
-              ifname: networkInfo.ifname,
+              ifname: `${networkInfo.ifname} (${urlBase})`,
               address: `http://${urlBase}`
             };
           })
         ];
+
+        if (networkInfoResult.findIndex(n => n.address.includes(CURRENT_NETWORK_INFO.address)) === -1) {
+          networkInfoResult.splice(0,0, CURRENT_NETWORK_INFO);
+        }
 
         return networkInfoResult;
       }),

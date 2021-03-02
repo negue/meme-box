@@ -1,0 +1,17 @@
+.columns {
+  display: flex;
+  flex-direction: row;
+}
+
+.column {
+  padding: 1rem;
+  min-width: 20rem;
+}
+
+mat-checkbox {
+  margin-right: 2rem;
+}
+
+th {
+  padding-bottom: 1rem;
+}

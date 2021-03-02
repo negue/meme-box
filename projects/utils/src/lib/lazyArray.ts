@@ -1,7 +1,7 @@
 // Original Code from https://angularbites.com/async-rendering-with-a-single-rx-operator/
 
-import {animationFrameScheduler, from, Observable, of, scheduled} from "rxjs";
-import {bufferCount, concatMap, delay, mergeMap, scan, tap} from "rxjs/operators";
+import { animationFrameScheduler, from, Observable, of, scheduled } from "rxjs";
+import { bufferCount, concatMap, delay, mergeMap, scan, startWith, tap } from "rxjs/operators";
 
 export function lazyArray<T>(
   delayMs = 0,
@@ -35,6 +35,7 @@ export function lazyArray<T>(
               isFirstEmission = false;
             }
           }),
+          startWith([])
         );
       }),
     );

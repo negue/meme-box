@@ -1,10 +1,9 @@
-import {combineLatest, Observable, of} from "rxjs";
-import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
-import {map} from "rxjs/internal/operators";
-import {AppState, Clip, MediaType} from "@memebox/contracts";
-import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
-import {switchMap} from "rxjs/operators";
-import {lazyArray} from "../../../../../projects/utils/src/lib/lazyArray";
+import { combineLatest, Observable } from "rxjs";
+import { IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS } from "./filter.component";
+import { map } from "rxjs/operators";
+import { AppState, Clip, MediaType } from "@memebox/contracts";
+import { sortClips } from "../../../../../projects/utils/src/lib/sort-clips";
+import { lazyArray } from "../../../../../projects/utils/src/lib/lazyArray";
 
 export function createCombinedFilterItems$ (
   state$: Observable<AppState>,
@@ -127,16 +126,6 @@ export function filterClips$(
 
     }),
     map(clipsToList => sortClips(clipsToList)),
-    switchMap(clips => {
-      console.info({clips});
-
-      return clips.length === 0
-          ? of([])
-          : of(clips).pipe(
-            // lazyArray cant work with zero items...
-            lazyArray(10, 3) // todo refactor / rebuild this lazyArray pipe
-          );
-      }
-    )
+    lazyArray(10, 3) // todo refactor / rebuild this lazyArray pipe
   );
 }

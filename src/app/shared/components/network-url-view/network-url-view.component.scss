@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  > *  {
+    margin: 0.5rem;
+  }
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+qr-code {
+  align-self: center;
+}

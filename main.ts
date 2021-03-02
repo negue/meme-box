@@ -1,4 +1,4 @@
-import {app, BrowserWindow, shell} from 'electron';
+import {app, BrowserWindow, dialog, ipcMain, shell} from 'electron';
 import * as path from 'path';
 import {expressServer} from './server/server-app';
 import {NEW_CONFIG_PATH} from "./server/path.utils";
@@ -27,7 +27,7 @@ function createWindow(): BrowserWindow {
   win = new BrowserWindow({
     ...data.bounds,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
     },
   });
 
@@ -70,8 +70,21 @@ function createWindow(): BrowserWindow {
   win.webContents.on('new-window', openExternalLinksInOSBrowser);
   win.webContents.on('will-navigate', openExternalLinksInOSBrowser);
 
+  ipcMain.on('select-dirs', async (event) => {
+    const result = await dialog.showOpenDialog(win, {
+      properties: ['openDirectory']
+    })
+    console.log('directories selected', result.filePaths);
+
+    const arg =  result.filePaths?.[0] ?? '';
+
+    event.sender.send('dir-selected', arg);
+  });
+
   return win;
 }
+
+
 
 try {
 

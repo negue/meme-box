@@ -39,7 +39,6 @@ export class ScreenInfoComponent implements OnInit {
     })
   ),
     tap(screenInfo => {
-      console.info('tap called');
       this._info = screenInfo;
     })
   );
@@ -53,26 +52,20 @@ export class ScreenInfoComponent implements OnInit {
     ))
   );
 
-  public networkUrl$ = this.networkInterfaceService.networkInterface$.pipe(
-    map(networkInterfaces => networkInterfaces.map(netInterface => {
-      return {
-        ...netInterface,
-        address: `${netInterface.address}/#/screen/${this.screenId}`
-      }
-    }))
-  )
-
   @Output()
   public onEdit = new EventEmitter();
+
+  @Output()
+  public onGetUrl = new EventEmitter();
+
+  @Output()
+  public onOpenArrangeDialog = new EventEmitter();
 
   @Output()
   public onPreview = new EventEmitter<string>()
 
   @Output()
   public onDelete = new EventEmitter();
-
-  @Output()
-  public onEditAssignments = new EventEmitter();
 
   @Output()
   public onEditScreenClipOptions = new EventEmitter<Clip>();
@@ -90,22 +83,5 @@ export class ScreenInfoComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  copyURL(urlToOpen: string): void {
-    if (this.clipboard.copy(urlToOpen)) {
-      this._snackBar.open('URL copied to clipboard', null, {
-        duration: 5000,
-        verticalPosition: 'top'
-
-      });
-    } else {
-      this._snackBar.open('URL couldn\'t be copied to clipboard', null, {
-        duration: 10000,
-        verticalPosition: 'top',
-        panelClass: ['mat-toolbar', 'mat-warn']
-      });
-    }
-  }
-
 
 }

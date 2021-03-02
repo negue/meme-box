@@ -3,7 +3,7 @@ import {ConfigMediaPathComponent} from "../../media/media-overview/config-media-
 import {Observable} from "rxjs";
 import {Config} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
-import {DialogService} from "../../../shared/components/dialogs/dialog.service";
+import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {AppQueries} from "../../../state/app.queries";
 
 @Component({
@@ -38,5 +38,9 @@ export class SettingsOverviewComponent implements OnInit {
 
   openConfigFolder() {
     this.service.openConfigFolder();
+  }
+
+  downloadStreamdeckPlugin() {
+    window.open('https://github.com/negue/meme-box/raw/release/memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin');
   }
 }

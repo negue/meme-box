@@ -1,0 +1,295 @@
+<h2 mat-dialog-title class="title">
+  <mat-icon svgIcon="tune" class="title__icon"></mat-icon>
+  Settings for Media: {{data.name}} / Screen: {{(currentScreen$|async).name}}
+</h2>
+<mat-dialog-content *ngIf="clipInfo$ | async as clipInfo" class="mat-typography">
+
+  <form [formGroup]="form" class="two-columns">
+    <div class="column">
+      <mat-form-field>
+        <mat-select formControlName="visibility"
+                    placeholder="Visibility"
+                    #visibilitySelect
+                    value="0">
+          <mat-option [value]="0">{{0 | visibilityToString}}</mat-option>
+          <mat-option [value]="1">{{1 | visibilityToString}}</mat-option>
+          <mat-option [value]="2">{{2 | visibilityToString}}</mat-option>
+        </mat-select>
+        <mat-hint [ngSwitch]="visibilitySelect.value">
+          <span *ngSwitchCase="0">
+            Once this media was triggered it'll be played and then <b>hidden again</b>.
+          </span>
+          <span *ngSwitchCase="2">
+          Once this media was triggered it'll <b>stay visible unless triggered</b> again.
+          </span>
+        </mat-hint>
+      </mat-form-field>
+
+<br/>
+<br/>
+
+            <mat-expansion-panel appPreventAnimationOnFirstView
+            class="stretched">
+              <mat-expansion-panel-header>
+                Type Specific Settings
+              </mat-expansion-panel-header>
+
+              <mat-form-field *ngIf="clipInfo.type === MediaType.Video">
+                <mat-select formControlName="loop"
+                            placeholder="Loop Media Clip"
+                            value="0">
+                  <mat-option [value]="false">No</mat-option>
+                  <mat-option [value]="true">Yes</mat-option>
+                </mat-select>
+              </mat-form-field>
+             <mat-form-field>
+                    <mat-select formControlName="imgFit"
+                                placeholder="Object-Fit"
+                                value="contain">
+                      <mat-option value="contain">Contain</mat-option>
+                      <mat-option value="fill">Fill</mat-option>
+                      <mat-option value="cover">Cover</mat-option>
+                      <mat-option value="scale-down">Scale down</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+            </mat-expansion-panel>
+
+      <mat-expansion-panel *ngIf="visibilitySelect.value !== 1"
+      #animationExpansionPanel appPreventAnimationOnFirstView
+      >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                Animation Options
+      </mat-panel-title>
+      <mat-panel-description>
+        <ng-container *ngIf="form.value.animationIn">
+          IN: {{form.value.animationIn}} <br/>
+        </ng-container>
+        <ng-container *ngIf="form.value.animationOut">
+          OUT: {{form.value.animationOut}}
+        </ng-container>
+      </mat-panel-description>
+              </mat-expansion-panel-header>
+
+
+              <mat-form-field>
+                <mat-select placeholder="Animate IN"
+                            formControlName="animationIn"
+                            #animationInSelect>
+                  <mat-option value="">None</mat-option>
+                  <mat-option value="random">Random</mat-option>
+                  <mat-option *ngFor="let animation of animateInList" [value]="animation">{{animation}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <input autocomplete="off"
+                       formControlName="animationInDuration"
+                       matInput #animationInDuration
+                       placeholder="Animate In - Duration"
+                       type="number">
+
+                <span matSuffix>ms</span>
+              </mat-form-field>
+
+        <app-animation-preview [animationList]="animateInList"
+                               *ngIf="animationExpansionPanel.expanded"
+                               [selectedAnimationConfig]="animationInSelect.value"
+                               [animationDuration]="animationInDuration.value"
+        ></app-animation-preview>
+
+        <br/>
+
+              <mat-form-field>
+                <mat-select placeholder="Animate OUT" #animationOutSelect
+                            formControlName="animationOut">
+                  <mat-option value="">None</mat-option>
+                  <mat-option value="random">Random</mat-option>
+
+                  <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field>
+                <input autocomplete="off"
+                       formControlName="animationOutDuration"
+                       matInput #animationOutDuration
+                       placeholder="Animate Out - Duration"
+                       type="number">
+
+                <span matSuffix>ms</span>
+              </mat-form-field>
+
+             <app-animation-preview [animationList]="animateOutList"
+                                    *ngIf="animationExpansionPanel.expanded"
+                               [selectedAnimationConfig]="animationOutSelect.value"
+                               [animationDuration]="animationOutDuration.value"
+        ></app-animation-preview>
+
+      </mat-expansion-panel>
+    </div>
+
+    <div class="column">
+      <mat-form-field>
+        <mat-select #positionSelection
+                    [value]="clipInfo?.position || 0"
+                    formControlName="position"
+                    placeholder="Position">
+          <mat-option [value]="0">{{0 | positionToString}}</mat-option>
+          <mat-option [value]="1">{{1 | positionToString}}</mat-option>
+          <mat-option [value]="2">{{2 | positionToString}}</mat-option>
+          <mat-option [value]="3">{{3 | positionToString}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <br/>
+      <br/>
+
+      <mat-expansion-panel *ngIf="positionSelection.value !== 0"
+                           appPreventAnimationOnFirstView
+                           class="stretched">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Size / Position Settings
+
+          </mat-panel-title>
+          <mat-panel-description>
+
+            <ng-container *ngIf="positionSelection.value">
+              Size:
+              [{{form.value.width}}] x [{{form.value.height}}]
+              <br>
+            </ng-container>
+
+
+
+            <ng-container *ngIf="positionSelection.value === 1 ">
+              Pos:
+              <ng-container *ngIf="form.value.left">
+                L: {{form.value.left}}
+              </ng-container>
+
+              <ng-container *ngIf="form.value.top">
+                T: {{form.value.top}}
+              </ng-container>
+
+              <ng-container *ngIf="form.value.right">
+                R: {{form.value.right}}
+              </ng-container>
+
+              <ng-container *ngIf="form.value.bottom">
+                B: {{form.value.bottom}}
+              </ng-container>
+            </ng-container>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+        <mat-form-field>
+          <input autocomplete="off" formControlName="width"
+                 matInput
+                 placeholder="Width (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input autocomplete="off" formControlName="height"
+                 matInput
+                 placeholder="Height (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
+
+      <ng-container *ngIf="positionSelection.value === 1">
+        <mat-form-field>
+          <input autocomplete="off" formControlName="left"
+                 matInput
+                 placeholder="Left (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <input autocomplete="off" formControlName="right"
+                 matInput
+                 placeholder="Right (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input autocomplete="off" formControlName="top"
+                 matInput
+                 placeholder="Top (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <input autocomplete="off" formControlName="bottom"
+                 matInput
+                 placeholder="Bottom (px, %, rem, em)"
+                 type="text">
+        </mat-form-field>
+      </ng-container>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="stretched"
+                           appPreventAnimationOnFirstView
+      >
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Advanced
+          </mat-panel-title>
+          <mat-panel-description>
+            <ng-container *ngIf="form.value.zIndex">
+              Z: {{form.value.zIndex}} -
+            </ng-container>
+              CSS: {{form.value.customCss ? 'Yes' : 'No' }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-form-field>
+        <input autocomplete="off" formControlName="zIndex"
+               matInput
+               placeholder="z-index"
+               type="number">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Custom CSS</mat-label>
+
+        <gewd-custom-form-control formControlName="customCss"
+                                  #customFormControl
+        >
+          <gewd-prism-editor [value]="customFormControl.value"
+                             language="css"
+                             [debounceTime]="450"
+                             [style.--editor-min-height.px]="200"
+                             (value$)="customFormControl.value = $event"
+                             (focussed$)="customFormControl.focused = $event">
+          </gewd-prism-editor>
+        </gewd-custom-form-control>
+
+        <mat-hint>
+          Hints: <br/>
+          <strong>.clip-holder</strong> can be used to style the holding element of the clip itself. <br/>
+          Everything else will be applied inside the holder itself.
+        </mat-hint>
+      </mat-form-field>
+
+        <br>
+        <br>
+      </mat-expansion-panel>
+    </div>
+  </form>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()"
+          color="primary"
+          mat-raised-button>Update
+  </button>
+</mat-dialog-actions>

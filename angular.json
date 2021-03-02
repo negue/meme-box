@@ -110,17 +110,21 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "memebox-app:build"
+            "browserTarget": "memebox-app:build",
+            "hmr": true
           },
           "configurations": {
             "dev": {
-              "browserTarget": "memebox-app:build:dev"
+              "browserTarget": "memebox-app:build:dev",
+              "hmr": true
             },
             "web": {
-              "browserTarget": "memebox-app:build:web"
+              "browserTarget": "memebox-app:build:web",
+              "hmr": true
             },
             "production": {
-              "browserTarget": "memebox-app:build:production"
+              "browserTarget": "memebox-app:build:production",
+              "hmr": true
             }
           }
         },
@@ -191,7 +195,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/contracts/tsconfig.lib.json",
             "project": "projects/contracts/ng-package.json"
@@ -231,7 +235,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/utils/tsconfig.lib.json",
             "project": "projects/utils/ng-package.json"
@@ -271,7 +275,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/state/tsconfig.lib.json",
             "project": "projects/state/ng-package.json"

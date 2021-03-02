@@ -1,0 +1,64 @@
+:host {
+  display: block;
+}
+
+mat-dialog-content {
+  min-height: 40vh;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.title__icon {
+  margin-right: 0.5rem;
+}
+
+textarea {
+  min-height: 15rem;
+}
+
+.two-columns {
+  display: flex;
+  flex-direction: row;
+
+  @media screen and (max-width: 920px) {
+    flex-direction: column;
+  }
+}
+
+.column {
+  flex: 1;
+  align-self: stretch;
+
+  > * {
+    width: 100%;
+  }
+
+  &:last-child {
+    @media screen and (min-width: 920px) {
+      margin-left: 1rem;
+    }
+  }
+}
+
+mat-expansion-panel {
+  margin-bottom: 0.5rem;
+
+  &.stretched {
+    ::ng-deep .mat-expansion-panel-body {
+
+      > * {
+        width: 100%;
+      }
+    }
+  }
+}

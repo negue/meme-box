@@ -1,0 +1,33 @@
+<ng-container *ngIf="networkUrl$ | async as networkInterfaces">
+
+  <mat-select #networkSelection
+              [value]="selectedItem?.address"
+              (selectionChange)="selectItem($event, networkInterfaces)">
+    <mat-option *ngFor="let networkInterface of networkInterfaces; let index = index"
+                [value]="networkInterface.address"
+    >
+      {{networkInterface.ifname}}
+    </mat-option>
+  </mat-select>
+
+  <div class="row">
+    <button mat-button
+            (click)="copyURL(networkSelection.value)"
+            [attr.aria-label]="'Copy URL'"
+            class="copyUrlButton">
+      <mat-icon svgIcon="content_copy"></mat-icon>
+      Copy URL
+    </button>
+
+    <button mat-button
+            (click)="openUrl(networkSelection.value)"
+            [attr.aria-label]="'Open URL'"
+            class="openUrlButton">
+      <mat-icon svgIcon="launch"></mat-icon>
+      Open URL
+    </button>
+  </div>
+
+  <qr-code [size]="140" [value]="networkSelection.value"></qr-code>
+
+</ng-container>

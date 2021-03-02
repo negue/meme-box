@@ -1,18 +1,15 @@
-import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {Clip, HasId, Screen} from "@memebox/contracts";
-import {Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {AppService} from "../../../state/app.service";
-import {AppQueries} from "../../../state/app.queries";
-import {DialogService} from "../../../shared/components/dialogs/dialog.service";
-import {WebsocketService} from "../../../core/services/websocket.service";
-import {SnackbarService} from "../../../core/services/snackbar.service";
-import {
-  ClipAssigningMode,
-  UnassignedFilterEnum
-} from "../../../shared/components/dialogs/clip-assigning-dialog/clip-assigning-dialog/clip-assigning-dialog.component";
+import { Component, OnInit, TrackByFunction } from '@angular/core';
+import { Clip, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum } from "@memebox/contracts";
+import { Observable } from "rxjs";
+import { map, take } from "rxjs/operators";
+import { AppService } from "../../../state/app.service";
+import { AppQueries } from "../../../state/app.queries";
+import { DialogService } from "../../../shared/dialogs/dialog.service";
+import { WebsocketService } from "../../../core/services/websocket.service";
+import { SnackbarService } from "../../../core/services/snackbar.service";
 
 import orderBy from 'lodash/orderBy';
+import { ScreenUrlDialogComponent } from "./screen-url-dialog/screen-url-dialog.component";
 
 // todo use @gewd npm package
 function timeout(ms) {
@@ -67,7 +64,7 @@ export class ScreenOverviewComponent implements OnInit {
   }
 
   showAssignmentDialog(screen: Partial<Screen>) {
-    this._dialog.showClipSelectionDialog({
+    return this._dialog.showClipSelectionDialog({
       mode: ClipAssigningMode.Multiple,
       screenId: screen.id,
 
@@ -109,5 +106,31 @@ export class ScreenOverviewComponent implements OnInit {
 
   openHelpOverview() {
     this._dialog.showHelpOverview();
+  }
+
+  onGetUrl(screen: Screen) {
+    this._dialog.open(ScreenUrlDialogComponent,{
+      autoFocus: false,
+      data: screen,
+      maxWidth: '96vw',
+      minHeight: '50vh'
+    });
+  }
+
+  async onOpenArrangeDialog(screen: Screen) {
+    if (Object.values(screen.clips).length === 0) {
+      await this.showAssignmentDialog(screen);
+
+      screen = await this._queries.screenMap$.pipe(
+        map(screens => screens[screen.id]),
+        take(1)
+      ).toPromise();
+
+      if (Object.values(screen.clips).length === 0) {
+        return;
+      }
+    }
+
+    this._dialog.arrangeMediaInScreen(screen);
   }
 }

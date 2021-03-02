@@ -1,4 +1,4 @@
-import {Clip} from "@memebox/contracts";
+import { Clip } from "@memebox/contracts";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
@@ -18,17 +18,17 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   const iframeDocument = iframe.contentDocument;
 
   // clean up the previous external files
-  let allExistingScripts = iframeDocument.body.getElementsByTagName('script');
+  const allExistingScripts = iframeDocument.body.getElementsByTagName('script');
 
-  for (var scriptIndex = 0; scriptIndex < allExistingScripts.length; scriptIndex++) {
+  for (let scriptIndex = 0; scriptIndex < allExistingScripts.length; scriptIndex++) {
     const script = allExistingScripts.item(scriptIndex);
     console.info({script});
     script.remove();
   }
 
-  let allExistingStyleLinks = iframeDocument.body.getElementsByTagName('link');
+  const allExistingStyleLinks = iframeDocument.body.getElementsByTagName('link');
 
-  for (var styleLinkIndex = 0; styleLinkIndex < allExistingStyleLinks.length; styleLinkIndex++) {
+  for (let styleLinkIndex = 0; styleLinkIndex < allExistingStyleLinks.length; styleLinkIndex++) {
     const style = allExistingStyleLinks.item(styleLinkIndex);
     console.info({style, length: allExistingStyleLinks.length});
     style.remove();
@@ -78,7 +78,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   }
   // add all strings into one?  and then apply innerHTML
 
-  var targetElement = iframeDocument.body.querySelector('.customHTML');
+  let targetElement = iframeDocument.body.querySelector('.customHTML');
 
   if (!targetElement) {
     targetElement = iframeDocument.createElement('div');
@@ -100,7 +100,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   }
 }
 
-export function clipDataToDynamicIframeContent (clip: Clip) {
+export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
   if (!clip.extended) {
     return null;
   }
@@ -123,10 +123,10 @@ export function clipDataToDynamicIframeContent (clip: Clip) {
 }
 
 
-export function applyDynamicIframeContentToClipData (iframeContent: DynamicIframeContent, targetClip: Clip) {
- console.info('PRE CHANGE', JSON.stringify(targetClip));
+export function applyDynamicIframeContentToClipData (iframeContent: DynamicIframeContent, targetClip: Partial<Clip>) {
+  console.info('PRE CHANGE', JSON.stringify(targetClip));
 
- console.info({iframeContent});
+  console.info({iframeContent});
 
   targetClip.extended['html'] = iframeContent.html;
   targetClip.extended['css'] = iframeContent.css;

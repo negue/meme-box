@@ -1,3 +1,4 @@
+// @ts-ignore
 import express, {Express} from 'express';
 import {
   API_PREFIX,
@@ -5,6 +6,7 @@ import {
   CLIP_ID_ENDPOINT,
   CONFIG_ENDPOINT,
   DANGER_ENDPOINT,
+  FILE_BY_ID_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
   FILES_OPEN_ENDPOINT,
@@ -22,6 +24,7 @@ import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 
+// @ts-ignore
 import open from 'open';
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getFiles, mapFileInformations} from "./file.utilts";
@@ -33,6 +36,7 @@ import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
 import {CONFIG_ROUTES} from "./rest-endpoints/config";
 import {STATE_ROUTES} from "./rest-endpoints/state";
+import {SERVER_URL} from "@memebox/contracts";
 
 const {  normalize, join } = require('path');
 
@@ -181,6 +185,39 @@ app.get(FILES_ENDPOINT, async (req, res) => {
   }
 });
 
+app.get(FILE_BY_ID_ENDPOINT, function(req, res){
+  const mediaId = req.params['mediaId'];
+
+  console.info(req.params);
+
+  if (!mediaId){
+    res.send('need a param');
+    return;
+  }
+
+  // simple solution
+  // check one path and then other
+  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
+  const clipMap = PersistenceInstance.fullState().clips;
+
+  const clip = clipMap[mediaId];
+
+  if (!clip) {
+    res.send('invalid mediaId');
+    return;
+  }
+
+  const filename = clip.path.replace(`${SERVER_URL}/file`, mediaFolder);
+
+  if (fs.existsSync(filename)) {
+    res.sendFile(filename);
+    return;
+  }
+
+  console.error(`file not found: ${mediaId}`);
+});
+
+
 // TODO use IDs instead of names ?
 // TODO use express.static ?
 // after the json "database" is done
@@ -206,7 +243,6 @@ app.get(FILE_ENDPOINT, function(req, res){
   // check one path and then other
   const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
 
-
   const filename = normalize(`${mediaFolder}/${firstParam}`);
 
   if (fs.existsSync(filename)) {
@@ -216,6 +252,7 @@ app.get(FILE_ENDPOINT, function(req, res){
 
   console.error(`file not found: ${firstParam}`);
 });
+
 
 // List Network IP Entries
 app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {

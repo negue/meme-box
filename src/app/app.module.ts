@@ -1,44 +1,32 @@
 import 'reflect-metadata';
 import '../polyfills';
 
-import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {CoreModule} from './core/core.module';
-import {SharedModule} from './shared/shared.module';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-import {AppRoutingModule} from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 // NG Translate
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import {AppComponent} from './app.component';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {AkitaNgDevtools} from '@datorama/akita-ngdevtools';
-import {AppConfig} from '../environments/environment';
-import {TargetScreenComponent} from "./target-screen/target-screen.component";
-import {MediaTypeClassPipe} from './target-screen/media-type-class.pipe';
-import {ServicesModule} from "./shared/services/services.module";
-import {DialogsModule} from "./shared/components/dialogs/dialogs.module";
-import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
-import {StyleguideColors} from './shared/styleguide/styleguide.component';
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
+import { AppConfig } from '@memebox/app/env';
+import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
+import { StyleguideColors } from './shared/styleguide/styleguide.component';
 
-import {PipesModule} from "./core/pipes/pipes.module";
-import {MediaToggleDirective} from './target-screen/media-toggle.directive';
-import {APP_ICONS} from "./app.icons";
-import {ServiceWorkerModule} from '@angular/service-worker';
-import {ENVIRONMENT_MODULES} from "@memebox/app/env/modules";
-import {DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions} from "@gewd/markdown/contracts";
-import {HighlightEditorModule} from "@gewd/components/highlight-editor";
-import {DynamicIframeModule} from "./shared/components/dynamic-iframe/dynamic-iframe.module";
-import {MarkdownModule} from "@gewd/markdown/module";
-import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
-import {HotkeysModule} from "@ngneat/hotkeys";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
+import { APP_ICONS } from "./app.icons";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions } from "@gewd/markdown/contracts";
+import { MarkdownOptionsInjectorToken } from "@gewd/markdown/service";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from "@angular/material/checkbox";
+import { ENVIRONMENT_MODULES } from "../environments/modules/modules";
+
+
+console.warn('APP.MODULE.TS - AppConfig', AppConfig);
 
 const markdownWorker = () => new Worker('./markdown.worker.ts', {
   name: 'markdown',
@@ -51,13 +39,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 }
 
 @NgModule({
-  declarations: [AppComponent, TargetScreenComponent, MediaTypeClassPipe, MediaToggleDirective ],
+  declarations: [
+    AppComponent,
+  ],
   imports: [
     BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    CoreModule,
-    SharedModule,
     AppRoutingModule,
     TranslateModule.forRoot({
       loader: {
@@ -67,11 +53,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       }
     }),
     BrowserAnimationsModule,
-    MatButtonModule,
-
-    AppConfig.production ? [] : AkitaNgDevtools.forRoot(),
-    ServicesModule,
-    DialogsModule,
 
     MaterialCssVarsModule.forRoot({
       // all optional
@@ -82,15 +63,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     }),
 
     ...ENVIRONMENT_MODULES,
-    PipesModule,
     ServiceWorkerModule.register('ngsw-worker.js', {enabled: AppConfig.production}),
-    MatIconModule,
 
-    MarkdownModule,
-    HighlightEditorModule,
-    DynamicIframeModule,
-    HotkeysModule,
-    MatTooltipModule
+    // needed for the MatIconModule
+    HttpClientModule,
+    MatIconModule,
+    MatTooltipModule,
   ],
   providers: [
     {
@@ -117,9 +95,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
         }
       } as MarkdownServiceOptions
     },
-    {provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {
-      color: 'primary'
-    } as MatCheckboxDefaultOptions}
+    {
+      provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {
+        color: 'primary'
+      } as MatCheckboxDefaultOptions
+    }
 
   ],
   bootstrap: [AppComponent]

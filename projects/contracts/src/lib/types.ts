@@ -19,7 +19,7 @@ export enum MetaTriggerTypes {
   AllDelay
 }
 
-// (Media) Clip
+// TODO RENAME? (Media) Clip
 export interface Clip extends HasId {
   name: string;
   previewUrl?: string;   // TODO generate dataurl as preview
@@ -53,6 +53,9 @@ export interface Screen extends HasId {
    */
   clips: Dictionary<ScreenClip>;
   customCss?: string;
+
+  height: number;
+  width: number;
 }
 
 export enum PositionEnum {
@@ -82,11 +85,13 @@ export interface ScreenClip extends HasId {
   width?: string; // 60%, 720px
   height?: string;
 
+  // todo extract position to its own object
   position?: PositionEnum;
   left?: string;
   right?: string;
   bottom?: string;
   top?: string;
+  transform?: string;
   imgFit?: string;
 
   hideAfter?: HideAfterType;
@@ -246,4 +251,10 @@ export interface FileResult {
   fileName: string;
   apiUrl: string;
   fileType: MediaType
+}
+
+export interface CombinedClip {
+  clip: Clip;
+  clipSetting: ScreenClip;
+  backgroundColor?: string;
 }

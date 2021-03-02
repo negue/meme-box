@@ -27,7 +27,7 @@
   "win": {
     "icon": "dist/assets/icons",
     "target": [
-      "portable"
+      "portable", "zip"
     ],
     "artifactName": "${productName}.${ext}"
   },

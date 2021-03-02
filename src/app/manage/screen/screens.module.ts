@@ -15,6 +15,12 @@ import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {ScreensArrayToUrlPipe} from './screen-overview/screen-url-dialog/screens-array-to-url.pipe';
+import {ScreenUrlDialogComponent} from "./screen-overview/screen-url-dialog/screen-url-dialog.component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {NetworkUrlViewModule} from "../../shared/components/network-url-view/network-url-view.module";
+import {SelectedScreenAmountPipe} from "./screen-overview/screen-url-dialog/selected-screen-amount.pipe";
+import {ClipsInScreenAmountPipe} from "./screen-overview/screen-url-dialog/clips-in-screen-amount.pipe";
 
 const routes: Routes = [
   {
@@ -26,7 +32,14 @@ const routes: Routes = [
 
 @NgModule({
   // todo finish renaming
-  declarations: [ScreenOverviewComponent, ScreenInfoComponent],
+  declarations: [
+    ScreenOverviewComponent,
+    ScreenInfoComponent,
+    ScreenUrlDialogComponent,
+    ScreensArrayToUrlPipe,
+    SelectedScreenAmountPipe,
+    ClipsInScreenAmountPipe
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -43,7 +56,9 @@ const routes: Routes = [
     GettingStartedModule,
     CardOverviewModule,
     MatTooltipModule,
-  ],
+    MatCheckboxModule,
+    NetworkUrlViewModule
+  ]
 })
 export class ScreensModule {
 }

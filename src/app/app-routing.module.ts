@@ -1,6 +1,5 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {TargetScreenComponent} from "./target-screen/target-screen.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 // root
 // | main page (with sidebar)
@@ -10,19 +9,28 @@ import {TargetScreenComponent} from "./target-screen/target-screen.component";
 const rootRoutes: Routes = [
   {
     path: 'manage',
-    loadChildren: () => import('./manage/main-page/main-page.module').then(module => module.MainPageModule)
+    loadChildren: () => import('./manage/main-page/main-page.module')
+      .then(module => module.MainPageModule)
   },
   {
     path: 'screen/:guid',
-    component: TargetScreenComponent
+    loadChildren: () => import('./screens/screen-route/screen-route.module')
+      .then(module => module.ScreenRouteModule)
+  },
+  {
+    path: 'screens',
+    loadChildren: () => import('./screens/screens-route/screens-route.module')
+      .then(module => module.ScreensRouteModule)
   },
   {
     path: 'test',
-    loadChildren: () => import('./testpage/testpage.module').then(module => module.TestpageModule)
+    loadChildren: () => import('./testpage/testpage.module')
+      .then(module => module.TestpageModule)
   },
   {
     path: 'mobile',
-    loadChildren: () => import('./mobile/mobile.module').then(module => module.MobileModule)
+    loadChildren: () => import('./mobile/mobile.module')
+      .then(module => module.MobileModule)
   },
   {
     path: '**',
@@ -35,7 +43,8 @@ const rootRoutes: Routes = [
   imports: [
     RouterModule.forRoot(rootRoutes, {
       enableTracing: true,
-      useHash: true
+      useHash: true,
+      relativeLinkResolution: 'legacy'
     }),
   ],
   exports: [RouterModule]

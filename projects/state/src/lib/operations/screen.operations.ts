@@ -1,5 +1,6 @@
-import {Screen, ScreenClip, SettingsState} from "../../../../contracts/src/lib/types";
+import {PositionEnum, Screen, ScreenClip, SettingsState, VisibilityEnum} from "../../../../contracts/src/lib/types";
 import {uuidv4} from "../../../../utils/src/lib/uuid";
+import {updateItemInDictionary} from "../../../../utils/src/lib/utils";
 
 // It needs to be a new object
 // otherwise it would take the clips refernce
@@ -8,8 +9,19 @@ function createInitialScreenObj(): Screen {
   return {
     id: '',
     name: '',
-    clips: {}
+    clips: {},
+    height: 1080,
+    width: 1920
   };
+}
+
+function createInitialScreenClipObj(): ScreenClip {
+  return {
+    visibility: VisibilityEnum.Play,
+    position: PositionEnum.FullScreen,
+    id: '',
+    // imgFit: todo Object/Image Fit Enum
+  }
 }
 
 // region Screen Operations
@@ -23,8 +35,14 @@ export function addScreen(state: SettingsState, screen: Partial<Screen>) {
 
 // region Screen Clip Operations
 
-export function addScreenClip(state: SettingsState, screenId: string, screenClip: ScreenClip) {
-  state.screen[screenId].clips[screenClip.id] = screenClip;
+export function fillDefaultsScreenClip (screenClip: Partial<ScreenClip>) {
+  return Object.assign(createInitialScreenClipObj(), screenClip);
+}
+
+export function addOrUpdateScreenClip(state: SettingsState, screenId: string, screenClip: Partial<ScreenClip>) {
+  const newScreenClipObj = fillDefaultsScreenClip(screenClip);
+
+  updateItemInDictionary(state.screen[screenId].clips, newScreenClipObj);
 }
 
 // endregion
