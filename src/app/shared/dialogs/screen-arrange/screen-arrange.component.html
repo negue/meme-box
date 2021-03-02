@@ -122,41 +122,12 @@
     </div>
     <div class="preview-area">
       <div class="dragging-config">
-        <div class="left" [class.hidden]="!currentSelectedClip">
-          <h3>
-            Dragging Settings
-
-
-            <button mat-raised-button (click)="reset()" color="warn">
-              Reset
-            </button>
-          </h3>
-          <div>
-          <mat-form-field>
-            <mat-select #sizeType [value]="currentSelectedClip?.clipSetting | settingsToSizingType"
-                        placeholder="Sizing Type">
-              <mat-option value="px">PX</mat-option>
-              <mat-option value="%">%</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-checkbox [checked]="true" #dragCheckbox>Drag</mat-checkbox>
-          <mat-checkbox [checked]="true" #resizeCheckbox
-                        (change)="onCheckedToggle($event, warpingCheckbox)">Resizing</mat-checkbox>
-          <mat-checkbox #rotateCheckbox
-                        [checked]="true">Rotating</mat-checkbox>
-          <mat-checkbox #warpingCheckbox
-                        (change)="onCheckedToggle($event, resizeCheckbox)">Warping</mat-checkbox>
-          </div>
-          </div>
         <div class="spacer" *ngIf="!currentSelectedClip"></div>
-        <div class="right" *ngIf="currentSelectedClip">
-          <h3>Media Position Type</h3>
-          <div>
-          <mat-form-field >
+        <div class="inline" [class.hidden]="!currentSelectedClip">
+          <mat-form-field *ngIf="currentSelectedClip">
             <mat-select (selectionChange)="triggerChangedetection()"
                         [(value)]="currentSelectedClip.clipSetting.position"
-                        placeholder="Position">
+                        placeholder="Media Position">
               <mat-option [value]="0">{{0 | positionToString}}</mat-option>
               <mat-option [value]="1">{{1 | positionToString}}</mat-option>
               <mat-option [value]="2">{{2 | positionToString}}</mat-option>
@@ -167,7 +138,6 @@
           <button mat-raised-button (click)="saveAllSettings()" color="accent">
             Save all Clip Settings
           </button>
-          </div>
         </div>
 
 
@@ -253,7 +223,8 @@
       </div>
 
       <div class="dragging-config">
-        <div class="left" [class.hidden]="!currentSelectedClip">
+        <div class="spacer" *ngIf="!currentSelectedClip"></div>
+        <div class="inline" [class.hidden]="!currentSelectedClip">
           <h2>
             Drag / Arrange Options
           </h2>
