@@ -33,6 +33,12 @@ h2 {
   }
 }
 
+.inline {
+  display: flex;
+  flex-direction: row;
+  min-height: 4rem;
+}
+
 .hover-background:hover {
   background: #555;
 }
@@ -43,6 +49,7 @@ h2 {
 
 .drag-drop-area-holder {
   flex: 1;
+  min-height: 0;
 }
 
 .drag-drop-area {

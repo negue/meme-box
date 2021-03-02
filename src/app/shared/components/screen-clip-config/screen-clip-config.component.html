@@ -62,6 +62,7 @@
                   matRipple [matRippleDisabled]="true"
 
                   #matRippleInstance="matRipple">
+          <!-- TODO Extract Item  MatCard to its own component -->
           <mat-card-header>
             <div mat-card-avatar>
               <app-clip-type [type]="visibleItem.clip.type"
@@ -89,25 +90,31 @@
               {{visibleItem.clipSetting.position | positionToString }}
             </ng-container>
             <ng-container *ngIf="visibleItem.clipSetting.position">
-              {{visibleItem.clipSetting.width}}x{{visibleItem.clipSetting.height}}
+              [{{visibleItem.clipSetting.width}}] x [{{visibleItem.clipSetting.height}}]
             </ng-container>
             <br>
 
             Pos:
-            <ng-container *ngIf="visibleItem.clipSetting.left">
-              L: {{visibleItem.clipSetting.left}}
-            </ng-container>
+            <ng-container *ngIf="visibleItem.clipSetting.position === 1 ">
 
-            <ng-container *ngIf="visibleItem.clipSetting.top">
-              T: {{visibleItem.clipSetting.top}}
-            </ng-container>
+              <ng-container *ngIf="visibleItem.clipSetting.left">
+                L: {{visibleItem.clipSetting.left}}
+              </ng-container>
 
-            <ng-container *ngIf="visibleItem.clipSetting.right">
-              R: {{visibleItem.clipSetting.right}}
-            </ng-container>
+              <ng-container *ngIf="visibleItem.clipSetting.top">
+                T: {{visibleItem.clipSetting.top}}
+              </ng-container>
 
-            <ng-container *ngIf="visibleItem.clipSetting.bottom">
-              B: {{visibleItem.clipSetting.bottom}}
+              <ng-container *ngIf="visibleItem.clipSetting.right">
+                R: {{visibleItem.clipSetting.right}}
+              </ng-container>
+
+              <ng-container *ngIf="visibleItem.clipSetting.bottom">
+                B: {{visibleItem.clipSetting.bottom}}
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="visibleItem.clipSetting.position !== 1 ">
+              {{ visibleItem.clipSetting.position | positionToString}}
             </ng-container>
           </mat-card-content>
         </mat-card>
@@ -157,8 +164,8 @@
             </mat-select>
           </mat-form-field>
 
-          <button mat-raised-button (click)="saveScreenClip()" color="accent">
-            Save Clip Settings
+          <button mat-raised-button (click)="saveAllSettings()" color="accent">
+            Save all Clip Settings
           </button>
           </div>
         </div>
@@ -244,6 +251,35 @@
         </gewd-auto-scale>
 
       </div>
+
+      <div class="dragging-config">
+        <div class="left" [class.hidden]="!currentSelectedClip">
+          <h2>
+            Drag / Arrange Options
+          </h2>
+          <div>
+            <mat-form-field>
+              <mat-select #sizeType [value]="currentSelectedClip?.clipSetting | settingsToSizingType"
+                          placeholder="Sizing Type">
+                <mat-option value="px">PX</mat-option>
+                <mat-option value="%">%</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-checkbox [checked]="true" #dragCheckbox>Drag</mat-checkbox>
+            <mat-checkbox [checked]="true" #resizeCheckbox
+                          (change)="onCheckedToggle($event, warpingCheckbox)">Resizing</mat-checkbox>
+            <mat-checkbox #rotateCheckbox
+                          [checked]="true">Rotating</mat-checkbox>
+            <mat-checkbox #warpingCheckbox
+                          (change)="onCheckedToggle($event, resizeCheckbox)">Warping</mat-checkbox>
+          </div>
+        <button mat-raised-button (click)="reset()" color="warn">
+            Reset
+          </button>
+
+        </div>
+      </div>
     </div>
 
     <div class="selected-item" *ngIf="false">
@@ -258,8 +294,8 @@
             <div class="settings-stuff">
               <h3>{{currentSelectedClip.clip.name}}</h3>
 
-              <button mat-raised-button (click)="saveScreenClip()" color="accent">
-                Save Clip Settings
+              <button mat-raised-button (click)="saveAllSettings()" color="accent">
+                Save all Settings
               </button>
               <br>
               <br>

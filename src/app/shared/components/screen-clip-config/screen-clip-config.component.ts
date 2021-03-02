@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction} from '@angular/core';
 import {AppQueries} from "../../../state/app.queries";
-import {map, publishReplay, refCount, startWith} from "rxjs/operators";
+import {map, publishReplay, refCount, startWith, take} from "rxjs/operators";
 import {
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
@@ -219,6 +219,8 @@ export class ScreenClipConfigComponent implements OnInit {
     $event.stopImmediatePropagation();
     $event.stopPropagation();
 
+    this.currentSelectedClip = null;
+
     this.dialogs.showScreenClipOptionsDialog({
       clipId: visibleItem.clip.id,
       screenId: this.screen.id,
@@ -246,5 +248,16 @@ export class ScreenClipConfigComponent implements OnInit {
     }
 
     this.appService.addOrUpdateScreenClip(this.screen.id, clipSetting);
+  }
+
+  async saveAllSettings() {
+    const allVisibleItems = await this.visibleItems$.pipe(
+      take(1)
+    ).toPromise();
+
+    for (const item of allVisibleItems) {
+      // TODO replace with a bulk update
+      await this.appService.addOrUpdateScreenClip(this.screen.id, item.clipSetting);
+    }
   }
 }
