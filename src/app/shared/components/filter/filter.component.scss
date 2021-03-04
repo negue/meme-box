@@ -20,8 +20,8 @@
 
 .filterRow__icon {
   margin-right: 1rem;
-  height: 4rem;
-  width: 4rem;
+  height: 3rem;
+  width: 3rem;
 }
 
 .filterChip {
@@ -39,4 +39,8 @@
 
 .filterEntry__icon {
   margin-right: 0.5rem;
+}
+
+mat-chip-list {
+  flex: 1;
 }
