@@ -19,7 +19,7 @@
 
           </app-clip-type>
           {{clip.name}}</figcaption>
-        <img [alt]="clip.name" [src]="clip.path | replaceholder" class="mediaList__img"/>
+        <img [alt]="clip.name" [src]="clip | mediaToUrl" class="mediaList__img"/>
       </figure>
 
       <span *ngIf="clip.type === 1" class="mediaList__audioContainer">
