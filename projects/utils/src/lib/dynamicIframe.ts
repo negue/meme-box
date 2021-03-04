@@ -1,4 +1,4 @@
-import { Clip } from "@memebox/contracts";
+import {Clip} from "@memebox/contracts";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
@@ -69,13 +69,16 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   // HTML => collection HTML-Elements as string
 
-  if (content.css) {
-    elementsToReplace.push(`
-      <style>
-        ${content.css}
-      </style>
-    `);
-  }
+
+  elementsToReplace.push(`
+    <style>
+      body {
+        overflow: hidden;
+      }
+      ${content.css}
+    </style>
+  `);
+
   // add all strings into one?  and then apply innerHTML
 
   let targetElement = iframeDocument.body.querySelector('.customHTML');

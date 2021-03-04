@@ -215,13 +215,15 @@ app.get(FILE_BY_ID_ENDPOINT, function(req, res){
   }
 
   console.error(`file not found: ${mediaId}`);
+
+  res.status(404);
+  res.send({
+    ok: false
+  });
 });
 
 
-// TODO use IDs instead of names ?
-// TODO use express.static ?
-// after the json "database" is done
-// use filename which is under
+// TODO - Remove on the next version
 // dev mode : "/src/assets"
 // prod mode:  "/assets"
 app.get(FILE_ENDPOINT, function(req, res){
@@ -251,6 +253,11 @@ app.get(FILE_ENDPOINT, function(req, res){
   }
 
   console.error(`file not found: ${firstParam}`);
+
+  res.status(404);
+  res.send({
+    ok: false
+  });
 });
 
 

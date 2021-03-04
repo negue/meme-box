@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'app-animation-preview',
@@ -25,7 +25,9 @@ export class AnimationPreviewComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges ({selectedAnimationConfig}: SimpleChanges): void {
-    // this.animationEnded();
+    if (selectedAnimationConfig.previousValue === '') {
+      this.animationEnded();
+    }
   }
 
   animationEnded () {

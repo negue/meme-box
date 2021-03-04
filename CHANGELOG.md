@@ -1,9 +1,10 @@
-## Unreleased
+## 2021.2.0
 
-* [x] Drag&Drop Media in a preview Area
+* [x] Drag&Drop Media in the `Assign / arrange media`-View
 * [x] Select the media folder in Electron with a dialog
 * [x] Open multiple target screens with one URL
 * [x] QR-Code to scan a target screen url to open it easier on tablets
+* [x] Support full animation list from https://animate.style/
 
 ## 2021.1.2
 

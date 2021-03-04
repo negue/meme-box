@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction } from '@angular/core';
-import { AppQueries } from "../../../state/app.queries";
-import { map, publishReplay, refCount, startWith , take} from "rxjs/operators";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction} from '@angular/core';
+import {AppQueries} from "../../../state/app.queries";
+import {map, publishReplay, refCount, startWith, take} from "rxjs/operators";
 import {
-  ANIMATION_IN_ARRAY,
-  ANIMATION_OUT_ARRAY,
   Clip,
   ClipAssigningMode,
   CombinedClip,
@@ -12,17 +10,16 @@ import {
   Screen,
   UnassignedFilterEnum
 } from "@memebox/contracts";
-import { replaceholder } from "../../../core/pipes/replaceholder.pipe";
-import { AppService } from "../../../state/app.service";
-import { MatCheckbox, MatCheckboxChange } from "@angular/material/checkbox";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { DragResizeMediaComponent } from "./drag-resize-media/drag-resize-media.component";
-import { FormControl } from "@angular/forms";
-import { combineLatest } from "rxjs";
-import { AutoScaleComponent } from "@gewd/components/auto-scale";
-import { WebsocketService } from "../../../core/services/websocket.service";
-import { DialogService } from "../dialog.service";
-import { MatRipple } from "@angular/material/core";
+import {AppService} from "../../../state/app.service";
+import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {DragResizeMediaComponent} from "./drag-resize-media/drag-resize-media.component";
+import {FormControl} from "@angular/forms";
+import {combineLatest} from "rxjs";
+import {AutoScaleComponent} from "@gewd/components/auto-scale";
+import {WebsocketService} from "../../../core/services/websocket.service";
+import {DialogService} from "../dialog.service";
+import {MatRipple} from "@angular/material/core";
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -56,10 +53,7 @@ export class ScreenArrangeComponent implements OnInit {
           clipSetting: {
             ...entry
           },
-          clip: {
-            ...clip,
-            path: replaceholder(clipMap?.[key]?.path)
-          }
+          clip
         });
       }
 
@@ -89,10 +83,6 @@ export class ScreenArrangeComponent implements OnInit {
       return clipList.filter(clip => selectedItems.includes(clip.clip.id));
     })
   )
-
-  public animateInList = ANIMATION_IN_ARRAY;
-
-  public animateOutList = ANIMATION_OUT_ARRAY;
 
   public currentSelectedClip: CombinedClip| null = null;
   private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();

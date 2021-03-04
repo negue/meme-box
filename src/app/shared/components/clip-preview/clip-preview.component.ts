@@ -23,6 +23,9 @@ export class ClipPreviewComponent implements OnInit {
   @Input()
   public showIframe = true;
 
+  @Input()
+  public useOldPathEndpoint = false;
+
   constructor() { }
 
   ngOnInit(): void {
