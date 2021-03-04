@@ -2,8 +2,6 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, T
 import {AppQueries} from "../../../state/app.queries";
 import {map, publishReplay, refCount, startWith, take} from "rxjs/operators";
 import {
-  ANIMATION_IN_ARRAY,
-  ANIMATION_OUT_ARRAY,
   Clip,
   ClipAssigningMode,
   CombinedClip,
@@ -85,10 +83,6 @@ export class ScreenArrangeComponent implements OnInit {
       return clipList.filter(clip => selectedItems.includes(clip.clip.id));
     })
   )
-
-  public animateInList = ANIMATION_IN_ARRAY;
-
-  public animateOutList = ANIMATION_OUT_ARRAY;
 
   public currentSelectedClip: CombinedClip| null = null;
   private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();
