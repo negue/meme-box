@@ -156,13 +156,13 @@
           >
             <ng-container *ngFor="let pair of visibleItems$|async; trackBy: trackByClip">
               <!-- improve the duplicate settings -->
-              <ng-container *ngIf="pair.clipSetting.position === 0">
+              <ng-container *ngIf="pair.clipSetting.position === PositionEnum.FullScreen">
                 <app-clip-preview [clip]="pair.clip"
                                   [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                   [style.position]="'absolute'"
                                   draggable="false" class="dragable-preview"></app-clip-preview>
               </ng-container>
-              <app-drag-resize-media *ngIf="pair.clipSetting.position === 2"
+              <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Centered"
                                      [clip]="pair.clip"
                                      [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                      [screen]="screen"
@@ -174,14 +174,14 @@
 
                                      transformOrigin="center center"
                                      [draggingEnabled]="false"
-                                     [resizeEnabled]="resizeCheckbox.checked"
-                                     [rotateEnabled]="rotateCheckbox.checked"
-                                     [warpEnabled]="warpingCheckbox.checked"
+                                     [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"
+                                     [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
+                                     [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
                                      class="dragable-preview"
               >
 
               </app-drag-resize-media>
-              <app-drag-resize-media *ngIf="pair.clipSetting.position === 3"
+              <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Random"
                                      [clip]="pair.clip"
                                      [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                      [screen]="screen"
@@ -191,16 +191,16 @@
                                      (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                                      (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
                                      [draggingEnabled]="false"
-                                     [resizeEnabled]="true"
-                                     [rotateEnabled]="rotateCheckbox.checked"
-                                     [warpEnabled]="warpingCheckbox.checked"
+                                     [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : true"
+                                     [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
+                                     [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
                                      class="dragable-preview"
               >
 
               </app-drag-resize-media>
 
                 <app-drag-resize-media
-                  *ngIf="pair.clipSetting.position === 1"
+                  *ngIf="pair.clipSetting.position === PositionEnum.Absolute"
                   [clip]="pair.clip"
                   [screen]="screen"
                   [sizeType]="sizeType.value"
@@ -210,10 +210,10 @@
                   [settings]="pair.clipSetting" #dragResizeMediaComponent
                   (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
 
-                  [draggingEnabled]="dragCheckbox.checked"
-                  [resizeEnabled]="resizeCheckbox.checked"
-                  [rotateEnabled]="rotateCheckbox.checked"
-                  [warpEnabled]="warpingCheckbox.checked"
+                  [draggingEnabled]="pair.clipSetting.arrangeLock?.position ? false : dragCheckbox.checked"
+                  [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"
+                  [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
+                  [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
 
                   class="dragable-preview"
                 >
@@ -241,13 +241,25 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-checkbox [checked]="true" #dragCheckbox>Drag</mat-checkbox>
+            <mat-checkbox [checked]="true" #dragCheckbox
+                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.position">
+              Drag
+            </mat-checkbox>
             <mat-checkbox [checked]="true" #resizeCheckbox
-                          (change)="onCheckedToggle($event, warpingCheckbox)">Resizing</mat-checkbox>
+                          (change)="onCheckedToggle($event, warpingCheckbox)"
+                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.size">
+              Resizing
+            </mat-checkbox>
             <mat-checkbox #rotateCheckbox
-                          [checked]="true">Rotating</mat-checkbox>
+                          [checked]="true"
+                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">
+              Rotating
+            </mat-checkbox>
             <mat-checkbox #warpingCheckbox
-                          (change)="onCheckedToggle($event, resizeCheckbox)">Warping</mat-checkbox>
+                          (change)="onCheckedToggle($event, resizeCheckbox)"
+                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">
+              Warping
+            </mat-checkbox>
           </div>
         <button mat-raised-button (click)="reset()" color="warn">
             Reset

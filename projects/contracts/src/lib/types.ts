@@ -106,6 +106,12 @@ export interface ScreenClip extends HasId {
   zIndex?: number;
 
   customCss?: string;
+
+  arrangeLock?: {
+    size: boolean;
+    position: boolean;
+    transform: boolean;
+  }
 }
 
 export interface ScreenViewEntry extends Screen {

@@ -81,3 +81,9 @@ mat-expansion-panel {
     min-width: 455px;
   }
 }
+
+.arrange-locking-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}

@@ -30,6 +30,7 @@ import {MatRipple} from "@angular/material/core";
 export class ScreenArrangeComponent implements OnInit {
 
   MediaType = MediaType;
+  PositionEnum = PositionEnum;
 
   screen$ = this.appQueries.screenMap$.pipe(
     map(screenMap => screenMap[this.screen.id])

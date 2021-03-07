@@ -5,7 +5,7 @@
 * [x] Each Media has a now cornered background to see boundaries
 * [x] Advanced: Ability to change the css transform value
 * [x] Arrange View: Resizes now also work easier when doing these functions from left/top
-* [ ] Arrange View: Ability to lock specific arrange / resize functions
+* [x] Arrange View: Ability to lock specific arrange / resize functions
 
 
 ## 2021.2.0

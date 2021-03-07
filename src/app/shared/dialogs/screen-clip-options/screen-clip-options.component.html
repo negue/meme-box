@@ -231,6 +231,40 @@
                  placeholder="Bottom (px, %, rem, em)"
                  type="text">
         </mat-form-field>
+
+        <h3>Advanced</h3>
+        <mat-form-field>
+          <textarea formControlName="transform"
+                    matInput
+                    [rows]="6"
+                    placeholder="CSS Transform"
+                    type="text">
+          </textarea>
+        </mat-form-field>
+
+        <br>
+
+        <h3>Lock Arrange Functions</h3>
+        <div class="arrange-locking-group">
+          <mat-button-toggle value="left" aria-label="Lock Position"
+                             (change)="lockOptions.position = $event.source.checked"
+                             [checked]="lockOptions.position">
+            <mat-icon [svgIcon]="lockOptions.position ? 'lock' : 'lock_open'"></mat-icon>
+            Position
+          </mat-button-toggle>
+          <mat-button-toggle value="center" aria-label="Lock Size"
+                             (change)="lockOptions.size = $event.source.checked"
+                             [checked]="lockOptions.size">
+            <mat-icon [svgIcon]="lockOptions.size ? 'lock' : 'lock_open'"></mat-icon>
+            Size
+          </mat-button-toggle>
+          <mat-button-toggle value="right" aria-label="Lock Transform"
+                             (change)="lockOptions.transform = $event.source.checked"
+                             [checked]="lockOptions.transform">
+            <mat-icon [svgIcon]="lockOptions.transform ? 'lock' : 'lock_open'"></mat-icon>
+            Transform
+          </mat-button-toggle>
+        </div>
       </ng-container>
       </mat-expansion-panel>
 
@@ -256,15 +290,6 @@
                type="number">
       </mat-form-field>
 
-
-        <mat-form-field>
-          <textarea formControlName="transform"
-                 matInput
-                 [rows]="6"
-                    placeholder="CSS Transform"
-                 type="text">
-          </textarea>
-        </mat-form-field>
 
       <mat-form-field>
         <mat-label>Custom CSS</mat-label>

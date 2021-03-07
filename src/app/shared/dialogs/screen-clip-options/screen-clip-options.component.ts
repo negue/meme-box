@@ -10,7 +10,7 @@ import {
   ScreenClip,
   VisibilityEnum
 } from "@memebox/contracts";
-import {map, takeUntil} from "rxjs/operators";
+import {map, take} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
 import {AppService} from "../../../state/app.service";
@@ -61,6 +61,12 @@ export class ScreenClipOptionsComponent implements OnInit {
 
   public animateOutList = ANIMATION_OUT_ARRAY;
 
+  public lockOptions = {
+    size: false,
+    position: false,
+    transform: false
+  };
+
   public currentScreen$: Observable<Screen> = this.appQueries.screenMap$.pipe(
     map(screenMap => screenMap[this.data.screenId])
   );
@@ -96,12 +102,15 @@ export class ScreenClipOptionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.clipInfo$.pipe(
-      takeUntil(this.destroy$)
+      take(1)
     ).subscribe(value => {
       this._clipInfo = value;
 
       this.form.reset(this._clipInfo);
-    })
+      if (value.arrangeLock) {
+        this.lockOptions = {...value.arrangeLock};
+      }
+    });
   }
 
   async save() {
@@ -115,7 +124,8 @@ export class ScreenClipOptionsComponent implements OnInit {
 
     const newScreenClipValue: ScreenClip = {
       ...this._clipInfo,
-      ...value
+      ...value,
+      arrangeLock: this.lockOptions
     };
 
     await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
