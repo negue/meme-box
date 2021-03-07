@@ -1,3 +1,10 @@
+## 2021.2.1
+
+### Quality of Life Improvements
+
+* [x] Each Media has a now cornered background to see boundaries
+
+
 ## 2021.2.0
 
 * [x] Drag&Drop Media in the `Assign / arrange media`-View

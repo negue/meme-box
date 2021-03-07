@@ -160,7 +160,7 @@
                 <app-clip-preview [clip]="pair.clip"
                                   [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                   [style.position]="'absolute'"
-                                  draggable="false"></app-clip-preview>
+                                  draggable="false" class="dragable-preview"></app-clip-preview>
               </ng-container>
               <app-drag-resize-media *ngIf="pair.clipSetting.position === 2"
                                      [clip]="pair.clip"
@@ -177,6 +177,7 @@
                                      [resizeEnabled]="resizeCheckbox.checked"
                                      [rotateEnabled]="rotateCheckbox.checked"
                                      [warpEnabled]="warpingCheckbox.checked"
+                                     class="dragable-preview"
               >
 
               </app-drag-resize-media>
@@ -193,6 +194,7 @@
                                      [resizeEnabled]="true"
                                      [rotateEnabled]="rotateCheckbox.checked"
                                      [warpEnabled]="warpingCheckbox.checked"
+                                     class="dragable-preview"
               >
 
               </app-drag-resize-media>
@@ -212,6 +214,8 @@
                   [resizeEnabled]="resizeCheckbox.checked"
                   [rotateEnabled]="rotateCheckbox.checked"
                   [warpEnabled]="warpingCheckbox.checked"
+
+                  class="dragable-preview"
                 >
 
                 </app-drag-resize-media>
