@@ -53,6 +53,21 @@ textarea {
 mat-expansion-panel {
   margin-bottom: 0.5rem;
 
+  ::ng-deep {
+    .mat-content {
+      .mat-expansion-panel-header-title,
+      .mat-expansion-panel-header-description {
+        flex: 1;
+      }
+    }
+
+    &.mat-expanded {
+      .mat-expansion-panel-header-description {
+        display: none;
+      }
+    }
+  }
+
   &.stretched {
     ::ng-deep .mat-expansion-panel-body {
 
@@ -60,5 +75,13 @@ mat-expansion-panel {
         width: 100%;
       }
     }
+  }
+}
+
+
+.animation-expansion-panel {
+  ::ng-deep .mat-expansion-panel-body {
+    padding-right: 0;
+    min-width: 455px;
   }
 }
