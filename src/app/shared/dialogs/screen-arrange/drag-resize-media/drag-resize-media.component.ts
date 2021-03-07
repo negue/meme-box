@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -84,33 +83,12 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
   private warpExist = false;
 
-  constructor(public element: ElementRef<HTMLElement>,
-              private cd: ChangeDetectorRef) {
-
-    // Yes its weird but the auto-scale sometimes doesn't
-    // get the inner content sizes to resize its own
-
-    // TODO Fix the autoscaling component somehow to "auto" scale on size changes
-    // until then let the timeouts begin...
-    setTimeout(() => {
-      this.cd.detectChanges();
-    }, 10);
-    setTimeout(() => {
-      this.cd.detectChanges();
-    }, 50);
-
-    setTimeout(() => {
-      this.cd.detectChanges();
-    }, 100);
-
-    setTimeout(() => {
-      this.cd.detectChanges();
-    }, 200);
+  constructor(public element: ElementRef<HTMLElement>) {
   }
 
   ngAfterViewInit(): void {
 
-    }
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.info('DragResize ngChanges');
@@ -172,6 +150,13 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
     this.updateCSSVar('width', newPosition.x);
     this.updateCSSVar('height', newPosition.y);
+
+    const beforeTranslate = drag.beforeTranslate;
+
+    this.frame.translate = beforeTranslate;
+
+    // smooth resizing from left / top
+    target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
   }
   onResizeEnd({ target, isDrag, clientX, clientY }) {
     console.log("onResizeEnd", target, isDrag);

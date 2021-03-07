@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { AppQueries } from "../../../state/app.queries";
-import { combineLatest, Observable, Subject } from "rxjs";
+import {Component, Inject, OnInit} from '@angular/core';
+import {AppQueries} from "../../../state/app.queries";
+import {combineLatest, Observable, Subject} from "rxjs";
 import {
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
@@ -10,11 +10,11 @@ import {
   ScreenClip,
   VisibilityEnum
 } from "@memebox/contracts";
-import { map, takeUntil } from "rxjs/operators";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder } from "@angular/forms";
-import { AppService } from "../../../state/app.service";
-import { SnackbarService } from "../../../core/services/snackbar.service";
+import {map, takeUntil} from "rxjs/operators";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder} from "@angular/forms";
+import {AppService} from "../../../state/app.service";
+import {SnackbarService} from "../../../core/services/snackbar.service";
 
 export interface ScreenClipOptionsPayload {
   screenId: string;
@@ -43,6 +43,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     right: '',
     bottom: '',
     top: '',
+    transform: '',
     imgFit: '', // todo image fit setting as enum
 
     animationIn: '',
