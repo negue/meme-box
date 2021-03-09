@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { AppQueries } from "../../../state/app.queries";
-import { combineLatest, Observable, Subject } from "rxjs";
+import {Component, Inject, OnInit} from '@angular/core';
+import {AppQueries} from "../../../state/app.queries";
+import {combineLatest, Observable, Subject} from "rxjs";
 import {
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
@@ -10,11 +10,12 @@ import {
   ScreenClip,
   VisibilityEnum
 } from "@memebox/contracts";
-import { map, takeUntil } from "rxjs/operators";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { FormBuilder } from "@angular/forms";
-import { AppService } from "../../../state/app.service";
-import { SnackbarService } from "../../../core/services/snackbar.service";
+import {map, take} from "rxjs/operators";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {FormBuilder} from "@angular/forms";
+import {AppService} from "../../../state/app.service";
+import {SnackbarService} from "../../../core/services/snackbar.service";
+import {DialogService} from "../dialog.service";
 
 export interface ScreenClipOptionsPayload {
   screenId: string;
@@ -43,6 +44,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     right: '',
     bottom: '',
     top: '',
+    transform: '',
     imgFit: '', // todo image fit setting as enum
 
     animationIn: '',
@@ -59,6 +61,12 @@ export class ScreenClipOptionsComponent implements OnInit {
   public animateInList = ANIMATION_IN_ARRAY;
 
   public animateOutList = ANIMATION_OUT_ARRAY;
+
+  public lockOptions = {
+    size: false,
+    position: false,
+    transform: false
+  };
 
   public currentScreen$: Observable<Screen> = this.appQueries.screenMap$.pipe(
     map(screenMap => screenMap[this.data.screenId])
@@ -90,17 +98,21 @@ export class ScreenClipOptionsComponent implements OnInit {
               private dialogRef: MatDialogRef<any>,
               private appQueries: AppQueries,
               private appService: AppService,
-              private snackBar: SnackbarService) {
+              private snackBar: SnackbarService,
+              private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
     this.clipInfo$.pipe(
-      takeUntil(this.destroy$)
+      take(1)
     ).subscribe(value => {
       this._clipInfo = value;
 
       this.form.reset(this._clipInfo);
-    })
+      if (value.arrangeLock) {
+        this.lockOptions = {...value.arrangeLock};
+      }
+    });
   }
 
   async save() {
@@ -114,7 +126,8 @@ export class ScreenClipOptionsComponent implements OnInit {
 
     const newScreenClipValue: ScreenClip = {
       ...this._clipInfo,
-      ...value
+      ...value,
+      arrangeLock: this.lockOptions
     };
 
     await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
@@ -123,5 +136,14 @@ export class ScreenClipOptionsComponent implements OnInit {
     this.snackBar.normal(`Screen / Clip Assignment updated`);
 
     this.dialogRef.close();
+  }
+
+  openMediaSetting() {
+    this.appQueries.clipMap$.pipe(
+      map(clipMap => clipMap[this.data.clipId]),
+      take(1)
+    ).subscribe(clipInfo => {
+      this.dialogService.showMediaEditDialog(clipInfo);
+    });
   }
 }

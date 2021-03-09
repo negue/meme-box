@@ -56,7 +56,8 @@ ___
 ## Roadmap
 
 * [ ] Change media options by triggered variables (e.g. different style, or something)
-* [ ] Labels on or around the Media
+* [ ] "Media Type": `Scripts` with this more advanced features could be realized 
+* [ ] Labels on or around the Media, each with their own Position / Animation
 * [ ] more to be added :)
 
 ## Based on this Template:

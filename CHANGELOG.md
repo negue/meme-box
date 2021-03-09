@@ -1,3 +1,14 @@
+## 2021.2.1
+
+### Quality of Life Improvements
+
+* [x] Each Media has a now cornered background to see boundaries
+* [x] Advanced: Ability to change the css transform value
+* [x] Arrange View: Resizes now also work easier when doing these functions from left/top
+* [x] Arrange View: Ability to lock specific arrange / resize functions
+* [x] Ability to switch to the "media config"-dialog from the "screen media config"-dialog 
+
+
 ## 2021.2.0
 
 * [x] Drag&Drop Media in the `Assign / arrange media`-View

@@ -38,3 +38,10 @@ Client is in `src/app`
 Server is in `main.ts` and `server/*`
 
 Streamdeck-Plugin is in `memebox-streamdeck`
+
+### Development Roadmap
+
+- [ ] cleanup shared constants
+- [ ] strict tsconfig / eslint rules
+- [ ] Use [`ts.ed`](https://tsed.io/) to improve the backend code by dependency injection and code 
+- [ ] Probably more to come once more features are added :)
