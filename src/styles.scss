@@ -104,6 +104,18 @@ h3 {
     color: white;
     font-family: Barlow, sans-serif;
   }
+
+  .mat-flat-button.mat-accent:hover {
+    background-color: rgba(var(--palette-accent-700), 1) !important;
+  }
+
+  .mat-flat-button.mat-primary:hover {
+    background-color: rgba(var(--palette-primary-900), 1) !important;
+  }
+
+  .mat-flat-button.mat-warn:hover {
+    background-color: rgba(var(--palette-warn-900), 1) !important;
+  }
 }
 
 .floating-action-button {

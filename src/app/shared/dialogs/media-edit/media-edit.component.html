@@ -210,7 +210,8 @@
     <!-- All others => AppClipType -->
     <gewd-auto-scale width="500" height="500"
                      *ngSwitchDefault>
-      <app-clip-preview [clip]="form.value">
+      <app-clip-preview [clip]="form.value"
+                        [useOldPathEndpoint]="true">
 
       </app-clip-preview>
     </gewd-auto-scale>

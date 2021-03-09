@@ -9,7 +9,6 @@ import {AppService} from "../../state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
-import {replaceholder} from "../../core/pipes/replaceholder.pipe";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -51,8 +50,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         result[key] = {
           clipSetting: entry,
           clip: {
-            ...allClips[key],
-            path: replaceholder(allClips?.[key]?.path)
+            ...allClips[key]
           },
           backgroundColor: this.random_rgba()
         }

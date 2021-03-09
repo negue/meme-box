@@ -17,6 +17,8 @@ export const APP_ICONS = [
   'info',
   'insert_photo',
   'launch',
+  'lock',
+  'lock_open',
   'mobile_friendly',
   'mobile_off',
   'network_wifi',

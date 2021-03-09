@@ -1,7 +1,7 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {Observable, Subject} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
   Clip,
   ClipAssigningMode,
@@ -11,11 +11,11 @@ import {
   TwitchTypesArray,
   UnassignedFilterEnum
 } from '@memebox/contracts';
-import { AppService } from '../../../state/app.service';
-import { AppQueries } from '../../../state/app.queries';
-import { SnackbarService } from '../../../core/services/snackbar.service';
-import { DialogService } from "../dialog.service";
-import { distinctUntilChanged, map, pairwise, startWith, take, takeUntil } from "rxjs/operators";
+import {AppService} from '../../../state/app.service';
+import {AppQueries} from '../../../state/app.queries';
+import {SnackbarService} from '../../../core/services/snackbar.service';
+import {DialogService} from "../dialog.service";
+import {distinctUntilChanged, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {
@@ -205,7 +205,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     const clipId = await this.dialogService.showClipSelectionDialog({
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
-      dialogTitle: this.data.name,
+      dialogTitle: this.data.name || 'Twitch Event',
       showMetaItems: true,
 
       unassignedFilterType: UnassignedFilterEnum.Twitch,

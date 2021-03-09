@@ -1,12 +1,12 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Clip, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum } from '@memebox/contracts';
-import { AppService } from '../../../state/app.service';
-import { AppQueries } from '../../../state/app.queries';
-import { SnackbarService } from '../../../core/services/snackbar.service';
-import { DialogService } from "../dialog.service";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {Observable, Subject} from 'rxjs';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {Clip, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
+import {AppService} from '../../../state/app.service';
+import {AppQueries} from '../../../state/app.queries';
+import {SnackbarService} from '../../../core/services/snackbar.service';
+import {DialogService} from "../dialog.service";
 
 // TODO better class/interface name?
 const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
@@ -91,7 +91,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     const clipId = await this.dialogService.showClipSelectionDialog({
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
-      dialogTitle: 'Select a clip: ',
+      dialogTitle: 'Timer',
       showMetaItems: true,
       showOnlyUnassignedFilter: true,
       unassignedFilterType: UnassignedFilterEnum.Timers
