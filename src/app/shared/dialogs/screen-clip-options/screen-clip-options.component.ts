@@ -15,6 +15,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
 import {AppService} from "../../../state/app.service";
 import {SnackbarService} from "../../../core/services/snackbar.service";
+import {DialogService} from "../dialog.service";
 
 export interface ScreenClipOptionsPayload {
   screenId: string;
@@ -97,7 +98,8 @@ export class ScreenClipOptionsComponent implements OnInit {
               private dialogRef: MatDialogRef<any>,
               private appQueries: AppQueries,
               private appService: AppService,
-              private snackBar: SnackbarService) {
+              private snackBar: SnackbarService,
+              private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -134,5 +136,14 @@ export class ScreenClipOptionsComponent implements OnInit {
     this.snackBar.normal(`Screen / Clip Assignment updated`);
 
     this.dialogRef.close();
+  }
+
+  openMediaSetting() {
+    this.appQueries.clipMap$.pipe(
+      map(clipMap => clipMap[this.data.clipId]),
+      take(1)
+    ).subscribe(clipInfo => {
+      this.dialogService.showMediaEditDialog(clipInfo);
+    });
   }
 }

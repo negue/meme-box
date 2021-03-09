@@ -17,6 +17,7 @@ import {AnimationPreviewComponent} from './animation-preview/animation-preview.c
 import {PreventAnimationOnFirstViewDirective} from './prevent-animation-on-first-view.directive';
 import {PipesModule} from "../../../core/pipes/pipes.module";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {ClipTypeModule} from "../../components/clip-type/clip-type.module";
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     MatButtonModule,
     MatExpansionModule,
     PipesModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    ClipTypeModule
   ],
   providers: [],
 })
