@@ -9,7 +9,7 @@ import {
   TwitchConfig,
   TwitchEventTypes,
   TwitchTriggerCommand
-} from '../projects/contracts/src/lib/types';
+} from '@memebox/contracts';
 import {triggerMediaClipById} from './websocket-server';
 import {Logger} from 'winston';
 import {newLogger} from './logger.utils';
@@ -218,7 +218,11 @@ export class TwitchHandler {
       .catch(console.error);
   }
 
-  getCommandOfMessage(message: string, event: TwitchEventTypes, eventOptions?: TwitchEventOptions): Twitch {
+  getCommandOfMessage(
+    message: string,
+    event: TwitchEventTypes,
+    eventOptions?: TwitchEventOptions
+  ): Twitch {
     if (!message && !eventOptions) {
       return null;
     }
