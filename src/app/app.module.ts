@@ -15,7 +15,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { AppConfig } from '@memebox/app/env';
 import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
-import { StyleguideColors } from './shared/styleguide/styleguide.component';
 
 import { APP_ICONS } from "./app.icons";
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -24,6 +23,18 @@ import { MarkdownOptionsInjectorToken } from "@gewd/markdown/service";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from "@angular/material/checkbox";
 import { ENVIRONMENT_MODULES } from "../environments/modules/modules";
+
+export const StyleguideColors = {
+  // var(--palette-background-background)
+  background: '#2f3640',
+  foreground: '#ffffff',
+  primary: '#4bcffa',
+  // mat-css-color-accent()
+  accent: '#575fcf',
+  warn: '#f53b57',
+  highlight: '#00d8d6', // todo add custom css var
+  chipSelected: '#ffd32a'
+}
 
 
 console.warn('APP.MODULE.TS - AppConfig', AppConfig);
