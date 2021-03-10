@@ -23,3 +23,4 @@ jobs:
           node-version: 12.16.2
       - run: npm install
       - run: npm run build:prepare
+      - run: jest
