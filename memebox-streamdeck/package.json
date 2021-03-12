@@ -36,7 +36,7 @@
 		"prop-types": "^15.6.2",
 		"raf": "3.4.0",
 		"react": "^16.4.1",
-		"react-dev-utils": "^5.0.2",
+		"react-dev-utils": "^11.0.4",
 		"react-dom": "^16.4.1",
 		"react-streamdeck": "^1.2.3",
 		"resolve": "1.6.0",
