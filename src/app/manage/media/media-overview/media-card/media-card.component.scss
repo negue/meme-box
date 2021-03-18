@@ -1,6 +1,17 @@
 :host {
   display: block;
   width: 300px;
+
+  ::ng-deep {
+    .mat-card-header-text, .mat-card-title {
+      overflow: hidden;
+    }
+
+    .mat-card-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 }
 
 .mat-card {

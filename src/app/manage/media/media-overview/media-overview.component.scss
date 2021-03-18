@@ -29,9 +29,24 @@
 }
 
 .mo__casual-overview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding-bottom: 12px;
+  padding: 2rem;
   overflow: hidden;
+
+  &__group {
+    display: flex;
+    flex-wrap: wrap;
+
+    &:not(:first-child) {
+      margin-top: 12px;
+    }
+
+    &__title {
+      flex: 100%;
+    }
+
+    &__medias {
+      display: flex;
+      gap: 12px;
+    }
+  }
 }

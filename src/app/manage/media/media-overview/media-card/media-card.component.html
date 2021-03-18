@@ -1,7 +1,6 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>{{media.name}}</mat-card-title>
-    <mat-card-subtitle>{{media.showOnMobile}}</mat-card-subtitle>
+    <mat-card-title [matTooltip]='media.name'>{{media.name}}</mat-card-title>
   </mat-card-header>
 
   <div mat-card-image [ngSwitch]='media.type'>

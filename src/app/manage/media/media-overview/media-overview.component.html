@@ -32,13 +32,21 @@
   </app-card-overview>
 
   <div class='mo__casual-overview' *ngSwitchCase='OVERVIEW_MODES.casual'>
-    <app-media-card *ngFor='let item of mediaList; trackBy: trackById'
-                    [media]='item'
-                    (onEdit)='onEdit(item)'
-                    (onPreview)='onPreview(item)'
-                    (onDelete)='onDelete(item.id)'
-    >
-    </app-media-card>
+    <div *ngFor='let mediGroup of mediaList | groupByMediaType' class='mo__casual-overview__group'>
+      <div class='mo__casual-overview__group__title mat-headline'>
+        {{mediGroup.groupName}}
+      </div>
+
+      <div class='mo__casual-overview__group__medias'>
+        <app-media-card *ngFor='let item of mediGroup.medias; trackBy: trackById'
+                        [media]='item'
+                        (onEdit)='onEdit(item)'
+                        (onPreview)='onPreview(item)'
+                        (onDelete)='onDelete(item.id)'
+        >
+        </app-media-card>
+      </div>
+    </div>
   </div>
 </div>
 
