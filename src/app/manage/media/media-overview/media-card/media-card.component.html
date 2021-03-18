@@ -1,0 +1,49 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{media.name}}</mat-card-title>
+    <mat-card-subtitle>{{media.showOnMobile}}</mat-card-subtitle>
+  </mat-card-header>
+
+  <div mat-card-image [ngSwitch]='media.type'>
+    <ng-container *ngSwitchCase='MEDIA_TYPE.Picture'>
+      <gewd-auto-scale *ngIf='media.previewUrl || media.path; else noPictureTemplate'
+                       width='300' height='188'
+                       class='mediaInfo__preview__img'>
+        <img [src]='media | mediaToUrl | safeurl'
+             [alt]='media.name' />
+      </gewd-auto-scale>
+
+      <ng-template #noPictureTemplate>
+        <app-clip-type [type]='MEDIA_TYPE.Picture'
+                       iconSize='12rem'
+                       class='mediaInfo__preview__img'>
+
+        </app-clip-type>
+      </ng-template>
+    </ng-container>
+
+    <ng-container *ngSwitchDefault>
+      <app-clip-type [type]='media.type'
+                     iconSize='12rem'
+                     class='mediaInfo__preview__img'></app-clip-type>
+    </ng-container>
+  </div>
+
+<!--  <mat-card-content>-->
+<!--    Add screens here-->
+<!--  </mat-card-content>-->
+
+  <mat-card-actions class='mc__actions-container'>
+    <button mat-button color='primary' (click)='onEdit.emit()'>Edit</button>
+    <button mat-button (click)='onPreview.emit()'>Preview</button>
+
+    <button mat-icon-button
+            matTooltip='Delete media'
+            aria-label='Delete media'
+            class='mc__actions-container__supplemental'
+            (click)='onDelete.emit()'
+    >
+      <mat-icon svgIcon='delete'></mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

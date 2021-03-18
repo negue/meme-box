@@ -1,20 +1,26 @@
-import { Component, OnInit, TrackByFunction } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from "rxjs";
-import { Clip, HasId, Screen } from "@memebox/contracts";
-import { AppService } from "../../../state/app.service";
-import { AppQueries } from "../../../state/app.queries";
-import { WebsocketService } from "../../../core/services/websocket.service";
-import { DialogService } from "../../../shared/dialogs/dialog.service";
-import { IFilterItem } from "../../../shared/components/filter/filter.component";
-import { createCombinedFilterItems$, filterClips$ } from "../../../shared/components/filter/filter.methods";
-import { map } from "rxjs/operators";
+import { ChangeDetectionStrategy, Component, OnInit, TrackByFunction } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { Clip, HasId, Screen } from '@memebox/contracts';
+import { AppService } from '../../../state/app.service';
+import { AppQueries } from '../../../state/app.queries';
+import { WebsocketService } from '../../../core/services/websocket.service';
+import { DialogService } from '../../../shared/dialogs/dialog.service';
+import { IFilterItem } from '../../../shared/components/filter/filter.component';
+import { createCombinedFilterItems$, filterClips$ } from '../../../shared/components/filter/filter.methods';
+import { map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { OverviewUiMode, OverviewUiService } from './overview-ui.service';
 
 @Component({
   selector: 'app-media-overview',
   templateUrl: './media-overview.component.html',
-  styleUrls: ['./media-overview.component.scss']
+  styleUrls: ['./media-overview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaOverviewComponent implements OnInit {
+  public uiMode$ = this._uiService.getCurrentUiMode$().pipe(
+    shareReplay({refCount: true, bufferSize: 1})
+  );
+  public OVERVIEW_MODES = OverviewUiMode;
 
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
@@ -46,7 +52,8 @@ export class MediaOverviewComponent implements OnInit {
   constructor(public service: AppService,
               public query: AppQueries,
               private _dialog: DialogService,
-              private _wsService: WebsocketService) {
+              private _wsService: WebsocketService,
+              private _uiService: OverviewUiService) {
   }
 
   ngOnInit(): void {
@@ -103,5 +110,9 @@ export class MediaOverviewComponent implements OnInit {
 
   openHelpOverview() {
     this._dialog.showHelpOverview();
+  }
+
+  toggleViewModes() {
+    this._uiService.toggleCurrentUiMode();
   }
 }

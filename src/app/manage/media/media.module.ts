@@ -20,6 +20,7 @@ import {ClipChipsListModule} from "../../shared/components/clip-chips-list/clip-
 import {DynamicIframeModule} from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
+import { MediaCardModule } from './media-overview/media-card/media-card.module';
 
 const routes: Routes = [
   {
@@ -50,7 +51,8 @@ const routes: Routes = [
     ClipChipsListModule,
     DynamicIframeModule,
     MatTooltipModule,
-    AutoScaleModule
+    AutoScaleModule,
+    MediaCardModule
   ]
 })
 export class MediaModule {}

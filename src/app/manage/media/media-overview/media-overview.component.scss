@@ -6,6 +6,8 @@
 }
 
 :host {
+  display: block;
+
   app-filter {
     display: block;
     padding-top: 1rem;
@@ -24,4 +26,12 @@
       }
     }
   }
+}
+
+.mo__casual-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  overflow: hidden;
 }

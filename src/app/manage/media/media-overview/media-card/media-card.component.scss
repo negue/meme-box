@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  width: 300px;
+}
+
+.mat-card {
+  height: 100%;
+}
+
+.mediaInfo__preview__img {
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.mc__actions-container {
+  position: relative;
+
+  &__supplemental {
+    top: 6px;
+    right: 0;
+    position: absolute;
+  }
+}
