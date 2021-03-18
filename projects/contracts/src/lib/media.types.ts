@@ -1,6 +1,7 @@
-import {Dictionary} from "./types";
+import { Dictionary } from './types';
 
 export enum MediaType {
+  Invalid = -1,
   Picture = 0,
   Audio = 1,
   Video = 2,

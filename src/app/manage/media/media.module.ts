@@ -1,36 +1,37 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MediaOverviewComponent} from './media-overview/media-overview.component';
-import {RouterModule, Routes} from "@angular/router";
-import {MatCardModule} from "@angular/material/card";
-import {MediaInfoComponent} from './media-overview/media-info/media-info.component';
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
-import {MatDialogModule} from "@angular/material/dialog";
-import {MatDividerModule} from "@angular/material/divider";
-import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
-import {MatListModule} from "@angular/material/list";
-import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
-import {ConfigMediaPathModule} from "./media-overview/config-media-path/config-media-path.module";
-import {MatChipsModule} from "@angular/material/chips";
-import {PipesModule} from "../../core/pipes/pipes.module";
-import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
-import {FilterModule} from "../../shared/components/filter/filter.module";
-import {ClipChipsListModule} from "../../shared/components/clip-chips-list/clip-chips-list.module";
-import {DynamicIframeModule} from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {AutoScaleModule} from "@gewd/components/auto-scale";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MediaOverviewComponent } from './media-overview/media-overview.component';
+import { RouterModule, Routes } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MediaInfoComponent } from './media-overview/media-info/media-info.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { ClipTypeModule } from '../../shared/components/clip-type/clip-type.module';
+import { MatListModule } from '@angular/material/list';
+import { GettingStartedModule } from '../../shared/components/getting-started/getting-started.module';
+import { ConfigMediaPathModule } from './media-overview/config-media-path/config-media-path.module';
+import { MatChipsModule } from '@angular/material/chips';
+import { PipesModule } from '../../core/pipes/pipes.module';
+import { CardOverviewModule } from '../../shared/components/card-overview/card-overview.module';
+import { FilterModule } from '../../shared/components/filter/filter.module';
+import { ClipChipsListModule } from '../../shared/components/clip-chips-list/clip-chips-list.module';
+import { DynamicIframeModule } from '../../shared/components/dynamic-iframe/dynamic-iframe.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AutoScaleModule } from '@gewd/components/auto-scale';
 import { MediaCardModule } from './media-overview/media-card/media-card.module';
+import { GroupByMediaTypePipe } from './media-overview/group-by-media-type.pipe';
 
 const routes: Routes = [
   {
-    path: "",
-    component: MediaOverviewComponent,
-  },
+    path: '',
+    component: MediaOverviewComponent
+  }
 ];
 
 @NgModule({
-  declarations: [MediaOverviewComponent, MediaInfoComponent],
+  declarations: [MediaOverviewComponent, MediaInfoComponent, GroupByMediaTypePipe],
   exports: [MediaOverviewComponent],
   imports: [
     PipesModule,
