@@ -50,3 +50,35 @@
     }
   }
 }
+
+.getting-started-info-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  font-size: 3rem;
+
+  .getting-started-info-pane__icon.mat-icon {
+    --info-size: 12rem;
+    height: var(--info-size);
+    width: var(--info-size);
+    line-height: var(--info-size);
+  }
+
+  .info-pane-inline-btn {
+    position: relative;
+    top: -0.5rem;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    max-width: 75vw;
+  }
+}

@@ -32,6 +32,16 @@
   </app-card-overview>
 
   <div class='mo__casual-overview' *ngSwitchCase='OVERVIEW_MODES.casual'>
+    <div *ngIf='showGettingStarted$ | async' class='getting-started-info-pane'>
+      <div>
+        <mat-icon inline svgIcon='info' color='primary' class='getting-started-info-pane__icon'></mat-icon>
+        <span>To add media files click on the
+          <button mat-fab color='warn' class='info-pane-inline-btn'><mat-icon svgIcon='add'></mat-icon></button>
+          button below
+        </span>
+      </div>
+    </div>
+
     <div *ngFor='let mediGroup of mediaList | groupByMediaType' class='mo__casual-overview__group'>
       <div class='mo__casual-overview__group__title mat-headline'>
         {{mediGroup.groupName}}
