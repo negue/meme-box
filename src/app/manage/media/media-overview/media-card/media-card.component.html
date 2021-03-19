@@ -1,67 +1,67 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title [matTooltip]='media.name'>{{media.name}}</mat-card-title>
+    <mat-card-title [matTooltip]="media.name">{{media.name}}</mat-card-title>
   </mat-card-header>
 
-  <div mat-card-image [ngSwitch]='media.type'>
-    <ng-container *ngSwitchCase='MEDIA_TYPE.Picture'>
-      <img *ngIf='media.previewUrl || media.path; else noPictureTemplate'
-           class='mediaInfo__preview__img'
-           [src]='media | mediaToUrl | safeurl'
-           [alt]='media.name' />
+  <div mat-card-image [ngSwitch]="media.type">
+    <ng-container *ngSwitchCase="MEDIA_TYPE.Picture">
+      <img *ngIf="media.previewUrl || media.path; else noPictureTemplate"
+           class="mediaInfo__preview__img"
+           [src]="media | mediaToUrl | safeurl"
+           [alt]="media.name" />
 
       <ng-template #noPictureTemplate>
-        <app-clip-type [type]='MEDIA_TYPE.Picture'
-                       iconSize='12rem'
-                       class='mediaInfo__preview__img'>
+        <app-clip-type [type]="MEDIA_TYPE.Picture"
+                       iconSize="12rem"
+                       class="mediaInfo__preview__img">
 
         </app-clip-type>
       </ng-template>
     </ng-container>
 
     <ng-container *ngSwitchDefault>
-      <app-clip-type [type]='media.type'
-                     iconSize='12rem'
-                     class='mediaInfo__preview__img'></app-clip-type>
+      <app-clip-type [type]="media.type"
+                     iconSize="12rem"
+                     class="mediaInfo__preview__img"></app-clip-type>
     </ng-container>
   </div>
 
-  <mat-card-content class='mc-content'>
-    <mat-expansion-panel class='mc__expander mat-elevation-z0'>
+  <mat-card-content class="mc-content">
+    <mat-expansion-panel class="mc__expander mat-elevation-z0">
       <mat-expansion-panel-header>
         <mat-panel-title>
           Details
         </mat-panel-title>
 
-        <mat-panel-description class='mc__expander__description'>
-          <div *ngIf='connectedTags.length > 0'>
-            <mat-icon svgIcon='tag' [inline]='true'></mat-icon>
+        <mat-panel-description class="mc__expander__description">
+          <div *ngIf="connectedTags.length > 0">
+            <mat-icon svgIcon="tag" [inline]="true"></mat-icon>
             {{connectedTags.length}}
           </div>
 
-          <div *ngIf='appearsInScreens.length > 0'>
-            <mat-icon svgIcon='screen' [inline]='true'></mat-icon>
+          <div *ngIf="appearsInScreens.length > 0">
+            <mat-icon svgIcon="screen" [inline]="true"></mat-icon>
             {{appearsInScreens.length}}
           </div>
         </mat-panel-description>
 
       </mat-expansion-panel-header>
 
-      <ng-container *ngIf='connectedTags.length > 0'>
-        <div class='mat-small'>Tags</div>
-        <mat-chip-list aria-label='List of connected tags'>
-          <mat-chip *ngFor='let tag of connectedTags' class='mat-chip-border'>
-            <mat-icon svgIcon='tag' [inline]='true'></mat-icon>
+      <ng-container *ngIf="connectedTags.length > 0">
+        <div class="mat-small">Tags</div>
+        <mat-chip-list aria-label="List of connected tags">
+          <mat-chip *ngFor="let tag of connectedTags" class="mat-chip-border">
+            <mat-icon svgIcon="tag" [inline]="true"></mat-icon>
             {{tag.name}}
           </mat-chip>
         </mat-chip-list>
       </ng-container>
 
-      <ng-container *ngIf='appearsInScreens.length > 0'>
-        <div class='mat-small'>Screens</div>
-        <mat-chip-list aria-label='List of screens the media appears in'>
-          <mat-chip *ngFor='let screen of appearsInScreens' class='mat-chip-border'>
-            <mat-icon svgIcon='screen' [inline]='true'></mat-icon>
+      <ng-container *ngIf="appearsInScreens.length > 0">
+        <div class="mat-small">Screens</div>
+        <mat-chip-list aria-label="List of screens the media appears in">
+          <mat-chip *ngFor="let screen of appearsInScreens" class="mat-chip-border">
+            <mat-icon svgIcon="screen" [inline]="true"></mat-icon>
             {{screen.name}}
           </mat-chip>
         </mat-chip-list>
@@ -70,17 +70,17 @@
     </mat-expansion-panel>
   </mat-card-content>
 
-  <mat-card-actions class='mc__actions-container'>
-    <button mat-button color='primary' (click)='onEdit.emit()'>Edit</button>
-    <button mat-button (click)='onPreview.emit()'>Preview</button>
+  <mat-card-actions class="mc__actions-container">
+    <button mat-button color="primary" (click)="onEdit.emit()">Edit</button>
+    <button mat-button (click)="onPreview.emit()">Preview</button>
 
     <button mat-icon-button
-            matTooltip='Delete media'
-            aria-label='Delete media'
-            class='mc__actions-container__supplemental'
-            (click)='onDelete.emit()'
+            matTooltip="Delete media"
+            aria-label="Delete media"
+            class="mc__actions-container__supplemental"
+            (click)="onDelete.emit()"
     >
-      <mat-icon svgIcon='delete'></mat-icon>
+      <mat-icon svgIcon="delete"></mat-icon>
     </button>
   </mat-card-actions>
 </mat-card>

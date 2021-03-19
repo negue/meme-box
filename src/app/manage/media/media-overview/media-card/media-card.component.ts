@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Clip, MediaType, Screen, Tag } from '@memebox/contracts';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { Clip, MediaType, Screen, Tag } from "@memebox/contracts";
 
 @Component({
-  selector: 'app-media-card',
-  templateUrl: './media-card.component.html',
-  styleUrls: ['./media-card.component.scss'],
+  selector: "app-media-card",
+  templateUrl: "./media-card.component.html",
+  styleUrls: ["./media-card.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaCardComponent {
