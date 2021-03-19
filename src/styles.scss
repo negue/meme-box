@@ -103,6 +103,15 @@ h3 {
     background-color: var(--card-background-color);
     color: white;
     font-family: Barlow, sans-serif;
+
+    &.mat-chip-border {
+      transition: border 350ms;
+      border: 1px solid rgb(255 255 255 / 23%);
+
+      &:hover, &:focus, &:active {
+        border: 1px solid transparent;
+      }
+    }
   }
 
   .mat-flat-button.mat-accent:hover {

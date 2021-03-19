@@ -40,6 +40,8 @@
       <div class='mo__casual-overview__group__medias'>
         <app-media-card *ngFor='let item of mediGroup.medias; trackBy: trackById'
                         [media]='item'
+                        [screens]='screenList$ | async'
+                        [tags]='tagList$ | async'
                         (onEdit)='onEdit(item)'
                         (onPreview)='onPreview(item)'
                         (onDelete)='onDelete(item.id)'

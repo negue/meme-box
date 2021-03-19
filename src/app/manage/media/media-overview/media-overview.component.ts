@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit, TrackByFunction } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
-import { Clip, HasId, Screen } from '@memebox/contracts';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { Clip, HasId, Screen, Tag } from '@memebox/contracts';
 import { AppService } from '../../../state/app.service';
 import { AppQueries } from '../../../state/app.queries';
 import { WebsocketService } from '../../../core/services/websocket.service';
 import { DialogService } from '../../../shared/dialogs/dialog.service';
 import { IFilterItem } from '../../../shared/components/filter/filter.component';
 import { createCombinedFilterItems$, filterClips$ } from '../../../shared/components/filter/filter.methods';
-import { map, shareReplay, startWith, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
 import { OverviewUiMode, OverviewUiService } from './overview-ui.service';
+import isEqual from 'lodash/isEqual';
 
 @Component({
   selector: 'app-media-overview',
@@ -27,9 +28,13 @@ export class MediaOverviewComponent implements OnInit {
   public mediaList$: Observable<Clip[]> = filterClips$(
     this.query.state$,
     this.filteredItems$
+  ).pipe(
+    distinctUntilChanged((pre, now) => isEqual(pre, now))
   );
 
   public screenList$: Observable<Screen[]> = this.query.screensList$;
+
+  public tagList$: Observable<Tag[]> = this.query.tagList$;
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.query.state$,

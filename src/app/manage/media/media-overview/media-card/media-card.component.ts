@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { Clip, MediaType } from '@memebox/contracts';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Clip, MediaType, Screen, Tag } from '@memebox/contracts';
 
 @Component({
   selector: 'app-media-card',
@@ -11,6 +11,12 @@ export class MediaCardComponent {
   @Input()
   media: Clip;
 
+  @Input()
+  screens: Screen[];
+
+  @Input()
+  tags: Tag[];
+
   @Output()
   onPreview = new EventEmitter();
 
@@ -21,4 +27,20 @@ export class MediaCardComponent {
   onDelete = new EventEmitter();
 
   readonly MEDIA_TYPE = MediaType;
+
+  get appearsInScreens(): Screen[] {
+    const screensEmpty = this.screens == null || this.screens.length === 0;
+    if (this.media == null || screensEmpty) {
+      return [];
+    }
+    return this.screens.filter(screen => screen.clips?.[this.media.id]).filter(s => !!s);
+  }
+
+  get connectedTags(): Tag[] {
+    const tagssEmpty = this.tags == null || this.tags.length === 0;
+    if (this.media == null || tagssEmpty) {
+      return [];
+    }
+    return this.tags.filter(tag => this.media.tags.includes(tag.id));
+  }
 }

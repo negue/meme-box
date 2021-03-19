@@ -8,7 +8,8 @@ import { PipesModule } from '../../../../core/pipes/pipes.module';
 import { ClipTypeModule } from '../../../../shared/components/clip-type/clip-type.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
 
 
 @NgModule({
@@ -24,7 +25,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     PipesModule,
     ClipTypeModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatExpansionModule,
+    MatChipsModule
   ]
 })
 export class MediaCardModule { }
