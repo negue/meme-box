@@ -36,7 +36,11 @@
       <div *ngIf="inOfflineMode$ | async">
         <mat-icon inline svgIcon="warning" color="warn" class="getting-started-info-pane__icon"></mat-icon>
         <span>You are currently in offline mode. Press
-            <button mat-fab color="warn" class="info-pane-inline-btn">
+            <button mat-fab
+                    color="warn"
+                    class="info-pane-inline-btn"
+                    (click)="fillWithDummyData()"
+            >
               <mat-icon svgIcon="dashboard_customize"></mat-icon>
             </button>
             to fill with dummy data

@@ -69,6 +69,9 @@ export class MediaOverviewComponent implements OnInit {
     this.showDialog(null);
   }
 
+  fillWithDummyData() {
+    this.service.fillDummyData();
+  }
 
   showDialog(clipInfo: Partial<Clip>): void {
     this._dialog.showMediaEditDialog(clipInfo);
