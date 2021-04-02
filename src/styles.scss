@@ -96,7 +96,7 @@ h3 {
   }
 
   .mat-dialog-container {
-    background-color: #2f3640 !important;
+    background-color: var(--palette-background-background) !important;
   }
 
   .mat-chip.mat-standard-chip {

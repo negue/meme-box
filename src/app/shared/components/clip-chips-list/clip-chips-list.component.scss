@@ -8,7 +8,7 @@
 }
 
 .chipList__chip {
-  background-color: #2f3640 !important;
+  background-color: var(--palette-background-background) !important;
   color: #ffffff !important;
   pointer-events: none;
 
