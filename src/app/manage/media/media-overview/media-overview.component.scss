@@ -17,8 +17,8 @@
     position: -webkit-sticky;
     position: sticky;
     top: 3.05rem;
-    z-index: 1;
-    background: var(--palette-background-background) !important;
+    z-index: 2;
+    background-color: var(--palette-background-background) !important;
 
     ::ng-deep {
       .filterRow {
@@ -30,7 +30,6 @@
 
 .mo__casual-overview {
   padding: 2rem;
-  overflow: hidden;
 
   &__group {
     display: flex;
@@ -42,6 +41,10 @@
 
     &__title {
       flex: 100%;
+      position: sticky;
+      top: 150px; // height of the <app-filter>
+      z-index: 1;
+      background-color: var(--palette-background-background);
     }
 
     &__medias {
