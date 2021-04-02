@@ -35,6 +35,7 @@ export class MediaOverviewComponent implements OnInit {
   public screenList$: Observable<Screen[]> = this.query.screensList$;
 
   public tagList$: Observable<Tag[]> = this.query.tagList$;
+  public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.query.state$,

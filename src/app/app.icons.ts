@@ -9,6 +9,7 @@ export const APP_ICONS = [
   'code',
   'collage',
   'content_copy',
+  'dashboard_customize',
   'delete',
   'edit',
   'filter',

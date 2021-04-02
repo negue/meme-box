@@ -33,11 +33,22 @@
 
   <div class="mo__casual-overview" *ngSwitchCase="OVERVIEW_MODES.casual">
     <div *ngIf="showGettingStarted$ | async" class="getting-started-info-pane">
+      <div *ngIf="inOfflineMode$ | async">
+        <mat-icon inline svgIcon="warning" color="warn" class="getting-started-info-pane__icon"></mat-icon>
+        <span>You are currently in offline mode. Press
+            <button mat-fab color="warn" class="info-pane-inline-btn">
+              <mat-icon svgIcon="dashboard_customize"></mat-icon>
+            </button>
+            to fill with dummy data
+        </span>
+      </div>
+
       <div>
         <mat-icon inline svgIcon="info" color="primary" class="getting-started-info-pane__icon"></mat-icon>
         <span>To add media files click on the
-          <button mat-fab color="warn" class="info-pane-inline-btn" [disableRipple]="true"><mat-icon
-            svgIcon="add"></mat-icon></button>
+          <button mat-fab color="warn" class="info-pane-inline-btn fake-add" [disableRipple]="true">
+            <mat-icon svgIcon="add"></mat-icon>
+          </button>
           button below
         </span>
       </div>

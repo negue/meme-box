@@ -55,6 +55,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
 
   position: absolute;
   top: 50px;
@@ -69,12 +70,16 @@
     height: var(--info-size);
     width: var(--info-size);
     line-height: var(--info-size);
+    margin-right: 1rem;
   }
 
   .info-pane-inline-btn {
     position: relative;
     top: -0.5rem;
-    cursor: default;
+
+    &.fake-add {
+      cursor: default;
+    }
   }
 
   div {
