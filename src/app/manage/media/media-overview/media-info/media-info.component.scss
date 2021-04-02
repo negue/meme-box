@@ -42,9 +42,11 @@
 
 .mediaInfo__preview__img {
   height: 100%;
+}
+
+gewd-auto-scale.mediaInfo__preview__img {
   margin-left: auto;
   margin-right: auto;
-  display: block;
 }
 
 app-clip-type {

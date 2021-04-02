@@ -1,4 +1,10 @@
-:host ::ng-deep .mat-icon {
-  height: var(--icon-size);
-  width: var(--icon-size);
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ::ng-deep .mat-icon {
+    height: var(--icon-size);
+    width: var(--icon-size);
+  }
 }

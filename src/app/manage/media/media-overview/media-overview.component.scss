@@ -46,6 +46,9 @@
 
     &__medias {
       display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+      flex-shrink: 0;
       gap: 12px;
     }
   }
