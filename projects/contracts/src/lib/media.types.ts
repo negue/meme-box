@@ -1,6 +1,7 @@
-import {Dictionary} from "./types";
+import { Dictionary } from "./types";
 
 export enum MediaType {
+  Invalid = -1,
   Picture = 0,
   Audio = 1,
   Video = 2,
@@ -20,45 +21,45 @@ export interface MediaTypeInformations {
 
 export const MEDIA_TYPE_INFORMATION: Dictionary<MediaTypeInformations> = {
   [MediaType.Picture]: {
-    label: 'Image',
-    className: 'image',
-    icon: 'insert_photo',
-    sortOrder: 2,
+    label: "Image",
+    className: "image",
+    icon: "insert_photo",
+    sortOrder: 2
   },
   [MediaType.Video]: {
-    label: 'Video',
-    className: 'video',
-    icon: 'videocam',
-    sortOrder: 3,
+    label: "Video",
+    className: "video",
+    icon: "videocam",
+    sortOrder: 3
   },
   [MediaType.Audio]: {
-    label: 'Audio',
-    className: 'audio',
-    icon: 'audiotrack',
+    label: "Audio",
+    className: "audio",
+    icon: "audiotrack",
     sortOrder: 1
   },
   [MediaType.IFrame]: {
-    label: 'iFrame', // IFrame , iframe
-    className: 'iframe',
-    icon: 'public',
-    sortOrder: 4,
+    label: "iFrame", // IFrame , iframe
+    className: "iframe",
+    icon: "public",
+    sortOrder: 4
   },
   [MediaType.HTML]: {
-    label: 'HTML', // IFrame , iframe
-    className: 'html',
-    icon: 'code',
-    sortOrder: 5,
+    label: "HTML", // IFrame , iframe
+    className: "html",
+    icon: "code",
+    sortOrder: 5
   },
   [MediaType.Meta]: {
-    icon: 'art_track',
-    label: 'Meta',
-    className: '', // not visible in target-screen-component
+    icon: "art_track",
+    label: "Meta",
+    className: "", // not visible in target-screen-component
     sortOrder: 100
   }
-}
+};
 
-export function mediaToString (mediaType: MediaType) {
-  return MEDIA_TYPE_INFORMATION[mediaType]?.label ?? '';
+export function mediaToString(mediaType: MediaType) {
+  return MEDIA_TYPE_INFORMATION[mediaType]?.label ?? "";
 }
 
 export function getSortOrderByType(mediaType: MediaType) {

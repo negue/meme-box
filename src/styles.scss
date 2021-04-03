@@ -96,13 +96,22 @@ h3 {
   }
 
   .mat-dialog-container {
-    background-color: #2f3640 !important;
+    background-color: var(--palette-background-background) !important;
   }
 
   .mat-chip.mat-standard-chip {
     background-color: var(--card-background-color);
     color: white;
     font-family: Barlow, sans-serif;
+
+    &.mat-chip-border {
+      transition: border 350ms;
+      border: 1px solid rgb(255 255 255 / 23%);
+
+      &:hover, &:focus, &:active {
+        border: 1px solid transparent;
+      }
+    }
   }
 
   .mat-flat-button.mat-accent:hover {

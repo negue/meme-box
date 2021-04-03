@@ -9,13 +9,14 @@
 
   ::ng-deep .mat-chip {
     &.mat-chip.mat-standard-chip {
-      background-color: #2f3640;
+      background-color: var(--palette-background-background);
+
       &.eventInfo__chip--selected {
         background-color: #0be881; //TODO - make a var
-        color: #2f3640; //TODO - make a var
+        color: var(--palette-background-background);
 
         .mat-checkbox-frame {
-          border-color: #2f3640;
+          border-color: var(--palette-background-background);
         }
       }
     }

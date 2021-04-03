@@ -6,6 +6,8 @@
 }
 
 :host {
+  display: block;
+
   app-filter {
     display: block;
     padding-top: 1rem;
@@ -15,13 +17,80 @@
     position: -webkit-sticky;
     position: sticky;
     top: 3.05rem;
-    z-index: 1;
-    background: var(--palette-background-background) !important;
+    z-index: 2;
+    background-color: var(--palette-background-background) !important;
 
     ::ng-deep {
       .filterRow {
         margin-bottom: 1rem;
       }
     }
+  }
+}
+
+.mo__casual-overview {
+  padding: 2rem;
+
+  &__group {
+    display: flex;
+    flex-wrap: wrap;
+
+    &:not(:first-child) {
+      margin-top: 12px;
+    }
+
+    &__title {
+      flex: 100%;
+      position: sticky;
+      top: 150px; // height of the <app-filter>
+      z-index: 1;
+      background-color: var(--palette-background-background);
+    }
+
+    &__medias {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+  }
+}
+
+.getting-started-info-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  position: absolute;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  font-size: 3rem;
+
+  .getting-started-info-pane__icon.mat-icon {
+    --info-size: 12rem;
+    height: var(--info-size);
+    width: var(--info-size);
+    line-height: var(--info-size);
+    margin-right: 1rem;
+  }
+
+  .info-pane-inline-btn {
+    position: relative;
+    top: -0.5rem;
+
+    &.fake-add {
+      cursor: default;
+    }
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    max-width: 75vw;
   }
 }
