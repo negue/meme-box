@@ -4,6 +4,10 @@
   display: block;
 }
 
+h3 {
+  margin-bottom: 0 !important;
+}
+
 // Copy from screen-arrange.component
 // TODO: Remove dublicates when outsourcing is complete
 .sidebar {
