@@ -49,14 +49,6 @@ mat-dialog-content {
   }
 }
 
-.hover-background:hover {
-  background: #555;
-}
-
-.overflow-y {
-  overflow-y: auto;
-}
-
 .drag-drop-area-holder {
   flex: 1;
   min-height: 0;
@@ -67,33 +59,6 @@ mat-dialog-content {
   overflow: hidden;
 
   background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
-}
-
-
-mat-expansion-panel, .settings-content, .settings-stuff {
-  margin: 1rem 1rem;
-}
-
-.settings-content {
-  height: 10rem;
-
-  mat-form-field {
-    width: 100%;
-  }
-}
-
-.selected-item {
-  grid-area: selected-item;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.media-config {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
 }
 
 .dragging-config {

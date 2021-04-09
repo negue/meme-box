@@ -1,25 +1,16 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction} from '@angular/core';
-import {AppQueries} from "../../../state/app.queries";
-import {map, publishReplay, refCount, startWith, take} from "rxjs/operators";
-import {
-  Clip,
-  ClipAssigningMode,
-  CombinedClip,
-  MediaType,
-  PositionEnum,
-  Screen,
-  UnassignedFilterEnum
-} from "@memebox/contracts";
-import {AppService} from "../../../state/app.service";
-import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {DragResizeMediaComponent} from "./drag-resize-media/drag-resize-media.component";
-import {FormControl} from "@angular/forms";
-import {combineLatest} from "rxjs";
-import {AutoScaleComponent} from "@gewd/components/auto-scale";
-import {WebsocketService} from "../../../core/services/websocket.service";
-import {DialogService} from "../dialog.service";
-import {MatRipple} from "@angular/material/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction } from '@angular/core';
+import { AppQueries } from '../../../state/app.queries';
+import { map, publishReplay, refCount, startWith, take } from 'rxjs/operators';
+import { Clip, CombinedClip, MediaType, PositionEnum, Screen } from '@memebox/contracts';
+import { AppService } from '../../../state/app.service';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DragResizeMediaComponent } from './drag-resize-media/drag-resize-media.component';
+import { FormControl } from '@angular/forms';
+import { combineLatest } from 'rxjs';
+import { AutoScaleComponent } from '@gewd/components/auto-scale';
+import { WebsocketService } from '../../../core/services/websocket.service';
+import { DialogService } from '../dialog.service';
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -67,8 +58,6 @@ export class ScreenArrangeComponent implements OnInit {
   public trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   selectedItems = new FormControl([]);
-
-  items: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   public visibleItems$ = combineLatest([
     this.clipList$,
@@ -140,11 +129,7 @@ export class ScreenArrangeComponent implements OnInit {
     }
   }
 
-  onSelectMedia(mouseEvent: MouseEvent, matRippleInstance: MatRipple, $event: CombinedClip) {
-    this.currentSelectedClip = $event;
 
-    matRippleInstance.launch(mouseEvent.x, mouseEvent.y);
-  }
 
   triggerChangedetection() {
     const component = this.combinedClipToComponent.get(this.currentSelectedClip);
@@ -187,35 +172,6 @@ export class ScreenArrangeComponent implements OnInit {
     this.wsService.onTriggerClip$.next({
       id: visibleItem.clip.id,
       targetScreen: this.screen.id
-    });
-  }
-
-  assignMedia() {
-    this.showAssignmentDialog(this.screen);
-  }
-
-  showAssignmentDialog(screen: Partial<Screen>) {
-    this.dialogs.showClipSelectionDialog({
-      mode: ClipAssigningMode.Multiple,
-      screenId: screen.id,
-
-      dialogTitle: screen.name,
-      showMetaItems: false,
-      showOnlyUnassignedFilter: true,
-      unassignedFilterType: UnassignedFilterEnum.Screens
-    });
-  }
-
-  openMediaSettingsDialog($event: MouseEvent, visibleItem: CombinedClip) {
-    $event.stopImmediatePropagation();
-    $event.stopPropagation();
-
-    this.currentSelectedClip = null;
-
-    this.dialogs.showScreenClipOptionsDialog({
-      clipId: visibleItem.clip.id,
-      screenId: this.screen.id,
-      name: visibleItem.clip.name
     });
   }
 

@@ -1,0 +1,60 @@
+:host {
+  display: block;
+}
+
+// Copy from screen-arrange.component
+// TODO: Remove dublicates when outsourcing is complete
+.sidebar {
+  width: 300px;
+  min-width: 300px; // since sometimes width alone is ignored.
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  &__title {
+    height: 5rem;
+
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+
+.sidebar__items {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  height: 100%;
+  align-content: flex-start;
+
+  ::ng-deep {
+    .mat-card {
+      padding: 10px;
+
+      &:not(.selectable) {
+        border: 3px solid transparent;
+      }
+
+      &:not(.small) {
+        height: 126px;
+      }
+
+      width: 100%;
+      margin-right: 5px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .mat-card-subtitle {
+      margin-bottom: 0;
+    }
+  }
+
+  .selected {
+    border: 3px mat-css-color-accent() solid;
+  }
+}
