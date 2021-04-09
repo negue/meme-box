@@ -8,28 +8,30 @@
 
   <ol class="mediaList">
     <li (click)="clickToSelect(clip)"
-        *ngFor="let clip of clips$|async; trackBy: trackByClip"
+        *ngFor="let clip of clips$ | async; trackBy: trackByClip"
         [class.mediaList__option--selected]="checkedMap[clip.id]"
-        class="mediaList__option animate__animated  animate__fadeIn">
+        class="mediaList__option animate__animated  animate__fadeIn"
+    >
       <figure *ngIf="clip.type === 0">
         <figcaption class="mediaList__name">
           <app-clip-type [type]="clip.type"
                          class="mediaList__icon"
                          matListIcon>
-
           </app-clip-type>
-          {{clip.name}}</figcaption>
-        <img [alt]="clip.name" [src]="clip | mediaToUrl" class="mediaList__img"/>
+
+          <span>{{clip.name}}</span>
+        </figcaption>
+        <img [alt]="clip.name" [src]="clip | mediaToUrl" class="mediaList__img" />
       </figure>
 
-      <span *ngIf="clip.type === 1" class="mediaList__audioContainer">
+      <span *ngIf="clip.type === MediaType.Audio" class="mediaList__audioContainer">
         <span class="mediaList__name">
            <app-clip-type [type]="clip.type"
                           class="mediaList__icon"
                           matListIcon>
+           </app-clip-type>
 
-            </app-clip-type>
-          {{clip.name}}
+           <span>{{clip.name}}</span>
         </span>
 
         <span class="audio-image">
@@ -37,14 +39,14 @@
         </span>
       </span>
 
-      <span *ngIf="clip.type === 2" class="mediaList__videoContainer">
+      <span *ngIf="clip.type === MediaType.Video" class="mediaList__videoContainer">
           <span class="mediaList__name">
             <app-clip-type [type]="clip.type"
                            class="mediaList__icon"
                            matListIcon>
-
             </app-clip-type>
-            {{clip.name}}
+
+            <span>{{clip.name}}</span>
         </span>
 
         <span class="video-image">
@@ -52,47 +54,48 @@
         </span>
       </span>
 
-      <span *ngIf="clip.type === 3" class="iframe-container">
+      <span *ngIf="clip.type === MediaType.IFrame" class="iframe-container">
         <span class="media-name">
            <app-clip-type [type]="clip.type"
                           class="mediaList__icon"
                           matListIcon>
+           </app-clip-type>
 
-            </app-clip-type>
-          {{ clip.name }}
+           <span>{{clip.name}}</span>
         </span>
+
         <span class="media-iframe-container">
           <app-clip-type [type]="clip.type"
-                          class="mediaList__icon"
-                          iconSize="6rem"
-                          matListIcon>
-
+                         class="mediaList__icon"
+                         iconSize="6rem"
+                         matListIcon>
             </app-clip-type>
         </span>
       </span>
 
 
-      <span *ngIf="clip.type === 4" class="iframe-container">
+      <span *ngIf="clip.type === MediaType.HTML" class="iframe-container">
         <span class="media-name">
            <app-clip-type [type]="clip.type"
                           class="mediaList__icon"
                           matListIcon>
+           </app-clip-type>
 
-            </app-clip-type>
-          {{ clip.name }}
+           <span>{{clip.name}}</span>
         </span>
-        <span class="media-iframe-container">
-        </span>
+
+        <span class="media-iframe-container"></span>
       </span>
 
-      <span *ngIf="clip.type === 100" class="mediaList__videoContainer">
+      <span *ngIf="clip.type === MediaType.Meta" class="mediaList__videoContainer">
           <span class="mediaList__name">
             <app-clip-type [type]="clip.type"
                            class="mediaList__icon"
                            matListIcon>
 
             </app-clip-type>
-            {{clip.name}}
+
+            <span>{{clip.name}}</span>
         </span>
 
         <span class="video-image">
