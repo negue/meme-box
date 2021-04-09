@@ -12,7 +12,7 @@
         [class.mediaList__option--selected]="checkedMap[clip.id]"
         class="mediaList__option animate__animated  animate__fadeIn"
     >
-      <figure *ngIf="clip.type === 0">
+      <figure *ngIf="clip.type === MediaType.Picture">
         <figcaption class="mediaList__name">
           <app-clip-type [type]="clip.type"
                          class="mediaList__icon"
