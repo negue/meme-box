@@ -29,8 +29,6 @@ export class ScreenArrangeSidebarComponent {
   @Output()
   changeCurrSelectedClip = new EventEmitter<CombinedClip | null>();
 
-  items: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
-
   constructor(private dialogs: DialogService) {
   }
 
