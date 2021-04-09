@@ -24,7 +24,7 @@ export class ScreenArrangePreviewComponent {
 
   PositionEnum = PositionEnum;
 
-  public trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
+  trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();
 
