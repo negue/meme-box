@@ -21,6 +21,7 @@ import { DragResizeMediaModule } from './drag-resize-media/drag-resize-media.mod
 import { TargetScreenModule } from '../../../screens/target-screen/target-screen.module';
 import { PipesModule } from '../../../core/pipes/pipes.module';
 import { ScreenArrangeSidebarModule } from './screen-arrange-sidebar/screen-arrange-sidebar.module';
+import { ScreenArrangePreviewModule } from './screen-arrange-preview/screen-arrange-preview.module';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ScreenArrangeSidebarModule } from './screen-arrange-sidebar/screen-arra
     DragResizeMediaModule,
     TargetScreenModule,
     PipesModule,
-    ScreenArrangeSidebarModule
+    ScreenArrangeSidebarModule,
+    ScreenArrangePreviewModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
