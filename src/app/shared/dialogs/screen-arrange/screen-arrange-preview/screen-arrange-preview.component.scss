@@ -1,0 +1,59 @@
+:host {
+  display: block;
+}
+
+.dragging-config {
+  display: flex;
+  flex-direction: row;
+  height: 4rem;
+
+  .spacer {
+    min-height: 4rem;
+  }
+}
+
+.inline {
+  display: flex;
+  flex-direction: row;
+  min-height: 4rem;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #444;
+  padding-right: 1rem;
+  padding-left: 1rem;
+
+  mat-checkbox {
+    margin-left: 1rem;
+  }
+}
+
+
+.drag-drop-area-holder {
+  flex: 1;
+  min-height: 0;
+}
+
+
+.drag-drop-area {
+  position: relative;
+  overflow: hidden;
+
+  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
+}
+
+
+// cornered example of https://css-tricks.com/more-control-over-css-borders-with-background-image/
+.dragable-preview {
+  --clr-border: #d3d3d3b0;
+  background-position: 0 0, 0 0, 100% 0, 0 100%;
+  background-size: 1vw 100%, 100% 1vw, 1vw 100%, 100% 1vw;
+  background-repeat: no-repeat;
+
+  background-image: linear-gradient(0deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // left
+  linear-gradient(90deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // top
+  linear-gradient(180deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // right
+  linear-gradient(270deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%) // bottom
+;
+}
+

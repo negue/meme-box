@@ -86,6 +86,10 @@ h3 {
   font-weight: bold;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .isDarkTheme {
   .mat-card {
     background-color: var(--card-background-color) !important;
