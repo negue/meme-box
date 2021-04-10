@@ -1,16 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Screen } from '@memebox/contracts';
 
 @Component({
   selector: 'app-screen-preview',
   templateUrl: './screen-preview.component.html',
   styleUrls: ['./screen-preview.component.scss']
 })
-export class ScreenPreviewComponent implements OnInit {
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+export class ScreenPreviewComponent {
+  @Input()
+  screen: Screen;
 }
