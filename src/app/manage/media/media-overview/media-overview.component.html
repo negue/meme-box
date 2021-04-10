@@ -15,7 +15,7 @@
       </app-overview-add-item>
     </ng-template>
 
-    <app-overview-item *ngFor="let item of mediaList; trackBy: trackById">
+    <app-overview-item *ngFor="let item of mediaList | lazyArray$:100: 3 | async; trackBy: trackById">
       <app-media-info (onDelete)="onDelete(item.id)"
                       (onEdit)="onEdit(item)"
                       (onEditScreenClipOptions)="onClipOptions(item, $event)"
@@ -64,7 +64,7 @@
       </div>
 
       <div class="mo__casual-overview__group__medias">
-        <app-media-card *ngFor="let item of mediGroup.medias; trackBy: trackById"
+        <app-media-card *ngFor="let item of mediGroup.medias | lazyArray$:100: 3 | async; trackBy: trackById"
                         [media]="item"
                         [screens]="screenList$ | async"
                         [tags]="tagList$ | async"

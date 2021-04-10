@@ -139,6 +139,7 @@ h3 {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  z-index: 2;
 
   .mat-icon {
     // wonder why the current style is pushing the icon down?!
