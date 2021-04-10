@@ -1,24 +1,17 @@
 :host {
-  display: block;
-}
-
-// Copy from screen-arrange.component
-// TODO: Remove dublicates when outsourcing is complete
-.sidebar {
   width: 300px;
   min-width: 300px; // since sometimes width alone is ignored.
   position: relative;
   display: flex;
   flex-direction: column;
-
-  &__title {
-    height: 5rem;
-
-    display: flex;
-    flex-direction: column;
-  }
 }
 
+.sidebar__title {
+  height: 5rem;
+
+  display: flex;
+  flex-direction: column;
+}
 
 .sidebar__items {
   display: flex;
@@ -57,4 +50,10 @@
   .selected {
     border: 3px mat-css-color-accent() solid;
   }
+}
+
+mat-card-title {
+  overflow-y: hidden;
+  height: 20px;
+  word-break: break-all;
 }
