@@ -3,7 +3,7 @@
 </div>
 
 <div class="sidebar__items">
-  <mat-card *ngFor="let visibleItem of clipList$ | async"
+  <mat-card *ngFor="let visibleItem of allItems"
             class="small selectable" matRipple
             (click)="onPreview(visibleItem)">
     <mat-card-header>

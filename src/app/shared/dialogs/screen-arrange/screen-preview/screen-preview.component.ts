@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Screen } from '@memebox/contracts';
+import { CombinedClip, Screen } from '@memebox/contracts';
 
 @Component({
   selector: 'app-screen-preview',
@@ -9,4 +9,7 @@ import { Screen } from '@memebox/contracts';
 export class ScreenPreviewComponent {
   @Input()
   screen: Screen;
+
+  @Input()
+  allItems: CombinedClip[];
 }

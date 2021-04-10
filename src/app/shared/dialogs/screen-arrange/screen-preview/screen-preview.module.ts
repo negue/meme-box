@@ -7,6 +7,9 @@ import { ScreenPreviewContentModule } from './screen-preview-content/screen-prev
 
 @NgModule({
   declarations: [ScreenPreviewComponent],
+  exports: [
+    ScreenPreviewComponent
+  ],
   imports: [
     CommonModule,
     ScreenPreviewSidebarModule,

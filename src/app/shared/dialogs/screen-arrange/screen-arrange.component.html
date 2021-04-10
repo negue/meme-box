@@ -34,7 +34,8 @@
 
   <!-- Preview -->
   <div class="tab_content" *ngIf="tabGroup.selectedIndex === 1">
-
+    <app-screen-preview [allItems]="clipList$ | async"
+                        [screen]="screen"></app-screen-preview>
   </div>
 </mat-dialog-content>
 

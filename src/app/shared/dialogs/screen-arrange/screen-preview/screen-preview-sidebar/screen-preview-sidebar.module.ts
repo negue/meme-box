@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ClipTypeModule } from '../../../../components/clip-type/clip-type.module';
 import { MatRippleModule } from '@angular/material/core';
 import { MatListModule } from '@angular/material/list';
+import { PipesModule } from '../../../../../core/pipes/pipes.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MatListModule } from '@angular/material/list';
     MatCardModule,
     ClipTypeModule,
     MatRippleModule,
-    MatListModule
+    MatListModule,
+    PipesModule
   ]
 })
 export class ScreenPreviewSidebarModule {

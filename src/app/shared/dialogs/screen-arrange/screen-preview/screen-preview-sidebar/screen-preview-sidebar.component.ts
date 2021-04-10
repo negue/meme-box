@@ -1,16 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CombinedClip, Screen } from '@memebox/contracts';
+import { WebsocketService } from '../../../../../core/services/websocket.service';
 
 @Component({
   selector: 'app-screen-preview-sidebar',
   templateUrl: './screen-preview-sidebar.component.html',
   styleUrls: ['./screen-preview-sidebar.component.scss']
 })
-export class ScreenPreviewSidebarComponent implements OnInit {
+export class ScreenPreviewSidebarComponent {
+  @Input()
+  screen: Screen;
 
-  constructor() {
+  @Input()
+  allItems: CombinedClip[];
+
+  constructor(private wsService: WebsocketService) {
   }
 
-  ngOnInit(): void {
+  onPreview(visibleItem: CombinedClip) {
+    this.wsService.onTriggerClip$.next({
+      id: visibleItem.clip.id,
+      targetScreen: this.screen.id
+    });
   }
-
 }
