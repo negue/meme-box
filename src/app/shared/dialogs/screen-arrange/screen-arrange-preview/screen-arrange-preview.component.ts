@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, TrackByFunction } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  TrackByFunction
+} from '@angular/core';
 import { Clip, CombinedClip, PositionEnum, Screen } from '@memebox/contracts';
 import { DragResizeMediaComponent } from '../drag-resize-media/drag-resize-media.component';
 import { AppService } from '../../../../state/app.service';
@@ -7,7 +15,8 @@ import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 @Component({
   selector: 'app-screen-arrange-preview',
   templateUrl: './screen-arrange-preview.component.html',
-  styleUrls: ['./screen-arrange-preview.component.scss']
+  styleUrls: ['./screen-arrange-preview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreenArrangePreviewComponent {
   @Input()
