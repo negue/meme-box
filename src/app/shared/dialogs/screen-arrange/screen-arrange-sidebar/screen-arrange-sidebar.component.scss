@@ -1,65 +1,15 @@
 @import '~angular-material-css-vars/public-util';
 
 :host {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-
-  ::ng-deep {
-    .mat-card-header-text {
-      flex: 1;
-    }
-  }
-}
-
-mat-dialog-content {
-  display: flex;
-  flex-direction: column;
-  overflow-y: hidden;
-  max-height: unset;
-  width: 99vw;
-  height: 100%;
-}
-
-.mat-dialog-title {
-  display: flex;
-
-  span {
-    flex: 1;
-  }
+  display: block;
 }
 
 h3 {
   margin-bottom: 0 !important;
 }
 
-mat-card-title {
-  overflow-y: hidden;
-  height: 20px;
-  word-break: break-all;
-}
-
-
-.tab_content {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-
-  flex: 1;
-
-  /**
-   * in order to achieve a MAX HEIGHT  you need a MIN HEIGHT ... obviously
-   */
-  min-height: 0;
-}
-
-.preview-area {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-}
-
+// Copy from screen-arrange.component
+// TODO: Remove dublicates when outsourcing is complete
 .sidebar {
   width: 300px;
   min-width: 300px; // since sometimes width alone is ignored.
@@ -75,6 +25,7 @@ mat-card-title {
   }
 }
 
+
 .sidebar__items {
   display: flex;
   gap: 5px;
@@ -87,9 +38,11 @@ mat-card-title {
   ::ng-deep {
     .mat-card {
       padding: 10px;
+
       &:not(.selectable) {
         border: 3px solid transparent;
       }
+
       &:not(.small) {
         height: 126px;
       }
@@ -101,6 +54,7 @@ mat-card-title {
         cursor: pointer;
       }
     }
+
     .mat-card-subtitle {
       margin-bottom: 0;
     }
@@ -111,7 +65,8 @@ mat-card-title {
   }
 }
 
-.preview-label {
-  justify-self: center;
-  font-weight: bold;
+mat-card-title {
+  overflow-y: hidden;
+  height: 20px;
+  word-break: break-all;
 }
