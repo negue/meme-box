@@ -58,3 +58,9 @@
     border: 3px mat-css-color-accent() solid;
   }
 }
+
+mat-card-title {
+  overflow-y: hidden;
+  height: 20px;
+  word-break: break-all;
+}
