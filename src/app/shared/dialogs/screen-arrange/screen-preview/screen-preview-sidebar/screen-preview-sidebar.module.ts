@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScreenPreviewSidebarComponent } from './screen-preview-sidebar.component';
+import { MatCardModule } from '@angular/material/card';
+import { ClipTypeModule } from '../../../../components/clip-type/clip-type.module';
 
 
 @NgModule({
@@ -9,7 +11,9 @@ import { ScreenPreviewSidebarComponent } from './screen-preview-sidebar.componen
     ScreenPreviewSidebarComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatCardModule,
+    ClipTypeModule
   ]
 })
 export class ScreenPreviewSidebarModule {
