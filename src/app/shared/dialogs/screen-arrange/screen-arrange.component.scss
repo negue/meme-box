@@ -29,11 +29,6 @@ mat-dialog-content {
   }
 }
 
-h3 {
-  margin-bottom: 0 !important;
-}
-
-
 .tab_content {
   display: flex;
   flex-direction: row;
@@ -45,11 +40,4 @@ h3 {
    * in order to achieve a MAX HEIGHT  you need a MIN HEIGHT ... obviously
    */
   min-height: 0;
-}
-
-.preview-area {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
 }
