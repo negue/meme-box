@@ -3,17 +3,12 @@
 >
   <gewd-auto-scale [width]="holdingElement.clientWidth"
                    [height]="holdingElement.clientHeight"
-
   >
 
     <div [style.width.px]="screen.width"
          [style.height.px]="screen.height"
          class="drag-drop-area">
-      <app-target-screen [screenId]="screen.id"
-
-      >
-
-      </app-target-screen>
+      <app-target-screen [screenId]="screen.id"></app-target-screen>
     </div>
 
   </gewd-auto-scale>
