@@ -1,33 +1,40 @@
-import { AppState, VisibilityEnum } from "@memebox/contracts";
+import {AppState, VisibilityEnum} from "@memebox/contracts";
+import {uuid} from "@gewd/utils";
 
 export function setDummyData(state: AppState) {
-  state.screen["356a0f2f-6d3a-4fbd-b2db-45b0fd97546a"] = {
+  const newScreenId = uuid();
+
+  // in the future there will be more examples added
+  const clipA = uuid();
+  const clipB = uuid();
+
+  state.screen[newScreenId] = {
     "name": "Firefox",
-    "id": "356a0f2f-6d3a-4fbd-b2db-45b0fd97546a",
+    "id": newScreenId,
     "clips": {
-      "cbdc0e82-d23f-4b94-96cc-c6438753ca53": {
+      [clipA]: {
         "position": 0,
-        "id": "cbdc0e82-d23f-4b94-96cc-c6438753ca53",
-        "width": "50%",
-        "height": "60%",
+        "id": clipA,
         "left": null,
         "right": null,
         "bottom": null,
         "top": null,
         "imgFit": null,
-        visibility: VisibilityEnum.Play
+        visibility: VisibilityEnum.Play,
+        animationIn: "random",
+        animationOut: "random",
       },
-      "65e61814-2748-4176-ba88-e99ac411f920": {
+      [clipB]: {
         "position": 0,
-        "id": "65e61814-2748-4176-ba88-e99ac411f920",
-        "width": "50%",
-        "height": "60%",
+        "id": clipB,
         "left": null,
         "right": null,
         "bottom": null,
         "top": null,
         "imgFit": null,
-        visibility: VisibilityEnum.Play
+        visibility: VisibilityEnum.Play,
+        animationIn: "random",
+        animationOut: "random",
       },
     },
     height: 1080,
@@ -35,8 +42,8 @@ export function setDummyData(state: AppState) {
   };
 
   state.clips = {
-    "cbdc0e82-d23f-4b94-96cc-c6438753ca53": {
-      "id": "cbdc0e82-d23f-4b94-96cc-c6438753ca53",
+    [clipA]: {
+      "id": clipA,
       "name": "Fill Murray",
       "type": 0,
       "volumeSetting": 10,
@@ -45,8 +52,8 @@ export function setDummyData(state: AppState) {
       "path": "https://www.fillmurray.com/460/300",
       "previewUrl": null
     },
-    "65e61814-2748-4176-ba88-e99ac411f920": {
-      "id": "65e61814-2748-4176-ba88-e99ac411f920",
+    [clipB]: {
+      "id": clipB,
       "name": "Placekitten",
       "type": 0,
       "volumeSetting": 100,

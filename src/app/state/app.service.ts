@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { AppStore } from './app.store';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {AppStore} from './app.store';
+import {HttpClient} from '@angular/common/http';
 import {
   Clip,
   Config,
@@ -27,15 +27,17 @@ import {
 import {SnackbarService} from '../core/services/snackbar.service';
 import {AppConfig} from '@memebox/app/env';
 import {setDummyData} from './app.dummy.data';
-import {deleteClip} from '@memebox/state';
+import {addOrUpdateScreenClip, deleteClip, fillDefaultsScreenClip} from '@memebox/state';
 import {take} from 'rxjs/operators';
-import {addOrUpdateScreenClip, fillDefaultsScreenClip} from "@memebox/state";
-
+import {WebsocketService} from "../core/services/websocket.service";
+import {uuid} from "@gewd/utils";
 
 console.warn('APP.SERVICE.TS - AppConfig', AppConfig);
 
 export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
+
+const NOT_POSSIBLE_OFFLINE = 'Not possible in Offline-Mode.';
 
 // TODO split up service per module??
 
@@ -46,9 +48,12 @@ export interface Response {
 
 @Injectable()
 export class AppService {
+  private offlineMode = true;
+
   constructor(private appStore: AppStore,
               private http: HttpClient,
-              private snackbar: SnackbarService) {
+              private snackbar: SnackbarService,
+              private websocketService: WebsocketService) {
   }
 
   public loadState() {
@@ -58,6 +63,7 @@ export class AppService {
       // delay(5000)
     ).subscribe(
       value => {
+        this.offlineMode = false;
         console.info('LOADED STATE', value);
         this.appStore.update(state => value);
 
@@ -68,9 +74,9 @@ export class AppService {
           this.appStore.update(state => {
             state.offlineMode = true;
           });
+          this.offlineMode = true;
           console.error('Changing into offline mode', error);
         }
-
       }
     );
   }
@@ -105,7 +111,10 @@ export class AppService {
     if (newClipId === '') {
       // add the clip to api & await
       // todo response type
-      const response = await this.http.post<Response>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip).toPromise();
+      const response = await this.tryHttpPost<Response>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip, {
+        ok: true,
+        id: uuid()
+      });
 
       if (!response.ok) {
         return;
@@ -114,7 +123,7 @@ export class AppService {
       clip.id = newClipId = response.id;
     } else {
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.CLIPS}/${newClipId}`, clip).toPromise();
+      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CLIPS}/${newClipId}`, clip);
     }
 
     // add to the state
@@ -129,7 +138,7 @@ export class AppService {
 
   public async deleteClip(clipId: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.CLIPS}/${clipId}`).toPromise();
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.CLIPS}/${clipId}`);
 
     // remove from state
     this.appStore.update(state => {
@@ -147,14 +156,12 @@ export class AppService {
 
     if (newTagId === '') {
       // add the clip to api & await
-      newTagId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.TAGS}`, tag, {
-        responseType: 'text' as any
-      }).toPromise();
+      newTagId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TAGS}`, tag, uuid());
 
       tag.id = newTagId;
     } else {
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.TAGS}/${newTagId}`, tag).toPromise();
+      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TAGS}/${newTagId}`, tag);
     }
 
     // add to the state
@@ -165,7 +172,7 @@ export class AppService {
 
   public async deleteTag(tagId: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.TAGS}/${tagId}`).toPromise();
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.TAGS}/${tagId}`);
 
     // TODO SHARED STATE OPERATIONS?
 
@@ -189,28 +196,31 @@ export class AppService {
     arr.splice(itemIndex, 1);
   }
 
-  public async addOrUpdateScreen(url: Screen) {
+  public async addOrUpdateScreen(screen: Screen) {
     const screensAvailable = Object.keys(this.appStore.getValue().screen).length > 0;
-    let newId = url?.id ?? '';
+    let newId = screen?.id ?? '';
 
     if (newId === '') {
       // add the clip to api & await
-      const response = await this.http.post<{ ok: boolean, id: string }>(`${API_BASE}${ENDPOINTS.SCREEN}`, url).toPromise();
+      const response = await this.tryHttpPost<Response>(`${API_BASE}${ENDPOINTS.SCREEN}`, screen, {
+        ok: true,
+        id: uuid()
+      });
 
       if (!response.ok) {
         return;
       }
 
-      newId = url.id = response.id;
-      url.clips = {};
+      newId = screen.id = response.id;
+      screen.clips = {};
     } else {
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${newId}`, url).toPromise();
+      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${newId}`, screen);
     }
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[newId] = url;
+      state.screen[newId] = screen;
     });
 
     if (!screensAvailable) {
@@ -227,7 +237,7 @@ export class AppService {
 
   public async deleteScreen(id: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.SCREEN}/${id}`).toPromise();
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.SCREEN}/${id}`);
 
     // remove from state
     this.appStore.update(state => {
@@ -245,7 +255,7 @@ export class AppService {
     };
 
     // add the clip to api & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`, screenClip).toPromise();
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`, screenClip);
 
 
     // add to the state
@@ -261,7 +271,7 @@ export class AppService {
     screenClip = fillDefaultsScreenClip(screenClip);
 
     // add the clip to api & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${screenClip.id}`, screenClip).toPromise();
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${screenClip.id}`, screenClip);
 
     const wasAlreadyAdded = !!this.appStore.getValue().screen[screenId].clips[screenClip.id];
 
@@ -275,7 +285,7 @@ export class AppService {
 
   public async deleteScreenClip(screenId: string, id: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${id}`).toPromise();
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${id}`);
 
     // remove from state
     this.appStore.update(state => {
@@ -292,14 +302,12 @@ export class AppService {
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}`, event, {
-        responseType: 'text' as any
-      }).toPromise();
+      newId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}`, event, uuid());
 
       event.id = newId;
     } else {
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}/${newId}`, event).toPromise();
+      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}/${newId}`, event);
     }
 
     // add to the state
@@ -313,7 +321,7 @@ export class AppService {
 
   public async deleteTimedEvent(timerId: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}/${timerId}`).toPromise();
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}/${timerId}`);
 
     // remove from state
     this.appStore.update(state => {
@@ -328,16 +336,14 @@ export class AppService {
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.http.post<string>(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}`, event, {
-        responseType: 'text' as any
-      }).toPromise();
+      newId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}`, event, uuid());
 
       event.id = newId;
     } else {
       // TODO see if api call worked?
 
       // add the clip to api & await
-      await this.http.put<string>(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}/${newId}`, event).toPromise();
+      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}/${newId}`, event);
     }
 
     // add to the state
@@ -350,7 +356,7 @@ export class AppService {
 
   public async deleteTwitchEvent(clipId: string) {
     // send the api call
-    await this.http.delete(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}/${clipId}`).toPromise();
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}/${clipId}`);
 
     // remove from state
     this.appStore.update(state => {
@@ -362,7 +368,7 @@ export class AppService {
 
   public async updateConfig(newConfig: Partial<Config>) {
     // update path & await
-    await this.http.put<Response>(`${API_BASE}${ENDPOINTS.CONFIG}`, newConfig).toPromise();
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG}`, newConfig);
 
     // update state
     this.appStore.update(state => {
@@ -376,7 +382,7 @@ export class AppService {
     };
 
     // update path & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_CHANNEL}`, newConfig).toPromise();
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_CHANNEL}`, newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -393,7 +399,7 @@ export class AppService {
     };
 
     // update path & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT}`, newConfig).toPromise();
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT}`, newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -409,7 +415,7 @@ export class AppService {
     };
 
     // update path & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_LOG}`, newConfig).toPromise();
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_LOG}`, newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -429,7 +435,7 @@ export class AppService {
     };
 
     // update path & await
-    await this.http.put<string>(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT_INTEGRATION}`, newConfig).toPromise();
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT_INTEGRATION}`, newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -447,32 +453,50 @@ export class AppService {
   }
 
   public async openMediaFolder() {
-    // update path & await
-    await this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();
+    if (this.offlineMode) {
+      this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
+    } else {
+      // update path & await
+      await this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();
+    }
   }
 
   public async openConfigFolder() {
-    // update path & await
-    await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT}${CONFIG_OPEN_PATH}`).toPromise();
+    if (this.offlineMode) {
+      this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
+    } else {
+      // update path & await
+      await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT}${CONFIG_OPEN_PATH}`).toPromise();
+    }
   }
 
-  fillDummyData() {
+  public fillDummyData() {
     this.appStore.update(state => {
       setDummyData(state);
     });
+
+    this.websocketService.stopReconnects();
   }
 
-  async deleteAll() {
-    await this.http.post<any>(`${EXPRESS_BASE}${DANGER_CLEAN_CONFIG_ENDPOINT}`, null).toPromise();
-    location.reload();
+  public async deleteAll() {
+    if (this.offlineMode) {
+      this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
+    } else {
+      await this.http.post<any>(`${EXPRESS_BASE}${DANGER_CLEAN_CONFIG_ENDPOINT}`, null).toPromise();
+      location.reload();
+    }
   }
 
-  async importAll(body: any) {
-    await this.http.post<any>(`${EXPRESS_BASE}${DANGER_IMPORT_ALL_ENDPOINT}`, body).toPromise();
-    location.reload();
+  public async importAll(body: any) {
+    if (this.offlineMode) {
+      this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
+    } else {
+      await this.http.post<any>(`${EXPRESS_BASE}${DANGER_IMPORT_ALL_ENDPOINT}`, body).toPromise();
+      location.reload();
+    }
   }
 
-  toggleTwitchActiveState(twitchId: string) {
+  public toggleTwitchActiveState(twitchId: string) {
     const twitchEvent = this.appStore.getValue().twitchEvents[twitchId];
 
     const newTwitchEventObject = {
@@ -483,7 +507,7 @@ export class AppService {
     return this.addOrUpdateTwitchEvent(newTwitchEventObject);
   }
 
-  toggleTimedClipActiveState(twitchId: string) {
+  public toggleTimedClipActiveState(twitchId: string) {
     const timedEvent = this.appStore.getValue().timers[twitchId];
 
     const newTimedEventObject = {
@@ -496,6 +520,12 @@ export class AppService {
 
   public postErrorToServer(error: Error) {
     console.error('logged error', error);
+
+    // testing what is broken on the preview
+    debugger;
+    if (this.offlineMode) {
+      return;
+    }
 
     const logPayload: LogPayload = {
       message: `${error.name} ${error.message}`,
@@ -527,6 +557,40 @@ export class AppService {
         version: 'none'
       };
     }
+  }
+
+  private tryHttpPostReturnString(url: string, data: unknown, offlineFallback: string){
+    if (this.offlineMode) {
+      return Promise.resolve(offlineFallback);
+    }
+
+    return this.http.post<string>(url, data, {
+      responseType: 'text' as any
+    }).toPromise();
+  }
+
+  private tryHttpPost<TReturn>(url: string, data: unknown, offlineFallback: TReturn): Promise<TReturn> {
+    if (this.offlineMode) {
+      return Promise.resolve(offlineFallback);
+    }
+
+    return this.http.post<TReturn>(url, data).toPromise();
+  }
+
+  private tryHttpPut(url: string, postData: unknown){
+    if (this.offlineMode) {
+      return Promise.resolve();
+    }
+
+    return this.http.put<unknown>(url, postData).toPromise();
+  }
+
+  private tryHttpDelete(url: string){
+    if (this.offlineMode) {
+      return Promise.resolve();
+    }
+
+    return this.http.delete<unknown>(url).toPromise();
   }
 }
 

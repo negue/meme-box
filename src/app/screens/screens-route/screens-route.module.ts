@@ -3,7 +3,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {CommonModule} from "@angular/common";
 import {ScreensRouteComponent} from "./screens-route.component";
 import {TargetScreenModule} from "../target-screen/target-screen.module";
-import {ServicesModule} from "../../core/services/services.module";
 import {StateModule} from "../../state/state.module";
 
 const routes: Routes = [
@@ -23,7 +22,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     TargetScreenModule,
 
-    ServicesModule,
     StateModule
   ],
   exports: [RouterModule]

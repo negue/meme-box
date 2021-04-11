@@ -1,8 +1,7 @@
-import { ErrorHandler, Injectable, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AppService } from "../state/app.service";
-import { StateModule } from "../state/state.module";
-import { ServicesModule } from "../core/services/services.module";
+import {ErrorHandler, Injectable, NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {AppService} from "../state/app.service";
+import {StateModule} from "../state/state.module";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +23,6 @@ export class ErrorHandlerService implements ErrorHandler {
   imports: [
     CommonModule,
     StateModule,
-    ServicesModule
   ],
   providers: [
     ErrorHandlerService,
