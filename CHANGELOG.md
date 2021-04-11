@@ -1,3 +1,9 @@
+## to be released
+
+### Fixes
+
+* [x] Allow multiple reactions of twitch commands (example cheer and command by string)
+
 ## 2021.2.1
 
 ### Quality of Life Improvements
