@@ -62,7 +62,9 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   mediaClipToShow$ = new BehaviorSubject<string>(null);
   clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement | HTMLIFrameElement>();
 
-  connectionState$ = this.wsService.connectionState$;
+  showOfflineIcon$ = this.wsService.connectionState$.pipe(
+    map(value => ![ConnectionState.Connected, ConnectionState.Offline].includes(value))
+  );
 
   ConnectionState = ConnectionState;
 
