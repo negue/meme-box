@@ -23,6 +23,7 @@ import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
 import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
+import {ServicesModule} from "./core/services/services.module";
 
 export const StyleguideColors = {
   // var(--palette-background-background)
@@ -80,6 +81,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     MatIconModule,
     MatTooltipModule,
+    ServicesModule
   ],
   providers: [
     // todo extract to custom markdown
