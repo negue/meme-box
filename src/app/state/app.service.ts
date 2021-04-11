@@ -48,7 +48,7 @@ export interface Response {
 
 @Injectable()
 export class AppService {
-  private offlineMode = false;
+  private offlineMode = true;
 
   constructor(private appStore: AppStore,
               private http: HttpClient,
@@ -63,6 +63,7 @@ export class AppService {
       // delay(5000)
     ).subscribe(
       value => {
+        this.offlineMode = false;
         console.info('LOADED STATE', value);
         this.appStore.update(state => value);
 
@@ -520,6 +521,8 @@ export class AppService {
   public postErrorToServer(error: Error) {
     console.error('logged error', error);
 
+    // testing what is broken on the preview
+    debugger;
     if (this.offlineMode) {
       return;
     }
