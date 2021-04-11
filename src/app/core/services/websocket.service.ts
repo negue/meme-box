@@ -32,8 +32,6 @@ export class WebsocketService {
   private allowReconnections = true;
 
   constructor(private snackbar: SnackbarService) {
-    console.warn('new WebSocket');
-
     setTimeout(() => this.connect(), 150);
   }
 
@@ -105,10 +103,7 @@ export class WebsocketService {
       this.ws = null;
     }
 
-    console.info('allow reconnects', this.allowReconnections);
-
     if (this.intervalId !== 0) {
-      console.info('this.intervalId', this.intervalId);
       clearInterval(this.intervalId);
       this.intervalId = 0;
     }
@@ -144,7 +139,7 @@ export class WebsocketService {
           this.intervalId = window.setInterval(() => {
             this.connect();
           }, 2000);
-          console.warn('new interval', this.intervalId);
+          console.warn('new ws connect interval', this.intervalId);
         } else {
           this.connectionState$.next(ConnectionState.Offline);
         }
