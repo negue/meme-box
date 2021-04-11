@@ -1,8 +1,10 @@
+export const IS_HTTPS = location.protocol === 'https:';
+
 export const AppConfig = {
   production: true,
   environment: 'PROD',
-  expressBase: `http://${location.hostname}:${location.port}`,
-  wsBase: `ws://${location.hostname}:${location.port}`
+  expressBase: `${location.protocol}//${location.hostname}:${location.port}`,
+  wsBase: `${IS_HTTPS ? 'wss' : 'ws'}://${location.hostname}:${location.port}`
 };
 
 
