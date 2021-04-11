@@ -520,6 +520,10 @@ export class AppService {
   public postErrorToServer(error: Error) {
     console.error('logged error', error);
 
+    if (this.offlineMode) {
+      return;
+    }
+
     const logPayload: LogPayload = {
       message: `${error.name} ${error.message}`,
       stack: error.stack,
