@@ -1,28 +1,28 @@
 import 'reflect-metadata';
 import '../polyfills';
 
-import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 
-import { AppRoutingModule } from './app-routing.module';
+import {AppRoutingModule} from './app-routing.module';
 // NG Translate
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { AppConfig } from '@memebox/app/env';
-import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
+import {AppConfig} from '@memebox/app/env';
+import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
 
-import { APP_ICONS } from "./app.icons";
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions } from "@gewd/markdown/contracts";
-import { MarkdownOptionsInjectorToken } from "@gewd/markdown/service";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from "@angular/material/checkbox";
-import { ENVIRONMENT_MODULES } from "../environments/modules/modules";
+import {APP_ICONS} from "./app.icons";
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions} from "@gewd/markdown/contracts";
+import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
+import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
 
 export const StyleguideColors = {
   // var(--palette-background-background)
@@ -82,6 +82,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MatTooltipModule,
   ],
   providers: [
+    // todo extract to custom markdown
     {
       provide: MarkdownOptionsInjectorToken,
       useValue: {

@@ -1,9 +1,15 @@
+@import '~angular-material-css-vars/public-util';
+
 :host {
   width: 300px;
   min-width: 300px; // since sometimes width alone is ignored.
   position: relative;
   display: flex;
   flex-direction: column;
+}
+
+h3 {
+  margin-bottom: 0 !important;
 }
 
 .sidebar__title {

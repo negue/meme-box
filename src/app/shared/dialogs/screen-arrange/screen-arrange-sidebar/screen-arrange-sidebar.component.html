@@ -4,10 +4,10 @@
   <div>
     <button mat-button (click)="hiddenSelect.open()"
             matTooltip="Select Media to be listed / previewed">
-      <ng-container *ngIf="items.length === selectedItems.value?.length || selectedItems.value?.length === 0">
+      <ng-container *ngIf="selectedItems.value?.length === 0">
         All media visible
       </ng-container>
-      <ng-container *ngIf="![items.length, 0].includes(selectedItems.value?.length)">
+      <ng-container *ngIf="0 != selectedItems.value?.length">
         {{selectedItems.value?.length}} visible
       </ng-container>
       <mat-icon svgIcon="arrow_drop_down"></mat-icon>
