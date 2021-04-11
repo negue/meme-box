@@ -1,9 +1,8 @@
-import { combineLatest, Observable } from "rxjs";
-import { IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS } from "./filter.component";
-import { map } from "rxjs/operators";
-import { AppState, Clip, MediaType } from "@memebox/contracts";
-import { sortClips } from "../../../../../projects/utils/src/lib/sort-clips";
-import { lazyArray } from "../../../../../projects/utils/src/lib/lazyArray";
+import {combineLatest, Observable} from "rxjs";
+import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
+import {map} from "rxjs/operators";
+import {AppState, Clip, MediaType} from "@memebox/contracts";
+import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
 
 export function createCombinedFilterItems$ (
   state$: Observable<AppState>,
@@ -125,7 +124,6 @@ export function filterClips$(
       })
 
     }),
-    map(clipsToList => sortClips(clipsToList)),
-    lazyArray(10, 3) // todo refactor / rebuild this lazyArray pipe
+    map(clipsToList => sortClips(clipsToList))
   );
 }
