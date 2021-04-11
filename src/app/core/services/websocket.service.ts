@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {ACTIONS, TriggerClip} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
-import {AppConfig} from "../../../environments/environment";
+import {AppConfig} from "@memebox/app/env";
 
 
 console.warn('WEBSOCKET - AppConfig', AppConfig);
@@ -32,6 +32,8 @@ export class WebsocketService {
   private allowReconnections = true;
 
   constructor(private snackbar: SnackbarService) {
+    console.warn('new WebSocket');
+
     setTimeout(() => this.connect(), 150);
   }
 
@@ -103,7 +105,10 @@ export class WebsocketService {
       this.ws = null;
     }
 
+    console.info('allow reconnects', this.allowReconnections);
+
     if (this.intervalId !== 0) {
+      console.info('this.intervalId', this.intervalId);
       clearInterval(this.intervalId);
       this.intervalId = 0;
     }
