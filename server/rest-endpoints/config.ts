@@ -2,6 +2,7 @@ import * as express from 'express';
 import {PersistenceInstance} from "../persistence";
 import {Config, TwitchConfig} from "../../projects/contracts/src/public-api";
 import {
+  CONFIG_CUSTOM_PORT_PATH,
   CONFIG_OPEN_PATH,
   CONFIG_TWITCH_BOT_INTEGRATION_PATH,
   CONFIG_TWITCH_BOT_PATH,
@@ -14,6 +15,7 @@ import {sep} from 'path';
 import open from "open";
 import {NEW_CONFIG_PATH} from "../path.utils";
 
+// TODO allow config generic put endpoint
 
 export const CONFIG_ROUTES = express.Router();
 
@@ -78,7 +80,18 @@ CONFIG_ROUTES
     res.send({ok: true});
   })
 
-.get(CONFIG_OPEN_PATH, async (req, res) => {
+  // todo validations
+  .put(CONFIG_CUSTOM_PORT_PATH, (req, res) => {
+    // update port config
+    const {newPort} = req.body;
+    PersistenceInstance.updateCustomPort(+newPort)
+
+    res.send({
+      ok: true
+    });
+  })
+
+  .get(CONFIG_OPEN_PATH, async (req, res) => {
   await open(NEW_CONFIG_PATH);
 
   res.send({open: true});

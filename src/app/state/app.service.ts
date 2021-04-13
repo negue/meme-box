@@ -17,7 +17,7 @@ import {
 } from '@memebox/contracts';
 import {
   API_PREFIX,
-  CONFIG_ENDPOINT,
+  CONFIG_ENDPOINT_PREFIX,
   CONFIG_OPEN_PATH,
   DANGER_CLEAN_CONFIG_ENDPOINT,
   DANGER_IMPORT_ALL_ENDPOINT,
@@ -466,7 +466,7 @@ export class AppService {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       // update path & await
-      await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT}${CONFIG_OPEN_PATH}`).toPromise();
+      await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT_PREFIX}${CONFIG_OPEN_PATH}`).toPromise();
     }
   }
 
