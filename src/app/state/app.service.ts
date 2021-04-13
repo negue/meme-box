@@ -17,7 +17,7 @@ import {
 } from '@memebox/contracts';
 import {
   API_PREFIX,
-  CONFIG_ENDPOINT,
+  CONFIG_ENDPOINT_PREFIX,
   CONFIG_OPEN_PATH,
   DANGER_CLEAN_CONFIG_ENDPOINT,
   DANGER_IMPORT_ALL_ENDPOINT,
@@ -376,6 +376,23 @@ export class AppService {
     });
   }
 
+  public async updateCustomPort(newPort: number) {
+    const newConfig = {
+      newPort
+    };
+
+    // update path & await
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_CUSTOM_PORT_PATH}`, newConfig);
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.customPort = newPort;
+    });
+
+
+    this.snackbar.normal('Custom Port updated!');
+  }
+
   public async updateTwitchChannel(twitchChannel: string) {
     const newConfig: Partial<TwitchConfig> = {
       channel: twitchChannel
@@ -466,7 +483,7 @@ export class AppService {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       // update path & await
-      await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT}${CONFIG_OPEN_PATH}`).toPromise();
+      await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT_PREFIX}${CONFIG_OPEN_PATH}`).toPromise();
     }
   }
 
