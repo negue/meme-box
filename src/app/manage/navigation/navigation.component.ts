@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { DialogService } from "../../shared/dialogs/dialog.service";
-import { QrcodeDialogComponent } from "../qrcode-dialog/qrcode-dialog.component";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { take } from "rxjs/operators";
-import { AppService } from "../../state/app.service";
-import { RELEASE_PAGE } from "../../../../server/constants";
-import { AppQueries } from "../../state/app.queries";
+import {Component, OnInit} from '@angular/core';
+import {DialogService} from "../../shared/dialogs/dialog.service";
+import {QrcodeDialogComponent} from "../qrcode-dialog/qrcode-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {take} from "rxjs/operators";
+import {AppService} from "../../state/app.service";
+import {RELEASE_PAGE} from "../../../../server/constants";
+import {AppQueries} from "../../state/app.queries";
+import {TranslocoService} from "@ngneat/transloco";
+
+interface LinkEntry {
+  path: string;
+  displayName: string;
+}
 
 @Component({
   selector: 'app-navigation',
@@ -13,22 +19,22 @@ import { AppQueries } from "../../state/app.queries";
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {
-  links = [
-    {path: './media', displayName: 'Media'},
-    {path: './screens', displayName: 'Screens'},
-    {path: './triggers', displayName: 'Triggers'}
-  ]
+  links: LinkEntry[];
 
   public update$ = this.appQuery.update$;
 
   constructor(private dialogService: DialogService,
               private snackbar: MatSnackBar,
               private appService: AppService,
-              private appQuery: AppQueries) {
+              private appQuery: AppQueries,
+              private translocoService: TranslocoService) {
 
-
-
-
+    translocoService.setFallbackLangForMissingTranslation({ fallbackLang: 'en' });
+    this.links = [
+      {path: './media', displayName: 'media'},
+      {path: './screens', displayName: 'screens'},
+      {path: './triggers', displayName: 'Triggers'}
+    ];
   }
 
   ngOnInit(): void {
@@ -60,5 +66,9 @@ export class NavigationComponent implements OnInit {
     this.dialogService.open(QrcodeDialogComponent, {
 
     });
+  }
+
+  switchTo(lang: string) {
+    this.translocoService.setActiveLang(lang);
   }
 }

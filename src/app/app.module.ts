@@ -3,12 +3,9 @@ import '../polyfills';
 
 import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
-// NG Translate
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -24,6 +21,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
 import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
 import {ServicesModule} from "./core/services/services.module";
+import {TranslocoRootModule} from './transloco/transloco-root.module';
 
 export const StyleguideColors = {
   // var(--palette-background-background)
@@ -45,11 +43,6 @@ const markdownWorker = () => new Worker('./markdown.worker.ts', {
   type: "module"
 });
 
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,13 +50,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
     BrowserAnimationsModule,
 
     MaterialCssVarsModule.forRoot({
@@ -81,7 +67,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     MatIconModule,
     MatTooltipModule,
-    ServicesModule
+    ServicesModule,
+    TranslocoRootModule
   ],
   providers: [
     // todo extract to custom markdown
