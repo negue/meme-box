@@ -376,6 +376,23 @@ export class AppService {
     });
   }
 
+  public async updateCustomPort(newPort: number) {
+    const newConfig = {
+      newPort
+    };
+
+    // update path & await
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_CUSTOM_PORT_PATH}`, newConfig);
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.customPort = newPort;
+    });
+
+
+    this.snackbar.normal('Custom Port updated!');
+  }
+
   public async updateTwitchChannel(twitchChannel: string) {
     const newConfig: Partial<TwitchConfig> = {
       channel: twitchChannel
