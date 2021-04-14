@@ -1,5 +1,3 @@
-@import '~angular-material-css-vars/public-util';
-
 :host {
   width: 300px;
   min-width: 300px; // since sometimes width alone is ignored.
@@ -18,6 +16,12 @@ h3 {
   display: flex;
   flex-direction: column;
 }
+
+.preview-label {
+  justify-self: center;
+  font-weight: bold;
+}
+
 
 .sidebar__items {
   display: flex;

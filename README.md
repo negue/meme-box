@@ -35,7 +35,9 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 
 ## Getting Started
 
-> Note: These are the current `Getting Started` / Tutorials of this branch, to see the ones of released version - [click here!](https://github.com/negue/meme-box/tree/release#getting-started)
+> Note: These are the current `Getting Started` / Tutorials for this branch.
+> 
+> To see the updated `Getting Started` / Tutorials from the released version - [click here!](https://github.com/negue/meme-box/tree/release#getting-started)
 
 [`1. Installation`](./tutorials/installation.md)
 

@@ -12,6 +12,7 @@ import {TimedHandler} from "./timed.handler";
 import https from 'https';
 import currentVersionJson from '@memebox/version';
 import {STATE_OBJECT} from "./rest-endpoints/state";
+import {Lazy} from "@gewd/markdown/utils";
 
 // This file creates the "shared" server logic between headless / electron
 
@@ -19,13 +20,36 @@ import {STATE_OBJECT} from "./rest-endpoints/state";
 
 const portArgument = process.argv.find(arg => arg.includes('--port'));
 
-export const NEW_PORT = portArgument ? +portArgument.replace('--port=', '') : DEFAULT_PORT;
+const CONFIG_IS_LOADED$ = PersistenceInstance.configLoaded$.pipe(
+  take(1)
+).toPromise();
 
-export const expressServer = createExpress(NEW_PORT);
-export const {server, wss} = createWebSocketServer(NEW_PORT);
+export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value => {
+  const SAVED_PORT = PersistenceInstance.getConfig()?.customPort;
 
-// Also mount the app here
-server.on('request', expressServer);
+  const PORT_ARGUMENT_OPTION = portArgument
+    ? +portArgument.replace('--port=', '')
+    : null;
+
+  if (PORT_ARGUMENT_OPTION) {
+    LOGGER.info(`Using the --port Argument: ${PORT_ARGUMENT_OPTION}`);
+  } else if (!SAVED_PORT) {
+    LOGGER.info(`Using the default Port: ${DEFAULT_PORT}`);
+  }
+
+  const NEW_PORT = PORT_ARGUMENT_OPTION ?? SAVED_PORT ?? DEFAULT_PORT;
+
+  const expressServer = createExpress(NEW_PORT);
+  const {server, wss} = createWebSocketServer(NEW_PORT);
+
+  // Also mount the app here
+  server.on('request', expressServer);
+
+  return {
+    expressServer
+  };
+}));
+
 
 let currentConfigJsonString = '';
 let currentTimers = '';

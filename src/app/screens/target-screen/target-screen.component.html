@@ -5,7 +5,7 @@ The Loaded Clips need to stay cached?
 -->
 
 <mat-icon svgIcon="wifi_off" class="connectionIcon"
-          *ngIf="(connectionState$ | async) !== ConnectionState.Connected">
+          *ngIf="showOfflineIcon$ | async">
 
 </mat-icon>
 

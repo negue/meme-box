@@ -22,6 +22,7 @@ import { TargetScreenModule } from '../../../screens/target-screen/target-screen
 import { PipesModule } from '../../../core/pipes/pipes.module';
 import { ScreenArrangeSidebarModule } from './screen-arrange-sidebar/screen-arrange-sidebar.module';
 import { ScreenArrangePreviewModule } from './screen-arrange-preview/screen-arrange-preview.module';
+import { ScreenPreviewModule } from './screen-preview/screen-preview.module';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { ScreenArrangePreviewModule } from './screen-arrange-preview/screen-arra
     TargetScreenModule,
     PipesModule,
     ScreenArrangeSidebarModule,
-    ScreenArrangePreviewModule
+    ScreenArrangePreviewModule,
+    ScreenPreviewModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

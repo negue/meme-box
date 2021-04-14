@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AppConfig} from "@memebox/app/env";
 
 // root
 // | main page (with sidebar)
@@ -42,7 +43,7 @@ const rootRoutes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(rootRoutes, {
-      enableTracing: true,
+      enableTracing: !AppConfig.production,
       useHash: true,
       relativeLinkResolution: 'legacy'
     }),

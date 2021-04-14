@@ -55,13 +55,16 @@
   width: 100%;
 }
 
-.mediaList__name {
+.mediaList__header {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
 
-  overflow: hidden;
-  white-space: nowrap;
+  &__name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .mediaList__icon {

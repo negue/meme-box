@@ -57,7 +57,7 @@ export default function ConfigView() {
     {
       clipId: "",
       advanced: false,
-      port: 4444,
+      port: 6363,
       protocol: 'ws',
       ip: 'localhost'
     },

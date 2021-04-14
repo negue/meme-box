@@ -1,13 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { AppQueries } from '../../../state/app.queries';
 import { map, publishReplay, refCount, startWith } from 'rxjs/operators';
-import { CombinedClip, MediaType, PositionEnum, Screen } from '@memebox/contracts';
+import { CombinedClip, MediaType, Screen } from '@memebox/contracts';
 import { AppService } from '../../../state/app.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { combineLatest } from 'rxjs';
-import { AutoScaleComponent } from '@gewd/components/auto-scale';
-import { WebsocketService } from '../../../core/services/websocket.service';
 import { ScreenArrangePreviewComponent } from './screen-arrange-preview/screen-arrange-preview.component';
 
 @Component({
@@ -17,10 +15,6 @@ import { ScreenArrangePreviewComponent } from './screen-arrange-preview/screen-a
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreenArrangeComponent implements OnInit {
-
-  MediaType = MediaType;
-  PositionEnum = PositionEnum;
-
   screen$ = this.appQueries.screenMap$.pipe(
     map(screenMap => screenMap[this.screen.id])
   );
@@ -77,8 +71,6 @@ export class ScreenArrangeComponent implements OnInit {
 
   constructor(private appQueries: AppQueries,
               private appService: AppService,
-              private cd: ChangeDetectorRef,
-              private wsService: WebsocketService,
               @Inject(MAT_DIALOG_DATA) public screen: Screen) {
   }
 
@@ -86,34 +78,7 @@ export class ScreenArrangeComponent implements OnInit {
     this.appService.loadState();
   }
 
-  changed($event: Event, pair: CombinedClip) {
-    console.info($event, pair);
-
-    const newLeft = ($event.target as HTMLElement).style.getPropertyValue('--left');
-
-    console.info('NEW LEFT', newLeft);
-  }
-
   clickedOutside() {
     this._screenArrangePreviewComponent.clickedOutside();
   }
-
-  saveScreenClip() {
-    this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.clipSetting);
-  }
-
-  resizeScaling(scaleContent: AutoScaleComponent, parentElement: HTMLDivElement) {
-    scaleContent.width = parentElement.clientWidth;
-    scaleContent.height = parentElement.clientHeight;
-
-    console.info('resize called');
-  }
-
-  onPreview(visibleItem: CombinedClip) {
-    this.wsService.onTriggerClip$.next({
-      id: visibleItem.clip.id,
-      targetScreen: this.screen.id
-    });
-  }
-
 }
