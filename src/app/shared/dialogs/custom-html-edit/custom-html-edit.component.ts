@@ -1,19 +1,20 @@
-import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { DynamicIframeContent } from "@memebox/utils";
-import { BehaviorSubject } from "rxjs";
-import { debounceTime } from "rxjs/operators";
+import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {DynamicIframeContent} from "@memebox/utils";
+import {BehaviorSubject} from "rxjs";
+import {debounceTime} from "rxjs/operators";
+import type {CustomHtmlDialogPayload} from "../dialog.contract";
 
 @Component({
-  selector: 'app-dynamic-iframe-edit',
-  templateUrl: './dynamic-iframe-edit.component.html',
-  styleUrls: ['./dynamic-iframe-edit.component.scss']
+  selector: 'app-custom-html-edit',
+  templateUrl: './custom-html-edit.component.html',
+  styleUrls: ['./custom-html-edit.component.scss']
 })
-export class DynamicIframeEditComponent implements OnInit {
+export class CustomHtmlEditComponent implements OnInit {
 
   public workingValue: DynamicIframeContent = {};
 
-  public iframeContentSubject$ = new BehaviorSubject(this.data);
+  public iframeContentSubject$ = new BehaviorSubject(this.data.iframePayload);
   public iframeContent$ = this.iframeContentSubject$.pipe(
     debounceTime(400)
   );
@@ -21,13 +22,13 @@ export class DynamicIframeEditComponent implements OnInit {
   private initDone = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: DynamicIframeContent,
+    @Inject(MAT_DIALOG_DATA) public data: CustomHtmlDialogPayload,
     private dialogRef: MatDialogRef<any>,
     private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.workingValue = {...this.data};
+    this.workingValue = {...this.data.iframePayload};
 
     this.initDone = true;
   }

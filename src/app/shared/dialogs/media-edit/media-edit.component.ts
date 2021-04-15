@@ -8,17 +8,17 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag } from "@memebox/contracts";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { AppService } from "../../../state/app.service";
-import { AppQueries } from "../../../state/app.queries";
-import { distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil } from "rxjs/operators";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { DialogService } from "../dialog.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {AppService} from "../../../state/app.service";
+import {AppQueries} from "../../../state/app.queries";
+import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
+import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {DialogService} from "../dialog.service";
 import {
   applyDynamicIframeContentToClipData,
   clipDataToDynamicIframeContent,
@@ -359,7 +359,10 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     console.info({data: this.data, iframe: dynamicIframeContent});
 
-    const dialogResult = await this.dialogService.showDynamicIframeEdit(dynamicIframeContent);
+    const dialogResult = await this.dialogService.showDynamicIframeEdit({
+      name: this.data.name,
+      iframePayload: dynamicIframeContent
+    });
 
     if (dialogResult) {
       applyDynamicIframeContentToClipData(dialogResult, this.data);

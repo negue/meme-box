@@ -1,4 +1,8 @@
 :host {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
   ::ng-deep {
     .mat-expansion-panel-header-description {
       flex-grow: 0;
@@ -6,6 +10,10 @@
   }
 }
 
+mat-dialog-content {
+  flex: 1;
+  max-height: unset;
+}
 
 .padding {
   margin: 2rem;
@@ -42,7 +50,8 @@ form {
 .dialog-content {
   display: flex;
   flex-direction: row;
-  height: 500px;
+
+  height: 100%;
 }
 
 mat-accordion {
