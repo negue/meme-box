@@ -202,13 +202,14 @@
     <div *ngSwitchCase="MediaType.HTML" class="custom-html-holder">
       <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
       <app-dynamic-iframe *ngIf="currentHtml$ | async as currentHtml"
-                          [content]="currentHtml">
+                          [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
     </div>
 
     <!-- All others => AppClipType -->
     <gewd-auto-scale width="500" height="500"
+                     class="preview-box"
                      *ngSwitchDefault>
       <app-clip-preview [clip]="form.value"
                         [useOldPathEndpoint]="true">
