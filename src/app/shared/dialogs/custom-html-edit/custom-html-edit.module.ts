@@ -14,6 +14,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-ifram
     MatSelectModule,
     MatInputModule,
     FormsModule,
-    DynamicIframeModule
+    DynamicIframeModule,
+    MatCheckboxModule
 
 
   ],

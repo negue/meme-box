@@ -72,6 +72,12 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   elementsToReplace.push(`
     <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+
+
       body {
         overflow: hidden;
       }
@@ -109,9 +115,9 @@ export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
   }
 
   const dynamicContent: DynamicIframeContent = {
-    html: clip.extended['html'],
-    css: clip.extended['css'],
-    js: clip.extended['js']
+    html: clip.extended['html'] ?? '',
+    css: clip.extended['css'] ?? '',
+    js: clip.extended['js'] ?? ''
   };
 
   console.info({extended: clip.extended});

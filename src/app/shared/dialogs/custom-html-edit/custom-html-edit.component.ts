@@ -1,9 +1,10 @@
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {DynamicIframeContent} from "@memebox/utils";
 import {BehaviorSubject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
 import type {CustomHtmlDialogPayload} from "../dialog.contract";
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-custom-html-edit',
@@ -13,6 +14,9 @@ import type {CustomHtmlDialogPayload} from "../dialog.contract";
 export class CustomHtmlEditComponent implements OnInit {
 
   public workingValue: DynamicIframeContent = {};
+
+  @ViewChild('enablePreviewRefresh', {static: true})
+  public autoRefreshCheckbox: MatCheckbox;
 
   public iframeContentSubject$ = new BehaviorSubject(this.data.iframePayload);
   public iframeContent$ = this.iframeContentSubject$.pipe(
@@ -54,8 +58,10 @@ export class CustomHtmlEditComponent implements OnInit {
     this.dialogRef.close(this.workingValue);
   }
 
-  markForCheck() {
-    if (this.initDone) {
+  markForCheck(force = false) {
+    const enableSubjectRefresh = force || this.autoRefreshCheckbox?.checked;
+
+    if (this.initDone && enableSubjectRefresh) {
       this.iframeContentSubject$.next({
         ...this.workingValue
       });

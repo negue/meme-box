@@ -131,6 +131,14 @@
 
 
 <div class="iframe-preview ">
+  <div class="iframe-preview-options">
+  <mat-checkbox [checked]="true" #enablePreviewRefresh>Enable Preview Auto-Refresh</mat-checkbox>
+  <button mat-raised-button *ngIf="!enablePreviewRefresh.checked"
+  (click)="markForCheck(true)">
+    Trigger preview
+  </button>
+  </div>
+
   <app-dynamic-iframe [content]="iframeContent$ | async"></app-dynamic-iframe>
 </div>
 
