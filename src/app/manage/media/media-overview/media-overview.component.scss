@@ -10,14 +10,9 @@
 
   app-filter {
     display: block;
-    padding-top: 1rem;
     padding-bottom: 1rem;
     padding-left: 2rem;
     width: 100%;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 3.05rem;
-    z-index: 2;
     background-color: var(--palette-background-background) !important;
 
     ::ng-deep {
@@ -30,21 +25,24 @@
 
 .mo__casual-overview {
   padding: 2rem;
+  padding-top: 0;
 
   &__group {
     display: flex;
     flex-wrap: wrap;
 
     &:not(:first-child) {
-      margin-top: 12px;
+      padding-top: 12px;
     }
 
     &__title {
       flex: 100%;
       position: sticky;
-      top: 150px; // height of the <app-filter>
+      top: 0;
       z-index: 1;
       background-color: var(--palette-background-background);
+      margin-bottom: 0;
+      padding-bottom: 16px;
     }
 
     &__medias {
