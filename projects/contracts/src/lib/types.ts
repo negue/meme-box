@@ -127,7 +127,8 @@ export enum TwitchEventTypes {
   bits = 'bits',
   raid = 'raid',
   host = 'host',
-  channelPoints = 'channelPoints'
+  channelPoints = 'channelPoints',
+  ban = 'ban'
 }
 
 export interface TimedClip extends HasId, HasClipId {
@@ -147,6 +148,7 @@ export interface Twitch extends HasId, HasClipId {
   roles: string[]; // maybe enum
   minAmount?: number;
   maxAmount?: number;
+  response?:string;
 
   cooldown?: number;
 

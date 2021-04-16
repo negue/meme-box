@@ -10,4 +10,5 @@ export interface TriggerClip {
   targetScreen?: string;
   repeatX?: number;
   repeatSecond?: number;
+  message?:string;
 }

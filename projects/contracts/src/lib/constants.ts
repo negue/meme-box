@@ -31,4 +31,5 @@ export const TwitchTypesArray = [
   // TwitchEventTypes.host,
   TwitchEventTypes.message,
   TwitchEventTypes.raid,
+  TwitchEventTypes.ban
 ];

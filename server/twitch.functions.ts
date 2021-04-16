@@ -28,9 +28,20 @@ export function* getCommandsOfMessage(
       const minAmount = twitchSetting.minAmount || 0;
       const maxAmount = twitchSetting.maxAmount || Infinity;
 
-      if (eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount) {
+
+      Object.keys(eventOptions).map((key) => {
+        if(twitchSetting.response) {
+          twitchSetting.response = twitchSetting.response.replace(`{{${key}}}`, eventOptions[key])
+        }
+      });
+
+      if (eventOptions.amount && (eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount)) {
         yield twitchSetting;
+      }else if(eventOptions.amount && !(eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount)){
+        continue;
       }
+
+      yield twitchSetting;
     }
 
     if (twitchSetting.event !== TwitchEventTypes.message) {
@@ -61,7 +72,9 @@ export function* getCommandsOfMessage(
 }
 
 interface TwitchEventOptions {
-  amount: number
+  amount?: number,
+  username?: string,
+  reason?: string
 }
 
 export function getLevelOfTags(userState: tmi.Userstate): string[] {

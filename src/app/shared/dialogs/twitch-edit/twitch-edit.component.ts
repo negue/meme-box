@@ -72,6 +72,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     contains: "",
     minAmount: undefined,
     maxAmount: undefined,
+    response: undefined,
     cooldown: [undefined, Validators.max(1000*60*60*10)]
   });
 

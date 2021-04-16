@@ -1,5 +1,5 @@
 import * as tmi from 'tmi.js';
-import {EmoteObj, Options} from 'tmi.js';
+import { EmoteObj, Options, Userstate } from 'tmi.js';
 import {Subscription} from 'rxjs';
 import {PersistenceInstance} from './persistence';
 import {startWith} from 'rxjs/operators';
@@ -52,7 +52,7 @@ export class TwitchHandler {
   private async connectAndListen() {
     for (let tryOut = 0; tryOut < 3; tryOut++) {
       try {
-        await this.tmiClient.connect();
+        await this.tmiClient.connect().then((r) => console.info("Twitch connected", r)).catch((e) => console.error("Twitch error", e));
         this.log({
           message: 'Connected to Twitch!'
         });
@@ -150,15 +150,42 @@ export class TwitchHandler {
       }
     });
 
+    //Reason is being returned as null even when one is provided when banning someone
+    this.tmiClient.on('ban', (channel: string, username:string, reason:string) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.ban,
+        {
+          username,
+          reason
+        });
+
+      for (const command of foundCommandsIterator) {
+        this.log({
+          type: 'ban',
+          username,
+          data: {
+            "bannedUser": username,
+            "reason": reason,
+            "response": command.response
+          }
+        });
+
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
+
     this.subscribeToUnusedTmiEvents();
 
     /*
-    *
-
-
-
-    *
-   anongiftpaidupgrade(channel: string, username: string, userstate: AnonSubGiftUpgradeUserstate): void;
+    anongiftpaidupgrade(channel: string, username: string, userstate: AnonSubGiftUpgradeUserstate): void;
     ban(channel: string, username: string, reason: string): void;
 
     clearchat(channel: string): void;
@@ -234,7 +261,8 @@ export class TwitchHandler {
         this.cooldownDictionary[trigger.command.id] = Date.now();
 
         triggerMediaClipById({
-          id: trigger.command.clipId
+          id: trigger.command.clipId,
+          message: trigger.command.response
         });
       }
     }
