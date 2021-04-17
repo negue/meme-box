@@ -137,6 +137,16 @@ export enum TwitchEventTypes {
   subscription = "subscription"
 }
 
+export interface TwitchEventFields {
+  [event:string]: {
+    fields: {
+      minValue?: { enable: boolean, placeholder?: string},
+      maxValue?: { enable: boolean, placeholder?: string},
+      response?: { enable: boolean, placeholder?: string},
+    }
+  }
+}
+
 export interface TimedClip extends HasId, HasClipId {
   // id => has nothing to do with clipID
   screenId?: string;
