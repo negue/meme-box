@@ -123,12 +123,18 @@ export interface ScreenViewEntry extends Screen {
 export enum TwitchEventTypes {
   message = 'message',
   follow = 'follow',
-  sub = 'sub',
   bits = 'bits',
   raid = 'raid',
   host = 'host',
   channelPoints = 'channelPoints',
-  ban = 'ban'
+  ban = 'ban',
+  allSubEvents = "allSubEvents",
+  anonGiftPaidUpgrade = "anonGiftPaidUpgrade",
+  giftPaidUpgrade = "giftPaidUpgrade",
+  resub = "resub",
+  subGift = "subGift",
+  subMysteryGift = "subMysteryGift",
+  subscription = "subscription"
 }
 
 export interface TimedClip extends HasId, HasClipId {

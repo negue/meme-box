@@ -1,5 +1,6 @@
 import {Twitch, TwitchEventTypes} from "@memebox/contracts";
 import * as tmi from "tmi.js";
+import { SubMethods, Userstate } from 'tmi.js';
 
 declare module 'tmi.js' {
   export interface Badges {
@@ -13,6 +14,12 @@ export function* getCommandsOfMessage(
   event: TwitchEventTypes,
   eventOptions?: TwitchEventOptions
 ): IterableIterator<Twitch> {
+  this.log({
+    message,
+    event,
+    eventOptions
+  });
+
   if (!message && !eventOptions) {
     return null;
   }
@@ -27,7 +34,6 @@ export function* getCommandsOfMessage(
     if (eventOptions && event === twitchSetting.event) {
       const minAmount = twitchSetting.minAmount || 0;
       const maxAmount = twitchSetting.maxAmount || Infinity;
-
 
       Object.keys(eventOptions).map((key) => {
         if(twitchSetting.response) {
@@ -74,7 +80,15 @@ export function* getCommandsOfMessage(
 interface TwitchEventOptions {
   amount?: number,
   username?: string,
-  reason?: string
+  reason?: string,
+  sender?: string,
+  userState?: Userstate,
+  months?: number,
+  message?:string,
+  methods?: SubMethods,
+  recipient?: string,
+  numberOfSubs?: number,
+  viewers?:number
 }
 
 export function getLevelOfTags(userState: tmi.Userstate): string[] {
