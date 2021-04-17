@@ -1,5 +1,7 @@
 ## to be released
-
+* [x] Add new twitch events to the trigger section
+  * [x] All the sub events were added
+  * [x] Ban event
 ### Fixes
 
 * [x] Allow multiple reactions of twitch commands (example cheer and command by string)
