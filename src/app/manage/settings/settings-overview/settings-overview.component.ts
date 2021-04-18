@@ -6,6 +6,8 @@ import {AppService} from "../../../state/app.service";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {AppQueries} from "../../../state/app.queries";
 
+const dummyItemsCreatorLazy = () => import('./dummyItemsCreator');
+
 @Component({
   selector: 'app-settings-overview',
   templateUrl: './settings-overview.component.html',
@@ -13,6 +15,7 @@ import {AppQueries} from "../../../state/app.queries";
 })
 export class SettingsOverviewComponent implements OnInit {
   public config$: Observable<Partial<Config>> = this.query.config$;
+  public offlineMode$ = this.query.inOfflineMode$;
 
   constructor(public service: AppService,
               public query: AppQueries,
@@ -42,5 +45,9 @@ export class SettingsOverviewComponent implements OnInit {
 
   downloadStreamdeckPlugin() {
     window.open('https://github.com/negue/meme-box/raw/release/memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin');
+  }
+
+  addMoreDummyItems () {
+    dummyItemsCreatorLazy().then(value => value.addMoreItems(this.service));
   }
 }
