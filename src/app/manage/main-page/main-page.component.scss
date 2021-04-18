@@ -1,11 +1,16 @@
 :host {
-  display: block;
+  --toolbar-height: 50px;
+
+  display: flex;
+  flex-direction: column;
 
   ::ng-deep app-navigation + router-outlet + * {
-    position: absolute;
-    top: 50px;
-    width: 100%;
-    bottom: 0;
+    // A fixed height is needed to show a scrollbar or let your content decide where to actually show it
+    height: calc(100vh - var(--toolbar-height));
     overflow: auto;
   }
+}
+
+app-navigation {
+  height: var(--toolbar-height);
 }

@@ -6,7 +6,8 @@
 }
 
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
 
   app-filter {
     display: block;
@@ -21,6 +22,10 @@
       }
     }
   }
+}
+
+.mo__content-container {
+  overflow: auto;
 }
 
 .mo__casual-overview {
