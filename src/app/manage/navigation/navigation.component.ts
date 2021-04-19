@@ -6,7 +6,6 @@ import {take} from "rxjs/operators";
 import {AppService} from "../../state/app.service";
 import {RELEASE_PAGE} from "../../../../server/constants";
 import {AppQueries} from "../../state/app.queries";
-import {TranslocoService} from "@ngneat/transloco";
 
 interface LinkEntry {
   path: string;
@@ -26,10 +25,8 @@ export class NavigationComponent implements OnInit {
   constructor(private dialogService: DialogService,
               private snackbar: MatSnackBar,
               private appService: AppService,
-              private appQuery: AppQueries,
-              private translocoService: TranslocoService) {
+              private appQuery: AppQueries) {
 
-    translocoService.setFallbackLangForMissingTranslation({ fallbackLang: 'en' });
     this.links = [
       {path: './media', displayName: 'media'},
       {path: './screens', displayName: 'screens'},
@@ -66,9 +63,5 @@ export class NavigationComponent implements OnInit {
     this.dialogService.open(QrcodeDialogComponent, {
 
     });
-  }
-
-  switchTo(lang: string) {
-    this.translocoService.setActiveLang(lang);
   }
 }
