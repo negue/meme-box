@@ -79,6 +79,9 @@
     <app-version-card></app-version-card>
   </app-overview-item>
 
+  <app-overview-item>
+    <app-custom-port-setting></app-custom-port-setting>
+  </app-overview-item>
 
   <app-overview-item>
     <div class="title-row">
@@ -94,6 +97,17 @@
 
     <br/>
     You can also trigger MemeBox Media with the Streamdeck Plugin.
+  </app-overview-item>
+
+  <app-overview-item *ngIf="offlineMode$ | async">
+   <div class="title-row">
+      <h2 class="mat-h2 title-name">More Dummy Data</h2>
+      <mat-icon svgIcon="settings"></mat-icon>
+    </div>
+
+    <button mat-raised-button (click)="addMoreDummyItems()">
+      Add more dummy items
+    </button>
   </app-overview-item>
 
   <app-overview-item>

@@ -191,6 +191,7 @@ export interface AppState extends SettingsState {
 }
 
 export interface Config {
+  customPort?: number | null;
   mediaFolder: string;
   twitch: TwitchConfig;
   enableVersionCheck?: boolean;

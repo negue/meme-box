@@ -8,6 +8,8 @@ import {AppQueries} from "../../../state/app.queries";
 import {TranslocoService} from "@ngneat/transloco";
 import {TranslocoSelectedLangService} from "../../../transloco/transloco-selected-lang.service";
 
+const dummyItemsCreatorLazy = () => import('./dummyItemsCreator');
+
 @Component({
   selector: 'app-settings-overview',
   templateUrl: './settings-overview.component.html',
@@ -15,6 +17,7 @@ import {TranslocoSelectedLangService} from "../../../transloco/transloco-selecte
 })
 export class SettingsOverviewComponent implements OnInit {
   public config$: Observable<Partial<Config>> = this.query.config$;
+  public offlineMode$ = this.query.inOfflineMode$;
 
   public currentLanguage = this.translocoService.getActiveLang();
   public availableLanguages = this.translocoService.getAvailableLangs();
@@ -50,6 +53,10 @@ export class SettingsOverviewComponent implements OnInit {
 
   downloadStreamdeckPlugin() {
     window.open('https://github.com/negue/meme-box/raw/release/memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin');
+  }
+
+  addMoreDummyItems () {
+    dummyItemsCreatorLazy().then(value => value.addMoreItems(this.service));
   }
 
   selectNewLanguage($event: any) {

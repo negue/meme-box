@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import '../polyfills';
 
-import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
 
@@ -9,7 +9,7 @@ import {AppRoutingModule} from './app-routing.module';
 
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
+import {MatIconModule} from "@angular/material/icon";
 import {AppConfig} from '@memebox/app/env';
 import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
 
@@ -22,6 +22,7 @@ import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/
 import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
 import {ServicesModule} from "./core/services/services.module";
 import {TranslocoRootModule} from './transloco/transloco-root.module';
+import {RegisterIconsModule} from "@gewd/mat-utils/material-icons";
 
 export const StyleguideColors = {
   // var(--palette-background-background)
@@ -68,6 +69,15 @@ const markdownWorker = () => new Worker('./markdown.worker.ts', {
     MatIconModule,
     MatTooltipModule,
     ServicesModule,
+
+    RegisterIconsModule.register({
+      iconArray: APP_ICONS,
+      pathToIcons: './assets/material-icons'
+    }),
+    RegisterIconsModule.register({
+      iconArray: ['twitch'],
+      pathToIcons: './assets/'
+    }),
     TranslocoRootModule
   ],
   providers: [
@@ -107,20 +117,8 @@ const markdownWorker = () => new Worker('./markdown.worker.ts', {
 })
 export class AppModule {
   constructor(
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer,
     public materialCssVarsService: MaterialCssVarsService
   ) {
-    for (const icon of APP_ICONS) {
-      iconRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(
-        `./assets/material-icons/${icon}.svg`
-      ));
-    }
-
-    iconRegistry.addSvgIcon('twitch', sanitizer.bypassSecurityTrustResourceUrl(
-      `./assets/twitch.svg`
-    ));
-
     this.materialCssVarsService.setDarkTheme(true);
     this.materialCssVarsService.setAutoContrastEnabled(true)
     this.materialCssVarsService.setPrimaryColor(StyleguideColors.primary);

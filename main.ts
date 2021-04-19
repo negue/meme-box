@@ -1,6 +1,6 @@
 import {app, BrowserWindow, dialog, ipcMain, shell} from 'electron';
 import * as path from 'path';
-import {expressServer} from './server/server-app';
+import {ExpressServerLazy} from './server/server-app';
 import {NEW_CONFIG_PATH} from "./server/path.utils";
 
 // TODO move electron to its own folder / file??
@@ -31,18 +31,19 @@ function createWindow(): BrowserWindow {
     },
   });
 
-  if (serve) {
+  ExpressServerLazy.getValue().then(({expressServer}) => {
+    if (serve) {
+      win.webContents.openDevTools();
 
-    win.webContents.openDevTools();
-
-    require('electron-reload')(__dirname, {
-      electron: require(`${__dirname}/../node_modules/electron`),
-      argv: ['--serve']
-    });
-    win.loadURL(`http://localhost:4200?port=${expressServer.get('port')}`);
-  } else {
-    win.loadURL(  `http://localhost:${expressServer.get('port')}`);
-  }
+      require('electron-reload')(__dirname, {
+        electron: require(`${__dirname}/../node_modules/electron`),
+        argv: ['--serve']
+      });
+      win.loadURL(`http://localhost:4200?port=${expressServer.get('port')}`);
+    } else {
+      win.loadURL(  `http://localhost:${expressServer.get('port')}`);
+    }
+  });
 
   win.on("close", function() {
     var data = {

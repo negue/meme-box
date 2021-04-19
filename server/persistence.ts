@@ -3,6 +3,7 @@ import {
   Clip,
   Config,
   ConfigV0,
+  createInitialState,
   PositionEnum,
   Screen,
   ScreenClip,
@@ -13,19 +14,21 @@ import {
   TwitchBotConfig,
   TwitchConfig,
   VisibilityEnum
-} from '../projects/contracts/src/lib/types';
-import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
+} from '@memebox/contracts';
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
-import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
+import {
+  deleteInArray,
+  deleteItemInDictionary,
+  simpleDateString,
+  sortClips,
+  updateItemInDictionary,
+  uuidv4
+} from "@memebox/utils";
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {uuidv4} from "../projects/utils/src/lib/uuid";
-import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
 import {operations} from '../projects/state/src/public-api';
 import {debounceTime} from "rxjs/operators";
 import {LOGGER} from "./logger.utils";
-import {sortClips} from "../projects/utils/src/lib/sort-clips";
-// Todo ts-config paths!!!
 
 // TODO Extract more state operations to shared library and from app
 
@@ -60,17 +63,6 @@ export class Persistence {
         return console.log(err);
       }
 
-      if (!fileBackupToday) {
-        const targetDir = path.dirname(this.filePath);
-        const targetFileName = path.basename(this.filePath);
-
-        const backupPathFile = `${targetDir}/backups/${targetFileName}.${simpleDateString()}.backup`;
-
-        saveFile(backupPathFile, data);
-
-        fileBackupToday = true;
-      }
-
       let dataFromFile = {};
 
       if (data && data.includes('{')) {
@@ -81,6 +73,19 @@ export class Persistence {
       this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
       this.updated$.next();
       this.configLoaded$.next();
+
+      this.logger.info('Settings loaded');
+
+      if (!fileBackupToday) {
+        const targetDir = path.dirname(this.filePath);
+        const targetFileName = path.basename(this.filePath);
+
+        const backupPathFile = `${targetDir}/backups/${targetFileName}.${simpleDateString()}.backup`;
+
+        saveFile(backupPathFile, data);
+
+        fileBackupToday = true;
+      }
     });
 
     this.updated$.pipe(
@@ -373,6 +378,15 @@ export class Persistence {
     this.data.config.twitch.bot.enabled = twitchBotConfig.enabled;
     this.saveData();
   }
+
+  public updateCustomPort (newPort: number) {
+    this.data.config = this.data.config || {};
+
+    this.data.config.customPort = newPort;
+
+    this.saveData();
+  }
+
 
   public updateTwitchBot (twitchConfig: TwitchConfig) {
     console.log(twitchConfig);

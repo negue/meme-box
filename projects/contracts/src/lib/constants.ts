@@ -18,7 +18,8 @@ export const ENDPOINTS = {
   CONFIG_TWITCH_CHANNEL: 'config/twitchChannel',
   CONFIG_TWITCH_BOT_INTEGRATION: 'config/twitchBotIntegration',
   CONFIG_TWITCH_BOT: 'config/twitchBot',
-  CONFIG_TWITCH_LOG: 'config/twitchLog'
+  CONFIG_TWITCH_LOG: 'config/twitchLog',
+  CONFIG_CUSTOM_PORT_PATH: 'config/customPort'
 }
 
 
