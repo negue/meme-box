@@ -1,4 +1,3 @@
-import * as http from "http";
 import * as WebSocket from "ws";
 import {ACTIONS, TriggerClip} from "../projects/contracts/src/lib/actions";
 import {PersistenceInstance} from "./persistence";
@@ -12,9 +11,6 @@ interface WebSocketType {
   readyState: number;
 }
 
-const server = http.createServer();
-
-const wss = new WebSocket.Server({ server });
 
 // value => socket => array?
 const obsPages: Dictionary<WebSocketType[]> = {};
@@ -112,60 +108,60 @@ function timeoutAsync(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-wss.on("connection", (ws: WebSocket) => {
-  //connection is up, let's add a simple simple event
-  ws.on("message", (message: string) => {
-    //log the received message and send it back to the client
-    // console.log("received: %s", message);
-    // ws.send(`Hello, you sent -> ${message}`);
+function handleWebSocketMessage(ws: WebSocket, message: string) {
+  //log the received message and send it back to the client
+  // console.log("received: %s", message);
+  // ws.send(`Hello, you sent -> ${message}`);
 
-    // ACTION={payload}
-    const [action, payload] = message.split('=');
+  // ACTION={payload}
+  const [action, payload] = message.split('=');
 
-    // console.info({action, payload});
+  // console.info({action, payload});
 
-    switch (action) {
-      case ACTIONS.I_AM_OBS: {
-        if (obsPages[payload]) {
-          obsPages[payload].push(ws);
-        } else {
-          obsPages[payload] = [ws];
-        }
-
-        wsToSend.push(ws);
-        break;
+  switch (action) {
+    case ACTIONS.I_AM_OBS: {
+      if (obsPages[payload]) {
+        obsPages[payload].push(ws);
+      } else {
+        obsPages[payload] = [ws];
       }
-      case ACTIONS.TRIGGER_CLIP: {
-        const payloadObs: TriggerClip = JSON.parse(payload);
 
-
-        WSS_LOGGER.info(`TRIGGER DATA TO - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
-
-        if (!payloadObs.targetScreen) {
-          triggerMediaClipById(payloadObs);
-        } else {
-          sendDataToScreen(payloadObs.targetScreen, message);
-        }
-
-        break;
-      }
-      case ACTIONS.RELOAD_SCREEN: {
-        sendDataToScreen(payload, message);
-        break;
-      }
+      wsToSend.push(ws);
+      break;
     }
+    case ACTIONS.TRIGGER_CLIP: {
+      const payloadObs: TriggerClip = JSON.parse(payload);
 
+
+      WSS_LOGGER.info(`TRIGGER DATA TO - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
+
+      if (!payloadObs.targetScreen) {
+        triggerMediaClipById(payloadObs);
+      } else {
+        sendDataToScreen(payloadObs.targetScreen, message);
+      }
+
+      break;
+    }
+    case ACTIONS.RELOAD_SCREEN: {
+      sendDataToScreen(payload, message);
+      break;
+    }
+  }
+}
+
+export function createWebSocketServer(httpServer) {
+  const wss = new WebSocket.Server({ server: httpServer });
+
+  wss.on("connection", (ws: WebSocket) => {
+    //connection is up, let's add a simple simple event
+    ws.on("message", (message: string) => {
+      handleWebSocketMessage(ws, message);
+    });
+
+    //send immediatly a feedback to the incoming connection
+    ws.send("Hi there, I am a WebSocket server");
   });
 
-  //send immediatly a feedback to the incoming connection
-  ws.send("Hi there, I am a WebSocket server");
-});
-
-export function createWebSocketServer(port) {
-  //start our server
-  server.listen(port, '0.0.0.0',() => {
-    LOGGER.info(`Server started on port: ${port}`);
-  });
-
-  return {server, wss};
+  return { wss};
 }

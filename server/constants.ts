@@ -40,7 +40,6 @@ export const CLIP_ENDPOINT = `${API_PREFIX}/clips`;
 export const CLIP_ID_ENDPOINT = `${API_PREFIX}/clips/:clipId`;
 export const SCREEN_ENDPOINT = `${API_PREFIX}/screen`;
 export const SCREEN_ID_ENDPOINT = `${API_PREFIX}/screen/:screenId`;
-export const SCREEN_CLIPS_ENDPOINT = `${API_PREFIX}/screen/:screenId/clips`;
 export const SCREEN_CLIPS_ID_ENDPOINT = `${API_PREFIX}/screen/:screenId/clips/:clipId`;
 
 
