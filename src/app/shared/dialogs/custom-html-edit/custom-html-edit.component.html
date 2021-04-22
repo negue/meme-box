@@ -9,6 +9,27 @@
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
         <mat-panel-title>
+          Custom Variables
+        </mat-panel-title>
+        <mat-panel-description>
+
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+        "Notes":
+        These are the variables to be used inside CSS / JS / HTML - for an easier way to change the Widget "config" or values or something.
+
+        <app-variables-config [variablesList]="variablesList"
+                              (onEditVariable)="markForCheck()"
+                              (onDeleteVariable)="deleteVariable($event)"
+                              (onAddNewVariable)="addNewVariable()">
+
+        </app-variables-config>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
           HTML
         </mat-panel-title>
         <mat-panel-description>

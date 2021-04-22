@@ -186,6 +186,18 @@
         </ng-container>
       </mat-select>
     </mat-form-field>
+
+    <ng-container *ngIf="form.value.type === MediaType.HTML">
+      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+        <div *ngFor="let variable of currentHtml.variablesConfig">
+          <app-dynamic-variable-input [variableType]="variable.type" [label]="variable.name"
+                                      [value]="data.extended[variable.name]"
+                                      (valueChanged)="data.extended[variable.name] = $event; triggerHTMLRefresh()">
+
+          </app-dynamic-variable-input>
+        </div>
+      </ng-container>
+    </ng-container>
   </form>
 
   <div class="column" [ngSwitch]="form.value.type"
@@ -201,7 +213,7 @@
 
     <div *ngSwitchCase="MediaType.HTML" class="custom-html-holder">
       <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
-      <app-dynamic-iframe *ngIf="currentHtml$ | async as currentHtml"
+      <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>

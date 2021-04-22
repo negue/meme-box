@@ -15,10 +15,13 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {VariablesConfigComponent} from './variables-config/variables-config.component';
+import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
 
 @NgModule({
   declarations: [
-    CustomHtmlEditComponent
+    CustomHtmlEditComponent,
+    VariablesConfigComponent
   ],
   imports: [
     MatDialogModule,
@@ -33,7 +36,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatInputModule,
     FormsModule,
     DynamicIframeModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DynamicVariableInputModule
 
 
   ],
