@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { ClipAssigningMode, CombinedClip, Screen, UnassignedFilterEnum } from '@memebox/contracts';
 import { FormControl } from '@angular/forms';
 import { DialogService } from '../../dialog.service';
+import { AppService } from '../../../../state/app.service';
 
 @Component({
   selector: 'app-screen-arrange-sidebar',
@@ -25,10 +26,17 @@ export class ScreenArrangeSidebarComponent {
   @Input()
   currentSelectedClip: CombinedClip | null = null;
 
+  @Input()
+  hasUnsavedChanges: boolean;
+
   @Output()
   changeCurrSelectedClip = new EventEmitter<CombinedClip | null>();
 
-  constructor(private dialogs: DialogService) {
+  @Output()
+  changesSaved = new EventEmitter();
+
+  constructor(private dialogs: DialogService,
+              private appService: AppService) {
   }
 
   assignMedia() {
@@ -56,6 +64,14 @@ export class ScreenArrangeSidebarComponent {
       screenId: this.screen.id,
       name: visibleItem.clip.name
     });
+  }
+
+  async saveAllSettings() {
+    for (const item of this.visibleItems) {
+      // TODO replace with a bulk update
+      await this.appService.addOrUpdateScreenClip(this.screen.id, item.clipSetting);
+    }
+    this.changesSaved.emit();
   }
 
   private showAssignmentDialog(screen: Partial<Screen>) {

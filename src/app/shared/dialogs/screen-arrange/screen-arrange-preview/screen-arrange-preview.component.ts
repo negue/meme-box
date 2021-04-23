@@ -31,6 +31,9 @@ export class ScreenArrangePreviewComponent {
   @Output()
   changeCurrSelectedClip = new EventEmitter<CombinedClip | null>();
 
+  @Output()
+  userChangeElement = new EventEmitter();
+
   PositionEnum = PositionEnum;
 
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
@@ -59,15 +62,12 @@ export class ScreenArrangePreviewComponent {
     this._cd.detectChanges();
   }
 
-  elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip) {
-    this.combinedClipToComponent.set(pair, dragResizeMediaComponent);
+  userChangedElement() {
+    this.userChangeElement.emit();
   }
 
-  async saveAllSettings() {
-    for (const item of this.visibleItems) {
-      // TODO replace with a bulk update
-      await this.appService.addOrUpdateScreenClip(this.screen.id, item.clipSetting);
-    }
+  elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip) {
+    this.combinedClipToComponent.set(pair, dragResizeMediaComponent);
   }
 
   onCheckedToggle($event: MatCheckboxChange, warpingCheckbox: MatCheckbox) {

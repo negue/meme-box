@@ -61,3 +61,11 @@
   </mat-selection-list>
 
 </div>
+
+<button *ngIf="hasUnsavedChanges"
+        mat-raised-button
+        (click)="saveAllSettings()"
+        color="accent"
+>
+  Save all Clip Settings
+</button>

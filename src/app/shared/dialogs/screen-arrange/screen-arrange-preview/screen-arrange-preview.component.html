@@ -10,10 +10,6 @@
         <mat-option [value]="3">{{3 | positionToString}}</mat-option>
       </mat-select>
     </mat-form-field>
-
-    <button mat-raised-button (click)="saveAllSettings()" color="accent">
-      Save all Clip Settings
-    </button>
   </div>
 </div>
 
@@ -83,6 +79,7 @@
           (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
           [settings]="pair.clipSetting" #dragResizeMediaComponent
           (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
+          (elementChanged)="userChangedElement()"
 
           [draggingEnabled]="pair.clipSetting.arrangeLock?.position ? false : dragCheckbox.checked"
           [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"

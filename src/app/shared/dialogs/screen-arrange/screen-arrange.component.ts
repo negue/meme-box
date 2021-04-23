@@ -49,6 +49,8 @@ export class ScreenArrangeComponent implements OnInit {
 
   selectedItems = new FormControl([]);
 
+  hasUnsavedChanges = false;
+
   public visibleItems$ = combineLatest([
     this.clipList$,
     this.selectedItems.valueChanges.pipe(
