@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { ClipAssigningMode, CombinedClip, Screen, UnassignedFilterEnum } from '@memebox/contracts';
 import { FormControl } from '@angular/forms';
 import { DialogService } from '../../dialog.service';
-import { MatRipple } from '@angular/material/core';
 
 @Component({
   selector: 'app-screen-arrange-sidebar',
@@ -36,16 +35,19 @@ export class ScreenArrangeSidebarComponent {
     this.showAssignmentDialog(this.screen);
   }
 
-  onSelectMedia(mouseEvent: MouseEvent, matRippleInstance: MatRipple, $event: CombinedClip) {
+  onSelectMedia(mouseEvent: MouseEvent, $event: CombinedClip) {
     this.changeCurrSelectedClip.emit($event);
     this.currentSelectedClip = $event;
+  }
 
-    matRippleInstance.launch(mouseEvent.x, mouseEvent.y);
+  preventEvent(event: Event): void {
+    event.stopImmediatePropagation();
+    event.stopPropagation();
+    event.preventDefault();
   }
 
   openMediaSettingsDialog($event: MouseEvent, visibleItem: CombinedClip) {
-    $event.stopImmediatePropagation();
-    $event.stopPropagation();
+    this.preventEvent($event);
 
     this.currentSelectedClip = null;
 

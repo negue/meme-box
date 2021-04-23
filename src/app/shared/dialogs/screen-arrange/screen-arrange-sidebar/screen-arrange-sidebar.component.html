@@ -37,67 +37,27 @@
 </div>
 
 <div class="sidebar__items">
-  <mat-card *ngFor="let visibleItem of visibleItems"
-            (click)="onSelectMedia($event, matRippleInstance, visibleItem)"
-            [class.selected]="currentSelectedClip?.clip?.id === visibleItem.clip.id"
-            matRipple [matRippleDisabled]="true"
-
-            #matRippleInstance="matRipple">
-    <!-- TODO Extract Item  MatCard to its own component -->
-    <mat-card-header>
-      <div mat-card-avatar>
+  <mat-selection-list [multiple]="false">
+    <mat-list-option *ngFor="let visibleItem of visibleItems"
+                     [selected]="currentSelectedClip === visibleItem"
+                     (click)="onSelectMedia($event, visibleItem)"
+                     (mousedown)="preventEvent($event)"
+    >
+      <div mat-list-avatar>
         <app-clip-type [type]="visibleItem.clip.type"
-                       iconSize="36px"
-                       mat-list-icon>
-
+                       iconSize="40px">
         </app-clip-type>
       </div>
-      <mat-card-title>{{visibleItem.clip.name}}</mat-card-title>
-      <mat-card-subtitle>
-        {{visibleItem.clipSetting.visibility | visibilityToString}}
-        / {{visibleItem.clipSetting.position | positionToString }}
-      </mat-card-subtitle>
-      <div style="width: 40px; height: 40px">
+      <div mat-line>{{visibleItem.clip.name}}</div>
+      <div mat-line>{{visibleItem.clipSetting.visibility | visibilityToString}}</div>
+
+      <div mat-list-icon class="card-settings-icon">
         <button (click)="openMediaSettingsDialog($event, visibleItem)"
                 mat-icon-button>
           <mat-icon svgIcon="settings"></mat-icon>
         </button>
       </div>
-    </mat-card-header>
+    </mat-list-option>
+  </mat-selection-list>
 
-    <mat-card-content>
-      Size:
-
-      <ng-container *ngIf="visibleItem.clipSetting.position === 0">
-        {{visibleItem.clipSetting.position | positionToString }}
-      </ng-container>
-      <ng-container *ngIf="visibleItem.clipSetting.position">
-        [{{visibleItem.clipSetting.width}}] x [{{visibleItem.clipSetting.height}}]
-      </ng-container>
-      <br>
-
-      Pos:
-      <ng-container *ngIf="visibleItem.clipSetting.position === 1 ">
-
-        <ng-container *ngIf="visibleItem.clipSetting.left">
-          L: {{visibleItem.clipSetting.left}}
-        </ng-container>
-
-        <ng-container *ngIf="visibleItem.clipSetting.top">
-          T: {{visibleItem.clipSetting.top}}
-        </ng-container>
-
-        <ng-container *ngIf="visibleItem.clipSetting.right">
-          R: {{visibleItem.clipSetting.right}}
-        </ng-container>
-
-        <ng-container *ngIf="visibleItem.clipSetting.bottom">
-          B: {{visibleItem.clipSetting.bottom}}
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="visibleItem.clipSetting.position !== 1 ">
-        {{ visibleItem.clipSetting.position | positionToString}}
-      </ng-container>
-    </mat-card-content>
-  </mat-card>
 </div>

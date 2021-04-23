@@ -19,6 +19,17 @@ h3 {
   flex-direction: column;
 }
 
+.mat-selection-list {
+  flex: 1;
+  overflow: hidden;
+
+  .card-settings-icon {
+    position: relative;
+    top: -8px;
+    order: -1;
+  }
+}
+
 .sidebar__items {
   display: flex;
   gap: 5px;
