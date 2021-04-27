@@ -118,11 +118,8 @@ export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
-// TODO refactor, maybe all messages
-// and then like "yes, but this one only with bits.."
 export enum TwitchEventTypes {
   message = 'message',
-  follow = 'follow',
   sub = 'sub',
   bits = 'bits',
   raid = 'raid',

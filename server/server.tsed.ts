@@ -2,10 +2,14 @@ import {BeforeInit, BeforeRoutesInit, Configuration, HttpServer, Inject, Platfor
 import {API_PREFIX} from "./constants";
 import {ScreenController} from "./controllers/screen.controller";
 import {createWebSocketServer} from "./websocket-server";
+import {TwitchBootstrap} from "./providers/twitch.bootstrap";
+import {Env} from "@tsed/core";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
 // import * as methodOverride from "method-override";
+
+export const isProduction = process.env.NODE_ENV === Env.PROD || true;
 
 const rootDir = __dirname;
 
@@ -16,6 +20,11 @@ const rootDir = __dirname;
     [API_PREFIX]: [
       ScreenController
     ]
+  },
+  logger: {
+    debug: !isProduction,
+    disableRoutesSummary: isProduction,
+    disableBootstrapLog: isProduction
   }
 })
 export class ServerTsED implements BeforeRoutesInit, BeforeInit {
@@ -25,7 +34,13 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
   @Configuration()
   settings: Configuration;
 
-  @Inject(HttpServer) httpServer: HttpServer
+  @Inject(HttpServer)
+  httpServer: HttpServer;
+
+  constructor(
+    private _twitchBootstrap: TwitchBootstrap
+  ) {
+  }
 
   /**
    * This method let you configure the express middleware required by your application to works.

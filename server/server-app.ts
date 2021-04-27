@@ -74,6 +74,7 @@ PersistenceInstance.dataUpdated$()
     startWith(true)
   )
   .subscribe(() => {
+    // TODO move to a different place?
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
 
     const config = PersistenceInstance.getConfig();

@@ -43,7 +43,7 @@ export class Persistence {
   // This is the CONFIG-Version, not the App Version
   private version = 1;
 
-  private updated$ = new Subject();
+  private updated$ = new Subject<void>();
   private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
 
@@ -130,7 +130,7 @@ export class Persistence {
     return configFromFile;
   }
 
-  public dataUpdated$ () : Observable<any> {
+  public dataUpdated$ () : Observable<void> {
     return this.updated$.asObservable();
   }
 
