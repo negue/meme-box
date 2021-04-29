@@ -1,5 +1,5 @@
 import {Injectable, ProviderScope, ProviderType, UseOpts} from "@tsed/di";
-import {MyLogger} from "./injectable-logger";
+import {NamedLogger} from "./injectable-logger";
 
 
 @Injectable({
@@ -8,7 +8,7 @@ import {MyLogger} from "./injectable-logger";
 })
 export class TwitchLogger {
   constructor(
-    @UseOpts({name: 'TwitchLogger'}) private logger: MyLogger
+    @UseOpts({name: 'TwitchLogger'}) private logger: NamedLogger
   ) {
     logger.warn('TEST IF TWITCHLOGGER IS CREATED ON STARTUP');
   }

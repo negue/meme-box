@@ -6,7 +6,7 @@ import {Injectable} from "@tsed/di";
 // TODO add all other methods
 
 @Injectable()
-export class MyLogger {
+export class NamedLogger {
   private logger: Logger;
 
   constructor(@Opts options: {name: string} = {name: 'Logger'},

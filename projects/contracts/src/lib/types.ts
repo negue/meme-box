@@ -249,14 +249,6 @@ export interface FileResult {
   fileType: MediaType
 }
 
-export interface FileResult {
-  fullPath: string;
-  ext: string;
-  fileName: string;
-  apiUrl: string;
-  fileType: MediaType
-}
-
 export interface CombinedClip {
   clip: Clip;
   clipSetting: ScreenClip;

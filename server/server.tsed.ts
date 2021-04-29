@@ -4,6 +4,8 @@ import {ScreenController} from "./controllers/screen.controller";
 import {createWebSocketServer} from "./websocket-server";
 import {TwitchBootstrap} from "./providers/twitch.bootstrap";
 import {Env} from "@tsed/core";
+import {LOG_PATH} from "./path.utils";
+import {Logger} from "@tsed/logger";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -38,8 +40,50 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
   httpServer: HttpServer;
 
   constructor(
-    private _twitchBootstrap: TwitchBootstrap
+    private _twitchBootstrap: TwitchBootstrap,
+    private _mainLogger: Logger
   ) {
+    const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0,10);
+
+    _mainLogger.appenders
+   .set("stdout", {
+      type: "stdout",
+      levels: ["info", "debug", "trace"],
+      //layout: {
+       // type: "json"  // todo json on production
+      //}
+    })
+
+      .set("file", {
+        type: "file",
+        // pattern not working so we added DateFormat ourselves
+        filename: `${LOG_PATH}/memebox_tsed.${TODAY_LOG_SUFFIX}.log`,
+        // pattern: '.yyyy-MM-dd',
+        layout:{
+          type: "json",
+          separator: ","
+        }
+      })
+
+    .set("stderr", {
+      levels: [ "fatal", "error", "warn"],
+      type: "stderr",
+      layout: {
+        type: "json"
+      }
+    })
+
+      .set("ERROR_FILE", {
+        type: "file",
+        levels: ["fatal", "error"],
+        filename: `${LOG_PATH}/errors.log`,
+        layout:{
+          type: "json",
+          separator: ","
+        }
+      })
+    ;
+
   }
 
   /**

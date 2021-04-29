@@ -66,6 +66,8 @@ export const fileFormat  = (labelName: string) =>   combine(
   textFormat()
 );
 
+// TODO move from winston to @tsed/logger for DI injection magic
+
 export function newLogger(label: string, fileName: string) {
   return createLogger({
     level: 'info',

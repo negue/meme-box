@@ -5,7 +5,7 @@
 # Frontend
 
 - Framework: Angular
-- State: Akita
+- State: [`Akita`](https://datorama.github.io/akita/) [`ImmerJs`](https://github.com/immerjs/immer)
 
 ## Arrange View
 
