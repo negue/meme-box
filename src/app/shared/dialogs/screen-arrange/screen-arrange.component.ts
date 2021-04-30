@@ -3,7 +3,7 @@ import { AppQueries } from '../../../state/app.queries';
 import { map, publishReplay, refCount, startWith } from 'rxjs/operators';
 import { CombinedClip, MediaType, Screen } from '@memebox/contracts';
 import { AppService } from '../../../state/app.service';
-import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { ScreenArrangePreviewComponent } from './screen-arrange-preview/screen-arrange-preview.component';
@@ -82,11 +82,32 @@ export class ScreenArrangeComponent implements OnInit {
               private appService: AppService,
               private _dialog: MatDialog,
               private _cd: ChangeDetectorRef,
+              public dialogRef: MatDialogRef<ScreenArrangeComponent>,
               @Inject(MAT_DIALOG_DATA) public screen: Screen) {
   }
 
   ngOnInit(): void {
     this.appService.loadState();
+  }
+
+  closeDlg(): void {
+    if (!this.hasUnsavedChanges) {
+      this.dialogRef.close();
+      return;
+    }
+    this.clickedOutside();
+
+    const dlg = this._dialog.open(OpenChangesDlgComponent, {
+      width: '350px',
+      closeOnNavigation: true,
+      hasBackdrop: true
+    });
+
+    dlg.afterClosed().subscribe(discardChanges => {
+      if (discardChanges) {
+        this.dialogRef.close();
+      }
+    });
   }
 
   tabSelectionChanged(tabChangeEvent: MatTabChangeEvent): void {
@@ -99,7 +120,7 @@ export class ScreenArrangeComponent implements OnInit {
     this._cd.detectChanges();
 
     const dlg = this._dialog.open(OpenChangesDlgComponent, {
-      width: '250px',
+      width: '350px',
       closeOnNavigation: true,
       hasBackdrop: true
     });
@@ -108,6 +129,7 @@ export class ScreenArrangeComponent implements OnInit {
       if (discardChanges) {
         this._tabGroup.selectedIndex = 1;
         this.hasUnsavedChanges = false;
+        this.appService.loadState(); // Reset the clips
       }
     });
   }

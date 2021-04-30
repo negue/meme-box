@@ -40,6 +40,7 @@ export class ScreenArrangeSidebarComponent {
   }
 
   assignMedia() {
+    this.changeCurrSelectedClip.emit(null);
     this.showAssignmentDialog(this.screen);
   }
 

@@ -4,7 +4,7 @@
     <mat-hint>Screen Size [{{screen?.width}}]x[{{screen?.height}}]</mat-hint>
   </span>
 
-  <button mat-button mat-dialog-close style="align-self: flex-start">Close</button>
+  <button mat-button (click)="closeDlg()" style="align-self: flex-start">Close</button>
 </span>
 <mat-dialog-content class="mat-typography">
   <mat-tab-group #tabGroup [selectedIndex]="selectedIndex" (selectedTabChange)="tabSelectionChanged($event)">
@@ -36,7 +36,7 @@
   </div>
 
   <!-- Preview -->
-  <app-screen-preview *ngIf="tabGroup.selectedIndex === 1"
+  <app-screen-preview [class.hidden]="tabGroup.selectedIndex !== 1"
                       class="tab_content"
                       [allItems]="clipList$ | async"
                       [screen]="screen"></app-screen-preview>
