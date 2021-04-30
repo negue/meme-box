@@ -23,10 +23,13 @@ import { PipesModule } from '../../../core/pipes/pipes.module';
 import { ScreenArrangeSidebarModule } from './screen-arrange-sidebar/screen-arrange-sidebar.module';
 import { ScreenArrangePreviewModule } from './screen-arrange-preview/screen-arrange-preview.module';
 import { ScreenPreviewModule } from './screen-preview/screen-preview.module';
+import { A11yModule } from '@angular/cdk/a11y';
+import { OpenChangesDlgComponent } from './open-changes-dlg.component';
 
 @NgModule({
   declarations: [
-    ScreenArrangeComponent
+    ScreenArrangeComponent,
+    OpenChangesDlgComponent
   ],
   exports: [
     ScreenArrangeComponent
@@ -51,7 +54,8 @@ import { ScreenPreviewModule } from './screen-preview/screen-preview.module';
     PipesModule,
     ScreenArrangeSidebarModule,
     ScreenArrangePreviewModule,
-    ScreenPreviewModule
+    ScreenPreviewModule,
+    A11yModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

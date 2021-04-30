@@ -9,6 +9,15 @@
     .mat-card-header-text {
       flex: 1;
     }
+
+    // Uncomment if you put the tabs in the mat-tabs instead of *ngIf
+    // There is a resize bug in the preview-content if you do...
+    //.mat-card-header-text, mat-tab-group, .mat-tab-body-wrapper {
+    //  flex: 1;
+    //}
+    //.mat-tab-body-content {
+    //  display: flex;
+    //}
   }
 }
 

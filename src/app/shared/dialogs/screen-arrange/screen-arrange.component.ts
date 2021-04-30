@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { AppQueries } from '../../../state/app.queries';
 import { map, publishReplay, refCount, startWith } from 'rxjs/operators';
 import { CombinedClip, MediaType, Screen } from '@memebox/contracts';
 import { AppService } from '../../../state/app.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { ScreenArrangePreviewComponent } from './screen-arrange-preview/screen-arrange-preview.component';
+import { MatTabGroup } from '@angular/material/tabs';
+import { OpenChangesDlgComponent } from './open-changes-dlg.component';
+import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -48,6 +51,7 @@ export class ScreenArrangeComponent implements OnInit {
   );
 
   selectedItems = new FormControl([]);
+  selectedIndex = 0;
 
   hasUnsavedChanges = false;
 
@@ -71,13 +75,41 @@ export class ScreenArrangeComponent implements OnInit {
   @ViewChild(ScreenArrangePreviewComponent)
   private _screenArrangePreviewComponent: ScreenArrangePreviewComponent;
 
+  @ViewChild(MatTabGroup)
+  private _tabGroup: MatTabGroup;
+
   constructor(private appQueries: AppQueries,
               private appService: AppService,
+              private _dialog: MatDialog,
+              private _cd: ChangeDetectorRef,
               @Inject(MAT_DIALOG_DATA) public screen: Screen) {
   }
 
   ngOnInit(): void {
     this.appService.loadState();
+  }
+
+  tabSelectionChanged(tabChangeEvent: MatTabChangeEvent): void {
+    this.clickedOutside();
+    if (!this.hasUnsavedChanges || tabChangeEvent.index === 0) {
+      return;
+    }
+
+    this._tabGroup.selectedIndex = 0;
+    this._cd.detectChanges();
+
+    const dlg = this._dialog.open(OpenChangesDlgComponent, {
+      width: '250px',
+      closeOnNavigation: true,
+      hasBackdrop: true
+    });
+
+    dlg.afterClosed().subscribe(discardChanges => {
+      if (discardChanges) {
+        this._tabGroup.selectedIndex = 1;
+        this.hasUnsavedChanges = false;
+      }
+    });
   }
 
   clickedOutside() {

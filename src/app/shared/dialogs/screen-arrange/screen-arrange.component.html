@@ -7,7 +7,7 @@
   <button mat-button mat-dialog-close style="align-self: flex-start">Close</button>
 </span>
 <mat-dialog-content class="mat-typography">
-  <mat-tab-group #tabGroup (selectedTabChange)="clickedOutside()">
+  <mat-tab-group #tabGroup [selectedIndex]="selectedIndex" (selectedTabChange)="tabSelectionChanged($event)">
     <mat-tab label="Arrange">
     </mat-tab>
     <mat-tab label="Preview"></mat-tab>
@@ -41,4 +41,3 @@
                       [allItems]="clipList$ | async"
                       [screen]="screen"></app-screen-preview>
 </mat-dialog-content>
-
