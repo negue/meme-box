@@ -1,11 +1,11 @@
-<span mat-dialog-title>
-  <span>
+<div mat-dialog-title>
+  <div>
     <h2>Arrange the Media on this Screen: {{screen.name}}</h2>
     <mat-hint>Screen Size [{{screen?.width}}]x[{{screen?.height}}]</mat-hint>
-  </span>
+  </div>
 
   <button mat-button (click)="closeDlg()" style="align-self: flex-start">Close</button>
-</span>
+</div>
 <mat-dialog-content class="mat-typography">
   <mat-tab-group #tabGroup [selectedIndex]="selectedIndex" (selectedTabChange)="tabSelectionChanged($event)">
     <mat-tab label="Arrange">
