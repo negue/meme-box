@@ -43,5 +43,5 @@ Streamdeck-Plugin is in `memebox-streamdeck`
 
 - [ ] cleanup shared constants
 - [ ] strict tsconfig / eslint rules
-- [ ] Use [`ts.ed`](https://tsed.io/) to improve the backend code by dependency injection and code 
 - [ ] Probably more to come once more features are added :)
+- [ ] Fill STACK.md

@@ -74,6 +74,10 @@ $custom-typography: mat-typography-config(
 body {
   font-size: 16px;
   font-family: Barlow, sans-serif;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: -moz-available;
+  min-height: fill-available;
 }
 
 * {

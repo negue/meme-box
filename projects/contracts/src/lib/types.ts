@@ -118,11 +118,8 @@ export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
-// TODO refactor, maybe all messages
-// and then like "yes, but this one only with bits.."
 export enum TwitchEventTypes {
   message = 'message',
-  follow = 'follow',
   sub = 'sub',
   bits = 'bits',
   raid = 'raid',
@@ -234,7 +231,6 @@ export interface FileInfo {
 }
 
 export interface TwitchTriggerCommand {
-  message: string;
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
 }
@@ -242,14 +238,6 @@ export interface TwitchTriggerCommand {
 export enum TargetScreenType {
   OneScreen,
   ScreenPerType
-}
-
-export interface FileResult {
-  fullPath: string;
-  ext: string;
-  fileName: string;
-  apiUrl: string;
-  fileType: MediaType
 }
 
 export interface FileResult {
