@@ -1,4 +1,8 @@
 :host {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
   ::ng-deep {
     .mat-expansion-panel-header-description {
       flex-grow: 0;
@@ -6,6 +10,10 @@
   }
 }
 
+mat-dialog-content {
+  flex: 1;
+  max-height: unset;
+}
 
 .padding {
   margin: 2rem;
@@ -42,7 +50,8 @@ form {
 .dialog-content {
   display: flex;
   flex-direction: row;
-  height: 500px;
+
+  height: 100%;
 }
 
 mat-accordion {
@@ -54,4 +63,21 @@ mat-accordion {
 .iframe-preview {
   flex: 1;
   padding-left: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  .iframe-preview-options {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-left: 1rem;
+    }
+  }
+
+  app-dynamic-iframe {
+    flex: 1;
+  }
 }
