@@ -38,8 +38,6 @@ export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value 
   const NEW_PORT = PORT_ARGUMENT_OPTION ?? SAVED_PORT ?? DEFAULT_PORT;
 
   const expressServer = createExpress(NEW_PORT);
- // const {server, wss} = createWebSocketServer(NEW_PORT);
-
   // Also mount the app here
  // server.on('request', expressServer);
 

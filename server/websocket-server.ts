@@ -9,5 +9,5 @@ export async function triggerMediaClipById(payloadObs: TriggerClip) {
 
 
 export async function sendDataToAllSockets(message: string) {
-  return CURRENT_MEMEBOX_WEBSOCKET.sendDataToAllSockets(message);
+  return CURRENT_MEMEBOX_WEBSOCKET?.sendDataToAllSockets(message);
 }
