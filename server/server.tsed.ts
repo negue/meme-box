@@ -1,11 +1,11 @@
 import {BeforeInit, BeforeRoutesInit, Configuration, HttpServer, Inject, PlatformApplication} from "@tsed/common";
 import {API_PREFIX} from "./constants";
 import {ScreenController} from "./controllers/screen.controller";
-import {createWebSocketServer} from "./websocket-server";
-import {TwitchBootstrap} from "./providers/twitch.bootstrap";
 import {Env} from "@tsed/core";
 import {LOG_PATH} from "./path.utils";
 import {Logger} from "@tsed/logger";
+import {TwitchBootstrap} from "./providers/twitch/twitch.bootstrap";
+import {WebsocketBootstrap} from "./providers/websockets/websocket.bootstrap";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -41,6 +41,7 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
 
   constructor(
     private _twitchBootstrap: TwitchBootstrap,
+    private _websocketBootstrap: WebsocketBootstrap,
     private _mainLogger: Logger
   ) {
     const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0,10);
@@ -103,6 +104,5 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
   }
 
   $beforeInit(): void | Promise<any> {
-    createWebSocketServer(this.httpServer);
   }
 }

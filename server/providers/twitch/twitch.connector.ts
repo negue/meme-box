@@ -3,30 +3,32 @@ import {ChatUserstate, Options} from 'tmi.js';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, startWith} from 'rxjs/operators';
 import {Twitch, TwitchConfig, TwitchEventTypes, TwitchTriggerCommand} from '@memebox/contracts';
-import {Logger} from 'winston';
-import {Service} from "@tsed/di";
+import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "./contracts";
-import {Persistence} from "../persistence";
-import {LOGGER, newLogger} from "../logger.utils";
-import {getLevelOfTags} from "../twitch.functions";
 import {TwitchChatMessage, TwitchCheerMessage, TwitchEvent, TwitchRaidedEvent} from "./twitch.connector.types";
 import {isAllowedToTrigger} from "./twitch.utils";
+import {Persistence} from "../../persistence";
+import {PERSISTENCE_DI} from "../contracts";
+import {NamedLogger} from "../named-logger";
+import {getLevelOfTags} from "./twitch.functions";
 
 @Service()
 export class TwitchConnector {
   private tmiClient: tmi.Client;
-  private twitchSettings: Twitch[] = [];
-  private logger: Logger;
   private _receivedTwitchEvents = new Subject<TwitchEvent>();
   private _twitchBotEnabled = false;
   private _currentTwitchConfig: TwitchConfig;
+
+
+  public twitchSettings: Twitch[] = [];
 
   constructor(
     // currently the twitch config is inside the Persistence,
     // once there is some other "config" layer,
     // then it'll be replaced
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+
+    @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
   ) {
     // TODO better way to find out the config has changed
     let currentConfigJsonString = "";
@@ -58,7 +60,7 @@ export class TwitchConnector {
         ) {
           currentConfigJsonString = jsonOfConfig;
 
-          LOGGER.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
+          this.log(`Creating the TwitchHandler for: ${config.twitch.channel}`);
 
           this.disconnect();
 
@@ -82,11 +84,6 @@ export class TwitchConnector {
           }
 
           this.tmiClient = tmi.Client(tmiConfig);
-
-          if (twitchConfig.enableLog) {
-            // will be removed once refactor is done
-            this.createLogger();
-          }
 
           this.connectAndListen();
         }
@@ -162,7 +159,7 @@ export class TwitchConnector {
   handleCommandsRequest(tags: tmi.ChatUserstate, message: string): void {
     const foundLevels = getLevelOfTags(tags);
     const commands = this.twitchSettings.filter((event) => {
-      const trigger: TwitchTriggerCommand = {message, command: event, tags};
+      const trigger: TwitchTriggerCommand = {command: event, tags};
 
       return (
         event.event === TwitchEventTypes.message &&
@@ -179,11 +176,7 @@ export class TwitchConnector {
       .replace('{{commands}}', commands.join(' | '))
       .replace('{{user}}', `${tags.username}`);
     this.tmiClient.say(this._currentTwitchConfig.channel, botResponse)
-      .catch(console.error);
-  }
-
-  private createLogger() {
-    this.logger = newLogger('Twitch', 'twitch');
+      .catch(ex => this.error(ex));
   }
 
   private log(data: any) {

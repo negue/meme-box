@@ -44,4 +44,9 @@ export class NamedLogger {
       }
     })
   }
+
+  error(...data: unknown[]) {
+    this.logger.error(...data);
+  }
+
 }

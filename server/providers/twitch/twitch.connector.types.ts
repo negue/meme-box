@@ -5,8 +5,13 @@ export interface TwitchEvent {
   type: TwitchEventTypes;
 }
 
-export class TwitchChatMessage implements TwitchEvent {
-  type = TwitchEventTypes.message;
+export interface TwitchEventHasMessage {
+  message: string;
+}
+
+export class TwitchChatMessage implements TwitchEvent, TwitchEventHasMessage {
+
+  readonly type = TwitchEventTypes.message;
 
   constructor(public payload: {
                 channel: string,
@@ -16,10 +21,14 @@ export class TwitchChatMessage implements TwitchEvent {
               }
   ) {
   }
+
+  get message() {
+    return this.payload.message;
+  }
 }
 
-export class TwitchCheerMessage implements TwitchEvent {
-  type: TwitchEventTypes.bits;
+export class TwitchCheerMessage implements TwitchEvent, TwitchEventHasMessage {
+  readonly type = TwitchEventTypes.bits;
 
   public payload: {
     channel: string,
@@ -39,11 +48,15 @@ export class TwitchCheerMessage implements TwitchEvent {
       bits: parseInt(payload.userstate.bits)
     }
   }
+
+  get message() {
+    return this.payload.message;
+  }
 }
 
 
 export class TwitchRaidedEvent implements TwitchEvent {
-  type: TwitchEventTypes.raid;
+  readonly type = TwitchEventTypes.raid;
 
   constructor(public payload: {
                 channel: string, username: string, viewers: number
@@ -51,3 +64,5 @@ export class TwitchRaidedEvent implements TwitchEvent {
   ) {
   }
 }
+
+export type AllTwitchEvents = TwitchChatMessage | TwitchCheerMessage | TwitchRaidedEvent;

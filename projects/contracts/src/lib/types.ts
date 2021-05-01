@@ -231,7 +231,6 @@ export interface FileInfo {
 }
 
 export interface TwitchTriggerCommand {
-  message: string;
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
 }

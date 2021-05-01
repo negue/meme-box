@@ -2,11 +2,9 @@ import {createExpress} from "./express-server";
 import {sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT, REMOTE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith, take} from "rxjs/operators";
-import {TwitchHandler} from './twitch.handler';
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "@memebox/contracts";
 import {LOGGER} from "./logger.utils";
-import {ExampleTwitchCommandsSubject} from "./shared";
 import {TimedHandler} from "./timed.handler";
 
 import https from 'https';
@@ -51,9 +49,7 @@ export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value 
 }));
 
 
-let currentConfigJsonString = '';
 let currentTimers = '';
-let twitchHandler:TwitchHandler = null;
 
 PersistenceInstance.hardRefresh$()
   .pipe(
@@ -77,23 +73,6 @@ PersistenceInstance.dataUpdated$()
     // TODO move to a different place?
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
 
-    const config = PersistenceInstance.getConfig();
-    const jsonOfConfig = JSON.stringify(config.twitch);
-
-    if (currentConfigJsonString !== jsonOfConfig
-      && !!config.twitch?.channel
-    ) {
-      currentConfigJsonString = jsonOfConfig;
-
-      LOGGER.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
-
-      if (twitchHandler != null) {
-        twitchHandler.disconnect();
-      }
-
-      twitchHandler = new TwitchHandler(config.twitch);
-    }
-
     const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
 
     if (currentTimers != jsonOfTimers) {
@@ -103,12 +82,6 @@ PersistenceInstance.dataUpdated$()
       LOGGER.info(`Refreshing TimedHandler`);
     }
   });
-
-ExampleTwitchCommandsSubject.subscribe(value => {
-  if (twitchHandler) {
-    twitchHandler.handle(value);
-  }
-});
 
 // Check Version & Log it
 
