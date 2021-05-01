@@ -88,6 +88,11 @@
           <div *ngIf="workingValue.js">JS is used</div>
         </mat-panel-description>
       </mat-expansion-panel-header>
+
+      <mat-checkbox [checked]="workingValue.settings.subscribeToTwitchEvent"
+      (change)="workingValue.settings.subscribeToTwitchEvent = $event.checked">
+        Receive Twitch Events
+      </mat-checkbox>
       <mat-form-field>
         <mat-label>JS</mat-label>
 

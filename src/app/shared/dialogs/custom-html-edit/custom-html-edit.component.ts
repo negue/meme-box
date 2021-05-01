@@ -34,7 +34,10 @@ export class CustomHtmlEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.workingValue = {...this.data.iframePayload};
+    this.workingValue = {
+      settings: {},
+      ...this.data.iframePayload
+    };
     this.variablesList = Object.values(this.workingValue.variablesConfig);
 
     this.initDone = true;

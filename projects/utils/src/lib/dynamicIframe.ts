@@ -22,6 +22,9 @@ export interface DynamicIframeContent {
   libraries?: HtmlExternalFile[];
   variablesConfig?: DynamicIframeVariable[];
   variables?: Dictionary<any>;
+  settings?: {
+    subscribeToTwitchEvent?: boolean;
+  }
 }
 
 // TODO fill the variables as content
@@ -145,7 +148,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 function getVariableValueOrFallback (config: DynamicIframeVariable,
                                      valueBag: Dictionary<any>,
                                      justReturnIt: boolean = false) {
-  const valueToReturn = valueBag[config.name] ?? config.fallback;
+  const valueToReturn = valueBag[config.name] || config.fallback;
 
   if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
     return valueToReturn;
@@ -176,7 +179,9 @@ const DYNAMIC_IFRAME_HTML_KEY = 'html';
 const DYNAMIC_IFRAME_CSS_KEY = 'css';
 const DYNAMIC_IFRAME_JS_KEY = 'js';
 const DYNAMIC_IFRAME_EXTERNAL_KEY = 'external';
-const DYNAMIC_IFRAME_VARIABLES_KEY = 'variables';
+
+const DYNAMIC_IFRAME_VARIABLES_KEY = '_variables';
+const DYNAMIC_IFRAME_SETTINGS_KEY = '_settings';
 
 export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
   if (!clip.extended) {
@@ -200,6 +205,10 @@ export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
 
   console.info('json', JSON.stringify(dynamicContent));
 
+  // todo add a settings type
+  const settings: any = JSON.parse(clip.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');
+  dynamicContent.settings = settings;
+
   return dynamicContent;
 }
 
@@ -215,11 +224,19 @@ export function applyDynamicIframeContentToClipData (iframeContent: DynamicIfram
 
   targetClip.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] = JSON.stringify(iframeContent.libraries);
   targetClip.extended[DYNAMIC_IFRAME_VARIABLES_KEY] = JSON.stringify(iframeContent.variablesConfig);
+  targetClip.extended[DYNAMIC_IFRAME_SETTINGS_KEY] = JSON.stringify(iframeContent.settings);
 
   console.info('POST CHANGE', JSON.stringify(targetClip));
 }
 
-const NOT_ALLOWED_NAMES = [DYNAMIC_IFRAME_VARIABLES_KEY, DYNAMIC_IFRAME_JS_KEY, DYNAMIC_IFRAME_CSS_KEY, DYNAMIC_IFRAME_EXTERNAL_KEY, DYNAMIC_IFRAME_HTML_KEY];
+const NOT_ALLOWED_NAMES = [
+  DYNAMIC_IFRAME_VARIABLES_KEY,
+  DYNAMIC_IFRAME_JS_KEY,
+  DYNAMIC_IFRAME_CSS_KEY,
+  DYNAMIC_IFRAME_EXTERNAL_KEY,
+  DYNAMIC_IFRAME_HTML_KEY,
+  DYNAMIC_IFRAME_SETTINGS_KEY
+];
 
 // TODO how to translate with variables?
 export function isDynamicIframeVariableValid(name: string): {ok: boolean, message: string} {
