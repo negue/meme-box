@@ -1,9 +1,8 @@
 import {app, BrowserWindow, dialog, ipcMain, shell} from 'electron';
 import * as path from 'path';
-import {ExpressServerLazy} from './server/server-app';
 import {NEW_CONFIG_PATH} from "./server/path.utils";
+import {bootstrapTsED} from "./server/server.bootstrap";
 
-// TODO move electron to its own folder / file??
 
 var fs = require("fs");
 
@@ -23,15 +22,24 @@ catch(e) {
 }
 
 function createWindow(): BrowserWindow {
+  const {width, height} = data.bounds;
+
   // Create the browser window.
   win = new BrowserWindow({
-    ...data.bounds,
+    width, height,
     webPreferences: {
-      nodeIntegration: true,
+      // Disabled Node integration
+      nodeIntegration: false,
+      // protect against prototype pollution
+      contextIsolation: true,
+      // turn off remote
+      enableRemoteModule: false,
+      // Preload script
+      preload: path.join(app.getAppPath(), 'out-electron', 'preload.js')
     },
   });
 
-  ExpressServerLazy.getValue().then(({expressServer}) => {
+  bootstrapTsED().then(({expressServer}) => {
     if (serve) {
       win.webContents.openDevTools();
 

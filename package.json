@@ -6,7 +6,7 @@
     "name": ""
   },
   "keywords": [],
-  "main": "out-electron/main.js",
+  "main": "out-electron/electron-shell.js",
   "private": true,
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -40,7 +40,7 @@
     "electron:serve-tsc:watch": "ttsc -p tsconfig-electron.json -w",
     "electron:serve-tsc": "npm-run-all -p electron:serve-tsc:watch electron:local",
     "electron:serve": "npx rimraf out-electron &&  wait-on tcp:4200 && npm run electron:serve-tsc",
-    "electron:local": "wait-on out-electron/main.js && npx electron . --serve",
+    "electron:local": "wait-on out-electron/electron-shell.js && npx electron . --serve",
     "electron:build": "npm run build:prod && ttsc -p tsconfig-electron.json &&  electron-builder build",
     "electron:build:only": "ttsc -p tsconfig-electron.json &&  electron-builder build -p never"
   },

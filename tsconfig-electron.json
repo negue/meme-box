@@ -27,7 +27,8 @@
     ]
   },
   "files": [
-    "main.ts"
+    "electron-shell.ts",
+    "preload.ts"
   ],
   "exclude": [
     "node_modules",

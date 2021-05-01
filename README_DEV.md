@@ -35,7 +35,7 @@ npm run electron:build
 ### Folders
 Client is in `src/app`
 
-Server is in `main.ts` and `server/*`
+Server is in `electron-shell.ts` and `server/*`
 
 Streamdeck-Plugin is in `memebox-streamdeck`
 
