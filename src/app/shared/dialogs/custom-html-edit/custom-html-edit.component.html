@@ -1,5 +1,11 @@
 <h2 mat-dialog-title class="title-wrapper">
   Custom HTML for "{{data.name}}"
+
+  <button mat-raised-button (click)="exportWidget()">Export</button>
+  <button mat-raised-button (click)="fileSelection.click()" >Import</button>
+  <input type="file" style="display: none"
+         #fileSelection accept="application/json"
+         (change)="onFileInputChanged($event)">
 </h2>
 <mat-dialog-content class="mat-typography">
 

@@ -5,6 +5,7 @@ import {BehaviorSubject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
 import type {CustomHtmlDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
+import {downloadFile} from "@gewd/utils";
 
 @Component({
   selector: 'app-custom-html-edit',
@@ -19,7 +20,7 @@ export class CustomHtmlEditComponent implements OnInit {
   @ViewChild('enablePreviewRefresh', {static: true})
   public autoRefreshCheckbox: MatCheckbox;
 
-  public iframeContentSubject$ = new BehaviorSubject(this.data.iframePayload);
+  public iframeContentSubject$ = new BehaviorSubject(null);
   public iframeContent$ = this.iframeContentSubject$.pipe(
     debounceTime(400)
   );
@@ -34,13 +35,17 @@ export class CustomHtmlEditComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.setWorkingValues(this.data.iframePayload);
+    this.initDone = true;
+  }
+
+  private setWorkingValues (payload: DynamicIframeContent) {
     this.workingValue = {
       settings: {},
-      ...this.data.iframePayload
+      ...payload
     };
     this.variablesList = Object.values(this.workingValue.variablesConfig);
-
-    this.initDone = true;
+    this.iframeContentSubject$.next(this.workingValue);
   }
 
   addNewExternal() {
@@ -112,5 +117,38 @@ export class CustomHtmlEditComponent implements OnInit {
     this.variablesList.splice(foundIndex, 1);
 
     this.markForCheck();
+  }
+
+  onFileInputChanged($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    const files = target.files;
+
+    const file = files[0];
+
+    console.info({$event, file});
+
+    // setting up the reader
+    var reader = new FileReader();
+    reader.readAsText(file,'UTF-8');
+
+    // here we tell the reader what to do when it's done reading...
+    reader.onload = readerEvent => {
+      var content = readerEvent.target.result; // this is the content!
+
+      if (typeof content === 'string' ) {
+        const importedPayload: DynamicIframeContent = JSON.parse(content);
+
+        this.setWorkingValues(importedPayload);
+      }
+    }
+  }
+
+  exportWidget() {
+    const jsonData = JSON.stringify(this.workingValue);
+    var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
+
+    console.info({jsonData, dataStr});
+
+    downloadFile('widget.json',dataStr);
   }
 }
