@@ -11,6 +11,7 @@ import { MatInputModule } from "@angular/material/input";
 import { CustomFormControlModule } from "@gewd/mat-utils/custom-form-control";
 import { HighlightEditorModule } from "@gewd/components/highlight-editor";
 import { MatButtonModule } from "@angular/material/button";
+import { CodemirrorModule } from "@gewd/components/codemirror";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { MatButtonModule } from "@angular/material/button";
     CustomFormControlModule,
     HighlightEditorModule,
     MatButtonModule,
+    CodemirrorModule,
   ],
   providers: [],
 })

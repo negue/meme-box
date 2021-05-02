@@ -4,6 +4,7 @@ import { Screen } from "@memebox/contracts";
 import { FormBuilder } from "@angular/forms";
 import { AppService } from "../../../state/app.service";
 import { SnackbarService } from "../../../core/services/snackbar.service";
+import { cssCodemirror } from "../../../core/codemirror.extensions";
 
 @Component({
   selector: 'app-obs-edit',
@@ -19,6 +20,8 @@ export class ScreenEditComponent implements OnInit {
     height: 0,
     width: 0
   })
+
+  public cssExtensions = cssCodemirror;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: Screen,
               private dialogRef: MatDialogRef<any>,
