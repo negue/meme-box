@@ -2,7 +2,7 @@
             [items]="filterItems$ | async"
             (selected)="filteredItems$.next($event)"></app-filter>
 
-<div *ngIf="mediaList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
+<div class="mo__content-container" *ngIf="mediaList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
   <app-card-overview *ngSwitchCase="OVERVIEW_MODES.pro">
     <app-overview-item *ngIf="showGettingStarted$ | async ; else hasData ">
       <app-getting-started></app-getting-started>

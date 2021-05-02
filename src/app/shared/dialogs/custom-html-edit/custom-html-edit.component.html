@@ -1,10 +1,37 @@
 <h2 mat-dialog-title class="title-wrapper">
-  Custom HTML
+  Custom HTML for "{{data.name}}"
+
+  <button mat-raised-button (click)="exportWidget()">Export</button>
+  <button mat-raised-button (click)="fileSelection.click()" >Import</button>
+  <input type="file" style="display: none"
+         #fileSelection accept="application/json"
+         (change)="onFileInputChanged($event)">
 </h2>
 <mat-dialog-content class="mat-typography">
 
 <div class="dialog-content">
   <mat-accordion [multi]="true">
+
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Custom Variables
+        </mat-panel-title>
+        <mat-panel-description>
+
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+        "Notes":
+        These are the variables to be used inside CSS / JS / HTML - for an easier way to change the Widget "config" or values or something.
+
+        <app-variables-config [variablesList]="variablesList"
+                              (onEditVariable)="markForCheck()"
+                              (onDeleteVariable)="deleteVariable($event)"
+                              (onAddNewVariable)="addNewVariable()">
+
+        </app-variables-config>
+    </mat-expansion-panel>
 
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
@@ -67,6 +94,11 @@
           <div *ngIf="workingValue.js">JS is used</div>
         </mat-panel-description>
       </mat-expansion-panel-header>
+
+      <mat-checkbox [checked]="workingValue.settings.subscribeToTwitchEvent"
+      (change)="workingValue.settings.subscribeToTwitchEvent = $event.checked">
+        Receive Twitch Events
+      </mat-checkbox>
       <mat-form-field>
         <mat-label>JS</mat-label>
 
@@ -131,7 +163,18 @@
 
 
 <div class="iframe-preview ">
-  <app-dynamic-iframe [content]="iframeContent$ | async"></app-dynamic-iframe>
+  <div class="iframe-preview-options">
+  <mat-checkbox [checked]="true" #enablePreviewRefresh>Enable Preview Auto-Refresh</mat-checkbox>
+  <button mat-raised-button *ngIf="!enablePreviewRefresh.checked"
+  (click)="markForCheck(true)">
+    Trigger preview
+  </button>
+  </div>
+
+  <app-dynamic-iframe [content]="iframeContent$ | async"
+                      class="preview-box">
+
+  </app-dynamic-iframe>
 </div>
 
 </div>

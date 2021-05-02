@@ -1,5 +1,7 @@
 import {Twitch, TwitchEventTypes} from "@memebox/contracts";
-import {getCommandsOfMessage} from "./twitch.functions";
+import {getCommandsOfTwitchEvent} from "./twitch.functions";
+import {TwitchCheerMessage} from "./twitch.connector.types";
+import {ChatUserstate} from "tmi.js";
 
 describe('twitch functions', () => {
 
@@ -22,14 +24,28 @@ describe('twitch functions', () => {
         minAmount: 70,
         event: TwitchEventTypes.bits,
         roles: []
+      },
+
+      {
+        id: '3',
+        active: false,
+        clipId: 'clip3',
+        name: 'some name - inactive',
+        minAmount: 70,
+        event: TwitchEventTypes.bits,
+        roles: []
       }
     ];
 
-    const iterator = getCommandsOfMessage(
+    const iterator = getCommandsOfTwitchEvent(
       allTwitchItems,
-      '', TwitchEventTypes.bits, {
-        amount: 100
-      }
+      new TwitchCheerMessage({
+        channel: 'any',
+        userstate: {
+          bits: '123'
+        } as Partial<ChatUserstate>,
+        message: 'some message'
+      })
     );
 
     const result = [...iterator];

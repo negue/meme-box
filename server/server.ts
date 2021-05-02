@@ -1,11 +1,11 @@
 import open from 'open';
 import * as fs from 'fs';
-import {ExpressServerLazy} from './server-app';
 import {LOGGER} from "./logger.utils";
+import {bootstrapTsED} from "./server.bootstrap";
 
 // CLI, Headless Mode
 
-ExpressServerLazy.getValue().then(async ({expressServer}) => {
+bootstrapTsED().then(async ({expressServer}) => {
   if (fs.existsSync('package.json')) {
     const waitForLocalhost = require('wait-for-localhost');
 

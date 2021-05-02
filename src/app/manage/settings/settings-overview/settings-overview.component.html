@@ -109,4 +109,19 @@
       Add more dummy items
     </button>
   </app-overview-item>
+
+  <app-overview-item>
+    <div class="title-row">
+      <h2 class="mat-h2 title-name">Translations</h2>
+    </div>
+
+    <mat-select *ngIf="availableLanguages.length > 1"
+                [value]="currentLanguage"
+                (valueChange)="selectNewLanguage($event)">
+      <mat-option *ngFor="let lang of availableLanguages"
+      [value]="lang">
+        {{ lang }}
+      </mat-option>
+    </mat-select>
+  </app-overview-item>
 </app-card-overview>

@@ -30,7 +30,7 @@
                           [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                           [style.position]="'absolute'"
                           draggable="false"
-                          class="dragable-preview"></app-clip-preview>
+                          class="preview-box"></app-clip-preview>
 
         <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Centered"
                                [clip]="pair.clip"
@@ -47,7 +47,7 @@
                                [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"
                                [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
                                [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
-                               class="dragable-preview"
+                               class="preview-box"
         >
 
         </app-drag-resize-media>
@@ -64,7 +64,7 @@
                                [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : true"
                                [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
                                [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
-                               class="dragable-preview"
+                               class="preview-box"
         >
 
         </app-drag-resize-media>
@@ -86,7 +86,7 @@
           [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
           [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
 
-          class="dragable-preview"
+          class="preview-box"
         >
 
         </app-drag-resize-media>

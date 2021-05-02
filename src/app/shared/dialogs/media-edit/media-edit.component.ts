@@ -8,17 +8,17 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag } from "@memebox/contracts";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { AppService } from "../../../state/app.service";
-import { AppQueries } from "../../../state/app.queries";
-import { distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil } from "rxjs/operators";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { DialogService } from "../dialog.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {AppService} from "../../../state/app.service";
+import {AppQueries} from "../../../state/app.queries";
+import {debounceTime, distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
+import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {DialogService} from "../dialog.service";
 import {
   applyDynamicIframeContentToClipData,
   clipDataToDynamicIframeContent,
@@ -85,6 +85,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
+
   mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
     .map(([mediaType, value]) => {
       return {
@@ -108,7 +109,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   currentTags$ = new BehaviorSubject<Tag[]>([]);
 
   // Current custom HTML Content?
-  currentHtml$ = new BehaviorSubject<DynamicIframeContent>(null);
+  currentHtmlConfig: DynamicIframeContent = null;
+  currentHtmlToPreview$ = new BehaviorSubject<DynamicIframeContent>(null);
+  triggerHtmlRefresh$ = new Subject();
 
   // Get all clips that have the assigned tags
   taggedClips$ = combineLatest([
@@ -155,7 +158,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
+    this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
+    this.executeHTMLRefresh();
     this.showOnMobile = this.data.showOnMobile;
 
     this.currentMediaType$.next(this.data.type);
@@ -223,6 +227,13 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     ]).pipe(
       map(([tagInputValue, allTags, currentTags]) => this._filter(tagInputValue, allTags, currentTags))
     );
+
+    this.triggerHtmlRefresh$.pipe(
+      debounceTime(1000),
+      takeUntil(this._destroy$)
+    ).subscribe( () => {
+      this.executeHTMLRefresh();
+    })
   }
 
   async save() {
@@ -359,13 +370,32 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     console.info({data: this.data, iframe: dynamicIframeContent});
 
-    const dialogResult = await this.dialogService.showDynamicIframeEdit(dynamicIframeContent);
+    const dialogResult = await this.dialogService.showDynamicIframeEdit({
+      name: this.data.name,
+      iframePayload: dynamicIframeContent
+    });
 
     if (dialogResult) {
       applyDynamicIframeContentToClipData(dialogResult, this.data);
 
-      this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
+      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
+      this.executeHTMLRefresh();
       this.cd.detectChanges();
     }
+  }
+
+  triggerHTMLRefresh() {
+    this.triggerHtmlRefresh$.next();
+  }
+
+  executeHTMLRefresh () {
+    const currentExtendedValues = this.data.extended;
+
+    const updatedHtmlDataset: DynamicIframeContent  = {
+      ...this.currentHtmlConfig,
+      variables: currentExtendedValues
+    };
+
+    this.currentHtmlToPreview$.next(updatedHtmlDataset);
   }
 }
