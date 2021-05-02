@@ -19,6 +19,7 @@ import {CompactClipCardModule} from "../../components/compact-clip-card/compact-
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.module";
+import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.modu
     DynamicIframeModule,
     AutoScaleModule,
     ClipPreviewModule,
+    DynamicVariableInputModule,
   ],
   providers: [],
 })

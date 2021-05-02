@@ -1,7 +1,5 @@
 :host {
   display: block;
-  overflow-y: scroll;
-  height: calc(100vh - 3.1rem);
 }
 
 
@@ -14,7 +12,7 @@
   width: calc(100% - 2rem);
   position: -webkit-sticky;
   position: sticky;
-  top: 0rem;
+  top: 0;
   z-index: 1;
   background: var(--palette-background-background) !important;
 }
