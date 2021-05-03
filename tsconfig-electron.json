@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-electron",
+    "outDir": "./out-electron-tsc",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
@@ -27,7 +27,8 @@
     ]
   },
   "files": [
-    "main.ts"
+    "electron-shell.ts",
+    "preload.ts"
   ],
   "exclude": [
     "node_modules",
