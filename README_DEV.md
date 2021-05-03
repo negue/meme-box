@@ -28,6 +28,16 @@ npm run build:all // or build:windows
 
 ### Electron
 
+Developing with Electron:
+
+- `npm run start:app`
+- `npm run electron:serve` (compiles only ts to js and runs the js)
+
+if you want to test the "build" version you can use `npm run electron:build:serve`
+this compiles it from ts to js, combines it all into one file (excluding electron which is handled by electron itself) and serves this one file
+
+Build the Angular App and electron for the current OS
+
 ```
 npm run electron:build
 ```
