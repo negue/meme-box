@@ -276,3 +276,13 @@ gewd-markdown {
   linear-gradient(180deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // right
   linear-gradient(270deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%); // bottom
 }
+
+
+gewd-codemirror {
+  min-height: 200px;
+  display: flex;
+
+  .cm-editor {
+    width: 100%;
+  }
+}

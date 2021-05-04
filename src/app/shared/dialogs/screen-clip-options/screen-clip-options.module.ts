@@ -18,6 +18,7 @@ import {PreventAnimationOnFirstViewDirective} from './prevent-animation-on-first
 import {PipesModule} from "../../../core/pipes/pipes.module";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {ClipTypeModule} from "../../components/clip-type/clip-type.module";
+import {CodemirrorModule} from "@gewd/components/codemirror";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {ClipTypeModule} from "../../components/clip-type/clip-type.module";
     MatExpansionModule,
     PipesModule,
     MatButtonToggleModule,
-    ClipTypeModule
+    ClipTypeModule,
+    CodemirrorModule
   ],
   providers: [],
 })
