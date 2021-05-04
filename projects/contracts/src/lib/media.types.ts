@@ -6,7 +6,7 @@ export enum MediaType {
   Audio = 1,
   Video = 2,
   IFrame = 3,
-  HTML = 4,
+  Widget = 4,
 
 
   Meta = 100

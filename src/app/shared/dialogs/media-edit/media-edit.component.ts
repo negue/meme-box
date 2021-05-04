@@ -47,8 +47,8 @@ interface MediaTypeButton {
   icon: string;
 }
 
-const MEDIA_TYPES_WITHOUT_PATH = [MediaType.HTML, MediaType.Meta];
-const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.HTML, MediaType.Picture, MediaType.IFrame];
+const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.Meta];
+const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 @Component({
   selector: "app-media-edit",

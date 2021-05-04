@@ -1,12 +1,12 @@
-import { AppService } from "../../../state/app.service";
-import { Clip, MediaType, Tag, Screen } from "@memebox/contracts";
-import { sleep, uuid } from "@gewd/utils";
+import {AppService} from "../../../state/app.service";
+import {Clip, MediaType, Screen, Tag} from "@memebox/contracts";
+import {sleep, uuid} from "@gewd/utils";
 
 const allTypes = [
   MediaType.Audio,
   MediaType.Picture,
   MediaType.Video,
-  MediaType.HTML,
+  MediaType.Widget,
   MediaType.IFrame,
   MediaType.Meta,
 ]

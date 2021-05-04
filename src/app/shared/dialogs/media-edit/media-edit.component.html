@@ -187,7 +187,7 @@
       </mat-select>
     </mat-form-field>
 
-    <ng-container *ngIf="form.value.type === MediaType.HTML">
+    <ng-container *ngIf="form.value.type === MediaType.Widget">
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
         <div *ngFor="let variable of currentHtml.variablesConfig">
           <app-dynamic-variable-input [variableType]="variable.type" [label]="variable.name"
@@ -201,7 +201,7 @@
   </form>
 
   <div class="column" [ngSwitch]="form.value.type"
-       [class.custom-html-preview]="form.value.type === MediaType.HTML">
+       [class.custom-html-preview]="form.value.type === MediaType.Widget">
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
       <h3>Assigned Clips by Tags</h3>
@@ -211,7 +211,7 @@
       </app-compact-clip-card>
     </div>
 
-    <div *ngSwitchCase="MediaType.HTML" class="custom-html-holder">
+    <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
       <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
       <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
                           [content]="currentHtml" class="preview-box">
