@@ -1,13 +1,13 @@
-import { basicSetup } from "@codemirror/basic-setup";
-import { Extension } from "@codemirror/state";
-import { oneDarkTheme } from "@codemirror/theme-one-dark";
-import { cssLanguage, css, cssCompletion } from "@codemirror/lang-css";
-import { javascript, javascriptLanguage } from "@codemirror/lang-javascript";
-import { html, htmlCompletion } from "@codemirror/lang-html";
+import {basicSetup} from "@codemirror/basic-setup";
+import {Extension} from "@codemirror/state";
+import {oneDark} from "@codemirror/theme-one-dark";
+import {css, cssCompletion} from "@codemirror/lang-css";
+import {javascript, javascriptLanguage} from "@codemirror/lang-javascript";
+import {html, htmlCompletion} from "@codemirror/lang-html";
 
 const defaultCodemirrorExtensions = [
   basicSetup,
-  oneDarkTheme
+  oneDark
 ];
 
 export const cssCodemirror: Extension[] = [
