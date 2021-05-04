@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 /out-electron
+/out-electron-tsc
 !/out-electron/electron/package.json
 /app-builds
 /release

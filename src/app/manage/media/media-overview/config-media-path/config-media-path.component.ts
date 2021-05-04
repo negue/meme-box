@@ -66,12 +66,11 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
   openNativeFolderPicker() {
     if (this.isElectron) {
 
-      const windowAny = window as any;
-      const ipcRenderer = windowAny.require('electron').ipcRenderer;
+      const electronApi = window.electron;
 
-      ipcRenderer.send('select-dirs')
+      electronApi.electronIpcSend('select-dirs')
 
-      ipcRenderer.on('dir-selected', (event, args) => {
+      electronApi.electronIpcOn('dir-selected', (event, args) => {
         if (args) {
           this.form.patchValue({
             path: args
@@ -83,8 +82,6 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
 
   // todo extract that to a service
   get isElectron(): boolean {
-    const windowAny = window as any;
-
-    return !!(windowAny && windowAny.process && windowAny.process.type);
+    return !!window.electron;
   }
 }
