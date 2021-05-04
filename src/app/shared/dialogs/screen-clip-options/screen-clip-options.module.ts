@@ -8,7 +8,6 @@ import {MatIconModule} from "@angular/material/icon";
 import {ReactiveFormsModule} from "@angular/forms";
 import {ScreenClipOptionsComponent, ScreenClipOptionsPayload} from "./screen-clip-options.component";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
-import {HighlightEditorModule} from "@gewd/components/highlight-editor";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
@@ -18,6 +17,7 @@ import {PreventAnimationOnFirstViewDirective} from './prevent-animation-on-first
 import {PipesModule} from "../../../core/pipes/pipes.module";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {ClipTypeModule} from "../../components/clip-type/clip-type.module";
+import {CodemirrorModule} from "@gewd/components/codemirror";
 
 @NgModule({
   declarations: [
@@ -28,7 +28,6 @@ import {ClipTypeModule} from "../../components/clip-type/clip-type.module";
   imports: [
     CommonModule,
     CustomFormControlModule,
-    HighlightEditorModule,
     MatIconModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -39,7 +38,8 @@ import {ClipTypeModule} from "../../components/clip-type/clip-type.module";
     MatExpansionModule,
     PipesModule,
     MatButtonToggleModule,
-    ClipTypeModule
+    ClipTypeModule,
+    CodemirrorModule
   ],
   providers: [],
 })

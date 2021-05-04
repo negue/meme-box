@@ -42,19 +42,16 @@
 
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
+      <mat-form-field  floatLabel="always">
         <mat-label>HTML</mat-label>
 
-        <gewd-custom-form-control #customFormControlHtml
-                                  [value]="workingValue.html"
+        <gewd-custom-form-control [value]="workingValue.html"
         >
-          <gewd-prism-editor [value]="workingValue.html"
-                             language="html"
-                             [debounceTime]="450"
-                             [style.--editor-min-height.px]="200"
-                             (value$)="workingValue.html = $event; markForCheck()"
-                             (focussed$)="customFormControlHtml.focused = $event">
-          </gewd-prism-editor>
+          <gewd-codemirror [value]="workingValue.html"
+                           [codemirrorExtensions]="htmlExtensions"
+                           (changed)="workingValue.html = $event">
+
+          </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
     </mat-expansion-panel>
@@ -67,19 +64,16 @@
           <div *ngIf="workingValue.css">CSS is used</div>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
+      <mat-form-field  floatLabel="always">
         <mat-label>CSS</mat-label>
 
-        <gewd-custom-form-control #customFormControlCss
-                                  [value]="workingValue.css">
-          <gewd-prism-editor [value]="workingValue.css"
+        <gewd-custom-form-control [value]="workingValue.css">
 
-                             language="css"
-                             [debounceTime]="450"
-                             [style.--editor-min-height.px]="200"
-                             (value$)="workingValue.css = $event; markForCheck()"
-                             (focussed$)="customFormControlCss.focused = $event">
-          </gewd-prism-editor>
+          <gewd-codemirror [value]="workingValue.css"
+                           [codemirrorExtensions]="cssExtensions"
+                           (changed)="workingValue.css = $event">
+
+          </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
 
@@ -99,19 +93,16 @@
       (change)="workingValue.settings.subscribeToTwitchEvent = $event.checked">
         Receive Twitch Events
       </mat-checkbox>
-      <mat-form-field>
+      <mat-form-field  floatLabel="always">
         <mat-label>JS</mat-label>
 
-        <gewd-custom-form-control #customFormControlJs
-                                  [value]="workingValue.js"
+        <gewd-custom-form-control [value]="workingValue.js"
         >
-          <gewd-prism-editor [value]="workingValue.js"
-                             language="js"
-                             [debounceTime]="450"
-                             [style.--editor-min-height.px]="200"
-                             (value$)="workingValue.js = $event; markForCheck()"
-                             (focussed$)="customFormControlJs.focused = $event">
-          </gewd-prism-editor>
+          <gewd-codemirror [value]="workingValue.js"
+                           [codemirrorExtensions]="jsExtensions"
+                           (changed)="workingValue.js = $event">
+
+          </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
     </mat-expansion-panel>
