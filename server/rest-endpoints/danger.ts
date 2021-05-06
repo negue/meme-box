@@ -1,9 +1,12 @@
 import * as express from 'express';
 import {PersistenceInstance} from "../persistence";
-import {Clip, FileResult, MediaType, TargetScreenType} from "../../projects/contracts/src/public-api";
-import {mediaToString} from "../../projects/contracts/src/lib/media.types";
+import {Clip, FileResult, MEDIA_TYPE_INFORMATION, MediaType, TargetScreenType} from "@memebox/contracts";
 import {getFiles, mapFileInformations} from "../file.utilts";
 
+// Only used in the Server
+export function mediaToString(mediaType: MediaType) {
+  return MEDIA_TYPE_INFORMATION[mediaType]?.labelFallback ?? "";
+}
 
 export const DANGER_ROUTES = express.Router();
 

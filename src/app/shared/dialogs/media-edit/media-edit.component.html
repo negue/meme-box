@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].label +': "' + form.value.name + '"'}}
+  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
 
   <mat-checkbox class="mobile-checkbox"
                 [checked]="showOnMobile"
@@ -22,7 +22,7 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="action-buttons">
+    <div class="action-buttons" *transloco="let t; read: '$common$'">
       <button *ngFor="let button of mediaTypeList"
               mat-raised-button
 
@@ -31,7 +31,7 @@
 
       >
         <mat-icon [svgIcon]="button.icon"></mat-icon>
-        {{ button.name }}
+        {{ t(button.name) }}
       </button>
     </div>
 

@@ -90,7 +90,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     .map(([mediaType, value]) => {
       return {
         icon: value.icon,
-        name: value.label,
+        name: value.translationKey,
         type: +mediaType
       }
     });

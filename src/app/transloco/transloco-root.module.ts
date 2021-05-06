@@ -2,6 +2,7 @@ import {
   TRANSLOCO_CONFIG,
   TRANSLOCO_FALLBACK_STRATEGY,
   TRANSLOCO_LOADER,
+  TRANSLOCO_SCOPE,
   translocoConfig,
   TranslocoFallbackStrategy,
   TranslocoModule
@@ -44,6 +45,7 @@ const activeLang = getSelectedLang();
       })
     },
     { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader },
+    { provide: TRANSLOCO_SCOPE, useValue: { scope: 'common', alias: '$common$'}, multi: true}
   ]
 })
 export class TranslocoRootModule {}
