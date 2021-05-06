@@ -59,8 +59,10 @@
     </div>
 
     <div *ngFor="let mediGroup of mediaList | groupByMediaType" class="mo__casual-overview__group">
-      <div class="mo__casual-overview__group__title mat-headline">
-        {{mediGroup.groupName}}
+      <div class="mo__casual-overview__group__title mat-headline"  >
+        <ng-container *transloco="let t; read: '$common$' ">
+          {{t(mediGroup.groupName)}}
+        </ng-container>
       </div>
 
       <div class="mo__casual-overview__group__medias">

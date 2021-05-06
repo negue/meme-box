@@ -1,66 +1,84 @@
-import { Dictionary } from "./types";
-
 export enum MediaType {
   Invalid = -1,
   Picture = 0,
   Audio = 1,
   Video = 2,
   IFrame = 3,
-  HTML = 4,
+  Widget = 4,
 
 
   Meta = 100
 }
 
 export interface MediaTypeInformations {
-  label: string;
+  translationKey: string;
+  labelFallback: string;
   className: string;
   icon: string;
   sortOrder: number;
+  mediaType: MediaType;
 }
 
-export const MEDIA_TYPE_INFORMATION: Dictionary<MediaTypeInformations> = {
+export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = {
+  [MediaType.Invalid]: /*{
+    translationKey: "",
+    labelFallback: "Invalid",
+    className: "",
+    icon: "",
+    sortOrder: -1
+  }*/ undefined,
   [MediaType.Picture]: {
-    label: "Image",
+    translationKey: "mediaType.image",
+    labelFallback: "Image",
     className: "image",
     icon: "insert_photo",
-    sortOrder: 2
+    sortOrder: 2,
+    mediaType: MediaType.Picture
   },
   [MediaType.Video]: {
-    label: "Video",
+    translationKey: "mediaType.video",
+    labelFallback: "Video",
     className: "video",
     icon: "videocam",
-    sortOrder: 3
+    sortOrder: 3,
+    mediaType: MediaType.Video
   },
   [MediaType.Audio]: {
-    label: "Audio",
+    translationKey: "mediaType.audio",
+    labelFallback: "Audio",
     className: "audio",
     icon: "audiotrack",
-    sortOrder: 1
+    sortOrder: 1,
+    mediaType: MediaType.Audio
   },
   [MediaType.IFrame]: {
-    label: "iFrame", // IFrame , iframe
+    translationKey: "mediaType.iframe",
+    labelFallback: "iFrame", // IFrame , iframe
     className: "iframe",
     icon: "public",
-    sortOrder: 4
+    sortOrder: 4,
+    mediaType: MediaType.IFrame
   },
-  [MediaType.HTML]: {
-    label: "HTML", // IFrame , iframe
+  [MediaType.Widget]: {
+    translationKey: "mediaType.widget",
+    labelFallback: "Widget", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code",
-    sortOrder: 5
+    sortOrder: 5,
+    mediaType: MediaType.Widget
   },
   [MediaType.Meta]: {
+    translationKey: "mediaType.meta",
     icon: "art_track",
-    label: "Meta",
+    labelFallback: "Meta",
     className: "", // not visible in target-screen-component
-    sortOrder: 100
+    sortOrder: 100,
+    mediaType: MediaType.Meta
   }
-};
+} as const;
 
-export function mediaToString(mediaType: MediaType) {
-  return MEDIA_TYPE_INFORMATION[mediaType]?.label ?? "";
-}
+export const MEDIA_TYPE_INFORMATION_ARRAY = Object.values(MEDIA_TYPE_INFORMATION)
+  .filter(value => !!value);
 
 export function getSortOrderByType(mediaType: MediaType) {
   return MEDIA_TYPE_INFORMATION[mediaType]?.sortOrder;

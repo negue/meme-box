@@ -20,6 +20,7 @@ import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-ifram
 import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.module";
 import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
+import {TranslocoModule} from "@ngneat/transloco";
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import {DynamicVariableInputModule} from "../../components/dynamic-variable-inpu
     AutoScaleModule,
     ClipPreviewModule,
     DynamicVariableInputModule,
+    TranslocoModule
   ],
   providers: [],
 })

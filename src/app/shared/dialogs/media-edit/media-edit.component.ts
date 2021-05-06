@@ -9,7 +9,15 @@ import {
   ViewChild
 } from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {
+  Clip,
+  FileInfo,
+  MEDIA_TYPE_INFORMATION,
+  MEDIA_TYPE_INFORMATION_ARRAY,
+  MediaType,
+  MetaTriggerTypes,
+  Tag
+} from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
@@ -47,8 +55,8 @@ interface MediaTypeButton {
   icon: string;
 }
 
-const MEDIA_TYPES_WITHOUT_PATH = [MediaType.HTML, MediaType.Meta];
-const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.HTML, MediaType.Picture, MediaType.IFrame];
+const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.Meta];
+const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 @Component({
   selector: "app-media-edit",
@@ -86,12 +94,12 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
 
-  mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
-    .map(([mediaType, value]) => {
+  mediaTypeList: MediaTypeButton[] = MEDIA_TYPE_INFORMATION_ARRAY
+    .map((value) => {
       return {
         icon: value.icon,
-        name: value.label,
-        type: +mediaType
+        name: value.translationKey,
+        type: +value.mediaType
       }
     });
 
