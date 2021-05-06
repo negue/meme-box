@@ -28,7 +28,7 @@ export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = 
     sortOrder: -1
   }*/ undefined,
   [MediaType.Picture]: {
-    translationKey: "mediaType.picture",
+    translationKey: "mediaType.image",
     labelFallback: "Image",
     className: "image",
     icon: "insert_photo",

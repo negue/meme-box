@@ -1,6 +1,6 @@
 {
   "mediaType": {
-    "picture": "Bild",
+    "image": "Bild",
     "video": "Video",
     "audio": "Audio",
     "iframe": "iFrame",

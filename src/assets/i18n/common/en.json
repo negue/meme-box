@@ -1,6 +1,6 @@
 {
   "mediaType": {
-    "picture": "Picture",
+    "image": "Image",
     "video": "Video",
     "audio": "Audio",
     "iframe": "iFrame",
