@@ -49,7 +49,7 @@
         >
           <gewd-codemirror [value]="workingValue.html"
                            [codemirrorExtensions]="htmlExtensions"
-                           (changed)="workingValue.html = $event">
+                           (changed)="workingValue.html = $event; markForCheck();">
 
           </gewd-codemirror>
         </gewd-custom-form-control>
@@ -71,7 +71,7 @@
 
           <gewd-codemirror [value]="workingValue.css"
                            [codemirrorExtensions]="cssExtensions"
-                           (changed)="workingValue.css = $event">
+                           (changed)="workingValue.css = $event; markForCheck();">
 
           </gewd-codemirror>
         </gewd-custom-form-control>
@@ -100,7 +100,7 @@
         >
           <gewd-codemirror [value]="workingValue.js"
                            [codemirrorExtensions]="jsExtensions"
-                           (changed)="workingValue.js = $event">
+                           (changed)="workingValue.js = $event; markForCheck();">
 
           </gewd-codemirror>
         </gewd-custom-form-control>

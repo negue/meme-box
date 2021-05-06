@@ -200,8 +200,10 @@
     </ng-container>
   </form>
 
-  <div class="column" [ngSwitch]="form.value.type"
-       [class.custom-html-preview]="form.value.type === MediaType.Widget">
+  <!-- Preview of a Media -->
+  <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
+       [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
+  >
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
       <h3>Assigned Clips by Tags</h3>
@@ -212,6 +214,25 @@
     </div>
 
     <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
+      <mat-select formControlName="fromTemplate" #fromTemplateSelect
+                  (valueChange)="onTemplateChanged($event)">
+        <mat-option value="">No Template</mat-option>
+        <mat-option *ngFor="let template of widgetTemplates$ | async"
+            [value]="template.id">{{template.name}}</mat-option>
+      </mat-select>
+
+      <button mat-raised-button color="primary" (click)="editHTML()"
+              *ngIf="fromTemplateSelect.value === ''">
+        Edit HTML
+      </button>
+      <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
+                          [content]="currentHtml" class="preview-box">
+
+      </app-dynamic-iframe>
+    </div>
+
+
+    <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
       <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
       <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
                           [content]="currentHtml" class="preview-box">
