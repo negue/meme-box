@@ -9,7 +9,15 @@ import {
   ViewChild
 } from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {
+  Clip,
+  FileInfo,
+  MEDIA_TYPE_INFORMATION,
+  MEDIA_TYPE_INFORMATION_ARRAY,
+  MediaType,
+  MetaTriggerTypes,
+  Tag
+} from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
@@ -86,12 +94,12 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
 
-  mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
-    .map(([mediaType, value]) => {
+  mediaTypeList: MediaTypeButton[] = MEDIA_TYPE_INFORMATION_ARRAY
+    .map((value) => {
       return {
         icon: value.icon,
         name: value.translationKey,
-        type: +mediaType
+        type: +value.mediaType
       }
     });
 

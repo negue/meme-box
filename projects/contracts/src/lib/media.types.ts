@@ -16,6 +16,7 @@ export interface MediaTypeInformations {
   className: string;
   icon: string;
   sortOrder: number;
+  mediaType: MediaType;
 }
 
 export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = {
@@ -31,44 +32,53 @@ export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = 
     labelFallback: "Image",
     className: "image",
     icon: "insert_photo",
-    sortOrder: 2
+    sortOrder: 2,
+    mediaType: MediaType.Picture
   },
   [MediaType.Video]: {
     translationKey: "mediaType.video",
     labelFallback: "Video",
     className: "video",
     icon: "videocam",
-    sortOrder: 3
+    sortOrder: 3,
+    mediaType: MediaType.Video
   },
   [MediaType.Audio]: {
     translationKey: "mediaType.audio",
     labelFallback: "Audio",
     className: "audio",
     icon: "audiotrack",
-    sortOrder: 1
+    sortOrder: 1,
+    mediaType: MediaType.Audio
   },
   [MediaType.IFrame]: {
     translationKey: "mediaType.iframe",
     labelFallback: "iFrame", // IFrame , iframe
     className: "iframe",
     icon: "public",
-    sortOrder: 4
+    sortOrder: 4,
+    mediaType: MediaType.IFrame
   },
   [MediaType.Widget]: {
     translationKey: "mediaType.widget",
     labelFallback: "Widget", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code",
-    sortOrder: 5
+    sortOrder: 5,
+    mediaType: MediaType.Widget
   },
   [MediaType.Meta]: {
     translationKey: "mediaType.meta",
     icon: "art_track",
     labelFallback: "Meta",
     className: "", // not visible in target-screen-component
-    sortOrder: 100
+    sortOrder: 100,
+    mediaType: MediaType.Meta
   }
-};
+} as const;
+
+export const MEDIA_TYPE_INFORMATION_ARRAY = Object.values(MEDIA_TYPE_INFORMATION)
+  .filter(value => !!value);
 
 export function getSortOrderByType(mediaType: MediaType) {
   return MEDIA_TYPE_INFORMATION[mediaType]?.sortOrder;

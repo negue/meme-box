@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
+import {MEDIA_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
 
 export interface IFilterItem {
@@ -12,12 +12,12 @@ export interface IFilterItem {
 
 export const MEDIA_FILTER_TYPE = 'MEDIA_TYPE';
 
-export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(Object.entries(MEDIA_TYPE_INFORMATION)
-  .filter(([_, informations]) => !!informations)
-  .map(([mediaType, informations]) => {
+export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(MEDIA_TYPE_INFORMATION_ARRAY
+  .map((informations) => {
+
     return {
       label: informations.translationKey,
-      value: +mediaType,
+      value: +informations.mediaType,
       icon: informations.icon,
       type:MEDIA_FILTER_TYPE,
       sortOrder: informations.sortOrder,
