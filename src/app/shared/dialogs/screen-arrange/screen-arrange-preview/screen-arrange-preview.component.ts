@@ -41,8 +41,6 @@ export class ScreenArrangePreviewComponent {
   @Output()
   userChangeElement = new EventEmitter();
 
-  PositionEnum = PositionEnum;
-
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   get isDragEnabled(): boolean {
@@ -62,12 +60,15 @@ export class ScreenArrangePreviewComponent {
   }
 
   readonly GlobalArrangeOptions = GlobalArrangeOptions;
+  readonly PositionEnum = PositionEnum;
 
   globalActionsForm = new FormControl([
     GlobalArrangeOptions.Drag,
     GlobalArrangeOptions.Resize,
     GlobalArrangeOptions.Rotate
   ] as GlobalArrangeOptions[]);
+
+  sizeSelection: 'px' | '%' = 'px';
 
   private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();
 
@@ -96,6 +97,13 @@ export class ScreenArrangePreviewComponent {
 
   userChangedElement() {
     this.userChangeElement.emit();
+  }
+
+  sizeOptionChanged(newValue: 'px' | '%') {
+    // TODO: Set the option
+    //this.currentSelectedClip.clipSetting = newValue;
+    this.sizeSelection = newValue;
+    this.triggerChangedetection();
   }
 
   elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip) {

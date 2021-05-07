@@ -1,19 +1,4 @@
-<!--<div class="dragging-config">-->
-<!--  <div class="inline" [class.hidden]="!currentSelectedClip">-->
-<!--    <mat-form-field *ngIf="currentSelectedClip">-->
-<!--      <mat-select (selectionChange)="triggerChangedetection()"-->
-<!--                  [(value)]="currentSelectedClip.clipSetting.position"-->
-<!--                  placeholder="Media Position">-->
-<!--        <mat-option [value]="0">{{0 | positionToString}}</mat-option>-->
-<!--        <mat-option [value]="1">{{1 | positionToString}}</mat-option>-->
-<!--        <mat-option [value]="2">{{2 | positionToString}}</mat-option>-->
-<!--        <mat-option [value]="3">{{3 | positionToString}}</mat-option>-->
-<!--      </mat-select>-->
-<!--    </mat-form-field>-->
-<!--  </div>-->
-<!--</div>-->
-
-<div class="arrange-buffer-area">
+<div class="arrange-buffer-area" style="display: flex;">
   <mat-button-toggle-group aria-label="Actions for selected media file"
                            multiple
                            [formControl]="globalActionsForm"
@@ -43,6 +28,31 @@
       Warp
     </mat-button-toggle>
   </mat-button-toggle-group>
+
+  <div *ngIf="currentSelectedClip" class="arrange-selection-actions">
+    <mat-form-field appearance="fill">
+      <mat-label>Size</mat-label>
+      <mat-select [value]="currentSelectedClip?.clipSetting | settingsToSizingType"
+                  (valueChange)="sizeOptionChanged($event)"
+                  placeholder="Size"
+      >
+        <mat-option value="px">px</mat-option>
+        <mat-option value="%">%</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="currentSelectedClip" appearance="fill">
+      <mat-label>Media Position</mat-label>
+      <mat-select (selectionChange)="triggerChangedetection()"
+                  [(value)]="currentSelectedClip.clipSetting.position"
+                  placeholder="Media Position">
+        <mat-option [value]="0">{{0 | positionToString}}</mat-option>
+        <mat-option [value]="1">{{1 | positionToString}}</mat-option>
+        <mat-option [value]="2">{{2 | positionToString}}</mat-option>
+        <mat-option [value]="3">{{3 | positionToString}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </div>
 
 <div class="drag-drop-area-holder" #holdingElement>
@@ -68,7 +78,7 @@
                                [clip]="pair.clip"
                                [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                [screen]="screen"
-                               [sizeType]="'px'"
+                               [sizeType]="sizeSelection"
                                [showResizeBorder]="pair === currentSelectedClip"
                                [settings]="pair.clipSetting" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
@@ -88,7 +98,7 @@
                                [clip]="pair.clip"
                                [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                [screen]="screen"
-                               [sizeType]="'px'"
+                               [sizeType]="sizeSelection"
                                [showResizeBorder]="pair === currentSelectedClip"
                                [settings]="pair.clipSetting" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
@@ -106,7 +116,7 @@
           *ngIf="pair.clipSetting.position === PositionEnum.Absolute"
           [clip]="pair.clip"
           [screen]="screen"
-          [sizeType]="'px'"
+          [sizeType]="sizeSelection"
           [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
           [showResizeBorder]="pair === currentSelectedClip"
           (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
@@ -138,36 +148,7 @@
 <!--      Drag / Arrange Options-->
 <!--    </h2>-->
 <!--    <div>-->
-<!--      <mat-form-field>-->
-<!--        <mat-select #sizeType [value]="currentSelectedClip?.clipSetting | settingsToSizingType"-->
-<!--                    placeholder="Sizing Type">-->
-<!--          <mat-option value="px">PX</mat-option>-->
-<!--          <mat-option value="%">%</mat-option>-->
-<!--        </mat-select>-->
-<!--      </mat-form-field>-->
 
-<!--      <mat-checkbox [checked]="true" #dragCheckbox-->
-<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.position">-->
-<!--        Drag-->
-<!--      </mat-checkbox>-->
-<!--      <mat-checkbox [checked]="true" #resizeCheckbox-->
-<!--                    (change)="onCheckedToggle($event, warpingCheckbox)"-->
-<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.size">-->
-<!--        Resizing-->
-<!--      </mat-checkbox>-->
-<!--      <mat-checkbox #rotateCheckbox-->
-<!--                    [checked]="true"-->
-<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">-->
-<!--        Rotating-->
-<!--      </mat-checkbox>-->
-<!--      <mat-checkbox #warpingCheckbox-->
-<!--                    (change)="onCheckedToggle($event, resizeCheckbox)"-->
-<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform"-->
-<!--                    [checked]="true"-->
-<!--      >-->
-<!--        Warping-->
-<!--      </mat-checkbox>-->
-<!--    </div>-->
 <!--    <button mat-raised-button (click)="reset()" color="warn">-->
 <!--      Reset-->
 <!--    </button>-->

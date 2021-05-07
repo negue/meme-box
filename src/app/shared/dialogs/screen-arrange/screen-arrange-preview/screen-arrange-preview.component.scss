@@ -47,6 +47,27 @@
 }
 
 
-.arrange-global-actions {
+.arrange-global-actions, .arrange-selection-actions {
   border: 1px solid #FFFFFF;
+  border-radius: 4px;
+}
+
+.arrange-selection-actions {
+  display: flex;
+  margin-left: 2rem;
+
+  ::ng-deep .mat-form-field-wrapper {
+    position: relative;
+    top: -4px; //
+  }
+
+  .mat-form-field:not(:first-child) {
+    margin-left: 2px;
+  }
+}
+
+.arrange-buffer-area {
+  display: flex;
+  height: 52px;
+  overflow: hidden;
 }

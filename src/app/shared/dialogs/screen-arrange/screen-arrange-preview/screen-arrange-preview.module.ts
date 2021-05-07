@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { PipesModule } from '../../../../core/pipes/pipes.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     PipesModule,
     MatButtonToggleModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatDividerModule
   ]
 })
 export class ScreenArrangePreviewModule {
