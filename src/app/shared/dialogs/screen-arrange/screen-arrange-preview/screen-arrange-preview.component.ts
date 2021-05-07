@@ -44,19 +44,23 @@ export class ScreenArrangePreviewComponent {
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   get isDragEnabled(): boolean {
-    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Drag);
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.position &&
+      this.globalActionsForm.value.includes(GlobalArrangeOptions.Drag);
   }
 
   get isResizeEnabled(): boolean {
-    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Resize);
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.size &&
+      this.globalActionsForm.value.includes(GlobalArrangeOptions.Resize);
   }
 
   get isRotateEnabled(): boolean {
-    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Rotate);
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform &&
+      this.globalActionsForm.value.includes(GlobalArrangeOptions.Rotate);
   }
 
   get isWarpEnabled(): boolean {
-    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Warp);
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform &&
+      this.globalActionsForm.value.includes(GlobalArrangeOptions.Warp);
   }
 
   readonly GlobalArrangeOptions = GlobalArrangeOptions;
@@ -77,6 +81,7 @@ export class ScreenArrangePreviewComponent {
   constructor(private _cd: ChangeDetectorRef,
               private _fb: FormBuilder,
               private appService: AppService) {
+    this.globalActionsForm.valueChanges.subscribe(_ => console.warn('aa', _));
   }
 
 

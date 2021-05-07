@@ -52,13 +52,22 @@
   border-radius: 4px;
 }
 
+.arrange-selection-actions-container {
+  margin-left: 2rem;
+}
+
 .arrange-selection-actions {
   display: flex;
-  margin-left: 2rem;
+  height: 50px;
+  overflow: hidden;
+
+  ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+  }
 
   ::ng-deep .mat-form-field-wrapper {
     position: relative;
-    top: -4px; //
+    top: -4px;
   }
 
   .mat-form-field:not(:first-child) {
@@ -68,6 +77,6 @@
 
 .arrange-buffer-area {
   display: flex;
-  height: 52px;
+  height: 76px;
   overflow: hidden;
 }

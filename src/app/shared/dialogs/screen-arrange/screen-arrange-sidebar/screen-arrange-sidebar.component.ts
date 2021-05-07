@@ -58,7 +58,7 @@ export class ScreenArrangeSidebarComponent {
   openMediaSettingsDialog($event: MouseEvent, visibleItem: CombinedClip) {
     this.preventEvent($event);
 
-    this.currentSelectedClip = null;
+    this.changeCurrSelectedClip.emit(null);
 
     this.dialogs.showScreenClipOptionsDialog({
       clipId: visibleItem.clip.id,
