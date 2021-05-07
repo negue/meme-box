@@ -10,7 +10,14 @@ import {
 import { Clip, CombinedClip, PositionEnum, Screen } from '@memebox/contracts';
 import { DragResizeMediaComponent } from '../drag-resize-media/drag-resize-media.component';
 import { AppService } from '../../../../state/app.service';
-import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { FormBuilder, FormControl } from '@angular/forms';
+
+enum GlobalArrangeOptions {
+  Drag,
+  Resize,
+  Rotate,
+  Warp
+}
 
 @Component({
   selector: 'app-screen-arrange-preview',
@@ -38,11 +45,36 @@ export class ScreenArrangePreviewComponent {
 
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
+  get isDragEnabled(): boolean {
+    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Drag);
+  }
+
+  get isResizeEnabled(): boolean {
+    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Resize);
+  }
+
+  get isRotateEnabled(): boolean {
+    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Rotate);
+  }
+
+  get isWarpEnabled(): boolean {
+    return this.globalActionsForm.value.includes(GlobalArrangeOptions.Warp);
+  }
+
+  readonly GlobalArrangeOptions = GlobalArrangeOptions;
+
+  globalActionsForm = new FormControl([
+    GlobalArrangeOptions.Drag,
+    GlobalArrangeOptions.Resize,
+    GlobalArrangeOptions.Rotate
+  ] as GlobalArrangeOptions[]);
+
   private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();
 
   private previouslyClickedComponent: DragResizeMediaComponent | null = null;
 
   constructor(private _cd: ChangeDetectorRef,
+              private _fb: FormBuilder,
               private appService: AppService) {
   }
 
@@ -68,12 +100,6 @@ export class ScreenArrangePreviewComponent {
 
   elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip) {
     this.combinedClipToComponent.set(pair, dragResizeMediaComponent);
-  }
-
-  onCheckedToggle($event: MatCheckboxChange, warpingCheckbox: MatCheckbox) {
-    if ($event.checked) {
-      warpingCheckbox.checked = false;
-    }
   }
 
   clickedOutside() {

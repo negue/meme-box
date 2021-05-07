@@ -1,16 +1,48 @@
-<div class="dragging-config">
-  <div class="inline" [class.hidden]="!currentSelectedClip">
-    <mat-form-field *ngIf="currentSelectedClip">
-      <mat-select (selectionChange)="triggerChangedetection()"
-                  [(value)]="currentSelectedClip.clipSetting.position"
-                  placeholder="Media Position">
-        <mat-option [value]="0">{{0 | positionToString}}</mat-option>
-        <mat-option [value]="1">{{1 | positionToString}}</mat-option>
-        <mat-option [value]="2">{{2 | positionToString}}</mat-option>
-        <mat-option [value]="3">{{3 | positionToString}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+<!--<div class="dragging-config">-->
+<!--  <div class="inline" [class.hidden]="!currentSelectedClip">-->
+<!--    <mat-form-field *ngIf="currentSelectedClip">-->
+<!--      <mat-select (selectionChange)="triggerChangedetection()"-->
+<!--                  [(value)]="currentSelectedClip.clipSetting.position"-->
+<!--                  placeholder="Media Position">-->
+<!--        <mat-option [value]="0">{{0 | positionToString}}</mat-option>-->
+<!--        <mat-option [value]="1">{{1 | positionToString}}</mat-option>-->
+<!--        <mat-option [value]="2">{{2 | positionToString}}</mat-option>-->
+<!--        <mat-option [value]="3">{{3 | positionToString}}</mat-option>-->
+<!--      </mat-select>-->
+<!--    </mat-form-field>-->
+<!--  </div>-->
+<!--</div>-->
+
+<div class="arrange-buffer-area">
+  <mat-button-toggle-group aria-label="Actions for selected media file"
+                           multiple
+                           [formControl]="globalActionsForm"
+                           class="arrange-global-actions"
+  >
+    <mat-button-toggle [value]="GlobalArrangeOptions.Drag"
+                       [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.position"
+    >
+      Drag
+    </mat-button-toggle>
+
+    <mat-button-toggle [value]="GlobalArrangeOptions.Resize"
+                       [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.size"
+    >
+      Resize
+    </mat-button-toggle>
+
+    <mat-button-toggle [value]="GlobalArrangeOptions.Rotate"
+                       [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform"
+    >
+      Rotate
+    </mat-button-toggle>
+
+    <mat-button-toggle [value]="GlobalArrangeOptions.Warp"
+                       [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform"
+    >
+      Warp
+    </mat-button-toggle>
+  </mat-button-toggle-group>
 </div>
 
 <div class="drag-drop-area-holder" #holdingElement>
@@ -36,7 +68,7 @@
                                [clip]="pair.clip"
                                [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                [screen]="screen"
-                               [sizeType]="sizeType.value"
+                               [sizeType]="'px'"
                                [showResizeBorder]="pair === currentSelectedClip"
                                [settings]="pair.clipSetting" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
@@ -44,26 +76,27 @@
 
                                transformOrigin="center center"
                                [draggingEnabled]="false"
-                               [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"
-                               [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
-                               [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
+                               [resizeEnabled]="isResizeEnabled"
+                               [rotateEnabled]="isRotateEnabled"
+                               [warpEnabled]="isWarpEnabled"
                                class="preview-box"
         >
 
         </app-drag-resize-media>
+
         <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Random"
                                [clip]="pair.clip"
                                [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                                [screen]="screen"
-                               [sizeType]="sizeType.value"
+                               [sizeType]="'px'"
                                [showResizeBorder]="pair === currentSelectedClip"
                                [settings]="pair.clipSetting" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                                (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
                                [draggingEnabled]="false"
-                               [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : true"
-                               [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
-                               [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
+                               [resizeEnabled]="isResizeEnabled"
+                               [rotateEnabled]="isRotateEnabled"
+                               [warpEnabled]="isWarpEnabled"
                                class="preview-box"
         >
 
@@ -73,7 +106,7 @@
           *ngIf="pair.clipSetting.position === PositionEnum.Absolute"
           [clip]="pair.clip"
           [screen]="screen"
-          [sizeType]="sizeType.value"
+          [sizeType]="'px'"
           [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
           [showResizeBorder]="pair === currentSelectedClip"
           (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
@@ -81,10 +114,10 @@
           (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
           (elementChanged)="userChangedElement()"
 
-          [draggingEnabled]="pair.clipSetting.arrangeLock?.position ? false : dragCheckbox.checked"
-          [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"
-          [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
-          [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
+          [draggingEnabled]="isDragEnabled"
+          [resizeEnabled]="isResizeEnabled"
+          [rotateEnabled]="isRotateEnabled"
+          [warpEnabled]="isWarpEnabled"
 
           class="preview-box"
         >
@@ -97,44 +130,47 @@
 
 </div>
 
-<div class="dragging-config">
-  <div class="spacer" *ngIf="!currentSelectedClip"></div>
-  <div class="inline" [class.hidden]="!currentSelectedClip">
-    <h2>
-      Drag / Arrange Options
-    </h2>
-    <div>
-      <mat-form-field>
-        <mat-select #sizeType [value]="currentSelectedClip?.clipSetting | settingsToSizingType"
-                    placeholder="Sizing Type">
-          <mat-option value="px">PX</mat-option>
-          <mat-option value="%">%</mat-option>
-        </mat-select>
-      </mat-form-field>
 
-      <mat-checkbox [checked]="true" #dragCheckbox
-                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.position">
-        Drag
-      </mat-checkbox>
-      <mat-checkbox [checked]="true" #resizeCheckbox
-                    (change)="onCheckedToggle($event, warpingCheckbox)"
-                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.size">
-        Resizing
-      </mat-checkbox>
-      <mat-checkbox #rotateCheckbox
-                    [checked]="true"
-                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">
-        Rotating
-      </mat-checkbox>
-      <mat-checkbox #warpingCheckbox
-                    (change)="onCheckedToggle($event, resizeCheckbox)"
-                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">
-        Warping
-      </mat-checkbox>
-    </div>
-    <button mat-raised-button (click)="reset()" color="warn">
-      Reset
-    </button>
+<!--<div class="dragging-config">-->
+<!--  <div class="spacer" *ngIf="!currentSelectedClip"></div>-->
+<!--  <div class="inline" [class.hidden]="!currentSelectedClip">-->
+<!--    <h2>-->
+<!--      Drag / Arrange Options-->
+<!--    </h2>-->
+<!--    <div>-->
+<!--      <mat-form-field>-->
+<!--        <mat-select #sizeType [value]="currentSelectedClip?.clipSetting | settingsToSizingType"-->
+<!--                    placeholder="Sizing Type">-->
+<!--          <mat-option value="px">PX</mat-option>-->
+<!--          <mat-option value="%">%</mat-option>-->
+<!--        </mat-select>-->
+<!--      </mat-form-field>-->
 
-  </div>
-</div>
+<!--      <mat-checkbox [checked]="true" #dragCheckbox-->
+<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.position">-->
+<!--        Drag-->
+<!--      </mat-checkbox>-->
+<!--      <mat-checkbox [checked]="true" #resizeCheckbox-->
+<!--                    (change)="onCheckedToggle($event, warpingCheckbox)"-->
+<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.size">-->
+<!--        Resizing-->
+<!--      </mat-checkbox>-->
+<!--      <mat-checkbox #rotateCheckbox-->
+<!--                    [checked]="true"-->
+<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">-->
+<!--        Rotating-->
+<!--      </mat-checkbox>-->
+<!--      <mat-checkbox #warpingCheckbox-->
+<!--                    (change)="onCheckedToggle($event, resizeCheckbox)"-->
+<!--                    [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform"-->
+<!--                    [checked]="true"-->
+<!--      >-->
+<!--        Warping-->
+<!--      </mat-checkbox>-->
+<!--    </div>-->
+<!--    <button mat-raised-button (click)="reset()" color="warn">-->
+<!--      Reset-->
+<!--    </button>-->
+
+<!--  </div>-->
+<!--</div>-->
