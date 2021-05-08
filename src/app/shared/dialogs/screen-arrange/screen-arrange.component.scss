@@ -32,6 +32,7 @@ mat-dialog-content {
 
 .mat-dialog-title {
   display: flex;
+  justify-content: space-between;
 
   span {
     flex: 1;

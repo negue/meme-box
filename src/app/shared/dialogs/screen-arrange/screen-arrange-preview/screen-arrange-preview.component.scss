@@ -52,6 +52,16 @@
   border-radius: 4px;
 }
 
+.arrange-global-actions {
+  ::ng-deep .mat-button-toggle-checked:not(.mat-button-toggle-disabled) {
+    background-color: rgba(var(--palette-accent-500), 1);
+  }
+
+  ::ng-deep .mat-button-toggle-appearance-standard {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
 .arrange-selection-actions-container {
   margin-left: 2rem;
 }
