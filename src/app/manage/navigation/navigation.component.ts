@@ -30,7 +30,7 @@ export class NavigationComponent implements OnInit {
     this.links = [
       {path: './media', displayName: 'media'},
       {path: './screens', displayName: 'screens'},
-      {path: './triggers', displayName: 'Triggers'}
+      {path: './triggers', displayName: 'triggers'}
     ];
   }
 

@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { Clip, MEDIA_TYPE_INFORMATION, MediaType } from '@memebox/contracts';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Clip, MEDIA_TYPE_INFORMATION, MediaType} from '@memebox/contracts';
 import groupBy from 'lodash/groupBy';
 
 export interface MediGroup {
@@ -22,7 +22,7 @@ export class GroupByMediaTypePipe implements PipeTransform {
     const groups = groupBy(medias, m => validTypes.includes(m.type) ? m.type : MediaType.Invalid);
 
     return Object.keys(groups).map(gKey => ({
-      groupName: MEDIA_TYPE_INFORMATION[groups[gKey][0].type]?.label ?? 'Unknown type',
+      groupName: MEDIA_TYPE_INFORMATION[groups[gKey][0].type]?.translationKey ?? 'invalid',
       medias: groups[gKey]
     }));
   }

@@ -6,6 +6,7 @@ import {debounceTime} from "rxjs/operators";
 import type {CustomHtmlDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {downloadFile} from "@gewd/utils";
+import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
 
 @Component({
   selector: 'app-custom-html-edit',
@@ -24,6 +25,11 @@ export class CustomHtmlEditComponent implements OnInit {
   public iframeContent$ = this.iframeContentSubject$.pipe(
     debounceTime(400)
   );
+
+
+  public cssExtensions = cssCodemirror;
+  public jsExtensions = jsCodemirror;
+  public htmlExtensions = htmlCodemirror;
 
   private initDone = false;
   private newVarCounter = 0;

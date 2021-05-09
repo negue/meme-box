@@ -7,7 +7,7 @@
   "files": [
     "out-electron/**/*",
     "dist/**/*",
-    "node_modules/**/*",
+    "!node_modules/**/*",
     "!node_modules/typescript",
     "!node_modules/schematics-utilities",
     "!**/*.ts",

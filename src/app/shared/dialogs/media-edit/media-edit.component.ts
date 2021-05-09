@@ -9,11 +9,29 @@ import {
   ViewChild
 } from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag} from "@memebox/contracts";
+import {
+  Clip,
+  FileInfo,
+  MEDIA_TYPE_INFORMATION,
+  MEDIA_TYPE_INFORMATION_ARRAY,
+  MediaType,
+  MetaTriggerTypes,
+  Tag
+} from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppService} from "../../../state/app.service";
 import {AppQueries} from "../../../state/app.queries";
-import {debounceTime, distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  pairwise,
+  shareReplay,
+  startWith,
+  take,
+  takeUntil
+} from "rxjs/operators";
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
@@ -38,7 +56,9 @@ const INITIAL_CLIP: Partial<Clip> = {
   metaDelay: META_DELAY_DEFAULT,
   metaType: MetaTriggerTypes.Random,
 
-  showOnMobile: true
+  showOnMobile: true,
+
+  fromTemplate: ""
 };
 
 interface MediaTypeButton {
@@ -47,8 +67,9 @@ interface MediaTypeButton {
   icon: string;
 }
 
-const MEDIA_TYPES_WITHOUT_PATH = [MediaType.HTML, MediaType.Meta];
-const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.HTML, MediaType.Picture, MediaType.IFrame];
+// TODO maybe use "TYPES WITH PATH"
+const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta];
+const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 @Component({
   selector: "app-media-edit",
@@ -69,7 +90,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
     metaType: 0,
     metaDelay: 0,
-  });
+
+    fromTemplate: ""
+  } as Clip);
 
   currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
 
@@ -86,12 +109,12 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
 
-  mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
-    .map(([mediaType, value]) => {
+  mediaTypeList: MediaTypeButton[] = MEDIA_TYPE_INFORMATION_ARRAY
+    .map((value) => {
       return {
         icon: value.icon,
-        name: value.label,
-        type: +mediaType
+        name: value.translationKey,
+        type: +value.mediaType
       }
     });
 
@@ -129,7 +152,16 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   )
 
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  widgetTemplates$ = this.appQuery.clipList$.pipe(
+    map(( allMedias) => {
+      return allMedias.filter(c => c.type === MediaType.WidgetTemplate);
+    }),
+    shareReplay(1)
+  );
+
+
+separatorKeysCodes: number[] = [ENTER, COMMA];
   tagFormCtrl = new FormControl();  // needed in form?!
 
   // current "filtered" tags
@@ -233,7 +265,12 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe( () => {
       this.executeHTMLRefresh();
-    })
+    });
+
+
+    if (this.data.fromTemplate) {
+      this.onTemplateChanged(this.data.fromTemplate);
+    }
   }
 
   async save() {
@@ -365,6 +402,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   }
 
   // endregion
+
   async editHTML() {
     const dynamicIframeContent = clipDataToDynamicIframeContent(this.data);
 
@@ -397,5 +435,19 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     };
 
     this.currentHtmlToPreview$.next(updatedHtmlDataset);
+  }
+
+  async onTemplateChanged(mediaId: string) {
+    console.info({mediaId});
+
+    const templates = await this.widgetTemplates$.pipe(
+      take(1)
+    ).toPromise();
+
+    const template = templates.find(t => t.id === mediaId);
+
+    this.currentHtmlConfig = clipDataToDynamicIframeContent(template);
+    this.executeHTMLRefresh();
+    this.cd.detectChanges();
   }
 }

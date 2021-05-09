@@ -24,7 +24,7 @@ import {PersistenceInstance} from "./persistence";
 // @ts-ignore
 import open from 'open';
 import {TAG_ROUTES} from "./rest-endpoints/tags";
-import {getFiles, mapFileInformations} from "./file.utilts";
+import {getAppRootPath, getFiles, isInElectron, mapFileInformations} from "./file.utilts";
 import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
@@ -41,16 +41,13 @@ const {  normalize, join } = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const versions = process.versions;
-
-const isInElectron = !!versions['electron'];
 
 const app: Express = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const rootPath = isInElectron ? join(__dirname, '/../../dist') : 'dist';
+const rootPath = getAppRootPath();
 
 app.use(express.static(rootPath));
 

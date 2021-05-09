@@ -38,13 +38,10 @@ export interface Clip extends HasId {
   showOnMobile?: boolean;
 
   extended?: Dictionary<string>; // only used for HTML - Type
+
+  fromTemplate?: string; // GUID / Clip.Id of the Template
 }
 
-export const enum EXTENDED_KEYS {
-  HTML = 'HTML',
-  CSS = 'CSS',
-  JS = 'JS'
-}
 
 export interface Screen extends HasId {
   name: string;

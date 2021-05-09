@@ -57,11 +57,29 @@ ___
 
 ___
 
-## Roadmap
+## Roadmap 
 
-* [ ] Change media options by triggered variables (e.g. different style, or something)
-* [ ] "Media Type": `Scripts` with this more advanced features could be realized 
+### 2021.3.0
+* [ ] Widgets (previously `HTML`) 
+  * [ ] API for Twitch or Events that its shown and so on
+  * [x] Templates
+  * [x] Widget-Variables
+  * [x] Import / Export Widgets
+  * [ ] Persistence of the Widget State across Screens
+* [x] Custom Port Settings, default Port now on 6363
+* [x] Electron can be hidden into the Tray
+* [ ] "Media Type": `Scripts` with this more advanced features could be realized
+
+### 2021.4.0
 * [ ] Labels on or around the Media, each with their own Position / Animation
+  * [ ] Changeable by Trigger Variables
+  * [ ] Can be placed like in the Arrange View
+* [ ] OBS Websockets
+  * [ ] "Media Type": `OBS Command`
+  * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
+
+### Future, if you want to help open a PR :)
+* [ ] Change media options by triggered variables (e.g. different style, or something)
 * [ ] more to be added :)
 
 ## Based on this Template:

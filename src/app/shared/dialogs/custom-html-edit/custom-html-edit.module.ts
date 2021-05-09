@@ -6,7 +6,6 @@ import {CustomHtmlEditComponent} from "./custom-html-edit.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
-import {HighlightEditorModule} from "@gewd/components/highlight-editor";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
@@ -17,6 +16,7 @@ import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-ifram
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {VariablesConfigComponent} from './variables-config/variables-config.component';
 import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
+import {CodemirrorModule} from "@gewd/components/codemirror";
 
 @NgModule({
   declarations: [
@@ -28,7 +28,6 @@ import {DynamicVariableInputModule} from "../../components/dynamic-variable-inpu
     MatExpansionModule,
     MatFormFieldModule,
     CustomFormControlModule,
-    HighlightEditorModule,
     CommonModule,
     MatButtonModule,
     MatIconModule,
@@ -37,9 +36,8 @@ import {DynamicVariableInputModule} from "../../components/dynamic-variable-inpu
     FormsModule,
     DynamicIframeModule,
     MatCheckboxModule,
-    DynamicVariableInputModule
-
-
+    DynamicVariableInputModule,
+    CodemirrorModule
   ],
   providers: [],
 })
