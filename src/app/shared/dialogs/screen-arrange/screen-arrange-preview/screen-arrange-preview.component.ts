@@ -124,6 +124,14 @@ export class ScreenArrangePreviewComponent {
     this._cd.markForCheck();
   }
 
+  applySingleChanges() {
+    // TODO
+  }
+
+  applyAllchanges() {
+    // TODO
+  }
+
   reset() {
     const { clipSetting } = this.currentSelectedClip;
 

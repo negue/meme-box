@@ -4,6 +4,44 @@
   display: flex;
   flex-direction: column;
   position: relative;
+
+
+  // Change the default background colors of the actions
+  .arrange-actions > button,
+  ::ng-deep .arrange-selection-actions .mat-form-field-appearance-fill .mat-form-field-flex,
+  ::ng-deep .mat-button-toggle.mat-button-toggle-appearance-standard,
+  ::ng-deep .mat-button-toggle-disabled .mat-button-toggle-button {
+    background-color: var(--palette-background-background);
+  }
+
+
+  .arrange-global-actions {
+    // Change default style of disabled toggle-button
+    ::ng-deep .mat-button-toggle-disabled .mat-button-toggle-button {
+      opacity: 0.3;
+    }
+
+    // Change the default color of the toggle button to our primary
+    ::ng-deep .mat-button-toggle-checked:not(.mat-button-toggle-disabled) {
+      background-color: rgba(var(--palette-accent-500), 1);
+    }
+  }
+
+  .arrange-selection-actions {
+    display: flex;
+
+    // Highlight the field when you hover over it
+    ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex:hover {
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+
+    // Vertically align the mat-input-fields because we don't need the error/hint line below the actual input
+    ::ng-deep .mat-form-field-wrapper {
+      position: relative;
+      top: -6px;
+    }
+  }
+
 }
 
 .dragging-config {
@@ -47,46 +85,24 @@
 }
 
 
-.arrange-global-actions, .arrange-selection-actions {
+.arrange-global-actions, .arrange-selection-actions, .arrange-actions {
   border: 1px solid #FFFFFF;
   border-radius: 4px;
-}
 
-.arrange-global-actions {
-  ::ng-deep .mat-button-toggle-checked:not(.mat-button-toggle-disabled) {
-    background-color: rgba(var(--palette-accent-500), 1);
-  }
-
-  ::ng-deep .mat-button-toggle-appearance-standard {
-    background: rgba(255, 255, 255, 0.12);
-  }
-}
-
-.arrange-selection-actions-container {
-  margin-left: 2rem;
-}
-
-.arrange-selection-actions {
-  display: flex;
   height: 50px;
   overflow: hidden;
-
-  ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex:hover {
-    background-color: rgba(255, 255, 255, 0.07);
-  }
-
-  ::ng-deep .mat-form-field-wrapper {
-    position: relative;
-    top: -4px;
-  }
-
-  .mat-form-field:not(:first-child) {
-    margin-left: 2px;
-  }
 }
 
 .arrange-buffer-area {
   display: flex;
-  height: 76px;
+  flex-wrap: wrap;
   overflow: hidden;
+
+  & > div:not(:last-child) {
+    margin-right: 1rem;
+  }
+}
+
+.arrange-actions {
+  display: flex;
 }

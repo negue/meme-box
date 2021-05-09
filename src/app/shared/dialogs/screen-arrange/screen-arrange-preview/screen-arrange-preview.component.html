@@ -1,5 +1,5 @@
 <div class="arrange-buffer-area" style="display: flex;">
-  <div class="arrange-global-actions-container">
+  <div>
     <div class="arrange-label">Global options</div>
 
     <mat-button-toggle-group class="arrange-global-actions"
@@ -48,6 +48,8 @@
         </mat-select>
       </mat-form-field>
 
+      <mat-divider [vertical]="true"></mat-divider>
+
       <mat-form-field *ngIf="currentSelectedClip" appearance="fill">
         <mat-label>Media Position</mat-label>
         <mat-select (selectionChange)="triggerChangedetection()"
@@ -59,6 +61,40 @@
           <mat-option [value]="3">{{3 | positionToString}}</mat-option>
         </mat-select>
       </mat-form-field>
+    </div>
+  </div>
+
+  <div>
+    <div class="arrange-label">Actions</div>
+
+    <div class="arrange-actions">
+      <button mat-button (click)="applySingleChanges()"
+              color="primary"
+              aria-label="Apply change for selected media"
+              matTooltip="Apply change for selected media"
+      >
+        <mat-icon svgIcon="check"></mat-icon>
+      </button>
+
+      <mat-divider [vertical]="true"></mat-divider>
+
+      <button mat-button (click)="applySingleChanges()"
+              color="primary"
+              aria-label="Apply changes for all changed medias"
+              matTooltip="Apply changes for all changed medias"
+      >
+        <mat-icon svgIcon="check-all"></mat-icon>
+      </button>
+
+      <mat-divider [vertical]="true"></mat-divider>
+
+      <button mat-button (click)="reset()"
+              color="warn"
+              aria-label="Reset changes for selected media"
+              matTooltip="Reset changes for selected media"
+      >
+        <mat-icon svgIcon="cancel2"></mat-icon>
+      </button>
     </div>
   </div>
 </div>
@@ -148,18 +184,3 @@
 
 </div>
 
-
-<!--<div class="dragging-config">-->
-<!--  <div class="spacer" *ngIf="!currentSelectedClip"></div>-->
-<!--  <div class="inline" [class.hidden]="!currentSelectedClip">-->
-<!--    <h2>-->
-<!--      Drag / Arrange Options-->
-<!--    </h2>-->
-<!--    <div>-->
-
-<!--    <button mat-raised-button (click)="reset()" color="warn">-->
-<!--      Reset-->
-<!--    </button>-->
-
-<!--  </div>-->
-<!--</div>-->
