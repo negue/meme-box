@@ -111,6 +111,14 @@ export class ScreenArrangePreviewComponent {
     this.triggerChangedetection();
   }
 
+  positionOptionChanged(newPosition: PositionEnum) {
+    if (this.currentSelectedClip == null) {
+      return;
+    }
+    this.currentSelectedClip.clipSetting.position = newPosition;
+    this.triggerChangedetection();
+  }
+
   elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip) {
     this.combinedClipToComponent.set(pair, dragResizeMediaComponent);
   }
