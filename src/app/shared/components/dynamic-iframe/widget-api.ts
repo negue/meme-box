@@ -1,5 +1,5 @@
 import {WebsocketHandler} from "../../../core/services/websocket.handler";
-import {TwitchEventTypes} from "@memebox/contracts";
+import {TriggerClip, TwitchEventTypes} from "@memebox/contracts";
 import {AllTwitchEvents} from "../../../../../server/providers/twitch/twitch.connector.types";
 import {Subscription} from "rxjs";
 
@@ -41,15 +41,28 @@ export class WidgetTwitchApi {
   }
 }
 
+type TriggeredEventCallback = (currentTriggeredPayload: TriggerClip) => void;
+
 export class WidgetApi {
   public twitch: WidgetTwitchApi;
+  private triggeredCallback: TriggeredEventCallback;
 
   constructor(private websocketHandler: WebsocketHandler) {
     this.twitch = new WidgetTwitchApi(websocketHandler);
   }
 
+  public triggered(callback: TriggeredEventCallback) {
+    this.triggeredCallback = callback;
+  }
 
   dispose() {
     this.twitch.dispose();
+  }
+
+  triggerIsShown(currentTriggeredPayload: TriggerClip) {
+    if (this.triggeredCallback) {
+      console.info({currentTriggeredPayload});
+      this.triggeredCallback(currentTriggeredPayload);
+    }
   }
 }

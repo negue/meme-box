@@ -10,4 +10,6 @@ export interface TriggerClip {
   targetScreen?: string;
   repeatX?: number;
   repeatSecond?: number;
+
+  // soon there will be more "overrides" to everything
 }

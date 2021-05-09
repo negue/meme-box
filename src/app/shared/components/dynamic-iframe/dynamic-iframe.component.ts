@@ -16,6 +16,7 @@ import {AppConfig} from "@memebox/app/env";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
+import {TriggerClip} from "@memebox/contracts";
 
 @Component({
   selector: 'app-dynamic-iframe',
@@ -43,12 +44,6 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit(): void {
-
-    // yes, as any, because we need to add a property to it
-    const iframeWindow = this.targetIframe.nativeElement.contentWindow as any;
-
-    iframeWindow.widget = this._widgetApi;
-
     this.handleContentUpdate();
 
     this.wsHandler.onMessage$.pipe(
@@ -72,8 +67,17 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  public componentIsShown(currentTriggeredPayload: TriggerClip) {
+    this._widgetApi.triggerIsShown(currentTriggeredPayload);
+  }
+
   private handleContentUpdate() {
     if (this.content) {
+      // yes, as any, because we need to add a property to it
+      const iframeWindow = this.targetIframe.nativeElement.contentWindow as any;
+
+      iframeWindow.widget = this._widgetApi;
+
       dynamicIframe(this.targetIframe.nativeElement, this.content);
 
       if (this.content.settings) {
