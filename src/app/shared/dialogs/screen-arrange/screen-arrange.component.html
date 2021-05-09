@@ -29,8 +29,11 @@
       [visibleItems]="visibleItems$ | async"
       [screen]="screen"
       [currentSelectedClip]="currentSelectedClip"
+      [unsavedChangesIds]="unsavedChangesIds"
       (changeCurrSelectedClip)="currentSelectedClip = $event"
       (userChangeElement)="userChangedMedia($event)"
+      (changesSaved)="userResetChangedOfMedia($event)"
+      (mediaReset)="userResetChangedOfMedia($event)"
     ></app-screen-arrange-preview>
   </div>
 

@@ -35,6 +35,9 @@ export class ScreenArrangePreviewComponent {
   @Input()
   screen: Screen;
 
+  @Input()
+  unsavedChangesIds: string[];
+
   @Output()
   changeCurrSelectedClip = new EventEmitter<CombinedClip | null>();
 
@@ -44,6 +47,9 @@ export class ScreenArrangePreviewComponent {
   // Outputs the ids of the saved medias
   @Output()
   changesSaved = new EventEmitter<string | string[]>();
+
+  @Output()
+  mediaReset = new EventEmitter<string>();
 
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
@@ -151,7 +157,7 @@ export class ScreenArrangePreviewComponent {
   }
 
   reset() {
-    const { clipSetting } = this.currentSelectedClip;
+    const { clipSetting, clip } = this.currentSelectedClip;
 
     clipSetting.transform = null;
     clipSetting.width = '50%';
@@ -170,6 +176,7 @@ export class ScreenArrangePreviewComponent {
     }
 
     this.appService.addOrUpdateScreenClip(this.screen.id, clipSetting);
+    this.mediaReset.emit(clip.id);
   }
 
   elementClicked(dragResizeMediaComponent: DragResizeMediaComponent,

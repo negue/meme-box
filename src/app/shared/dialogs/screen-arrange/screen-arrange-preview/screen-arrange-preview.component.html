@@ -76,7 +76,7 @@
               color="primary"
               aria-label="Apply change for selected media"
               matTooltip="Apply change for selected media"
-              [disabled]="currentSelectedClip == null"
+              [disabled]="currentSelectedClip == null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
               (click)="applySingleChanges()"
       >
         <mat-icon svgIcon="check"></mat-icon>
@@ -88,6 +88,7 @@
               color="primary"
               aria-label="Apply changes for all changed medias"
               matTooltip="Apply changes for all changed medias"
+              [disabled]="unsavedChangesIds.length === 0"
       >
         <mat-icon svgIcon="check-all"></mat-icon>
       </button>
@@ -98,7 +99,7 @@
               color="warn"
               aria-label="Reset changes for selected media"
               matTooltip="Reset changes for selected media"
-              [disabled]="currentSelectedClip == null"
+              [disabled]="currentSelectedClip == null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
               (click)="reset()"
       >
         <mat-icon svgIcon="cancel2"></mat-icon>

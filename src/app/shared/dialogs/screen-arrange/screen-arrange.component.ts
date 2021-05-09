@@ -32,7 +32,7 @@ export class ScreenArrangeComponent implements OnInit {
       for (const [key, entry] of Object.entries(screen.clips)) {
         const clip = clipMap[key];
 
-        if (clip.type === MediaType.Audio ) {
+        if (clip.type === MediaType.Audio) {
           continue;
         }
 
@@ -68,7 +68,7 @@ export class ScreenArrangeComponent implements OnInit {
 
       return clipList.filter(clip => selectedItems.includes(clip.clip.id));
     })
-  )
+  );
 
   public currentSelectedClip: CombinedClip | null = null;
 
@@ -144,5 +144,20 @@ export class ScreenArrangeComponent implements OnInit {
       // create a new object for CD
       this.unsavedChangesIds = Array.from([...currentIds, clipId]);
     }
+  }
+
+  userResetChangedOfMedia(clipIds: string | string[]) {
+    const ids = Array.isArray(clipIds) ? clipIds : [clipIds];
+
+    for (const clipId of ids) {
+      const index = this.unsavedChangesIds.findIndex(id => id === clipId);
+      const arrayCopy = Array.from(this.unsavedChangesIds);
+      arrayCopy.splice(index, 1);
+      this.unsavedChangesIds = arrayCopy;
+    }
+
+    // This is a workaround. Because the references seem to change, the sidebar selects another (the first) clip
+    // if you want to keep the users selection, comment out the following line.
+    this.clickedOutside();
   }
 }
