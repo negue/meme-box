@@ -27,7 +27,6 @@ export interface DynamicIframeContent {
   }
 }
 
-// TODO fill the variables as content
 export function dynamicIframe (iframe: HTMLIFrameElement,
                                content: DynamicIframeContent) {
 

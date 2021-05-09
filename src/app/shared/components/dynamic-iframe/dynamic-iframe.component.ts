@@ -15,6 +15,7 @@ import {WebsocketHandler} from "../../../core/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import {WidgetApi} from "./widget-api";
 
 @Component({
   selector: 'app-dynamic-iframe',
@@ -24,6 +25,7 @@ import {takeUntil} from "rxjs/operators";
 export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   private wsHandler: WebsocketHandler;
   private _destroy$ = new Subject();
+  private _widgetApi: WidgetApi;
 
   @ViewChild('targetIframe', {static: true})
   targetIframe: ElementRef<HTMLIFrameElement>;
@@ -36,9 +38,17 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor() {
     this.wsHandler = new WebsocketHandler(AppConfig.wsBase+'/ws/twitch_events', 3000);
+
+    this._widgetApi = new WidgetApi(this.wsHandler);
   }
 
   ngOnInit(): void {
+
+    // yes, as any, because we need to add a property to it
+    const iframeWindow = this.targetIframe.nativeElement.contentWindow as any;
+
+    iframeWindow.widget = this._widgetApi;
+
     this.handleContentUpdate();
 
     this.wsHandler.onMessage$.pipe(
@@ -49,6 +59,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this.load.emit();
+
   }
   ngOnDestroy() {
     this._destroy$.next();
