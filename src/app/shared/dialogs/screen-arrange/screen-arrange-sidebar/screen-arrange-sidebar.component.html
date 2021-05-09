@@ -41,10 +41,16 @@
                      (click)="onSelectMedia($event, visibleItem)"
                      (mousedown)="preventEvent($event)"
     >
-      <div mat-list-avatar>
+      <div mat-list-avatar class="clip-avatar">
         <app-clip-type [type]="visibleItem.clip.type"
                        iconSize="40px">
         </app-clip-type>
+
+        <mat-icon *ngIf="unsavedChangesIds.includes(visibleItem.clip.id)"
+                  class="clip-modified-icon"
+                  svgIcon="edit"
+                  color="primary"
+        ></mat-icon>
       </div>
       <div mat-line>{{visibleItem.clip.name}}</div>
       <div mat-line>{{visibleItem.clipSetting.visibility | visibilityToString}}</div>
