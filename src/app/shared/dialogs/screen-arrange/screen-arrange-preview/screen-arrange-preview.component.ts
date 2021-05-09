@@ -91,7 +91,6 @@ export class ScreenArrangePreviewComponent {
   constructor(private _cd: ChangeDetectorRef,
               private _fb: FormBuilder,
               private appService: AppService) {
-    this.globalActionsForm.valueChanges.subscribe(_ => console.warn('aa', _));
   }
 
 
