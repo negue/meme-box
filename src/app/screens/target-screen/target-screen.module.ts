@@ -1,11 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from "@angular/common";
-import { TargetScreenComponent } from "./target-screen.component";
-import { MediaToggleDirective } from "./media-toggle.directive";
-import { MediaTypeClassPipe } from "./media-type-class.pipe";
-import { MatIconModule } from "@angular/material/icon";
-import { PipesModule } from "../../core/pipes/pipes.module";
-import { DynamicIframeModule } from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
+import {NgModule} from '@angular/core';
+import {CommonModule} from "@angular/common";
+import {TargetScreenComponent} from "./target-screen.component";
+import {MediaToggleDirective} from "./media-toggle.directive";
+import {MediaTypeClassPipe} from "./media-type-class.pipe";
+import {MatIconModule} from "@angular/material/icon";
+import {PipesModule} from "../../core/pipes/pipes.module";
+import {DynamicIframeModule} from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
+import {WidgetPipesModule} from "../../shared/widget-pipes/widget-pipes.module";
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { DynamicIframeModule } from "../../shared/components/dynamic-iframe/dyna
     MatIconModule,
     PipesModule,
     DynamicIframeModule,
+    WidgetPipesModule,
   ],
   exports: [
     TargetScreenComponent

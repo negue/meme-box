@@ -224,7 +224,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       } )
     }
 
-    if (value.type === MediaType.HTML){
+    if (value.type === MediaType.Widget){
 
       console.warn('Is HTML (iframe)');
       this.mediaClipMap$.pipe(

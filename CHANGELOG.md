@@ -1,8 +1,28 @@
 ## to be released
 
+### Features
+
+* [x] Custom Port Setting inside Meme-Box
+* [x] Started with the Translation Process - Open PRs if you want to help!
+* [ ] Improved Widgets (previously named `HTML`)
+  * [ ] API for Twitch or Events that its shown and so on
+  * [x] Templates
+  * [x] Widget-Variables
+  * [x] Import / Export Widgets
+  * [ ] Persistence of the Widget State across Screens
+* [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
+* [ ] "Media Type": `Scripts` with this more advanced features could be realized
+
 ### Fixes
 
 * [x] Allow multiple reactions of twitch commands (example cheer and command by string)
+* [x] The Media Overview sometimes showed more items while listing/filtering items
+* [x] Changed the default port from `4444` to `6363`
+
+### Changes
+
+* [x] The Media Overview was redesigned (you can still switch to the old one)
+* [x] "HTML" is now renamed to "Widgets"
 
 ## 2021.2.1
 

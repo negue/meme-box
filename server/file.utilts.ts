@@ -1,7 +1,7 @@
 import {fileEndingToType} from "../projects/utils/src/lib/files";
-import {basename, extname, resolve, sep} from "path";
+import {basename, extname, join, resolve, sep} from "path";
 import {FileInfo, SERVER_URL} from '@memebox/contracts';
-import fs from "fs";
+import fs, {existsSync} from "fs";
 
 const { readdir } = fs.promises;
 
@@ -62,4 +62,36 @@ export function mapFileInformations (
       apiUrl
     }
   });
+}
+
+const versions = process.versions;
+export const isInElectron = !!versions['electron'];
+
+export function getAppRootPath () {
+  const appRootPath = isInElectron ? join(__dirname, '/../dist') : 'dist';
+
+  if (existsSync(appRootPath)) {
+    return appRootPath;
+  }
+
+  // serving electron without a built/copied app yet
+  return join(__dirname, '/../../dist');
+}
+
+const outElectronPath = 'out-electron';
+export function getElectronPath () {
+  if (isInElectron) {
+    if (__dirname.includes(outElectronPath)) {
+      const indexOf = __dirname.indexOf(outElectronPath);
+
+      return join(__dirname.substring(0, indexOf), outElectronPath);
+    } else {
+      return join(__dirname, 'out-electron');
+    }
+  }
+
+  return __dirname;
+}
+
+export function getPreloadJsPath () {
 }

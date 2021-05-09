@@ -16,6 +16,7 @@ import {FormBuilder} from "@angular/forms";
 import {AppService} from "../../../state/app.service";
 import {SnackbarService} from "../../../core/services/snackbar.service";
 import {DialogService} from "../dialog.service";
+import {cssCodemirror} from "../../../core/codemirror.extensions";
 
 export interface ScreenClipOptionsPayload {
   screenId: string;
@@ -89,6 +90,8 @@ export class ScreenClipOptionsComponent implements OnInit {
     }))
   );
 
+
+  public cssExtensions = cssCodemirror;
 
 
   private _clipInfo: ScreenClip = null;

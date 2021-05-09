@@ -6,7 +6,7 @@
     "name": ""
   },
   "keywords": [],
-  "main": "out-electron/main.js",
+  "main": "out-electron/index.js",
   "private": true,
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
@@ -37,12 +37,17 @@
     "build:macos": "npx  nexe release/memebox.js -t mac-x64 -r dist -o release/out/memebox-macos",
     "build:all": "npm run build:windows && npm run build:linux && npm run build:macos",
     "build:with-electron": "npm run electron:serve-tsc && npm run build",
-    "electron:serve-tsc:watch": "ttsc -p tsconfig-electron.json -w",
-    "electron:serve-tsc": "npm-run-all -p electron:serve-tsc:watch electron:local",
+    "electron:serve-tsc:watch": "ttsc -p tsconfig-electron.json -w -outDir out-electron",
+    "electron:serve-tsc": "npm-run-all -p electron:serve-tsc:watch electron:serve-local",
+    "electron:serve-local": "wait-on out-electron/electron-shell.js && npx electron out-electron/electron-shell.js --serve",
     "electron:serve": "npx rimraf out-electron &&  wait-on tcp:4200 && npm run electron:serve-tsc",
-    "electron:local": "wait-on out-electron/main.js && npx electron . --serve",
-    "electron:build": "npm run build:prod && ttsc -p tsconfig-electron.json &&  electron-builder build",
-    "electron:build:only": "ttsc -p tsconfig-electron.json &&  electron-builder build -p never"
+    "electron:build_app": "npm run build:prod ",
+    "electron:build_0compile": "ttsc -p tsconfig-electron.json",
+    "electron:build_1combineJs": "npx @vercel/ncc@latest build out-electron-tsc/electron-shell.js -e electron -e electron-reload -o ./out-electron && cpy out-electron-tsc/preload.js out-electron",
+    "electron:build": "npm run electron:build_app && npm run electron:build_0compile && npm run electron:build:withoutapp",
+    "electron:build:withoutapp": "npm run electron:build_0compile && npm run electron:build_1combineJs && electron-builder build",
+    "electron:build:only": "npm run electron:build_0compile && npm run electron:build_1combineJs &&  electron-builder build -p never",
+    "electron:build:serve": "npm run electron:build_0compile && npm run electron:build_1combineJs &&  npx electron out-electron/index.js --serve --built-serve"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "11.0.0",
@@ -67,7 +72,7 @@
     "@angular/router": "11.2.9",
     "@angular/service-worker": "11.2.9",
     "@datorama/akita-ngdevtools": "^5.0.1",
-    "@gewd/components": "0.2.1",
+    "@gewd/components": "0.3.0",
     "@tsed/common": "6.43.4",
     "@tsed/core": "6.43.4",
     "@tsed/di": "6.43.4",
@@ -114,6 +119,11 @@
     "node": ">=10.13.0"
   },
   "dependencies": {
+    "@codemirror/basic-setup": "0.18.0",
+    "@codemirror/lang-css": "0.18.0",
+    "@codemirror/lang-html": "0.18.0",
+    "@codemirror/lang-javascript": "0.18.0",
+    "@codemirror/theme-one-dark": "0.18.0",
     "@datorama/akita": "5.2.0",
     "@gewd/markdown": "0.4.2",
     "@gewd/mat-utils": "0.1.0",

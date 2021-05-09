@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
+import {MEDIA_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
 
 export interface IFilterItem {
@@ -7,18 +7,21 @@ export interface IFilterItem {
   icon: string;
   type: any; // string type to see / filter what kind of filter-item-type it is
   value: any; // todo change to generic?
+  translateLabel?: boolean;
 }
 
 export const MEDIA_FILTER_TYPE = 'MEDIA_TYPE';
 
-export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(Object.entries(MEDIA_TYPE_INFORMATION)
-  .map(([mediaType, informations]) => {
+export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(MEDIA_TYPE_INFORMATION_ARRAY
+  .map((informations) => {
+
     return {
-      label: informations.label,
-      value: +mediaType,
+      label: informations.translationKey,
+      value: +informations.mediaType,
       icon: informations.icon,
       type:MEDIA_FILTER_TYPE,
-      sortOrder: informations.sortOrder
+      sortOrder: informations.sortOrder,
+      translateLabel: true,
     } as IFilterItem;
   }), 'sortOrder');
 
