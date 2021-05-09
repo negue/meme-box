@@ -2,7 +2,7 @@ import {NgModule} from "@angular/core";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import type {CustomHtmlDialogPayload, DialogContract} from "../dialog.contract";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
-import {CustomHtmlEditComponent} from "./custom-html-edit.component";
+import {WidgetEditComponent} from "./widget-edit.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
@@ -20,7 +20,7 @@ import {CodemirrorModule} from "@gewd/components/codemirror";
 
 @NgModule({
   declarations: [
-    CustomHtmlEditComponent,
+    WidgetEditComponent,
     VariablesConfigComponent
   ],
   imports: [
@@ -41,12 +41,12 @@ import {CodemirrorModule} from "@gewd/components/codemirror";
   ],
   providers: [],
 })
-export class CustomHtmlEditModule implements DialogContract<CustomHtmlDialogPayload> {
+export class WidgetEditModule implements DialogContract<CustomHtmlDialogPayload> {
   constructor(private dialog: MatDialog) {
   }
 
   public openDialog (payload: CustomHtmlDialogPayload): MatDialogRef<any> {
-    const dialogRef = this.dialog.open(CustomHtmlEditComponent, {
+    const dialogRef = this.dialog.open(WidgetEditComponent, {
       data: payload,
       minWidth: '100vw',
       maxWidth: '100vw',

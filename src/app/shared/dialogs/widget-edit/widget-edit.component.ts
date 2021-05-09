@@ -9,11 +9,11 @@ import {downloadFile} from "@gewd/utils";
 import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
 
 @Component({
-  selector: 'app-custom-html-edit',
-  templateUrl: './custom-html-edit.component.html',
-  styleUrls: ['./custom-html-edit.component.scss']
+  selector: 'app-widget-edit',
+  templateUrl: './widget-edit.component.html',
+  styleUrls: ['./widget-edit.component.scss']
 })
-export class CustomHtmlEditComponent implements OnInit {
+export class WidgetEditComponent implements OnInit {
 
   public workingValue: DynamicIframeContent = {};
   public variablesList: DynamicIframeVariable[] = [];
