@@ -61,7 +61,7 @@ ___
 
 ### 2021.3.0
 * [ ] Widgets (previously `HTML`) 
-  * [ ] API for Twitch or Events that its shown and so on
+  * [x] API for Twitch or Events that its shown and so on
   * [x] Templates
   * [x] Widget-Variables
   * [x] Import / Export Widgets
@@ -80,6 +80,7 @@ ___
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
+* [ ] Stats per commands / media / or something last cheerer and so on 
 * [ ] more to be added :)
 
 ## Based on this Template:
