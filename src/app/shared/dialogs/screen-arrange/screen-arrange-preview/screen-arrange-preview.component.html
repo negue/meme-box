@@ -134,6 +134,7 @@
                                [showResizeBorder]="pair === currentSelectedClip"
                                [settings]="pair.clipSetting" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
+                               (elementChanged)="userChangedElement()"
                                (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
 
                                transformOrigin="center center"
@@ -155,6 +156,7 @@
                                [settings]="pair.clipSetting" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                                (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
+                               (elementChanged)="userChangedElement()"
                                [draggingEnabled]="false"
                                [resizeEnabled]="isResizeEnabled"
                                [rotateEnabled]="isRotateEnabled"

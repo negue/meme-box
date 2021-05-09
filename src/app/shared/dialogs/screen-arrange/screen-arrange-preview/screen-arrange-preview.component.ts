@@ -39,7 +39,11 @@ export class ScreenArrangePreviewComponent {
   changeCurrSelectedClip = new EventEmitter<CombinedClip | null>();
 
   @Output()
-  userChangeElement = new EventEmitter();
+  userChangeElement = new EventEmitter<string>();
+
+  // Outputs the ids of the saved medias
+  @Output()
+  changesSaved = new EventEmitter<string | string[]>();
 
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
@@ -101,7 +105,7 @@ export class ScreenArrangePreviewComponent {
   }
 
   userChangedElement() {
-    this.userChangeElement.emit();
+    this.userChangeElement.emit(this.currentSelectedClip.clip.id);
   }
 
   sizeOptionChanged(newValue: 'px' | '%') {
@@ -133,11 +137,17 @@ export class ScreenArrangePreviewComponent {
   }
 
   applySingleChanges() {
-    // TODO
+    this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.clipSetting);
+    this.changesSaved.emit(this.currentSelectedClip.clip.id);
   }
 
-  applyAllchanges() {
-    // TODO
+  async applyAllchanges() {
+    for (const item of this.visibleItems) {
+      // TODO replace with a bulk update
+      await this.appService.addOrUpdateScreenClip(this.screen.id, item.clipSetting);
+    }
+
+    this.changesSaved.emit(this.visibleItems.map(i => i.clip.id));
   }
 
   reset() {

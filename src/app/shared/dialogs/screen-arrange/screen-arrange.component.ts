@@ -53,7 +53,7 @@ export class ScreenArrangeComponent implements OnInit {
   selectedItems = new FormControl([]);
   selectedIndex = 0;
 
-  hasUnsavedChanges = false;
+  unsavedChangesIds: string[] = [];
 
   public visibleItems$ = combineLatest([
     this.clipList$,
@@ -91,7 +91,7 @@ export class ScreenArrangeComponent implements OnInit {
   }
 
   closeDlg(): void {
-    if (!this.hasUnsavedChanges) {
+    if (this.unsavedChangesIds.length === 0) {
       this.dialogRef.close();
       return;
     }
@@ -112,7 +112,7 @@ export class ScreenArrangeComponent implements OnInit {
 
   tabSelectionChanged(tabChangeEvent: MatTabChangeEvent): void {
     this.clickedOutside();
-    if (!this.hasUnsavedChanges || tabChangeEvent.index === 0) {
+    if (this.unsavedChangesIds.length === 0 || tabChangeEvent.index === 0) {
       return;
     }
 
@@ -128,7 +128,7 @@ export class ScreenArrangeComponent implements OnInit {
     dlg.afterClosed().subscribe(discardChanges => {
       if (discardChanges) {
         this._tabGroup.selectedIndex = 1;
-        this.hasUnsavedChanges = false;
+        this.unsavedChangesIds = [];
         this.appService.loadState(); // Reset the clips
       }
     });
@@ -136,5 +136,13 @@ export class ScreenArrangeComponent implements OnInit {
 
   clickedOutside() {
     this._screenArrangePreviewComponent.clickedOutside();
+  }
+
+  userChangedMedia(clipId: string) {
+    const currentIds = this.unsavedChangesIds;
+    if (!currentIds.includes(clipId)) {
+      // create a new object for CD
+      this.unsavedChangesIds = Array.from([...currentIds, clipId]);
+    }
   }
 }

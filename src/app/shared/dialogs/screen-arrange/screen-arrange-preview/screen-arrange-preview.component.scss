@@ -6,12 +6,14 @@
   position: relative;
 
 
-  // Change the default background colors of the actions
-  .arrange-actions > button,
-  ::ng-deep .arrange-selection-actions .mat-form-field-appearance-fill .mat-form-field-flex,
-  ::ng-deep .mat-button-toggle.mat-button-toggle-appearance-standard,
-  ::ng-deep .mat-button-toggle-disabled .mat-button-toggle-button {
-    background-color: var(--palette-background-background);
+  .arrange-buffer-area ::ng-deep {
+    // Change the default background colors of the actions
+    .arrange-actions > button,
+    .arrange-selection-actions .mat-form-field-appearance-fill .mat-form-field-flex,
+    .arrange-global-actions .mat-button-toggle.mat-button-toggle-appearance-standard,
+    .arrange-global-actions .mat-button-toggle.mat-button-toggle-disabled .mat-button-toggle-button {
+      background-color: var(--palette-background-background);
+    }
   }
 
   // Highlight the field when you hover over it

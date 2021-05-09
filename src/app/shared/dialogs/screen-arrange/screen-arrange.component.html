@@ -21,9 +21,8 @@
       [screen]="screen"
       [currentSelectedClip]="currentSelectedClip"
       [selectedItems]="selectedItems"
-      [hasUnsavedChanges]="hasUnsavedChanges"
+      [unsavedChangesIds]="unsavedChangesIds"
       (changeCurrSelectedClip)="currentSelectedClip = $event"
-      (changesSaved)="hasUnsavedChanges = false"
     ></app-screen-arrange-sidebar>
 
     <app-screen-arrange-preview
@@ -31,7 +30,7 @@
       [screen]="screen"
       [currentSelectedClip]="currentSelectedClip"
       (changeCurrSelectedClip)="currentSelectedClip = $event"
-      (userChangeElement)="hasUnsavedChanges = true"
+      (userChangeElement)="userChangedMedia($event)"
     ></app-screen-arrange-preview>
   </div>
 
