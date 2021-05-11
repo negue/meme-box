@@ -17,6 +17,8 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
 import {TriggerClip} from "@memebox/contracts";
+import {WebsocketService} from "../../../core/services/websocket.service";
+import {guid} from "@datorama/akita";
 
 @Component({
   selector: 'app-dynamic-iframe',
@@ -27,9 +29,13 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   private wsHandler: WebsocketHandler;
   private _destroy$ = new Subject();
   private _widgetApi: WidgetApi;
+  private _widgetInstance = guid();
 
   @ViewChild('targetIframe', {static: true})
   targetIframe: ElementRef<HTMLIFrameElement>;
+
+  @Input()
+  mediaId: string;
 
   @Input()
   content: DynamicIframeContent;
@@ -39,14 +45,15 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
 
   errorSubject$ = new BehaviorSubject<string>('');
 
-
-  constructor() {
+  constructor(private websocket: WebsocketService) {
     this.wsHandler = new WebsocketHandler(AppConfig.wsBase+'/ws/twitch_events', 3000);
 
     this._widgetApi = new WidgetApi(this.wsHandler, this.errorSubject$);
   }
 
   ngOnInit(): void {
+    this.websocket.sendWidgetRegistration(this.mediaId, this._widgetInstance, true);
+
     this.targetIframe.nativeElement.contentWindow.onerror = (event : string) => {
       this.errorSubject$.next(event);
       console.error(event);
@@ -67,6 +74,8 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   }
   ngOnDestroy() {
     this._destroy$.next();
+
+    this.websocket.sendWidgetRegistration(this.mediaId, this._widgetInstance, false);
   }
 
   ngOnChanges({content}: SimpleChanges): void {

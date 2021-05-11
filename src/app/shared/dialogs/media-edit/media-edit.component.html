@@ -226,6 +226,7 @@
         Edit HTML
       </button>
       <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
+                          [mediaId]="data.id"
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
@@ -235,6 +236,7 @@
     <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
       <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
       <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
+                          [mediaId]="data.id"
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>

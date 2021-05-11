@@ -3,6 +3,7 @@ import {NamedLogger} from "../named-logger";
 import * as WebSocket from "ws";
 import {ACTIONS, Dictionary, MediaType, MetaTriggerTypes, TriggerClip} from "@memebox/contracts";
 import {PersistenceInstance} from "../../persistence";
+import {Subject} from "rxjs";
 
 // todo maybe extract?
 interface WebSocketType {
@@ -18,8 +19,10 @@ export class MemeboxWebsocket {
   private _socketsPerScreen: Dictionary<WebSocketType[]> = {};
   private _connectedSocketList: WebSocketType[] = [];
 
+  private _receivedActions$ = new Subject<{type: string, payload: string}>();
   private _wss = new WebSocket.Server({  noServer: true });
 
+  public ReceivedActions$ = this._receivedActions$.asObservable();
 
   constructor(
     @UseOpts({name: 'WS.MemeBox'}) public logger: NamedLogger,
@@ -71,6 +74,11 @@ export class MemeboxWebsocket {
 
     // ACTION={payload}
     const [action, payload] = message.split('=');
+
+    this._receivedActions$.next({
+      type: action,
+      payload
+    });
 
     // console.info({action, payload});
 

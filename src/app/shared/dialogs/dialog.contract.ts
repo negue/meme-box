@@ -6,6 +6,7 @@ export interface DialogContract<TPayload> {
 }
 
 export interface CustomHtmlDialogPayload {
+  mediaId: string;
   name: string;
   iframePayload: DynamicIframeContent;
 }
