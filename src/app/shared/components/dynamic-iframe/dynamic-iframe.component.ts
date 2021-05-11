@@ -13,7 +13,7 @@ import {
 import {dynamicIframe, DynamicIframeContent} from "@memebox/utils";
 import {WebsocketHandler} from "../../../core/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
-import {Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
 import {TriggerClip} from "@memebox/contracts";
@@ -37,13 +37,22 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   load = new EventEmitter();
 
+  errorSubject$ = new BehaviorSubject<string>('');
+
+
   constructor() {
     this.wsHandler = new WebsocketHandler(AppConfig.wsBase+'/ws/twitch_events', 3000);
 
-    this._widgetApi = new WidgetApi(this.wsHandler);
+    this._widgetApi = new WidgetApi(this.wsHandler, this.errorSubject$);
   }
 
   ngOnInit(): void {
+    this.targetIframe.nativeElement.contentWindow.onerror = (event : string) => {
+      this.errorSubject$.next(event);
+      console.error(event);
+      return false;
+    };
+
     this.handleContentUpdate();
 
     this.wsHandler.onMessage$.pipe(
@@ -79,6 +88,8 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
       iframeWindow.widget = this._widgetApi;
 
       dynamicIframe(this.targetIframe.nativeElement, this.content);
+
+      this.errorSubject$.next('');
 
       if (this.content.settings) {
         if (this.content.settings.subscribeToTwitchEvent) {

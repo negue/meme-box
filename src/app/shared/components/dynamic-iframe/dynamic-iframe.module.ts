@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DynamicIframeComponent} from './dynamic-iframe.component';
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -9,7 +10,8 @@ import {DynamicIframeComponent} from './dynamic-iframe.component';
     DynamicIframeComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatIconModule
   ]
 })
 export class DynamicIframeModule { }

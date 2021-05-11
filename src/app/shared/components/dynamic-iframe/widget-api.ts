@@ -1,7 +1,7 @@
 import {WebsocketHandler} from "../../../core/services/websocket.handler";
 import {TriggerClip, TwitchEventTypes} from "@memebox/contracts";
 import {AllTwitchEvents} from "../../../../../server/providers/twitch/twitch.connector.types";
-import {BehaviorSubject, Subscription} from "rxjs";
+import {BehaviorSubject, Subject, Subscription} from "rxjs";
 import {debounceTime, skip} from "rxjs/operators";
 
 type TwitchEventCallback = (twitchEvent: AllTwitchEvents) => void;
@@ -11,20 +11,29 @@ export class WidgetTwitchApi {
   private callbackMap = new Map<string, TwitchEventCallback>();
   private subscription: Subscription;
 
-  constructor(private websocketHandler: WebsocketHandler) {
+  constructor(private websocketHandler: WebsocketHandler,
+              private _errorSubject$: Subject<string>) {
     this.subscription = this.websocketHandler.onMessage$
       .subscribe(twitchEventRaw => {
         const twitchEvent: AllTwitchEvents = JSON.parse(twitchEventRaw)
         const twitchEventType = twitchEvent.type;
 
         if (this.callbackMap.has(twitchEventType)) {
+          try{
           const callbackFunc = this.callbackMap.get(twitchEventType);
           callbackFunc(twitchEvent);
+          } catch (e) {
+            this._errorSubject$.next(e);
+          }
         }
 
         if (this.callbackMap.has('*')) {
-          const callbackFunc = this.callbackMap.get('*');
-          callbackFunc(twitchEvent);
+          try {
+            const callbackFunc = this.callbackMap.get('*');
+            callbackFunc(twitchEvent);
+          } catch (e) {
+            this._errorSubject$.next(e);
+          }
         }
       });
   }
@@ -68,7 +77,9 @@ class WidgetStoreApi {
   private _state$ = new BehaviorSubject<WidgetStore>({});
   private _state$$: Subscription;
 
-  constructor() {
+  constructor(
+    private _errorSubject$: Subject<string>
+  ) {
     // Load the Current State from API
     // MediaID
     this._state$$ = this._state$
@@ -91,7 +102,12 @@ class WidgetStoreApi {
     return defaultValue;
   }
 
-  public setString(key: string, value: any) {
+  public setString(key: string, value: unknown) {
+    if (typeof value !== 'string') {
+      this._errorSubject$.next(`The "${key}" value needs to be a string`);
+      return;
+    }
+
     this._state[key] = value;
 
     this.updateObservable();
@@ -108,7 +124,12 @@ class WidgetStoreApi {
     return defaultValue;
   }
 
-  public setNumber(key: string, value: any) {
+  public setNumber(key: string, value: unknown) {
+    if (typeof value !== 'number') {
+      this._errorSubject$.next(`The "${key}" value needs to be a number`);
+      return;
+    }
+
     this._state[key] = value;
 
     this.updateObservable();
@@ -124,7 +145,12 @@ class WidgetStoreApi {
     return defaultValue;
   }
 
-  public setObject(key: string, value: any) {
+  public setObject(key: string, value: unknown) {
+    if (typeof value !== 'object') {
+      this._errorSubject$.next(`The "${key}" value needs to be an object`);
+      return;
+    }
+
     this._state[key] = value;
 
     this.updateObservable();
@@ -146,9 +172,12 @@ export class WidgetApi {
   public store: WidgetStoreApi;
   private triggeredCallback: TriggeredEventCallback;
 
-  constructor(private websocketHandler: WebsocketHandler) {
-    this.twitch = new WidgetTwitchApi(websocketHandler);
-    this.store = new WidgetStoreApi();
+  constructor (
+    private websocketHandler: WebsocketHandler,
+    private _errorSubject$: Subject<string>
+  ) {
+    this.twitch = new WidgetTwitchApi(websocketHandler, _errorSubject$);
+    this.store = new WidgetStoreApi(_errorSubject$);
   }
 
   public triggered(callback: TriggeredEventCallback) {
@@ -161,8 +190,12 @@ export class WidgetApi {
 
   triggerIsShown(currentTriggeredPayload: TriggerClip) {
     if (this.triggeredCallback) {
-      console.info({currentTriggeredPayload});
-      this.triggeredCallback(currentTriggeredPayload);
+      try {
+        console.info({currentTriggeredPayload});
+        this.triggeredCallback(currentTriggeredPayload);
+      } catch (e) {
+        this._errorSubject$.next(e);
+      }
     }
   }
 }
