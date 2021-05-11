@@ -19,6 +19,7 @@ import {WidgetApi} from "./widget-api";
 import {TriggerClip} from "@memebox/contracts";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {guid} from "@datorama/akita";
+import {AppService} from "../../../state/app.service";
 
 @Component({
   selector: 'app-dynamic-iframe',
@@ -45,13 +46,15 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
 
   errorSubject$ = new BehaviorSubject<string>('');
 
-  constructor(private websocket: WebsocketService) {
+  constructor(private websocket: WebsocketService,
+              private appService: AppService) {
     this.wsHandler = new WebsocketHandler(AppConfig.wsBase+'/ws/twitch_events', 3000);
 
-    this._widgetApi = new WidgetApi(this.wsHandler, this.errorSubject$);
   }
 
   ngOnInit(): void {
+    this._widgetApi = new WidgetApi(this.mediaId, this._widgetInstance, this.appService, this.wsHandler, this.errorSubject$);
+
     this.websocket.sendWidgetRegistration(this.mediaId, this._widgetInstance, true);
 
     this.targetIframe.nativeElement.contentWindow.onerror = (event : string) => {
@@ -90,7 +93,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private handleContentUpdate() {
-    if (this.content) {
+    if (this.content && this._widgetApi) {
       // yes, as any, because we need to add a property to it
       const iframeWindow = this.targetIframe.nativeElement.contentWindow as any;
 

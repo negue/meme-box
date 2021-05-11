@@ -2,7 +2,8 @@ import {WebsocketHandler} from "../../../core/services/websocket.handler";
 import {TriggerClip, TwitchEventTypes} from "@memebox/contracts";
 import {AllTwitchEvents} from "../../../../../server/providers/twitch/twitch.connector.types";
 import {BehaviorSubject, Subject, Subscription} from "rxjs";
-import {debounceTime, skip} from "rxjs/operators";
+import {debounceTime, skip, take} from "rxjs/operators";
+import {API_BASE, AppService} from "../../../state/app.service";
 
 type TwitchEventCallback = (twitchEvent: AllTwitchEvents) => void;
 
@@ -78,8 +79,19 @@ class WidgetStoreApi {
   private _state$$: Subscription;
 
   constructor(
+    private mediaId: string,
+    private instanceId: string,
+    private appService: AppService,
     private _errorSubject$: Subject<string>
   ) {
+    this.appService.http.get<WidgetStore>(`${API_BASE}widget-state/${mediaId}`)
+      .pipe(
+        take(1)
+      ).subscribe(value => {
+        this._state = value;
+        this._state$.next(value);
+    });
+
     // Load the Current State from API
     // MediaID
     this._state$$ = this._state$
@@ -88,7 +100,7 @@ class WidgetStoreApi {
         debounceTime(1500)
       )
       .subscribe(newStore => {
-        // TODO push to the api
+        this.appService.tryHttpPut(`${API_BASE}widget-state/${mediaId}/${instanceId}`, newStore);
       })
   }
 
@@ -173,11 +185,14 @@ export class WidgetApi {
   private triggeredCallback: TriggeredEventCallback;
 
   constructor (
+    mediaId: string,
+    instanceId: string,
+    appService: AppService,
     private websocketHandler: WebsocketHandler,
     private _errorSubject$: Subject<string>
   ) {
     this.twitch = new WidgetTwitchApi(websocketHandler, _errorSubject$);
-    this.store = new WidgetStoreApi(_errorSubject$);
+    this.store = new WidgetStoreApi(mediaId, instanceId, appService, _errorSubject$);
   }
 
   public triggered(callback: TriggeredEventCallback) {
