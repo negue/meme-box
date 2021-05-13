@@ -19,7 +19,7 @@ export class MemeboxWebsocket {
   private _socketsPerScreen: Dictionary<WebSocketType[]> = {};
   private _connectedSocketList: WebSocketType[] = [];
 
-  private _receivedActions$ = new Subject<{type: string, payload: string}>();
+  private _receivedActions$ = new Subject<{type: string, payload: string, ws: WebSocket}>();
   private _wss = new WebSocket.Server({  noServer: true });
 
   public ReceivedActions$ = this._receivedActions$.asObservable();
@@ -38,6 +38,7 @@ export class MemeboxWebsocket {
       //send immediatly a feedback to the incoming connection
       ws.send("Hi there, I am a WebSocket server");
     });
+
   }
 
   handleUpgrade(request: any, socket: any, head: any) {
@@ -77,7 +78,8 @@ export class MemeboxWebsocket {
 
     this._receivedActions$.next({
       type: action,
-      payload
+      payload,
+      ws,
     });
 
     // console.info({action, payload});

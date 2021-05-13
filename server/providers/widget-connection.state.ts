@@ -5,6 +5,7 @@ import {NamedLogger} from "./named-logger";
 
 @Injectable()
 export class WidgetConnectionState {
+  private connectedSocketMap = new Map<string, WebSocket>();
   private connectionState: Record<string, { connectedInstances: string[], mainId: string }> = { }
 
   constructor(
@@ -12,7 +13,7 @@ export class WidgetConnectionState {
 
     @UseOpts({name: 'WidgetConnectionState'}) private logger: NamedLogger,
   ) {
-    memeboxWebSocket.ReceivedActions$.subscribe(({type, payload}) => {
+    memeboxWebSocket.ReceivedActions$.subscribe(({type, payload, ws}) => {
       switch (type) {
         case ACTIONS.REGISTER_WIDGET_INSTANCE: {
           const [mediaId, instanceId] = payload.split('|');
@@ -35,22 +36,19 @@ export class WidgetConnectionState {
 
           this.logger.info({type, payload, state: this.connectionState[mediaId]});
 
+          this.connectedSocketMap[instanceId] = ws;
+
+          ws.once("close", () => {
+            this.unregisterWidgetConnection(mediaId, instanceId);
+            this.logger.info({type: 'Unregister by WS Close', payload, state: this.connectionState[mediaId]});
+          });
+
           break;
         }
         case ACTIONS.UNREGISTER_WIDGET_INSTANCE: {
           const [mediaId, instanceId] = payload.split('|');
 
-          if (this.connectionState[mediaId]) {
-            const mediaInformation = this.connectionState[mediaId];
-
-            const indexOfInstance = mediaInformation.connectedInstances.indexOf(instanceId);
-
-            mediaInformation.connectedInstances.splice(indexOfInstance, 1);
-
-            if (mediaInformation.mainId === instanceId) {
-              mediaInformation.mainId = mediaInformation.connectedInstances[0];
-            }
-          }
+          this.unregisterWidgetConnection(mediaId, instanceId);
 
           this.logger.info({type, payload, state: this.connectionState[mediaId]});
 
@@ -62,5 +60,19 @@ export class WidgetConnectionState {
 
   public isTheMainInstance(mediaId: string, instanceId: string) {
     return this.connectionState[mediaId]?.mainId === instanceId;
+  }
+
+  private unregisterWidgetConnection (mediaId: string, instanceId: string)  {
+    if (this.connectionState[mediaId]) {
+      const mediaInformation = this.connectionState[mediaId];
+
+      const indexOfInstance = mediaInformation.connectedInstances.indexOf(instanceId);
+
+      mediaInformation.connectedInstances.splice(indexOfInstance, 1);
+
+      if (mediaInformation.mainId === instanceId) {
+        mediaInformation.mainId = mediaInformation.connectedInstances[0];
+      }
+    }
   }
 }

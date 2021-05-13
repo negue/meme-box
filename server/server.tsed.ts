@@ -26,9 +26,10 @@ const rootDir = __dirname;
     ]
   },
   logger: {
-    debug: !isProduction,
+    debug: false,
     disableRoutesSummary: isProduction,
-    disableBootstrapLog: isProduction
+    disableBootstrapLog: isProduction,
+    logRequest: false
   }
 })
 export class ServerTsED implements BeforeRoutesInit, BeforeInit {
