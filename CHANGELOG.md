@@ -4,12 +4,12 @@
 
 * [x] Custom Port Setting inside Meme-Box (commandline option `--port` would still override it)
 * [x] Started with the Translation Process - Open PRs if you want to help!
-* [ ] Improved Widgets (previously named `HTML`)
+* [x] Improved Widgets (previously named `HTML`)
   * [x] API for Twitch or Events that its shown and so on
   * [x] Templates
   * [x] Widget-Variables
   * [x] Import / Export Widgets
-  * [ ] Persistence of the Widget State across Screens
+  * [x] Persistence of the Widget State across Screens
 * [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
 * [ ] "Media Type": `Scripts` with this more advanced features could be realized
 
