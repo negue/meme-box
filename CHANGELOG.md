@@ -2,14 +2,14 @@
 
 ### Features
 
-* [x] Custom Port Setting inside Meme-Box
+* [x] Custom Port Setting inside Meme-Box (commandline option `--port` would still override it)
 * [x] Started with the Translation Process - Open PRs if you want to help!
-* [ ] Improved Widgets (previously named `HTML`)
-  * [ ] API for Twitch or Events that its shown and so on
+* [x] Improved Widgets (previously named `HTML`)
+  * [x] API for Twitch or Events that its shown and so on
   * [x] Templates
   * [x] Widget-Variables
   * [x] Import / Export Widgets
-  * [ ] Persistence of the Widget State across Screens
+  * [x] Persistence of the Widget State across Screens
 * [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
 * [ ] "Media Type": `Scripts` with this more advanced features could be realized
 
@@ -21,12 +21,10 @@
 
 ### Changes
 
-* [x] The Media Overview was redesigned (you can still switch to the old one)
+* [x] The Media Overview was redesigned by `@owehmer` (you can still switch to the old one)
 * [x] "HTML" is now renamed to "Widgets"
 
 ## 2021.2.1
-
-### Quality of Life Improvements
 
 * [x] Each Media has a now cornered background to see boundaries
 * [x] Advanced: Ability to change the css transform value

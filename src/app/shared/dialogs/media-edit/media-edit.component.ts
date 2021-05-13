@@ -408,7 +408,8 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     console.info({data: this.data, iframe: dynamicIframeContent});
 
-    const dialogResult = await this.dialogService.showDynamicIframeEdit({
+    const dialogResult = await this.dialogService.showWidgetEdit({
+      mediaId: this.data.id,
       name: this.data.name,
       iframePayload: dynamicIframeContent
     });

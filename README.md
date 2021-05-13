@@ -60,12 +60,12 @@ ___
 ## Roadmap 
 
 ### 2021.3.0
-* [ ] Widgets (previously `HTML`) 
-  * [ ] API for Twitch or Events that its shown and so on
+* [x] Widgets (previously `HTML`) 
+  * [x] API for Twitch or Events that its shown and so on
   * [x] Templates
   * [x] Widget-Variables
   * [x] Import / Export Widgets
-  * [ ] Persistence of the Widget State across Screens
+  * [x] Persistence of the Widget State across Screens
 * [x] Custom Port Settings, default Port now on 6363
 * [x] Electron can be hidden into the Tray
 * [ ] "Media Type": `Scripts` with this more advanced features could be realized
@@ -80,6 +80,7 @@ ___
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
+* [ ] Stats per commands / media / or something last cheerer and so on 
 * [ ] more to be added :)
 
 ## Based on this Template:

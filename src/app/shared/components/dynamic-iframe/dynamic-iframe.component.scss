@@ -3,4 +3,22 @@
   display: block;
   height: 100%;
   width: 100%;
+  position: relative;
+}
+
+.error {
+  position: absolute;
+  top: 0;
+  width: calc(100% - 0.5rem);
+  background: rgba(255, 0, 0, 0.7);
+  outline: 1px solid white;
+  border: 1px solid black;
+  padding: 0.5rem;
+  margin: 0.25rem;
+  display: flex;
+}
+
+mat-icon {
+  cursor: pointer;
+  margin-right: 0.5rem;
 }

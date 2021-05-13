@@ -1,1 +1,5 @@
 <iframe #targetIframe class="allow-pointer"></iframe>
+
+<div *ngIf="errorSubject$ | async as errorToShow" class="error">
+  <mat-icon svgIcon="cancel" (click)="errorSubject$.next('')"></mat-icon> {{errorToShow}}
+</div>

@@ -58,9 +58,9 @@ export class DialogService {
     );
   }
 
-  async showDynamicIframeEdit(payload: CustomHtmlDialogPayload) {
+  async showWidgetEdit(payload: CustomHtmlDialogPayload) {
     const dialogRef = await this.loadAndOpen(
-      import('./custom-html-edit/custom-html-edit.module'),
+      import('./widget-edit/widget-edit.module'),
       payload
     );
 

@@ -225,19 +225,48 @@
               *ngIf="fromTemplateSelect.value === ''">
         Edit HTML
       </button>
-      <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
+      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+
+      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
+
+
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Widget State
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
+      </mat-expansion-panel>
+      </ng-container>
     </div>
 
 
     <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
       <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
-      <app-dynamic-iframe *ngIf="currentHtmlToPreview$ | async as currentHtml"
+      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+
+
+      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
+
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Widget State
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
+      </mat-expansion-panel>
+
+</ng-container>
     </div>
 
     <!-- All others => AppClipType -->

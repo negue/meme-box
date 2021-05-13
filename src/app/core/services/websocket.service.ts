@@ -3,6 +3,7 @@ import {ACTIONS, TriggerClip} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {AppConfig} from "@memebox/app/env";
+import {filter, mapTo, take} from "rxjs/operators";
 
 
 console.warn('WEBSOCKET - AppConfig', AppConfig);
@@ -15,6 +16,8 @@ export enum ConnectionState{
   Error,
   Offline
 }
+
+// TODO Refactor
 
 @Injectable()
 export class WebsocketService {
@@ -37,6 +40,15 @@ export class WebsocketService {
 
   public sendI_Am_OBS(guid: string) {
     this.ws.send(`${ACTIONS.I_AM_OBS}=${guid}`);
+  }
+
+  public sendWidgetRegistration(mediaId: string, widgetInstance: string, register: boolean) {
+
+    const action = register ? ACTIONS.REGISTER_WIDGET_INSTANCE : ACTIONS.UNREGISTER_WIDGET_INSTANCE;
+
+    const payload = `${mediaId}|${widgetInstance}`;
+
+    this.ws.send(`${action}=${payload}`);
   }
 
   public triggerClipOnScreen(clipId: string, screenId?: string | null) {
@@ -153,5 +165,13 @@ export class WebsocketService {
 
   stopReconnects() {
     this.allowReconnections = false;
+  }
+
+  isReady() : Promise<boolean> {
+    return this.connectionState$.pipe(
+      filter(connectionState => connectionState === ConnectionState.Connected),
+      take(1),
+      mapTo(true)
+    ).toPromise();
   }
 }

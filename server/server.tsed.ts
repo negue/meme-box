@@ -6,12 +6,13 @@ import {LOG_PATH} from "./path.utils";
 import {Logger} from "@tsed/logger";
 import {TwitchBootstrap} from "./providers/twitch/twitch.bootstrap";
 import {WebsocketBootstrap} from "./providers/websockets/websocket.bootstrap";
+import {WidgetStateController} from "./controllers/widget-state.controller";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
 // import * as methodOverride from "method-override";
 
-export const isProduction = process.env.NODE_ENV === Env.PROD || true;
+export const isProduction = process.env.NODE_ENV === Env.PROD;
 
 const rootDir = __dirname;
 
@@ -20,13 +21,15 @@ const rootDir = __dirname;
   acceptMimes: ["application/json"],
   mount: {
     [API_PREFIX]: [
-      ScreenController
+      ScreenController,
+      WidgetStateController
     ]
   },
   logger: {
-    debug: !isProduction,
+    debug: false,
     disableRoutesSummary: isProduction,
-    disableBootstrapLog: isProduction
+    disableBootstrapLog: isProduction,
+    logRequest: false
   }
 })
 export class ServerTsED implements BeforeRoutesInit, BeforeInit {
