@@ -3,6 +3,7 @@ import {ACTIONS, TriggerClip} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {AppConfig} from "@memebox/app/env";
+import {filter, mapTo, take} from "rxjs/operators";
 
 
 console.warn('WEBSOCKET - AppConfig', AppConfig);
@@ -164,5 +165,13 @@ export class WebsocketService {
 
   stopReconnects() {
     this.allowReconnections = false;
+  }
+
+  isReady() : Promise<boolean> {
+    return this.connectionState$.pipe(
+      filter(connectionState => connectionState === ConnectionState.Connected),
+      take(1),
+      mapTo(true)
+    ).toPromise();
   }
 }

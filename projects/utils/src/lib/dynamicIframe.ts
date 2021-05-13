@@ -183,7 +183,7 @@ const DYNAMIC_IFRAME_VARIABLES_KEY = '_variables';
 const DYNAMIC_IFRAME_SETTINGS_KEY = '_settings';
 
 export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
-  if (!clip.extended) {
+  if (!clip?.extended) {
     return null;
   }
 

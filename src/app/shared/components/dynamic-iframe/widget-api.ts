@@ -77,6 +77,7 @@ class WidgetStoreApi {
   private _state: WidgetStore = {};
   private _state$ = new BehaviorSubject<WidgetStore>({});
   private _state$$: Subscription;
+  private _loaded : Promise<boolean>;
 
   constructor(
     private mediaId: string,
@@ -84,13 +85,18 @@ class WidgetStoreApi {
     private appService: AppService,
     private _errorSubject$: Subject<string>
   ) {
-    this.appService.http.get<WidgetStore>(`${API_BASE}widget-state/${mediaId}`)
-      .pipe(
-        take(1)
-      ).subscribe(value => {
-        this._state = value;
-        this._state$.next(value);
-    });
+    // todo extract / refactor to have only one store for all widgets on the browser / tab
+    this._loaded = new Promise(async (resolve, reject) => {
+      const stateResult = await this.appService.http.get<WidgetStore>(`${API_BASE}widget-state/${mediaId}`)
+        .pipe(
+          take(1)
+        ).toPromise();
+
+      this._state = stateResult;
+      this._state$.next(stateResult);
+
+      resolve(true);
+    })
 
     // Load the Current State from API
     // MediaID
@@ -102,6 +108,10 @@ class WidgetStoreApi {
       .subscribe(newStore => {
         this.appService.tryHttpPut(`${API_BASE}widget-state/${mediaId}/${instanceId}`, newStore);
       })
+  }
+
+  public ready() {
+    return this._loaded;
   }
 
   public getString(key: string, defaultValue: string): string {
@@ -212,5 +222,10 @@ export class WidgetApi {
         this._errorSubject$.next(e);
       }
     }
+  }
+
+  isReady(): Promise<boolean> {
+    // todo twitch api "ready"
+    return this.store.ready();
   }
 }

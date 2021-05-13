@@ -52,9 +52,15 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  ngOnInit(): void {
-    this._widgetApi = new WidgetApi(this.mediaId, this._widgetInstance, this.appService, this.wsHandler, this.errorSubject$);
+  async ngOnInit(): Promise<void> {
+    const currentWidgetApi = new WidgetApi(this.mediaId, this._widgetInstance, this.appService, this.wsHandler, this.errorSubject$);
 
+    await Promise.all([
+      currentWidgetApi.isReady(),
+      this.websocket.isReady()
+    ]);
+
+    this._widgetApi =currentWidgetApi;
     this.websocket.sendWidgetRegistration(this.mediaId, this._widgetInstance, true);
 
     this.targetIframe.nativeElement.contentWindow.onerror = (event : string) => {
@@ -75,6 +81,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
     this.load.emit();
 
   }
+
   ngOnDestroy() {
     this._destroy$.next();
 
