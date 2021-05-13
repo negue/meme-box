@@ -182,6 +182,10 @@ class WidgetStoreApi {
     this._state$$.unsubscribe();
   }
 
+  public get state$ () {
+    return this._state$.asObservable();
+  }
+
   private updateObservable() {
     this._state$.next(this._state);
   }

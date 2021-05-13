@@ -21,6 +21,7 @@ import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.module";
 import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
 import {TranslocoModule} from "@ngneat/transloco";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {TranslocoModule} from "@ngneat/transloco";
     AutoScaleModule,
     ClipPreviewModule,
     DynamicVariableInputModule,
-    TranslocoModule
+    TranslocoModule,
+    MatExpansionModule
   ],
   providers: [],
 })

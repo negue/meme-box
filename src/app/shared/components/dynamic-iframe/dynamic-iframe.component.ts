@@ -95,6 +95,10 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  public get WidgetApi() {
+    return this._widgetApi;
+  }
+
   public componentIsShown(currentTriggeredPayload: TriggerClip) {
     this._widgetApi.triggerIsShown(currentTriggeredPayload);
   }
