@@ -8,8 +8,8 @@ import { FormControl } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { ScreenArrangePreviewComponent } from './screen-arrange-preview/screen-arrange-preview.component';
 import { MatTabGroup } from '@angular/material/tabs';
-import { OpenChangesDlgComponent } from './open-changes-dlg.component';
 import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
+import { DialogService } from '../dialog.service';
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -81,6 +81,7 @@ export class ScreenArrangeComponent implements OnInit {
   constructor(private appQueries: AppQueries,
               private appService: AppService,
               private _dialog: MatDialog,
+              private _dlgService: DialogService,
               private _cd: ChangeDetectorRef,
               public dialogRef: MatDialogRef<ScreenArrangeComponent>,
               @Inject(MAT_DIALOG_DATA) public screen: Screen) {
@@ -97,13 +98,9 @@ export class ScreenArrangeComponent implements OnInit {
     }
     this.clickedOutside();
 
-    const dlg = this._dialog.open(OpenChangesDlgComponent, {
-      width: '350px',
-      closeOnNavigation: true,
-      hasBackdrop: true
-    });
+    const dlgCloseMode = this._showDiscardDlg();
 
-    dlg.afterClosed().subscribe(discardChanges => {
+    dlgCloseMode.then(discardChanges => {
       if (discardChanges) {
         this.dialogRef.close();
       }
@@ -119,13 +116,9 @@ export class ScreenArrangeComponent implements OnInit {
     this._tabGroup.selectedIndex = 0;
     this._cd.detectChanges();
 
-    const dlg = this._dialog.open(OpenChangesDlgComponent, {
-      width: '350px',
-      closeOnNavigation: true,
-      hasBackdrop: true
-    });
+    const dlgCloseMode = this._showDiscardDlg();
 
-    dlg.afterClosed().subscribe(discardChanges => {
+    dlgCloseMode.then(discardChanges => {
       if (discardChanges) {
         this._tabGroup.selectedIndex = 1;
         this.unsavedChangesIds = [];
@@ -160,4 +153,16 @@ export class ScreenArrangeComponent implements OnInit {
     // if you want to keep the users selection, comment out the following line.
     this.clickedOutside();
   }
+
+  private _showDiscardDlg(): Promise<boolean> {
+    const dlgCloseMode = this._dlgService.showConfirmationDialog({
+      title: 'Unsaved changes',
+      content: 'You still have unsaved changes. If you leave this tab they will be reset to their prior state.',
+      noButton: 'Keep',
+      yesButton: 'Discard',
+      overrideButtons: true
+    });
+    return dlgCloseMode;
+  }
+
 }

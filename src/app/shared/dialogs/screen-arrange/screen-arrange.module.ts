@@ -24,12 +24,10 @@ import { ScreenArrangeSidebarModule } from './screen-arrange-sidebar/screen-arra
 import { ScreenArrangePreviewModule } from './screen-arrange-preview/screen-arrange-preview.module';
 import { ScreenPreviewModule } from './screen-preview/screen-preview.module';
 import { A11yModule } from '@angular/cdk/a11y';
-import { OpenChangesDlgComponent } from './open-changes-dlg.component';
 
 @NgModule({
   declarations: [
-    ScreenArrangeComponent,
-    OpenChangesDlgComponent
+    ScreenArrangeComponent
   ],
   exports: [
     ScreenArrangeComponent
