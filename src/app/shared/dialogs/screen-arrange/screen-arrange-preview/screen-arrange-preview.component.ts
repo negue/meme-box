@@ -54,23 +54,47 @@ export class ScreenArrangePreviewComponent {
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   get isDragEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.position &&
-      this.globalActionsForm.value.includes(GlobalArrangeOptions.Drag);
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.position;
+  }
+
+  get isDragSet(): boolean {
+    return this.isDragEnabled ? this.globalActionsForm.value.includes(GlobalArrangeOptions.Drag) : false;
   }
 
   get isResizeEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.size &&
-      this.globalActionsForm.value.includes(GlobalArrangeOptions.Resize);
+    const warpEnabled = !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform;
+    const warpSet = this.globalActionsForm.value.includes(GlobalArrangeOptions.Warp);
+    if (warpEnabled && warpSet) {
+      return false;
+    }
+
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.size;
+  }
+
+  get isResizeSet(): boolean {
+    return this.isResizeEnabled ? this.globalActionsForm.value.includes(GlobalArrangeOptions.Resize) : false;
   }
 
   get isRotateEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform &&
-      this.globalActionsForm.value.includes(GlobalArrangeOptions.Rotate);
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform;
+  }
+
+  get isRotateSet(): boolean {
+    return this.isRotateEnabled ? this.globalActionsForm.value.includes(GlobalArrangeOptions.Rotate) : false;
   }
 
   get isWarpEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform &&
-      this.globalActionsForm.value.includes(GlobalArrangeOptions.Warp);
+    const resizeEnabled = !this.currentSelectedClip?.clipSetting?.arrangeLock?.size;
+    const resizeSet = this.globalActionsForm.value.includes(GlobalArrangeOptions.Resize);
+    if (resizeEnabled && resizeSet) {
+      return false;
+    }
+
+    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform;
+  }
+
+  get isWarpSet(): boolean {
+    return this.isWarpEnabled ? this.globalActionsForm.value.includes(GlobalArrangeOptions.Warp) : false;
   }
 
   readonly GlobalArrangeOptions = GlobalArrangeOptions;

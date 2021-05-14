@@ -8,25 +8,26 @@
                              [formControl]="globalActionsForm"
     >
       <mat-button-toggle [value]="GlobalArrangeOptions.Drag"
-                         [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.position"
+                         [disabled]="!isDragEnabled"
       >
         Drag
       </mat-button-toggle>
 
-      <mat-button-toggle [value]="GlobalArrangeOptions.Resize"
-                         [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.size"
-      >
-        Resize
-      </mat-button-toggle>
-
       <mat-button-toggle [value]="GlobalArrangeOptions.Rotate"
-                         [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform"
+                         [disabled]="!isRotateEnabled"
       >
         Rotate
       </mat-button-toggle>
 
+      <!--      TODO: Find solution/control to show user it can only be resize OR warp.-->
+      <mat-button-toggle [value]="GlobalArrangeOptions.Resize"
+                         [disabled]="!isResizeEnabled"
+      >
+        Resize
+      </mat-button-toggle>
+
       <mat-button-toggle [value]="GlobalArrangeOptions.Warp"
-                         [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform"
+                         [disabled]="!isWarpEnabled"
       >
         Warp
       </mat-button-toggle>
@@ -140,9 +141,9 @@
 
                                transformOrigin="center center"
                                [draggingEnabled]="false"
-                               [resizeEnabled]="isResizeEnabled"
-                               [rotateEnabled]="isRotateEnabled"
-                               [warpEnabled]="isWarpEnabled"
+                               [resizeEnabled]="isResizeSet"
+                               [rotateEnabled]="isRotateSet"
+                               [warpEnabled]="isWarpSet"
                                class="preview-box"
         >
 
@@ -159,9 +160,9 @@
                                (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
                                (elementChanged)="userChangedElement()"
                                [draggingEnabled]="false"
-                               [resizeEnabled]="isResizeEnabled"
-                               [rotateEnabled]="isRotateEnabled"
-                               [warpEnabled]="isWarpEnabled"
+                               [resizeEnabled]="isResizeSet"
+                               [rotateEnabled]="isRotateSet"
+                               [warpEnabled]="isWarpSet"
                                class="preview-box"
         >
 
@@ -179,10 +180,10 @@
           (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
           (elementChanged)="userChangedElement()"
 
-          [draggingEnabled]="isDragEnabled"
-          [resizeEnabled]="isResizeEnabled"
-          [rotateEnabled]="isRotateEnabled"
-          [warpEnabled]="isWarpEnabled"
+          [draggingEnabled]="isDragSet"
+          [resizeEnabled]="isResizeSet"
+          [rotateEnabled]="isRotateSet"
+          [warpEnabled]="isWarpSet"
 
           class="preview-box"
         >
