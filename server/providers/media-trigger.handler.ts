@@ -8,6 +8,7 @@ import {MemeboxWebsocket} from "./websockets/memebox.websocket";
 import {MediaTriggerEventBus} from "./media-trigger.event-bus";
 
 import {VM, VMScript} from "vm2";
+import OBSWebSocket from "obs-websocket-js";
 
 @Service()
 export class MediaTriggerHandler {
@@ -20,6 +21,12 @@ export class MediaTriggerHandler {
   // TODO / check can it run multiple longer-scripts at once?
   private _vm = new VM({
     sandbox: {
+      getObsWebsocket: (address: string, password?: string) => {
+        const obs = new OBSWebSocket();
+        obs.connect({ address, password });
+
+        return obs;
+      },
       waitMilliseconds: (ms: number) => timeoutAsync(ms),
       triggerClip: (targetMediaId: string, targetScreenId?: string) => {
         this.triggerMediaClipById({
@@ -91,22 +98,30 @@ export class MediaTriggerHandler {
   private async triggerScript(mediaConfig: Clip) {
     let script: VMScript;
 
-    if(this._compiledScripts.has(mediaConfig.id)) {
+    if (this._compiledScripts.has(mediaConfig.id)) {
       script = this._compiledScripts.get(mediaConfig.id);
     } else {
-      script = new VMScript(`
-        async function scriptInVm() {
-        ${mediaConfig.extended?.['script'] || ''}
-    }
+      try {
+        script = new VMScript(`
+          async function scriptInVm() {
+            ${mediaConfig.extended?.['script'] || ''}
+          }
 
-        scriptInVm();
-    `);
-
+          scriptInVm();
+        `).compile();
+      } catch (err) {
+        this.logger.error(`Failed to compile script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
+        return;
+      }
       this._compiledScripts.set(mediaConfig.id, script);
     }
 
-    // trigger scripts
-    console.log(this._vm.run(script));
+    try {
+      this._vm.run(script);
+    }
+    catch(err) {
+      this.logger.error(`Failed to run script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
+    }
   }
 
   private async triggerMeta(mediaConfig: Clip): Promise<void> {

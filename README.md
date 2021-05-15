@@ -68,7 +68,9 @@ ___
   * [x] Persistence of the Widget State across Screens
 * [x] Custom Port Settings, default Port now on 6363
 * [x] Electron can be hidden into the Tray
-* [ ] "Media Type": `Scripts` with this more advanced features could be realized
+* [x] "Media Type": `Scripts` for more advanced features
+  * [ ] Wait once a triggered clip (inside the script) is done to trigger other stuff
+  * [ ] Use custom variables like in the Widget-Variables for easier configs
 
 ### 2021.4.0
 * [ ] Labels on or around the Media, each with their own Position / Animation
@@ -83,8 +85,11 @@ ___
 * [ ] Stats per commands / media / or something last cheerer and so on 
 * [ ] more to be added :)
 
-## Based on this Template:
-https://github.com/maximegris/angular-electron
+## How to help / contribute?
+* Improve Docs / Translations
+* Find bugs
+* Help fix bugs / improve features
+* Star it :)
 
 ## Contributors ✨
 

@@ -14,6 +14,7 @@
 # Backend
 
 - Frameworks: [`express`](https://expressjs.com/), [`TsED.io`](https://tsed.io/)
+- Running sandboxed scripts: [`VM2`](https://www.npmjs.com/package/vm2)
 
 # TypeScript
 
