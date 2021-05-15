@@ -1,0 +1,91 @@
+import {Service, UseOpts} from "@tsed/di";
+import {ACTIONS, MediaType, MetaTriggerTypes, TriggerClip} from "@memebox/contracts";
+import {Persistence, PersistenceInstance} from "../persistence";
+import {NamedLogger} from "./named-logger";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "./contracts";
+import {MemeboxWebsocket} from "./websockets/memebox.websocket";
+import {MediaTriggerEventBus} from "./media-trigger.event-bus";
+
+@Service()
+export class MediaTriggerHandler {
+  constructor (
+    @UseOpts({name: 'MediaTriggerHandler'}) public logger: NamedLogger,
+    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private mediaTriggerEventBus: MediaTriggerEventBus,
+    private _memeboxWebSocket: MemeboxWebsocket
+  ) {
+    mediaTriggerEventBus.AllEvents$.subscribe(triggerMedia => {
+      this.triggerMediaClipById(triggerMedia);
+    })
+  }
+
+  async triggerMediaClipById(payloadObs: TriggerClip) {
+    this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
+
+    // TODO refactor to class properties/fields
+    const allScreens = this._persistence.listScreens();
+    const clipConfig = this._persistence.fullState().clips[payloadObs.id];
+
+    if (clipConfig.type !== MediaType.Meta) {
+      // No Meta Type
+      // Trigger the clip on all assign screens
+      for (const screen of allScreens) {
+        if (screen.clips[payloadObs.id]) {
+          const newMessageObj = {
+            ...payloadObs,
+            targetScreen: screen.id
+          };
+
+          this._memeboxWebSocket.sendDataToScreen(screen.id, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(newMessageObj)}`);
+        }
+      }
+    } else {
+      // Get all Tags
+      const assignedTags = clipConfig.tags || [];
+
+      if (assignedTags.length === 0) {
+        return;
+      }
+
+      // Get all clips assigned with these tags
+      const allClips = PersistenceInstance.listClips().filter(
+        clip => clip.id !== clipConfig.id && clip.tags && clip.tags.some(tagId => assignedTags.includes(tagId))
+      );
+      // per metaType
+      switch (clipConfig.metaType) {
+        case MetaTriggerTypes.Random: {
+          // random 0..1
+          const randomIndex = Math.floor(Math.random()*allClips.length);
+
+          const clipToTrigger = allClips[randomIndex];
+
+          this.triggerMediaClipById(clipToTrigger);
+
+          break;
+        }
+        case MetaTriggerTypes.All: {
+          allClips.forEach(clipToTrigger => {
+            this.triggerMediaClipById(clipToTrigger);
+          });
+
+          break;
+        }
+        case MetaTriggerTypes.AllDelay: {
+
+          for (const clipToTrigger of allClips) {
+            await this.triggerMediaClipById(clipToTrigger);
+            await timeoutAsync(clipConfig.metaDelay)
+          }
+
+          break;
+        }
+      }
+    }
+  }
+}
+
+function timeoutAsync(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+

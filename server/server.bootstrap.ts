@@ -23,5 +23,6 @@ export async function bootstrapTsED() {
     };
   } catch (er) {
     $log.error(er);
+    throw er;
   }
 }

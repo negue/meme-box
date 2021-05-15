@@ -6,7 +6,7 @@ const { combine, timestamp, printf, colorize, label } = format;
 
 const MESSAGE_SYMBOL = Symbol.for('message')
 
-export const textFormat = (space: string = null) => printf(({ level, label, timestamp, message, ...obj }) => {
+export const textFormat = (space: string|null = null) => printf(({ level, label, timestamp, message, ...obj }) => {
   const isObject = typeof obj === 'object';
 
   const symbolKey = Object.getOwnPropertySymbols(obj).find(k => k === MESSAGE_SYMBOL);
@@ -79,7 +79,6 @@ export function newLogger(label: string, fileName: string) {
         format: fileFormat(label),
         dirname: LOG_PATH,
         filename: fileName,
-        stream: null,
         extension: '.log'
       })
     ]

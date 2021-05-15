@@ -1,9 +1,9 @@
 import {Service, UseOpts} from "@tsed/di";
 import {NamedLogger} from "../named-logger";
 import * as WebSocket from "ws";
-import {ACTIONS, Dictionary, MediaType, MetaTriggerTypes, TriggerClip} from "@memebox/contracts";
-import {PersistenceInstance} from "../../persistence";
+import {ACTIONS, Dictionary, TriggerClip} from "@memebox/contracts";
 import {Subject} from "rxjs";
+import {MediaTriggerEventBus} from "../media-trigger.event-bus";
 
 // todo maybe extract?
 interface WebSocketType {
@@ -26,6 +26,7 @@ export class MemeboxWebsocket {
 
   constructor(
     @UseOpts({name: 'WS.MemeBox'}) public logger: NamedLogger,
+    private mediaTriggerEventBus: MediaTriggerEventBus
   ) {
     CURRENT_MEMEBOX_WEBSOCKET = this;
 
@@ -102,7 +103,7 @@ export class MemeboxWebsocket {
         this.logger.info(`TRIGGER DATA TO - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
 
         if (!payloadObs.targetScreen) {
-          this.triggerMediaClipById(payloadObs);
+          this.mediaTriggerEventBus.triggerMedia(payloadObs);
         } else {
           this.sendDataToScreen(payloadObs.targetScreen, message);
         }
@@ -115,74 +116,4 @@ export class MemeboxWebsocket {
       }
     }
   }
-
-
-  async triggerMediaClipById(payloadObs: TriggerClip) {
-    this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
-
-    // TODO refactor to class properties/fields
-    const allScreens = PersistenceInstance.listScreens();
-    const clipConfig = PersistenceInstance.fullState().clips[payloadObs.id];
-
-    if (clipConfig.type !== MediaType.Meta) {
-      // No Meta Type
-      // Trigger the clip on all assign screens
-      for (const screen of allScreens) {
-        if (screen.clips[payloadObs.id]) {
-          const newMessageObj = {
-            ...payloadObs,
-            targetScreen: screen.id
-          };
-
-          this.sendDataToScreen(screen.id, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(newMessageObj)}`);
-        }
-      }
-    } else {
-      // Get all Tags
-      const assignedTags = clipConfig.tags || [];
-
-      if (assignedTags.length === 0) {
-        return;
-      }
-
-      // Get all clips assigned with these tags
-      const allClips = PersistenceInstance.listClips().filter(
-        clip => clip.id !== clipConfig.id && clip.tags && clip.tags.some(tagId => assignedTags.includes(tagId))
-      );
-      // per metaType
-      switch (clipConfig.metaType) {
-        case MetaTriggerTypes.Random: {
-          // random 0..1
-          const randomIndex = Math.floor(Math.random()*allClips.length);
-
-          const clipToTrigger = allClips[randomIndex];
-
-          this.triggerMediaClipById(clipToTrigger);
-
-          break;
-        }
-        case MetaTriggerTypes.All: {
-          allClips.forEach(clipToTrigger => {
-            this.triggerMediaClipById(clipToTrigger);
-          });
-
-          break;
-        }
-        case MetaTriggerTypes.AllDelay: {
-
-          for (const clipToTrigger of allClips) {
-            await this.triggerMediaClipById(clipToTrigger);
-            await timeoutAsync(clipConfig.metaDelay)
-          }
-
-          break;
-        }
-      }
-    }
-  }
 }
-
-function timeoutAsync(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
