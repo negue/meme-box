@@ -34,6 +34,8 @@ function unassignedFilterToString(  unassignedFilterType: UnassignedFilterEnum) 
   return '';
 }
 
+const ignoreMediaTypes = [MediaType.WidgetTemplate];
+
 @Component({
   selector: 'app-clip-assigning-dialog',
   templateUrl: './clip-assigning-dialog.component.html',
@@ -56,13 +58,12 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
           return true;
         }
 
-        const ignoreList = [MediaType.WidgetTemplate];
 
         if (!this.data.showMetaItems) {
-          ignoreList.push(MediaType.Meta);
+          ignoreMediaTypes.push(MediaType.Meta);
         }
 
-        return !ignoreList.includes(item.value);
+        return !ignoreMediaTypes.includes(item.value);
       })
     }),
     map(filterItems => {
