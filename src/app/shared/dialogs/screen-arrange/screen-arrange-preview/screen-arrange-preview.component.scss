@@ -136,3 +136,42 @@
     background-color: rgba(var(--palette-accent-500), 1);
   }
 }
+
+.expander-button {
+  display: flex;
+  align-items: center;
+  background-color: var(--palette-background-background);
+  z-index: 1;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.07);
+  }
+
+  .mat-icon {
+    transform: rotate(0);
+    transition: transform 200ms;
+  }
+
+  &.expander-button-minimize .mat-icon {
+    transform: rotate(180deg);
+  }
+}
+
+.extender {
+  display: flex;
+  transition: width 600ms;
+  overflow: hidden;
+
+  &.extender-full-screen {
+    width: 14rem;
+  }
+
+  &.extender-absolute {
+    width: 28rem;
+  }
+
+  &.extender-closed, &:not(.extender-absolute):not(.extender-full-screen) {
+    width: 0 !important;
+  }
+}

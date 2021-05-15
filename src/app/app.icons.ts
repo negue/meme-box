@@ -9,6 +9,7 @@ export const APP_ICONS = [
   'check-all',
   'circle',
   'check_circle',
+  'chevron_right',
   'code',
   'collage',
   'content_copy',

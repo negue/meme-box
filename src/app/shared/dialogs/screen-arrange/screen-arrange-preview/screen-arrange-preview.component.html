@@ -67,49 +67,62 @@
         </mat-select>
       </mat-form-field>
 
+      <div class="extender" [class.extender-closed]="!actionsExpanded"
+           [class.extender-full-screen]="currentSelectedClip?.clipSetting?.position === PositionEnum.FullScreen"
+           [class.extender-absolute]="currentSelectedClip?.clipSetting?.position === PositionEnum.Absolute"
+      >
+        <mat-divider [vertical]="true"></mat-divider>
+
+        <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.FullScreen">
+          <mat-form-field appearance="fill" class="arrange-width-control form-field-disabled">
+            <mat-label>Width</mat-label>
+            <input matInput placeholder="Width" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.width">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-height-control form-field-disabled">
+            <mat-label>Height</mat-label>
+            <input matInput placeholder="Height" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.height">
+          </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.Absolute">
+          <mat-form-field appearance="fill" class="arrange-left-control form-field-disabled">
+            <mat-label>Left</mat-label>
+            <input matInput placeholder="Left" [disabled]="true" [value]="currentSelectedClip.clipSetting.left">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-top-control form-field-disabled">
+            <mat-label>Top</mat-label>
+            <input matInput placeholder="Top" [disabled]="true" [value]="currentSelectedClip.clipSetting.top">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-right-control form-field-disabled">
+            <mat-label>Right</mat-label>
+            <input matInput placeholder="Right" [disabled]="true" [value]="currentSelectedClip.clipSetting.right">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-bottom-control form-field-disabled">
+            <mat-label>Bottom</mat-label>
+            <input matInput placeholder="Bottom" [disabled]="true" [value]="currentSelectedClip.clipSetting.bottom">
+          </mat-form-field>
+        </ng-container>
+      </div>
+
       <mat-divider [vertical]="true"></mat-divider>
 
-      <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.FullScreen">
-        <mat-form-field appearance="fill" class="arrange-width-control form-field-disabled">
-          <mat-label>Width</mat-label>
-          <input matInput placeholder="Width" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.width">
-        </mat-form-field>
-
-        <mat-divider [vertical]="true"></mat-divider>
-
-        <mat-form-field appearance="fill" class="arrange-height-control form-field-disabled">
-          <mat-label>Height</mat-label>
-          <input matInput placeholder="Height" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.height">
-        </mat-form-field>
-      </ng-container>
-
-      <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.Absolute">
-        <mat-form-field appearance="fill" class="arrange-left-control form-field-disabled">
-          <mat-label>Left</mat-label>
-          <input matInput placeholder="Left" [disabled]="true" [value]="currentSelectedClip.clipSetting.left">
-        </mat-form-field>
-
-        <mat-divider [vertical]="true"></mat-divider>
-
-        <mat-form-field appearance="fill" class="arrange-top-control form-field-disabled">
-          <mat-label>Top</mat-label>
-          <input matInput placeholder="Top" [disabled]="true" [value]="currentSelectedClip.clipSetting.top">
-        </mat-form-field>
-
-        <mat-divider [vertical]="true"></mat-divider>
-
-        <mat-form-field appearance="fill" class="arrange-right-control form-field-disabled">
-          <mat-label>Right</mat-label>
-          <input matInput placeholder="Right" [disabled]="true" [value]="currentSelectedClip.clipSetting.right">
-        </mat-form-field>
-
-        <mat-divider [vertical]="true"></mat-divider>
-
-        <mat-form-field appearance="fill" class="arrange-bottom-control form-field-disabled">
-          <mat-label>Bottom</mat-label>
-          <input matInput placeholder="Bottom" [disabled]="true" [value]="currentSelectedClip.clipSetting.bottom">
-        </mat-form-field>
-      </ng-container>
+      <div class="expander-button"
+           [class.expander-button-minimize]="actionsExpanded"
+           (click)="actionsExpanded = !actionsExpanded">
+        <mat-icon svgIcon="chevron_right"></mat-icon>
+      </div>
     </div>
   </div>
 
