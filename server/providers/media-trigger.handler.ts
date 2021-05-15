@@ -7,11 +7,30 @@ import {PERSISTENCE_DI} from "./contracts";
 import {MemeboxWebsocket} from "./websockets/memebox.websocket";
 import {MediaTriggerEventBus} from "./media-trigger.event-bus";
 
+import {VM, VMScript} from "vm2";
+
 @Service()
 export class MediaTriggerHandler {
   private _allScreens: Screen[] = [];
   private _allMediasMap: Dictionary<Clip> = {};
   private _allMediasList: Clip[] = [];
+
+  private _compiledScripts = new Map<string, VMScript>();
+
+  // TODO / check can it run multiple longer-scripts at once?
+  private _vm = new VM({
+    sandbox: {
+      waitMilliseconds: (ms: number) => timeoutAsync(ms),
+      triggerClip: (targetMediaId: string, targetScreenId?: string) => {
+        this.triggerMediaClipById({
+          id: targetMediaId,
+          targetScreen: targetScreenId
+        })
+
+        return Promise.resolve(true);
+      }
+    }
+  });
 
   constructor(
     @UseOpts({name: 'MediaTriggerHandler'}) public logger: NamedLogger,
@@ -25,6 +44,11 @@ export class MediaTriggerHandler {
 
     _persistence.dataUpdated$().subscribe(() => {
       this.getData();
+
+      // TODO get updated Path to know what kind of state needs to be refilled
+      // for example the compiled scripts
+
+      this._compiledScripts = new Map<string, VMScript>();
     })
 
     this.getData();
@@ -65,9 +89,24 @@ export class MediaTriggerHandler {
   }
 
   private async triggerScript(mediaConfig: Clip) {
-    // trigger scripts
+    let script: VMScript;
 
-    this.logger.info(`Now a script would be executed, yay: ${mediaConfig.name}`);
+    if(this._compiledScripts.has(mediaConfig.id)) {
+      script = this._compiledScripts.get(mediaConfig.id);
+    } else {
+      script = new VMScript(`
+        async function scriptInVm() {
+        ${mediaConfig.extended?.['script'] || ''}
+    }
+
+        scriptInVm();
+    `);
+
+      this._compiledScripts.set(mediaConfig.id, script);
+    }
+
+    // trigger scripts
+    console.log(this._vm.run(script));
   }
 
   private async triggerMeta(mediaConfig: Clip): Promise<void> {
