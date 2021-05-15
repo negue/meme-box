@@ -5,12 +5,14 @@ import {
   EventEmitter,
   Input,
   Output,
-  TrackByFunction
+  TrackByFunction,
+  ViewChild
 } from '@angular/core';
 import { Clip, CombinedClip, PositionEnum, Screen } from '@memebox/contracts';
 import { DragResizeMediaComponent } from '../drag-resize-media/drag-resize-media.component';
 import { AppService } from '../../../../state/app.service';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { AutoScaleComponent } from '@gewd/components/auto-scale';
 
 enum GlobalArrangeOptions {
   Drag,
@@ -27,7 +29,18 @@ enum GlobalArrangeOptions {
 })
 export class ScreenArrangePreviewComponent {
   @Input()
-  currentSelectedClip: CombinedClip | null = null;
+  set currentSelectedClip(val: CombinedClip | null) {
+    this._currentSelectedClip = val;
+
+    // Force view update in another CD cycle
+    Promise.resolve().then(() => {
+      this?._gewdAutoScale.forceUpdate();
+    });
+  }
+
+  get currentSelectedClip(): CombinedClip | null {
+    return this._currentSelectedClip;
+  }
 
   @Input()
   visibleItems: CombinedClip[];
@@ -111,6 +124,10 @@ export class ScreenArrangePreviewComponent {
   private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();
 
   private previouslyClickedComponent: DragResizeMediaComponent | null = null;
+  private _currentSelectedClip: CombinedClip | null = null;
+
+  @ViewChild(AutoScaleComponent)
+  private _gewdAutoScale: AutoScaleComponent;
 
   constructor(private _cd: ChangeDetectorRef,
               private _fb: FormBuilder,

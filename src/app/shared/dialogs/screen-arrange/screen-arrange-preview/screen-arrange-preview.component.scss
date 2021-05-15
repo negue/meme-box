@@ -18,7 +18,7 @@
 
   // Highlight the field when you hover over it
   .arrange-selection-actions-container.clip-is-selected > .arrange-selection-actions {
-    ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex:hover {
+    ::ng-deep .mat-form-field:not(.form-field-disabled).mat-form-field-appearance-fill .mat-form-field-flex:hover {
       background-color: rgba(255, 255, 255, 0.07);
     }
   }
@@ -88,10 +88,8 @@
   display: flex;
   flex-wrap: wrap;
   overflow: hidden;
-
-  & > div:not(:last-child) {
-    margin-right: 1rem;
-  }
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .arrange-actions {
@@ -104,6 +102,23 @@
 
   &:not(.clip-is-selected) {
     opacity: 0.3;
+  }
+
+  .arrange-size-control {
+    width: 5rem;
+  }
+
+  .arrange-position-control {
+    width: 10rem;
+  }
+
+  .arrange-width-control,
+  .arrange-height-control,
+  .arrange-left-control,
+  .arrange-top-control,
+  .arrange-right-control,
+  .arrange-bottom-control {
+    width: 7rem;
   }
 }
 
