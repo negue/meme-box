@@ -291,9 +291,14 @@
   </div>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    ID: {{data.id}}
+  </div>
+  <div class="column" align="end" >
   <button mat-button mat-dialog-close>Cancel</button>
   <button (click)="save()"
           color="accent"
           mat-raised-button>{{ data?.id ? 'Update' : 'Add' }}</button>
+  </div>
 </mat-dialog-actions>
