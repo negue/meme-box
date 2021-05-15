@@ -22,6 +22,7 @@ import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.modu
 import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
 import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {CodemirrorModule} from "@gewd/components/codemirror";
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {MatExpansionModule} from "@angular/material/expansion";
     ClipPreviewModule,
     DynamicVariableInputModule,
     TranslocoModule,
-    MatExpansionModule
+    MatExpansionModule,
+    CodemirrorModule
   ],
   providers: [],
 })

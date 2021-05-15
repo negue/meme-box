@@ -5,6 +5,7 @@ export enum MediaType {
   Video = 2,
   IFrame = 3,
   Widget = 4,
+  Script = 5,
 
 
   WidgetTemplate = 99,
@@ -67,6 +68,14 @@ export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = 
     icon: "code",
     sortOrder: 5,
     mediaType: MediaType.Widget
+  },
+  [MediaType.Script]: {
+    translationKey: "mediaType.script",
+    labelFallback: "Script", // todo rename the property, add a "translationKey" to it
+    className: "",
+    icon: "code",
+    sortOrder: 6,
+    mediaType: MediaType.Script
   },
   [MediaType.WidgetTemplate]: {
     translationKey: "mediaType.widgetTemplate",

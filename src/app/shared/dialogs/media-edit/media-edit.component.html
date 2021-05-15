@@ -69,8 +69,9 @@
         </mat-error>
       </mat-form-field>
     </div>
+
     <div class="form-field-row"
-         *ngIf="form.value.type !== MediaType.Meta">
+         *ngIf="!MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
       <mat-form-field>
         <input [placeholder]="
                  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)
@@ -203,6 +204,7 @@
   <!-- Preview of a Media -->
   <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
        [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
+       [class.script]="MediaType.Script === form.value.type"
   >
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
@@ -268,6 +270,13 @@
 
 </ng-container>
     </div>
+
+    <gewd-codemirror *ngSwitchCase="MediaType.Script"
+                     [value]="data.extended['script'] || ''"
+                     [codemirrorExtensions]="jsExtensions"
+                     (changed)="data.extended['script'] = $event;">
+
+    </gewd-codemirror>
 
     <!-- All others => AppClipType -->
     <gewd-auto-scale width="500" height="500"

@@ -70,10 +70,22 @@ img {
 .column {
   flex: 1;
 
+
+
   &:last-child {
     &:not(.custom-html-preview) {
       align-self: center;
     }
+
+    &.script {
+      align-self: stretch;
+      width: 50%;
+
+      gewd-codemirror {
+        height: 100%;
+      }
+    }
+
 
     @media screen and (min-width: 920px) {
       margin-left: 1rem;

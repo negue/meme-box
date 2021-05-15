@@ -42,6 +42,7 @@ import {
   clipDataToDynamicIframeContent,
   DynamicIframeContent
 } from "@memebox/utils";
+import {jsCodemirror} from "../../../core/codemirror.extensions";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -68,7 +69,8 @@ interface MediaTypeButton {
 }
 
 // TODO maybe use "TYPES WITH PATH"
-const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta];
+const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta, MediaType.Script];
+const MEDIA_TYPES_WITHOUT_PLAYTIME = [MediaType.Meta, MediaType.Script];
 const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 @Component({
@@ -105,7 +107,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
+  public jsExtensions = jsCodemirror;
   MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
+  MEDIA_TYPES_WITHOUT_PLAYTIME = MEDIA_TYPES_WITHOUT_PLAYTIME;
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
 
