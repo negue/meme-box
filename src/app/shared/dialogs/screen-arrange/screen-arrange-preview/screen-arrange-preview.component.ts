@@ -64,6 +64,8 @@ export class ScreenArrangePreviewComponent {
   @Output()
   mediaReset = new EventEmitter<string>();
 
+  actionsExpanded = false;
+
   trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
 
   get isDragEnabled(): boolean {
@@ -158,6 +160,7 @@ export class ScreenArrangePreviewComponent {
     // TODO: Set the option
     //this.currentSelectedClip.clipSetting = newValue;
     this.sizeSelection = newValue;
+    this.userChangedElement();
     this.triggerChangedetection();
   }
 
@@ -166,6 +169,7 @@ export class ScreenArrangePreviewComponent {
       return;
     }
     this.currentSelectedClip.clipSetting.position = newPosition;
+    this.userChangedElement();
     this.triggerChangedetection();
   }
 
