@@ -53,7 +53,8 @@
         ></mat-icon>
       </div>
       <div mat-line>{{visibleItem.clip.name}}</div>
-      <div mat-line>{{visibleItem.clipSetting.visibility | visibilityToString}}</div>
+      <div mat-line>{{visibleItem.clipSetting.visibility | visibilityToString}}
+        / {{visibleItem.clipSetting.position | positionToString}}</div>
 
       <div mat-list-icon class="card-settings-icon">
         <button (click)="openMediaSettingsDialog($event, visibleItem)"
