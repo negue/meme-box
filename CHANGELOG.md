@@ -20,10 +20,13 @@
 * [x] Allow multiple reactions of twitch commands (example cheer and command by string)
 * [x] The Media Overview sometimes showed more items while listing/filtering items
 * [x] Changed the default port from `4444` to `6363`
+* [x] Arrange View: Prevent switching between tabs when editing media - #266
+* [x] Arrange View: Selected media still visible after assign media was clicked - #276
 
 ### Changes
 
 * [x] The Media Overview was redesigned by `@owehmer` (you can still switch to the old one)
+* [x] The Arrange View was redesigned by `@owehmer`
 * [x] "HTML" is now renamed to "Widgets"
 
 ## 2021.2.1
