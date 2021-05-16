@@ -6,6 +6,7 @@
     "iframe": "iFrame",
     "widget": "Widget",
     "widgetTemplate": "Widget Template",
-    "meta": "Meta"
+    "meta": "Meta",
+    "script": "Script"
   }
 }

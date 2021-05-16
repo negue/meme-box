@@ -5,11 +5,11 @@ import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
 import {Dictionary, TwitchTriggerCommand} from "@memebox/contracts";
 import {TwitchLogger} from "./twitch.logger";
-import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {ExampleTwitchCommandsSubject} from "../../shared";
+import {MediaTriggerEventBus} from "../media-trigger.event-bus";
 
 @Injectable({
   type: ProviderType.SERVICE,
@@ -22,7 +22,7 @@ export class TwitchHandler {
     private _twitchConnector: TwitchConnector,
     private _twitchLogger: TwitchLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private _memeboxWebsocket: MemeboxWebsocket
+    private _mediaTriggerEventBus: MediaTriggerEventBus
   ) {
 
     _twitchConnector
@@ -75,7 +75,7 @@ export class TwitchHandler {
       if (allowedToTrigger) {
         this.cooldownDictionary[trigger.command.id] = Date.now();
 
-        this._memeboxWebsocket.triggerMediaClipById({
+        this._mediaTriggerEventBus.triggerMedia({
           id: trigger.command.clipId
         });
       }
