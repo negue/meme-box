@@ -1,13 +1,13 @@
-<span mat-dialog-title>
-  <span>
+<div mat-dialog-title>
+  <div>
     <h2>Arrange the Media on this Screen: {{screen.name}}</h2>
     <mat-hint>Screen Size [{{screen?.width}}]x[{{screen?.height}}]</mat-hint>
-  </span>
+  </div>
 
-  <button mat-button mat-dialog-close style="align-self: flex-start">Close</button>
-</span>
+  <button mat-button (click)="closeDlg()" style="align-self: flex-start">Close</button>
+</div>
 <mat-dialog-content class="mat-typography">
-  <mat-tab-group #tabGroup (selectedTabChange)="clickedOutside()">
+  <mat-tab-group #tabGroup [selectedIndex]="selectedIndex" (selectedTabChange)="tabSelectionChanged($event)">
     <mat-tab label="Arrange">
     </mat-tab>
     <mat-tab label="Preview"></mat-tab>
@@ -21,6 +21,7 @@
       [screen]="screen"
       [currentSelectedClip]="currentSelectedClip"
       [selectedItems]="selectedItems"
+      [unsavedChangesIds]="unsavedChangesIds"
       (changeCurrSelectedClip)="currentSelectedClip = $event"
     ></app-screen-arrange-sidebar>
 
@@ -28,14 +29,17 @@
       [visibleItems]="visibleItems$ | async"
       [screen]="screen"
       [currentSelectedClip]="currentSelectedClip"
+      [unsavedChangesIds]="unsavedChangesIds"
       (changeCurrSelectedClip)="currentSelectedClip = $event"
+      (userChangeElement)="userChangedMedia($event)"
+      (changesSaved)="userResetChangedOfMedia($event)"
+      (mediaReset)="userResetChangedOfMedia($event)"
     ></app-screen-arrange-preview>
   </div>
 
   <!-- Preview -->
-  <app-screen-preview *ngIf="tabGroup.selectedIndex === 1"
+  <app-screen-preview [class.hidden]="tabGroup.selectedIndex !== 1"
                       class="tab_content"
                       [allItems]="clipList$ | async"
                       [screen]="screen"></app-screen-preview>
 </mat-dialog-content>
-

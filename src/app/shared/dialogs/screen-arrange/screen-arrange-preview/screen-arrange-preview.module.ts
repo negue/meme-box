@@ -9,6 +9,12 @@ import { DragResizeMediaModule } from '../drag-resize-media/drag-resize-media.mo
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { PipesModule } from '../../../../core/pipes/pipes.module';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
@@ -25,7 +31,14 @@ import { PipesModule } from '../../../../core/pipes/pipes.module';
     DragResizeMediaModule,
     MatCheckboxModule,
     MatButtonModule,
-    PipesModule
+    PipesModule,
+    MatButtonToggleModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatDividerModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatInputModule
   ]
 })
 export class ScreenArrangePreviewModule {
