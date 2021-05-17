@@ -71,6 +71,8 @@ ___
 * [x] "Media Type": `Scripts` for more advanced features
   * [ ] Wait once a triggered clip (inside the script) is done to trigger other stuff
   * [ ] Use custom variables like in the Widget-Variables for easier configs
+* [ ] Overview of local media files not existing anymore
+* [ ] Overhaul of the Media Creation Dialog(s) 
 
 ### 2021.4.0
 * [ ] Labels on or around the Media, each with their own Position / Animation
