@@ -222,7 +222,7 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 
 
 
-export function createExpress(port) {
+export function createExpress(port: number) {
   app.set('port', port);
 
   // app.get('port')

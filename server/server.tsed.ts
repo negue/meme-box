@@ -6,12 +6,14 @@ import {LOG_PATH} from "./path.utils";
 import {Logger} from "@tsed/logger";
 import {WidgetStateController} from "./controllers/widget-state.controller";
 import {BootstrapServices} from "./providers/bootstrap.services";
+import * as fs from "fs";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
 // import * as methodOverride from "method-override";
 
-export const isProduction = process.env.NODE_ENV === Env.PROD;
+export const isProduction = !fs.existsSync('package.json')
+  || process.env.NODE_ENV === Env.PROD;
 
 const rootDir = __dirname;
 
@@ -45,47 +47,46 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
     private _mainLogger: Logger,
     _services: BootstrapServices
   ) {
-    const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0,10);
+    const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
 
     _mainLogger.appenders
-   .set("stdout", {
-      type: "stdout",
-      levels: ["info", "debug", "trace"],
-      //layout: {
-       // type: "json"  // todo json on production
-      //}
-    })
+      .set("stdout", {
+        type: "stdout",
+        levels: ["info", "debug", "trace"],
+        //layout: {
+        // type: "json"  // todo json on production
+        //}
+      })
 
       .set("file", {
         type: "file",
         // pattern not working so we added DateFormat ourselves
         filename: `${LOG_PATH}/memebox_tsed.${TODAY_LOG_SUFFIX}.log`,
         // pattern: '.yyyy-MM-dd',
-        layout:{
+        layout: {
           type: "json",
           separator: ","
         }
       })
 
-    .set("stderr", {
-      levels: [ "fatal", "error", "warn"],
-      type: "stderr",
-      layout: {
-        type: "json"
-      }
-    })
+      .set("stderr", {
+        levels: ["fatal", "error", "warn"],
+        type: "stderr",
+        layout: {
+          type: "json"
+        }
+      })
 
       .set("ERROR_FILE", {
         type: "file",
         levels: ["fatal", "error"],
         filename: `${LOG_PATH}/errors.log`,
-        layout:{
+        layout: {
           type: "json",
           separator: ","
         }
       })
     ;
-
   }
 
   /**

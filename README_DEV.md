@@ -26,6 +26,11 @@ npm run build:prepare
 npm run build:all // or build:windows 
 ```
 
+### Building helpers
+
+`npm run build:server:wo:vm2` build the headless w/o vm2
+so that you can get the real stats.json (otherwise this file is overridden by the 3 other files of vm2 that somehow are added to the output)
+
 ### Electron
 
 Developing with Electron:
