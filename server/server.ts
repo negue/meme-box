@@ -1,7 +1,8 @@
 import open from 'open';
 import {LOGGER} from "./logger.utils";
 import {bootstrapTsED} from "./server.bootstrap";
-import { isProduction } from "./server.tsed";
+import {isProduction} from "./server.tsed";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 // CLI, Headless Mode
 
@@ -19,7 +20,10 @@ bootstrapTsED().then(async ({expressServer}) => {
     LOGGER.info('== DEV-MODE == Server is ready');
   } else {
     LOGGER.info('Server is ready');
-    open(`http://localhost:${port}`);
+
+    if (CLI_OPTIONS.OPEN_BROWSER) {
+      open(`http://localhost:${port}`);
+    }
   }
 });
 

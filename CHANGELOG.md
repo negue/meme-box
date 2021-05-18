@@ -1,5 +1,10 @@
 ## to be released
 
+### Breaking Changes
+
+* [x] The Headless Mode will not open the browser on start anymore, use `--open=true` for that
+* [x] Changed the default port from `4444` to `6363`
+
 ### Features
 
 * [x] Custom Port Setting inside Meme-Box (commandline option `--port` would still override it)
@@ -19,7 +24,6 @@
 
 * [x] Allow multiple reactions of twitch commands (example cheer and command by string)
 * [x] The Media Overview sometimes showed more items while listing/filtering items
-* [x] Changed the default port from `4444` to `6363`
 * [x] Arrange View: Prevent switching between tabs when editing media - #266
 * [x] Arrange View: Selected media still visible after assign media was clicked - #276
 

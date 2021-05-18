@@ -31,6 +31,7 @@ import {debounceTime} from "rxjs/operators";
 import {LOGGER} from "./logger.utils";
 import {registerProvider} from "@tsed/di";
 import {PERSISTENCE_DI} from "./providers/contracts";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 // TODO Extract more state operations to shared library and from app
 
@@ -401,7 +402,12 @@ export class Persistence {
   }
 
   public getConfig() {
-    return this.data.config;
+    const mediaFolder = CLI_OPTIONS.MEDIA_PATH ?? this.data.config.mediaFolder;
+
+    return {
+      ...this.data.config,
+      mediaFolder
+    };
   }
 
   public cleanUpConfigs() {
@@ -472,9 +478,11 @@ export const PERSISTENCE: {
   instance: null
 }
 
-LOGGER.info({NEW_CONFIG_PATH, LOG_PATH});
 
 export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
+
+// todo refactor it to a new place when the new logger is being used
+LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
 
 PERSISTENCE.instance = PersistenceInstance;
 
