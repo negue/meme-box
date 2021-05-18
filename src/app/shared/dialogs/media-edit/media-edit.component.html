@@ -81,7 +81,7 @@
                [required]="MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)"
                autocomplete="off"
                formControlName="playLength"
-               matInput
+               matInput min="0"
                type="number"
         />
         <span matSuffix>ms</span>

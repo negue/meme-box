@@ -70,7 +70,7 @@ interface MediaTypeButton {
 
 // TODO maybe use "TYPES WITH PATH"
 const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta, MediaType.Script];
-const MEDIA_TYPES_WITHOUT_PLAYTIME = [MediaType.Meta, MediaType.Script];
+const MEDIA_TYPES_WITHOUT_PLAYTIME = [MediaType.Meta, MediaType.WidgetTemplate, MediaType.Script];
 const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 @Component({
@@ -86,7 +86,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     type: 0,
     volumeSetting: 0,
     clipLength: 0,
-    playLength: 0,
+    playLength: [0, Validators.min(0)],
     path: "",
     previewUrl: "",
 
@@ -94,7 +94,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     metaDelay: 0,
 
     fromTemplate: ""
-  } as Clip);
+  });
 
   currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
 
@@ -239,7 +239,9 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
         if (MEDIA_TYPES_WITHOUT_PATH.includes(prev)) {
           console.info('adding validators');
-          this.form.controls['path'].setValidators(Validators.required);
+          this.form.controls['path'].setValidators([
+            Validators.required,
+          ]);
         }
 
         if (MEDIA_TYPES_WITHOUT_PATH.includes(next)){

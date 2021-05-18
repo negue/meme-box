@@ -27,6 +27,7 @@
 * [x] Arrange View: Prevent switching between tabs when editing media - #266
 * [x] Arrange View: Selected media still visible after assign media was clicked - #276
 * [x] Media Creation: The Image Preview wasn't resizing on change - #238
+* [x] Media Creation: Visible screen time - minus values were possible - #239
 
 ### Changes
 
