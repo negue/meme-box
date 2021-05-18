@@ -321,12 +321,16 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   onChange($event: FileInfo) {
-    console.info({ $event });
-
     this.form.patchValue({
       path: $event.apiUrl,
       name: $event.fileName
     });
+
+    this.markForCheck();
+  }
+
+  markForCheck() {
+    this.cd.markForCheck();
   }
 
   updateMediaType(value: MediaType): void {

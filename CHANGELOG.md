@@ -26,6 +26,7 @@
 * [x] The Media Overview sometimes showed more items while listing/filtering items
 * [x] Arrange View: Prevent switching between tabs when editing media - #266
 * [x] Arrange View: Selected media still visible after assign media was clicked - #276
+* [x] Media Creation: The Image Preview wasn't resizing on change - #238
 
 ### Changes
 
