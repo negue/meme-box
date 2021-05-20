@@ -22,6 +22,7 @@
 
 ### Fixes
 
+* [x] Changing any Settings - refreshed all media (including widgets) to be reloaded / recreated - #284
 * [x] Allow multiple reactions of twitch commands (example cheer and command by string)
 * [x] The Media Overview sometimes showed more items while listing/filtering items
 * [x] Arrange View: Prevent switching between tabs when editing media - #266

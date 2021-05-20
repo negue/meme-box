@@ -2,7 +2,7 @@ import type {Rule} from 'css';
 import * as css from 'css';
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, CombinedClip, Dictionary, MediaType, Screen, ScreenClip, TriggerClip} from "@memebox/contracts";
+import {Clip, CombinedClip, MediaType, Screen, ScreenClip, TriggerClip} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
@@ -39,21 +39,21 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     map(([screenId, screenMap]) => screenMap[screenId].clips)
   );
 
-  mediaClipMap$: Observable<Dictionary<CombinedClip>> = combineLatest([
+  mediaClipMap$: Observable<CombinedClip[]> = combineLatest([
     this.assignedClipsMap$,
     this.appQuery.clipMap$
   ]).pipe(
     map(([assignedClips, allClips]) => {
-      const result: Dictionary<CombinedClip> = {};
+      const result: CombinedClip[] = [];
 
       for (const [key, entry] of Object.entries(assignedClips)) {
-        result[key] = {
+        result.push({
           clipSetting: entry,
           clip: {
             ...allClips[key]
           },
           backgroundColor: this.random_rgba()
-        }
+        });
       }
 
       return result;
@@ -212,15 +212,11 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       ).subscribe(map => {
         const iframeElement = element as HTMLIFrameElement;
 
-        const iframeCss = map[value.id].clipSetting.customCss;
+        const foundMedia = map.find(e => e.clip.id === value.id);
 
-        console.warn({
-          document: iframeElement.contentDocument,
-          iframeCss
-        });
+        const iframeCss =  foundMedia.clipSetting.customCss;
 
         this.addOrUpdateStyleTag(iframeElement.contentDocument, 'iframe', iframeCss);
-
       } )
     }
 
