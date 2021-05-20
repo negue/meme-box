@@ -12,6 +12,7 @@ export interface DynamicIframeVariable {
   name: string; // TODO validations?
   hint: string;
   type: DynamicIframeVariableTypes;
+  htmlNewLineBreak?: boolean;
   fallback: any; // TODO - might need some typesafety .. maybe during runtime
 }
 
@@ -87,7 +88,13 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
         htmlValueBag[config.name] = getVariableValueOrFallback(config, valueBag, true);
 
         if (config.type === 'textarea') {
-          htmlValueBag[config.name] = htmlValueBag[config.name].replaceAll('\n', '\\n');
+          let valueOfName = htmlValueBag[config.name] as string;
+
+          if (config.htmlNewLineBreak) {
+            valueOfName = valueOfName.replaceAll('\n', '<br/>');
+          }
+
+          htmlValueBag[config.name] = valueOfName;
         }
       });
 
@@ -151,6 +158,10 @@ function getVariableValueOrFallback (config: DynamicIframeVariable,
 
   if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
     return valueToReturn;
+  }
+
+  if (config.type === 'textarea') {
+    return "`"+valueToReturn+"`";
   }
 
   // string

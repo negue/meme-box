@@ -2,39 +2,43 @@
 <table>
   <ng-container *ngFor="let customVariable of variablesList">
     <tr>
-      <td rowspan="2">
-        <mat-form-field>
+      <td>
+        <mat-form-field appearance="outline">
           <mat-label>Your Variable Name</mat-label>
           <input matInput [(ngModel)]="customVariable.name"
                  (ngModelChange)="onEditVariable.emit(customVariable)" type="text">
         </mat-form-field>
+        <mat-form-field  appearance="outline">
+          <mat-label>Variable Type selection</mat-label>
+          <mat-select [(value)]="customVariable.type"
+                      (selectionChange)="onEditVariable.emit(customVariable)">
+            <mat-option value="text">Text</mat-option>
+            <mat-option value="textarea">Textarea</mat-option>
+            <mat-option value="number">Number</mat-option>
+            <mat-option value="boolean">Boolean</mat-option>
+          </mat-select>
+        </mat-form-field>
       </td>
       <td>
-        <mat-label>Variable Type selection</mat-label>
-        <mat-select [(value)]="customVariable.type"
-                    (selectionChange)="onEditVariable.emit(customVariable)">
-          <mat-option value="text">Text</mat-option>
-          <mat-option value="textarea">Textarea</mat-option>
-          <mat-option value="number">Number</mat-option>
-          <mat-option value="boolean">Boolean</mat-option>
-        </mat-select>
-      </td>
-      <td>
-        <button mat-raised-button color="warn"
-                (click)="onDeleteVariable.emit(customVariable)">
-          Delete Button
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td [ngSwitch]="customVariable.type">
-
         <app-dynamic-variable-input [variableType]="customVariable.type"
-          label="Fallback Value"
-          [value]="customVariable.fallback"
-          (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
+                                    label="Fallback Value"
+                                    [value]="customVariable.fallback"
+                                    (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
 
         </app-dynamic-variable-input>
+
+
+        <mat-checkbox *ngIf="customVariable.type === 'textarea'"
+                      [(ngModel)]="customVariable.htmlNewLineBreak"
+                      (change)="onEditVariable.emit(customVariable)">
+          HTML: Replace new lines with &lt;br&gt;
+        </mat-checkbox>
+      </td>
+      <td>
+        <button mat-icon-button color="warn"
+                (click)="onDeleteVariable.emit(customVariable)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
       </td>
     </tr>
   </ng-container>

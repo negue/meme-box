@@ -52,7 +52,7 @@
                matInput
                [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
                [placeholder]="form.value.type !== MediaType.IFrame ? 'File' : 'URL'"
-               type="text"
+               type="text" (keyup)="markForCheck()"
         />
         <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
           <mat-select (valueChange)="onChange($event)"
@@ -81,7 +81,7 @@
                [required]="MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)"
                autocomplete="off"
                formControlName="playLength"
-               matInput
+               matInput min="0"
                type="number"
         />
         <span matSuffix>ms</span>

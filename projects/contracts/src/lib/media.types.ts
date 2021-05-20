@@ -74,7 +74,7 @@ export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = 
     labelFallback: "Script", // todo rename the property, add a "translationKey" to it
     className: "",
     icon: "code",
-    sortOrder: 6,
+    sortOrder: 7,
     mediaType: MediaType.Script
   },
   [MediaType.WidgetTemplate]: {
@@ -82,7 +82,7 @@ export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = 
     labelFallback: "Widget Template", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code", // new icon?
-    sortOrder: 99,
+    sortOrder: 6,
     mediaType: MediaType.WidgetTemplate
   },
   [MediaType.Meta]: {

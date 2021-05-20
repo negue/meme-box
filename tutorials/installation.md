@@ -13,8 +13,10 @@ Start the downloaded Executable File
 
 |Config|Default|Explanation|
 |--|--|--|
-|`--port=`|`6363`|The Server Port|
+|`--port=`|`6363` or the Setting inside Meme-Box|The Server Port|
 |`--config=`| see `Default Config Path` |`Your path to folder/meme-box config`|
+|`--media=`|the default Path you select in Meme-Box|`Your path to your media collection folder`|
+|`--open=`|false|`headless mode`: to open the browser on startup |
 
 ### Default Config Path
 

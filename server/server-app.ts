@@ -11,12 +11,11 @@ import https from 'https';
 import currentVersionJson from '@memebox/version';
 import {STATE_OBJECT} from "./rest-endpoints/state";
 import {Lazy} from "@gewd/markdown/utils";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 // This file creates the "shared" server logic between headless / electron
 
 // TODO use config values?
-
-const portArgument = process.argv.find(arg => arg.includes('--port'));
 
 const CONFIG_IS_LOADED$ = PersistenceInstance.configLoaded$.pipe(
   take(1)
@@ -25,17 +24,13 @@ const CONFIG_IS_LOADED$ = PersistenceInstance.configLoaded$.pipe(
 export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value => {
   const SAVED_PORT = PersistenceInstance.getConfig()?.customPort;
 
-  const PORT_ARGUMENT_OPTION = portArgument
-    ? +portArgument.replace('--port=', '')
-    : null;
-
-  if (PORT_ARGUMENT_OPTION) {
-    LOGGER.info(`Using the --port Argument: ${PORT_ARGUMENT_OPTION}`);
+  if (CLI_OPTIONS.PORT) {
+    LOGGER.info(`Using the --port Argument: ${CLI_OPTIONS.PORT}`);
   } else if (!SAVED_PORT) {
     LOGGER.info(`Using the default Port: ${DEFAULT_PORT}`);
   }
 
-  const NEW_PORT = PORT_ARGUMENT_OPTION ?? SAVED_PORT ?? DEFAULT_PORT;
+  const NEW_PORT = CLI_OPTIONS.PORT ?? SAVED_PORT ?? DEFAULT_PORT;
 
   const expressServer = createExpress(NEW_PORT);
   // Also mount the app here

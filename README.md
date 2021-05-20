@@ -14,7 +14,7 @@
 
 [Nightly Builds](https://github.com/negue/meme-box-nightly/releases)
 
-A complete management app for [`image / audio / video / iframe / custom HTML`](/tutorials/type_overview.md) "clips" to be used inside OBS.
+A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "medias" to be used inside OBS.
 
 |**Media Setup Example + Mobile View**|**Setup a Twitch-Trigger**|
 |--|--|
@@ -22,14 +22,15 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 
 ## Working Features
 
-* [x] [Custom CSS per Clip / Screen][URL_ADVANCED_SETTINGS]
-* [x] [Custom Position per Clip / Screen][URL_ADVANCED_SETTINGS]
+* [x] [Custom CSS per Media / Screen][URL_ADVANCED_SETTINGS]
+* [x] [Custom Position per Media / Screen][URL_ADVANCED_SETTINGS]
 * [x] [Custom Visibility States: Play, Toggle and Static][URL_ADVANCED_SETTINGS]
-* [x] Trigger clips by twitch messages / bits / raids
-* [x] Trigger clips by timers
-* [x] Trigger clips by mobile view (to use your phone / tablet)
-* [x] Trigger clips by [`streamdeck-plugin`](./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
-* [x] [`Trigger multiple / random clips`][URL_META_CLIPS]
+* [x] Trigger Media by twitch messages / bits / raids
+* [x] Trigger Media by timers
+* [x] Trigger Media by mobile view (to use your phone / tablet)
+* [x] Trigger Media by [`streamdeck-plugin`](./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
+* [x] [`Trigger multiple / random Media`][URL_META_CLIPS]
+* [x] Create / use dynamic Widgets that can react on Twitch Events
 
 -----
 
@@ -46,7 +47,7 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 `3. Advanced`:
 
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
-- [`Screen / Clip Settings`][URL_ADVANCED_SETTINGS]
+- [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 
 [URL_META_CLIPS]: ./tutorials/meta_clips.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
