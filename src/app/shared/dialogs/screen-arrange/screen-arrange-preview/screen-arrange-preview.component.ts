@@ -8,11 +8,11 @@ import {
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import { Clip, CombinedClip, PositionEnum, Screen } from '@memebox/contracts';
-import { DragResizeMediaComponent } from '../drag-resize-media/drag-resize-media.component';
-import { AppService } from '../../../../state/app.service';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { AutoScaleComponent } from '@gewd/components/auto-scale';
+import {Clip, CombinedClip, PositionEnum, Screen} from '@memebox/contracts';
+import {DragResizeMediaComponent} from '../drag-resize-media/drag-resize-media.component';
+import {AppService} from '../../../../state/app.service';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {AutoScaleComponent} from '@gewd/components/auto-scale';
 
 enum GlobalArrangeOptions {
   Drag,
@@ -168,7 +168,18 @@ export class ScreenArrangePreviewComponent {
     if (this.currentSelectedClip == null) {
       return;
     }
+
+    const oldPosition = this.currentSelectedClip.clipSetting.position;
+
     this.currentSelectedClip.clipSetting.position = newPosition;
+
+    if (oldPosition === PositionEnum.FullScreen) {
+      if (!this.currentSelectedClip.clipSetting.height || !this.currentSelectedClip.clipSetting.width) {
+        this.currentSelectedClip.clipSetting.height = '30%';
+        this.currentSelectedClip.clipSetting.width = '40%';
+      }
+    }
+
     this.userChangedElement();
     this.triggerChangedetection();
   }
