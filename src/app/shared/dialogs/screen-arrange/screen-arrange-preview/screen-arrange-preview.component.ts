@@ -4,6 +4,8 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
   TrackByFunction,
   ViewChild
@@ -27,7 +29,7 @@ enum GlobalArrangeOptions {
   styleUrls: ['./screen-arrange-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScreenArrangePreviewComponent {
+export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   @Input()
   set currentSelectedClip(val: CombinedClip | null) {
     this._currentSelectedClip = val;
@@ -253,5 +255,13 @@ export class ScreenArrangePreviewComponent {
     if (this.previouslyClickedComponent != null) {
       this.previouslyClickedComponent.showResizeBorder = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    document.body.style.overflow = '';
+  }
+
+  ngOnInit(): void {
+    document.body.style.overflow = 'hidden';
   }
 }
