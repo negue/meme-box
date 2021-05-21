@@ -56,8 +56,17 @@
  * Zone JS is required by default for Angular itself.
  */
 import 'zone.js/dist/zone'; // Included with Angular CLI.
-
-
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+/***************************************************************************************************
+ * TYPES
+ */
+import type {electronAPI, electronAPIKey} from '../preload'
+
+declare global {
+  interface Window {
+    [electronAPIKey]: typeof electronAPI
+  }
+}
+

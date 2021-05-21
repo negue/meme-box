@@ -1,5 +1,5 @@
-import { GroupByMediaTypePipe, MediGroup } from './group-by-media-type.pipe';
-import { Clip, MediaType } from '@memebox/contracts';
+import {GroupByMediaTypePipe, MediGroup} from './group-by-media-type.pipe';
+import {Clip, MediaType} from '@memebox/contracts';
 
 describe('GroupByMediaTypePipe', () => {
   it('outputs to correct groups', () => {
@@ -22,11 +22,11 @@ describe('GroupByMediaTypePipe', () => {
 
     expect(pipe.transform(clips as Clip[])).toEqual([
       {
-        groupName: 'Image',
+        groupName: 'mediaType.image',
         medias: [clips[2]]
       },
       {
-        groupName: 'Audio',
+        groupName: 'mediaType.audio',
         medias: [clips[0], clips[1]]
       }
     ] as MediGroup[]);
@@ -52,7 +52,7 @@ describe('GroupByMediaTypePipe', () => {
 
     expect(pipe.transform(clips as Clip[])).toEqual([
       {
-        groupName: 'Unknown type',
+        groupName: 'invalid',
         medias: clips
       }
     ] as MediGroup[]);

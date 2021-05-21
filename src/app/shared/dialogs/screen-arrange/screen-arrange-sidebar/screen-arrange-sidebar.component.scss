@@ -13,10 +13,20 @@ h3 {
 }
 
 .sidebar__title {
-  height: 5rem;
-
   display: flex;
   flex-direction: column;
+  margin-top: 1rem;
+}
+
+.mat-selection-list {
+  flex: 1;
+  overflow: hidden;
+
+  .card-settings-icon {
+    position: relative;
+    top: -8px;
+    order: -1;
+  }
 }
 
 .sidebar__items {
@@ -62,4 +72,16 @@ mat-card-title {
   overflow-y: hidden;
   height: 20px;
   word-break: break-all;
+}
+
+.clip-avatar {
+  position: relative;
+
+  .clip-modified-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+  }
 }

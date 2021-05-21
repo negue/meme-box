@@ -51,7 +51,7 @@ export class AppService {
   private offlineMode = true;
 
   constructor(private appStore: AppStore,
-              private http: HttpClient,
+              public http: HttpClient,  // todo extract http client and api_url base including the offline checks
               private snackbar: SnackbarService,
               private websocketService: WebsocketService) {
   }
@@ -60,6 +60,7 @@ export class AppService {
     this.appStore.setLoading(true);
 
     this.http.get(API_BASE).pipe(
+      take(1)
       // delay(5000)
     ).subscribe(
       value => {
@@ -576,7 +577,7 @@ export class AppService {
     }
   }
 
-  private tryHttpPostReturnString(url: string, data: unknown, offlineFallback: string){
+  public tryHttpPostReturnString(url: string, data: unknown, offlineFallback: string){
     if (this.offlineMode) {
       return Promise.resolve(offlineFallback);
     }
@@ -586,7 +587,7 @@ export class AppService {
     }).toPromise();
   }
 
-  private tryHttpPost<TReturn>(url: string, data: unknown, offlineFallback: TReturn): Promise<TReturn> {
+  public tryHttpPost<TReturn>(url: string, data: unknown, offlineFallback: TReturn): Promise<TReturn> {
     if (this.offlineMode) {
       return Promise.resolve(offlineFallback);
     }
@@ -594,7 +595,7 @@ export class AppService {
     return this.http.post<TReturn>(url, data).toPromise();
   }
 
-  private tryHttpPut(url: string, postData: unknown){
+  public tryHttpPut(url: string, postData: unknown){
     if (this.offlineMode) {
       return Promise.resolve();
     }
@@ -602,7 +603,7 @@ export class AppService {
     return this.http.put<unknown>(url, postData).toPromise();
   }
 
-  private tryHttpDelete(url: string){
+  public tryHttpDelete(url: string){
     if (this.offlineMode) {
       return Promise.resolve();
     }

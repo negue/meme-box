@@ -8,22 +8,41 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Clip, FileInfo, MEDIA_TYPE_INFORMATION, MediaType, MetaTriggerTypes, Tag } from "@memebox/contracts";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { AppService } from "../../../state/app.service";
-import { AppQueries } from "../../../state/app.queries";
-import { distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil } from "rxjs/operators";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { DialogService } from "../dialog.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {
+  Clip,
+  FileInfo,
+  MEDIA_TYPE_INFORMATION,
+  MEDIA_TYPE_INFORMATION_ARRAY,
+  MediaType,
+  MetaTriggerTypes,
+  Tag
+} from "@memebox/contracts";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {AppService} from "../../../state/app.service";
+import {AppQueries} from "../../../state/app.queries";
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  pairwise,
+  shareReplay,
+  startWith,
+  take,
+  takeUntil
+} from "rxjs/operators";
+import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {DialogService} from "../dialog.service";
 import {
   applyDynamicIframeContentToClipData,
   clipDataToDynamicIframeContent,
   DynamicIframeContent
 } from "@memebox/utils";
+import {jsCodemirror} from "../../../core/codemirror.extensions";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -38,7 +57,9 @@ const INITIAL_CLIP: Partial<Clip> = {
   metaDelay: META_DELAY_DEFAULT,
   metaType: MetaTriggerTypes.Random,
 
-  showOnMobile: true
+  showOnMobile: true,
+
+  fromTemplate: ""
 };
 
 interface MediaTypeButton {
@@ -47,8 +68,10 @@ interface MediaTypeButton {
   icon: string;
 }
 
-const MEDIA_TYPES_WITHOUT_PATH = [MediaType.HTML, MediaType.Meta];
-const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.HTML, MediaType.Picture, MediaType.IFrame];
+// TODO maybe use "TYPES WITH PATH"
+const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta, MediaType.Script];
+const MEDIA_TYPES_WITHOUT_PLAYTIME = [MediaType.Meta, MediaType.WidgetTemplate, MediaType.Script];
+const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 @Component({
   selector: "app-media-edit",
@@ -63,12 +86,14 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     type: 0,
     volumeSetting: 0,
     clipLength: 0,
-    playLength: 0,
+    playLength: [0, Validators.min(0)],
     path: "",
     previewUrl: "",
 
     metaType: 0,
     metaDelay: 0,
+
+    fromTemplate: ""
   });
 
   currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
@@ -82,15 +107,18 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   );
 
+  public jsExtensions = jsCodemirror;
   MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
+  MEDIA_TYPES_WITHOUT_PLAYTIME = MEDIA_TYPES_WITHOUT_PLAYTIME;
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
-  mediaTypeList: MediaTypeButton[] = Object.entries(MEDIA_TYPE_INFORMATION)
-    .map(([mediaType, value]) => {
+
+  mediaTypeList: MediaTypeButton[] = MEDIA_TYPE_INFORMATION_ARRAY
+    .map((value) => {
       return {
         icon: value.icon,
-        name: value.label,
-        type: +mediaType
+        name: value.translationKey,
+        type: +value.mediaType
       }
     });
 
@@ -108,7 +136,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   currentTags$ = new BehaviorSubject<Tag[]>([]);
 
   // Current custom HTML Content?
-  currentHtml$ = new BehaviorSubject<DynamicIframeContent>(null);
+  currentHtmlConfig: DynamicIframeContent = null;
+  currentHtmlToPreview$ = new BehaviorSubject<DynamicIframeContent>(null);
+  triggerHtmlRefresh$ = new Subject();
 
   // Get all clips that have the assigned tags
   taggedClips$ = combineLatest([
@@ -126,7 +156,16 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     })
   )
 
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  widgetTemplates$ = this.appQuery.clipList$.pipe(
+    map(( allMedias) => {
+      return allMedias.filter(c => c.type === MediaType.WidgetTemplate);
+    }),
+    shareReplay(1)
+  );
+
+
+separatorKeysCodes: number[] = [ENTER, COMMA];
   tagFormCtrl = new FormControl();  // needed in form?!
 
   // current "filtered" tags
@@ -155,7 +194,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
+    this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
+    this.executeHTMLRefresh();
     this.showOnMobile = this.data.showOnMobile;
 
     this.currentMediaType$.next(this.data.type);
@@ -199,7 +239,9 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
         if (MEDIA_TYPES_WITHOUT_PATH.includes(prev)) {
           console.info('adding validators');
-          this.form.controls['path'].setValidators(Validators.required);
+          this.form.controls['path'].setValidators([
+            Validators.required,
+          ]);
         }
 
         if (MEDIA_TYPES_WITHOUT_PATH.includes(next)){
@@ -223,6 +265,18 @@ export class MediaEditComponent implements OnInit, OnDestroy {
     ]).pipe(
       map(([tagInputValue, allTags, currentTags]) => this._filter(tagInputValue, allTags, currentTags))
     );
+
+    this.triggerHtmlRefresh$.pipe(
+      debounceTime(1000),
+      takeUntil(this._destroy$)
+    ).subscribe( () => {
+      this.executeHTMLRefresh();
+    });
+
+
+    if (this.data.fromTemplate) {
+      this.onTemplateChanged(this.data.fromTemplate);
+    }
   }
 
   async save() {
@@ -269,12 +323,16 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   }
 
   onChange($event: FileInfo) {
-    console.info({ $event });
-
     this.form.patchValue({
       path: $event.apiUrl,
       name: $event.fileName
     });
+
+    this.markForCheck();
+  }
+
+  markForCheck() {
+    this.cd.markForCheck();
   }
 
   updateMediaType(value: MediaType): void {
@@ -354,18 +412,53 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   }
 
   // endregion
+
   async editHTML() {
     const dynamicIframeContent = clipDataToDynamicIframeContent(this.data);
 
     console.info({data: this.data, iframe: dynamicIframeContent});
 
-    const dialogResult = await this.dialogService.showDynamicIframeEdit(dynamicIframeContent);
+    const dialogResult = await this.dialogService.showWidgetEdit({
+      mediaId: this.data.id,
+      name: this.data.name,
+      iframePayload: dynamicIframeContent
+    });
 
     if (dialogResult) {
       applyDynamicIframeContentToClipData(dialogResult, this.data);
 
-      this.currentHtml$.next(clipDataToDynamicIframeContent(this.data));
+      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
+      this.executeHTMLRefresh();
       this.cd.detectChanges();
     }
+  }
+
+  triggerHTMLRefresh() {
+    this.triggerHtmlRefresh$.next();
+  }
+
+  executeHTMLRefresh () {
+    const currentExtendedValues = this.data.extended;
+
+    const updatedHtmlDataset: DynamicIframeContent  = {
+      ...this.currentHtmlConfig,
+      variables: currentExtendedValues
+    };
+
+    this.currentHtmlToPreview$.next(updatedHtmlDataset);
+  }
+
+  async onTemplateChanged(mediaId: string) {
+    console.info({mediaId});
+
+    const templates = await this.widgetTemplates$.pipe(
+      take(1)
+    ).toPromise();
+
+    const template = templates.find(t => t.id === mediaId);
+
+    this.currentHtmlConfig = clipDataToDynamicIframeContent(template);
+    this.executeHTMLRefresh();
+    this.cd.detectChanges();
   }
 }

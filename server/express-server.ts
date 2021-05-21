@@ -12,9 +12,6 @@ import {
   FILES_OPEN_ENDPOINT,
   LOG_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
-  SCREEN_CLIPS_ID_ENDPOINT,
-  SCREEN_ENDPOINT,
-  SCREEN_ID_ENDPOINT,
   STATE_ENDPOINT,
   TAGS_ENDPOINT,
   TIMED_ENDPOINT,
@@ -27,8 +24,8 @@ import {PersistenceInstance} from "./persistence";
 // @ts-ignore
 import open from 'open';
 import {TAG_ROUTES} from "./rest-endpoints/tags";
-import {getFiles, mapFileInformations} from "./file.utilts";
-import {allowedFileUrl, clipValidations, screenValidations, validOrLeave} from "./validations";
+import {getAppRootPath, getFiles, isInElectron, mapFileInformations} from "./file.utilts";
+import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
@@ -44,16 +41,13 @@ const {  normalize, join } = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const versions = process.versions;
-
-const isInElectron = !!versions['electron'];
 
 const app: Express = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const rootPath = isInElectron ? join(__dirname, '/../../dist') : 'dist';
+const rootPath = getAppRootPath();
 
 app.use(express.static(rootPath));
 
@@ -115,46 +109,6 @@ app.use(STATE_ENDPOINT, STATE_ROUTES);
 /**
  * OBS-Specific API
  */
-
-
-app.get(SCREEN_ENDPOINT, (req,res) => {
-  res.send(PersistenceInstance.listScreens());
-});
-
-
-// Post = New
-app.post(SCREEN_ENDPOINT, screenValidations, validOrLeave, (req, res) => {
-  const newScreenId = PersistenceInstance.addScreen(req.body);
-
-  res.send({
-    ok: true,
-    id: newScreenId
-  });
-});
-
-// Put = Update
-app.put(SCREEN_ID_ENDPOINT, (req, res) => {
-
-  res.send(PersistenceInstance.updateScreen(req.params['screenId'], req.body));
-});
-// Delete
-app.delete(SCREEN_ID_ENDPOINT, (req, res) => {
-
-  res.send(PersistenceInstance.deleteScreen(req.params['screenId']));
-});
-
-// Put = Update
-app.put(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
-  const {screenId, clipId} = req.params;
-
-  res.send(PersistenceInstance.updateScreenClip(screenId, clipId, req.body));
-});
-// Delete
-app.delete(SCREEN_CLIPS_ID_ENDPOINT, (req, res) => {
-  const {screenId, clipId} = req.params;
-
-  res.send(PersistenceInstance.deleteScreenClip(screenId, clipId));
-});
 
 app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
 
@@ -268,7 +222,7 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 
 
 
-export function createExpress(port) {
+export function createExpress(port: number) {
   app.set('port', port);
 
   // app.get('port')

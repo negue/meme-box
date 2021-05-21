@@ -1,5 +1,6 @@
 import {Twitch, TwitchEventTypes} from "@memebox/contracts";
 import * as tmi from "tmi.js";
+import {AllTwitchEvents} from "./twitch.connector.types";
 import { SubMethods, Userstate } from 'tmi.js';
 
 declare module 'tmi.js' {
@@ -8,48 +9,64 @@ declare module 'tmi.js' {
   }
 }
 
-export function* getCommandsOfMessage(
+export function* getCommandsOfTwitchEvent(
   twitchSettingsList: Twitch[],
-  message: string,
-  event: TwitchEventTypes,
-  eventOptions?: TwitchEventOptions
+  twitchEvent: AllTwitchEvents
 ): IterableIterator<Twitch> {
-  this.log({
-    message,
-    event,
-    eventOptions
-  });
+  const onlyActiveConfigs = twitchSettingsList.filter(s => s.active);
 
-  if (!message && !eventOptions) {
-    return null;
+  switch (twitchEvent.type) {
+    case TwitchEventTypes.message: {
+      yield* returnAllCommandsByMessage(
+        onlyActiveConfigs,
+        twitchEvent.message
+      );
+
+    } break;
+    case TwitchEventTypes.bits: {
+      for (const twitchSetting of onlyActiveConfigs) {
+        if (twitchEvent.type === twitchSetting.event
+          && checkEventInRange(twitchEvent.payload.bits, twitchSetting)) {
+          yield twitchSetting;
+        }
+      }
+
+      yield* returnAllCommandsByMessage(
+        onlyActiveConfigs,
+        twitchEvent.message
+      );
+
+      break;
+    }
+    case TwitchEventTypes.raid: {
+      for (const twitchSetting of onlyActiveConfigs) {
+        if (twitchEvent.type === twitchSetting.event
+          && checkEventInRange(twitchEvent.payload.viewers, twitchSetting)) {
+          yield twitchSetting;
+        }
+      }
+
+      break;
+    }
+
   }
+}
+
+function checkEventInRange(amount: number, twitchSetting: Twitch) {
+  const minAmount = twitchSetting.minAmount || 0;
+  const maxAmount = twitchSetting.maxAmount || Infinity;
+
+  return amount >= minAmount && amount <= maxAmount;
+}
+
+function* returnAllCommandsByMessage (
+  twitchSettingsList: Twitch[],
+  message: string
+) : IterableIterator<Twitch> {
 
   let foundCommand: Twitch = null;
   for (const twitchSetting of twitchSettingsList) {
-    if (!twitchSetting.active) {
-      continue;
-    }
-
-    // raid / bits
-    if (eventOptions && event === twitchSetting.event) {
-      const minAmount = twitchSetting.minAmount || 0;
-      const maxAmount = twitchSetting.maxAmount || Infinity;
-
-      Object.keys(eventOptions).map((key) => {
-        if(twitchSetting.response) {
-          twitchSetting.response = twitchSetting.response.replace(`{{${key}}}`, eventOptions[key])
-        }
-      });
-
-      if (eventOptions.amount && (eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount)) {
-        yield twitchSetting;
-      }else if(eventOptions.amount && !(eventOptions.amount >= minAmount && eventOptions.amount <= maxAmount)){
-        continue;
-      }
-
-      yield twitchSetting;
-    }
-
+    // check if the Twitch Event Config is triggered by "message"
     if (twitchSetting.event !== TwitchEventTypes.message) {
       continue;
     }

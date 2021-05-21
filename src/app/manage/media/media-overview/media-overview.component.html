@@ -2,7 +2,7 @@
             [items]="filterItems$ | async"
             (selected)="filteredItems$.next($event)"></app-filter>
 
-<div *ngIf="mediaList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
+<div class="mo__content-container" *ngIf="mediaList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
   <app-card-overview *ngSwitchCase="OVERVIEW_MODES.pro">
     <app-overview-item *ngIf="showGettingStarted$ | async ; else hasData ">
       <app-getting-started></app-getting-started>
@@ -59,8 +59,10 @@
     </div>
 
     <div *ngFor="let mediGroup of mediaList | groupByMediaType" class="mo__casual-overview__group">
-      <div class="mo__casual-overview__group__title mat-headline">
-        {{mediGroup.groupName}}
+      <div class="mo__casual-overview__group__title mat-headline"  >
+        <ng-container *transloco="let t; read: '$common$' ">
+          {{t(mediGroup.groupName)}}
+        </ng-container>
       </div>
 
       <div class="mo__casual-overview__group__medias">

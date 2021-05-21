@@ -1,11 +1,11 @@
-import { Component, OnInit, TrackByFunction } from '@angular/core';
-import { ENDPOINTS, HasId, TimedClip, Twitch, TwitchTriggerCommand } from "@memebox/contracts";
-import { Observable } from "rxjs";
-import { AppQueries } from "../../../state/app.queries";
-import { API_BASE, AppService } from "../../../state/app.service";
-import { DialogService } from "../../../shared/dialogs/dialog.service";
-import { HttpClient } from "@angular/common/http";
-import { map } from "rxjs/operators";
+import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {ENDPOINTS, HasId, TimedClip, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
+import {Observable} from "rxjs";
+import {AppQueries} from "../../../state/app.queries";
+import {API_BASE, AppService} from "../../../state/app.service";
+import {DialogService} from "../../../shared/dialogs/dialog.service";
+import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/operators";
 import orderBy from 'lodash/orderBy';
 
 @Component({
@@ -69,9 +69,7 @@ export class EventsOverviewComponent implements OnInit {
     }
 
     const triggerObj: TwitchTriggerCommand = {
-      //event: item.event,
       command: item,
-      message: item.contains,
       tags: {
         badges
       }

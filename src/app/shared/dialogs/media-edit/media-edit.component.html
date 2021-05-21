@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].label +': "' + form.value.name + '"'}}
+  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
 
   <mat-checkbox class="mobile-checkbox"
                 [checked]="showOnMobile"
@@ -22,7 +22,7 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="action-buttons">
+    <div class="action-buttons" *transloco="let t; read: '$common$'">
       <button *ngFor="let button of mediaTypeList"
               mat-raised-button
 
@@ -31,7 +31,7 @@
 
       >
         <mat-icon [svgIcon]="button.icon"></mat-icon>
-        {{ button.name }}
+        {{ t(button.name) }}
       </button>
     </div>
 
@@ -52,7 +52,7 @@
                matInput
                [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
                [placeholder]="form.value.type !== MediaType.IFrame ? 'File' : 'URL'"
-               type="text"
+               type="text" (keyup)="markForCheck()"
         />
         <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
           <mat-select (valueChange)="onChange($event)"
@@ -69,8 +69,9 @@
         </mat-error>
       </mat-form-field>
     </div>
+
     <div class="form-field-row"
-         *ngIf="form.value.type !== MediaType.Meta">
+         *ngIf="!MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
       <mat-form-field>
         <input [placeholder]="
                  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)
@@ -80,7 +81,7 @@
                [required]="MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)"
                autocomplete="off"
                formControlName="playLength"
-               matInput
+               matInput min="0"
                type="number"
         />
         <span matSuffix>ms</span>
@@ -186,10 +187,25 @@
         </ng-container>
       </mat-select>
     </mat-form-field>
+
+    <ng-container *ngIf="form.value.type === MediaType.Widget">
+      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+        <div *ngFor="let variable of currentHtml.variablesConfig">
+          <app-dynamic-variable-input [variableType]="variable.type" [label]="variable.name"
+                                      [value]="data.extended[variable.name]"
+                                      (valueChanged)="data.extended[variable.name] = $event; triggerHTMLRefresh()">
+
+          </app-dynamic-variable-input>
+        </div>
+      </ng-container>
+    </ng-container>
   </form>
 
-  <div class="column" [ngSwitch]="form.value.type"
-       [class.custom-html-preview]="form.value.type === MediaType.HTML">
+  <!-- Preview of a Media -->
+  <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
+       [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
+       [class.script]="MediaType.Script === form.value.type"
+  >
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
       <h3>Assigned Clips by Tags</h3>
@@ -199,16 +215,72 @@
       </app-compact-clip-card>
     </div>
 
-    <div *ngSwitchCase="MediaType.HTML" class="custom-html-holder">
-      <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
-      <app-dynamic-iframe *ngIf="currentHtml$ | async as currentHtml"
-                          [content]="currentHtml">
+    <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
+      <mat-select formControlName="fromTemplate" #fromTemplateSelect
+                  (valueChange)="onTemplateChanged($event)">
+        <mat-option value="">No Template</mat-option>
+        <mat-option *ngFor="let template of widgetTemplates$ | async"
+            [value]="template.id">{{template.name}}</mat-option>
+      </mat-select>
+
+      <button mat-raised-button color="primary" (click)="editHTML()"
+              *ngIf="fromTemplateSelect.value === ''">
+        Edit HTML
+      </button>
+      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+
+      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
+                          [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
+
+
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Widget State
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
+      </mat-expansion-panel>
+      </ng-container>
     </div>
+
+
+    <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
+      <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
+      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+
+
+      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
+                          [content]="currentHtml" class="preview-box">
+
+      </app-dynamic-iframe>
+
+      <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Widget State
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
+      </mat-expansion-panel>
+
+</ng-container>
+    </div>
+
+    <gewd-codemirror *ngSwitchCase="MediaType.Script"
+                     [value]="data.extended['script'] || ''"
+                     [codemirrorExtensions]="jsExtensions"
+                     (changed)="data.extended['script'] = $event;">
+
+    </gewd-codemirror>
 
     <!-- All others => AppClipType -->
     <gewd-auto-scale width="500" height="500"
+                     class="preview-box"
                      *ngSwitchDefault>
       <app-clip-preview [clip]="form.value"
                         [useOldPathEndpoint]="true">
@@ -219,9 +291,14 @@
   </div>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    ID: {{data.id}}
+  </div>
+  <div class="column" align="end" >
   <button mat-button mat-dialog-close>Cancel</button>
   <button (click)="save()"
           color="accent"
           mat-raised-button>{{ data?.id ? 'Update' : 'Add' }}</button>
+  </div>
 </mat-dialog-actions>

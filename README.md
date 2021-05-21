@@ -14,7 +14,7 @@
 
 [Nightly Builds](https://github.com/negue/meme-box-nightly/releases)
 
-A complete management app for [`image / audio / video / iframe / custom HTML`](/tutorials/type_overview.md) "clips" to be used inside OBS.
+A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "medias" to be used inside OBS.
 
 |**Media Setup Example + Mobile View**|**Setup a Twitch-Trigger**|
 |--|--|
@@ -22,14 +22,15 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 
 ## Working Features
 
-* [x] [Custom CSS per Clip / Screen][URL_ADVANCED_SETTINGS]
-* [x] [Custom Position per Clip / Screen][URL_ADVANCED_SETTINGS]
+* [x] [Custom CSS per Media / Screen][URL_ADVANCED_SETTINGS]
+* [x] [Custom Position per Media / Screen][URL_ADVANCED_SETTINGS]
 * [x] [Custom Visibility States: Play, Toggle and Static][URL_ADVANCED_SETTINGS]
-* [x] Trigger clips by twitch messages / bits / raids
-* [x] Trigger clips by timers
-* [x] Trigger clips by mobile view (to use your phone / tablet)
-* [x] Trigger clips by [`streamdeck-plugin`](./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
-* [x] [`Trigger multiple / random clips`][URL_META_CLIPS]
+* [x] Trigger Media by twitch messages / bits / raids
+* [x] Trigger Media by timers
+* [x] Trigger Media by mobile view (to use your phone / tablet)
+* [x] Trigger Media by [`streamdeck-plugin`](./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
+* [x] [`Trigger multiple / random Media`][URL_META_CLIPS]
+* [x] Create / use dynamic Widgets that can react on Twitch Events
 
 -----
 
@@ -46,7 +47,7 @@ A complete management app for [`image / audio / video / iframe / custom HTML`](/
 `3. Advanced`:
 
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
-- [`Screen / Clip Settings`][URL_ADVANCED_SETTINGS]
+- [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 
 [URL_META_CLIPS]: ./tutorials/meta_clips.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
@@ -57,15 +58,41 @@ ___
 
 ___
 
-## Roadmap
+## Roadmap 
 
-* [ ] Change media options by triggered variables (e.g. different style, or something)
-* [ ] "Media Type": `Scripts` with this more advanced features could be realized 
+### 2021.3.0
+* [x] Widgets (previously `HTML`) 
+  * [x] API for Twitch or Events that its shown and so on
+  * [x] Templates
+  * [x] Widget-Variables
+  * [x] Import / Export Widgets
+  * [x] Persistence of the Widget State across Screens
+* [x] Custom Port Settings, default Port now on 6363
+* [x] Electron can be hidden into the Tray
+* [x] "Media Type": `Scripts` for more advanced features
+  * [ ] Wait once a triggered clip (inside the script) is done to trigger other stuff
+  * [ ] Use custom variables like in the Widget-Variables for easier configs
+* [ ] Overview of local media files not existing anymore
+* [ ] Overhaul of the Media Creation Dialog(s) 
+
+### 2021.4.0
 * [ ] Labels on or around the Media, each with their own Position / Animation
+  * [ ] Changeable by Trigger Variables
+  * [ ] Can be placed like in the Arrange View
+* [ ] OBS Websockets
+  * [ ] "Media Type": `OBS Command`
+  * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
+
+### Future, if you want to help open a PR :)
+* [ ] Change media options by triggered variables (e.g. different style, or something)
+* [ ] Stats per commands / media / or something last cheerer and so on 
 * [ ] more to be added :)
 
-## Based on this Template:
-https://github.com/maximegris/angular-electron
+## How to help / contribute?
+* Improve Docs / Translations
+* Find bugs
+* Help fix bugs / improve features
+* Star it :)
 
 ## Contributors ✨
 

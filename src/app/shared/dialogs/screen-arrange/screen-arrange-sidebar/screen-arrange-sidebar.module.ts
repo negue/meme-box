@@ -10,6 +10,7 @@ import { ClipTypeModule } from '../../../components/clip-type/clip-type.module';
 import { PipesModule } from '../../../../core/pipes/pipes.module';
 import { MatRippleModule } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatListModule } from '@angular/material/list';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ClipTypeModule,
     PipesModule,
     MatRippleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatListModule
   ]
 })
 export class ScreenArrangeSidebarModule {

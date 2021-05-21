@@ -54,7 +54,10 @@
       </div>
 
       <div *ngIf="info.type === 4 && false">
-        <app-dynamic-iframe [content]="info | clipToIframe"></app-dynamic-iframe>
+        <app-dynamic-iframe [content]="info | clipToIframe"
+                            [mediaId]="info.id">
+
+        </app-dynamic-iframe>
       </div>
     </div>
 

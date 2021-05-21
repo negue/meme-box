@@ -4,6 +4,7 @@ import {FilterComponent} from './filter.component';
 import {MatIconModule} from "@angular/material/icon";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatListModule} from "@angular/material/list";
+import {TranslocoModule} from "@ngneat/transloco";
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import {MatListModule} from "@angular/material/list";
     CommonModule,
     MatIconModule,
     MatChipsModule,
-    MatListModule
+    MatListModule,
+    TranslocoModule
   ]
 })
 export class FilterModule { }

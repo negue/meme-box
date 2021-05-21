@@ -39,6 +39,21 @@
         </div>
       </div>
 
+      <div *ngIf="clip.type === MediaType.Script" class="mediaList__scriptContainer">
+        <div class="mediaList__header">
+          <app-clip-type [type]="clip.type"
+                         class="mediaList__icon"
+                         matListIcon>
+          </app-clip-type>
+
+          <span class="mediaList__header__name">{{clip.name}}</span>
+        </div>
+
+        <div class="script-image">
+          <mat-icon matListIcon svgIcon="code"></mat-icon>
+        </div>
+      </div>
+
       <div *ngIf="clip.type === MediaType.Video" class="mediaList__videoContainer">
         <div class="mediaList__header">
           <app-clip-type [type]="clip.type"
@@ -74,7 +89,7 @@
       </div>
 
 
-      <div *ngIf="clip.type === MediaType.HTML" class="iframe-container">
+      <div *ngIf="clip.type === MediaType.Widget" class="iframe-container">
         <div class="mediaList__header">
           <app-clip-type [type]="clip.type"
                          class="mediaList__icon"

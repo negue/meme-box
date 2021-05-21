@@ -1,12 +1,15 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { AppQueries } from '../../../state/app.queries';
 import { map, publishReplay, refCount, startWith } from 'rxjs/operators';
 import { CombinedClip, MediaType, Screen } from '@memebox/contracts';
 import { AppService } from '../../../state/app.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { ScreenArrangePreviewComponent } from './screen-arrange-preview/screen-arrange-preview.component';
+import { MatTabGroup } from '@angular/material/tabs';
+import { MatTabChangeEvent } from '@angular/material/tabs/tab-group';
+import { DialogService } from '../dialog.service';
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -29,7 +32,7 @@ export class ScreenArrangeComponent implements OnInit {
       for (const [key, entry] of Object.entries(screen.clips)) {
         const clip = clipMap[key];
 
-        if (clip.type === MediaType.Audio ) {
+        if (clip.type === MediaType.Audio) {
           continue;
         }
 
@@ -48,6 +51,9 @@ export class ScreenArrangeComponent implements OnInit {
   );
 
   selectedItems = new FormControl([]);
+  selectedIndex = 0;
+
+  unsavedChangesIds: string[] = [];
 
   public visibleItems$ = combineLatest([
     this.clipList$,
@@ -62,15 +68,22 @@ export class ScreenArrangeComponent implements OnInit {
 
       return clipList.filter(clip => selectedItems.includes(clip.clip.id));
     })
-  )
+  );
 
   public currentSelectedClip: CombinedClip | null = null;
 
   @ViewChild(ScreenArrangePreviewComponent)
   private _screenArrangePreviewComponent: ScreenArrangePreviewComponent;
 
+  @ViewChild(MatTabGroup)
+  private _tabGroup: MatTabGroup;
+
   constructor(private appQueries: AppQueries,
               private appService: AppService,
+              private _dialog: MatDialog,
+              private _dlgService: DialogService,
+              private _cd: ChangeDetectorRef,
+              public dialogRef: MatDialogRef<ScreenArrangeComponent>,
               @Inject(MAT_DIALOG_DATA) public screen: Screen) {
   }
 
@@ -78,7 +91,78 @@ export class ScreenArrangeComponent implements OnInit {
     this.appService.loadState();
   }
 
+  closeDlg(): void {
+    if (this.unsavedChangesIds.length === 0) {
+      this.dialogRef.close();
+      return;
+    }
+    this.clickedOutside();
+
+    const dlgCloseMode = this._showDiscardDlg();
+
+    dlgCloseMode.then(discardChanges => {
+      if (discardChanges) {
+        this.dialogRef.close();
+      }
+    });
+  }
+
+  tabSelectionChanged(tabChangeEvent: MatTabChangeEvent): void {
+    this.clickedOutside();
+    if (this.unsavedChangesIds.length === 0 || tabChangeEvent.index === 0) {
+      return;
+    }
+
+    this._tabGroup.selectedIndex = 0;
+    this._cd.detectChanges();
+
+    const dlgCloseMode = this._showDiscardDlg();
+
+    dlgCloseMode.then(discardChanges => {
+      if (discardChanges) {
+        this._tabGroup.selectedIndex = 1;
+        this.unsavedChangesIds = [];
+        this.appService.loadState(); // Reset the clips
+      }
+    });
+  }
+
   clickedOutside() {
     this._screenArrangePreviewComponent.clickedOutside();
   }
+
+  userChangedMedia(clipId: string) {
+    const currentIds = this.unsavedChangesIds;
+    if (!currentIds.includes(clipId)) {
+      // create a new object for CD
+      this.unsavedChangesIds = Array.from([...currentIds, clipId]);
+    }
+  }
+
+  userResetChangedOfMedia(clipIds: string | string[]) {
+    const ids = Array.isArray(clipIds) ? clipIds : [clipIds];
+
+    for (const clipId of ids) {
+      const index = this.unsavedChangesIds.findIndex(id => id === clipId);
+      const arrayCopy = Array.from(this.unsavedChangesIds);
+      arrayCopy.splice(index, 1);
+      this.unsavedChangesIds = arrayCopy;
+    }
+
+    // This is a workaround. Because the references seem to change, the sidebar selects another (the first) clip
+    // if you want to keep the users selection, comment out the following line.
+    this.clickedOutside();
+  }
+
+  private _showDiscardDlg(): Promise<boolean> {
+    const dlgCloseMode = this._dlgService.showConfirmationDialog({
+      title: 'Unsaved changes',
+      content: 'You still have unsaved changes. If you leave this tab they will be reset to their prior state.',
+      noButton: 'Keep',
+      yesButton: 'Discard',
+      overrideButtons: true
+    });
+    return dlgCloseMode;
+  }
+
 }

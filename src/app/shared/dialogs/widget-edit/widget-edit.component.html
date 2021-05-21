@@ -1,10 +1,37 @@
 <h2 mat-dialog-title class="title-wrapper">
-  Custom HTML
+  Edit Widget for "{{data.name}}"
+
+  <button mat-raised-button (click)="exportWidget()">Export</button>
+  <button mat-raised-button (click)="fileSelection.click()" >Import</button>
+  <input type="file" style="display: none"
+         #fileSelection accept="application/json"
+         (change)="onFileInputChanged($event)">
 </h2>
 <mat-dialog-content class="mat-typography">
 
 <div class="dialog-content">
   <mat-accordion [multi]="true">
+
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Custom Variables
+        </mat-panel-title>
+        <mat-panel-description>
+
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+        "Notes":
+        These are the variables to be used inside CSS / JS / HTML - for an easier way to change the Widget "config" or values or something.
+
+        <app-variables-config [variablesList]="variablesList"
+                              (onEditVariable)="markForCheck()"
+                              (onDeleteVariable)="deleteVariable($event)"
+                              (onAddNewVariable)="addNewVariable()">
+
+        </app-variables-config>
+    </mat-expansion-panel>
 
     <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>
@@ -15,19 +42,16 @@
 
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
+      <mat-form-field  floatLabel="always">
         <mat-label>HTML</mat-label>
 
-        <gewd-custom-form-control #customFormControlHtml
-                                  [value]="workingValue.html"
+        <gewd-custom-form-control [value]="workingValue.html"
         >
-          <gewd-prism-editor [value]="workingValue.html"
-                             language="html"
-                             [debounceTime]="450"
-                             [style.--editor-min-height.px]="200"
-                             (value$)="workingValue.html = $event; markForCheck()"
-                             (focussed$)="customFormControlHtml.focused = $event">
-          </gewd-prism-editor>
+          <gewd-codemirror [value]="workingValue.html"
+                           [codemirrorExtensions]="htmlExtensions"
+                           (changed)="workingValue.html = $event; markForCheck();">
+
+          </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
     </mat-expansion-panel>
@@ -40,19 +64,16 @@
           <div *ngIf="workingValue.css">CSS is used</div>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
+      <mat-form-field  floatLabel="always">
         <mat-label>CSS</mat-label>
 
-        <gewd-custom-form-control #customFormControlCss
-                                  [value]="workingValue.css">
-          <gewd-prism-editor [value]="workingValue.css"
+        <gewd-custom-form-control [value]="workingValue.css">
 
-                             language="css"
-                             [debounceTime]="450"
-                             [style.--editor-min-height.px]="200"
-                             (value$)="workingValue.css = $event; markForCheck()"
-                             (focussed$)="customFormControlCss.focused = $event">
-          </gewd-prism-editor>
+          <gewd-codemirror [value]="workingValue.css"
+                           [codemirrorExtensions]="cssExtensions"
+                           (changed)="workingValue.css = $event; markForCheck();">
+
+          </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
 
@@ -67,19 +88,21 @@
           <div *ngIf="workingValue.js">JS is used</div>
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <mat-form-field>
+
+      <mat-checkbox [checked]="workingValue.settings.subscribeToTwitchEvent"
+      (change)="workingValue.settings.subscribeToTwitchEvent = $event.checked">
+        Receive Twitch Events
+      </mat-checkbox>
+      <mat-form-field  floatLabel="always">
         <mat-label>JS</mat-label>
 
-        <gewd-custom-form-control #customFormControlJs
-                                  [value]="workingValue.js"
+        <gewd-custom-form-control [value]="workingValue.js"
         >
-          <gewd-prism-editor [value]="workingValue.js"
-                             language="js"
-                             [debounceTime]="450"
-                             [style.--editor-min-height.px]="200"
-                             (value$)="workingValue.js = $event; markForCheck()"
-                             (focussed$)="customFormControlJs.focused = $event">
-          </gewd-prism-editor>
+          <gewd-codemirror [value]="workingValue.js"
+                           [codemirrorExtensions]="jsExtensions"
+                           (changed)="workingValue.js = $event; markForCheck();">
+
+          </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
     </mat-expansion-panel>
@@ -131,7 +154,19 @@
 
 
 <div class="iframe-preview ">
-  <app-dynamic-iframe [content]="iframeContent$ | async"></app-dynamic-iframe>
+  <div class="iframe-preview-options">
+  <mat-checkbox [checked]="true" #enablePreviewRefresh>Enable Preview Auto-Refresh</mat-checkbox>
+  <button mat-raised-button *ngIf="!enablePreviewRefresh.checked"
+  (click)="markForCheck(true)">
+    Trigger preview
+  </button>
+  </div>
+
+  <app-dynamic-iframe [content]="iframeContent$ | async"
+                      [mediaId]="data.mediaId"
+                      class="preview-box">
+
+  </app-dynamic-iframe>
 </div>
 
 </div>
