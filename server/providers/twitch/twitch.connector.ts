@@ -154,6 +154,182 @@ export class TwitchConnector {
         channel, username, viewers
       }));
     });
+
+    //Reason is being returned as null even when one is provided when banning someone
+    this.tmiClient.on('ban', (channel: string, username:string, reason:string) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.ban,
+        {
+          username,
+          reason
+        });
+
+      this.log({
+        type: 'ban',
+        username,
+        reason
+      });
+
+      for (const command of foundCommandsIterator) {
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
+
+    this.tmiClient.on('anongiftpaidupgrade', (channel: string, username: string, userState: Userstate) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.anonGiftPaidUpgrade,
+        {
+          username,
+          ...userState
+        });
+
+      for (const command of foundCommandsIterator) {
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
+
+    this.tmiClient.on('giftpaidupgrade', (channel: string, username: string, sender: string, userState: Userstate) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.giftPaidUpgrade,
+        {
+          username,
+          sender,
+          ...userState
+        });
+
+      for (const command of foundCommandsIterator) {
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
+
+    this.tmiClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods : SubMethods) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.resub,
+        {
+          username,
+          months,
+          message,
+          userState,
+          methods,
+          ...{
+            'cumulative-months': userState['msg-param-cumulative-months'],
+            'should-share-streak': userState['msg-param-should-share-streak']
+          }
+        });
+
+      for (const command of foundCommandsIterator) {
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
+
+    this.tmiClient.on('subgift', (channel: string, username:string, months:number, recipient: string, methods : SubMethods, userState: Userstate) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.subGift,
+        {
+          username,
+          months,
+          recipient,
+          methods,
+          ...{
+            'display-name': userState['msg-param-recipient-display-name'],
+            'recipient-id': userState['msg-param-recipient-id'],
+            'user-name': userState['msg-param-recipient-user-name'],
+            'sender-count': userState['msg-param-sender-count']
+          }
+        });
+
+      for (const command of foundCommandsIterator) {
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
+
+    this.tmiClient.on('submysterygift', (channel: string, username: string, numberOfSubs: number, methods: SubMethods, userState: Userstate) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.subGift,
+        {
+          username,
+          numberOfSubs,
+          methods,
+          ...{
+            "sender-count": userState["msg-param-sender-count"]
+          }
+        });
+
+      for (const command of foundCommandsIterator) {
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
+
+    this.tmiClient.on('subscription', (channel: string, username: string, methods: SubMethods, message: string, userState: Userstate) => {
+      const foundCommandsIterator = getCommandsOfMessage(
+        this.twitchSettings,
+        '',
+        TwitchEventTypes.subscription,
+        {
+          username,
+          message,
+          methods,
+          ...userState
+        });
+
+      for (const command of foundCommandsIterator) {
+        // todo add the correct twitchevent-types!
+        this.handle({
+          // event: TwitchEventTypes.message,
+          message: command.response,
+          command,
+          tags: {}
+        });
+      }
+    });
   }
 
   handleCommandsRequest(tags: tmi.ChatUserstate, message: string): void {
