@@ -33,13 +33,17 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   const iframeDocument = iframe.contentDocument;
 
+  if (!iframeDocument) {
+    return;
+  }
+
   // clean up the previous external files
   const allExistingScripts = iframeDocument.body.getElementsByTagName('script');
 
   for (let scriptIndex = 0; scriptIndex < allExistingScripts.length; scriptIndex++) {
     const script = allExistingScripts.item(scriptIndex);
     console.info({script});
-    script.remove();
+    script?.remove();
   }
 
   const allExistingStyleLinks = iframeDocument.body.getElementsByTagName('link');
@@ -47,7 +51,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   for (let styleLinkIndex = 0; styleLinkIndex < allExistingStyleLinks.length; styleLinkIndex++) {
     const style = allExistingStyleLinks.item(styleLinkIndex);
     console.info({style, length: allExistingStyleLinks.length});
-    style.remove();
+    style?.remove();
   }
 
   // re-add
@@ -58,7 +62,10 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   const valueBag = content.variables ?? {};
 
-  for (const externalFile of content.libraries) {
+  const librariesArray = content.libraries ?? [];
+  const variablesConfig = content.variablesConfig ?? [];
+
+  for (const externalFile of librariesArray) {
     if (externalFile.type === 'css') {
       const newStyle = iframeDocument.createElement("link");
       newStyle.rel = 'stylesheet'
@@ -78,10 +85,10 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   const elementsToReplace: string[] = [];
 
   if (content.html) {
-    const availableVariables = content.variablesConfig
+    const availableVariables = variablesConfig
       .filter(config => !!config.fallback);
 
-    const htmlValueBag = {};
+    const htmlValueBag: Record<string, unknown> = {};
 
     availableVariables
       .forEach(config => {
@@ -114,7 +121,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
         margin: 0;
         padding: 0;
 
-        ${getCssCustomVariables(content.variablesConfig, valueBag)}
+        ${getCssCustomVariables(variablesConfig, valueBag)}
       }
 
 
@@ -145,7 +152,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
     iframeDocument.body.appendChild(customScript);
 
     customScript.text = ` {
-      ${getJsCustomVariables(content.variablesConfig, valueBag)}
+      ${getJsCustomVariables(variablesConfig, valueBag)}
       ${content.js}
     }`;
   }
@@ -228,9 +235,13 @@ export function applyDynamicIframeContentToClipData (iframeContent: DynamicIfram
 
   console.info({iframeContent});
 
-  targetClip.extended[DYNAMIC_IFRAME_HTML_KEY] = iframeContent.html;
-  targetClip.extended[DYNAMIC_IFRAME_CSS_KEY] = iframeContent.css;
-  targetClip.extended[DYNAMIC_IFRAME_JS_KEY] = iframeContent.js;
+  if (!targetClip.extended) {
+    targetClip.extended = {};
+  }
+
+  targetClip.extended[DYNAMIC_IFRAME_HTML_KEY] = iframeContent.html ?? '';
+  targetClip.extended[DYNAMIC_IFRAME_CSS_KEY] = iframeContent.css ?? '';
+  targetClip.extended[DYNAMIC_IFRAME_JS_KEY] = iframeContent.js ?? '';
 
   targetClip.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] = JSON.stringify(iframeContent.libraries);
   targetClip.extended[DYNAMIC_IFRAME_VARIABLES_KEY] = JSON.stringify(iframeContent.variablesConfig);
@@ -239,7 +250,7 @@ export function applyDynamicIframeContentToClipData (iframeContent: DynamicIfram
   console.info('POST CHANGE', JSON.stringify(targetClip));
 }
 
-const NOT_ALLOWED_NAMES = [
+export const NOT_ALLOWED_WIDGET_VARIABLE_NAMES = [
   DYNAMIC_IFRAME_VARIABLES_KEY,
   DYNAMIC_IFRAME_JS_KEY,
   DYNAMIC_IFRAME_CSS_KEY,
@@ -248,20 +259,4 @@ const NOT_ALLOWED_NAMES = [
   DYNAMIC_IFRAME_SETTINGS_KEY
 ];
 
-// TODO how to translate with variables?
-export function isDynamicIframeVariableValid(name: string): {ok: boolean, message: string} {
-  if (NOT_ALLOWED_NAMES.includes(name)) {
-    return { ok: false, message: `Not allowed to be one of the following names: ${NOT_ALLOWED_NAMES.join(', ')}`}
-  }
 
-  if (name === '') {
-    return { ok: false, message:  'A variable needs a name.'};
-  }
-
-  if (name.includes(' ')) {
-    return { ok: false, message:  `Variable Names can't have spaces in it: "${name}"`};
-  }
-
-
-  return {ok: true, message: ''};
-}

@@ -271,12 +271,15 @@
 </ng-container>
     </div>
 
-    <gewd-codemirror *ngSwitchCase="MediaType.Script"
-                     [value]="data.extended['script'] || ''"
-                     [codemirrorExtensions]="jsExtensions"
-                     (changed)="data.extended['script'] = $event;">
+    <div *ngSwitchCase="MediaType.Script">
 
-    </gewd-codemirror>
+     <button mat-raised-button color="primary" (click)="editScript()">
+        Edit Script + Config
+     </button>
+
+
+      TODO Variables Config
+    </div>
 
     <!-- All others => AppClipType -->
     <gewd-auto-scale width="500" height="500"

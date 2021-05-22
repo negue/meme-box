@@ -39,7 +39,9 @@ import {MatChipInputEvent} from "@angular/material/chips";
 import {DialogService} from "../dialog.service";
 import {
   applyDynamicIframeContentToClipData,
+  applyScriptConfigToClipData,
   clipDataToDynamicIframeContent,
+  clipDataToScriptConfig,
   DynamicIframeContent
 } from "@memebox/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
@@ -69,6 +71,7 @@ interface MediaTypeButton {
 }
 
 // TODO maybe use "TYPES WITH PATH"
+// TODO extract these informs to the media dictionary?
 const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta, MediaType.Script];
 const MEDIA_TYPES_WITHOUT_PLAYTIME = [MediaType.Meta, MediaType.WidgetTemplate, MediaType.Script];
 const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
@@ -460,5 +463,23 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.currentHtmlConfig = clipDataToDynamicIframeContent(template);
     this.executeHTMLRefresh();
     this.cd.detectChanges();
+  }
+
+  async editScript() {
+    const scriptConfig = clipDataToScriptConfig(this.data);
+
+    console.info({data: this.data,scriptConfig });
+
+    const dialogResult = await this.dialogService.showScriptEdit({
+      mediaId: this.data.id,
+      name: this.data.name,
+      scriptConfig
+    });
+
+    if (dialogResult) {
+      applyScriptConfigToClipData(dialogResult, this.data);
+
+      this.cd.detectChanges();
+    }
   }
 }

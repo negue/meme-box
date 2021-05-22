@@ -1,27 +1,28 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
-  DynamicIframeContent,
   DynamicIframeVariable,
   isDynamicIframeVariableValid,
-  NOT_ALLOWED_WIDGET_VARIABLE_NAMES
+  NOT_ALLOWED_SCRIPT_VARIABLE_NAMES,
+  ScriptConfig,
+  ScriptVariable
 } from "@memebox/utils";
 import {BehaviorSubject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
-import type {CustomHtmlDialogPayload} from "../dialog.contract";
+import {CustomScriptDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {downloadFile} from "@gewd/utils";
 import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
 
 @Component({
-  selector: 'app-widget-edit',
-  templateUrl: './widget-edit.component.html',
-  styleUrls: ['./widget-edit.component.scss']
+  selector: 'app-script-edit',
+  templateUrl: './script-edit.component.html',
+  styleUrls: ['./script-edit.component.scss']
 })
-export class WidgetEditComponent implements OnInit {
+export class ScriptEditComponent implements OnInit {
 
-  public workingValue: DynamicIframeContent = {};
-  public variablesList: DynamicIframeVariable[] = [];
+  public workingValue: Partial<ScriptConfig> = {};
+  public variablesList: ScriptVariable[] = [];
 
   @ViewChild('enablePreviewRefresh', {static: true})
   public autoRefreshCheckbox: MatCheckbox;
@@ -40,17 +41,17 @@ export class WidgetEditComponent implements OnInit {
   private newVarCounter = 0;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: CustomHtmlDialogPayload,
+    @Inject(MAT_DIALOG_DATA) public data: CustomScriptDialogPayload,
     private dialogRef: MatDialogRef<any>,
     private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.setWorkingValues(this.data.iframePayload);
+    this.setWorkingValues(this.data.scriptConfig);
     this.initDone = true;
   }
 
-  private setWorkingValues (payload: DynamicIframeContent) {
+  private setWorkingValues (payload: ScriptConfig) {
     this.workingValue = {
       settings: {},
       ...payload
@@ -59,25 +60,11 @@ export class WidgetEditComponent implements OnInit {
     this.iframeContentSubject$.next(this.workingValue);
   }
 
-  addNewExternal() {
-    this.workingValue.libraries.push({type:'css', src:''});
-    this.markForCheck();
-  }
-
-  saveExternalArray() {
-
-  }
-
-  deleteExternalFile(index: number) {
-    this.workingValue.libraries.splice(index, 1);
-    this.markForCheck();
-  }
-
   save() {
     const variablesObject = {};
 
     for (const value of this.variablesList) {
-      const variableNameValid = isDynamicIframeVariableValid(value.name, NOT_ALLOWED_WIDGET_VARIABLE_NAMES);
+      const variableNameValid = isDynamicIframeVariableValid(value.name, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES);
 
       if (!variableNameValid.ok){
         alert(variableNameValid.message);
@@ -147,7 +134,7 @@ export class WidgetEditComponent implements OnInit {
       var content = readerEvent.target.result; // this is the content!
 
       if (typeof content === 'string' ) {
-        const importedPayload: DynamicIframeContent = JSON.parse(content);
+        const importedPayload: ScriptConfig = JSON.parse(content);
 
         this.setWorkingValues(importedPayload);
       }
