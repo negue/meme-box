@@ -9,7 +9,7 @@ import {MediaTriggerEventBus} from "./media-trigger.event-bus";
 
 import {VM, VMScript} from "vm2";
 import OBSWebSocket from "obs-websocket-js";
-import {clipDataToScriptConfig, ScriptConfig} from "@memebox/utils";
+import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 
 // name pending
 interface ScriptHoldingData {
@@ -163,11 +163,18 @@ export class MediaTriggerHandler {
     }
 
     try {
+      const variables = getScriptVariablesOrFallbackValues(scriptHoldingData.script,
+        mediaConfig.extended);
+
+      console.info({
+        variables
+      });
+
       if (!scriptHoldingData.isBootstrapped) {
         const bootstrapFunc = this._vm.run(scriptHoldingData.compiledBootstrapScript);
 
         scriptHoldingData.bootstrap_variables = await bootstrapFunc({
-          variables: scriptHoldingData.script.variables,
+          variables,
         });
         scriptHoldingData.isBootstrapped = true;
 
@@ -177,10 +184,15 @@ export class MediaTriggerHandler {
       const scriptToCall = this._vm.run(scriptHoldingData.compiledExecutionScript);
 
       const scriptArguments = {
-        variables: scriptHoldingData.script.variables,
+        variables,
         bootstrap: scriptHoldingData.bootstrap_variables,
         triggerPayload: payloadObs
       };
+
+      console.info({
+        variables,
+        script: scriptHoldingData.script
+      });
 
       console.info({ scriptArguments });
 

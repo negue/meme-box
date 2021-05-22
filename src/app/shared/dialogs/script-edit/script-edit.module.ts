@@ -13,11 +13,10 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
-import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {VariablesConfigComponent} from './variables-config/variables-config.component';
-import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
 import {CodemirrorModule} from "@gewd/components/codemirror";
+import {ScriptVariableInputModule} from "../../components/script-variable-input/script-variable-input.module";
 
 @NgModule({
   declarations: [
@@ -35,10 +34,9 @@ import {CodemirrorModule} from "@gewd/components/codemirror";
     MatSelectModule,
     MatInputModule,
     FormsModule,
-    DynamicIframeModule,
     MatCheckboxModule,
-    DynamicVariableInputModule,
-    CodemirrorModule
+    CodemirrorModule,
+    ScriptVariableInputModule
   ],
   providers: [],
 })

@@ -15,7 +15,7 @@ import {FormsModule} from "@angular/forms";
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {VariablesConfigComponent} from './variables-config/variables-config.component';
-import {DynamicVariableInputModule} from "../../components/dynamic-variable-input/dynamic-variable-input.module";
+import {WidgetVariableInputModule} from "../../components/dynamic-variable-input/widget-variable-input.module";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 
 @NgModule({
@@ -36,7 +36,7 @@ import {CodemirrorModule} from "@gewd/components/codemirror";
     FormsModule,
     DynamicIframeModule,
     MatCheckboxModule,
-    DynamicVariableInputModule,
+    WidgetVariableInputModule,
     CodemirrorModule
   ],
   providers: [],

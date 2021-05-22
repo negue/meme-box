@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DynamicVariableInputComponent} from './dynamic-variable-input.component';
+import {ScriptVariableInputComponent} from './script-variable-input.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
@@ -9,10 +9,10 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
-    DynamicVariableInputComponent
+    ScriptVariableInputComponent
   ],
   exports: [
-    DynamicVariableInputComponent
+    ScriptVariableInputComponent
   ],
   imports: [
     CommonModule,
@@ -22,4 +22,4 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatCheckboxModule
   ]
 })
-export class DynamicVariableInputModule { }
+export class ScriptVariableInputModule { }

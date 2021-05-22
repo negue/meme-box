@@ -42,7 +42,8 @@ import {
   applyScriptConfigToClipData,
   clipDataToDynamicIframeContent,
   clipDataToScriptConfig,
-  DynamicIframeContent
+  DynamicIframeContent,
+  ScriptConfig
 } from "@memebox/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
 
@@ -143,6 +144,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   currentHtmlToPreview$ = new BehaviorSubject<DynamicIframeContent>(null);
   triggerHtmlRefresh$ = new Subject();
 
+  currentScript: ScriptConfig = null;
+
   // Get all clips that have the assigned tags
   taggedClips$ = combineLatest([
     this.currentTags$,
@@ -197,8 +200,15 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
       }
     });
 
-    this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
-    this.executeHTMLRefresh();
+    if (this.data.type === MediaType.Widget || this.data.type === MediaType.IFrame) {
+      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
+      this.executeHTMLRefresh();
+    }
+
+    if (this.data.type === MediaType.Script) {
+      this.currentScript = clipDataToScriptConfig(this.data);
+    }
+
     this.showOnMobile = this.data.showOnMobile;
 
     this.currentMediaType$.next(this.data.type);
@@ -479,6 +489,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     if (dialogResult) {
       applyScriptConfigToClipData(dialogResult, this.data);
 
+      this.currentScript = scriptConfig;
       this.cd.detectChanges();
     }
   }

@@ -13,7 +13,6 @@ export interface ScriptConfig {
   executionScript: string;
   bootstrapScript: string;
   variablesConfig?: ScriptVariable[];
-  variables?: Dictionary<any>;
   settings?: {
   }
 }
@@ -78,3 +77,15 @@ export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [
 ];
 
 
+export function getScriptVariablesOrFallbackValues (
+  config: ScriptConfig,
+  valueBag: Dictionary<any>
+) {
+  const newValueBag: Dictionary<unknown> = {};
+
+  for (const variablesConfigElement of (config.variablesConfig || [])) {
+    newValueBag[variablesConfigElement.name] = valueBag[variablesConfigElement.name] || variablesConfigElement.fallback;
+  }
+
+  return newValueBag;
+}

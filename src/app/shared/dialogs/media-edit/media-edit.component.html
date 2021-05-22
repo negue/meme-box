@@ -191,11 +191,11 @@
     <ng-container *ngIf="form.value.type === MediaType.Widget">
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
         <div *ngFor="let variable of currentHtml.variablesConfig">
-          <app-dynamic-variable-input [variableType]="variable.type" [label]="variable.name"
+          <app-widget-variable-input [variableType]="variable.type" [label]="variable.name"
                                       [value]="data.extended[variable.name]"
                                       (valueChanged)="data.extended[variable.name] = $event; triggerHTMLRefresh()">
 
-          </app-dynamic-variable-input>
+          </app-widget-variable-input>
         </div>
       </ng-container>
     </ng-container>
@@ -277,8 +277,12 @@
         Edit Script + Config
      </button>
 
-
-      TODO Variables Config
+        <div *ngFor="let variable of currentScript.variablesConfig">
+          <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
+                                     [value]="data.extended[variable.name]"
+                                     (valueChanged)="data.extended[variable.name] = $event;">
+          </app-script-variable-input>
+        </div>
     </div>
 
     <!-- All others => AppClipType -->
