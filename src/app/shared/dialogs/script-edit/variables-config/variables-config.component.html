@@ -20,19 +20,15 @@
         </mat-form-field>
       </td>
       <td>
-        <app-widget-variable-input [variableType]="customVariable.type"
+        <app-script-variable-input [variableType]="customVariable.type"
                                     label="Fallback Value"
                                     [value]="customVariable.fallback"
                                     (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
 
-        </app-widget-variable-input>
+        </app-script-variable-input>
 
 
-        <mat-checkbox *ngIf="customVariable.type === 'textarea'"
-                      [(ngModel)]="customVariable.htmlNewLineBreak"
-                      (change)="onEditVariable.emit(customVariable)">
-          HTML: Replace new lines with &lt;br&gt;
-        </mat-checkbox>
+
       </td>
       <td>
         <button mat-icon-button color="warn"

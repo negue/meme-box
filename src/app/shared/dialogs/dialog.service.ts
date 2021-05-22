@@ -8,7 +8,7 @@ import type {ConfirmationsPayload} from "./simple-confirmation-dialog/simple-con
 import type {ScreenClipOptionsPayload} from "./screen-clip-options/screen-clip-options.component";
 import type {ClipAssigningDialogOptions} from "./clip-assigning-dialog/clip-assigning-dialog.component";
 import {MarkdownDialogPayload} from "../../../../server/constants";
-import {CustomHtmlDialogPayload, DialogContract} from "./dialog.contract";
+import {CustomHtmlDialogPayload, CustomScriptDialogPayload, DialogContract} from "./dialog.contract";
 
 @Injectable()
 export class DialogService {
@@ -61,6 +61,16 @@ export class DialogService {
   async showWidgetEdit(payload: CustomHtmlDialogPayload) {
     const dialogRef = await this.loadAndOpen(
       import('./widget-edit/widget-edit.module'),
+      payload
+    );
+
+    return dialogRef.afterClosed().toPromise();
+  }
+
+
+  async showScriptEdit(payload: CustomScriptDialogPayload) {
+    const dialogRef = await this.loadAndOpen(
+      import('./script-edit/script-edit.module'),
       payload
     );
 

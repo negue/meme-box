@@ -9,6 +9,16 @@ import {MediaTriggerEventBus} from "./media-trigger.event-bus";
 
 import {VM, VMScript} from "vm2";
 import OBSWebSocket from "obs-websocket-js";
+import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
+
+// name pending
+interface ScriptHoldingData {
+  script: ScriptConfig;
+  compiledBootstrapScript: VMScript;
+  bootstrap_variables: Record<string, unknown>;
+  isBootstrapped: boolean;
+  compiledExecutionScript: VMScript;
+}
 
 @Service()
 export class MediaTriggerHandler {
@@ -16,11 +26,16 @@ export class MediaTriggerHandler {
   private _allMediasMap: Dictionary<Clip> = {};
   private _allMediasList: Clip[] = [];
 
-  private _compiledScripts = new Map<string, VMScript>();
+  private _compiledScripts = new Map<string, ScriptHoldingData>();
 
   // TODO / check can it run multiple longer-scripts at once?
   private _vm = new VM({
     sandbox: {
+      console: {
+        info: (...args) => {
+           this.logger.info(...args)
+        }
+      },
       getObsWebsocket: (address: string, password?: string) => {
         const obs = new OBSWebSocket();
         obs.connect({ address, password });
@@ -55,7 +70,7 @@ export class MediaTriggerHandler {
       // TODO get updated Path to know what kind of state needs to be refilled
       // for example the compiled scripts
 
-      this._compiledScripts = new Map<string, VMScript>();
+      this._compiledScripts = new Map<string, ScriptHoldingData>();
     })
 
     this.getData();
@@ -71,7 +86,7 @@ export class MediaTriggerHandler {
         this.triggerMeta(mediaConfig);
         break;
       case MediaType.Script:
-        this.triggerScript(mediaConfig);
+        this.triggerScript(mediaConfig, payloadObs);
         break;
       default: {
         if (payloadObs.targetScreen) {
@@ -95,29 +110,93 @@ export class MediaTriggerHandler {
     }
   }
 
-  private async triggerScript(mediaConfig: Clip) {
-    let script: VMScript;
+  private async triggerScript(mediaConfig: Clip, payloadObs: TriggerClip) {
+    let scriptHoldingData: ScriptHoldingData;
 
     if (this._compiledScripts.has(mediaConfig.id)) {
-      script = this._compiledScripts.get(mediaConfig.id);
+      scriptHoldingData = this._compiledScripts.get(mediaConfig.id);
     } else {
+      var executionScript: VMScript;
+      var bootstrapScript: VMScript;
+
+      const scriptConfig = clipDataToScriptConfig(mediaConfig);
+
       try {
-        script = new VMScript(`
-          async function scriptInVm() {
-            ${mediaConfig.extended?.['script'] || ''}
+        bootstrapScript = new VMScript(`
+          async function bootstrap(
+            { variables }
+          ) {
+            ${scriptConfig.bootstrapScript}
           }
 
-          scriptInVm();
+          (bootstrap);
         `).compile();
       } catch (err) {
-        this.logger.error(`Failed to compile script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
+        this.logger.error(`Failed to compile bootstrap script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
         return;
       }
-      this._compiledScripts.set(mediaConfig.id, script);
+
+      try {
+        executionScript = new VMScript(`
+          async function scriptInVm(
+            { variables, bootstrap, triggerPayload }
+          ) {
+            ${scriptConfig.executionScript}
+          }
+
+          (scriptInVm)
+        `).compile();
+      } catch (err) {
+        this.logger.error(`Failed to compile execution script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
+        return;
+      }
+
+      scriptHoldingData = {
+        compiledExecutionScript: executionScript,
+        compiledBootstrapScript: bootstrapScript,
+        bootstrap_variables: {},
+        isBootstrapped: false,
+        script: scriptConfig
+      };
+
+      this._compiledScripts.set(mediaConfig.id, scriptHoldingData);
     }
 
     try {
-      this._vm.run(script);
+      const variables = getScriptVariablesOrFallbackValues(scriptHoldingData.script,
+        mediaConfig.extended);
+
+      console.info({
+        variables
+      });
+
+      if (!scriptHoldingData.isBootstrapped) {
+        const bootstrapFunc = this._vm.run(scriptHoldingData.compiledBootstrapScript);
+
+        scriptHoldingData.bootstrap_variables = await bootstrapFunc({
+          variables,
+        });
+        scriptHoldingData.isBootstrapped = true;
+
+        console.info('bootstrap result', scriptHoldingData.bootstrap_variables);
+      }
+
+      const scriptToCall = this._vm.run(scriptHoldingData.compiledExecutionScript);
+
+      const scriptArguments = {
+        variables,
+        bootstrap: scriptHoldingData.bootstrap_variables,
+        triggerPayload: payloadObs
+      };
+
+      console.info({
+        variables,
+        script: scriptHoldingData.script
+      });
+
+      console.info({ scriptArguments });
+
+      scriptToCall(scriptArguments);
     }
     catch(err) {
       this.logger.error(`Failed to run script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
