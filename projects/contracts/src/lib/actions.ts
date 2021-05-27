@@ -12,9 +12,24 @@ export const ACTIONS = {
   UNREGISTER_WIDGET_INSTANCE: 'UNREGISTER_WIDGET_INSTANCE',
 }
 
+export enum TriggerClipOrigin {
+  Unknown,
+  AppPreview,
+  StreamDeck, // currently also Unknown
+  TwitchEvent,
+  Timer,
+  Meta,
+  Scripts
+}
+
 export interface TriggerClip {
   id: string;
   targetScreen?: string;
+
+  fromWebsocket?: boolean;
+  origin?: TriggerClipOrigin;
+  originId?: string;
+
   repeatX?: number;
   repeatSecond?: number;
 

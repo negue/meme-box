@@ -1,5 +1,14 @@
 import {Service, UseOpts} from "@tsed/di";
-import {ACTIONS, Clip, Dictionary, MediaType, MetaTriggerTypes, Screen, TriggerClip} from "@memebox/contracts";
+import {
+  ACTIONS,
+  Clip,
+  Dictionary,
+  MediaType,
+  MetaTriggerTypes,
+  Screen,
+  TriggerClip,
+  TriggerClipOrigin
+} from "@memebox/contracts";
 import {Persistence} from "../persistence";
 import {NamedLogger} from "./named-logger";
 import {Inject} from "@tsed/common";
@@ -46,7 +55,8 @@ export class MediaTriggerHandler {
       triggerClip: (targetMediaId: string, targetScreenId?: string) => {
         this.triggerMediaClipById({
           id: targetMediaId,
-          targetScreen: targetScreenId
+          targetScreen: targetScreenId,
+          origin: TriggerClipOrigin.Scripts
         })
 
         return Promise.resolve(true);
@@ -77,7 +87,7 @@ export class MediaTriggerHandler {
   }
 
   async triggerMediaClipById(payloadObs: TriggerClip) {
-    this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
+    this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'} - Origin: ${payloadObs.origin}`, payloadObs);
 
     const mediaConfig = this._allMediasMap[payloadObs.id];
 
@@ -223,13 +233,21 @@ export class MediaTriggerHandler {
 
         const clipToTrigger = allClips[randomIndex];
 
-        this.triggerMediaClipById(clipToTrigger);
+        this.triggerMediaClipById({
+          id: clipToTrigger.id,
+          origin: TriggerClipOrigin.Meta,
+          originId: mediaConfig.id
+        });
 
         break;
       }
       case MetaTriggerTypes.All: {
         allClips.forEach(clipToTrigger => {
-          this.triggerMediaClipById(clipToTrigger);
+          this.triggerMediaClipById({
+            id: clipToTrigger.id,
+            origin: TriggerClipOrigin.Meta,
+            originId: mediaConfig.id
+          });
         });
 
         break;
@@ -237,7 +255,11 @@ export class MediaTriggerHandler {
       case MetaTriggerTypes.AllDelay: {
 
         for (const clipToTrigger of allClips) {
-          await this.triggerMediaClipById(clipToTrigger);
+          await this.triggerMediaClipById({
+            id: clipToTrigger.id,
+            origin: TriggerClipOrigin.Meta,
+            originId: mediaConfig.id
+          });
           await timeoutAsync(mediaConfig.metaDelay)
         }
 

@@ -1,4 +1,4 @@
-import {Dictionary} from "@memebox/contracts";
+import {Dictionary, TriggerClipOrigin} from "@memebox/contracts";
 import {PersistenceInstance} from "./persistence";
 import {triggerMediaClipById} from "./websocket-server";
 import Timeout = NodeJS.Timeout;
@@ -13,7 +13,10 @@ export class TimedHandler {
       if (timer.active) {
         this.intervalDictionary[timer.id] = setInterval(() => {
           triggerMediaClipById({
-            id: timer.clipId
+            id: timer.clipId,
+            targetScreen: timer.screenId,
+            origin: TriggerClipOrigin.Timer,
+            originId: timer.id
           });
         }, timer.everyXms);
       }
