@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  width: 300px;
+
+  ::ng-deep {
+    .mat-card-header-text, .mat-card-title {
+      overflow: hidden;
+    }
+
+    .mat-card-image {
+      margin: 0 -16px 0px -16px;
+    }
+
+    .mat-card-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.mediaInfo__preview__img {
+  height: 188px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.mc__actions-container {
+  position: relative;
+
+  &__supplemental {
+    top: 6px;
+    right: 0;
+    position: absolute;
+  }
+}
+
+.mc-content {
+  margin: 0 -16px 4px -16px;
+}
+
+.mat-icon.mat-icon-inline {
+  margin-right: 4px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.mc__expander {
+  background-color: var(--card-background-color);
+
+  &__description {
+    flex-direction: row-reverse;
+
+    & > div {
+      display: flex;
+
+      &:not(:first-child) {
+        margin-right: 12px;
+      }
+    }
+  }
+}
+
+div.mat-small {
+  margin-bottom: 0.25rem;
+}
+
+.mat-chip-list + div.mat-small {
+  margin-top: 1rem;
+}

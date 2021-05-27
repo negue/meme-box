@@ -1,0 +1,31 @@
+<ng-container [ngSwitch]="variableType">
+  <mat-form-field *ngSwitchCase="'text'"  appearance="outline">
+    <mat-label>{{label}}</mat-label>
+    <input matInput [(ngModel)]="value" type="text" autocomplete="off"
+           (ngModelChange)="valueChanged.emit(value)">
+  </mat-form-field>
+
+  <mat-form-field *ngSwitchCase="'textarea'"  appearance="outline">
+    <mat-label>{{label}}</mat-label>
+    <textarea matInput [(ngModel)]="value"
+           (ngModelChange)="valueChanged.emit(value)">
+
+          </textarea>
+
+  </mat-form-field>
+
+  <mat-form-field *ngSwitchCase="'number'" appearance="outline">
+    <mat-label>{{label}}</mat-label>
+    <input matInput [(ngModel)]="value" type="number"
+           autocomplete="off"
+           (ngModelChange)="valueChanged.emit(value)">
+  </mat-form-field>
+
+
+  <ng-container *ngSwitchCase="'boolean'">
+    <mat-checkbox [checked]="!!value"
+                  (change)="value = $event.checked; valueChanged.emit($event.checked)" >
+      {{label}}
+    </mat-checkbox>
+  </ng-container>
+</ng-container>

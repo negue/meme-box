@@ -45,19 +45,17 @@
 
 
     <div class="form-control textarea">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" floatLabel="always">
         <mat-label>Custom CSS</mat-label>
 
         <gewd-custom-form-control formControlName="customCss"
                                   #customFormControl
         >
-          <gewd-prism-editor [value]="customFormControl.value"
-                             language="css"
-                             [debounceTime]="450"
-                             [style.--editor-min-height.px]="200"
-                             (value$)="customFormControl.value = $event"
-                             (focussed$)="customFormControl.focused = $event" #editoe>
-          </gewd-prism-editor>
+          <gewd-codemirror [value]="customFormControl.value"
+                           [codemirrorExtensions]="cssExtensions"
+                           (changed)="customFormControl.value = $event">
+
+          </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
     </div>

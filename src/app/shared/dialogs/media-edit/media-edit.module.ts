@@ -19,6 +19,11 @@ import {CompactClipCardModule} from "../../components/compact-clip-card/compact-
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.module";
+import {WidgetVariableInputModule} from "../../components/dynamic-variable-input/widget-variable-input.module";
+import {TranslocoModule} from "@ngneat/transloco";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {CodemirrorModule} from "@gewd/components/codemirror";
+import {ScriptVariableInputModule} from "../../components/script-variable-input/script-variable-input.module";
 
 @NgModule({
   declarations: [
@@ -41,6 +46,11 @@ import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.modu
     DynamicIframeModule,
     AutoScaleModule,
     ClipPreviewModule,
+    WidgetVariableInputModule,
+    TranslocoModule,
+    MatExpansionModule,
+    CodemirrorModule,
+    ScriptVariableInputModule
   ],
   providers: [],
 })

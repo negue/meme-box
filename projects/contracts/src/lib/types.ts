@@ -38,13 +38,10 @@ export interface Clip extends HasId {
   showOnMobile?: boolean;
 
   extended?: Dictionary<string>; // only used for HTML - Type
+
+  fromTemplate?: string; // GUID / Clip.Id of the Template
 }
 
-export const enum EXTENDED_KEYS {
-  HTML = 'HTML',
-  CSS = 'CSS',
-  JS = 'JS'
-}
 
 export interface Screen extends HasId {
   name: string;
@@ -118,11 +115,8 @@ export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
-// TODO refactor, maybe all messages
-// and then like "yes, but this one only with bits.."
 export enum TwitchEventTypes {
   message = 'message',
-  follow = 'follow',
   sub = 'sub',
   bits = 'bits',
   raid = 'raid',
@@ -191,6 +185,7 @@ export interface AppState extends SettingsState {
 }
 
 export interface Config {
+  customPort?: number | null;
   mediaFolder: string;
   twitch: TwitchConfig;
   enableVersionCheck?: boolean;
@@ -233,7 +228,6 @@ export interface FileInfo {
 }
 
 export interface TwitchTriggerCommand {
-  message: string;
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
 }
@@ -241,14 +235,6 @@ export interface TwitchTriggerCommand {
 export enum TargetScreenType {
   OneScreen,
   ScreenPerType
-}
-
-export interface FileResult {
-  fullPath: string;
-  ext: string;
-  fileName: string;
-  apiUrl: string;
-  fileType: MediaType
 }
 
 export interface FileResult {

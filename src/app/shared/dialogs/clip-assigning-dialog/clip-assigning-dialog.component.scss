@@ -22,7 +22,7 @@
 
   position: sticky;
   top: 0;
-  background: #2f3640;
+  background: var(--palette-background-background);
   z-index: 10;
 }
 
@@ -55,13 +55,16 @@
   width: 100%;
 }
 
-.mediaList__name {
+.mediaList__header {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
 
-  overflow: hidden;
-  white-space: nowrap;
+  &__name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .mediaList__icon {

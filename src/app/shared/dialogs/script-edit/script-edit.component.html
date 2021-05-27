@@ -1,0 +1,82 @@
+<h2 mat-dialog-title class="title-wrapper">
+  Edit Script for "{{data.name}}"
+
+  <button mat-raised-button (click)="exportWidget()">Export</button>
+  <button mat-raised-button (click)="fileSelection.click()" >Import</button>
+  <input type="file" style="display: none"
+         #fileSelection accept="application/json"
+         (change)="onFileInputChanged($event)">
+</h2>
+<mat-dialog-content class="mat-typography">
+
+<div class="dialog-content">
+  <mat-accordion [multi]="true">
+
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Custom Variables
+        </mat-panel-title>
+        <mat-panel-description>
+
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+        "Notes":
+        These are the variables to be used inside CSS / JS / HTML - for an easier way to change the Widget "config" or values or something.
+
+        <app-variables-config [variablesList]="variablesList"
+                              (onEditVariable)="markForCheck()"
+                              (onDeleteVariable)="deleteVariable($event)"
+                              (onAddNewVariable)="addNewVariable()">
+
+        </app-variables-config>
+    </mat-expansion-panel>
+
+
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Bootstrap Script
+        </mat-panel-title>
+        <mat-panel-description>
+          <div *ngIf="workingValue.bootstrapScript">Bootstrap is used</div>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <mat-form-field  floatLabel="always">
+        <mat-label>Bootstrap Script</mat-label>
+
+        <gewd-custom-form-control [value]="workingValue.bootstrapScript"
+        >
+          <gewd-codemirror [value]="workingValue.bootstrapScript"
+                           [codemirrorExtensions]="jsExtensions"
+                           (changed)="workingValue.bootstrapScript = $event; markForCheck();">
+
+          </gewd-codemirror>
+        </gewd-custom-form-control>
+      </mat-form-field>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+
+<div class="iframe-preview ">
+  Execution Script:
+  <gewd-codemirror [value]="workingValue.executionScript"
+                   [codemirrorExtensions]="jsExtensions"
+                   (changed)="workingValue.executionScript = $event; markForCheck();">
+
+  </gewd-codemirror>
+</div>
+
+</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()" cdkFocusInitial
+          color="accent"
+          mat-raised-button>Update</button>
+</mat-dialog-actions>

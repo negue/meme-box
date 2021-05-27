@@ -3,6 +3,7 @@ import {
   Clip,
   Config,
   ConfigV0,
+  createInitialState,
   PositionEnum,
   Screen,
   ScreenClip,
@@ -13,19 +14,24 @@ import {
   TwitchBotConfig,
   TwitchConfig,
   VisibilityEnum
-} from '../projects/contracts/src/lib/types';
-import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
+} from '@memebox/contracts';
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
-import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
+import {
+  deleteInArray,
+  deleteItemInDictionary,
+  simpleDateString,
+  sortClips,
+  updateItemInDictionary,
+  uuidv4
+} from "@memebox/utils";
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {uuidv4} from "../projects/utils/src/lib/uuid";
-import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
 import {operations} from '../projects/state/src/public-api';
 import {debounceTime} from "rxjs/operators";
 import {LOGGER} from "./logger.utils";
-import {sortClips} from "../projects/utils/src/lib/sort-clips";
-// Todo ts-config paths!!!
+import {registerProvider} from "@tsed/di";
+import {PERSISTENCE_DI} from "./providers/contracts";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 // TODO Extract more state operations to shared library and from app
 
@@ -38,7 +44,7 @@ export class Persistence {
   // This is the CONFIG-Version, not the App Version
   private version = 1;
 
-  private updated$ = new Subject();
+  private updated$ = new Subject<void>();
   private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
 
@@ -60,17 +66,6 @@ export class Persistence {
         return console.log(err);
       }
 
-      if (!fileBackupToday) {
-        const targetDir = path.dirname(this.filePath);
-        const targetFileName = path.basename(this.filePath);
-
-        const backupPathFile = `${targetDir}/backups/${targetFileName}.${simpleDateString()}.backup`;
-
-        saveFile(backupPathFile, data);
-
-        fileBackupToday = true;
-      }
-
       let dataFromFile = {};
 
       if (data && data.includes('{')) {
@@ -81,6 +76,19 @@ export class Persistence {
       this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
       this.updated$.next();
       this.configLoaded$.next();
+
+      this.logger.info('Settings loaded');
+
+      if (!fileBackupToday) {
+        const targetDir = path.dirname(this.filePath);
+        const targetFileName = path.basename(this.filePath);
+
+        const backupPathFile = `${targetDir}/backups/${targetFileName}.${simpleDateString()}.backup`;
+
+        saveFile(backupPathFile, data);
+
+        fileBackupToday = true;
+      }
     });
 
     this.updated$.pipe(
@@ -123,7 +131,7 @@ export class Persistence {
     return configFromFile;
   }
 
-  public dataUpdated$ () : Observable<any> {
+  public dataUpdated$ () : Observable<void> {
     return this.updated$.asObservable();
   }
 
@@ -374,6 +382,15 @@ export class Persistence {
     this.saveData();
   }
 
+  public updateCustomPort (newPort: number) {
+    this.data.config = this.data.config || {};
+
+    this.data.config.customPort = newPort;
+
+    this.saveData();
+  }
+
+
   public updateTwitchBot (twitchConfig: TwitchConfig) {
     console.log(twitchConfig);
     this.data.config = this.data.config || {};
@@ -385,7 +402,12 @@ export class Persistence {
   }
 
   public getConfig() {
-    return this.data.config;
+    const mediaFolder = CLI_OPTIONS.MEDIA_PATH ?? this.data.config.mediaFolder;
+
+    return {
+      ...this.data.config,
+      mediaFolder
+    };
   }
 
   public cleanUpConfigs() {
@@ -456,8 +478,17 @@ export const PERSISTENCE: {
   instance: null
 }
 
-LOGGER.info({NEW_CONFIG_PATH, LOG_PATH});
 
 export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
 
+// todo refactor it to a new place when the new logger is being used
+LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
+
 PERSISTENCE.instance = PersistenceInstance;
+
+
+// Registry for TsED
+registerProvider({
+  provide: PERSISTENCE_DI,
+  useValue: PersistenceInstance
+});

@@ -1,6 +1,6 @@
 # Types
 
-Meme-Box has the following types of clips that could be triggered:
+Meme-Box has the following types of medias that could be triggered:
 
 ## Simple
 
@@ -40,14 +40,20 @@ If no `Play time on screen` is set, the full clip will the played and after that
 
 This will show the Iframe of `URL` in your target-screen.
 
-This Type needs to have fixed value of `Visible screen time`.
+> Note: This Type needs to have fixed value of `Visible screen time`.
 
 
-### HTML
+### Widgets
 
-With this type you can create your own "Widgets", with custom HTML, CSS and JS.
+With this type you can create your own Widgets, with custom HTML, CSS and JS.
 
-This Type needs to have fixed value of `Visible screen time`.
+Also including a Widget-API to access Twitch-Events or a Persistence-State.
+
+You can also  declare variables for easier way to change the "Widget-Settings".
+
+Or import / export these Widgets.
+
+> Note: This Type needs to have fixed value of `Visible screen time`.
 
 
 ### Meta
@@ -59,3 +65,8 @@ Example of:
 - [Combine Audio and Image](./meta_clips.md)
 - [Trigger one random Clip](./meta_clips.md)
 - [Trigger all items with a delay](./meta_clips.md)
+
+
+### Scripts
+
+TODO

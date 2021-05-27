@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -10,8 +9,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Clip, PositionEnum, ScreenClip} from "@memebox/contracts";
-import {NgxMoveableComponent} from "ngx-moveable";
+import { Clip, PositionEnum, ScreenClip } from '@memebox/contracts';
+import { NgxMoveableComponent } from 'ngx-moveable';
 
 export interface TranslatedSize {
   x: string;
@@ -23,7 +22,7 @@ export interface TranslatedSize {
   templateUrl: './drag-resize-media.component.html',
   styleUrls: ['./drag-resize-media.component.scss']
 })
-export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChanges {
+export class DragResizeMediaComponent implements OnInit, OnChanges {
 
   @Input()
   public showResizeBorder = false;
@@ -65,6 +64,9 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   @Output()
   public inputApplied = new EventEmitter();
 
+  @Output()
+  public elementChanged = new EventEmitter();
+
   @ViewChild('moveableInstance')
   public moveableInstance: NgxMoveableComponent;
 
@@ -86,10 +88,6 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   constructor(public element: ElementRef<HTMLElement>) {
   }
 
-  ngAfterViewInit(): void {
-
-  }
-
   ngOnChanges(changes: SimpleChanges): void {
     console.info('DragResize ngChanges');
     this.applyPositionBySetting();
@@ -103,13 +101,15 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
    this.applyPositionBySetting();
 
    this.inputApplied.next();
-
   }
 
 
   onDragStart({ set }) {
-    console.info( this.frame);
+    console.info(this.frame);
+    this.elementChanged.emit();
+    this.inputApplied.next();
   }
+
   onDrag({ target, left, top }) {
     const newPosition = this.translatePixelToTarget(left, top);
 
@@ -121,6 +121,7 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     this.updateCSSVar('bottom',  null);
 
     this.frame.currentDraggingPosition = newPosition;
+    this.elementChanged.emit();
   }
 
   onDragEnd({ target, isDrag, clientX, clientY }) {
@@ -130,11 +131,12 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     this.settings.left = this.frame.currentDraggingPosition.x;
     this.settings.right = null;
     this.settings.bottom = null;
+    this.elementChanged.emit();
   }
 
   onResizeStart({ target, set, setOrigin, dragStart }) {
     // Set origin if transform-orgin use %.
-    setOrigin(["%", "%"]);
+    setOrigin(['%', '%']);
 
     // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
     const style = window.getComputedStyle(target);
@@ -144,6 +146,8 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
     // If a drag event has already occurred, there is no dragStart.
     dragStart && dragStart.set(this.frame.translate);
+
+    this.elementChanged.emit();
   }
   onResize({ target, width, height, drag }) {
     const newPosition = this.translatePixelToTarget(width, height);
@@ -157,12 +161,15 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
     // smooth resizing from left / top
     target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+
+    this.elementChanged.emit();
   }
   onResizeEnd({ target, isDrag, clientX, clientY }) {
     console.log("onResizeEnd", target, isDrag);
 
     this.settings.width = this.getCSSVar('width');
     this.settings.height = this.getCSSVar('height');
+    this.elementChanged.emit();
   }
 
   onRotateStart({ target, set }) {
@@ -170,16 +177,19 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     set(this.frame.rotate);
 
     console.info('onRotateStart', this.frame.rotate);
+    this.elementChanged.emit();
   }
   onRotate({ target, beforeRotate }) {
     this.frame.rotate = beforeRotate;
   //  target.style.transform = `rotate(${beforeRotate}deg)`;
     this.applyTransform(target);
+    this.elementChanged.emit();
   }
   onRotateEnd({ target, isDrag, clientX, clientY }) {
     console.log("onRotateEnd", target, isDrag);
 
     this.applyTransformToSettings();
+    this.elementChanged.emit();
   }
 
   warpMatrix = [
@@ -191,18 +201,21 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   onWarpStart({ set }) {
     set(this.warpMatrix);
     this.warpExist = true;
+    this.elementChanged.emit();
   }
   onWarp({ target, matrix, transform }) {
     this.warpMatrix = matrix;
 
     // target.style.transform = transform;
     this.applyTransform(target);
+    this.elementChanged.emit();
     //target.style.transform = `matrix3d(${matrix.join(",")})`;
   }
   onWarpEnd({ target, isDrag, clientX, clientY }) {
     console.log("onWarpEnd", target, isDrag);
 
     this.applyTransformToSettings();
+    this.elementChanged.emit();
   }
 
   previewClicked($event: MouseEvent) {

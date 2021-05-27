@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import { ACTIONS, TriggerClip } from "@memebox/contracts";
-import { BehaviorSubject, Subject } from "rxjs";
-import {  SnackbarService } from "./snackbar.service";import { AppConfig } from "../../../environments/environment";
+import {Injectable} from '@angular/core';
+import {ACTIONS, TriggerClip} from "@memebox/contracts";
+import {BehaviorSubject, Subject} from "rxjs";
+import {SnackbarService} from "./snackbar.service";
+import {AppConfig} from "@memebox/app/env";
+import {filter, mapTo, take} from "rxjs/operators";
 
 
 console.warn('WEBSOCKET - AppConfig', AppConfig);
@@ -11,8 +13,11 @@ export enum ConnectionState{
   Disconnected,
   Connected,
   Reconnecting,
-  Error
+  Error,
+  Offline
 }
+
+// TODO Refactor
 
 @Injectable()
 export class WebsocketService {
@@ -27,6 +32,7 @@ export class WebsocketService {
   private firstConnectionWorked = true;
   private isConnected = false;
   private intervalId = 0;
+  private allowReconnections = true;
 
   constructor(private snackbar: SnackbarService) {
     setTimeout(() => this.connect(), 150);
@@ -34,6 +40,15 @@ export class WebsocketService {
 
   public sendI_Am_OBS(guid: string) {
     this.ws.send(`${ACTIONS.I_AM_OBS}=${guid}`);
+  }
+
+  public sendWidgetRegistration(mediaId: string, widgetInstance: string, register: boolean) {
+
+    const action = register ? ACTIONS.REGISTER_WIDGET_INSTANCE : ACTIONS.UNREGISTER_WIDGET_INSTANCE;
+
+    const payload = `${mediaId}|${widgetInstance}`;
+
+    this.ws.send(`${action}=${payload}`);
   }
 
   public triggerClipOnScreen(clipId: string, screenId?: string | null) {
@@ -100,6 +115,11 @@ export class WebsocketService {
       this.ws = null;
     }
 
+    if (this.intervalId !== 0) {
+      clearInterval(this.intervalId);
+      this.intervalId = 0;
+    }
+
     this.connectionState$.next(ConnectionState.Reconnecting);
 
     this.ws = new WebSocket(AppConfig.wsBase);
@@ -108,11 +128,6 @@ export class WebsocketService {
       this.isConnected = true;
       this.onOpenConnection$.next();
       this.connectionState$.next(ConnectionState.Connected);
-
-      if (this.intervalId !== 0) {
-        clearInterval(this.intervalId);
-        this.intervalId = 0;
-      }
 
       if (!this.firstConnectionWorked) {
         this.onReconnection$.next();
@@ -132,17 +147,31 @@ export class WebsocketService {
       this.connectionState$.next(ConnectionState.Disconnected);
 
       if (this.intervalId === 0) {
-        console.info('new interval');
-        this.intervalId = window.setInterval(() => {
-          this.connect();
-        }, 2000);
-
-        console.info('new interval', this.intervalId);
+        if (this.allowReconnections) {
+          this.intervalId = window.setInterval(() => {
+            this.connect();
+          }, 2000);
+          console.warn('new ws connect interval', this.intervalId);
+        } else {
+          this.connectionState$.next(ConnectionState.Offline);
+        }
       }
     };
 
     this.ws.onmessage = event => {
       this.onMessage(event);
     };
+  }
+
+  stopReconnects() {
+    this.allowReconnections = false;
+  }
+
+  isReady() : Promise<boolean> {
+    return this.connectionState$.pipe(
+      filter(connectionState => connectionState === ConnectionState.Connected),
+      take(1),
+      mapTo(true)
+    ).toPromise();
   }
 }

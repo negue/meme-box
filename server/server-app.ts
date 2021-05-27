@@ -1,35 +1,48 @@
 import {createExpress} from "./express-server";
-import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
+import {sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT, REMOTE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith, take} from "rxjs/operators";
-import {TwitchHandler} from './twitch.handler';
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "@memebox/contracts";
 import {LOGGER} from "./logger.utils";
-import {ExampleTwitchCommandsSubject} from "./shared";
 import {TimedHandler} from "./timed.handler";
 
 import https from 'https';
 import currentVersionJson from '@memebox/version';
 import {STATE_OBJECT} from "./rest-endpoints/state";
+import {Lazy} from "@gewd/markdown/utils";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 // This file creates the "shared" server logic between headless / electron
 
 // TODO use config values?
 
-const portArgument = process.argv.find(arg => arg.includes('--port'));
+const CONFIG_IS_LOADED$ = PersistenceInstance.configLoaded$.pipe(
+  take(1)
+).toPromise();
 
-export const NEW_PORT = portArgument ? +portArgument.replace('--port=', '') : DEFAULT_PORT;
+export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value => {
+  const SAVED_PORT = PersistenceInstance.getConfig()?.customPort;
 
-export const expressServer = createExpress(NEW_PORT);
-export const {server, wss} = createWebSocketServer(NEW_PORT);
+  if (CLI_OPTIONS.PORT) {
+    LOGGER.info(`Using the --port Argument: ${CLI_OPTIONS.PORT}`);
+  } else if (!SAVED_PORT) {
+    LOGGER.info(`Using the default Port: ${DEFAULT_PORT}`);
+  }
 
-// Also mount the app here
-server.on('request', expressServer);
+  const NEW_PORT = CLI_OPTIONS.PORT ?? SAVED_PORT ?? DEFAULT_PORT;
 
-let currentConfigJsonString = '';
+  const expressServer = createExpress(NEW_PORT);
+  // Also mount the app here
+ // server.on('request', expressServer);
+
+  return {
+    expressServer
+  };
+}));
+
+
 let currentTimers = '';
-let twitchHandler:TwitchHandler = null;
 
 PersistenceInstance.hardRefresh$()
   .pipe(
@@ -50,24 +63,8 @@ PersistenceInstance.dataUpdated$()
     startWith(true)
   )
   .subscribe(() => {
+    // TODO move to a different place?
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
-
-    const config = PersistenceInstance.getConfig();
-    const jsonOfConfig = JSON.stringify(config.twitch);
-
-    if (currentConfigJsonString !== jsonOfConfig
-      && !!config.twitch?.channel
-    ) {
-      currentConfigJsonString = jsonOfConfig;
-
-      LOGGER.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
-
-      if (twitchHandler != null) {
-        twitchHandler.disconnect();
-      }
-
-      twitchHandler = new TwitchHandler(config.twitch);
-    }
 
     const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
 
@@ -78,12 +75,6 @@ PersistenceInstance.dataUpdated$()
       LOGGER.info(`Refreshing TimedHandler`);
     }
   });
-
-ExampleTwitchCommandsSubject.subscribe(value => {
-  if (twitchHandler) {
-    twitchHandler.handle(value);
-  }
-});
 
 // Check Version & Log it
 

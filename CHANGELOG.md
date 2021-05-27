@@ -1,6 +1,44 @@
-## 2021.2.1
+## to be released
 
-### Quality of Life Improvements
+### Breaking Changes
+
+* [x] The Headless Mode will not open the browser on start anymore, use `--open=true` for that
+* [x] Changed the default port from `4444` to `6363`
+
+### Features
+
+* [x] Custom Port Setting inside Meme-Box (commandline option `--port` would still override it)
+* [x] Started with the Translation Process - Open PRs if you want to help!
+* [x] Improved Widgets (previously named `HTML`)
+  * [x] API for Twitch or Events that its shown and so on
+  * [x] Templates
+  * [x] Widget-Variables
+  * [x] Import / Export Widgets
+  * [x] Persistence of the Widget State across Screens
+* [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
+* [x] "Media Type": `Scripts` for more advanced features
+  * [ ] Wait once a triggered clip (inside the script) is done to trigger other stuff
+  * [ ] Use custom variables like in the Widget-Variables for easier configs
+
+### Fixes
+
+* [x] Changing any Settings - refreshed all media (including widgets) to be reloaded / recreated - #284
+* [x] Allow multiple reactions of twitch commands (example cheer and command by string)
+* [x] The Media Overview sometimes showed more items while listing/filtering items
+* [x] Arrange View: Prevent switching between tabs when editing media - #266
+* [x] Arrange View: Selected media still visible after assign media was clicked - #276
+* [x] Arrange View: Changing a media from position full screen to fixed - didn't added a size border- #253
+* [x] Arrange View: Moving Items out of screen-area - #250
+* [x] Media Creation: The Image Preview wasn't resizing on change - #238
+* [x] Media Creation: Visible screen time - minus values were possible - #239
+
+### Changes
+
+* [x] The Media Overview was redesigned by `@owehmer` (you can still switch to the old one)
+* [x] The Arrange View was redesigned by `@owehmer`
+* [x] "HTML" is now renamed to "Widgets"
+
+## 2021.2.1
 
 * [x] Each Media has a now cornered background to see boundaries
 * [x] Advanced: Ability to change the css transform value

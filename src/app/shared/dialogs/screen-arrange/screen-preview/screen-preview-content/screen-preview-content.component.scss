@@ -1,0 +1,18 @@
+:host {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.drag-drop-area-holder {
+  flex: 1;
+  min-height: 0;
+}
+
+.drag-drop-area {
+  position: relative;
+  overflow: hidden;
+
+  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
+}

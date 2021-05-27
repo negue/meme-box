@@ -1,15 +1,14 @@
-import { Compiler, Injectable, Injector, TemplateRef, Type } from '@angular/core';
-import { MatDialog } from "@angular/material/dialog";
-import { Clip, Screen, TimedClip, Twitch } from "@memebox/contracts";
-import { ComponentType } from "@angular/cdk/portal";
-import { MatDialogConfig } from "@angular/material/dialog/dialog-config";
-import { MatDialogRef } from "@angular/material/dialog/dialog-ref";
-import type { ConfirmationsPayload } from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
-import type { ScreenClipOptionsPayload } from "./screen-clip-options/screen-clip-options.component";
-import type { ClipAssigningDialogOptions } from "./clip-assigning-dialog/clip-assigning-dialog.component";
-import { DynamicIframeContent } from "@memebox/utils";
-import { MarkdownDialogPayload } from "../../../../server/constants";
-import { DialogContract } from "./dialog.contract";
+import {Compiler, Injectable, Injector, TemplateRef, Type} from '@angular/core';
+import {MatDialog} from "@angular/material/dialog";
+import {Clip, Screen, TimedClip, Twitch} from "@memebox/contracts";
+import {ComponentType} from "@angular/cdk/portal";
+import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
+import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import type {ConfirmationsPayload} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
+import type {ScreenClipOptionsPayload} from "./screen-clip-options/screen-clip-options.component";
+import type {ClipAssigningDialogOptions} from "./clip-assigning-dialog/clip-assigning-dialog.component";
+import {MarkdownDialogPayload} from "../../../../server/constants";
+import {CustomHtmlDialogPayload, CustomScriptDialogPayload, DialogContract} from "./dialog.contract";
 
 @Injectable()
 export class DialogService {
@@ -59,9 +58,19 @@ export class DialogService {
     );
   }
 
-  async showDynamicIframeEdit(payload: DynamicIframeContent) {
+  async showWidgetEdit(payload: CustomHtmlDialogPayload) {
     const dialogRef = await this.loadAndOpen(
-      import('./dynamic-iframe-edit/dynamic-iframe-edit.module'),
+      import('./widget-edit/widget-edit.module'),
+      payload
+    );
+
+    return dialogRef.afterClosed().toPromise();
+  }
+
+
+  async showScriptEdit(payload: CustomScriptDialogPayload) {
+    const dialogRef = await this.loadAndOpen(
+      import('./script-edit/script-edit.module'),
       payload
     );
 

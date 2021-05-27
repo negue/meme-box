@@ -5,6 +5,10 @@ import {Config} from "@memebox/contracts";
 import {AppService} from "../../../state/app.service";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {AppQueries} from "../../../state/app.queries";
+import {TranslocoService} from "@ngneat/transloco";
+import {TranslocoSelectedLangService} from "../../../transloco/transloco-selected-lang.service";
+
+const dummyItemsCreatorLazy = () => import('./dummyItemsCreator');
 
 @Component({
   selector: 'app-settings-overview',
@@ -13,10 +17,17 @@ import {AppQueries} from "../../../state/app.queries";
 })
 export class SettingsOverviewComponent implements OnInit {
   public config$: Observable<Partial<Config>> = this.query.config$;
+  public offlineMode$ = this.query.inOfflineMode$;
+
+  public currentLanguage = this.translocoService.getActiveLang();
+  public availableLanguages = this.translocoService.getAvailableLangs();
 
   constructor(public service: AppService,
               public query: AppQueries,
-              private _dialog: DialogService) {
+              private _dialog: DialogService,
+              private translocoService: TranslocoService,
+              private selectedLangService: TranslocoSelectedLangService) {
+
   }
 
   ngOnInit(): void {
@@ -42,5 +53,13 @@ export class SettingsOverviewComponent implements OnInit {
 
   downloadStreamdeckPlugin() {
     window.open('https://github.com/negue/meme-box/raw/release/memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin');
+  }
+
+  addMoreDummyItems () {
+    dummyItemsCreatorLazy().then(value => value.addMoreItems(this.service));
+  }
+
+  selectNewLanguage($event: any) {
+    this.selectedLangService.setSelectedLang($event)
   }
 }

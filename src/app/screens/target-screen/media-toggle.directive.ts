@@ -5,12 +5,14 @@ import {
   CombinedClip,
   MediaType,
   PositionEnum,
+  TriggerClip,
   VisibilityEnum
 } from "@memebox/contracts";
 import {KeyValue} from "@angular/common";
 import {BehaviorSubject, Subject} from "rxjs";
 import {TargetScreenComponent} from "./target-screen.component";
 import {takeUntil} from "rxjs/operators";
+import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
 
 enum MediaState {
   HIDDEN,
@@ -38,7 +40,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private selectedInAnimation = '';
   private selectedOutAnimation = '';
   private queueCounter = 0;
-  private queueTrigger = new Subject();
+  private queueTrigger = new Subject<TriggerClip>();
+  private _currentTriggeredPayload: TriggerClip;
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
 
@@ -96,7 +99,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
     this.queueTrigger.pipe(
       takeUntil(this._destroy$)
-    ).subscribe(() => {
+    ).subscribe((triggerEvent) => {
+      this._currentTriggeredPayload = triggerEvent;
 
       console.info('Queue Trigger - Subscribe', this.queueCounter);
 
@@ -134,9 +138,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.parentComp.mediaClipToShow$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(toShow => {
-      if (toShow === this.combinedClip.clip.id) {
+      if (toShow?.id === this.combinedClip.clip.id) {
         if (this.clipVisibility === VisibilityEnum.Toggle) {
-          this.queueTrigger.next();
+          this.queueTrigger.next(toShow);
           return;
         }
 
@@ -146,7 +150,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
           console.info('No Queue - Triggering', this.queueCounter);
 
-          this.queueTrigger.next();
+          this.queueTrigger.next(toShow);
         }
       }
     });
@@ -305,7 +309,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
         if (this.clipVisibility !== VisibilityEnum.Toggle) {
           this.queueCounter--;
-          this.queueTrigger.next();
+          this.queueTrigger.next(this._currentTriggeredPayload);
         }
 
         console.info('MEDIA DONE - Queue Counter', this.queueCounter);
@@ -324,6 +328,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       {
         this.isVisible$.next(true);
         this.removeAnimation(this.selectedInAnimation);
+        this.triggerComponentIsShown();
 
         // "once its done"
         this.stopMedia();
@@ -417,5 +422,13 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     var randomIndex = Math.floor(Math.random() * animations.length);     // returns a random integer from 0 to 9
 
     return animations[randomIndex];
+  }
+
+  private triggerComponentIsShown() {
+    const control = this.parentComp.clipToControlMap.get(this.combinedClip.clip.id);
+
+    if (control instanceof DynamicIframeComponent) {
+      control.componentIsShown(this._currentTriggeredPayload);
+    }
   }
 }

@@ -1,29 +1,41 @@
-import { Component, OnInit, TrackByFunction } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from "rxjs";
-import { Clip, HasId, Screen } from "@memebox/contracts";
-import { AppService } from "../../../state/app.service";
-import { AppQueries } from "../../../state/app.queries";
-import { WebsocketService } from "../../../core/services/websocket.service";
-import { DialogService } from "../../../shared/dialogs/dialog.service";
-import { IFilterItem } from "../../../shared/components/filter/filter.component";
-import { createCombinedFilterItems$, filterClips$ } from "../../../shared/components/filter/filter.methods";
-import { map } from "rxjs/operators";
+import { ChangeDetectionStrategy, Component, OnInit, TrackByFunction } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { Clip, HasId, Screen, Tag } from '@memebox/contracts';
+import { AppService } from '../../../state/app.service';
+import { AppQueries } from '../../../state/app.queries';
+import { WebsocketService } from '../../../core/services/websocket.service';
+import { DialogService } from '../../../shared/dialogs/dialog.service';
+import { IFilterItem } from '../../../shared/components/filter/filter.component';
+import { createCombinedFilterItems$, filterClips$ } from '../../../shared/components/filter/filter.methods';
+import { distinctUntilChanged, map, shareReplay } from 'rxjs/operators';
+import { OverviewUiMode, OverviewUiService } from './overview-ui.service';
+import isEqual from 'lodash/isEqual';
 
 @Component({
   selector: 'app-media-overview',
   templateUrl: './media-overview.component.html',
-  styleUrls: ['./media-overview.component.scss']
+  styleUrls: ['./media-overview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaOverviewComponent implements OnInit {
+  public uiMode$ = this._uiService.getCurrentUiMode$().pipe(
+    shareReplay({ refCount: true, bufferSize: 1 })
+  );
+  public OVERVIEW_MODES = OverviewUiMode;
 
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
   public mediaList$: Observable<Clip[]> = filterClips$(
     this.query.state$,
     this.filteredItems$
+  ).pipe(
+    distinctUntilChanged((pre, now) => isEqual(pre, now))
   );
 
   public screenList$: Observable<Screen[]> = this.query.screensList$;
+
+  public tagList$: Observable<Tag[]> = this.query.tagList$;
+  public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;
 
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.query.state$,
@@ -41,12 +53,13 @@ export class MediaOverviewComponent implements OnInit {
 
   public trackById: TrackByFunction<HasId> = (index, item) => {
     return item.id;
-  }
+  };
 
   constructor(public service: AppService,
               public query: AppQueries,
               private _dialog: DialogService,
-              private _wsService: WebsocketService) {
+              private _wsService: WebsocketService,
+              private _uiService: OverviewUiService) {
   }
 
   ngOnInit(): void {
@@ -56,6 +69,9 @@ export class MediaOverviewComponent implements OnInit {
     this.showDialog(null);
   }
 
+  fillWithDummyData() {
+    this.service.fillDummyData();
+  }
 
   showDialog(clipInfo: Partial<Clip>): void {
     this._dialog.showMediaEditDialog(clipInfo);
@@ -63,7 +79,7 @@ export class MediaOverviewComponent implements OnInit {
 
   async onDelete(clipId: string) {
     const result = await this._dialog.showConfirmationDialog({
-      title: 'Are you sure you want to delete this clip?',
+      title: 'Are you sure you want to delete this clip?'
     });
 
     if (result) {
@@ -103,5 +119,9 @@ export class MediaOverviewComponent implements OnInit {
 
   openHelpOverview() {
     this._dialog.showHelpOverview();
+  }
+
+  toggleViewModes() {
+    this._uiService.toggleCurrentUiMode();
   }
 }

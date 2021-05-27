@@ -44,6 +44,25 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "owehmer",
+      "name": "Oliver",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45573843?v=4",
+      "profile": "https://github.com/owehmer",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "jonathanbucci",
+      "name": "jonathanbucci",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29556823?v=4",
+      "profile": "https://github.com/jonathanbucci",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,

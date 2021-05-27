@@ -1,23 +1,29 @@
 import open from 'open';
-import * as fs from 'fs';
-import {expressServer} from './server-app';
 import {LOGGER} from "./logger.utils";
+import {bootstrapTsED} from "./server.bootstrap";
+import {isProduction} from "./server.tsed";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 // CLI, Headless Mode
 
-if(fs.existsSync('package.json')) {
-  const waitForLocalhost = require('wait-for-localhost');
+bootstrapTsED().then(async ({expressServer}) => {
+  const port: number = expressServer.get('port');
 
-  console.info('Waiting on Angular to finish the build :)');
+  if (!isProduction) {
+    const waitForLocalhost = require('wait-for-localhost');
 
-  (async () => {
+    console.info('Waiting on Angular to finish the build :)');
+
     await waitForLocalhost({port: 4200});
 
-    open(`http://localhost:4200?port=${expressServer.get('port')}`);
+    open(`http://localhost:4200?port=${port}`);
     LOGGER.info('== DEV-MODE == Server is ready');
-  })();
-} else {
-  LOGGER.info('Server is ready');
-  open(`http://localhost:${expressServer.get('port')}`);
-}
+  } else {
+    LOGGER.info('Server is ready');
+
+    if (CLI_OPTIONS.OPEN_BROWSER) {
+      open(`http://localhost:${port}`);
+    }
+  }
+});
 

@@ -1,13 +1,13 @@
-<span mat-dialog-title>
-  <span>
+<div mat-dialog-title>
+  <div>
     <h2>Arrange the Media on this Screen: {{screen.name}}</h2>
     <mat-hint>Screen Size [{{screen?.width}}]x[{{screen?.height}}]</mat-hint>
-  </span>
+  </div>
 
-  <button mat-button mat-dialog-close style="align-self: flex-start">Close</button>
-</span>
+  <button mat-button (click)="closeDlg()" style="align-self: flex-start">Close</button>
+</div>
 <mat-dialog-content class="mat-typography">
-  <mat-tab-group #tabGroup (selectedTabChange)="clickedOutside()">
+  <mat-tab-group #tabGroup [selectedIndex]="selectedIndex" (selectedTabChange)="tabSelectionChanged($event)">
     <mat-tab label="Arrange">
     </mat-tab>
     <mat-tab label="Preview"></mat-tab>
@@ -15,311 +15,31 @@
 
   <div class="tab_content" [class.hidden]="tabGroup.selectedIndex !== 0">
 
-    <div class="sidebar" *ngIf="clipList$|async as allItems">
-      <div class="sidebar__title">
-        <h3>Visible Media</h3>
+    <app-screen-arrange-sidebar
+      [allItems]="clipList$ | async"
+      [visibleItems]="visibleItems$ | async"
+      [screen]="screen"
+      [currentSelectedClip]="currentSelectedClip"
+      [selectedItems]="selectedItems"
+      [unsavedChangesIds]="unsavedChangesIds"
+      (changeCurrSelectedClip)="currentSelectedClip = $event"
+    ></app-screen-arrange-sidebar>
 
-        <div class="actionButtons">
-          <button mat-button (click)="hiddenSelect.open()"
-                  matTooltip="Select Media to be listed / previewed">
-            <ng-container *ngIf="items.length === selectedItems.value?.length || selectedItems.value?.length === 0">
-              All media visible
-            </ng-container>
-            <ng-container *ngIf="![items.length, 0].includes(selectedItems.value?.length)">
-              {{selectedItems.value?.length}} visible
-            </ng-container>
-            <mat-icon svgIcon="arrow_drop_down"></mat-icon>
-          </button>
-
-          <mat-select multiple [formControl]="selectedItems"
-                      style="visibility:hidden;width: 0"
-                      #hiddenSelect>
-            <mat-option *ngFor="let item of allItems" [value]="item.clip.id">
-              {{item.clip.name}}
-            </mat-option>
-            <mat-select-trigger>
-
-            </mat-select-trigger>
-          </mat-select>
-
-          <button (click)="assignMedia()"
-                  class="actionButtons--single"
-                  color="accent"
-                  mat-flat-button>
-            <mat-icon svgIcon="playlist_add"></mat-icon>
-            Assign Media
-          </button>
-
-        </div>
-
-
-      </div>
-
-      <div class="sidebar__items">
-        <mat-card *ngFor="let visibleItem of visibleItems$ | async"
-                  (click)="onSelectMedia($event, matRippleInstance, visibleItem)"
-                  [class.selected]="currentSelectedClip?.clip?.id === visibleItem.clip.id"
-                  matRipple [matRippleDisabled]="true"
-
-                  #matRippleInstance="matRipple">
-          <!-- TODO Extract Item  MatCard to its own component -->
-          <mat-card-header>
-            <div mat-card-avatar>
-              <app-clip-type [type]="visibleItem.clip.type"
-                             iconSize="36px"
-                             mat-list-icon>
-
-              </app-clip-type>
-            </div>
-            <mat-card-title>{{visibleItem.clip.name}}</mat-card-title>
-            <mat-card-subtitle>
-              {{visibleItem.clipSetting.visibility | visibilityToString}} / {{visibleItem.clipSetting.position | positionToString }}
-            </mat-card-subtitle>
-            <div style="width: 40px; height: 40px">
-            <button (click)="openMediaSettingsDialog($event, visibleItem)"
-                    mat-icon-button>
-              <mat-icon svgIcon="settings"></mat-icon>
-            </button>
-            </div>
-          </mat-card-header>
-
-          <mat-card-content>
-            Size:
-
-            <ng-container *ngIf="visibleItem.clipSetting.position === 0">
-              {{visibleItem.clipSetting.position | positionToString }}
-            </ng-container>
-            <ng-container *ngIf="visibleItem.clipSetting.position">
-              [{{visibleItem.clipSetting.width}}] x [{{visibleItem.clipSetting.height}}]
-            </ng-container>
-            <br>
-
-            Pos:
-            <ng-container *ngIf="visibleItem.clipSetting.position === 1 ">
-
-              <ng-container *ngIf="visibleItem.clipSetting.left">
-                L: {{visibleItem.clipSetting.left}}
-              </ng-container>
-
-              <ng-container *ngIf="visibleItem.clipSetting.top">
-                T: {{visibleItem.clipSetting.top}}
-              </ng-container>
-
-              <ng-container *ngIf="visibleItem.clipSetting.right">
-                R: {{visibleItem.clipSetting.right}}
-              </ng-container>
-
-              <ng-container *ngIf="visibleItem.clipSetting.bottom">
-                B: {{visibleItem.clipSetting.bottom}}
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="visibleItem.clipSetting.position !== 1 ">
-              {{ visibleItem.clipSetting.position | positionToString}}
-            </ng-container>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-    <div class="preview-area">
-      <div class="dragging-config">
-        <div class="spacer" *ngIf="!currentSelectedClip"></div>
-        <div class="inline" [class.hidden]="!currentSelectedClip">
-          <mat-form-field *ngIf="currentSelectedClip">
-            <mat-select (selectionChange)="triggerChangedetection()"
-                        [(value)]="currentSelectedClip.clipSetting.position"
-                        placeholder="Media Position">
-              <mat-option [value]="0">{{0 | positionToString}}</mat-option>
-              <mat-option [value]="1">{{1 | positionToString}}</mat-option>
-              <mat-option [value]="2">{{2 | positionToString}}</mat-option>
-              <mat-option [value]="3">{{3 | positionToString}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <button mat-raised-button (click)="saveAllSettings()" color="accent">
-            Save all Clip Settings
-          </button>
-        </div>
-
-
-      </div>
-      <div class="drag-drop-area-holder"
-           #holdingElement
-      >
-
-        <gewd-auto-scale [width]="holdingElement.clientWidth"
-                         [height]="holdingElement.clientHeight"
-
-        >
-          <div class="drag-drop-area" (click)="clickedOutside()"
-               [style.width.px]="screen?.width || 1920"
-               [style.height.px]="screen?.height || 1080"
-          >
-            <ng-container *ngFor="let pair of visibleItems$|async; trackBy: trackByClip">
-              <!-- improve the duplicate settings -->
-              <ng-container *ngIf="pair.clipSetting.position === PositionEnum.FullScreen">
-                <app-clip-preview [clip]="pair.clip"
-                                  [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
-                                  [style.position]="'absolute'"
-                                  draggable="false" class="dragable-preview"></app-clip-preview>
-              </ng-container>
-              <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Centered"
-                                     [clip]="pair.clip"
-                                     [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
-                                     [screen]="screen"
-                                     [sizeType]="sizeType.value"
-                                     [showResizeBorder]="pair === currentSelectedClip"
-                                     [settings]="pair.clipSetting" #dragResizeMediaComponent
-                                     (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
-                                     (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
-
-                                     transformOrigin="center center"
-                                     [draggingEnabled]="false"
-                                     [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"
-                                     [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
-                                     [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
-                                     class="dragable-preview"
-              >
-
-              </app-drag-resize-media>
-              <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Random"
-                                     [clip]="pair.clip"
-                                     [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
-                                     [screen]="screen"
-                                     [sizeType]="sizeType.value"
-                                     [showResizeBorder]="pair === currentSelectedClip"
-                                     [settings]="pair.clipSetting" #dragResizeMediaComponent
-                                     (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
-                                     (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
-                                     [draggingEnabled]="false"
-                                     [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : true"
-                                     [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
-                                     [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
-                                     class="dragable-preview"
-              >
-
-              </app-drag-resize-media>
-
-                <app-drag-resize-media
-                  *ngIf="pair.clipSetting.position === PositionEnum.Absolute"
-                  [clip]="pair.clip"
-                  [screen]="screen"
-                  [sizeType]="sizeType.value"
-                  [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
-                  [showResizeBorder]="pair === currentSelectedClip"
-                  (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
-                  [settings]="pair.clipSetting" #dragResizeMediaComponent
-                  (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
-
-                  [draggingEnabled]="pair.clipSetting.arrangeLock?.position ? false : dragCheckbox.checked"
-                  [resizeEnabled]="pair.clipSetting.arrangeLock?.size ? false : resizeCheckbox.checked"
-                  [rotateEnabled]="pair.clipSetting.arrangeLock?.transform ? false : rotateCheckbox.checked"
-                  [warpEnabled]="pair.clipSetting.arrangeLock?.transform ? false : warpingCheckbox.checked"
-
-                  class="dragable-preview"
-                >
-
-                </app-drag-resize-media>
-              </ng-container>
-          </div>
-
-        </gewd-auto-scale>
-
-      </div>
-
-      <div class="dragging-config">
-        <div class="spacer" *ngIf="!currentSelectedClip"></div>
-        <div class="inline" [class.hidden]="!currentSelectedClip">
-          <h2>
-            Drag / Arrange Options
-          </h2>
-          <div>
-            <mat-form-field>
-              <mat-select #sizeType [value]="currentSelectedClip?.clipSetting | settingsToSizingType"
-                          placeholder="Sizing Type">
-                <mat-option value="px">PX</mat-option>
-                <mat-option value="%">%</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-checkbox [checked]="true" #dragCheckbox
-                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.position">
-              Drag
-            </mat-checkbox>
-            <mat-checkbox [checked]="true" #resizeCheckbox
-                          (change)="onCheckedToggle($event, warpingCheckbox)"
-                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.size">
-              Resizing
-            </mat-checkbox>
-            <mat-checkbox #rotateCheckbox
-                          [checked]="true"
-                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">
-              Rotating
-            </mat-checkbox>
-            <mat-checkbox #warpingCheckbox
-                          (change)="onCheckedToggle($event, resizeCheckbox)"
-                          [disabled]="currentSelectedClip?.clipSetting.arrangeLock?.transform">
-              Warping
-            </mat-checkbox>
-          </div>
-        <button mat-raised-button (click)="reset()" color="warn">
-            Reset
-          </button>
-
-        </div>
-      </div>
-    </div>
+    <app-screen-arrange-preview
+      [visibleItems]="visibleItems$ | async"
+      [screen]="screen"
+      [currentSelectedClip]="currentSelectedClip"
+      [unsavedChangesIds]="unsavedChangesIds"
+      (changeCurrSelectedClip)="currentSelectedClip = $event"
+      (userChangeElement)="userChangedMedia($event)"
+      (changesSaved)="userResetChangedOfMedia($event)"
+      (mediaReset)="userResetChangedOfMedia($event)"
+    ></app-screen-arrange-preview>
   </div>
 
   <!-- Preview -->
-  <div class="tab_content" *ngIf="tabGroup.selectedIndex === 1">
-    <div class="sidebar">
-      <div class="sidebar__title" style="justify-content: center">
-        <h3 class="preview-label">Click to preview Media</h3>
-      </div>
-
-      <div class="sidebar__items">
-        <mat-card *ngFor="let visibleItem of clipList$ | async"
-                  class="small selectable" matRipple
-                  (click)="onPreview(visibleItem)">
-          <mat-card-header>
-            <div mat-card-avatar>
-              <app-clip-type [type]="visibleItem.clip.type"
-                             iconSize="36px"
-                             mat-list-icon>
-
-              </app-clip-type>
-            </div>
-            <mat-card-title>{{visibleItem.clip.name}}</mat-card-title>
-            <mat-card-subtitle>
-              {{visibleItem.clipSetting.visibility | visibilityToString}} / {{visibleItem.clipSetting.position | positionToString }}
-            </mat-card-subtitle>
-          </mat-card-header>
-        </mat-card>
-      </div>
-    </div>
-
-    <div class="preview-area">
-      <div class="drag-drop-area-holder"
-           #holdingElement
-      >
-        <gewd-auto-scale [width]="holdingElement.clientWidth"
-                         [height]="holdingElement.clientHeight"
-
-        >
-
-          <div [style.width.px]="screen.width"
-               [style.height.px]="screen.height"
-               class="drag-drop-area">
-            <app-target-screen [screenId]="screen.id"
-
-            >
-
-            </app-target-screen>
-          </div>
-
-        </gewd-auto-scale>
-      </div>
-    </div>
-  </div>
+  <app-screen-preview [class.hidden]="tabGroup.selectedIndex !== 1"
+                      class="tab_content"
+                      [allItems]="clipList$ | async"
+                      [screen]="screen"></app-screen-preview>
 </mat-dialog-content>
-

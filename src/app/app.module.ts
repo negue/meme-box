@@ -1,29 +1,40 @@
 import 'reflect-metadata';
 import '../polyfills';
 
-import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {HttpClientModule} from '@angular/common/http';
 
-import { AppRoutingModule } from './app-routing.module';
-// NG Translate
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {AppRoutingModule} from './app-routing.module';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { AppConfig } from '@memebox/app/env';
-import { MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
-import { StyleguideColors } from './shared/styleguide/styleguide.component';
+import {AppComponent} from './app.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatIconModule} from "@angular/material/icon";
+import {AppConfig} from '@memebox/app/env';
+import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
 
-import { APP_ICONS } from "./app.icons";
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions } from "@gewd/markdown/contracts";
-import { MarkdownOptionsInjectorToken } from "@gewd/markdown/service";
-import { MatTooltipModule } from "@angular/material/tooltip";
-import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions } from "@angular/material/checkbox";
-import { ENVIRONMENT_MODULES } from "../environments/modules/modules";
+import {APP_ICONS} from "./app.icons";
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions} from "@gewd/markdown/contracts";
+import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
+import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
+import {ServicesModule} from "./core/services/services.module";
+import {TranslocoRootModule} from './transloco/transloco-root.module';
+import {RegisterIconsModule} from "@gewd/mat-utils/material-icons";
+
+export const StyleguideColors = {
+  // var(--palette-background-background)
+  background: '#2f3640',
+  foreground: '#ffffff',
+  primary: '#4bcffa',
+  // mat-css-color-accent()
+  accent: '#575fcf',
+  warn: '#f53b57',
+  highlight: '#00d8d6', // todo add custom css var
+  chipSelected: '#ffd32a'
+}
 
 
 console.warn('APP.MODULE.TS - AppConfig', AppConfig);
@@ -33,11 +44,6 @@ const markdownWorker = () => new Worker('./markdown.worker.ts', {
   type: "module"
 });
 
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,13 +51,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   imports: [
     BrowserModule,
     AppRoutingModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
     BrowserAnimationsModule,
 
     MaterialCssVarsModule.forRoot({
@@ -69,8 +68,20 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     MatIconModule,
     MatTooltipModule,
+    ServicesModule,
+
+    RegisterIconsModule.register({
+      iconArray: APP_ICONS,
+      pathToIcons: './assets/material-icons'
+    }),
+    RegisterIconsModule.register({
+      iconArray: ['twitch'],
+      pathToIcons: './assets/'
+    }),
+    TranslocoRootModule
   ],
   providers: [
+    // todo extract to custom markdown
     {
       provide: MarkdownOptionsInjectorToken,
       useValue: {
@@ -106,20 +117,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
 })
 export class AppModule {
   constructor(
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer,
     public materialCssVarsService: MaterialCssVarsService
   ) {
-    for (const icon of APP_ICONS) {
-      iconRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(
-        `./assets/material-icons/${icon}.svg`
-      ));
-    }
-
-    iconRegistry.addSvgIcon('twitch', sanitizer.bypassSecurityTrustResourceUrl(
-      `./assets/twitch.svg`
-    ));
-
     this.materialCssVarsService.setDarkTheme(true);
     this.materialCssVarsService.setAutoContrastEnabled(true)
     this.materialCssVarsService.setPrimaryColor(StyleguideColors.primary);

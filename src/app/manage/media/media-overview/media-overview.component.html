@@ -2,8 +2,8 @@
             [items]="filterItems$ | async"
             (selected)="filteredItems$.next($event)"></app-filter>
 
-<div *ngIf="mediaList$ | async as mediaList">
-  <app-card-overview>
+<div class="mo__content-container" *ngIf="mediaList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
+  <app-card-overview *ngSwitchCase="OVERVIEW_MODES.pro">
     <app-overview-item *ngIf="showGettingStarted$ | async ; else hasData ">
       <app-getting-started></app-getting-started>
     </app-overview-item>
@@ -15,7 +15,7 @@
       </app-overview-add-item>
     </ng-template>
 
-    <app-overview-item *ngFor="let item of mediaList; trackBy: trackById">
+    <app-overview-item *ngFor="let item of mediaList | lazyArray$:100: 3 | async; trackBy: trackById">
       <app-media-info (onDelete)="onDelete(item.id)"
                       (onEdit)="onEdit(item)"
                       (onEditScreenClipOptions)="onClipOptions(item, $event)"
@@ -30,20 +30,75 @@
     </app-overview-item>
 
   </app-card-overview>
+
+  <div class="mo__casual-overview" *ngSwitchCase="OVERVIEW_MODES.casual">
+    <div *ngIf="showGettingStarted$ | async" class="getting-started-info-pane">
+      <div *ngIf="inOfflineMode$ | async">
+        <mat-icon inline svgIcon="warning" color="warn" class="getting-started-info-pane__icon"></mat-icon>
+        <span>You are currently in offline mode. Press
+            <button mat-fab
+                    color="warn"
+                    class="info-pane-inline-btn"
+                    (click)="fillWithDummyData()"
+            >
+              <mat-icon svgIcon="dashboard_customize"></mat-icon>
+            </button>
+            to fill with dummy data
+        </span>
+      </div>
+
+      <div>
+        <mat-icon inline svgIcon="info" color="primary" class="getting-started-info-pane__icon"></mat-icon>
+        <span>To add media files click on the
+          <button mat-fab color="warn" class="info-pane-inline-btn fake-add" [disableRipple]="true">
+            <mat-icon svgIcon="add"></mat-icon>
+          </button>
+          button below
+        </span>
+      </div>
+    </div>
+
+    <div *ngFor="let mediGroup of mediaList | groupByMediaType" class="mo__casual-overview__group">
+      <div class="mo__casual-overview__group__title mat-headline"  >
+        <ng-container *transloco="let t; read: '$common$' ">
+          {{t(mediGroup.groupName)}}
+        </ng-container>
+      </div>
+
+      <div class="mo__casual-overview__group__medias">
+        <app-media-card *ngFor="let item of mediGroup.medias | lazyArray$:100: 3 | async; trackBy: trackById"
+                        [media]="item"
+                        [screens]="screenList$ | async"
+                        [tags]="tagList$ | async"
+                        (onEdit)="onEdit(item)"
+                        (onPreview)="onPreview(item)"
+                        (onDelete)="onDelete(item.id)"
+        >
+        </app-media-card>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="floating-action-button">
   <button mat-mini-fab
-          aria-label="Opening the Help-Overview"
-          matTooltip="Opening the Help-Overview"
+          aria-label="Switch view mode"
+          matTooltip="Switch view mode"
+          (click)="toggleViewModes()"
+  >
+    <mat-icon [svgIcon]='(uiMode$ | async) === OVERVIEW_MODES.casual ? "collage" : "grid_view"'></mat-icon>
+  </button>
+  <button mat-mini-fab
+          aria-label="Open the help overview"
+          matTooltip="Open the help overview"
           (click)="openHelpOverview()">
     <mat-icon svgIcon="help_center"></mat-icon>
   </button>
-  <button (click)="addNewItem()"
+  <button mat-fab
           aria-label="Add a new meme/media"
           matTooltip="Add a new meme/media"
           color="warn"
-          mat-fab
+          (click)="addNewItem()"
   >
     <mat-icon svgIcon="add"></mat-icon>
   </button>

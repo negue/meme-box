@@ -1,12 +1,12 @@
-import { Component, Inject, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Clip, ClipAssigningMode, Dictionary, MediaType, Screen, UnassignedFilterEnum } from "@memebox/contracts";
-import { BehaviorSubject, Observable, Subject } from "rxjs";
-import { map, takeUntil, withLatestFrom } from "rxjs/operators";
-import { IFilterItem } from "../../components/filter/filter.component";
-import { createCombinedFilterItems$, filterClips$ } from "../../components/filter/filter.methods";
-import { AppQueries } from "../../../state/app.queries";
-import { AppService } from "../../../state/app.service";
+import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Clip, ClipAssigningMode, Dictionary, MediaType, Screen, UnassignedFilterEnum} from "@memebox/contracts";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {map, takeUntil, withLatestFrom} from "rxjs/operators";
+import {IFilterItem} from "../../components/filter/filter.component";
+import {createCombinedFilterItems$, filterClips$} from "../../components/filter/filter.methods";
+import {AppQueries} from "../../../state/app.queries";
+import {AppService} from "../../../state/app.service";
 
 
 export interface ClipAssigningDialogOptions {
@@ -34,6 +34,8 @@ function unassignedFilterToString(  unassignedFilterType: UnassignedFilterEnum) 
   return '';
 }
 
+const ignoreMediaTypes = [MediaType.WidgetTemplate];
+
 @Component({
   selector: 'app-clip-assigning-dialog',
   templateUrl: './clip-assigning-dialog.component.html',
@@ -50,12 +52,19 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
     this.appQueries.state$,
     true
   ).pipe(
-    map(value => {
-      if (this.data.showMetaItems) {
-        return value;
-      } else {
-        return value.filter(c => c.type === 'TAG' || c.value !== MediaType.Meta)
-      }
+    map(filterItems => {
+      return filterItems.filter(item => {
+        if (item.type === 'TAG') {
+          return true;
+        }
+
+
+        if (!this.data.showMetaItems) {
+          ignoreMediaTypes.push(MediaType.Meta);
+        }
+
+        return !ignoreMediaTypes.includes(item.value);
+      })
     }),
     map(filterItems => {
       if (this.data.showOnlyUnassignedFilter) {
