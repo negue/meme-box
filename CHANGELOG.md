@@ -19,6 +19,7 @@
 * [x] "Media Type": `Scripts` for more advanced features
   * [ ] Wait once a triggered clip (inside the script) is done to trigger other stuff
   * [ ] Use custom variables like in the Widget-Variables for easier configs
+* [x] Timers / Twitch Events can now select the Target Screen
 
 ### Fixes
 

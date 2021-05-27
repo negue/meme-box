@@ -1,11 +1,12 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
   Clip,
   ClipAssigningMode,
   Dictionary,
+  MediaType,
   Twitch,
   TwitchEventTypes,
   TwitchTypesArray,
@@ -15,13 +16,14 @@ import {AppService} from '../../../state/app.service';
 import {AppQueries} from '../../../state/app.queries';
 import {SnackbarService} from '../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
-import {distinctUntilChanged, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
+import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<Twitch> = {
   name: '',
   event: TwitchEventTypes.message,
   contains: '',
+  screenId: '',
   active: true,
   roles: ['user']
 };
@@ -69,6 +71,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     name: "",
     event: "",
     clipId: "",
+    screenId: "",
     contains: "",
     minAmount: undefined,
     maxAmount: undefined,
@@ -80,7 +83,27 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   twitchEventTypes = TwitchEventTypes;
 
+  selectedMediaId$ = new BehaviorSubject('');
+
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
+  selectedMedia$ = combineLatest([
+    this.clipDictionary$,
+    this.selectedMediaId$
+  ]).pipe(
+    filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
+    map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
+  );
+
+  showScreenSelection$ = this.selectedMedia$.pipe(
+    map(media => ![MediaType.Script, MediaType.Meta, MediaType.WidgetTemplate].includes(media.type) )
+  );
+
+  screenList$ = combineLatest([
+    this.selectedMedia$,
+    this.appQuery.screensList$
+  ]).pipe(
+    map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
+  );
 
   showWarningClipSelection = false;
 
@@ -101,6 +124,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     });
     this.data.roles = [...this.data.roles];
     console.info({data: this.data});
+    this.selectedMediaId$.next(this.data.clipId);
   }
 
   async save() {
@@ -218,6 +242,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         clipId
       });
+
+      this.selectedMediaId$.next(clipId);
     }
   }
 
