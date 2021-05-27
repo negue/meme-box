@@ -2,9 +2,8 @@
   <code *ngIf="form.value.everyXms">{{form.value.everyXms | readableMs}}</code>
 </h2>
 <mat-dialog-content class="mat-typography min-height-dialog">
-  <div class="two-columns">
+  <div class="two-columns" [formGroup]="form">
     <div class="column">
-      <form [formGroup]="form">
         <div class="example-container">
           <mat-form-field appearance="outline">
             <mat-label>Trigger</mat-label>
@@ -25,7 +24,7 @@
         <button mat-raised-button class="example-button" (click)="setXMinutes(1)">Every 1 minute</button>
         <button mat-raised-button class="example-button" (click)="setXMinutes(10)">Every 10 minutes</button>
         <button mat-raised-button class="example-button" (click)="setXMinutes(30)">Every 30 minutes</button>
-      </form>
+
     </div>
     <div class="column">
       <div class="example-container">
@@ -54,6 +53,21 @@
       </div>
 
       <br />
+
+
+      <div class="example-container" *ngIf="showScreenSelection$ | async">
+        <mat-form-field appearance="fill">
+          <mat-label>Target Screen</mat-label>
+          <mat-select formControlName="screenId">
+            <mat-option [value]="''">All</mat-option>
+            <mat-option *ngFor="let screen of screenList$ | async"
+                        [value]="screen.id">
+              {{ screen.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
     </div>
   </div>
 </mat-dialog-content>

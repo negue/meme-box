@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ACTIONS, TriggerClip} from "@memebox/contracts";
+import {ACTIONS, TriggerClip, TriggerClipOrigin} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {AppConfig} from "@memebox/app/env";
@@ -57,6 +57,8 @@ export class WebsocketService {
       targetScreen: screenId,
       repeatX: 0,  // todo after streamdeck ?
       repeatSecond: 0,
+
+      origin: TriggerClipOrigin.AppPreview
     }
 
     this.ws.send(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);

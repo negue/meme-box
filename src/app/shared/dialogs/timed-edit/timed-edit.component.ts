@@ -1,16 +1,18 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Clip, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
+import {Clip, ClipAssigningMode, Dictionary, MediaType, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppService} from '../../../state/app.service';
 import {AppQueries} from '../../../state/app.queries';
 import {SnackbarService} from '../../../core/services/snackbar.service';
 import {DialogService} from "../dialog.service";
+import {filter, map} from "rxjs/operators";
 
 // TODO better class/interface name?
 const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
   clipId:  '',
+  screenId: '',
   active: true,
   everyXms: 1000 * 60  // 1min
 };
@@ -24,12 +26,35 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
     id: "",
     clipId: "",
+    screenId: "",
     everyXms: [undefined, Validators.max(19_999_999)]
   });
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 
   showWarningClipSelection = false;
+
+  selectedMediaId$ = new BehaviorSubject('');
+
+  selectedMedia$ = combineLatest([
+    this.clipDictionary$,
+    this.selectedMediaId$
+  ]).pipe(
+    filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
+    map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
+  );
+
+  showScreenSelection$ = this.selectedMedia$.pipe(
+    map(media => ![MediaType.Script, MediaType.Meta, MediaType.WidgetTemplate].includes(media.type) )
+  );
+
+  screenList$ = combineLatest([
+    this.selectedMedia$,
+    this.appQuery.screensList$
+  ]).pipe(
+    map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
+  );
+
 
   private _destroy$ = new Subject();
 
@@ -47,6 +72,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       ...this.data
     });
     console.info({data: this.data});
+    this.selectedMediaId$.next(this.data.clipId);
   }
 
   async save() {
@@ -103,6 +129,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         clipId
       });
+      this.selectedMediaId$.next(clipId);
     }
   }
 

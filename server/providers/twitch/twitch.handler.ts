@@ -3,7 +3,7 @@ import {TwitchConnector} from "./twitch.connector";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
-import {Dictionary, TwitchTriggerCommand} from "@memebox/contracts";
+import {Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
 import {TwitchLogger} from "./twitch.logger";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
@@ -76,7 +76,10 @@ export class TwitchHandler {
         this.cooldownDictionary[trigger.command.id] = Date.now();
 
         this._mediaTriggerEventBus.triggerMedia({
-          id: trigger.command.clipId
+          id: trigger.command.clipId,
+          targetScreen: trigger.command.screenId,
+          origin: TriggerClipOrigin.TwitchEvent,
+          originId: trigger.command.id,
         });
       }
     }

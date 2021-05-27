@@ -98,9 +98,11 @@ export class MemeboxWebsocket {
       }
       case ACTIONS.TRIGGER_CLIP: {
         const payloadObs: TriggerClip = JSON.parse(payload);
-
+        payloadObs.fromWebsocket = true;
 
         this.logger.info(`TRIGGER DATA TO - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
+
+        // TODO refactor this dependency pingpong
 
         if (!payloadObs.targetScreen) {
           this.mediaTriggerEventBus.triggerMedia(payloadObs);
