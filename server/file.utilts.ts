@@ -1,5 +1,5 @@
 import {fileEndingToType} from "../projects/utils/src/lib/files";
-import {basename, extname, join, resolve, sep} from "path";
+import {basename, dirname, extname, join, resolve, sep} from "path";
 import {FileInfo, SERVER_URL} from '@memebox/contracts';
 import fs, {existsSync} from "fs";
 
@@ -67,15 +67,24 @@ export function mapFileInformations (
 const versions = process.versions;
 export const isInElectron = !!versions['electron'];
 
-export function getAppRootPath () {
-  const appRootPath = isInElectron ? join(__dirname, '/../dist') : 'dist';
 
-  if (existsSync(appRootPath)) {
-    return appRootPath;
+export function getAppRootPath () {
+  const baseDir = dirname(process.execPath);
+
+  const defaultAppOutPutDir = join(baseDir, '/dist');
+
+  let appRootPath = isInElectron
+    ? join(baseDir, '/../dist')
+    : defaultAppOutPutDir;
+
+  if (!existsSync(appRootPath) && isInElectron) {
+    // serving electron without a built/copied app yet
+    appRootPath = join(baseDir, '/../../dist');
+  } else {
+    appRootPath = defaultAppOutPutDir;
   }
 
-  // serving electron without a built/copied app yet
-  return join(__dirname, '/../../dist');
+  return appRootPath;
 }
 
 const outElectronPath = 'out-electron';
