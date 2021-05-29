@@ -1,4 +1,4 @@
-# Meta Clips (Advanced)
+# Meta Media (Advanced)
 
 1. Create your media with the type of `Meta`
 2. While creating your meta group, you need to `Assign a new tag` to tag other media clips that those should be linked

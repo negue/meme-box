@@ -31,7 +31,7 @@ Functions are able to be called on *both* Script-Types
 |--|--|
 | `console.info` | To log stuff |
 | `waitMillisecondsAsync(ms)` | waits for `ms` |
-| `triggerClipAsync(mediaId, screenId?)` | It will trigger this media and wait until its done |
+| `triggerMediaAsync(mediaId, screenId?)` | It will trigger this media and wait until its done |
 
 
 ### `TriggerPayload`

@@ -40,7 +40,7 @@ export class ScriptHandler {
         return obs;
       },
       waitMillisecondsAsync: (ms: number) => timeoutAsync(ms),
-      triggerClipAsync: (targetMediaId: string, targetScreenId?: string) => {
+      triggerMediaAsync: (targetMediaId: string, targetScreenId?: string) => {
         this.mediaTriggerEventBus.triggerMedia({
           id: targetMediaId,
           targetScreen: targetScreenId,

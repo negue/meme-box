@@ -49,7 +49,7 @@ A complete management app for [`image / audio / video / iframe / widgets`](/tuto
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 
-[URL_META_CLIPS]: ./tutorials/meta_clips.md
+[URL_META_CLIPS]: tutorials/meta_media.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
 
 ___
