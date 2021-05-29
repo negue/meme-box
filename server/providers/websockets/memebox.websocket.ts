@@ -116,6 +116,13 @@ export class MemeboxWebsocket {
         this.sendDataToScreen(payload, message);
         break;
       }
+      case ACTIONS.MEDIA_STATE: {
+        console.info('mediaState', {
+          payload
+        });
+
+        break;
+      }
     }
   }
 }

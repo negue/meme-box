@@ -51,6 +51,16 @@ export class WebsocketService {
     this.ws.send(`${action}=${payload}`);
   }
 
+  public updateMediaState(mediaId: string, screenId: string, showing: boolean) {
+    const triggerObj = {
+      mediaId,
+      screenId,
+      showing,
+    };
+
+    this.ws.send(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);
+  }
+
   public triggerClipOnScreen(clipId: string, screenId?: string | null) {
     const triggerObj: TriggerClip = {
       id: clipId,

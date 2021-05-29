@@ -24,6 +24,7 @@ The Loaded Clips need to stay cached?
 
      appMediaToggle [mediaHoldingElement]="mediaHolder"
      [combinedClip]="entry"
+     [screenId]="screenId"
      #mediaToggleVar="appMediaToggle"
 
      [class.clip-is-visible]="mediaToggleVar.isVisible$ | async"
