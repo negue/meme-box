@@ -1,9 +1,10 @@
 import {Service, UseOpts} from "@tsed/di";
 import {NamedLogger} from "../named-logger";
 import * as WebSocket from "ws";
-import {ACTIONS, Dictionary, TriggerClip} from "@memebox/contracts";
+import {ACTIONS, Dictionary, MediaStatePayload, TriggerClip} from "@memebox/contracts";
 import {Subject} from "rxjs";
-import {MediaTriggerEventBus} from "../media-trigger.event-bus";
+import {MediaTriggerEventBus} from "../media/media-trigger.event-bus";
+import {MediaStateEventBus} from "../media/media-state.event-bus";
 
 // todo maybe extract?
 interface WebSocketType {
@@ -26,7 +27,8 @@ export class MemeboxWebsocket {
 
   constructor(
     @UseOpts({name: 'WS.MemeBox'}) public logger: NamedLogger,
-    private mediaTriggerEventBus: MediaTriggerEventBus
+    private mediaTriggerEventBus: MediaTriggerEventBus,
+    private mediaStateEventBus: MediaStateEventBus
   ) {
     CURRENT_MEMEBOX_WEBSOCKET = this;
 
@@ -114,6 +116,13 @@ export class MemeboxWebsocket {
       }
       case ACTIONS.RELOAD_SCREEN: {
         this.sendDataToScreen(payload, message);
+        break;
+      }
+      case ACTIONS.MEDIA_STATE: {
+        const mediaStatePayload: MediaStatePayload = JSON.parse(payload);
+
+        this.mediaStateEventBus.updateMediaState(mediaStatePayload);
+
         break;
       }
     }

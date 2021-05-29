@@ -1,5 +1,6 @@
-import {Twitch, TwitchEventTypes} from "@memebox/contracts";
+import {Twitch, TwitchEventTypes, TwitchTriggerCommand} from "@memebox/contracts";
 import * as tmi from "tmi.js";
+import {ChatUserstate} from "tmi.js";
 import {AllTwitchEvents} from "./twitch.connector.types";
 
 declare module 'tmi.js' {
@@ -11,14 +12,15 @@ declare module 'tmi.js' {
 export function* getCommandsOfTwitchEvent(
   twitchSettingsList: Twitch[],
   twitchEvent: AllTwitchEvents
-): IterableIterator<Twitch> {
+): IterableIterator<TwitchTriggerCommand> {
   const onlyActiveConfigs = twitchSettingsList.filter(s => s.active);
 
   switch (twitchEvent.type) {
     case TwitchEventTypes.message: {
       yield* returnAllCommandsByMessage(
         onlyActiveConfigs,
-        twitchEvent.message
+        twitchEvent.message,
+        twitchEvent.payload.userstate
       );
 
     } break;
@@ -26,13 +28,17 @@ export function* getCommandsOfTwitchEvent(
       for (const twitchSetting of onlyActiveConfigs) {
         if (twitchEvent.type === twitchSetting.event
           && checkEventInRange(twitchEvent.payload.bits, twitchSetting)) {
-          yield twitchSetting;
+          yield {
+            command: twitchSetting,
+            tags: twitchEvent.payload.userstate
+          };
         }
       }
 
       yield* returnAllCommandsByMessage(
         onlyActiveConfigs,
-        twitchEvent.message
+        twitchEvent.message,
+        twitchEvent.payload.userstate
       );
 
       break;
@@ -41,7 +47,9 @@ export function* getCommandsOfTwitchEvent(
       for (const twitchSetting of onlyActiveConfigs) {
         if (twitchEvent.type === twitchSetting.event
           && checkEventInRange(twitchEvent.payload.viewers, twitchSetting)) {
-          yield twitchSetting;
+          yield {
+            command: twitchSetting,
+          };
         }
       }
 
@@ -60,8 +68,9 @@ function checkEventInRange(amount: number, twitchSetting: Twitch) {
 
 function* returnAllCommandsByMessage (
   twitchSettingsList: Twitch[],
-  message: string
-) : IterableIterator<Twitch> {
+  message: string,
+  chatUserState: ChatUserstate,
+) : IterableIterator<TwitchTriggerCommand> {
 
   let foundCommand: Twitch = null;
   for (const twitchSetting of twitchSettingsList) {
@@ -89,7 +98,10 @@ function* returnAllCommandsByMessage (
   }
 
   if (foundCommand) {
-    yield foundCommand;
+    yield {
+      command: foundCommand,
+      tags: chatUserState
+    };
   }
 }
 

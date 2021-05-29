@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DynamicIframeVariable} from "@memebox/utils";
+import {ScriptVariable} from "@memebox/utils";
 
 @Component({
   selector: 'app-variables-config',
@@ -9,16 +9,16 @@ import {DynamicIframeVariable} from "@memebox/utils";
 export class VariablesConfigComponent implements OnInit {
 
   @Input()
-  public variablesList: DynamicIframeVariable[] = [];
+  public variablesList: ScriptVariable[] = [];
 
   @Output()
   public onAddNewVariable = new EventEmitter();
 
   @Output()
-  public onEditVariable = new EventEmitter<DynamicIframeVariable>();
+  public onEditVariable = new EventEmitter<ScriptVariable>();
 
   @Output()
-  public onDeleteVariable = new EventEmitter<DynamicIframeVariable>();
+  public onDeleteVariable = new EventEmitter<ScriptVariable>();
 
   constructor() { }
 

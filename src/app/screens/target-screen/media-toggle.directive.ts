@@ -13,6 +13,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {TargetScreenComponent} from "./target-screen.component";
 import {takeUntil} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
+import {WebsocketService} from "../../core/services/websocket.service";
 
 enum MediaState {
   HIDDEN,
@@ -34,6 +35,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   @Input()
   public mediaHoldingElement: HTMLElement;
 
+  @Input()
+  public screenId: string;
+
   public isVisible$ = new BehaviorSubject<boolean>(false);
 
   private currentState = MediaState.HIDDEN;
@@ -46,7 +50,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private clipVisibility: VisibilityEnum;
 
   constructor(private element: ElementRef<HTMLElement>,
-              private parentComp: TargetScreenComponent) {
+              private parentComp: TargetScreenComponent,
+              private webSocket: WebsocketService) {
   }
 
   @HostListener('animationend', ['$event'])
@@ -303,7 +308,11 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.isVisible$.next(false);
 
         this.currentState = MediaState.HIDDEN;
-
+        this.webSocket.updateMediaState(
+          this.combinedClip.clip.id,
+          this.screenId,
+          false
+        );
 
         this.stopMedia();
 
@@ -333,6 +342,12 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         // "once its done"
         this.stopMedia();
         this.playMedia();
+
+        this.webSocket.updateMediaState(
+          this.combinedClip.clip.id,
+          this.screenId,
+          true
+        );
 
         break;
       }

@@ -4,6 +4,9 @@ export const ACTIONS = {
   UPDATE_DATA: 'UPDATE_DATA',
   RELOAD_SCREEN: 'RELOAD_SCREEN',
 
+  MEDIA_STATE: 'MEDIA_STATE',
+
+  // todo trigger websocket calls from screens
   REGISTER_SCREEN_INSTANCE: 'REGISTER_SCREEN_INSTANCE',
   UNREGISTER_SCREEN_INSTANCE: 'UNREGISTER_SCREEN_INSTANCE',
 
@@ -34,4 +37,10 @@ export interface TriggerClip {
   repeatSecond?: number;
 
   // soon there will be more "overrides" to everything
+}
+
+export interface MediaStatePayload {
+  mediaId: string;
+  screenId?: string;
+  active: boolean;
 }

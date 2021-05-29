@@ -62,9 +62,9 @@ Or import / export these Widgets.
 Meta Types are used to combine others, like Image and Audio, or triggered a random Clip of the tagged Items.
 
 Example of:
-- [Combine Audio and Image](./meta_clips.md)
-- [Trigger one random Clip](./meta_clips.md)
-- [Trigger all items with a delay](./meta_clips.md)
+- [Combine Audio and Image](./meta_media.md)
+- [Trigger one random Clip](./meta_media.md)
+- [Trigger all items with a delay](./meta_media.md)
 
 
 ### Scripts

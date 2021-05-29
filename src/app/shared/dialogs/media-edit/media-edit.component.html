@@ -190,7 +190,8 @@
 
     <ng-container *ngIf="form.value.type === MediaType.Widget">
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
-        <div *ngFor="let variable of currentHtml.variablesConfig">
+        <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
+        <div *ngFor="let variable of currentHtml?.variablesConfig">
           <app-widget-variable-input [variableType]="variable.type" [label]="variable.name"
                                       [value]="data.extended[variable.name]"
                                       (valueChanged)="data.extended[variable.name] = $event; triggerHTMLRefresh()">
@@ -277,9 +278,11 @@
         Edit Script + Config
      </button>
 
-        <div *ngFor="let variable of currentScript.variablesConfig">
+      <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
+
+        <div *ngFor="let variable of currentScript?.variablesConfig">
           <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
-                                     [value]="data.extended[variable.name]"
+                                     [value]="data.extended[variable.name] || variable.fallback"
                                      (valueChanged)="data.extended[variable.name] = $event;">
           </app-script-variable-input>
         </div>
@@ -303,9 +306,9 @@
     ID: {{data.id}}
   </div>
   <div class="column" align="end" >
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="save()"
-          color="accent"
-          mat-raised-button>{{ data?.id ? 'Update' : 'Add' }}</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()"
+            color="accent"
+            mat-raised-button>{{ data?.id ? 'Update' : 'Add' }}</button>
   </div>
 </mat-dialog-actions>
