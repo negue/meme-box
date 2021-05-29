@@ -16,19 +16,17 @@
             <mat-option value="textarea">Textarea</mat-option>
             <mat-option value="number">Number</mat-option>
             <mat-option value="boolean">Boolean</mat-option>
+            <!--<mat-option value="media">Media</mat-option>-->
           </mat-select>
         </mat-form-field>
       </td>
       <td>
         <app-script-variable-input [variableType]="customVariable.type"
-                                    label="Fallback Value"
+                                    label="Fallback Value" [inConfigMode]="true"
                                     [value]="customVariable.fallback"
                                     (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
 
         </app-script-variable-input>
-
-
-
       </td>
       <td>
         <button mat-icon-button color="warn"

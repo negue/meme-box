@@ -1,7 +1,7 @@
 <h2 mat-dialog-title class="title-wrapper">
   Edit Script for "{{data.name}}"
 
-  <button mat-raised-button (click)="exportWidget()">Export</button>
+  <button mat-raised-button (click)="exportScript()">Export</button>
   <button mat-raised-button (click)="fileSelection.click()" >Import</button>
   <input type="file" style="display: none"
          #fileSelection accept="application/json"
@@ -21,9 +21,6 @@
 
         </mat-panel-description>
       </mat-expansion-panel-header>
-
-        "Notes":
-        These are the variables to be used inside CSS / JS / HTML - for an easier way to change the Widget "config" or values or something.
 
         <app-variables-config [variablesList]="variablesList"
                               (onEditVariable)="markForCheck()"

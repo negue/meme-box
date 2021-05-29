@@ -5,12 +5,14 @@ Scripts can be used to create advanced type of triggers / chains of your media.
 A script can have pre-defined variables (to be changed outside of the script).
 
 If you need calculated variables that don't need to be changed on each call, you do / add them inside the `Bootstrap Script`. You need to return them like that: 
-```js 
 
+```js
 return {myVar, andOtherVar, andSoOn};
 ```
 
 The `Execution Script` which is called each time per trigger, does the actual "stuff".
+
+> Note: Scripts are handled inside the Backend, so there is no availability of Browser-Functions like `alert` and other stuff. But mostly everything else in JS can be used.
 
 ## Pre-Defined Variables
 

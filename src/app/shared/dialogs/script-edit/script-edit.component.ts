@@ -1,7 +1,6 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
-  DynamicIframeVariable,
   isDynamicIframeVariableValid,
   NOT_ALLOWED_SCRIPT_VARIABLE_NAMES,
   ScriptConfig,
@@ -107,7 +106,7 @@ export class ScriptEditComponent implements OnInit {
     this.markForCheck();
   }
 
-  deleteVariable($event: DynamicIframeVariable) {
+  deleteVariable($event: ScriptVariable) {
     // TODO "Are you sure?"
 
     const foundIndex = this.variablesList.findIndex(value => value.name === $event.name);
@@ -141,12 +140,12 @@ export class ScriptEditComponent implements OnInit {
     }
   }
 
-  exportWidget() {
+  exportScript() {
     const jsonData = JSON.stringify(this.workingValue);
     var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
 
     console.info({jsonData, dataStr});
 
-    downloadFile('widget.json',dataStr);
+    downloadFile(this.data.name+'-script.json',dataStr);
   }
 }

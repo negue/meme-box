@@ -124,6 +124,9 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
         ${getCssCustomVariables(variablesConfig, valueBag)}
       }
 
+      iframe {
+        border: 0;
+      }
 
       body {
         overflow: hidden;

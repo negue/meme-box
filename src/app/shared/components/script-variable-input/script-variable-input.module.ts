@@ -5,6 +5,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {CompactClipCardModule} from "../compact-clip-card/compact-clip-card.module";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    CompactClipCardModule
   ]
 })
 export class ScriptVariableInputModule { }
