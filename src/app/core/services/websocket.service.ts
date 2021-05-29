@@ -55,7 +55,7 @@ export class WebsocketService {
     const triggerObj: MediaStatePayload = {
       mediaId,
       screenId,
-      showing,
+      active: showing,
     };
 
     this.ws.send(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);

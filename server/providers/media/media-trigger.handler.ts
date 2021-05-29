@@ -15,19 +15,8 @@ import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 
-import {VM, VMScript} from "vm2";
-import OBSWebSocket from "obs-websocket-js";
-import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 import {MediaTriggerEventBus} from "./media-trigger.event-bus";
-
-// name pending
-interface ScriptHoldingData {
-  script: ScriptConfig;
-  compiledBootstrapScript: VMScript;
-  bootstrap_variables: Record<string, unknown>;
-  isBootstrapped: boolean;
-  compiledExecutionScript: VMScript;
-}
+import {ScriptHandler, timeoutAsync} from "./script.handler";
 
 @Service()
 export class MediaTriggerHandler {
@@ -35,40 +24,12 @@ export class MediaTriggerHandler {
   private _allMediasMap: Dictionary<Clip> = {};
   private _allMediasList: Clip[] = [];
 
-  private _compiledScripts = new Map<string, ScriptHoldingData>();
-
-  // TODO / check can it run multiple longer-scripts at once?
-  private _vm = new VM({
-    sandbox: {
-      console: {
-        info: (...args) => {
-           this.logger.info(...args)
-        }
-      },
-      getObsWebsocket: (address: string, password?: string) => {
-        const obs = new OBSWebSocket();
-        obs.connect({ address, password });
-
-        return obs;
-      },
-      waitMilliseconds: (ms: number) => timeoutAsync(ms),
-      triggerClip: (targetMediaId: string, targetScreenId?: string) => {
-        this.triggerMediaClipById({
-          id: targetMediaId,
-          targetScreen: targetScreenId,
-          origin: TriggerClipOrigin.Scripts
-        })
-
-        return Promise.resolve(true);
-      }
-    }
-  });
-
   constructor(
     @UseOpts({name: 'MediaTriggerHandler'}) public logger: NamedLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private mediaTriggerEventBus: MediaTriggerEventBus,
-    private _memeboxWebSocket: MemeboxWebsocket
+    private _memeboxWebSocket: MemeboxWebsocket,
+    private _scriptHandler: ScriptHandler
   ) {
     mediaTriggerEventBus.AllEvents$.subscribe(triggerMedia => {
       this.triggerMediaClipById(triggerMedia);
@@ -76,11 +37,6 @@ export class MediaTriggerHandler {
 
     _persistence.dataUpdated$().subscribe(() => {
       this.getData();
-
-      // TODO get updated Path to know what kind of state needs to be refilled
-      // for example the compiled scripts
-
-      this._compiledScripts = new Map<string, ScriptHoldingData>();
     })
 
     this.getData();
@@ -96,7 +52,7 @@ export class MediaTriggerHandler {
         this.triggerMeta(mediaConfig);
         break;
       case MediaType.Script:
-        this.triggerScript(mediaConfig, payloadObs);
+        this._scriptHandler.handleScript(mediaConfig, payloadObs);
         break;
       default: {
         if (payloadObs.targetScreen) {
@@ -120,98 +76,6 @@ export class MediaTriggerHandler {
     }
   }
 
-  private async triggerScript(mediaConfig: Clip, payloadObs: TriggerClip) {
-    let scriptHoldingData: ScriptHoldingData;
-
-    if (this._compiledScripts.has(mediaConfig.id)) {
-      scriptHoldingData = this._compiledScripts.get(mediaConfig.id);
-    } else {
-      var executionScript: VMScript;
-      var bootstrapScript: VMScript;
-
-      const scriptConfig = clipDataToScriptConfig(mediaConfig);
-
-      try {
-        bootstrapScript = new VMScript(`
-          async function bootstrap(
-            { variables }
-          ) {
-            ${scriptConfig.bootstrapScript}
-          }
-
-          (bootstrap);
-        `).compile();
-      } catch (err) {
-        this.logger.error(`Failed to compile bootstrap script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
-        return;
-      }
-
-      try {
-        executionScript = new VMScript(`
-          async function scriptInVm(
-            { variables, bootstrap, triggerPayload }
-          ) {
-            ${scriptConfig.executionScript}
-          }
-
-          (scriptInVm)
-        `).compile();
-      } catch (err) {
-        this.logger.error(`Failed to compile execution script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
-        return;
-      }
-
-      scriptHoldingData = {
-        compiledExecutionScript: executionScript,
-        compiledBootstrapScript: bootstrapScript,
-        bootstrap_variables: {},
-        isBootstrapped: false,
-        script: scriptConfig
-      };
-
-      this._compiledScripts.set(mediaConfig.id, scriptHoldingData);
-    }
-
-    try {
-      const variables = getScriptVariablesOrFallbackValues(scriptHoldingData.script,
-        mediaConfig.extended);
-
-      console.info({
-        variables
-      });
-
-      if (!scriptHoldingData.isBootstrapped) {
-        const bootstrapFunc = this._vm.run(scriptHoldingData.compiledBootstrapScript);
-
-        scriptHoldingData.bootstrap_variables = await bootstrapFunc({
-          variables,
-        });
-        scriptHoldingData.isBootstrapped = true;
-
-        console.info('bootstrap result', scriptHoldingData.bootstrap_variables);
-      }
-
-      const scriptToCall = this._vm.run(scriptHoldingData.compiledExecutionScript);
-
-      const scriptArguments = {
-        variables,
-        bootstrap: scriptHoldingData.bootstrap_variables,
-        triggerPayload: payloadObs
-      };
-
-      console.info({
-        variables,
-        script: scriptHoldingData.script
-      });
-
-      console.info({ scriptArguments });
-
-      scriptToCall(scriptArguments);
-    }
-    catch(err) {
-      this.logger.error(`Failed to run script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
-    }
-  }
 
   private async triggerMeta(mediaConfig: Clip): Promise<void> {
     // Get all Tags
@@ -274,8 +138,3 @@ export class MediaTriggerHandler {
     this._allMediasList = Object.values(this._allMediasMap);
   }
 }
-
-function timeoutAsync(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-

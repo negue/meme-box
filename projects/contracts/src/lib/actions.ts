@@ -42,5 +42,5 @@ export interface TriggerClip {
 export interface MediaStatePayload {
   mediaId: string;
   screenId: string;
-  showing: boolean;
+  active: boolean;
 }
