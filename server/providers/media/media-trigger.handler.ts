@@ -9,16 +9,16 @@ import {
   TriggerClip,
   TriggerClipOrigin
 } from "@memebox/contracts";
-import {Persistence} from "../persistence";
-import {NamedLogger} from "./named-logger";
+import {Persistence} from "../../persistence";
+import {NamedLogger} from "../named-logger";
 import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "./contracts";
-import {MemeboxWebsocket} from "./websockets/memebox.websocket";
-import {MediaTriggerEventBus} from "./media-trigger.event-bus";
+import {PERSISTENCE_DI} from "../contracts";
+import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 
 import {VM, VMScript} from "vm2";
 import OBSWebSocket from "obs-websocket-js";
 import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
+import {MediaTriggerEventBus} from "./media-trigger.event-bus";
 
 // name pending
 interface ScriptHoldingData {

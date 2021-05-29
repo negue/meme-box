@@ -1,9 +1,9 @@
 import {Service, UseOpts} from "@tsed/di";
 import {NamedLogger} from "../named-logger";
 import * as WebSocket from "ws";
-import {ACTIONS, Dictionary, TriggerClip} from "@memebox/contracts";
+import {ACTIONS, Dictionary, MediaStatePayload, TriggerClip} from "@memebox/contracts";
 import {Subject} from "rxjs";
-import {MediaTriggerEventBus} from "../media-trigger.event-bus";
+import {MediaTriggerEventBus} from "../media/media-trigger.event-bus";
 
 // todo maybe extract?
 interface WebSocketType {
@@ -117,8 +117,10 @@ export class MemeboxWebsocket {
         break;
       }
       case ACTIONS.MEDIA_STATE: {
+        const mediaStatePayload: MediaStatePayload = JSON.parse(payload);
+
         console.info('mediaState', {
-          payload
+          mediaStatePayload
         });
 
         break;

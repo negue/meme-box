@@ -38,3 +38,9 @@ export interface TriggerClip {
 
   // soon there will be more "overrides" to everything
 }
+
+export interface MediaStatePayload {
+  mediaId: string;
+  screenId: string;
+  showing: boolean;
+}
