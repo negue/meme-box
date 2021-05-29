@@ -35,11 +35,7 @@ export class TwitchHandler {
 
         for (const command of foundCommandsIterator) {
           // todo add the correct twitchevent-types!
-          this.handle({
-            // event: TwitchEventTypes.message,
-            command,
-            tags: {}
-          });
+          this.handle(command);
         }
       })
 
@@ -71,9 +67,16 @@ export class TwitchHandler {
 
       const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
 
+      this._twitchLogger.log({
+        isBroadcaster,
+        foundLevels,
+        trigger
+      });
 
       if (allowedToTrigger) {
         this.cooldownDictionary[trigger.command.id] = Date.now();
+
+        this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
 
         this._mediaTriggerEventBus.triggerMedia({
           id: trigger.command.clipId,
