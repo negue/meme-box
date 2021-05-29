@@ -9,6 +9,7 @@ import {Persistence} from "../../persistence";
 import {MediaTriggerEventBus} from "./media-trigger.event-bus";
 import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 import {MediaActiveState} from "./media-active-state";
+import {MediaStateEventBus} from "./media-state.event-bus";
 
 // name pending
 interface ScriptHoldingData {
@@ -55,6 +56,7 @@ export class ScriptHandler {
     @UseOpts({name: 'ScriptHandler'}) public logger: NamedLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private mediaTriggerEventBus: MediaTriggerEventBus,
+    private mediaStateEventBus: MediaStateEventBus,
     private mediaActiveState: MediaActiveState
   ) {
     _persistence.dataUpdated$().subscribe(() => {
@@ -69,6 +71,11 @@ export class ScriptHandler {
 
   public async handleScript(mediaConfig: Clip, payloadObs: TriggerClip) {
     this.logger.info('Handle Script!!');
+
+    this.mediaStateEventBus.updateMediaState({
+      mediaId: mediaConfig.id,
+      active: true
+    });
 
     let scriptHoldingData: ScriptHoldingData;
 
@@ -155,11 +162,18 @@ export class ScriptHandler {
 
       console.info({ scriptArguments });
 
-      scriptToCall(scriptArguments);
+      await scriptToCall(scriptArguments);
     }
     catch(err) {
       this.logger.error(`Failed to run script for "${mediaConfig.name}" [${mediaConfig.id}]`, err);
     }
+
+    this.logger.info(`Script "${mediaConfig.name}" is done.`);
+
+    this.mediaStateEventBus.updateMediaState({
+      mediaId: mediaConfig.id,
+      active: false
+    });
   }
 }
 
