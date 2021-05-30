@@ -74,10 +74,16 @@ export function getAppRootPath () {
   const defaultAppOutPutDir = join(baseDir, '/dist');
 
   let appRootPath = isInElectron
-    ? join(baseDir, '/../dist')
+    ? join(__dirname, '/../dist')
     : defaultAppOutPutDir;
 
-  if (!existsSync(appRootPath) && isInElectron) {
+  const appRootPathExists = existsSync(appRootPath);
+
+  if (appRootPathExists) {
+    return appRootPath;
+  }
+
+  if (!appRootPathExists && isInElectron) {
     // serving electron without a built/copied app yet
     appRootPath = join(baseDir, '/../../dist');
   } else {

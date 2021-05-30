@@ -24,7 +24,7 @@
                 "output": "/assets/prism/"
               },
               {
-                "glob": "prism-plugin-(inline-color|bracket-match).worker-func.js",
+                "glob": "prism-plugin-@(inline-color|bracket-match).worker-func.js",
                 "input": "./node_modules/@gewd/components/highlight-editor",
                 "output": "/assets/prism/"
               },
