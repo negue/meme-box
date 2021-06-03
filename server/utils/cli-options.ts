@@ -8,15 +8,15 @@ function extractValue<T>(
   // typed version of T result doesnt work, otherwise open a PR! thank you
   convertFunction: (val: string) => any = val => val
 ) : T | null {
- const optionExists = process.argv.find(arg => arg.includes(optionPrefix));
+  const optionExists = process.argv.find(arg => arg.includes(optionPrefix));
 
- if (optionExists) {
-   const valueOfOption = optionExists.replace(`${optionPrefix}=`, '')
+  if (optionExists) {
+    const valueOfOption = optionExists.replace(`${optionPrefix}=`, '')
 
-   return convertFunction(valueOfOption) as T;
- }
+    return convertFunction(valueOfOption) as T;
+  }
 
- return null;
+  return null;
 }
 
 const PORT = extractValue<number>(PORT_OPTION_PREFIX, val => +val);
