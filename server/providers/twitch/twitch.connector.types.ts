@@ -65,4 +65,22 @@ export class TwitchRaidedEvent implements TwitchEvent {
   }
 }
 
-export type AllTwitchEvents = TwitchChatMessage | TwitchCheerMessage | TwitchRaidedEvent;
+export class TwitchChannelPointRedemptionEvent implements TwitchEvent {
+  readonly type = TwitchEventTypes.channelPoints;
+
+  constructor(public payload: {
+    id: string,
+    userId: string,
+    userName: string,
+    userDisplayName: string,
+    redemptionDate: Date,
+    rewardId: string,
+    rewardName: string,
+    rewardCost: number,
+    message: string
+  }) {
+  }
+}
+
+export type AllTwitchEvents = TwitchChatMessage | TwitchCheerMessage
+  | TwitchRaidedEvent | TwitchChannelPointRedemptionEvent;

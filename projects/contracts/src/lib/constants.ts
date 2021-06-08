@@ -27,7 +27,7 @@ export const TwitchTypesArray = [
   // TwitchEventTypes.follow,
   // TwitchEventTypes.sub,
   TwitchEventTypes.bits,
-  // TwitchEventTypes.channelPoints,
+  TwitchEventTypes.channelPoints,
   // TwitchEventTypes.host,
   TwitchEventTypes.message,
   TwitchEventTypes.raid,
