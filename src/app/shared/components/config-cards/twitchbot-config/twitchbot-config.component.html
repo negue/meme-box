@@ -1,8 +1,4 @@
-<div class="title-row">
-  <h2 class="mat-h2 title-name">Twitch Bot Config</h2>
-
-  <mat-icon svgIcon="twitch"></mat-icon>
-</div>
+<app-config-card title="Twitch Bot Config" icon="twitch">
 
 <div>
   <form [formGroup]="form" *ngIf="config$ | async as config">
@@ -70,3 +66,4 @@
     </button>
   </form>
 </div>
+</app-config-card>

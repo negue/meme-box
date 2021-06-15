@@ -10,17 +10,36 @@ import {TranslocoSelectedLangService} from "../../../transloco/transloco-selecte
 
 const dummyItemsCreatorLazy = () => import('./dummyItemsCreator');
 
+interface LanguageEntry {
+  id: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-settings-overview',
   templateUrl: './settings-overview.component.html',
-  styleUrls: ['./settings-overview.component.scss']
+  styleUrls: ['./settings-overview.component.scss'],
+  providers: [ ]
 })
 export class SettingsOverviewComponent implements OnInit {
   public config$: Observable<Partial<Config>> = this.query.config$;
   public offlineMode$ = this.query.inOfflineMode$;
 
   public currentLanguage = this.translocoService.getActiveLang();
-  public availableLanguages = this.translocoService.getAvailableLangs();
+  public availableLanguages: LanguageEntry[] = [...this.translocoService.getAvailableLangs()].map(value => {
+    if (typeof value  === 'string') {
+      return {
+        id: value,
+        label: value,
+      }
+    }
+
+    return {
+      id: value.id,
+      label: value.label
+    };
+  })
+  ;
 
   constructor(public service: AppService,
               public query: AppQueries,
@@ -59,7 +78,7 @@ export class SettingsOverviewComponent implements OnInit {
     dummyItemsCreatorLazy().then(value => value.addMoreItems(this.service));
   }
 
-  selectNewLanguage($event: any) {
-    this.selectedLangService.setSelectedLang($event)
+  selectNewLanguage($event: LanguageEntry) {
+    this.selectedLangService.setSelectedLang($event.id)
   }
 }

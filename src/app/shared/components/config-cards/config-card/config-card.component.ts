@@ -13,6 +13,9 @@ export class ConfigCardComponent implements OnInit {
   @Input()
   public icon: string;
 
+  @Input()
+  public titlePadding = true;
+
   constructor() { }
 
   ngOnInit(): void {

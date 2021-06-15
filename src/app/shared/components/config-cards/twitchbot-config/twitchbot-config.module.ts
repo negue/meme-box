@@ -6,9 +6,9 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import { TwitchbotConfigComponent } from './twitchbot-config.component';
-import { MatTabsModule } from '@angular/material/tabs';
-
+import {TwitchbotConfigComponent} from './twitchbot-config.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {ConfigCardModule} from "../config-card/config-card.module";
 
 
 @NgModule({
@@ -24,7 +24,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatTabsModule
+    MatTabsModule,
+    ConfigCardModule
   ]
 })
 export class TwitchbotConfigModule { }

@@ -5,7 +5,9 @@
   align-content: center;
   justify-content: space-between;
 
-  // margin-bottom: 2rem;
+  &.padding {
+    margin-bottom: 2rem;
+  }
 }
 
 .title-name {

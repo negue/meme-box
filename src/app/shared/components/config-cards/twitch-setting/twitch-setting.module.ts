@@ -7,6 +7,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {ConfigCardModule} from "../config-card/config-card.module";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     ReactiveFormsModule,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    ConfigCardModule
   ]
 })
 export class TwitchSettingModule { }

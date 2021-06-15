@@ -17,6 +17,8 @@ import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-s
 import {TwitchbotConfigModule} from '../../shared/components/config-cards/twitchbot-config/twitchbot-config.module';
 import {VersionCardModule} from "../../shared/components/config-cards/version-card/version-card.module";
 import {CustomPortSettingModule} from "../../shared/components/config-cards/custom-port-setting/custom-port-setting.module";
+import {ConnectionsListModule} from "../../shared/components/config-cards/connections-list/connections-list.module";
+import {ConfigCardModule} from "../../shared/components/config-cards/config-card/config-card.module";
 
 const routes: Routes = [
   {
@@ -43,7 +45,9 @@ const routes: Routes = [
     TwitchbotConfigModule,
     VersionCardModule,
     CustomPortSettingModule,
-  ],
+    ConnectionsListModule,
+    ConfigCardModule,
+  ]
 })
 export class SettingsModule {
 }

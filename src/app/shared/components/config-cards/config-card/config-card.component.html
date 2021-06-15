@@ -1,5 +1,9 @@
-<div class="title-row">
-  <h2 class="mat-h2 title-name">{{title}}</h2>
+<div class="title-row" [class.padding]="titlePadding">
+  <h2 class="mat-h2 title-name">
+    <ng-content select="[configCardTitle]"></ng-content>
+
+    {{title}}
+  </h2>
 
   <mat-icon *ngIf="icon" [svgIcon]="icon"></mat-icon>
 </div>
