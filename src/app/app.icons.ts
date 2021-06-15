@@ -28,6 +28,7 @@ export const APP_ICONS = [
   'lock_open',
   'mobile_friendly',
   'mobile_off',
+  'more_vert',
   'network_wifi',
   'playlist_add_check',
   'playlist_add',
