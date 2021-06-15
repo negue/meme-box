@@ -1,4 +1,4 @@
-<div *ngIf="screenList | async as screenList">
+<div *ngIf="screenList$ | async as screenList">
   <app-card-overview>
     <app-overview-item *ngIf="screenList.length === 0 ; else hasData ">
       <app-getting-started></app-getting-started>
