@@ -1,0 +1,41 @@
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TwitchConnectionEditComponent} from './twitch-connection-edit.component';
+import {DialogContract} from "../dialog.contract";
+import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {MatDialog} from "@angular/material/dialog";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+
+
+@NgModule({
+  declarations: [
+    TwitchConnectionEditComponent
+  ],
+  imports: [
+    CommonModule,
+    MatCheckboxModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatIconModule
+  ]
+})
+export class TwitchConnectionEditModule implements DialogContract<void> {
+  constructor(private dialog: MatDialog) { }
+
+  openDialog(): MatDialogRef<any> {
+    const dialogRef = this.dialog.open(TwitchConnectionEditComponent, {
+
+    });
+
+    return dialogRef;
+  }
+}

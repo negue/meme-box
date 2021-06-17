@@ -26,15 +26,6 @@
   </app-overview-item>
 
   <app-overview-item>
-    <app-twitch-setting></app-twitch-setting>
-  </app-overview-item>
-
-  <app-overview-item *ngIf="(config$ | async)?.twitch?.bot?.enabled">
-    <app-twitchbot-config></app-twitchbot-config>
-  </app-overview-item>
-
-
-  <app-overview-item>
     <app-config-card title="Danger!!" icon="warning">
     <app-persistence-actions></app-persistence-actions>
     </app-config-card>

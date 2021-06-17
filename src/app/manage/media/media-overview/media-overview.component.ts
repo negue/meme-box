@@ -10,6 +10,7 @@ import {createCombinedFilterItems$, filterClips$} from '../../../shared/componen
 import {distinctUntilChanged, map, shareReplay} from 'rxjs/operators';
 import {OverviewUiMode, OverviewUiService} from './overview-ui.service';
 import isEqual from 'lodash/isEqual';
+import {ConfigService} from "../../../state/config.service";
 
 @Component({
   selector: 'app-media-overview',
@@ -59,7 +60,8 @@ export class MediaOverviewComponent implements OnInit {
               public query: AppQueries,
               private _dialog: DialogService,
               private _wsService: WebsocketService,
-              private _uiService: OverviewUiService) {
+              private _uiService: OverviewUiService,
+              private configService: ConfigService,) {
   }
 
   ngOnInit(): void {
@@ -70,7 +72,7 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   fillWithDummyData() {
-    this.service.fillDummyData();
+    this.configService.fillDummyData();
   }
 
   showDialog(clipInfo: Partial<Clip>): void {

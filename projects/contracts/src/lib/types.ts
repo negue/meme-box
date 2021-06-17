@@ -198,7 +198,8 @@ export interface Config {
 export interface TwitchConfig {
   channel: string;
   enableLog?: boolean;
-  bot?: TwitchBotConfig
+  bot?: TwitchBotConfig;
+  token: string;
 }
 
 export interface TwitchBotConfig {

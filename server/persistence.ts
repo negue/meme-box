@@ -32,10 +32,13 @@ import {LOGGER} from "./logger.utils";
 import {registerProvider} from "@tsed/di";
 import {PERSISTENCE_DI} from "./providers/contracts";
 import {CLI_OPTIONS} from "./utils/cli-options";
+import cloneDeep from 'lodash/cloneDeep';
 
 // TODO Extract more state operations to shared library and from app
 
 let fileBackupToday = false;
+
+export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
 
 export class Persistence {
 
@@ -114,6 +117,7 @@ export class Persistence {
       if (configV0) {
         configFromFile.config.twitch = {
           channel: configV0.twitchChannel,
+          token: '',
           enableLog: configV0.twitchLog,
           bot: {
             enabled: false,
@@ -141,7 +145,20 @@ export class Persistence {
 
 
   public fullState() {
-    return  this.data;
+    const twitchConfig = cloneDeep(this.data.config.twitch);
+    twitchConfig.token ||= TOKEN_EXISTS_MARKER;
+
+    if (twitchConfig.bot?.auth) {
+      twitchConfig.bot.auth.token ||= TOKEN_EXISTS_MARKER;
+    }
+
+    return {
+      ...this.data,
+      config: {
+        ...this.data.config,
+        twitch: twitchConfig
+      }
+    };
   }
 
   // save it on changes
@@ -354,9 +371,12 @@ export class Persistence {
   }
 
 
-  public updateTwitchChannel (channel: string) {
+  public updateTwitchChannel(twitchConfig: TwitchConfig) {
     this.data.config = this.data.config || {};
-    this.data.config.twitch.channel  = channel;
+    this.data.config.twitch.channel  = twitchConfig.channel;
+    if (twitchConfig.token && twitchConfig.token !== TOKEN_EXISTS_MARKER) {
+      this.data.config.twitch.token = twitchConfig.token;
+    }
 
     this.saveData();
   }

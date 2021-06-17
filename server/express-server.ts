@@ -66,6 +66,7 @@ app.get(API_PREFIX, (req,res) => {
 
 // TODO Add CONTSTANTS Values
 // TODO better to register apis?
+// TODO EXTRACT Controllers as  TsED Controllers
 /**
  * Clips API
  */

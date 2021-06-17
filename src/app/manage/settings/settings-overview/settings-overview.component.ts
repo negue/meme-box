@@ -7,6 +7,7 @@ import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {AppQueries} from "../../../state/app.queries";
 import {TranslocoService} from "@ngneat/transloco";
 import {TranslocoSelectedLangService} from "../../../transloco/transloco-selected-lang.service";
+import {ConfigService} from "../../../state/config.service";
 
 const dummyItemsCreatorLazy = () => import('./dummyItemsCreator');
 
@@ -42,6 +43,7 @@ export class SettingsOverviewComponent implements OnInit {
   ;
 
   constructor(public service: AppService,
+              private configService: ConfigService,
               public query: AppQueries,
               private _dialog: DialogService,
               private translocoService: TranslocoService,
@@ -59,7 +61,7 @@ export class SettingsOverviewComponent implements OnInit {
   }
 
   openMediaFolderExplorer(): void {
-    this.service.openMediaFolder();
+    this.configService.openMediaFolder();
   }
 
   reload() {
@@ -67,7 +69,7 @@ export class SettingsOverviewComponent implements OnInit {
   }
 
   openConfigFolder() {
-    this.service.openConfigFolder();
+    this.configService.openConfigFolder();
   }
 
   downloadStreamdeckPlugin() {

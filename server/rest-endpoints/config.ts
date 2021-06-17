@@ -28,7 +28,7 @@ CONFIG_ROUTES
   const twitchConfigBody: TwitchConfig = req.body;
 
   // update config
-  res.send(PersistenceInstance.updateTwitchChannel(twitchConfigBody.channel));
+  res.send(PersistenceInstance.updateTwitchChannel(twitchConfigBody));
 })
 
 // TODO Refactor this config boilerplate !!!
