@@ -22,6 +22,13 @@ export const ENDPOINTS = {
   CONFIG_CUSTOM_PORT_PATH: 'config/customPort'
 }
 
+export const CONFIG_TWITCH_CHANNEL_PATH = '/twitchChannel';
+export const CONFIG_TWITCH_LOG_PATH = '/twitchLog';
+export const CONFIG_TWITCH_BOT_INTEGRATION_PATH = '/twitchBotIntegration';
+export const CONFIG_TWITCH_BOT_PATH = '/twitchBot';
+export const CONFIG_CUSTOM_PORT_PATH = '/customPort';
+export const CONFIG_OPEN_PATH = `/open`;
+
 
 export const TwitchTypesArray = [
   // TwitchEventTypes.follow,

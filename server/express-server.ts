@@ -4,7 +4,6 @@ import {
   API_PREFIX,
   CLIP_ENDPOINT,
   CLIP_ID_ENDPOINT,
-  CONFIG_ENDPOINT_PREFIX,
   DANGER_ENDPOINT,
   FILE_BY_ID_ENDPOINT,
   FILE_ENDPOINT,
@@ -31,7 +30,6 @@ import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
 import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
-import {CONFIG_ROUTES} from "./rest-endpoints/config";
 import {STATE_ROUTES} from "./rest-endpoints/state";
 import {SERVER_URL} from "@memebox/contracts";
 
@@ -104,7 +102,6 @@ app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 app.use(LOG_ENDPOINT, LOG_ROUTES);
 app.use(TWITCH_ENDPOINT, TWITCH_ROUTES);
 app.use(TIMED_ENDPOINT, TIMER_ROUTES);
-app.use(CONFIG_ENDPOINT_PREFIX, CONFIG_ROUTES);
 app.use(STATE_ENDPOINT, STATE_ROUTES);
 
 /**

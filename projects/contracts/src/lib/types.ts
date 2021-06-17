@@ -255,3 +255,8 @@ export interface CombinedClip {
   clipSetting: ScreenClip;
   backgroundColor?: string;
 }
+
+export interface Response {
+  ok: boolean;
+  id?: string;
+}

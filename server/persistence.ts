@@ -145,19 +145,9 @@ export class Persistence {
 
 
   public fullState() {
-    const twitchConfig = cloneDeep(this.data.config.twitch);
-    twitchConfig.token ||= TOKEN_EXISTS_MARKER;
-
-    if (twitchConfig.bot?.auth) {
-      twitchConfig.bot.auth.token ||= TOKEN_EXISTS_MARKER;
-    }
-
     return {
       ...this.data,
-      config: {
-        ...this.data.config,
-        twitch: twitchConfig
-      }
+      config: this.getConfig()
     };
   }
 
@@ -421,11 +411,19 @@ export class Persistence {
     this.saveData();
   }
 
-  public getConfig() {
+  public getConfig(): Config {
     const mediaFolder = CLI_OPTIONS.MEDIA_PATH ?? this.data.config.mediaFolder;
+
+    const twitchConfig = cloneDeep(this.data.config.twitch);
+    twitchConfig.token ||= TOKEN_EXISTS_MARKER;
+
+    if (twitchConfig.bot?.auth) {
+      twitchConfig.bot.auth.token ||= TOKEN_EXISTS_MARKER;
+    }
 
     return {
       ...this.data.config,
+      twitch: twitchConfig,
       mediaFolder
     };
   }
