@@ -1,14 +1,19 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from './app.store';
 import {HttpClient} from '@angular/common/http';
-import {Config, ENDPOINTS, TwitchConfig} from '@memebox/contracts';
 import {
-  CONFIG_ENDPOINT_PREFIX,
-  CONFIG_OPEN_PATH,
-  DANGER_CLEAN_CONFIG_ENDPOINT,
-  DANGER_IMPORT_ALL_ENDPOINT,
-  FILES_OPEN_ENDPOINT
-} from '../../../server/constants';
+  Config,
+  CONFIG_CUSTOM_PORT_PATH,
+  CONFIG_TWITCH_BOT_INTEGRATION_PATH,
+  CONFIG_TWITCH_BOT_PATH,
+  CONFIG_TWITCH_CHANNEL_PATH,
+  CONFIG_TWITCH_LOG_PATH,
+  ENDPOINTS,
+  OPEN_CONFIG_PATH,
+  OPEN_FILES_PATH,
+  TwitchConfig
+} from '@memebox/contracts';
+import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../server/constants';
 import {SnackbarService} from '../core/services/snackbar.service';
 import {setDummyData} from './app.dummy.data';
 import {WebsocketService} from "../core/services/websocket.service";
@@ -19,7 +24,6 @@ const NOT_POSSIBLE_OFFLINE = 'Not possible in Offline-Mode.';
 
 @Injectable()
 export class ConfigService {
-  private offlineMode = true;
 
   constructor(private appStore: AppStore,
               public http: HttpClient,  // todo extract http client and api_url base including the offline checks
@@ -30,7 +34,7 @@ export class ConfigService {
 
   public async updateConfig(newConfig: Partial<Config>) {
     // update path & await
-    await this.appService.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG}`, newConfig);
+    await this.appService.tryHttpPut( this.configEndpoint(''), newConfig);
 
     // update state
     this.appStore.update(state => {
@@ -44,7 +48,7 @@ export class ConfigService {
     };
 
     // update path & await
-    await this.appService.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_CUSTOM_PORT_PATH}`, newConfig);
+    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_CUSTOM_PORT_PATH), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -61,7 +65,7 @@ export class ConfigService {
     };
 
     // update path & await
-    await this.appService.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_CHANNEL}`, newConfig);
+    await this.appService.tryHttpPut(this.configEndpoint(CONFIG_TWITCH_CHANNEL_PATH), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -73,12 +77,8 @@ export class ConfigService {
   }
 
   public async updateTwitchBotData(twitchBotConfig: TwitchConfig) {
-    const newConfig: Partial<Config> = {
-      twitch: twitchBotConfig
-    };
-
     // update path & await
-    await this.appService.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT}`, newConfig);
+    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_TWITCH_BOT_PATH), twitchBotConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -94,7 +94,7 @@ export class ConfigService {
     };
 
     // update path & await
-    await this.appService.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_LOG}`, newConfig);
+    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_TWITCH_LOG_PATH), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -114,7 +114,7 @@ export class ConfigService {
     };
 
     // update path & await
-    await this.appService.tryHttpPut(`${API_BASE}${ENDPOINTS.CONFIG_TWITCH_BOT_INTEGRATION}`, newConfig);
+    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_TWITCH_BOT_INTEGRATION_PATH), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -132,20 +132,20 @@ export class ConfigService {
   }
 
   public async openMediaFolder() {
-    if (this.offlineMode) {
+    if (this.appService.isOffline()) {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       // update path & await
-      await this.http.get<string>(`${EXPRESS_BASE}${FILES_OPEN_ENDPOINT}`).toPromise();
+      await this.http.get<string>(this.openEndpoint(OPEN_FILES_PATH)).toPromise();
     }
   }
 
   public async openConfigFolder() {
-    if (this.offlineMode) {
+    if (this.appService.isOffline()) {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       // update path & await
-      await this.http.get<string>(`${EXPRESS_BASE}${CONFIG_ENDPOINT_PREFIX}${CONFIG_OPEN_PATH}`).toPromise();
+      await this.http.get<string>(this.openEndpoint(OPEN_CONFIG_PATH)).toPromise();
     }
   }
 
@@ -158,7 +158,7 @@ export class ConfigService {
   }
 
   public async deleteAll() {
-    if (this.offlineMode) {
+    if (this.appService.isOffline()) {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       await this.http.post<any>(`${EXPRESS_BASE}${DANGER_CLEAN_CONFIG_ENDPOINT}`, null).toPromise();
@@ -167,11 +167,19 @@ export class ConfigService {
   }
 
   public async importAll(body: any) {
-    if (this.offlineMode) {
+    if (this.appService.isOffline()) {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       await this.http.post<any>(`${EXPRESS_BASE}${DANGER_IMPORT_ALL_ENDPOINT}`, body).toPromise();
       location.reload();
     }
+  }
+
+  private configEndpoint(endpoint: string) {
+    return `${API_BASE}${ENDPOINTS.CONFIG}${endpoint}`;
+  }
+
+  private openEndpoint(endpoint: string) {
+    return `${API_BASE}${ENDPOINTS.OPEN}${endpoint}`;
   }
 }

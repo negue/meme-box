@@ -1,7 +1,6 @@
 import {
   Config,
   CONFIG_CUSTOM_PORT_PATH,
-  CONFIG_OPEN_PATH,
   CONFIG_TWITCH_BOT_INTEGRATION_PATH,
   CONFIG_TWITCH_BOT_PATH,
   CONFIG_TWITCH_CHANNEL_PATH,
@@ -13,8 +12,6 @@ import {
 import {allowedFileUrl} from "../validations";
 import {existsSync} from "fs";
 import {sep} from 'path';
-import open from "open";
-import {NEW_CONFIG_PATH} from "../path.utils";
 import {BodyParams, Controller, Get, Inject, Put} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
 import {Persistence} from "../persistence";
@@ -35,16 +32,6 @@ export class ConfigController {
   @Get('/')
   getConfig(): Config {
     return this._persistence.getConfig();
-  }
-
-
-  @Get(CONFIG_OPEN_PATH)
-  async openConfigPath() {
-    await open(NEW_CONFIG_PATH);
-
-    return {
-      open: true
-    };
   }
 
   @Put(CONFIG_TWITCH_CHANNEL_PATH)

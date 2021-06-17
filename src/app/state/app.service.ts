@@ -5,6 +5,7 @@ import {
   Clip,
   ENDPOINTS,
   FileInfo,
+  Response,
   Screen,
   ScreenClip,
   Tag,
@@ -28,10 +29,7 @@ export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 // TODO split up service per module??
 
-export interface Response {
-  ok: boolean;
-  id?: string;
-}
+
 
 @Injectable()
 export class AppService {
@@ -40,6 +38,10 @@ export class AppService {
   constructor(private appStore: AppStore,
               public http: HttpClient,  // todo extract http client and api_url base including the offline checks
               private snackbar: SnackbarService) {
+  }
+
+  public isOffline() {
+    return this.offlineMode;
   }
 
   public loadState() {

@@ -1,4 +1,3 @@
-// @ts-ignore
 import express, {Express} from 'express';
 import {
   API_PREFIX,
@@ -8,7 +7,6 @@ import {
   FILE_BY_ID_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
-  FILES_OPEN_ENDPOINT,
   LOG_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
   STATE_ENDPOINT,
@@ -20,8 +18,6 @@ import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 
-// @ts-ignore
-import open from 'open';
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getAppRootPath, getFiles, isInElectron, mapFileInformations} from "./file.utilts";
 import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
@@ -107,15 +103,6 @@ app.use(STATE_ENDPOINT, STATE_ROUTES);
 /**
  * OBS-Specific API
  */
-
-app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
-
-  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
-
-  await open(mediaFolder);
-
-  res.send({open: true});
-});
 
 app.get(FILES_ENDPOINT, async (req, res) => {
 
