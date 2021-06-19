@@ -62,7 +62,7 @@
   </div>
     </mat-tab>
     <mat-tab label="Additional settings">
-      <form *ngIf="config$ | async as config" [formGroup]="botAccountForm">
+      <form *ngIf="config$ | async as config" [formGroup]="additionalForm">
         <ng-container *ngIf="showAdvancedOptions">
           <ng-container *ngIf="config$ | async as config">
             <br />
@@ -87,7 +87,7 @@
                     class="twitchSetting__textarea"
                     matInput></textarea>
 
-          <mat-error *ngIf="botAccountForm.controls['botResponse'].hasError('required')">
+          <mat-error *ngIf="additionalForm.controls['botResponse'].hasError('required')">
             Please enter bot response message.
           </mat-error>
         </mat-form-field>

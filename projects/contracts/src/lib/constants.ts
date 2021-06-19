@@ -18,14 +18,10 @@ export const ENDPOINTS = {
   NETWORK_LIST: 'network_ip_list',
 }
 
-export const CONFIG_TWITCH_CHANNEL_PATH = '/twitchChannel';
-export const CONFIG_TWITCH_LOG_PATH = '/twitchLog';
-export const CONFIG_TWITCH_BOT_INTEGRATION_PATH = '/twitchBotIntegration';
-export const CONFIG_TWITCH_BOT_PATH = '/twitchBot';
+export const CONFIG_TWITCH = '/twitch';
 export const CONFIG_CUSTOM_PORT_PATH = '/customPort';
 export const OPEN_CONFIG_PATH = `/config`;
 export const OPEN_FILES_PATH = `/files`;
-
 
 export const TwitchTypesArray = [
   // TwitchEventTypes.follow,

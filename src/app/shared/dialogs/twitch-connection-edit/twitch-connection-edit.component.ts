@@ -5,7 +5,7 @@ import {AppQueries} from "../../../state/app.queries";
 import {AppService} from "../../../state/app.service";
 import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {Config, TwitchConfig} from "@memebox/contracts";
+import {Config} from "@memebox/contracts";
 import {ConfigService} from "../../../state/config.service";
 import {TwitchOAuthHandler} from "./twitch.oauth";
 
@@ -36,8 +36,9 @@ export class TwitchConnectionEditComponent implements OnInit {
     botToken: '',
   });
 
-  public botAccountForm = new FormBuilder().group({
+  public additionalForm = new FormBuilder().group({
     bot: false,
+    log: false,
     botResponse: ''
   });
 
@@ -64,7 +65,7 @@ export class TwitchConnectionEditComponent implements OnInit {
       botToken: '',
     });
 
-    this.botAccountForm.reset({
+    this.additionalForm.reset({
       botResponse: ''
     });
 
@@ -78,7 +79,7 @@ export class TwitchConnectionEditComponent implements OnInit {
         botToken: value.twitch?.bot?.auth?.token ?? '',
       });
 
-      this.botAccountForm.reset({
+      this.additionalForm.reset({
         botResponse: value.twitch?.bot?.response ?? ''
       });
 
@@ -95,11 +96,39 @@ export class TwitchConnectionEditComponent implements OnInit {
     if (!this.mainAccountForm.valid) {
       // highlight hack
       this.mainAccountForm.markAllAsTouched();
+
+
+      // TODO jump to Tab 1
+
       return;
     }
 
-    this.editMode = false;
-    await this.configService.updateTwitchChannel(this.mainAccountForm.value.name);
+    if (!this.additionalForm.valid) {
+      // highlight hack
+      this.additionalForm.markAllAsTouched();
+
+      // TODO jump to Tab 2
+
+      return;
+    }
+
+
+    const mainAccountValues = this.mainAccountForm.value;
+    const botValues = this.additionalForm.value;
+
+    await this.configService.updateTwitchConfig({
+      channel: mainAccountValues.channelName,
+      token: mainAccountValues.authToken,
+      enableLog: botValues.log,
+      bot: {
+        enabled: botValues.bot,
+        response: botValues.botResponse,
+        auth: {
+          name: mainAccountValues.botName,
+          token: mainAccountValues.botToken
+        }
+      }
+    });
   }
 
   toggleOrSave() {
@@ -111,34 +140,12 @@ export class TwitchConnectionEditComponent implements OnInit {
   }
 
   onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>) {
-    this.configService.updateTwitchLogs($event.checked);
+    // this.configService.updateTwitchLogs($event.checked);
   }
 
-  saveBotData(): Promise<void> {
-    if (!this.botAccountForm.valid) {
-      // highlight hack
-      this.botAccountForm.markAllAsTouched();
-      return;
-    }
-
-    const twitchBot: TwitchConfig = {
-      channel: '',
-      token: '',
-      bot:{
-        response: this.botAccountForm.value.botResponse,
-        enabled: this.botIntegrationEnabled,
-        auth: {
-          name: this.botAccountForm.value.botName,
-          token: this.botAccountForm.value.botToken
-        }
-      }
-    };
-
-    this.configService.updateTwitchBotData(twitchBot);
-  }
 
   onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>){
-    this.configService.updateTwitchBotIntegration($event.checked);
+   //  this.configService.updateTwitchBotIntegration($event.checked);
   }
 
   async tryAuthentication(type: string) {

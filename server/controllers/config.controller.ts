@@ -1,14 +1,4 @@
-import {
-  Config,
-  CONFIG_CUSTOM_PORT_PATH,
-  CONFIG_TWITCH_BOT_INTEGRATION_PATH,
-  CONFIG_TWITCH_BOT_PATH,
-  CONFIG_TWITCH_CHANNEL_PATH,
-  CONFIG_TWITCH_LOG_PATH,
-  ENDPOINTS,
-  Response,
-  TwitchConfig
-} from "@memebox/contracts";
+import {Config, CONFIG_CUSTOM_PORT_PATH, CONFIG_TWITCH, ENDPOINTS, Response, TwitchConfig} from "@memebox/contracts";
 import {allowedFileUrl} from "../validations";
 import {existsSync} from "fs";
 import {sep} from 'path';
@@ -34,53 +24,16 @@ export class ConfigController {
     return this._persistence.getConfig();
   }
 
-  @Put(CONFIG_TWITCH_CHANNEL_PATH)
+  @Put(CONFIG_TWITCH)
   updateTwitchConfig(
     @BodyParams() twitchConfigBody: TwitchConfig
   ): Response {
-    this._persistence.updateTwitchChannel(twitchConfigBody);
+    this._persistence.updateTwitchConfig(twitchConfigBody);
 
     return {
       ok: true
     };
   }
-
-
-  @Put(CONFIG_TWITCH_LOG_PATH)
-  updateTwitchLog(
-    @BodyParams() twitchConfigBody: TwitchConfig
-  ): Response {
-    this._persistence.updateTwitchLog(twitchConfigBody.enableLog);
-
-    return {
-      ok: true
-    };
-  }
-
-
-  @Put(CONFIG_TWITCH_BOT_INTEGRATION_PATH)
-  updateTwitchBotEnabled(
-    @BodyParams() twitchConfigBody: TwitchConfig
-  ): Response {
-    this._persistence.updateTwitchBotIntegration(twitchConfigBody.bot);
-
-    return {
-      ok: true
-    };
-  }
-
-
-  @Put(CONFIG_TWITCH_BOT_PATH)
-  updateTwitchBot(
-    @BodyParams() twitchConfigBody: TwitchConfig
-  ): Response {
-    this._persistence.updateTwitchBot(twitchConfigBody);
-
-    return {
-      ok: true
-    };
-  }
-
 
   @Put()
   updateConfig(

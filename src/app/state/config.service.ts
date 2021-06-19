@@ -4,10 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {
   Config,
   CONFIG_CUSTOM_PORT_PATH,
-  CONFIG_TWITCH_BOT_INTEGRATION_PATH,
-  CONFIG_TWITCH_BOT_PATH,
-  CONFIG_TWITCH_CHANNEL_PATH,
-  CONFIG_TWITCH_LOG_PATH,
+  CONFIG_TWITCH,
   ENDPOINTS,
   OPEN_CONFIG_PATH,
   OPEN_FILES_PATH,
@@ -59,76 +56,17 @@ export class ConfigService {
     this.snackbar.normal('Custom Port updated!');
   }
 
-  public async updateTwitchChannel(twitchChannel: string) {
-    const newConfig: Partial<TwitchConfig> = {
-      channel: twitchChannel
-    };
 
+  public async updateTwitchConfig(newConfig: Partial<TwitchConfig>) {
     // update path & await
-    await this.appService.tryHttpPut(this.configEndpoint(CONFIG_TWITCH_CHANNEL_PATH), newConfig);
+    await this.appService.tryHttpPut(this.configEndpoint(CONFIG_TWITCH), newConfig);
 
     // add to the state
     this.appStore.update(state => {
-      state.config.twitch.channel = twitchChannel;
+      state.config.twitch = newConfig as TwitchConfig;
     });
 
-
-    this.snackbar.normal('Twitch Channel updated!');
-  }
-
-  public async updateTwitchBotData(twitchBotConfig: TwitchConfig) {
-    // update path & await
-    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_TWITCH_BOT_PATH), twitchBotConfig);
-
-    // add to the state
-    this.appStore.update(state => {
-      state.config.twitch = twitchBotConfig;
-    });
-
-    this.snackbar.normal('Twitch Bot settings updated!');
-  }
-
-  public async updateTwitchLogs(enabled: boolean) {
-    const newConfig: Partial<TwitchConfig> = {
-      enableLog: enabled
-    };
-
-    // update path & await
-    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_TWITCH_LOG_PATH), newConfig);
-
-    // add to the state
-    this.appStore.update(state => {
-      state.config.twitch.enableLog = enabled;
-    });
-
-
-    this.snackbar.normal(`Twitch Logging ${enabled ? 'enabled' : 'disabled'}!`);
-  }
-
-  public async updateTwitchBotIntegration(enabled: boolean) {
-    const newConfig: Partial<TwitchConfig> = {
-      bot: {
-        response: '',
-        enabled: enabled
-      }
-    };
-
-    // update path & await
-    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_TWITCH_BOT_INTEGRATION_PATH), newConfig);
-
-    // add to the state
-    this.appStore.update(state => {
-      if (!state.config.twitch.bot) {
-        state.config.twitch.bot = {
-          response: '',
-          enabled: enabled
-        };
-      }
-
-      state.config.twitch.bot.enabled = enabled;
-    });
-
-    this.snackbar.normal(`Twitch bot ${enabled ? 'enabled' : 'disabled'}!`);
+    this.snackbar.normal('Twitch Config updated!');
   }
 
   public async openMediaFolder() {

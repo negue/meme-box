@@ -11,7 +11,6 @@ import {
   Tag,
   TimedClip,
   Twitch,
-  TwitchBotConfig,
   TwitchConfig,
   VisibilityEnum
 } from '@memebox/contracts';
@@ -361,34 +360,37 @@ export class Persistence {
   }
 
 
-  public updateTwitchChannel(twitchConfig: TwitchConfig) {
+  public updateTwitchConfig(newTwitchConfig: TwitchConfig) {
     this.data.config = this.data.config || {};
-    this.data.config.twitch.channel  = twitchConfig.channel;
-    if (twitchConfig.token && twitchConfig.token !== TOKEN_EXISTS_MARKER) {
-      this.data.config.twitch.token = twitchConfig.token;
+
+    const twitchConfig = this.data.config.twitch;
+
+    twitchConfig.enableLog = newTwitchConfig.enableLog;
+    twitchConfig.channel  = newTwitchConfig.channel;
+    if (newTwitchConfig.token && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
+      twitchConfig.token = newTwitchConfig.token;
     }
 
-    this.saveData();
-  }
-
-  public updateTwitchLog (enabled: boolean) {
-    this.data.config = this.data.config || {};
-    this.data.config.twitch.enableLog = enabled;
-
-    this.saveData();
-  }
-
-  public updateTwitchBotIntegration (twitchBotConfig: TwitchBotConfig) {
-    this.data.config = this.data.config || {};
-
-    if(!this.data.config.twitch.bot) {
-      this.data.config.twitch.bot = {
-        enabled: twitchBotConfig.enabled,
-        response: twitchBotConfig.response,
-      };
+    if(!twitchConfig.bot) {
+      twitchConfig.bot = {
+        enabled: false,
+        response: '',
+        auth: {
+          name: '',
+          token: ''
+        }
+      }
     }
 
-    this.data.config.twitch.bot.enabled = twitchBotConfig.enabled;
+    twitchConfig.bot.enabled = newTwitchConfig.bot.enabled;
+    twitchConfig.bot.response = newTwitchConfig.bot.response;
+    twitchConfig.bot.auth.name = newTwitchConfig.bot.auth.name;
+
+    if (newTwitchConfig.bot.auth.token && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
+      twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
+    }
+
+    // TODO add "what changed" to saveData
     this.saveData();
   }
 
@@ -397,17 +399,6 @@ export class Persistence {
 
     this.data.config.customPort = newPort;
 
-    this.saveData();
-  }
-
-
-  public updateTwitchBot (twitchConfig: TwitchConfig) {
-    console.log(twitchConfig);
-    this.data.config = this.data.config || {};
-    twitchConfig.channel = this.data.config.twitch.channel || "";
-    twitchConfig.bot.enabled = this.data.config.twitch.bot.enabled || false;
-    //twitchConfig.bot.response = this.data.config.twitch.bot.response || "";
-    this.data.config.twitch = twitchConfig;
     this.saveData();
   }
 
