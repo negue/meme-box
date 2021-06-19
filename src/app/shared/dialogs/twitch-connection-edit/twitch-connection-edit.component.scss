@@ -1,3 +1,16 @@
+.config-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-rows: min-content;
+
+  gap: 1rem 1rem;
+  grid-auto-rows: min-content;
+  grid-auto-flow: row;
+}
+
+
+
+
 .twitchSetting__input[readonly] {
   opacity: 0.3;
 }

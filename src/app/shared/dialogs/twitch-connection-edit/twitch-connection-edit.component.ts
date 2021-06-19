@@ -19,13 +19,13 @@ export class TwitchConnectionEditComponent implements OnInit {
   public showAdvancedOptions = true;
 
   public mainAccountForm = new FormBuilder().group({
-    name: ''
+    name: '',
+    botName: '',
+    botToken: '',
   });
 
   public botAccountForm = new FormBuilder().group({
     bot: false,
-    botName: '',
-    botToken: '',
     botResponse: ''
   });
 

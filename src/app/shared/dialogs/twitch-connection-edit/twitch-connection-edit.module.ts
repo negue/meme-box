@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {TwitchConnectionEditComponent} from './twitch-connection-edit.component';
 import {DialogContract} from "../dialog.contract";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -25,7 +25,8 @@ import {MatIconModule} from "@angular/material/icon";
     MatInputModule,
     MatTabsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ]
 })
 export class TwitchConnectionEditModule implements DialogContract<void> {

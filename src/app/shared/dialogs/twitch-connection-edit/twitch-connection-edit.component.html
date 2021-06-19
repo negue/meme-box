@@ -1,84 +1,85 @@
-<div>
-  <form [formGroup]="mainAccountForm">
+<h2 mat-dialog-title> Twitch Connection Details: </h2>
+<mat-dialog-content class="mat-typography">
 
+<div [formGroup]="mainAccountForm">
+  <mat-tab-group>
+    <mat-tab label="Authentication">
+  <div class="config-grid">
+    <div>
 
-    <mat-form-field>
-      <mat-label>Channel-Name</mat-label>
-      <input autocomplete="off" [readonly]="!editMode"
-             formControlName="name" (keyup.enter)="save()"
-             class="twitchSetting__input"
-             matInput required>
+      <mat-form-field>
+        <mat-label>Channel-Name</mat-label>
+        <input autocomplete="off"
+               formControlName="name" (keyup.enter)="save()"
+               class="twitchSetting__input"
+               matInput required>
 
-      <mat-error *ngIf="mainAccountForm.controls['name'].hasError('required')">
-        Please enter your Twitch channel name
-      </mat-error>
+        <mat-error *ngIf="mainAccountForm.controls['name'].hasError('required')">
+          Please enter your Twitch channel name
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
 
-      <button (click)="toggleOrSave()" matSuffix
-              color="primary"
-              class="twitchSetting__button"
-              mat-raised-button>{{editMode ? 'Update' : 'Edit'}}</button>
-
-    </mat-form-field>
-
-    <div class="explanation">
-      If you want to trigger media clips on Twitch-Events, then you need to provide a Channel-Name in order subscribe to
-      these events.
+      <div class="markdown-styling">
+      Twitch Channel Name is needed for anonymous connection to the TwitchAPI: <br>
+      With this you can use the events for:
+      <ul>
+        <li>Chat-Message</li>
+        <li>Raid</li>
+        <li>Bits (Cheers)</li>
+      </ul>
+      </div>
     </div>
 
-    <ng-container *ngIf="showAdvancedOptions">
-      <ng-container *ngIf="config$ | async as config">
-        <br />
-        <mat-checkbox [checked]="config?.twitch?.enableLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
-        </mat-checkbox>
-        <br />
-        <br />
+    <div>
+      <div>
+        TODO OAuth Button
+      </div>
 
-        <br />
-      </ng-container>
-    </ng-container>
-  </form>
-</div>
+    </div>
+    <div>
 
-<div *ngIf="config$ | async as config">
-  <form [formGroup]="botAccountForm" *ngIf="config?.twitch?.bot">
-    <mat-checkbox [checked]="config?.twitch?.bot?.enabled"
-                  (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
-    </mat-checkbox>
+      <div class="markdown-styling">
+        With an authenticated connection to the TwitchAPI: <br>
+        you can use the following features:
+        <ul>
+          <li>Trigger actions by Channel-Points</li>
+          <li>Use this Account for the Bot to write in Chat</li>
+        </ul>
+      </div>
+    </div>
 
-    <mat-tab-group>
-      <mat-tab label="Authentication">
+    <div *ngIf="config$ | async as config">
+      <mat-checkbox [checked]="config?.twitch?.bot?.enabled"
+                    (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
+      </mat-checkbox>
 
-        <p>To obtain the bot token, login into twitch with your bot account, click on the "Get Twitch Token" button and
-          follow the steps in the window that opens.<br /></p>
-        <p><br /><a mat-button mat-raised-button href="https://twitchapps.com/tmi/" target="_blank"
-                    class="twitchSetting__token-button">
-          <mat-icon svgIcon="launch"></mat-icon> &nbsp;Get Twitch Token</a></p>
+      <div>
+        TODO OAuth Button
+      </div>
+    </div>
+    <div>
+      If this Account is connected, it will be used primary for the `!commands` and upcoming Twitch-Chat actions.
+    </div>
 
-        <mat-form-field>
-          <mat-label>Bot name</mat-label>
-          <input autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
-                 formControlName="botName"
-                 class="twitchSetting__input"
-                 matInput required>
+  </div>
+    </mat-tab>
+    <mat-tab label="Additional settings">
+      <form *ngIf="config$ | async as config" [formGroup]="botAccountForm">
+        <ng-container *ngIf="showAdvancedOptions">
+          <ng-container *ngIf="config$ | async as config">
+            <br />
+            <mat-checkbox [checked]="config?.twitch?.enableLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
+            </mat-checkbox>
+            <br />
+            <br />
 
-          <mat-error *ngIf="botAccountForm.controls['botName'].hasError('required')">
-            Please enter bot name
-          </mat-error>
-        </mat-form-field>
+            <br />
+          </ng-container>
+        </ng-container>
 
-        <mat-form-field>
-          <mat-label>Bot token</mat-label>
-          <input autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
-                 formControlName="botToken"
-                 class="twitchSetting__input" type="password"
-                 matInput required>
 
-          <mat-error *ngIf="botAccountForm.controls['botToken'].hasError('required')">
-            Please enter bot oAuth token
-          </mat-error>
-        </mat-form-field>
-      </mat-tab>
-      <mat-tab label="Bot settings">
         <mat-form-field>
           <mat-label>Bot response</mat-label>
           <textarea autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
@@ -98,15 +99,18 @@
           <code>{{userFlagMessage}}</code>
           to reference the user that asked for commands.
         </p>
-      </mat-tab>
-    </mat-tab-group>
+      </form>
 
-    <button (click)="saveBotData()" matSuffix
-            color="primary"
-            class="twitchSetting__button"
-            [disabled]="!config?.twitch?.bot.enabled"
-            mat-raised-button>Save
-    </button>
-  </form>
+    </mat-tab>
+  </mat-tab-group>
+
 </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()"
+          color="primary"
+          mat-raised-button>Update Twitch Config</button>
+</mat-dialog-actions>
 
