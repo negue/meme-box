@@ -10,11 +10,11 @@
       <mat-form-field>
         <mat-label>Channel-Name</mat-label>
         <input autocomplete="off"
-               formControlName="name" (keyup.enter)="save()"
+               formControlName="channelName" (keyup.enter)="save()"
                class="twitchSetting__input"
                matInput required>
 
-        <mat-error *ngIf="mainAccountForm.controls['name'].hasError('required')">
+        <mat-error *ngIf="mainAccountForm.controls['channelName'].hasError('required')">
           Please enter your Twitch channel name
         </mat-error>
       </mat-form-field>
@@ -34,7 +34,7 @@
 
     <div>
       <div>
-        TODO OAuth Button
+        <button (click)="tryAuthentication('main')" >oauth</button>
       </div>
 
     </div>
@@ -51,12 +51,8 @@
     </div>
 
     <div *ngIf="config$ | async as config">
-      <mat-checkbox [checked]="config?.twitch?.bot?.enabled"
-                    (change)="onBotIntegrationChanged($event, config)">Enable Bot Integration
-      </mat-checkbox>
-
       <div>
-        TODO OAuth Button
+        <button (click)="tryAuthentication('bot')" >oauth</button>
       </div>
     </div>
     <div>
@@ -78,6 +74,10 @@
             <br />
           </ng-container>
         </ng-container>
+        <mat-checkbox [checked]="config?.twitch?.bot?.enabled"
+                      (change)="onBotIntegrationChanged($event, config)">
+          Enable Bot Command Response
+        </mat-checkbox>
 
 
         <mat-form-field>

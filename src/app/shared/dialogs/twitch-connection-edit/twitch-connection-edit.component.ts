@@ -7,7 +7,17 @@ import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {Config, TwitchConfig} from "@memebox/contracts";
 import {ConfigService} from "../../../state/config.service";
+import {TwitchOAuthHandler} from "./twitch.oauth";
 
+const currentUrl = `${location.origin}`;
+const scopes = [
+  // 'user:read:email',            // ???
+  'chat:read',                     // TMI - Chat
+  'chat:edit',                     // TMI - Write to chat?
+  'channel:read:redemptions',      // PubSub Channelpoints Event
+  'channel:manage:redemptions'     // Twitch API Change Channelpoint Redemptions
+].join('+');
+const clientId = 'zmqh0d2kwa9r24eecywm5uhhryggm4';
 
 @Component({
   selector: 'app-twitch-connection-edit',
@@ -19,7 +29,9 @@ export class TwitchConnectionEditComponent implements OnInit {
   public showAdvancedOptions = true;
 
   public mainAccountForm = new FormBuilder().group({
-    name: '',
+    channelName: '',
+    authUserName: '',
+    authToken: '',
     botName: '',
     botToken: '',
   });
@@ -47,33 +59,29 @@ export class TwitchConnectionEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.mainAccountForm.reset({
-      name: 'my-channel'
-    });
-
-    this.appQuery.config$.pipe(
-      filter(config => !!config.twitch.channel),
-      take(1),
-    ).subscribe(value => {
-      this.mainAccountForm.reset({
-        name: value.twitch.channel
-      });
+      channelName: 'my-channel',
+      botName: '',
+      botToken: '',
     });
 
     this.botAccountForm.reset({
-      botName: '',
-      botToken: '',
       botResponse: ''
     });
 
     this.appQuery.config$.pipe(
       filter(config => !!config.twitch),
-      take(1)
+      take(1),
     ).subscribe(value => {
-      this.botAccountForm.reset({
+      this.mainAccountForm.reset({
+        channelName: value.twitch.channel,
         botName: value.twitch?.bot?.auth?.name ?? '',
         botToken: value.twitch?.bot?.auth?.token ?? '',
+      });
+
+      this.botAccountForm.reset({
         botResponse: value.twitch?.bot?.response ?? ''
       });
+
       this.botIntegrationEnabled = value.twitch.bot.enabled;
     });
   }
@@ -131,5 +139,25 @@ export class TwitchConnectionEditComponent implements OnInit {
 
   onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>){
     this.configService.updateTwitchBotIntegration($event.checked);
+  }
+
+  async tryAuthentication(type: string) {
+    const oauthHandler = new TwitchOAuthHandler(
+      clientId, scopes, currentUrl, true
+    );
+
+    const result = await oauthHandler.login();
+
+    if (type === 'main') {
+      this.mainAccountForm.patchValue({
+        authUserName: result.userName,
+        authToken: result.accessToken,
+      });
+    } else {
+      this.mainAccountForm.patchValue({
+        botName: result.userName,
+        botToken: result.accessToken,
+      });
+    }
   }
 }

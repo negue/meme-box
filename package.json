@@ -146,6 +146,7 @@
     "express": "4.17.1",
     "express-validator": "6.6.1",
     "immer": "8.0.1",
+    "jwt-decode": "3.1.2",
     "lodash": "4.17.20",
     "marked": "1.2.6",
     "morphdom": "2.6.1",
