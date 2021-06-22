@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Injectable,
   Input,
   OnChanges,
   OnDestroy,
@@ -14,12 +15,32 @@ import {dynamicIframe, DynamicIframeContent} from "@memebox/utils";
 import {WebsocketHandler} from "../../../core/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
 import {BehaviorSubject, Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {take, takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
 import {TriggerClip} from "@memebox/contracts";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {guid} from "@datorama/akita";
-import {AppService} from "../../../state/app.service";
+import {API_BASE, AppService} from "../../../state/app.service";
+import {ActionStore, ActionStoreAdapter} from "@memebox/state";
+
+@Injectable({providedIn: 'root'})
+class WidgetStoreRemoteAdapter implements ActionStoreAdapter {
+  constructor(
+    private appService: AppService,
+  ) {
+  }
+
+  getCurrentData(mediaId: string): Promise<ActionStore> {
+    return this.appService.http.get<ActionStore>(`${API_BASE}widget-state/${mediaId}`)
+      .pipe(
+        take(1)
+      ).toPromise();
+  }
+
+  updateData(mediaId: string, instanceId: string, newData: ActionStore) {
+    this.appService.tryHttpPut(`${API_BASE}widget-state/${mediaId}/${instanceId}`, newData);
+  }
+}
 
 @Component({
   selector: 'app-dynamic-iframe',
@@ -47,13 +68,14 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   errorSubject$ = new BehaviorSubject<string>('');
 
   constructor(private websocket: WebsocketService,
-              private appService: AppService) {
+              private appService: AppService,
+              private remoteStoreApiAdapter: WidgetStoreRemoteAdapter) {
     this.wsHandler = new WebsocketHandler(AppConfig.wsBase+'/ws/twitch_events', 3000);
 
   }
 
   async ngOnInit(): Promise<void> {
-    const currentWidgetApi = new WidgetApi(this.mediaId, this._widgetInstance, this.appService, this.wsHandler, this.errorSubject$);
+    const currentWidgetApi = new WidgetApi(this.mediaId, this._widgetInstance, this.remoteStoreApiAdapter, this.wsHandler, this.errorSubject$);
 
     await Promise.all([
       currentWidgetApi.isReady(),
