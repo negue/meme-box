@@ -42,13 +42,10 @@ export class TwitchConnectionEditComponent implements OnInit {
     botResponse: ''
   });
 
-  public editMode = false;
-
   public config$ = this.appQuery.config$;
 
   private _destroy$ = new Subject();
 
-  private botIntegrationEnabled = false;
   public commandsFlagMessage = '{{commands}}';
   public userFlagMessage = '{{user}}';
 
@@ -80,10 +77,10 @@ export class TwitchConnectionEditComponent implements OnInit {
       });
 
       this.additionalForm.reset({
-        botResponse: value.twitch?.bot?.response ?? ''
+        botResponse: value.twitch?.bot?.response ?? '',
+        bot: value.twitch.bot.enabled
       });
 
-      this.botIntegrationEnabled = value.twitch.bot.enabled;
     });
   }
 
@@ -131,21 +128,17 @@ export class TwitchConnectionEditComponent implements OnInit {
     });
   }
 
-  toggleOrSave() {
-    if (this.editMode) {
-      this.save();
-    } else {
-      this.editMode = true;
-    }
-  }
-
   onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>) {
-    // this.configService.updateTwitchLogs($event.checked);
+    this.additionalForm.patchValue({
+      log: $event.checked
+    });
   }
 
 
   onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>){
-   //  this.configService.updateTwitchBotIntegration($event.checked);
+    this.additionalForm.patchValue({
+      bot: $event.checked
+    });
   }
 
   async tryAuthentication(type: string) {

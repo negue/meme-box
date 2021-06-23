@@ -34,6 +34,7 @@
 
     <div>
       <div>
+        {{ mainAccountForm.value.authUserName }}
         <button (click)="tryAuthentication('main')" >oauth</button>
       </div>
 
@@ -52,6 +53,8 @@
 
     <div *ngIf="config$ | async as config">
       <div>
+
+        {{ mainAccountForm.value.botName }}
         <button (click)="tryAuthentication('bot')" >oauth</button>
       </div>
     </div>

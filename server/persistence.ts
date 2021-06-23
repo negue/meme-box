@@ -371,6 +371,7 @@ export class Persistence {
       twitchConfig.token = newTwitchConfig.token;
     }
 
+    // fill empty bot object
     if(!twitchConfig.bot) {
       twitchConfig.bot = {
         enabled: false,
@@ -379,6 +380,14 @@ export class Persistence {
           name: '',
           token: ''
         }
+      }
+    }
+
+      // fill empty bot object
+    if(!twitchConfig.bot.auth) {
+      twitchConfig.bot.auth = {
+        name: '',
+        token: ''
       }
     }
 

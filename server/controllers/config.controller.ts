@@ -8,7 +8,6 @@ import {Persistence} from "../persistence";
 
 
 // TODO allow config generic put endpoint
-// TODO Refactor this config boilerplate !!!
 // todo validations
 
 @Controller(`/${ENDPOINTS.CONFIG}`)
