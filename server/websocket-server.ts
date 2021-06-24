@@ -1,6 +1,6 @@
 import {TriggerAction} from "@memebox/contracts";
 import {CURRENT_MEMEBOX_WEBSOCKET} from "./providers/websockets/memebox.websocket";
-import {CURRENT_MEMEBOX_MEDIATRIGGER_EVENT_BUS} from "./providers/actions/media/media-trigger.event-bus";
+import {CURRENT_MEMEBOX_MEDIATRIGGER_EVENT_BUS} from "./providers/actions/action-trigger-event.bus";
 
 // Once all services are in the TsED way - these functions can be removed
 

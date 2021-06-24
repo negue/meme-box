@@ -1,5 +1,5 @@
 import {Service} from "@tsed/di";
-import {MediaTriggerHandler} from "./actions/media/media-trigger.handler";
+import {ActionTriggerHandler} from "./actions/action-trigger.handler";
 import {TwitchBootstrap} from "./twitch/twitch.bootstrap";
 import {WebsocketBootstrap} from "./websockets/websocket.bootstrap";
 
@@ -11,7 +11,7 @@ import {WebsocketBootstrap} from "./websockets/websocket.bootstrap";
 @Service()
 export class BootstrapServices {
   constructor(
-    mediaTriggerHandler: MediaTriggerHandler,
+    mediaTriggerHandler: ActionTriggerHandler,
     _twitchBootstrap: TwitchBootstrap,
     _websocketBootstrap: WebsocketBootstrap,
   ) {

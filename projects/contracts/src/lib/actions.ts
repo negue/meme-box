@@ -39,7 +39,7 @@ export interface TriggerAction {
   // soon there will be more "overrides" to everything
 }
 
-export interface MediaStatePayload {
+export interface ActionActiveStatePayload {
   mediaId: string;
   screenId?: string;
   active: boolean;

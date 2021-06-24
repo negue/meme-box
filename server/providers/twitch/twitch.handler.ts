@@ -9,7 +9,7 @@ import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {ExampleTwitchCommandsSubject} from "../../shared";
-import {MediaTriggerEventBus} from "../actions/media/media-trigger.event-bus";
+import {ActionTriggerEventBus} from "../actions/action-trigger-event.bus";
 
 @Injectable({
   type: ProviderType.SERVICE,
@@ -22,7 +22,7 @@ export class TwitchHandler {
     private _twitchConnector: TwitchConnector,
     private _twitchLogger: TwitchLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private _mediaTriggerEventBus: MediaTriggerEventBus
+    private _mediaTriggerEventBus: ActionTriggerEventBus
   ) {
 
     _twitchConnector

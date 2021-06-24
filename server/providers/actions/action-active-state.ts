@@ -1,16 +1,16 @@
 import {Service} from "@tsed/di";
-import {MediaStateEventBus} from "./media-state.event-bus";
+import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
 import {filter, map, take} from "rxjs/operators";
 
 type MediaVisibilityStateType = Record<string, Record<string, boolean>>;
 
 @Service()
-export class MediaActiveState {
+export class ActionActiveState {
   // mediaId   -> screenId --> visible state
   private state: MediaVisibilityStateType = {};
 
   constructor(
-    private mediaStateEventBus: MediaStateEventBus
+    private mediaStateEventBus: ActionActiveStateEventBus
   ) {
     mediaStateEventBus.AllEvents$.subscribe(
       value => {
@@ -18,7 +18,7 @@ export class MediaActiveState {
           this.state[value.mediaId] = {};
         }
 
-        this.state[value.mediaId][value.screenId] = value.active;
+        this.state[value.mediaId][value.screenId ?? value.mediaId] = value.active;
       }
     )
   }

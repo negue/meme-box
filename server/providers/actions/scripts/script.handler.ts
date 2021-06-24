@@ -6,9 +6,9 @@ import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../contracts";
 import {Persistence} from "../../../persistence";
-import {MediaTriggerEventBus} from "../media/media-trigger.event-bus";
-import {MediaActiveState} from "../media/media-active-state";
-import {MediaStateEventBus} from "../media/media-state.event-bus";
+import {ActionTriggerEventBus} from "../action-trigger-event.bus";
+import {ActionActiveState} from "../action-active-state";
+import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
 import {ActionStore, ActionStoreAdapter} from "@memebox/state";
 import {ScriptContext} from "./script.context";
 import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
@@ -47,9 +47,9 @@ export class ScriptHandler implements ActionStoreAdapter {
   constructor(
     @UseOpts({name: 'ScriptHandler'}) public logger: NamedLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private mediaTriggerEventBus: MediaTriggerEventBus,
-    private mediaStateEventBus: MediaStateEventBus,
-    private mediaActiveState: MediaActiveState,
+    private mediaTriggerEventBus: ActionTriggerEventBus,
+    private mediaStateEventBus: ActionActiveStateEventBus,
+    private mediaActiveState: ActionActiveState,
 
     private actionStateHandler: ActionPersistentStateHandler
   ) {

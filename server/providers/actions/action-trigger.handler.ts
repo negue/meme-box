@@ -15,19 +15,20 @@ import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 
-import {MediaTriggerEventBus} from "./media/media-trigger.event-bus";
-import {ScriptHandler, timeoutAsync} from "./scripts/script.handler";
+import {ActionTriggerEventBus} from "./action-trigger-event.bus";
+import {ScriptHandler} from "./scripts/script.handler";
+import {timeoutAsync} from "./scripts/apis/sleep.api";
 
 @Service()
-export class MediaTriggerHandler {
+export class ActionTriggerHandler {
   private _allScreens: Screen[] = [];
   private _allMediasMap: Dictionary<Clip> = {};
   private _allMediasList: Clip[] = [];
 
   constructor(
-    @UseOpts({name: 'MediaTriggerHandler'}) public logger: NamedLogger,
+    @UseOpts({name: 'ActionTriggerHandler'}) public logger: NamedLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private mediaTriggerEventBus: MediaTriggerEventBus,
+    private mediaTriggerEventBus: ActionTriggerEventBus,
     private _memeboxWebSocket: MemeboxWebsocket,
     private _scriptHandler: ScriptHandler
   ) {
