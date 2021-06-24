@@ -19,10 +19,24 @@ The `Execution Script` which is called each time per trigger, does the actual "s
 |Script Types|Variable Name|Description|
 |------------|--|--|
 |*both*| `variables` | It holds all values of  your added `Custom Variables` |
+|*both*| `store` | [See the `Store`-Documentation](./store.md) |
+|*both*| `sleep` | Check `Sleep API` below |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
 |`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
-|*both*| `store` | [See the `Store`-Documentation](./store.md) |
 
+### Sleep API
+
+If you need to wait for X seconds or ms you can use this:
+
+```js
+await sleep.secondAsync(X)
+await sleep.msAsync(Y);
+await sleep.for(X, sleep.TYPE.MS);
+
+// also you can use
+sleep.TYPE.SECONDS
+sleep.TYPE.MINUTES
+```
 
 ## Pre-Defined Functions
 

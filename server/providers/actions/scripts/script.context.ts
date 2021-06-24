@@ -3,6 +3,7 @@ import {VM, VMScript} from "vm2";
 import {ActionStoreAdapter, ActionStoreApi} from "@memebox/state";
 import {Clip, Dictionary, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
+import {Sleep, sleep} from "./apis/sleep.api";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -15,6 +16,9 @@ class ScriptCompileError extends Error {
 interface ExecutionScriptPayload {
   variables: Dictionary<unknown>;
   bootstrap: Record<string, unknown>;
+  triggerPayload: TriggerAction;
+  store: ActionStoreApi;
+  sleep: Sleep
 }
 
 type ExecutionScript = (
@@ -32,6 +36,9 @@ export class ScriptContext {
   compiledBootstrapScript: VMScript;
   bootstrap_variables: Record<string, unknown>;
   compiledExecutionScript: VMScript;
+
+  // created execution function
+  scriptToCall: ExecutionScript;
 
   constructor(
     private _vm: VM,
@@ -102,21 +109,25 @@ export class ScriptContext {
       this.script.extended
     );
 
-    await Promise.all([
-      this.bootstrap(variables),
-      this.store.ready()
-    ]);
 
-    const scriptToCall = this._vm.run(this.compiledExecutionScript);
+    if (!this.scriptToCall) {
+      await Promise.all([
+        this.bootstrap(variables),
+        this.store.ready()
+      ]);
+
+      this.scriptToCall = this._vm.run(this.compiledExecutionScript);
+    }
 
     // these are the available APIs / variables that can be used inside
-    const scriptArguments = {
+    const scriptArguments: ExecutionScriptPayload = {
       variables,
       bootstrap: this.bootstrap_variables,
       triggerPayload: payloadObs,
-      store: this.store
+      store: this.store,
+      sleep: sleep
     };
 
-    await scriptToCall(scriptArguments);
+    await this.scriptToCall(scriptArguments);
   }
 }

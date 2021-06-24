@@ -32,7 +32,6 @@ export class ScriptHandler implements ActionStoreAdapter {
 
         return obs;
       },
-      waitMillisecondsAsync: (ms: number) => timeoutAsync(ms),
       triggerMediaAsync: (targetMediaId: string, targetScreenId?: string) => {
         this.mediaTriggerEventBus.triggerMedia({
           id: targetMediaId,
@@ -121,9 +120,5 @@ export class ScriptHandler implements ActionStoreAdapter {
       active: false
     });
   }
-}
-
-export function timeoutAsync(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
