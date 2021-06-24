@@ -12,6 +12,7 @@ import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
 import {ActionStore, ActionStoreAdapter} from "@memebox/state";
 import {ScriptContext} from "./script.context";
 import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
+import {MemeboxApiFactory} from "./apis/memebox.api";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -51,7 +52,8 @@ export class ScriptHandler implements ActionStoreAdapter {
     private mediaStateEventBus: ActionActiveStateEventBus,
     private mediaActiveState: ActionActiveState,
 
-    private actionStateHandler: ActionPersistentStateHandler
+    private actionStateHandler: ActionPersistentStateHandler,
+    private memeboxApiFactory: MemeboxApiFactory
   ) {
     _persistence.dataUpdated$().subscribe(() => {
       // TODO get updated Path to know what kind of state needs to be refilled
@@ -94,7 +96,8 @@ export class ScriptHandler implements ActionStoreAdapter {
       scriptHoldingData = new ScriptContext(
         this._vm,
         this,
-        script
+        script,
+        this.memeboxApiFactory.getApiFor(script.id)
       );
 
       try {

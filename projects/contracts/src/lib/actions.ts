@@ -26,7 +26,9 @@ export enum TriggerClipOrigin {
 }
 
 export interface TriggerAction {
-  id: string;
+  // TODO an unique triggerActionId to follow
+
+  id: string;   // actionId
   targetScreen?: string;
 
   fromWebsocket?: boolean;

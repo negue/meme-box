@@ -4,6 +4,7 @@ import {ActionStoreAdapter, ActionStoreApi} from "@memebox/state";
 import {Clip, Dictionary, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {Sleep, sleep} from "./apis/sleep.api";
+import {MemeboxApi} from "./apis/memebox.api";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -13,12 +14,18 @@ class ScriptCompileError extends Error {
   }
 }
 
-interface ExecutionScriptPayload {
+interface SharedScriptPayload {
   variables: Dictionary<unknown>;
+  store: ActionStoreApi;
+  sleep: Sleep;
+  memebox: MemeboxApi
+}
+
+const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox';
+
+interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
   triggerPayload: TriggerAction;
-  store: ActionStoreApi;
-  sleep: Sleep
 }
 
 type ExecutionScript = (
@@ -44,6 +51,7 @@ export class ScriptContext {
     private _vm: VM,
     storeAdapter: ActionStoreAdapter,
     public script: Clip,
+    public memeboxApi: MemeboxApi
   ) {
     this.scriptConfig = clipDataToScriptConfig(script);
 
@@ -62,7 +70,7 @@ export class ScriptContext {
     try {
       this.compiledBootstrapScript = new VMScript(`
           async function bootstrap(
-            { variables }
+            { ${SHARED_API_ARGUMENTS} }
           ) {
             ${this.scriptConfig.bootstrapScript}
           }
@@ -76,7 +84,7 @@ export class ScriptContext {
     try {
       this.compiledExecutionScript = new VMScript(`
           async function scriptInVm(
-            { variables, bootstrap, triggerPayload, store }
+            { ${SHARED_API_ARGUMENTS}, bootstrap, triggerPayload }
           ) {
             ${this.scriptConfig.executionScript}
           }
@@ -93,10 +101,14 @@ export class ScriptContext {
     if (!this.isBootstrapped) {
       const bootstrapFunc = this._vm.run(this.compiledBootstrapScript);
 
-      this.bootstrap_variables = await bootstrapFunc({
+      const bootstrapPayload: SharedScriptPayload = {
         variables,
-        store: this.store
-      });
+        store: this.store,
+        sleep,
+        memebox: this.memeboxApi
+      }
+
+      this.bootstrap_variables = await bootstrapFunc(bootstrapPayload);
       this.isBootstrapped = true;
     }
   }
@@ -125,7 +137,8 @@ export class ScriptContext {
       bootstrap: this.bootstrap_variables,
       triggerPayload: payloadObs,
       store: this.store,
-      sleep: sleep
+      sleep,
+      memebox: this.memeboxApi
     };
 
     await this.scriptToCall(scriptArguments);
