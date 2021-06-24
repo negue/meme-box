@@ -9,14 +9,14 @@ import {
   TriggerAction,
   TriggerClipOrigin
 } from "@memebox/contracts";
-import {Persistence} from "../../../persistence";
-import {NamedLogger} from "../../named-logger";
+import {Persistence} from "../../persistence";
+import {NamedLogger} from "../named-logger";
 import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../../contracts";
-import {MemeboxWebsocket} from "../../websockets/memebox.websocket";
+import {PERSISTENCE_DI} from "../contracts";
+import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 
-import {MediaTriggerEventBus} from "./media-trigger.event-bus";
-import {ScriptHandler, timeoutAsync} from "../scripts/script.handler";
+import {MediaTriggerEventBus} from "./media/media-trigger.event-bus";
+import {ScriptHandler, timeoutAsync} from "./scripts/script.handler";
 
 @Service()
 export class MediaTriggerHandler {
