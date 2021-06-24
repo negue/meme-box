@@ -88,6 +88,7 @@ export class ScriptContext {
 
       this.bootstrap_variables = await bootstrapFunc({
         variables,
+        store: this.store
       });
       this.isBootstrapped = true;
     }
@@ -101,7 +102,10 @@ export class ScriptContext {
       this.script.extended
     );
 
-    await this.bootstrap(variables);
+    await Promise.all([
+      this.bootstrap(variables),
+      this.store.ready()
+    ]);
 
     const scriptToCall = this._vm.run(this.compiledExecutionScript);
 
@@ -109,7 +113,8 @@ export class ScriptContext {
     const scriptArguments = {
       variables,
       bootstrap: this.bootstrap_variables,
-      triggerPayload: payloadObs
+      triggerPayload: payloadObs,
+      store: this.store
     };
 
     await scriptToCall(scriptArguments);

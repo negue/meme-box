@@ -20,7 +20,8 @@ The `Execution Script` which is called each time per trigger, does the actual "s
 |------------|--|--|
 |*both*| `variables` | It holds all values of  your added `Custom Variables` |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
-|`Execution Script`| `triggerPayload` | It has the current information of the media trigger |
+|`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
+|*both*| `store` | [See the `Store`-Documentation](./store.md) |
 
 
 ## Pre-Defined Functions

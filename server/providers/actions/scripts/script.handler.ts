@@ -11,6 +11,7 @@ import {MediaActiveState} from "../media/media-active-state";
 import {MediaStateEventBus} from "../media/media-state.event-bus";
 import {ActionStore, ActionStoreAdapter} from "@memebox/state";
 import {ScriptContext} from "./script.context";
+import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -49,7 +50,9 @@ export class ScriptHandler implements ActionStoreAdapter {
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private mediaTriggerEventBus: MediaTriggerEventBus,
     private mediaStateEventBus: MediaStateEventBus,
-    private mediaActiveState: MediaActiveState
+    private mediaActiveState: MediaActiveState,
+
+    private actionStateHandler: ActionPersistentStateHandler
   ) {
     _persistence.dataUpdated$().subscribe(() => {
       // TODO get updated Path to know what kind of state needs to be refilled
@@ -63,11 +66,15 @@ export class ScriptHandler implements ActionStoreAdapter {
   // region ActionStoreAdapter
 
   public getCurrentData(mediaId: string): Promise<ActionStore> {
-    return Promise.resolve({});
+    return this.actionStateHandler
+      .getActionFileHandler(mediaId)
+      .loadFile({})
   }
 
   public updateData(mediaId: string, instanceId: string, newData: ActionStore) {
-
+    return this.actionStateHandler
+      .getActionFileHandler(mediaId)
+      .update(newData);
   }
 
   // endregion ActionStoreAdapter
