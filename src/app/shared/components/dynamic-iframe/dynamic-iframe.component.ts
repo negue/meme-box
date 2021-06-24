@@ -2,7 +2,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Injectable,
   Input,
   OnChanges,
   OnDestroy,
@@ -15,32 +14,13 @@ import {dynamicIframe, DynamicIframeContent} from "@memebox/utils";
 import {WebsocketHandler} from "../../../core/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
 import {BehaviorSubject, Subject} from "rxjs";
-import {take, takeUntil} from "rxjs/operators";
+import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
 import {TriggerAction} from "@memebox/contracts";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {guid} from "@datorama/akita";
-import {API_BASE, AppService} from "../../../state/app.service";
-import {ActionStore, ActionStoreAdapter} from "@memebox/state";
-
-@Injectable({providedIn: 'root'})
-class WidgetStoreRemoteAdapter implements ActionStoreAdapter {
-  constructor(
-    private appService: AppService,
-  ) {
-  }
-
-  getCurrentData(mediaId: string): Promise<ActionStore> {
-    return this.appService.http.get<ActionStore>(`${API_BASE}widget-state/${mediaId}`)
-      .pipe(
-        take(1)
-      ).toPromise();
-  }
-
-  updateData(mediaId: string, instanceId: string, newData: ActionStore) {
-    this.appService.tryHttpPut(`${API_BASE}widget-state/${mediaId}/${instanceId}`, newData);
-  }
-}
+import {AppService} from "../../../state/app.service";
+import {WidgetStoreRemoteAdapter} from "./widget-store-remote-adapter.service";
 
 @Component({
   selector: 'app-dynamic-iframe',
