@@ -2,7 +2,7 @@ import type {Rule} from 'css';
 import * as css from 'css';
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, CombinedClip, MediaType, Screen, ScreenClip, TriggerClip} from "@memebox/contracts";
+import {Clip, CombinedClip, MediaType, Screen, ScreenClip, TriggerAction} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
@@ -59,7 +59,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       return result;
     })
   );
-  mediaClipToShow$ = new BehaviorSubject<TriggerClip>(null);
+  mediaClipToShow$ = new BehaviorSubject<TriggerAction>(null);
   clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement | HTMLIFrameElement>();
 
   showOfflineIcon$ = this.wsService.connectionState$.pipe(

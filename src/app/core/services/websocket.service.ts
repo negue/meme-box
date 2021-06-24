@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ACTIONS, MediaStatePayload, TriggerClip, TriggerClipOrigin} from "@memebox/contracts";
+import {ACTIONS, MediaStatePayload, TriggerAction, TriggerClipOrigin} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {AppConfig} from "@memebox/app/env";
@@ -25,7 +25,7 @@ export class WebsocketService {
   public onReconnection$ = new Subject();
   public onUpdateData$ = new Subject();
   public onReloadScreen$ = new Subject();
-  public onTriggerClip$ = new Subject<TriggerClip>();
+  public onTriggerClip$ = new Subject<TriggerAction>();
   public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.NONE)
 
   private ws: WebSocket;
@@ -62,7 +62,7 @@ export class WebsocketService {
   }
 
   public triggerClipOnScreen(clipId: string, screenId?: string | null) {
-    const triggerObj: TriggerClip = {
+    const triggerObj: TriggerAction = {
       id: clipId,
       targetScreen: screenId,
       repeatX: 0,  // todo after streamdeck ?
@@ -91,7 +91,7 @@ export class WebsocketService {
 
     switch (action) {
       case ACTIONS.TRIGGER_CLIP: {
-        const payloadObj: TriggerClip = JSON.parse(payload);
+        const payloadObj: TriggerAction = JSON.parse(payload);
 
         this.onTriggerClip$.next(payloadObj);
 

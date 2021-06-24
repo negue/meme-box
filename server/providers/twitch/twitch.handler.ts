@@ -9,7 +9,7 @@ import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {ExampleTwitchCommandsSubject} from "../../shared";
-import {MediaTriggerEventBus} from "../media/media-trigger.event-bus";
+import {MediaTriggerEventBus} from "../actions/media/media-trigger.event-bus";
 
 @Injectable({
   type: ProviderType.SERVICE,

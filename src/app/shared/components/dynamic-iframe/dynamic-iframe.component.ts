@@ -17,7 +17,7 @@ import {AppConfig} from "@memebox/app/env";
 import {BehaviorSubject, Subject} from "rxjs";
 import {take, takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
-import {TriggerClip} from "@memebox/contracts";
+import {TriggerAction} from "@memebox/contracts";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {guid} from "@datorama/akita";
 import {API_BASE, AppService} from "../../../state/app.service";
@@ -121,7 +121,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
     return this._widgetApi;
   }
 
-  public componentIsShown(currentTriggeredPayload: TriggerClip) {
+  public componentIsShown(currentTriggeredPayload: TriggerAction) {
     this._widgetApi.triggerIsShown(currentTriggeredPayload);
   }
 

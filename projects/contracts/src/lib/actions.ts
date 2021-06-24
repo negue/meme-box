@@ -25,7 +25,7 @@ export enum TriggerClipOrigin {
   Scripts
 }
 
-export interface TriggerClip {
+export interface TriggerAction {
   id: string;
   targetScreen?: string;
 

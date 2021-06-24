@@ -1,5 +1,5 @@
 import {WebsocketHandler} from "../../../core/services/websocket.handler";
-import {TriggerClip, TwitchEventTypes} from "@memebox/contracts";
+import {TriggerAction, TwitchEventTypes} from "@memebox/contracts";
 import {AllTwitchEvents} from "../../../../../server/providers/twitch/twitch.connector.types";
 import {Subject, Subscription} from "rxjs";
 import {ActionStoreAdapter, ActionStoreApi} from "@memebox/state";
@@ -70,7 +70,7 @@ export class WidgetTwitchApi {
  4. widget store preview?
  */
 
-type TriggeredEventCallback = (currentTriggeredPayload: TriggerClip) => void;
+type TriggeredEventCallback = (currentTriggeredPayload: TriggerAction) => void;
 
 export class WidgetApi {
   public twitch: WidgetTwitchApi;
@@ -96,7 +96,7 @@ export class WidgetApi {
     this.twitch.dispose();
   }
 
-  triggerIsShown(currentTriggeredPayload: TriggerClip) {
+  triggerIsShown(currentTriggeredPayload: TriggerAction) {
     if (this.triggeredCallback) {
       try {
         console.info({currentTriggeredPayload});

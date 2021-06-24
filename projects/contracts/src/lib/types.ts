@@ -14,6 +14,7 @@ export interface HasTargetScreenId {
   screenId?: string;
 }
 
+// TODO replace by Record<TKey, TValue>
 export interface Dictionary<T> {
   [key: string]: T
 }
@@ -24,7 +25,8 @@ export enum MetaTriggerTypes {
   AllDelay
 }
 
-// TODO RENAME? (Media) Clip
+// TODO RENAME? (Media) Clip -- new name ACTIONS
+// - because media is visible and actions are just the scripts and stuff
 export interface Clip extends HasId {
   name: string;
   previewUrl?: string;   // TODO generate dataurl as preview

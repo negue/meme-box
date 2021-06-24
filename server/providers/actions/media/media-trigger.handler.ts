@@ -6,17 +6,17 @@ import {
   MediaType,
   MetaTriggerTypes,
   Screen,
-  TriggerClip,
+  TriggerAction,
   TriggerClipOrigin
 } from "@memebox/contracts";
-import {Persistence} from "../../persistence";
-import {NamedLogger} from "../named-logger";
+import {Persistence} from "../../../persistence";
+import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
-import {MemeboxWebsocket} from "../websockets/memebox.websocket";
+import {PERSISTENCE_DI} from "../../contracts";
+import {MemeboxWebsocket} from "../../websockets/memebox.websocket";
 
 import {MediaTriggerEventBus} from "./media-trigger.event-bus";
-import {ScriptHandler, timeoutAsync} from "./script.handler";
+import {ScriptHandler, timeoutAsync} from "../scripts/script.handler";
 
 @Service()
 export class MediaTriggerHandler {
@@ -42,7 +42,7 @@ export class MediaTriggerHandler {
     this.getData();
   }
 
-  async triggerMediaClipById(payloadObs: TriggerClip) {
+  async triggerMediaClipById(payloadObs: TriggerAction) {
     this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'} - Origin: ${payloadObs.origin}`, payloadObs);
 
     const mediaConfig = this._allMediasMap[payloadObs.id];

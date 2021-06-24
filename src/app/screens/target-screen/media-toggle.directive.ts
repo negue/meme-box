@@ -5,7 +5,7 @@ import {
   CombinedClip,
   MediaType,
   PositionEnum,
-  TriggerClip,
+  TriggerAction,
   VisibilityEnum
 } from "@memebox/contracts";
 import {KeyValue} from "@angular/common";
@@ -44,8 +44,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private selectedInAnimation = '';
   private selectedOutAnimation = '';
   private queueCounter = 0;
-  private queueTrigger = new Subject<TriggerClip>();
-  private _currentTriggeredPayload: TriggerClip;
+  private queueTrigger = new Subject<TriggerAction>();
+  private _currentTriggeredPayload: TriggerAction;
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
 

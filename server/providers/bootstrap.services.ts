@@ -1,5 +1,5 @@
 import {Service} from "@tsed/di";
-import {MediaTriggerHandler} from "./media/media-trigger.handler";
+import {MediaTriggerHandler} from "./actions/media/media-trigger.handler";
 import {TwitchBootstrap} from "./twitch/twitch.bootstrap";
 import {WebsocketBootstrap} from "./websockets/websocket.bootstrap";
 
