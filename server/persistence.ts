@@ -349,6 +349,11 @@ export class Persistence {
   public updatePartialConfig(config: Partial<Config>) {
     this.data.config = Object.assign({}, this.data.config, config);
 
+    console.info({
+      config,
+      saved: this.data.config
+    });
+
     this.saveData();
   }
 
@@ -399,6 +404,12 @@ export class Persistence {
       twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
     }
 
+
+    console.info({
+      twitchConfig,
+      saved: this.data.config
+    });
+
     // TODO add "what changed" to saveData
     this.saveData();
   }
@@ -415,10 +426,12 @@ export class Persistence {
     const mediaFolder = CLI_OPTIONS.MEDIA_PATH ?? this.data.config.mediaFolder;
 
     const twitchConfig = cloneDeep(this.data.config.twitch);
-    twitchConfig.token ||= TOKEN_EXISTS_MARKER;
+    if (twitchConfig.token) {
+      twitchConfig.token = TOKEN_EXISTS_MARKER;
+    }
 
-    if (twitchConfig.bot?.auth) {
-      twitchConfig.bot.auth.token ||= TOKEN_EXISTS_MARKER;
+    if (twitchConfig.bot?.auth?.token) {
+      twitchConfig.bot.auth.token = TOKEN_EXISTS_MARKER;
     }
 
     return {

@@ -53,6 +53,7 @@ app.get(`${API_PREFIX}/debugPaths`, (req, res) => {
   });
 })
 
+// todo split up endpoints
 
 app.get(API_PREFIX, (req,res) => {
   res.send(PersistenceInstance.fullState());

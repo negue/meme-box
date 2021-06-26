@@ -134,6 +134,7 @@
     "@gewd/ng-utils": "0.4.1",
     "@gewd/utils": "0.2.0",
     "@ngneat/hotkeys": "1.1.1",
+    "@ngneat/reactive-forms": "1.7.3",
     "@ngneat/transloco": "2.20.1",
     "angular-material-css-vars": "1.1.0",
     "angular2-qrcode": "2.0.3",

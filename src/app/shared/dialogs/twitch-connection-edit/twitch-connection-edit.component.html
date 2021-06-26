@@ -34,8 +34,16 @@
 
     <div>
       <div>
-        {{ mainAccountForm.value.authUserName }}
-        <button (click)="tryAuthentication('main')" >oauth</button>
+        <button *ngIf="!mainAccountForm.value.authToken"
+                mat-raised-button color="accent"
+                (click)="tryAuthentication('main')" >
+          Auth with Twitch
+        </button>
+        <button *ngIf="mainAccountForm.value.authToken"
+                mat-raised-button color="warn"
+                (click)="deleteMainAuth()">
+          Delete Auth-Token
+        </button>
       </div>
 
     </div>
@@ -53,9 +61,16 @@
 
     <div *ngIf="config$ | async as config">
       <div>
-
-        {{ mainAccountForm.value.botName }}
-        <button (click)="tryAuthentication('bot')" >oauth</button>
+        <button *ngIf="!mainAccountForm.value.botToken"
+                mat-raised-button color="accent"
+                (click)="tryAuthentication('bot')" >
+          Auth with Twitch
+        </button>
+        <button *ngIf="mainAccountForm.value.botToken"
+                mat-raised-button color="warn"
+                (click)="deleteBotAuth()">
+          Delete Auth-Token
+        </button>
       </div>
     </div>
     <div>

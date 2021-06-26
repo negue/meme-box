@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
+import { FormBuilder } from '@ngneat/reactive-forms';
 import {Subject} from "rxjs";
 import {AppQueries} from "../../../state/app.queries";
 import {AppService} from "../../../state/app.service";
@@ -19,6 +19,19 @@ const scopes = [
 ].join('+');
 const clientId = 'zmqh0d2kwa9r24eecywm5uhhryggm4';
 
+interface MainAccountForm {
+  channelName: string;
+  authToken: string;
+  botName: string;
+  botToken: string;
+}
+
+interface AdditionalForm {
+  bot: boolean;
+  log: boolean;
+  botResponse: string;
+}
+
 @Component({
   selector: 'app-twitch-connection-edit',
   templateUrl: './twitch-connection-edit.component.html',
@@ -28,15 +41,14 @@ export class TwitchConnectionEditComponent implements OnInit {
   @Input()
   public showAdvancedOptions = true;
 
-  public mainAccountForm = new FormBuilder().group({
+  public mainAccountForm = new FormBuilder().group<MainAccountForm>({
     channelName: '',
-    authUserName: '',
     authToken: '',
     botName: '',
     botToken: '',
   });
 
-  public additionalForm = new FormBuilder().group({
+  public additionalForm = new FormBuilder().group<AdditionalForm>({
     bot: false,
     log: false,
     botResponse: ''
@@ -70,8 +82,11 @@ export class TwitchConnectionEditComponent implements OnInit {
       filter(config => !!config.twitch),
       take(1),
     ).subscribe(value => {
+      console.info({ value });
+
       this.mainAccountForm.reset({
         channelName: value.twitch.channel,
+        authToken: value.twitch.token,
         botName: value.twitch?.bot?.auth?.name ?? '',
         botToken: value.twitch?.bot?.auth?.token ?? '',
       });
@@ -150,7 +165,6 @@ export class TwitchConnectionEditComponent implements OnInit {
 
     if (type === 'main') {
       this.mainAccountForm.patchValue({
-        authUserName: result.userName,
         authToken: result.accessToken,
       });
     } else {
@@ -159,5 +173,18 @@ export class TwitchConnectionEditComponent implements OnInit {
         botToken: result.accessToken,
       });
     }
+  }
+
+  deleteMainAuth () {
+    this.mainAccountForm.patchValue({
+      authToken: null
+    });
+  }
+
+  deleteBotAuth () {
+    this.mainAccountForm.patchValue({
+      botName: null,
+      botToken: null,
+    });
   }
 }
