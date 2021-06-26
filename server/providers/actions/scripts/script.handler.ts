@@ -1,7 +1,7 @@
 import {Service, UseOpts} from "@tsed/di";
 import {VM} from "vm2";
 import OBSWebSocket from "obs-websocket-js";
-import {Clip, TriggerAction, TriggerClipOrigin} from "@memebox/contracts";
+import {ActionStateEnum, Clip, TriggerAction} from "@memebox/contracts";
 import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../contracts";
@@ -33,24 +33,15 @@ export class ScriptHandler implements ActionStoreAdapter {
 
         return obs;
       },
-      triggerMediaAsync: (targetMediaId: string, targetScreenId?: string) => {
-        this.mediaTriggerEventBus.triggerMedia({
-          id: targetMediaId,
-          targetScreen: targetScreenId,
-          origin: TriggerClipOrigin.Scripts
-        });
-
-        return this.mediaActiveState.waitUntilDoneAsync(targetMediaId, targetScreenId);
-      }
     }
   });
 
   constructor(
     @UseOpts({name: 'ScriptHandler'}) public logger: NamedLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private mediaTriggerEventBus: ActionTriggerEventBus,
-    private mediaStateEventBus: ActionActiveStateEventBus,
-    private mediaActiveState: ActionActiveState,
+    private actionTriggerEventBus: ActionTriggerEventBus,
+    private actionStateEventBus: ActionActiveStateEventBus,
+    private actionActiveState: ActionActiveState,
 
     private actionStateHandler: ActionPersistentStateHandler,
     private memeboxApiFactory: MemeboxApiFactory
@@ -83,9 +74,9 @@ export class ScriptHandler implements ActionStoreAdapter {
   public async handleScript(script: Clip, payloadObs: TriggerAction) {
     this.logger.info('Handle Script!!');
 
-    this.mediaStateEventBus.updateMediaState({
+    this.actionStateEventBus.updateActionState({
       mediaId: script.id,
-      active: true
+      state: ActionStateEnum.Active
     });
 
     let scriptHoldingData: ScriptContext;
@@ -97,7 +88,8 @@ export class ScriptHandler implements ActionStoreAdapter {
         this._vm,
         this,
         script,
-        this.memeboxApiFactory.getApiFor(script.id)
+        this.memeboxApiFactory.getApiFor(script.id),
+        this.logger
       );
 
       try {
