@@ -4,8 +4,10 @@ import {HttpClient} from '@angular/common/http';
 import {
   Config,
   CONFIG_CUSTOM_PORT_PATH,
+  CONFIG_OBS,
   CONFIG_TWITCH,
   ENDPOINTS,
+  ObsConfig,
   OPEN_CONFIG_PATH,
   OPEN_FILES_PATH,
   TwitchConfig
@@ -54,6 +56,18 @@ export class ConfigService {
 
 
     this.snackbar.normal('Custom Port updated!');
+  }
+
+  public async updateObsConfig(newConfig: Partial<ObsConfig>) {
+    // update path & await
+    await this.appService.tryHttpPut(this.configEndpoint(CONFIG_OBS), newConfig);
+
+    // add to the state
+    this.appStore.update(state => {
+      state.config.obs = newConfig as ObsConfig;
+    });
+
+    this.snackbar.normal('Obs Config updated!');
   }
 
 

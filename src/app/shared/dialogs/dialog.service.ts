@@ -121,6 +121,13 @@ export class DialogService {
     );
   }
 
+  openObsConnectionDialog() {
+    this.loadAndOpen(
+      import('./obs-connection-edit/obs-connection-edit.module'),
+      null
+    );
+  }
+
   async loadAndOpen<TPayload, TDialogModule extends DialogContract<TPayload>>(
     // typesafety for module lazy loads :), it has to use the same TPayload you pass
     lazyDialogImport: Promise<{[moduleExport: string]: Type<TDialogModule>}>,
@@ -144,4 +151,5 @@ export class DialogService {
   ): MatDialogRef<T, R> {
     return this._dialog.open(componentOrTemplateRef, config);
   }
+
 }

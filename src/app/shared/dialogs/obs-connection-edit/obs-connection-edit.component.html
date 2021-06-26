@@ -1,0 +1,38 @@
+<h2 mat-dialog-title> Obs Connection Details: </h2>
+<mat-dialog-content class="mat-typography">
+
+<div [formGroup]="obsForm">
+  <div class="config-grid">
+    <div>
+
+      <mat-form-field>
+        <mat-label>Hostname</mat-label>
+        <input autocomplete="off"
+               formControlName="hostname" (keyup.enter)="save()"
+               class="twitchSetting__input"
+               matInput required>
+
+        <mat-error *ngIf="obsForm.controls['hostname'].hasError('required')">
+          Please enter your OBS Hostname / IP
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input autocomplete="off" type="password"
+               formControlName="password" (keyup.enter)="save()"
+               class="twitchSetting__input"
+               matInput >
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()"
+          color="primary"
+          mat-raised-button>Update OBS Config</button>
+</mat-dialog-actions>
+
