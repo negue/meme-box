@@ -195,6 +195,7 @@ export interface Config {
   mediaFolder: string;
   twitch: TwitchConfig;
   enableVersionCheck?: boolean;
+  obs: ObsConfig;
 }
 
 export interface TwitchConfig {
@@ -203,6 +204,12 @@ export interface TwitchConfig {
   bot?: TwitchBotConfig;
   token: string;
 }
+
+export interface ObsConfig {
+  hostname: string;
+  password?: string;
+}
+
 
 export interface TwitchBotConfig {
   enabled: boolean;

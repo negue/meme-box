@@ -4,6 +4,7 @@ import {
   Config,
   ConfigV0,
   createInitialState,
+  ObsConfig,
   PositionEnum,
   Screen,
   ScreenClip,
@@ -364,6 +365,27 @@ export class Persistence {
     this.saveData();
   }
 
+  public updateObsConfig(newObsConfig: ObsConfig) {
+    this.data.config = this.data.config || {};
+
+    let obsConfig = this.data.config.obs;
+
+    if (!obsConfig) {
+      obsConfig = this.data.config.obs = {
+        hostname: '',
+        password: null
+      };
+    }
+
+    obsConfig.hostname = newObsConfig.hostname;
+    if (newObsConfig.password && newObsConfig.password !== TOKEN_EXISTS_MARKER) {
+      obsConfig.password = newObsConfig.password;
+    }
+
+    // TODO add "what changed" to saveData
+    this.saveData();
+  }
+
 
   public updateTwitchConfig(newTwitchConfig: TwitchConfig) {
     this.data.config = this.data.config || {};
@@ -434,10 +456,18 @@ export class Persistence {
       twitchConfig.bot.auth.token = TOKEN_EXISTS_MARKER;
     }
 
+    const obsConfig = (cloneDeep(this.data.config.obs) || {}) as ObsConfig;
+
+    if (obsConfig.password) {
+      obsConfig.password = TOKEN_EXISTS_MARKER;
+    }
+
+
     return {
       ...this.data.config,
       twitch: twitchConfig,
-      mediaFolder
+      mediaFolder,
+      obs: obsConfig
     };
   }
 

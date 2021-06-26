@@ -19,6 +19,7 @@ export const ENDPOINTS = {
 }
 
 export const CONFIG_TWITCH = '/twitch';
+export const CONFIG_OBS = '/obs';
 export const CONFIG_CUSTOM_PORT_PATH = '/customPort';
 export const OPEN_CONFIG_PATH = `/config`;
 export const OPEN_FILES_PATH = `/files`;
