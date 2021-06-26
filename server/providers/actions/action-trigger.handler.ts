@@ -1,6 +1,7 @@
 import {Service, UseOpts} from "@tsed/di";
 import {
   ACTIONS,
+  ActionStateEnum,
   Clip,
   Dictionary,
   MediaType,
@@ -18,6 +19,7 @@ import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 import {ActionTriggerEventBus} from "./action-trigger-event.bus";
 import {ScriptHandler} from "./scripts/script.handler";
 import {timeoutAsync} from "./scripts/apis/sleep.api";
+import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
 
 @Service()
 export class ActionTriggerHandler {
@@ -30,7 +32,8 @@ export class ActionTriggerHandler {
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private mediaTriggerEventBus: ActionTriggerEventBus,
     private _memeboxWebSocket: MemeboxWebsocket,
-    private _scriptHandler: ScriptHandler
+    private _scriptHandler: ScriptHandler,
+    private actionStateEventBus: ActionActiveStateEventBus,
   ) {
     mediaTriggerEventBus.AllEvents$.subscribe(triggerMedia => {
       this.triggerMediaClipById(triggerMedia);
@@ -47,6 +50,11 @@ export class ActionTriggerHandler {
     this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'} - Origin: ${payloadObs.origin}`, payloadObs);
 
     const mediaConfig = this._allMediasMap[payloadObs.id];
+
+    this.actionStateEventBus.updateActionState({
+      mediaId: payloadObs.id,
+      state: ActionStateEnum.Triggered
+    });
 
     switch (mediaConfig.type) {
       case MediaType.Meta:
@@ -83,8 +91,18 @@ export class ActionTriggerHandler {
     const assignedTags = mediaConfig.tags || [];
 
     if (assignedTags.length === 0) {
+      this.actionStateEventBus.updateActionState({
+        mediaId: mediaConfig.id,
+        state: ActionStateEnum.Done
+      });
+
       return;
     }
+
+    this.actionStateEventBus.updateActionState({
+      mediaId: mediaConfig.id,
+      state: ActionStateEnum.Active
+    });
 
     // Get all clips assigned with these tags
     const allClips = this._allMediasList.filter(
@@ -98,7 +116,7 @@ export class ActionTriggerHandler {
 
         const clipToTrigger = allClips[randomIndex];
 
-        this.triggerMediaClipById({
+        await this.triggerMediaClipById({
           id: clipToTrigger.id,
           origin: TriggerClipOrigin.Meta,
           originId: mediaConfig.id
@@ -107,13 +125,19 @@ export class ActionTriggerHandler {
         break;
       }
       case MetaTriggerTypes.All: {
+        const allPromises: Promise<void>[] = [];
+
         allClips.forEach(clipToTrigger => {
-          this.triggerMediaClipById({
-            id: clipToTrigger.id,
-            origin: TriggerClipOrigin.Meta,
-            originId: mediaConfig.id
-          });
+          allPromises.push(
+            this.triggerMediaClipById({
+              id: clipToTrigger.id,
+              origin: TriggerClipOrigin.Meta,
+              originId: mediaConfig.id
+            })
+          );
         });
+
+        await Promise.all(allPromises);
 
         break;
       }
@@ -131,6 +155,11 @@ export class ActionTriggerHandler {
         break;
       }
     }
+
+    this.actionStateEventBus.updateActionState({
+      mediaId: mediaConfig.id,
+      state: ActionStateEnum.Done
+    });
   }
 
   private getData() {

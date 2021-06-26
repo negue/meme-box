@@ -121,7 +121,7 @@ export class MemeboxWebsocket {
       case ACTIONS.MEDIA_STATE: {
         const mediaStatePayload: ActionActiveStatePayload = JSON.parse(payload);
 
-        this.mediaStateEventBus.updateMediaState(mediaStatePayload);
+        this.mediaStateEventBus.updateActionState(mediaStatePayload);
 
         break;
       }

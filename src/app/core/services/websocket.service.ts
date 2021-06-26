@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActionActiveStatePayload, ACTIONS, TriggerAction, TriggerClipOrigin} from "@memebox/contracts";
+import {ActionActiveStatePayload, ACTIONS, ActionStateEnum, TriggerAction, TriggerClipOrigin} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {AppConfig} from "@memebox/app/env";
@@ -55,7 +55,7 @@ export class WebsocketService {
     const triggerObj: ActionActiveStatePayload = {
       mediaId,
       screenId,
-      active: showing,
+      state: showing ? ActionStateEnum.Active : ActionStateEnum.Done,
     };
 
     this.ws.send(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);

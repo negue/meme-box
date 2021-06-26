@@ -8,7 +8,7 @@ export class ActionActiveStateEventBus {
 
   public AllEvents$ = this._allEvents$.asObservable();
 
-  public updateMediaState(payload: ActionActiveStatePayload) {
+  public updateActionState(payload: ActionActiveStatePayload) {
     this._allEvents$.next(payload);
   }
 }

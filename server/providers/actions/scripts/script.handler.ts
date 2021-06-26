@@ -118,9 +118,9 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     this.logger.info(`Script "${script.name}" is done.`);
 
-    this.mediaStateEventBus.updateMediaState({
+    this.actionStateEventBus.updateActionState({
       mediaId: script.id,
-      active: false
+      state: ActionStateEnum.Done
     });
   }
 }

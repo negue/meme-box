@@ -41,8 +41,14 @@ export interface TriggerAction {
   // soon there will be more "overrides" to everything
 }
 
+export enum ActionStateEnum {
+  Triggered,
+  Active,
+  Done
+}
+
 export interface ActionActiveStatePayload {
   mediaId: string;
   screenId?: string;
-  active: boolean;
+  state: ActionStateEnum;
 }
