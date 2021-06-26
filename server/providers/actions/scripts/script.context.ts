@@ -7,6 +7,7 @@ import {Sleep, sleep} from "./apis/sleep.api";
 import {MemeboxApi} from "./apis/memebox.api";
 import {NamedLogger} from "../../named-logger";
 import {LoggerApi} from "./apis/logger.api";
+import {ObsApi} from "./apis/obs.api";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -22,9 +23,10 @@ interface SharedScriptPayload {
   sleep: Sleep;
   memebox: MemeboxApi;
   logger: LoggerApi;
+  obs: ObsApi;
 }
 
-const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger';
+const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs';
 
 interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
@@ -56,7 +58,8 @@ export class ScriptContext {
     storeAdapter: ActionStoreAdapter,
     public script: Clip,
     public memeboxApi: MemeboxApi,
-    baseLogger: NamedLogger
+    baseLogger: NamedLogger,
+    public obsApi: ObsApi
   ) {
     this.scriptConfig = clipDataToScriptConfig(script);
 
@@ -113,7 +116,8 @@ export class ScriptContext {
         store: this.store,
         sleep,
         memebox: this.memeboxApi,
-        logger: this.logger
+        logger: this.logger,
+        obs: this.obsApi
       }
 
       this.bootstrap_variables = await bootstrapFunc(bootstrapPayload);
@@ -147,7 +151,8 @@ export class ScriptContext {
       store: this.store,
       sleep,
       memebox: this.memeboxApi,
-      logger: this.logger
+      logger: this.logger,
+      obs: this.obsApi
     };
 
     await this.scriptToCall(scriptArguments);

@@ -1,6 +1,5 @@
 import {Service, UseOpts} from "@tsed/di";
 import {VM} from "vm2";
-import OBSWebSocket from "obs-websocket-js";
 import {ActionStateEnum, Clip, TriggerAction} from "@memebox/contracts";
 import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
@@ -13,26 +12,17 @@ import {ActionStore, ActionStoreAdapter} from "@memebox/state";
 import {ScriptContext} from "./script.context";
 import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 import {MemeboxApiFactory} from "./apis/memebox.api";
+import {ObsConnection} from "../../obs-connection";
+import {ObsApi} from "./apis/obs.api";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
-
+  private obsApi: ObsApi;
   private _compiledScripts = new Map<string, ScriptContext>();
 
   // TODO / check can it run multiple longer-scripts at once?
   private _vm = new VM({
     sandbox: {
-      console: {
-        info: (...args) => {
-          this.logger.info(...args)
-        }
-      },
-      getObsWebsocket: (address: string, password?: string) => {
-        const obs = new OBSWebSocket();
-        obs.connect({ address, password });
-
-        return obs;
-      },
     }
   });
 
@@ -44,7 +34,8 @@ export class ScriptHandler implements ActionStoreAdapter {
     private actionActiveState: ActionActiveState,
 
     private actionStateHandler: ActionPersistentStateHandler,
-    private memeboxApiFactory: MemeboxApiFactory
+    private memeboxApiFactory: MemeboxApiFactory,
+    private obsConnection : ObsConnection
   ) {
     _persistence.dataUpdated$().subscribe(() => {
       // TODO get updated Path to know what kind of state needs to be refilled
@@ -53,6 +44,17 @@ export class ScriptHandler implements ActionStoreAdapter {
       this._compiledScripts = new Map<string, ScriptContext>();
     })
 
+
+  }
+
+  public async getObsApi() : Promise<ObsApi> {
+    if (this.obsApi) {
+      return this.obsApi;
+    }
+
+    const obsWebsocket = await this.obsConnection.getCurrentConnection()
+
+    return this.obsApi = new ObsApi(this.obsConnection, obsWebsocket);
   }
 
   // region ActionStoreAdapter
@@ -84,12 +86,15 @@ export class ScriptHandler implements ActionStoreAdapter {
     if (this._compiledScripts.has(script.id)) {
       scriptHoldingData = this._compiledScripts.get(script.id);
     } else {
+      const obsApi = await this.getObsApi();
+
       scriptHoldingData = new ScriptContext(
         this._vm,
         this,
         script,
         this.memeboxApiFactory.getApiFor(script.id),
-        this.logger
+        this.logger,
+        obsApi
       );
 
       try {

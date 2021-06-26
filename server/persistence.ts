@@ -548,6 +548,7 @@ LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
 PERSISTENCE.instance = PersistenceInstance;
 
 
+// TODO Check if possible to use the default @Service()
 // Registry for TsED
 registerProvider({
   provide: PERSISTENCE_DI,

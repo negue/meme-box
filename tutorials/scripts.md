@@ -21,6 +21,8 @@ The `Execution Script` which is called each time per trigger, does the actual "s
 |*both*| `variables` | It holds all values of  your added `Custom Variables` |
 |*both*| `store` | [See the `Store`-Documentation](./store.md) |
 |*both*| `sleep` | Check `Sleep API` below |
+|*both*| `logger` | Check `Logger API` below |
+|*both*| `obs` | Check `OBS API` below |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
 |`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
 
@@ -36,6 +38,26 @@ await sleep.for(X, sleep.TYPE.MS);
 // also you can use
 sleep.TYPE.SECONDS
 sleep.TYPE.MINUTES
+
+```
+
+### Logger API
+
+```js
+logger.log('Something', 1234)
+logger.error('er')
+
+```
+
+
+### Obs API
+
+```js
+obs.getFilter('SourceName', 'FilterName')
+  .updateEnabled(true / false)
+
+obs.raw // using the Obs WebSocket JS Library https://github.com/obs-websocket-community-projects/obs-websocket-js#sending-requests
+
 ```
 
 ## Pre-Defined Functions
