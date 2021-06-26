@@ -1,3 +1,29 @@
+.config-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-rows: min-content;
+
+  gap: 1rem 1rem;
+  grid-auto-rows: min-content;
+  grid-auto-flow: row;
+}
+
+
+
+
+.twitchSetting__input[readonly] {
+  opacity: 0.3;
+}
+
+.twitchSetting__button {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.mat-form-field {
+  display: block;
+}
+
 .twitchSetting__input[readonly] {
   opacity: 0.3;
 }
@@ -8,19 +34,6 @@
 
 .mat-form-field {
   display: block;
-}
-
-.title-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
-
-.title-name {
-  margin-bottom: 0;
 }
 
 :host ::ng-deep .mat-tab-body-wrapper {

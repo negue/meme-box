@@ -1,0 +1,134 @@
+<h2 mat-dialog-title> Twitch Connection Details: </h2>
+<mat-dialog-content class="mat-typography">
+
+<div [formGroup]="mainAccountForm">
+  <mat-tab-group>
+    <mat-tab label="Authentication">
+  <div class="config-grid">
+    <div>
+
+      <mat-form-field>
+        <mat-label>Channel-Name</mat-label>
+        <input autocomplete="off"
+               formControlName="channelName" (keyup.enter)="save()"
+               class="twitchSetting__input"
+               matInput required>
+
+        <mat-error *ngIf="mainAccountForm.controls['channelName'].hasError('required')">
+          Please enter your Twitch channel name
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+
+      <div class="markdown-styling">
+      Twitch Channel Name is needed for anonymous connection to the TwitchAPI: <br>
+      With this you can use the events for:
+      <ul>
+        <li>Chat-Message</li>
+        <li>Raid</li>
+        <li>Bits (Cheers)</li>
+      </ul>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <button *ngIf="!mainAccountForm.value.authToken"
+                mat-raised-button color="accent"
+                (click)="tryAuthentication('main')" >
+          Auth with Twitch
+        </button>
+        <button *ngIf="mainAccountForm.value.authToken"
+                mat-raised-button color="warn"
+                (click)="deleteMainAuth()">
+          Delete Auth-Token
+        </button>
+      </div>
+
+    </div>
+    <div>
+
+      <div class="markdown-styling">
+        With an authenticated connection to the TwitchAPI: <br>
+        you can use the following features:
+        <ul>
+          <li>Trigger actions by Channel-Points</li>
+          <li>Use this Account for the Bot to write in Chat</li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="config$ | async as config">
+      <div>
+        <button *ngIf="!mainAccountForm.value.botToken"
+                mat-raised-button color="accent"
+                (click)="tryAuthentication('bot')" >
+          Auth with Twitch
+        </button>
+        <button *ngIf="mainAccountForm.value.botToken"
+                mat-raised-button color="warn"
+                (click)="deleteBotAuth()">
+          Delete Auth-Token
+        </button>
+      </div>
+    </div>
+    <div>
+      If this Account is connected, it will be used primary for the `!commands` and upcoming Twitch-Chat actions.
+    </div>
+
+  </div>
+    </mat-tab>
+    <mat-tab label="Additional settings">
+      <form *ngIf="config$ | async as config" [formGroup]="additionalForm">
+        <ng-container *ngIf="showAdvancedOptions">
+          <ng-container *ngIf="config$ | async as config">
+            <br />
+            <mat-checkbox [checked]="config?.twitch?.enableLog" (change)="onCheckboxChanged($event, config)">Enable Twitch LOG
+            </mat-checkbox>
+            <br />
+            <br />
+
+            <br />
+          </ng-container>
+        </ng-container>
+        <mat-checkbox [checked]="config?.twitch?.bot?.enabled"
+                      (change)="onBotIntegrationChanged($event, config)">
+          Enable Bot Command Response
+        </mat-checkbox>
+
+
+        <mat-form-field>
+          <mat-label>Bot response</mat-label>
+          <textarea autocomplete="off" [readonly]="!config?.twitch?.bot.enabled"
+                    formControlName="botResponse"
+                    class="twitchSetting__textarea"
+                    matInput></textarea>
+
+          <mat-error *ngIf="additionalForm.controls['botResponse'].hasError('required')">
+            Please enter bot response message.
+          </mat-error>
+        </mat-form-field>
+
+        <p>
+          The message that will be outputted the the chat when someone writes !commands. Use
+          <code>{{commandsFlagMessage}}</code>
+          to print out the whole list of twitch commands available in memebox and
+          <code>{{userFlagMessage}}</code>
+          to reference the user that asked for commands.
+        </p>
+      </form>
+
+    </mat-tab>
+  </mat-tab-group>
+
+</div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()"
+          color="primary"
+          mat-raised-button>Update Twitch Config</button>
+</mat-dialog-actions>
+

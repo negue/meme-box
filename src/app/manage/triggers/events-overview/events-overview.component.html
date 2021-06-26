@@ -18,9 +18,11 @@
 </ng-container>
 
   <ng-template #noChannel>
-    <app-overview-item>
-      <app-twitch-setting [showAdvancedOptions]="false"></app-twitch-setting>
-    </app-overview-item>
+    <app-overview-add-item label="Setup Twitch Connection"
+                           (click)="openTwitchConfigs()">
+
+    </app-overview-add-item>
+
   </ng-template>
 
 </app-card-overview>

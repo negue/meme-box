@@ -5,6 +5,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatButtonModule} from "@angular/material/button";
+import {ConfigCardModule} from "../config-card/config-card.module";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {MatButtonModule} from "@angular/material/button";
     MatIconModule,
     MatCheckboxModule,
     MatBadgeModule,
-    MatButtonModule
+    MatButtonModule,
+    ConfigCardModule
   ]
 })
 export class VersionCardModule { }

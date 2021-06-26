@@ -1,0 +1,10 @@
+.mat-icon-button {
+  display: none;
+}
+
+.mat-list-item:hover {
+
+  .mat-icon-button {
+    display: block;
+  }
+}

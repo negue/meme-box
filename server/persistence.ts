@@ -11,7 +11,6 @@ import {
   Tag,
   TimedClip,
   Twitch,
-  TwitchBotConfig,
   TwitchConfig,
   VisibilityEnum
 } from '@memebox/contracts';
@@ -32,10 +31,13 @@ import {LOGGER} from "./logger.utils";
 import {registerProvider} from "@tsed/di";
 import {PERSISTENCE_DI} from "./providers/contracts";
 import {CLI_OPTIONS} from "./utils/cli-options";
+import cloneDeep from 'lodash/cloneDeep';
 
 // TODO Extract more state operations to shared library and from app
 
 let fileBackupToday = false;
+
+export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
 
 export class Persistence {
 
@@ -114,6 +116,7 @@ export class Persistence {
       if (configV0) {
         configFromFile.config.twitch = {
           channel: configV0.twitchChannel,
+          token: '',
           enableLog: configV0.twitchLog,
           bot: {
             enabled: false,
@@ -141,7 +144,10 @@ export class Persistence {
 
 
   public fullState() {
-    return  this.data;
+    return {
+      ...this.data,
+      config: this.getConfig()
+    };
   }
 
   // save it on changes
@@ -343,6 +349,11 @@ export class Persistence {
   public updatePartialConfig(config: Partial<Config>) {
     this.data.config = Object.assign({}, this.data.config, config);
 
+    console.info({
+      config,
+      saved: this.data.config
+    });
+
     this.saveData();
   }
 
@@ -354,31 +365,52 @@ export class Persistence {
   }
 
 
-  public updateTwitchChannel (channel: string) {
-    this.data.config = this.data.config || {};
-    this.data.config.twitch.channel  = channel;
-
-    this.saveData();
-  }
-
-  public updateTwitchLog (enabled: boolean) {
-    this.data.config = this.data.config || {};
-    this.data.config.twitch.enableLog = enabled;
-
-    this.saveData();
-  }
-
-  public updateTwitchBotIntegration (twitchBotConfig: TwitchBotConfig) {
+  public updateTwitchConfig(newTwitchConfig: TwitchConfig) {
     this.data.config = this.data.config || {};
 
-    if(!this.data.config.twitch.bot) {
-      this.data.config.twitch.bot = {
-        enabled: twitchBotConfig.enabled,
-        response: twitchBotConfig.response,
-      };
+    const twitchConfig = this.data.config.twitch;
+
+    twitchConfig.enableLog = newTwitchConfig.enableLog;
+    twitchConfig.channel  = newTwitchConfig.channel;
+    if (newTwitchConfig.token && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
+      twitchConfig.token = newTwitchConfig.token;
     }
 
-    this.data.config.twitch.bot.enabled = twitchBotConfig.enabled;
+    // fill empty bot object
+    if(!twitchConfig.bot) {
+      twitchConfig.bot = {
+        enabled: false,
+        response: '',
+        auth: {
+          name: '',
+          token: ''
+        }
+      }
+    }
+
+      // fill empty bot object
+    if(!twitchConfig.bot.auth) {
+      twitchConfig.bot.auth = {
+        name: '',
+        token: ''
+      }
+    }
+
+    twitchConfig.bot.enabled = newTwitchConfig.bot.enabled;
+    twitchConfig.bot.response = newTwitchConfig.bot.response;
+    twitchConfig.bot.auth.name = newTwitchConfig.bot.auth.name;
+
+    if (newTwitchConfig.bot.auth.token && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
+      twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
+    }
+
+
+    console.info({
+      twitchConfig,
+      saved: this.data.config
+    });
+
+    // TODO add "what changed" to saveData
     this.saveData();
   }
 
@@ -390,22 +422,21 @@ export class Persistence {
     this.saveData();
   }
 
-
-  public updateTwitchBot (twitchConfig: TwitchConfig) {
-    console.log(twitchConfig);
-    this.data.config = this.data.config || {};
-    twitchConfig.channel = this.data.config.twitch.channel || "";
-    twitchConfig.bot.enabled = this.data.config.twitch.bot.enabled || false;
-    //twitchConfig.bot.response = this.data.config.twitch.bot.response || "";
-    this.data.config.twitch = twitchConfig;
-    this.saveData();
-  }
-
-  public getConfig() {
+  public getConfig(): Config {
     const mediaFolder = CLI_OPTIONS.MEDIA_PATH ?? this.data.config.mediaFolder;
+
+    const twitchConfig = cloneDeep(this.data.config.twitch);
+    if (twitchConfig.token) {
+      twitchConfig.token = TOKEN_EXISTS_MARKER;
+    }
+
+    if (twitchConfig.bot?.auth?.token) {
+      twitchConfig.bot.auth.token = TOKEN_EXISTS_MARKER;
+    }
 
     return {
       ...this.data.config,
+      twitch: twitchConfig,
       mediaFolder
     };
   }

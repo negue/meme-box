@@ -7,6 +7,8 @@ import {Logger} from "@tsed/logger";
 import {WidgetStateController} from "./controllers/widget-state.controller";
 import {BootstrapServices} from "./providers/bootstrap.services";
 import * as fs from "fs";
+import {ConfigController} from "./controllers/config.controller";
+import {OpenController} from "./controllers/open.controller";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -23,7 +25,9 @@ const rootDir = __dirname;
   mount: {
     [API_PREFIX]: [
       ScreenController,
-      WidgetStateController
+      WidgetStateController,
+      ConfigController,
+      OpenController
     ]
   },
   logger: {

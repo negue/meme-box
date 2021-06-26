@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {TargetScreenType} from "@memebox/contracts";
-import {AppService} from "../../../../state/app.service";
+import {ConfigService} from "../../../../state/config.service";
 
 @Component({
   selector: 'app-import-media-files-dialog',
@@ -15,7 +15,9 @@ export class ImportMediaFilesDialogComponent implements OnInit {
 
   TargetScreenType = TargetScreenType;
 
-  constructor(private appService: AppService) { }
+  constructor(
+    private configService: ConfigService,
+  ) { }
 
   ngOnInit(): void {
   }
@@ -30,6 +32,6 @@ export class ImportMediaFilesDialogComponent implements OnInit {
       const {value} = this.form;
 
       // reloads the view
-    this.appService.importAll(value);
+    this.configService.importAll(value);
   }
 }

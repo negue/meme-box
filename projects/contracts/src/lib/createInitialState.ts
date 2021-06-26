@@ -6,6 +6,7 @@ export function createInitialState (): SettingsState {
     config: {
       twitch: {
         channel: '',
+        token: '',
       }
     },
     twitchEvents: {},
