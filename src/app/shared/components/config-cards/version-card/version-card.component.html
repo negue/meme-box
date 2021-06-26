@@ -1,5 +1,7 @@
-<div class="title-row">
-  <h2 class="mat-h2 title-name">
+
+<app-config-card  icon="info">
+
+  <div configCardTitle>
 
       {{updateAvailableBadgeLabel$ | async}}
 
@@ -7,10 +9,8 @@
             mat-icon-button>
       <mat-icon svgIcon="launch"></mat-icon>
     </button>
-  </h2>
+  </div>
 
-  <mat-icon svgIcon="info"></mat-icon>
-</div>
 
 <div>
   <ng-container *ngIf="config$ | async as config">
@@ -25,3 +25,5 @@
   <div class="mat-subheader">Built at: {{VERSION_JSON.BUILD_TIME}}</div>
   <div class="mat-subheader">branch: {{VERSION_JSON.BRANCH}} - commit: {{VERSION_JSON.COMMIT}}</div>
 </div>
+
+</app-config-card>

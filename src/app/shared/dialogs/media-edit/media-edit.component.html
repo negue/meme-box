@@ -22,7 +22,7 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="action-buttons" *transloco="let t; read: '$common$'">
+    <div class="action-buttons" *transloco="let t; read: 'common'">
       <button *ngFor="let button of mediaTypeList"
               mat-raised-button
 
@@ -289,7 +289,7 @@
     </div>
 
     <!-- All others => AppClipType -->
-    <gewd-auto-scale width="500" height="500"
+    <gewd-auto-scale [width]="500" [height]="500"
                      class="preview-box"
                      *ngSwitchDefault>
       <app-clip-preview [clip]="form.value"

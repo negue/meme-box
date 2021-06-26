@@ -1,6 +1,6 @@
 <div class="filterRow">
   <mat-icon class="filterRow__icon" matListIcon svgIcon="filter"></mat-icon>
-  <mat-chip-list aria-label="Filter media type" *transloco="let t; read: '$common$' ">
+  <mat-chip-list aria-label="Filter media type" *transloco="let t; read: 'common' ">
     <ng-container *ngFor="let item of items">
       <mat-chip (click)="toggleFilter(item)"
                 [class.filterChip--selected]="selectedArray.includes(item)"

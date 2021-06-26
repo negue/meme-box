@@ -34,7 +34,7 @@
     <div class="mediaInfo__preview">
       <!--Todo extract this to clip-preview -->
       <gewd-auto-scale *ngIf="info.type === 0 && (info.previewUrl || info.path)"
-                       width="300" height="188"
+                       [width]="300" [height]="188"
                        class="mediaInfo__preview__img">
         <img [src]="info | mediaToUrl | safeurl"
              [alt]="info.name">

@@ -6,6 +6,7 @@ import {AppQueries} from "../../../../state/app.queries";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
+import {ConfigService} from "../../../../state/config.service";
 
 @Component({
   selector: 'app-config-media-path',
@@ -26,6 +27,7 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
   constructor(private appQuery: AppQueries,
               private dialogRef: MatDialogRef<any>,
               private appService: AppService,
+              private configService: ConfigService,
               private snackBar: SnackbarService) {
 
   }
@@ -49,7 +51,7 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
 
     const {value} = this.form;
 
-    await this.appService.updateConfig({
+    await this.configService.updateConfig({
       mediaFolder: value.path
     });
 

@@ -1,52 +1,7 @@
-@import '~@angular/material/theming';
-@import '~angular-material-css-vars/main';
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
 @import '~animate.css/animate.css';
-@import './css-var-colors';
+@import './styles/material.overrides';
+@import './styles/moveable.overrides';
 
-
-// optional
-$mat-css-dark-theme-selector: '.isDarkTheme';
-$mat-css-light-theme-selector: '.isLightTheme';
-
-@mixin app-theme($theme) {
-  // Extract the palettes you need from the theme definition.
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-
-  // Define any styles affected by the theme.
-  .app-header {
-    // Use mat-color to extract individual colors from a palette.
-    background-color: mat-color($primary);
-    border: medium solid mat-color($accent, A400);
-  }
-}
-
-
-// Define a custom typography config that overrides the font-family as well as the
-// `headlines` and `body-1` levels.
-$custom-typography: mat-typography-config(
-  $font-family: 'Barlow, sans-serif',
-  $headline: mat-typography-level(32px, 48px, 700),
-  $body-1: mat-typography-level(16px, 24px, 500)
-);
-
-// init theme
-// examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
-
-@include init-material-css-vars($typography-config: $custom-typography) {
-  .mat-app-background {
-    background-color: var(--palette-background-background) !important;
-  }
-
-  .navigation {
-    background-color: var(--palette-background-background) !important;
-  }
-};
-
-.cdk-global-scrollblock {
-  overflow-y: hidden;
-}
 
 .max-height-dialog {
   .mat-dialog-content {
@@ -67,9 +22,6 @@ $custom-typography: mat-typography-config(
   }
 }
 
-:root {
-  @include list-colors();
-}
 
 body {
   font-size: 16px;
@@ -94,66 +46,6 @@ h3 {
   display: none !important;
 }
 
-.isDarkTheme {
-  .mat-card {
-    background-color: var(--card-background-color) !important;
-  }
-
-  .mat-table {
-    background: transparent !important;
-  }
-
-  .mat-dialog-container {
-    background-color: var(--palette-background-background) !important;
-  }
-
-  .mat-chip.mat-standard-chip {
-    background-color: var(--card-background-color);
-    color: white;
-    font-family: Barlow, sans-serif;
-
-    &.mat-chip-border {
-      transition: border 350ms;
-      border: 1px solid rgb(255 255 255 / 23%);
-
-      &:hover, &:focus, &:active {
-        border: 1px solid transparent;
-      }
-    }
-  }
-
-  .mat-flat-button, .mat-icon-button {
-    &:hover {
-      &.mat-accent {
-        background-color: rgba(var(--palette-accent-700), 1) !important;
-      }
-
-      &.mat-primary {
-        background-color: rgba(var(--palette-primary-900), 1) !important;
-      }
-
-      &.mat-warn {
-        background-color: rgba(var(--palette-warn-A400), 1) !important;
-      }
-    }
-  }
-}
-
-.floating-action-button {
-  position: fixed;
-  right: 3rem;
-  bottom: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  z-index: 2;
-
-  .mat-icon {
-    // wonder why the current style is pushing the icon down?!
-    height: initial;
-  }
-}
 
 code {
   background: #222222;
@@ -175,7 +67,7 @@ iframe {
   }
 }
 
-gewd-markdown {
+gewd-markdown, .markdown-styling {
   @import "~@gewd/markdown/markdown.mixin";
 
   @include markdownCss();
@@ -186,87 +78,6 @@ gewd-markdown {
     font-size: 18px !important;
   }
 }
-
-.mat-snack-bar-container.danger {
-  background: darkred;
-  color: white;
-}
-
-
-/** Moveable CSS */
-.moveable-line {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  background: #4af;
-  transform-origin: 0px 0.5px;
-}
-
-.moveable-line.moveable-rotation-line {
-  height: 40px;
-  width: 1px;
-  transform-origin: 0.5px 39.5px;
-}
-
-.moveable-control {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-sizing: border-box;
-  background: #4af;
-  margin-top: -7px;
-  margin-left: -7px;
-  z-index: 10;
-}
-
-/* moveable-rotation */
-.moveable-line.moveable-rotation-line .moveable-control {
-  border-color: #4af;
-  background:#fff;
-  cursor: alias;
-}
-
-.moveable-control.moveable-origin {
-  display: none;
-  border-color: #f55;
-  background: #fff;
-  width: 12px;
-  height: 12px;
-  margin-top: -6px;
-  margin-left: -6px;
-  pointer-events: none;
-}
-
-.moveable-direction.moveable-e, .moveable-direction.moveable-w {
-  cursor: ew-resize;
-}
-.moveable-direction.moveable-s, .moveable-direction.moveable-n {
-  cursor: ns-resize;
-}
-.moveable-direction.moveable-nw, .moveable-direction.moveable-se, .moveable-reverse .moveable-direction.moveable-ne, .moveable-reverse .moveable-direction.moveable-sw {
-  cursor: nwse-resize;
-}
-.moveable-direction.moveable-ne, .moveable-direction.moveable-sw, .rCSckyn7i.moveable-reverse .moveable-direction.moveable-nw, moveable-reverse .moveable-direction.moveable-se {
-  cursor: nesw-resize;
-}
-
-
-.moveable {
-  font-family: "Roboto", sans-serif;
-  position: relative;
-  width: 250px;
-  height: 200px;
-  text-align: center;
-  font-size: 40px;
-  margin: 0px auto;
-  font-weight: 100;
-  letter-spacing: 1px;
-}
-
-
-/** */
 
 // cornered example of https://css-tricks.com/more-control-over-css-borders-with-background-image/
 .preview-box {
@@ -289,9 +100,4 @@ gewd-codemirror {
   .cm-editor {
     width: 100%;
   }
-}
-
-.mat-form-field-appearance-outline.mat-form-field-type-mat-select .mat-form-field-infix {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
 }

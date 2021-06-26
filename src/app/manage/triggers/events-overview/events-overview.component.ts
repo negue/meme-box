@@ -80,4 +80,8 @@ export class EventsOverviewComponent implements OnInit {
           // need result?
     })
   }
+
+  openTwitchConfigs() {
+    this.dialogService.openTwitchConnectionConfig();
+  }
 }

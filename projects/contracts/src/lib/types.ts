@@ -198,7 +198,8 @@ export interface Config {
 export interface TwitchConfig {
   channel: string;
   enableLog?: boolean;
-  bot?: TwitchBotConfig
+  bot?: TwitchBotConfig;
+  token: string;
 }
 
 export interface TwitchBotConfig {
@@ -253,4 +254,9 @@ export interface CombinedClip {
   clip: Clip;
   clipSetting: ScreenClip;
   backgroundColor?: string;
+}
+
+export interface Response {
+  ok: boolean;
+  id?: string;
 }

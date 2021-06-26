@@ -1,0 +1,18 @@
+<app-config-card [title]="'config.connections' | transloco" [titlePadding]="false">
+  <mat-list>
+    <ng-container *ngFor="let entries of groupedConnections$ | async | mykeyvalue: originalOrder">
+
+    <div mat-subheader>{{entries.key}}</div>
+    <mat-list-item *ngFor="let twitchConnection of entries.value">
+      <div mat-line>{{twitchConnection.connectedAccount}}</div>
+      <div mat-line> {{twitchConnection.isConfigured }} </div>
+
+      <button mat-icon-button (click)="twitchConnection.openConfig()">
+        <mat-icon svgIcon="edit"></mat-icon>
+      </button>
+
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    </ng-container>
+  </mat-list>
+</app-config-card>

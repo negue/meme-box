@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from "rxjs";
-import { Clip, Screen } from "@memebox/contracts";
-import { AppQueries } from "../../../state/app.queries";
-import { DialogService } from "../../dialogs/dialog.service";
-import { AppService } from "../../../state/app.service";
-import { ConfigMediaPathComponent } from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
-import { map } from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {Observable} from "rxjs";
+import {Clip, Screen} from "@memebox/contracts";
+import {AppQueries} from "../../../state/app.queries";
+import {DialogService} from "../../dialogs/dialog.service";
+import {ConfigMediaPathComponent} from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
+import {map} from "rxjs/operators";
+import {ConfigService} from "../../../state/config.service";
 
 @Component({
   selector: 'app-getting-started',
@@ -23,7 +23,7 @@ export class GettingStartedComponent implements OnInit {
 
 
   constructor(private query: AppQueries,
-              private appService: AppService,
+              private configService: ConfigService,
               private dialog: DialogService) {
   }
 
@@ -39,7 +39,7 @@ export class GettingStartedComponent implements OnInit {
   }
 
   fillData() {
-    this.appService.fillDummyData();
+    this.configService.fillDummyData();
   }
 
   openMediaFolderDialog(): void {

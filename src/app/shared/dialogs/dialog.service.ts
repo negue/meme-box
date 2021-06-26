@@ -114,6 +114,13 @@ export class DialogService {
     );
   }
 
+  openTwitchConnectionConfig() {
+    this.loadAndOpen(
+      import('./twitch-connection-edit/twitch-connection-edit.module'),
+      null
+    );
+  }
+
   async loadAndOpen<TPayload, TDialogModule extends DialogContract<TPayload>>(
     // typesafety for module lazy loads :), it has to use the same TPayload you pass
     lazyDialogImport: Promise<{[moduleExport: string]: Type<TDialogModule>}>,
