@@ -1,4 +1,15 @@
-import {Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
@@ -15,7 +26,7 @@ import {takeUntil} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
 import {WebsocketService} from "../../core/services/websocket.service";
 
-enum MediaState {
+export enum MediaState {
   HIDDEN,
   ANIMATE_IN,
   VISIBLE,
@@ -37,6 +48,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   @Input()
   public screenId: string;
+
+  @Output()
+  public mediaStateChanged = new EventEmitter<MediaState>();
 
   public isVisible$ = new BehaviorSubject<boolean>(false);
 
@@ -295,6 +309,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private triggerState(newState: MediaState) {
+    this.mediaStateChanged.emit(newState);
+
     switch (newState) {
       case MediaState.HIDDEN:
       {

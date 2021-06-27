@@ -1,6 +1,6 @@
 import {Service} from "@tsed/di";
 import {Subject} from "rxjs";
-import {TriggerAction} from "@memebox/contracts";
+import {TriggerAction, TriggerActionUpdate} from "@memebox/contracts";
 
 // UNTIL everything in the backend is refactored to TSED, we need some global instance
 export let CURRENT_MEMEBOX_MEDIATRIGGER_EVENT_BUS: ActionTriggerEventBus;
@@ -8,9 +8,11 @@ export let CURRENT_MEMEBOX_MEDIATRIGGER_EVENT_BUS: ActionTriggerEventBus;
 
 @Service()
 export class ActionTriggerEventBus {
-  private _allEvents$ = new Subject<TriggerAction>();
+  private _allTriggerEvents$ = new Subject<TriggerAction>();
+  private _allUpdateEvents$ = new Subject<TriggerActionUpdate>();
 
-  public AllEvents$ = this._allEvents$.asObservable();
+  public AllTriggerEvents$ = this._allTriggerEvents$.asObservable();
+  public AllUpdateEvents$ = this._allUpdateEvents$.asObservable();
 
   constructor() {
     CURRENT_MEMEBOX_MEDIATRIGGER_EVENT_BUS = this;
@@ -18,6 +20,6 @@ export class ActionTriggerEventBus {
 
 
   public triggerMedia(triggerClip: TriggerAction) {
-    this._allEvents$.next(triggerClip);
+    this._allTriggerEvents$.next(triggerClip);
   }
 }

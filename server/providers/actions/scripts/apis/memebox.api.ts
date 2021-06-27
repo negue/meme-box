@@ -1,6 +1,6 @@
 import {Service} from "@tsed/di";
 import {ActionTriggerEventBus} from "../../action-trigger-event.bus";
-import {TriggerClipOrigin} from "@memebox/contracts";
+import {TriggerActionOverrides, TriggerClipOrigin} from "@memebox/contracts";
 import {ActionActiveState} from "../../action-active-state";
 
 export class ActionApi {
@@ -21,11 +21,12 @@ export class ActionApi {
 
     return this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId);
   }
-  triggerWithOverrides(overrides: unknown): Promise<void> {
+  triggerWithOverrides(overrides: TriggerActionOverrides): Promise<void> {
     this.memeboxApi.actionTriggerEventBus.triggerMedia({
       id: this.actionId,
       origin: TriggerClipOrigin.Scripts,
-      originId: this.memeboxApi.scriptId
+      originId: this.memeboxApi.scriptId,
+      overrides
     })
 
     return this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId);

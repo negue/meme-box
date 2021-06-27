@@ -1,3 +1,5 @@
+import {ScreenMediaOverridableProperies} from "./types";
+
 export const ACTIONS = {
   I_AM_OBS: 'I_AM_OBS',
   TRIGGER_CLIP: 'TRIGGER_CLIP',  // the only "public" websocket action
@@ -25,8 +27,7 @@ export enum TriggerClipOrigin {
   Scripts
 }
 
-export interface TriggerAction {
-  // TODO an unique triggerActionId to follow
+export interface TriggerBase {
 
   id: string;   // actionId
   targetScreen?: string;
@@ -34,11 +35,47 @@ export interface TriggerAction {
   fromWebsocket?: boolean;
   origin?: TriggerClipOrigin;
   originId?: string;
+}
+
+export interface TriggerActionOverrides {
+  /** examples / ideas
+   *
+   *  action: {
+           visibleTime: newVal(),
+           volume: newVolume(),
+           variables: {
+             someVarOfScript: 42,
+             otherVar: "just Do eeet"
+           }
+         },
+   screenMedia: {
+           position: 'absolute',
+           top: '20%',
+           right: '5%'
+         },
+   extra: {
+           // stuff only script / widgets can understand?
+         }
+
+   *
+   */
+  screenMedia: ScreenMediaOverridableProperies
+
+}
+
+export interface TriggerAction extends TriggerBase {
+  // TODO an unique triggerActionId to follow
 
   repeatX?: number;
   repeatSecond?: number;
 
+  overrides?: TriggerActionOverrides;
+
   // soon there will be more "overrides" to everything
+}
+
+export interface TriggerActionUpdate extends TriggerBase {
+  screenMedia?: ScreenMediaOverridableProperies
 }
 
 export enum ActionStateEnum {

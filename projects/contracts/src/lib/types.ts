@@ -25,9 +25,13 @@ export enum MetaTriggerTypes {
   AllDelay
 }
 
+export interface ActionOverridableProperies {
+  // Empty for now
+}
+
 // TODO RENAME? (Media) Clip -- new name ACTIONS
 // - because media is visible and actions are just the scripts and stuff
-export interface Clip extends HasId {
+export interface Clip extends HasId, ActionOverridableProperies {
   name: string;
   previewUrl?: string;   // TODO generate dataurl as preview
   volumeSetting?: number; //  XX / 100 in percent
@@ -48,7 +52,6 @@ export interface Clip extends HasId {
 
   fromTemplate?: string; // GUID / Clip.Id of the Template
 }
-
 
 export interface Screen extends HasId {
   name: string;
@@ -81,7 +84,7 @@ export enum HideAfterType {
   Repeats // maybe?
 }
 
-export interface ScreenClip extends HasId {
+export interface ScreenMediaOverridableProperies {
   visibility: VisibilityEnum;
   loop?: boolean;
 
@@ -98,9 +101,6 @@ export interface ScreenClip extends HasId {
   transform?: string;
   imgFit?: string;
 
-  hideAfter?: HideAfterType;
-  hideAfterValue?: any;
-
   animationIn?: string | null;
   animationOut?: string | null;
 
@@ -110,7 +110,13 @@ export interface ScreenClip extends HasId {
   zIndex?: number;
 
   customCss?: string;
+}
 
+export interface ScreenClip extends HasId, ScreenMediaOverridableProperies {
+  hideAfter?: HideAfterType;
+  hideAfterValue?: any;
+
+  // settings view only
   arrangeLock?: {
     size: boolean;
     position: boolean;

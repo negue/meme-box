@@ -25,6 +25,7 @@ The Loaded Clips need to stay cached?
      appMediaToggle [mediaHoldingElement]="mediaHolder"
      [combinedClip]="entry"
      [screenId]="screenId"
+     (mediaStateChanged)="removeOverridingOptions(entry, $event)"
      #mediaToggleVar="appMediaToggle"
 
      [class.clip-is-visible]="mediaToggleVar.isVisible$ | async"

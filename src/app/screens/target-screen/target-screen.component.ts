@@ -2,13 +2,22 @@ import type {Rule} from 'css';
 import * as css from 'css';
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, CombinedClip, MediaType, Screen, ScreenClip, TriggerAction} from "@memebox/contracts";
+import {
+  Clip,
+  CombinedClip,
+  MediaType,
+  Screen,
+  ScreenClip,
+  ScreenMediaOverridableProperies,
+  TriggerAction
+} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
+import {MediaState} from "./media-toggle.directive";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -39,16 +48,26 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     map(([screenId, screenMap]) => screenMap[screenId].clips)
   );
 
+  overridableProperiesMap$ = new BehaviorSubject<Record<string, ScreenMediaOverridableProperies>>({});
+
   mediaClipMap$: Observable<CombinedClip[]> = combineLatest([
     this.assignedClipsMap$,
-    this.appQuery.clipMap$
+    this.appQuery.clipMap$,
+    this.overridableProperiesMap$
   ]).pipe(
-    map(([assignedClips, allClips]) => {
+    map(([assignedClips, allClips, overridablePropertiesMap]) => {
       const result: CombinedClip[] = [];
 
-      for (const [key, entry] of Object.entries(assignedClips)) {
+      for (let [key, clipSetting] of Object.entries(assignedClips)) {
+        const screenMediaOverrides = overridablePropertiesMap[key];
+
+        if (screenMediaOverrides) {
+          clipSetting = Object.assign({}, clipSetting, screenMediaOverrides);
+          console.info('merged', { clipSetting });
+        }
+
         result.push({
-          clipSetting: entry,
+          clipSetting,
           clip: {
             ...allClips[key]
           },
@@ -129,9 +148,14 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     this.wsService.onTriggerClip$.pipe(
       takeUntil(this._destroy$)
-    ).subscribe(clip => {
-      if (clip.targetScreen === this.screenId) {
-        this.mediaClipToShow$.next(clip);
+    ).subscribe(triggerPayload => {
+      if (triggerPayload.targetScreen === this.screenId) {
+        if (triggerPayload.overrides?.screenMedia) {
+          console.info('adding overrides', { triggerPayload });
+          this.addOverridingOptions(triggerPayload);
+        }
+
+        this.mediaClipToShow$.next(triggerPayload);
       }
     });
 
@@ -335,5 +359,29 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     const obj = this.parseAndApplyScreenCssRules(screen);
 
     return css.stringify(obj);
+  }
+
+  async removeOverridingOptions(entry: CombinedClip, $event: MediaState) {
+    if ($event === MediaState.HIDDEN) {
+      const currentOverrides = await this.overridableProperiesMap$.pipe(
+        take(1)
+      ).toPromise();
+
+      delete currentOverrides[entry.clip.id];
+
+      this.overridableProperiesMap$.next(currentOverrides);
+    }
+  }
+
+
+  async addOverridingOptions(triggerPayload: TriggerAction) {
+    const currentOverrides = await this.overridableProperiesMap$.pipe(
+        take(1)
+      ).toPromise();
+
+    currentOverrides[triggerPayload.id] = triggerPayload.overrides.screenMedia;
+
+      this.overridableProperiesMap$.next(currentOverrides);
+
   }
 }

@@ -35,7 +35,7 @@ export class ActionTriggerHandler {
     private _scriptHandler: ScriptHandler,
     private actionStateEventBus: ActionActiveStateEventBus,
   ) {
-    mediaTriggerEventBus.AllEvents$.subscribe(triggerMedia => {
+    mediaTriggerEventBus.AllTriggerEvents$.subscribe(triggerMedia => {
       this.triggerMediaClipById(triggerMedia);
     });
 
