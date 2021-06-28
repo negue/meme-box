@@ -8,7 +8,7 @@ type ActionStateEntries = Record<string, Record<string, ActionStateEnum>>;
 
 @Service()
 export class ActionActiveState {
-  // mediaId   -> screenId --> visible state
+  // actionId   -> actionId/screenId --> visible state
   private state: ActionStateEntries = {};
 
   constructor(
@@ -35,7 +35,7 @@ export class ActionActiveState {
   public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {
     console.info('Created a waitUntilDoneAsync - ', mediaId);
 
-    // TODO ONCE SCREEN STATE is avilable check if the target screen is visible / opened
+    // TODO ONCE SCREEN STATE is available check if the target screen is visible / opened
 
     // first try
     return this.mediaStateEventBus.AllEvents$.pipe(

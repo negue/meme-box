@@ -87,7 +87,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       scriptHoldingData = this._compiledScripts.get(script.id);
     } else {
       const obsApi = await this.getObsApi();
-
+console.info({ obsApi });
       scriptHoldingData = new ScriptContext(
         this._vm,
         this,

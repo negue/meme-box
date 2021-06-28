@@ -23,7 +23,7 @@ The Loaded Clips need to stay cached?
      [style.--clip-setting-width]="entry.clipSetting.width"
 
      appMediaToggle [mediaHoldingElement]="mediaHolder"
-     [combinedClip]="entry"
+     [clipId]="entry.clip.id"
      [screenId]="screenId"
      (mediaStateChanged)="removeOverridingOptions(entry, $event)"
      #mediaToggleVar="appMediaToggle"

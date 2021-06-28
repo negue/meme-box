@@ -14,11 +14,15 @@ export class ObsConnection {
   ) {
     const obsConfig = _persistence.getConfig().obs;
 
+    const obsConfigExists = !!obsConfig?.hostname;
+
     this.obsConnection = new OBSWebSocket();
-    this.obsConnectionPromise = this.obsConnection.connect({
-      address: obsConfig?.hostname,
-      password: obsConfig?.password
-    });
+    this.obsConnectionPromise = obsConfigExists
+      ? this.obsConnection.connect({
+        address: obsConfig?.hostname,
+        password: obsConfig?.password
+      })
+      : Promise.resolve();
   }
 
   async getCurrentConnection() : Promise<OBSWebSocket> {

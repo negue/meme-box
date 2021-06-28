@@ -11,7 +11,7 @@ import {
   ScreenMediaOverridableProperies,
   TriggerAction
 } from "@memebox/contracts";
-import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
+import { distinctUntilChanged, filter, map, shareReplay, take, takeUntil, tap } from "rxjs/operators";
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
 import {ActivatedRoute} from "@angular/router";
@@ -28,7 +28,7 @@ import {MediaState} from "./media-toggle.directive";
 })
 export class TargetScreenComponent implements OnInit, OnDestroy {
 
-  log = [];
+  log: unknown[] = [];
 
   debug$ = this.route.queryParams.pipe(
     map(queryParams => queryParams['debug'] === 'true')
@@ -63,7 +63,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
         if (screenMediaOverrides) {
           clipSetting = Object.assign({}, clipSetting, screenMediaOverrides);
-          console.info('merged', { clipSetting });
+          console.info('merged ', key, { clipSetting });
         }
 
         result.push({
@@ -101,7 +101,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   @Input()
-  public screenId : string;
+  public screenId: string = '';
 
   @HostBinding('id')
   public get cssId() {
@@ -190,9 +190,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         if (screenClipSettings.clip.type === MediaType.IFrame) {
           const item = this.clipToControlMap.get(screenClipSettings.clip.id) as HTMLIFrameElement;
 
-          if (item) {
-            console.info({document: item.contentDocument});
-            this.addOrUpdateStyleTag(item.contentDocument, 'iframe', screenClipSettings.clipSetting.customCss);
+          if (item && item.contentDocument) {
+            this.addOrUpdateStyleTag(item.contentDocument, 'iframe', screenClipSettings.clipSetting.customCss ?? '');
           }
         }
       }
@@ -284,7 +283,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
 
   parseAndApplyScreenCssRules(screen: Screen) {
-    const obj = css.parse(screen.customCss, {
+    const obj = css.parse(screen.customCss ?? '', {
       silent: true
     });
     // css.stringify(obj, options);
@@ -313,12 +312,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     // todo use the @gewd package to add the style
     const head = document.getElementsByTagName('head')[0];
     const allStyles = head.getElementsByTagName('style');
-    let style: HTMLStyleElement = null;
+    let style: HTMLStyleElement|null = null;
 
     for (let styleIndex = 0; styleIndex < allStyles.length; styleIndex++) {
       const styleInHeader = allStyles.item(styleIndex);
 
-      if (styleInHeader.id === styleId) {
+      if (styleInHeader?.id === styleId) {
         style = styleInHeader;
         break;
       }
@@ -331,13 +330,13 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       head.appendChild(style);
     }
 
-    if (style.childNodes.length > 0) {
+    if (style?.childNodes.length > 0) {
       console.info('Rules in the Style', styleId);
       console.info('Childnodes', style.childNodes);
 
       style.childNodes.forEach(child => {
         console.info('Removing', child);
-        style.removeChild(child);
+        style?.removeChild(child);
       })
     }
 
@@ -376,12 +375,20 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
   async addOverridingOptions(triggerPayload: TriggerAction) {
     const currentOverrides = await this.overridableProperiesMap$.pipe(
-        take(1)
-      ).toPromise();
+      take(1)
+    ).toPromise();
 
     currentOverrides[triggerPayload.id] = triggerPayload.overrides.screenMedia;
 
-      this.overridableProperiesMap$.next(currentOverrides);
+    this.overridableProperiesMap$.next(currentOverrides);
+  }
 
+  getClipById$ (clipId: string): Observable<CombinedClip|undefined> {
+    console.info('getClipById', {clipId});
+    return this.mediaClipMap$.pipe(
+      tap(map => console.info({map})),
+      map(mediaMap => mediaMap.find(media => media.clip.id === clipId)),
+      shareReplay(1)
+    );
   }
 }
