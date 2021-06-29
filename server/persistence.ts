@@ -350,11 +350,6 @@ export class Persistence {
   public updatePartialConfig(config: Partial<Config>) {
     this.data.config = Object.assign({}, this.data.config, config);
 
-    console.info({
-      config,
-      saved: this.data.config
-    });
-
     this.saveData();
   }
 
@@ -424,13 +419,8 @@ export class Persistence {
 
     if (newTwitchConfig.bot.auth.token && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
+      console.info('updating bot auth token?');
     }
-
-
-    console.info({
-      twitchConfig,
-      saved: this.data.config
-    });
 
     // TODO add "what changed" to saveData
     this.saveData();

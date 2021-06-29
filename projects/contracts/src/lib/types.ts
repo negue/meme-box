@@ -1,5 +1,6 @@
 import {ChatUserstate} from "tmi.js";
 import {MediaType} from "./media.types";
+import {TriggerAction} from "./actions";
 
 export interface HasId {
   id: string;
@@ -268,6 +269,7 @@ export interface FileResult {
 export interface CombinedClip {
   clip: Clip;
   clipSetting: ScreenClip;
+  triggerPayload?: TriggerAction;
   backgroundColor?: string;
 }
 

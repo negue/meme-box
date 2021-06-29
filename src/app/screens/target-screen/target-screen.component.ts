@@ -2,22 +2,13 @@ import type {Rule} from 'css';
 import * as css from 'css';
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {
-  Clip,
-  CombinedClip,
-  MediaType,
-  Screen,
-  ScreenClip,
-  ScreenMediaOverridableProperies,
-  TriggerAction
-} from "@memebox/contracts";
-import { distinctUntilChanged, filter, map, shareReplay, take, takeUntil, tap } from "rxjs/operators";
+import {Clip, CombinedClip, MediaType, Screen, ScreenClip, TriggerAction} from "@memebox/contracts";
+import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
-import {MediaState} from "./media-toggle.directive";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -48,24 +39,14 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     map(([screenId, screenMap]) => screenMap[screenId].clips)
   );
 
-  overridableProperiesMap$ = new BehaviorSubject<Record<string, ScreenMediaOverridableProperies>>({});
-
-  mediaClipMap$: Observable<CombinedClip[]> = combineLatest([
+  mediaClipList$: Observable<CombinedClip[]> = combineLatest([
     this.assignedClipsMap$,
-    this.appQuery.clipMap$,
-    this.overridableProperiesMap$
+    this.appQuery.clipMap$
   ]).pipe(
-    map(([assignedClips, allClips, overridablePropertiesMap]) => {
+    map(([assignedClips, allClips]) => {
       const result: CombinedClip[] = [];
 
-      for (let [key, clipSetting] of Object.entries(assignedClips)) {
-        const screenMediaOverrides = overridablePropertiesMap[key];
-
-        if (screenMediaOverrides) {
-          clipSetting = Object.assign({}, clipSetting, screenMediaOverrides);
-          console.info('merged ', key, { clipSetting });
-        }
-
+      for (const [key, clipSetting] of Object.entries(assignedClips)) {
         result.push({
           clipSetting,
           clip: {
@@ -78,7 +59,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       return result;
     })
   );
-  mediaClipToShow$ = new BehaviorSubject<TriggerAction>(null);
+  mediaClipToShow$ = new BehaviorSubject<CombinedClip>(null);
   clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement | HTMLIFrameElement>();
 
   showOfflineIcon$ = this.wsService.connectionState$.pipe(
@@ -148,14 +129,11 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     this.wsService.onTriggerClip$.pipe(
       takeUntil(this._destroy$)
-    ).subscribe(triggerPayload => {
+    ).subscribe(async triggerPayload => {
       if (triggerPayload.targetScreen === this.screenId) {
-        if (triggerPayload.overrides?.screenMedia) {
-          console.info('adding overrides', { triggerPayload });
-          this.addOverridingOptions(triggerPayload);
-        }
+        const combinedClip = await this.getCombinedClipWithOverridingOptionsAsync(triggerPayload);
 
-        this.mediaClipToShow$.next(triggerPayload);
+        this.mediaClipToShow$.next(combinedClip);
       }
     });
 
@@ -173,7 +151,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     this.screenId$.next(this.screenId);
 
-    this.mediaClipMap$.pipe(
+    this.mediaClipList$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(mediaClipMap => {
       for(const screenClipSettings of Object.values(mediaClipMap)){
@@ -230,7 +208,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     if (value.type === MediaType.IFrame){
 
       console.warn('Is Iframe');
-      this.mediaClipMap$.pipe(
+      this.mediaClipList$.pipe(
         take(1)
       ).subscribe(map => {
         const iframeElement = element as HTMLIFrameElement;
@@ -246,7 +224,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     if (value.type === MediaType.Widget){
 
       console.warn('Is HTML (iframe)');
-      this.mediaClipMap$.pipe(
+      this.mediaClipList$.pipe(
         take(1)
       ).subscribe(map => {
         // custom css for custom html?!
@@ -360,35 +338,25 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     return css.stringify(obj);
   }
 
-  async removeOverridingOptions(entry: CombinedClip, $event: MediaState) {
-    if ($event === MediaState.HIDDEN) {
-      const currentOverrides = await this.overridableProperiesMap$.pipe(
-        take(1)
-      ).toPromise();
-
-      delete currentOverrides[entry.clip.id];
-
-      this.overridableProperiesMap$.next(currentOverrides);
-    }
-  }
-
-
-  async addOverridingOptions(triggerPayload: TriggerAction) {
-    const currentOverrides = await this.overridableProperiesMap$.pipe(
+  async getCombinedClipWithOverridingOptionsAsync(
+    triggerPayload: TriggerAction
+  ): Promise<CombinedClip> {
+    const currentMediaList = await this.mediaClipList$.pipe(
       take(1)
     ).toPromise();
 
-    currentOverrides[triggerPayload.id] = triggerPayload.overrides.screenMedia;
+    const foundById = currentMediaList.find(m => m.clip.id === triggerPayload.id);
 
-    this.overridableProperiesMap$.next(currentOverrides);
-  }
+    let clipSetting = foundById.clipSetting;
 
-  getClipById$ (clipId: string): Observable<CombinedClip|undefined> {
-    console.info('getClipById', {clipId});
-    return this.mediaClipMap$.pipe(
-      tap(map => console.info({map})),
-      map(mediaMap => mediaMap.find(media => media.clip.id === clipId)),
-      shareReplay(1)
-    );
+    if (triggerPayload.overrides?.screenMedia) {
+      clipSetting = Object.assign({}, clipSetting, triggerPayload.overrides.screenMedia);
+    }
+
+    return {
+      clip: foundById.clip,
+      clipSetting,
+      triggerPayload
+    };
   }
 }
