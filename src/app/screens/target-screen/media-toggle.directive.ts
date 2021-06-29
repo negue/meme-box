@@ -33,6 +33,7 @@ export enum MediaState {
 }
 
 // TODO POSSIBLE TO SPLIT UP?
+// TODO add more debug logs if needed foranother debugging sessions
 
 const ALL_MEDIA = [MediaType.Audio, MediaType.Video];
 
@@ -160,10 +161,11 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         return;
       }
 
+      console.info('pre getAnimationValues', this.selectedInAnimation, this.selectedOutAnimation);
       this.getAnimationValues();
 
-      this.updateNeededVariables();
-      this.applyPositions();
+      console.info('post getAnimationValues', this.selectedInAnimation, this.selectedOutAnimation);
+
 
       console.info({
         visibility: this.clipVisibility,
@@ -171,8 +173,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       });
 
       if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
+        console.info('Was toggle and currently visible -> animate Out or Hide');
         this.animateOutOrHide();
       } else {
+        this.updateNeededVariables();
         this.applyPositions();
 
         // Trigger Play
@@ -211,6 +215,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private applyPositions() {
+    if (!this.currentCombinedClip) {
+      return;
+    }
+
     const {clipSetting, clip, backgroundColor} = this.currentCombinedClip;
     const currentPosition = clipSetting.position;
 
@@ -321,8 +329,13 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private updateNeededVariables() {
     const lastVisibility = this.clipVisibility;
 
-    this.clipVisibility = this.currentCombinedClip.clipSetting.visibility
-      ?? VisibilityEnum.Play;
+    if (!this.currentCombinedClip) {
+      return;
+    }
+
+    this.clipVisibility = this.currentCombinedClip.clipSetting.visibility ?? VisibilityEnum.Play;
+
+    console.info('set visibility to ', this.clipVisibility, this.clipId);
 
     setTimeout(() => {
       if (lastVisibility !== VisibilityEnum.Play) {
