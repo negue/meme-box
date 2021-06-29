@@ -1,12 +1,12 @@
 import {Service} from "@tsed/di";
 import {ActionTriggerEventBus} from "../../action-trigger-event.bus";
-import {TriggerActionOverrides, TriggerClipOrigin} from "@memebox/contracts";
+import {TriggerActionOverrides, TriggerClipOrigin, VisibilityEnum} from "@memebox/contracts";
 import {ActionActiveState} from "../../action-active-state";
 
 export class ActionApi {
   constructor(
-    private memeboxApi: MemeboxApi,
-    private actionId: string
+    protected memeboxApi: MemeboxApi,
+    protected actionId: string
   ) {
 
   }
@@ -21,6 +21,7 @@ export class ActionApi {
 
     return this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId);
   }
+
   triggerWithOverrides(overrides: TriggerActionOverrides): Promise<void> {
     this.memeboxApi.actionTriggerEventBus.triggerMedia({
       id: this.actionId,
@@ -34,11 +35,34 @@ export class ActionApi {
 }
 
 export class MediaApi extends ActionApi {
+  constructor(
+    memeboxApi: MemeboxApi,
+    actionId: string
+  ) {
+    super(memeboxApi, actionId);
+  }
+
+
   updateScreenOptions(screenOptionsPayload: unknown): Promise<void> {
     return Promise.resolve();
   }
-  triggerAndDoStuff(executionFunction: (currentVisibleMedia: unknown) => Promise<void>) {
-    return Promise.resolve();
+  async triggerAndDoStuff(executionFunction: () => Promise<void>) {
+    // screenId needed?
+
+    this.memeboxApi.actionTriggerEventBus.triggerMedia({
+      id: this.actionId,
+      origin: TriggerClipOrigin.Scripts,
+      originId: this.memeboxApi.scriptId,
+      overrides: {
+        screenMedia: {
+          visibility: VisibilityEnum.Toggle
+        }
+      }
+    })
+
+    await executionFunction();
+
+    await this.trigger();
   }
 }
 
