@@ -26,6 +26,7 @@ export class WebsocketService {
   public onUpdateData$ = new Subject();
   public onReloadScreen$ = new Subject();
   public onTriggerClip$ = new Subject<TriggerAction>();
+  public onUpdateMedia$ = new Subject<TriggerAction>();
   public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.NONE)
 
   private ws: WebSocket;
@@ -94,6 +95,13 @@ export class WebsocketService {
         const payloadObj: TriggerAction = JSON.parse(payload);
 
         this.onTriggerClip$.next(payloadObj);
+
+        break;
+      }
+      case ACTIONS.UPDATE_MEDIA: {
+        const payloadObj: TriggerAction = JSON.parse(payload);
+
+        this.onUpdateMedia$.next(payloadObj);
 
         break;
       }

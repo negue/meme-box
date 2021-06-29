@@ -269,6 +269,7 @@ export interface FileResult {
 export interface CombinedClip {
   clip: Clip;
   clipSetting: ScreenClip;
+  originalClipSetting?: ScreenClip;
   triggerPayload?: TriggerAction;
   backgroundColor?: string;
 }

@@ -22,4 +22,8 @@ export class ActionTriggerEventBus {
   public triggerMedia(triggerClip: TriggerAction) {
     this._allTriggerEvents$.next(triggerClip);
   }
+
+  public updateMedia(triggerClip: TriggerAction) {
+    this._allUpdateEvents$.next(triggerClip);
+  }
 }

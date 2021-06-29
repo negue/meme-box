@@ -20,7 +20,7 @@ import {
   VisibilityEnum
 } from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
-import {TargetScreenComponent} from "./target-screen.component";
+import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
 import {takeUntil, withLatestFrom} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
 import {WebsocketService} from "../../core/services/websocket.service";
@@ -134,6 +134,19 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       this.updateNeededVariables();
       this.applyPositions();
     });
+
+    this.webSocket.onUpdateMedia$.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(triggerPayload => {
+      if (
+        this.clipId === triggerPayload.id &&
+        this.screenId == triggerPayload.targetScreen
+      ) {
+        this.currentCombinedClip = mergeCombinedClipWithOverrides(this.currentCombinedClip, triggerPayload);
+
+        this.applyPositions();
+      }
+    })
 
     this.queueTrigger.pipe(
       takeUntil(this._destroy$)
@@ -452,6 +465,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private startAnimation(animationName: string, animationDurationValue: number) {
+    this.element.nativeElement.classList.add('isAnimating');
+
     const elementToAnimate = this.getElementToAddAnimation();
 
     if (!elementToAnimate) {
@@ -471,6 +486,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     console.info('After Adding', elementToAnimate.classList.toString());
   }
   private removeAnimation(animationName: string) {
+    this.element.nativeElement.classList.remove('isAnimating');
     const elementToAnimate =  this.getElementToAddAnimation();
 
     elementToAnimate.classList.remove('animate__animated');

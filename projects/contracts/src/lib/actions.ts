@@ -3,6 +3,7 @@ import {ScreenMediaOverridableProperies} from "./types";
 export const ACTIONS = {
   I_AM_OBS: 'I_AM_OBS',
   TRIGGER_CLIP: 'TRIGGER_CLIP',  // the only "public" websocket action
+  UPDATE_MEDIA: 'UPDATE_MEDIA',
   UPDATE_DATA: 'UPDATE_DATA',
   RELOAD_SCREEN: 'RELOAD_SCREEN',
 
@@ -70,6 +71,8 @@ export interface TriggerAction extends TriggerBase {
   repeatSecond?: number;
 
   overrides?: TriggerActionOverrides;
+
+  useOverridesAsBase?: boolean;
 
   // soon there will be more "overrides" to everything
 }

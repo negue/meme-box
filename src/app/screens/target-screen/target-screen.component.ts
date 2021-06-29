@@ -49,6 +49,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       for (const [key, clipSetting] of Object.entries(assignedClips)) {
         result.push({
           clipSetting,
+          originalClipSetting: clipSetting,
           clip: {
             ...allClips[key]
           },
@@ -347,16 +348,28 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     const foundById = currentMediaList.find(m => m.clip.id === triggerPayload.id);
 
-    let clipSetting = foundById.clipSetting;
-
-    if (triggerPayload.overrides?.screenMedia) {
-      clipSetting = Object.assign({}, clipSetting, triggerPayload.overrides.screenMedia);
-    }
-
-    return {
-      clip: foundById.clip,
-      clipSetting,
-      triggerPayload
-    };
+    return mergeCombinedClipWithOverrides(foundById, triggerPayload);
   }
+}
+
+export function mergeCombinedClipWithOverrides (
+  sourceCombinedClip: CombinedClip,
+  triggerPayload: TriggerAction
+) {
+  let clipSetting = sourceCombinedClip.originalClipSetting;
+
+  if (triggerPayload.useOverridesAsBase) {
+    sourceCombinedClip.originalClipSetting = Object.assign({},
+      sourceCombinedClip.originalClipSetting,
+      triggerPayload.overrides.screenMedia);
+  }
+
+  if (triggerPayload.overrides?.screenMedia) {
+    clipSetting = Object.assign({}, sourceCombinedClip.originalClipSetting, triggerPayload.overrides.screenMedia);
+  }
+
+  return {
+    ...sourceCombinedClip,
+    clipSetting
+  };
 }

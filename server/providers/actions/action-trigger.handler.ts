@@ -38,6 +38,9 @@ export class ActionTriggerHandler {
     mediaTriggerEventBus.AllTriggerEvents$.subscribe(triggerMedia => {
       this.triggerMediaClipById(triggerMedia);
     });
+    mediaTriggerEventBus.AllUpdateEvents$.subscribe(triggerMedia => {
+      this.updateMediaEvent(triggerMedia);
+    });
 
     _persistence.dataUpdated$().subscribe(() => {
       this.getData();
@@ -85,6 +88,25 @@ export class ActionTriggerHandler {
     }
   }
 
+  async updateMediaEvent(payloadObs: TriggerAction) {
+    if (payloadObs.targetScreen) {
+      this._memeboxWebSocket.sendDataToScreen(payloadObs.targetScreen, `${ACTIONS.UPDATE_MEDIA}=${JSON.stringify(payloadObs)}`);
+      return;
+    }
+
+    // No Meta Type
+    // Trigger the clip on all assign screens
+    for (const screen of this._allScreens) {
+      if (screen.clips[payloadObs.id]) {
+        const newMessageObj = {
+          ...payloadObs,
+          targetScreen: screen.id
+        };
+
+        this._memeboxWebSocket.sendDataToScreen(screen.id, `${ACTIONS.UPDATE_MEDIA}=${JSON.stringify(newMessageObj)}`);
+      }
+    }
+  }
 
   private async triggerMeta(mediaConfig: Clip): Promise<void> {
     // Get all Tags
