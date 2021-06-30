@@ -1,16 +1,18 @@
 import {Service} from "@tsed/di";
-import {MediaStateEventBus} from "./media-state.event-bus";
+import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
 import {filter, map, take} from "rxjs/operators";
+import {ActionStateEnum} from "@memebox/contracts";
 
-type MediaVisibilityStateType = Record<string, Record<string, boolean>>;
+
+type ActionStateEntries = Record<string, Record<string, ActionStateEnum>>;
 
 @Service()
-export class MediaActiveState {
-  // mediaId   -> screenId --> visible state
-  private state: MediaVisibilityStateType = {};
+export class ActionActiveState {
+  // actionId   -> actionId/screenId --> visible state
+  private state: ActionStateEntries = {};
 
   constructor(
-    private mediaStateEventBus: MediaStateEventBus
+    private mediaStateEventBus: ActionActiveStateEventBus
   ) {
     mediaStateEventBus.AllEvents$.subscribe(
       value => {
@@ -18,13 +20,13 @@ export class MediaActiveState {
           this.state[value.mediaId] = {};
         }
 
-        this.state[value.mediaId][value.screenId] = value.active;
+        this.state[value.mediaId][value.screenId ?? value.mediaId] = value.state;
       }
     )
   }
 
   // todo real readonly
-  public getState (): Readonly<MediaVisibilityStateType> {
+  public getState (): Readonly<ActionStateEntries> {
     return {
       ...this.state
     }
@@ -33,11 +35,11 @@ export class MediaActiveState {
   public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {
     console.info('Created a waitUntilDoneAsync - ', mediaId);
 
+    // TODO ONCE SCREEN STATE is available check if the target screen is visible / opened
+
     // first try
     return this.mediaStateEventBus.AllEvents$.pipe(
       filter(e => {
-        console.info('current event', e);
-
         if (e.mediaId !== mediaId) {
           return false;
         }
@@ -46,7 +48,7 @@ export class MediaActiveState {
           return false;
         }
 
-        return e.active === false;
+        return e.state === ActionStateEnum.Done;
       }),
       map(value => {}),
       take(1)

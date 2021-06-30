@@ -1,4 +1,13 @@
-import {Config, CONFIG_CUSTOM_PORT_PATH, CONFIG_TWITCH, ENDPOINTS, Response, TwitchConfig} from "@memebox/contracts";
+import {
+  Config,
+  CONFIG_CUSTOM_PORT_PATH,
+  CONFIG_OBS,
+  CONFIG_TWITCH,
+  ENDPOINTS,
+  ObsConfig,
+  Response,
+  TwitchConfig
+} from "@memebox/contracts";
 import {allowedFileUrl} from "../validations";
 import {existsSync} from "fs";
 import {sep} from 'path';
@@ -28,6 +37,17 @@ export class ConfigController {
     @BodyParams() twitchConfigBody: TwitchConfig
   ): Response {
     this._persistence.updateTwitchConfig(twitchConfigBody);
+
+    return {
+      ok: true
+    };
+  }
+
+  @Put(CONFIG_OBS)
+  updateObsConfig(
+    @BodyParams() obsConfigPayload: ObsConfig
+  ): Response {
+    this._persistence.updateObsConfig(obsConfigPayload);
 
     return {
       ok: true

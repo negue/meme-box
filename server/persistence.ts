@@ -4,6 +4,7 @@ import {
   Config,
   ConfigV0,
   createInitialState,
+  ObsConfig,
   PositionEnum,
   Screen,
   ScreenClip,
@@ -349,11 +350,6 @@ export class Persistence {
   public updatePartialConfig(config: Partial<Config>) {
     this.data.config = Object.assign({}, this.data.config, config);
 
-    console.info({
-      config,
-      saved: this.data.config
-    });
-
     this.saveData();
   }
 
@@ -361,6 +357,27 @@ export class Persistence {
     this.data.config = this.data.config || {};
     this.data.config.mediaFolder = newFolder;
 
+    this.saveData();
+  }
+
+  public updateObsConfig(newObsConfig: ObsConfig) {
+    this.data.config = this.data.config || {};
+
+    let obsConfig = this.data.config.obs;
+
+    if (!obsConfig) {
+      obsConfig = this.data.config.obs = {
+        hostname: '',
+        password: null
+      };
+    }
+
+    obsConfig.hostname = newObsConfig.hostname;
+    if (newObsConfig.password && newObsConfig.password !== TOKEN_EXISTS_MARKER) {
+      obsConfig.password = newObsConfig.password;
+    }
+
+    // TODO add "what changed" to saveData
     this.saveData();
   }
 
@@ -402,13 +419,8 @@ export class Persistence {
 
     if (newTwitchConfig.bot.auth.token && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
+      console.info('updating bot auth token?');
     }
-
-
-    console.info({
-      twitchConfig,
-      saved: this.data.config
-    });
 
     // TODO add "what changed" to saveData
     this.saveData();
@@ -434,10 +446,18 @@ export class Persistence {
       twitchConfig.bot.auth.token = TOKEN_EXISTS_MARKER;
     }
 
+    const obsConfig = (cloneDeep(this.data.config.obs) || {}) as ObsConfig;
+
+    if (obsConfig.password) {
+      obsConfig.password = TOKEN_EXISTS_MARKER;
+    }
+
+
     return {
       ...this.data.config,
       twitch: twitchConfig,
-      mediaFolder
+      mediaFolder,
+      obs: obsConfig
     };
   }
 
@@ -510,7 +530,9 @@ export const PERSISTENCE: {
 }
 
 
-export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
+export const PersistenceInstance = new Persistence(
+  path.join(NEW_CONFIG_PATH, 'settings', 'settings.json')
+);
 
 // todo refactor it to a new place when the new logger is being used
 LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
@@ -518,6 +540,7 @@ LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
 PERSISTENCE.instance = PersistenceInstance;
 
 
+// TODO Check if possible to use the default @Service()
 // Registry for TsED
 registerProvider({
   provide: PERSISTENCE_DI,

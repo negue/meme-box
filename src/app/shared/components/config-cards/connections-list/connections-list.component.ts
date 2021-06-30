@@ -56,14 +56,14 @@ export class ConnectionsListComponent implements OnInit {
             openConfig: () => this.dialogService.openMainTwitchConnection()
           },
         ],
-        'OBS':  [
+       */ 'OBS':  [
           {
             isConfigured: false,
-            connectedAccount: 'theChannelName',
-            hasAuthToken: false,
-            openConfig: () => this.dialogService.openMainTwitchConnection()
+            connectedAccount: config.obs?.hostname,
+            hasAuthToken: !!config.obs?.password,
+            openConfig: () => this.dialogService.openObsConnectionDialog()
           },
-        ]*/
+        ]
       };
     })
   );

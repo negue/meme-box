@@ -9,21 +9,12 @@ The Loaded Clips need to stay cached?
 
 </mat-icon>
 
-<div *ngFor="let entry of mediaClipMap$ | async; trackBy: trackByKeyValue"
-     [class.absolute]="entry.clipSetting.position === 1"
-     [class.centered]="entry.clipSetting.position === 2"
-     [class.random]="entry.clipSetting.position === 3"
-     [class.fullscreen]="!entry.clipSetting.position"
+<div *ngFor="let entry of mediaClipList$ | async; trackBy: trackByKeyValue"
      [ngSwitch]="entry.clip.type"
-     [style.--clip-background]="entry.backgroundColor"
-     [style.--clip-setting-height]="entry.clipSetting.height"
-     [style.--clip-setting-img-fit]="entry.clipSetting.imgFit"
-     [style.z-index]="entry.clipSetting.zIndex"
 
-     [style.--clip-setting-width]="entry.clipSetting.width"
 
      appMediaToggle [mediaHoldingElement]="mediaHolder"
-     [combinedClip]="entry"
+     [clipId]="entry.clip.id"
      [screenId]="screenId"
      #mediaToggleVar="appMediaToggle"
 
@@ -84,5 +75,5 @@ The Loaded Clips need to stay cached?
 
 <pre style="display: none;">
   {{ log | json }}
-  {{ mediaClipMap$ | async | json }}
+  {{ mediaClipList$ | async | json }}
 </pre>

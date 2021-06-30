@@ -33,12 +33,8 @@ export function clipDataToScriptConfig (clip: Partial<Clip>) {
     bootstrapScript: clip.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
   };
 
-  console.info({extended: clip.extended});
-
   const customVariables: ScriptVariable[] = JSON.parse(clip.extended[SCRIPT_VARIABLES_KEY] ?? '[]');
   dynamicContent.variablesConfig = customVariables;
-
-  console.info('json', JSON.stringify(dynamicContent));
 
   // todo add a settings type
   const settings: any = JSON.parse(clip.extended[SCRIPT_SETTINGS_KEY] ?? '{}');
@@ -80,7 +76,7 @@ export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [
 export function getScriptVariablesOrFallbackValues (
   config: ScriptConfig,
   valueBag: Dictionary<any>
-) {
+): Dictionary<unknown> {
   const newValueBag: Dictionary<unknown> = {};
 
   for (const variablesConfigElement of (config.variablesConfig || [])) {

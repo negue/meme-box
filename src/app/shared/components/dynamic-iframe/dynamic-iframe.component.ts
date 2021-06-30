@@ -16,10 +16,11 @@ import {AppConfig} from "@memebox/app/env";
 import {BehaviorSubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
-import {TriggerClip} from "@memebox/contracts";
+import {TriggerAction} from "@memebox/contracts";
 import {WebsocketService} from "../../../core/services/websocket.service";
 import {guid} from "@datorama/akita";
 import {AppService} from "../../../state/app.service";
+import {WidgetStoreRemoteAdapter} from "./widget-store-remote-adapter.service";
 
 @Component({
   selector: 'app-dynamic-iframe',
@@ -47,13 +48,14 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   errorSubject$ = new BehaviorSubject<string>('');
 
   constructor(private websocket: WebsocketService,
-              private appService: AppService) {
+              private appService: AppService,
+              private remoteStoreApiAdapter: WidgetStoreRemoteAdapter) {
     this.wsHandler = new WebsocketHandler(AppConfig.wsBase+'/ws/twitch_events', 3000);
 
   }
 
   async ngOnInit(): Promise<void> {
-    const currentWidgetApi = new WidgetApi(this.mediaId, this._widgetInstance, this.appService, this.wsHandler, this.errorSubject$);
+    const currentWidgetApi = new WidgetApi(this.mediaId, this._widgetInstance, this.remoteStoreApiAdapter, this.wsHandler, this.errorSubject$);
 
     await Promise.all([
       currentWidgetApi.isReady(),
@@ -99,7 +101,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
     return this._widgetApi;
   }
 
-  public componentIsShown(currentTriggeredPayload: TriggerClip) {
+  public componentIsShown(currentTriggeredPayload: TriggerAction) {
     this._widgetApi.triggerIsShown(currentTriggeredPayload);
   }
 

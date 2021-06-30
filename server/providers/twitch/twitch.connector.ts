@@ -76,6 +76,8 @@ export class TwitchConnector {
             channels: [twitchConfig.channel]
           };
 
+          // TODO Merge Logins or choose if only main account is connected but not the bot
+
           if (twitchConfig.bot?.enabled && twitchConfig.bot?.auth?.name && twitchConfig.bot?.auth?.token){
             tmiConfig.identity = {
               username: twitchConfig.bot.auth.name,

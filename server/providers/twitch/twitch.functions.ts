@@ -112,7 +112,7 @@ interface TwitchEventOptions {
 export function getLevelOfTags(userState: tmi.Userstate): string[] {
   const levels = ['user'];
 
-  if (!userState.badges) {
+  if (!userState?.badges) {
     return levels;
   }
 
