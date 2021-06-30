@@ -8,44 +8,40 @@ import {
 } from "@memebox/contracts";
 import {ActionActiveState} from "../../action-active-state";
 import {timeoutAsync} from "./sleep.api";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "../../../contracts";
+import { Persistence } from "../../../../persistence";
+import merge from 'lodash/merge';
+
 
 export class ActionApi {
   constructor(
     protected memeboxApi: MemeboxApi,
-    protected actionId: string
+    protected actionId: string,
+    protected screenId?: string | undefined
   ) {
 
   }
 
-
-  trigger(): Promise<void> {
-    this.memeboxApi.actionTriggerEventBus.triggerMedia({
-      id: this.actionId,
-      origin: TriggerClipOrigin.Scripts,
-      originId: this.memeboxApi.scriptId
-    })
-
-    return this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId);
-  }
-
-  triggerWithOverrides(overrides: TriggerActionOverrides): Promise<void> {
+  trigger(overrides?: TriggerActionOverrides | undefined): Promise<void> {
     this.memeboxApi.actionTriggerEventBus.triggerMedia({
       id: this.actionId,
       origin: TriggerClipOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       overrides
-    })
+    });
 
-    return this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId);
+    return this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
   }
 }
 
 export class MediaApi extends ActionApi {
   constructor(
     memeboxApi: MemeboxApi,
-    actionId: string
+    actionId: string,
+    screenId?: string|undefined
   ) {
-    super(memeboxApi, actionId);
+    super(memeboxApi, actionId, screenId);
   }
 
   updateScreenOptions(overrides: ScreenMediaOverridableProperies): Promise<void> {
@@ -53,6 +49,7 @@ export class MediaApi extends ActionApi {
       id: this.actionId,
       origin: TriggerClipOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
+      targetScreen: this.screenId,
       overrides: {
         screenMedia: overrides
       }
@@ -61,23 +58,26 @@ export class MediaApi extends ActionApi {
     return timeoutAsync(50);
   }
 
-  async triggerAndDoStuff(executionFunction: (
+  async triggerWhile(executionFunction: (
     helpers:
     {
       reset: () => void,
     }
-  ) => Promise<void>) {
-    // screenId needed?
+  ) => Promise<void>, overrides?: TriggerActionOverrides | undefined) {
+    const newOverrides = merge({}, overrides, {
+        screenMedia: {
+          visibility: VisibilityEnum.Toggle
+        }
+      });
+
+    console.info( { newOverrides });
 
     this.memeboxApi.actionTriggerEventBus.triggerMedia({
       id: this.actionId,
       origin: TriggerClipOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
-      overrides: {
-        screenMedia: {
-          visibility: VisibilityEnum.Toggle
-        }
-      },
+      targetScreen: this.screenId,
+      overrides: newOverrides,
       useOverridesAsBase: true
     })
 
@@ -85,8 +85,15 @@ export class MediaApi extends ActionApi {
       reset: () => this.updateScreenOptions(null)
     });
 
-    await this.triggerWithOverrides(null);
+    await this.trigger(null);
   }
+}
+
+// todo multiple actions
+
+export type ActionSelector = string  | {
+  byId?: string[],
+  byTags: string[]
 }
 
 export class MemeboxApi {
@@ -102,8 +109,9 @@ export class MemeboxApi {
   getAction(actionId: string): ActionApi {
     return new ActionApi(this, actionId);
   }
-  getMedia(mediaid: string): MediaApi {
-    return new MediaApi(this, mediaid);
+
+  getMedia(mediaid: string, screenId?: string): MediaApi {
+    return new MediaApi(this, mediaid, screenId);
   }
 }
 
@@ -111,7 +119,10 @@ export class MemeboxApi {
 export class MemeboxApiFactory {
   constructor(
     private actionTriggerEventBus: ActionTriggerEventBus,
-    private actionActiveState: ActionActiveState
+    private actionActiveState: ActionActiveState,
+
+    @Inject(PERSISTENCE_DI)
+    private _persistence: Persistence
   ) {
   }
 

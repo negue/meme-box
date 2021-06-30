@@ -530,7 +530,9 @@ export const PERSISTENCE: {
 }
 
 
-export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
+export const PersistenceInstance = new Persistence(
+  path.join(NEW_CONFIG_PATH, 'settings', 'settings.json')
+);
 
 // todo refactor it to a new place when the new logger is being used
 LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
