@@ -2,7 +2,16 @@ import type {Rule} from 'css';
 import * as css from 'css';
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, CombinedClip, MediaType, Screen, ScreenClip, TriggerAction} from "@memebox/contracts";
+import {
+  ANIMATION_IN_ARRAY,
+  ANIMATION_OUT_ARRAY,
+  Clip,
+  CombinedClip,
+  MediaType,
+  Screen,
+  ScreenClip,
+  TriggerAction
+} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
 import {AppQueries} from "../../state/app.queries";
 import {AppService} from "../../state/app.service";
@@ -133,6 +142,9 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     ).subscribe(async triggerPayload => {
       if (triggerPayload.targetScreen === this.screenId) {
         const combinedClip = await this.getCombinedClipWithOverridingOptionsAsync(triggerPayload);
+
+        combinedClip.clipSetting.animationIn = this.getAnimationName(combinedClip, true);
+        combinedClip.clipSetting.animationOut = this.getAnimationName(combinedClip, false);
 
         this.mediaClipToShow$.next(combinedClip);
       }
@@ -350,13 +362,35 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     return mergeCombinedClipWithOverrides(foundById, triggerPayload);
   }
+
+  private getAnimationName (combinedClip: CombinedClip, animateIn: boolean) {
+    let selectedAnimation = animateIn
+      ? combinedClip.clipSetting.animationIn
+      : combinedClip.clipSetting.animationOut;
+
+    if (selectedAnimation === 'random') {
+      selectedAnimation = this.randomAnimation(animateIn
+        ? ANIMATION_IN_ARRAY
+        : ANIMATION_OUT_ARRAY
+      );
+    }
+
+    return selectedAnimation;
+  }
+
+  private randomAnimation(animations: string[]) {
+    var randomIndex = Math.floor(Math.random() * animations.length);     // returns a random integer from 0 to 9
+
+    return animations[randomIndex];
+  }
+
 }
 
 export function mergeCombinedClipWithOverrides (
   sourceCombinedClip: CombinedClip,
   triggerPayload: TriggerAction
 ) {
-  let clipSetting = sourceCombinedClip.originalClipSetting;
+  let clipSetting = Object.assign({}, sourceCombinedClip.originalClipSetting);
 
   if (triggerPayload.useOverridesAsBase) {
     sourceCombinedClip.originalClipSetting = Object.assign({},
