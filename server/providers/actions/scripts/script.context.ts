@@ -8,6 +8,7 @@ import {MemeboxApi} from "./apis/memebox.api";
 import {NamedLogger} from "../../named-logger";
 import {LoggerApi} from "./apis/logger.api";
 import {ObsApi} from "./apis/obs.api";
+import {TwitchApi} from "./apis/twitch.api";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -24,9 +25,10 @@ interface SharedScriptPayload {
   memebox: MemeboxApi;
   logger: LoggerApi;
   obs: ObsApi;
+  twitch: TwitchApi;
 }
 
-const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs';
+const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs, twitch';
 
 interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
@@ -59,7 +61,8 @@ export class ScriptContext {
     public script: Clip,
     public memeboxApi: MemeboxApi,
     baseLogger: NamedLogger,
-    public obsApi: ObsApi
+    public obsApi: ObsApi,
+    public twitchApi: TwitchApi
   ) {
     this.scriptConfig = clipDataToScriptConfig(script);
 
@@ -117,7 +120,8 @@ export class ScriptContext {
         sleep,
         memebox: this.memeboxApi,
         logger: this.logger,
-        obs: this.obsApi
+        obs: this.obsApi,
+        twitch: this.twitchApi
       }
 
       this.bootstrap_variables = await bootstrapFunc(bootstrapPayload);
@@ -152,7 +156,8 @@ export class ScriptContext {
       sleep,
       memebox: this.memeboxApi,
       logger: this.logger,
-      obs: this.obsApi
+      obs: this.obsApi,
+      twitch: this.twitchApi
     };
 
     await this.scriptToCall(scriptArguments);

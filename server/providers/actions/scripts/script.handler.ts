@@ -14,10 +14,14 @@ import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 import {MemeboxApiFactory} from "./apis/memebox.api";
 import {ObsConnection} from "../../obs-connection";
 import {ObsApi} from "./apis/obs.api";
+import {TwitchConnector} from "../../twitch/twitch.connector";
+import {TwitchApi} from "./apis/twitch.api";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
   private obsApi: ObsApi;
+  private twitchApi: TwitchApi;
+
   private _compiledScripts = new Map<string, ScriptContext>();
 
   // TODO / check can it run multiple longer-scripts at once?
@@ -35,7 +39,9 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     private actionStateHandler: ActionPersistentStateHandler,
     private memeboxApiFactory: MemeboxApiFactory,
-    private obsConnection : ObsConnection
+    private obsConnection : ObsConnection,
+
+    private twitchConnector: TwitchConnector
   ) {
     _persistence.dataUpdated$().subscribe(() => {
       // TODO get updated Path to know what kind of state needs to be refilled
@@ -44,7 +50,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       this._compiledScripts = new Map<string, ScriptContext>();
     })
 
-
+    this.twitchApi = new TwitchApi(twitchConnector);
   }
 
   public async getObsApi() : Promise<ObsApi> {
@@ -94,7 +100,8 @@ console.info({ obsApi });
         script,
         this.memeboxApiFactory.getApiFor(script.id),
         this.logger,
-        obsApi
+        obsApi,
+        this.twitchApi
       );
 
       try {
