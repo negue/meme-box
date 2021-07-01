@@ -98,7 +98,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  stopIfStillPlaying(combinedClip: CombinedClip) {
+  stopIfStillPlaying() {
     console.info('stopifPlaying', {
       animationOut: this.selectedOutAnimation,
       state: this.currentState,
@@ -335,8 +335,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
     this.clipVisibility = this.currentCombinedClip.clipSetting.visibility ?? VisibilityEnum.Play;
 
-    console.info('set visibility to ', this.clipVisibility, this.clipId);
-
     setTimeout(() => {
       if (lastVisibility !== VisibilityEnum.Play) {
         this.isVisible$.next(false);
@@ -348,7 +346,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         }
 
         this.isVisible$.next(true);
-      } else {
+      } else if (lastVisibility === VisibilityEnum.Static) {
         if(ALL_MEDIA.includes(this.currentCombinedClip.clip.type)) {
           this.stopMedia();
         }
@@ -383,7 +381,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
     if (this.currentCombinedClip.clip.playLength) {
       setTimeout(() => {
-        this.stopIfStillPlaying(null);
+        this.stopIfStillPlaying();
       }, this.currentCombinedClip.clip.playLength)
     }
   }
