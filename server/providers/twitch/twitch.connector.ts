@@ -39,7 +39,7 @@ export class TwitchConnector {
         startWith(true)
       )
       .subscribe(() => {
-        const config = _persistence.getConfig();
+        const config = _persistence.getConfig(false);
         const jsonOfConfig = JSON.stringify(config.twitch);
 
         const twitchConfig = config.twitch;
@@ -76,7 +76,12 @@ export class TwitchConnector {
             channels: [twitchConfig.channel]
           };
 
-          // TODO Merge Logins or choose if only main account is connected but not the bot
+          if (twitchConfig.token) {
+            tmiConfig.identity = {
+              username: twitchConfig.channel,
+              password: twitchConfig.token
+            };
+          }
 
           if (twitchConfig.bot?.enabled && twitchConfig.bot?.auth?.name && twitchConfig.bot?.auth?.token){
             tmiConfig.identity = {
@@ -94,6 +99,14 @@ export class TwitchConnector {
 
   public twitchEvents$(): Observable<TwitchEvent> {
     return this._receivedTwitchEvents.asObservable();
+  }
+
+  public tmiInstance(){
+    return this.tmiClient;
+  }
+
+  public getTwitchSettings (){
+    return this._currentTwitchConfig;
   }
 
   public disconnect() {

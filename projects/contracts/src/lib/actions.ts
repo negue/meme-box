@@ -1,4 +1,5 @@
 import {ScreenMediaOverridableProperies} from "./types";
+import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
 
 export const ACTIONS = {
   I_AM_OBS: 'I_AM_OBS',
@@ -71,10 +72,11 @@ export interface TriggerAction extends TriggerBase {
   repeatSecond?: number;
 
   overrides?: TriggerActionOverrides;
-
   useOverridesAsBase?: boolean;
 
   // soon there will be more "overrides" to everything
+
+  byTwitch?: AllTwitchEvents;
 }
 
 export interface TriggerActionUpdate extends TriggerBase {
@@ -82,6 +84,7 @@ export interface TriggerActionUpdate extends TriggerBase {
 }
 
 export enum ActionStateEnum {
+  Unset,
   Triggered,
   Active,
   Done

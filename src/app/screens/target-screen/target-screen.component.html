@@ -27,7 +27,7 @@ The Loaded Clips need to stay cached?
     <video #video *ngSwitchCase="2" class="media-clip"
            (canplay)="addLog('canplay', $event)"
            (canplaythrough)="addLog('canplaythrough', $event)"
-           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
+           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying();"
            (loadeddata)="addLog('loadeddata', $event)"
            (loadedmetadata)="addLog('loadedmetadata', $event)"
            (loadstart)="addLog('loadstart', $event); addToMap(entry.clip, video)"
@@ -40,7 +40,7 @@ The Loaded Clips need to stay cached?
            [volume]="entry.clip.volumeSetting / 100"
     ></video>
     <audio #audio *ngSwitchCase="1"  class="media-clip"
-           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
+           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying();"
            (loadstart)="addToMap(entry.clip, audio)"
            (play)="addLog('play', $event)"
            (playing)="addLog('playing', $event)"

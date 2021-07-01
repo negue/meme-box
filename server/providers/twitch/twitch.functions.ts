@@ -20,7 +20,8 @@ export function* getCommandsOfTwitchEvent(
       yield* returnAllCommandsByMessage(
         onlyActiveConfigs,
         twitchEvent.message,
-        twitchEvent.payload.userstate
+        twitchEvent.payload.userstate,
+        twitchEvent
       );
 
     } break;
@@ -30,7 +31,8 @@ export function* getCommandsOfTwitchEvent(
           && checkEventInRange(twitchEvent.payload.bits, twitchSetting)) {
           yield {
             command: twitchSetting,
-            tags: twitchEvent.payload.userstate
+            tags: twitchEvent.payload.userstate,
+            twitchEvent
           };
         }
       }
@@ -38,7 +40,8 @@ export function* getCommandsOfTwitchEvent(
       yield* returnAllCommandsByMessage(
         onlyActiveConfigs,
         twitchEvent.message,
-        twitchEvent.payload.userstate
+        twitchEvent.payload.userstate,
+        twitchEvent
       );
 
       break;
@@ -49,6 +52,7 @@ export function* getCommandsOfTwitchEvent(
           && checkEventInRange(twitchEvent.payload.viewers, twitchSetting)) {
           yield {
             command: twitchSetting,
+            twitchEvent
           };
         }
       }
@@ -70,6 +74,7 @@ function* returnAllCommandsByMessage (
   twitchSettingsList: Twitch[],
   message: string,
   chatUserState: ChatUserstate,
+  twitchEvent: AllTwitchEvents
 ) : IterableIterator<TwitchTriggerCommand> {
 
   let foundCommand: Twitch = null;
@@ -100,7 +105,8 @@ function* returnAllCommandsByMessage (
   if (foundCommand) {
     yield {
       command: foundCommand,
-      tags: chatUserState
+      tags: chatUserState,
+      twitchEvent
     };
   }
 }

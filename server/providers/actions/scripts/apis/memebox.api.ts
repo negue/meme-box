@@ -8,9 +8,9 @@ import {
 } from "@memebox/contracts";
 import {ActionActiveState} from "../../action-active-state";
 import {timeoutAsync} from "./sleep.api";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "../../../contracts";
-import { Persistence } from "../../../../persistence";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "../../../contracts";
+import {Persistence} from "../../../../persistence";
 import merge from 'lodash/merge';
 
 
@@ -23,7 +23,14 @@ export class ActionApi {
 
   }
 
-  trigger(overrides?: TriggerActionOverrides | undefined): Promise<void> {
+  async trigger(overrides?: TriggerActionOverrides | undefined): Promise<void> {
+    // if there is one already running
+
+    // todo add the current visibility it was trigggered with
+    // - to prevent waiting if its currently in toggle mode
+
+    // await this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
+
     this.memeboxApi.actionTriggerEventBus.triggerMedia({
       id: this.actionId,
       origin: TriggerClipOrigin.Scripts,
@@ -31,7 +38,7 @@ export class ActionApi {
       overrides
     });
 
-    return this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
+    await this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
   }
 }
 
@@ -64,6 +71,9 @@ export class MediaApi extends ActionApi {
       reset: () => void,
     }
   ) => Promise<void>, overrides?: TriggerActionOverrides | undefined) {
+    // if there is one already running
+    await this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
+
     const newOverrides = merge({}, overrides, {
         screenMedia: {
           visibility: VisibilityEnum.Toggle
