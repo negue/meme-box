@@ -76,7 +76,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   @HostListener('animationend', ['$event'])
   onAnimationEnd(event: any) {
-    console.info(this.currentState, 'animationend', event);
+    console.info(this.clipId, this.currentState, 'animationend', event);
     if (this.currentState === MediaState.ANIMATE_IN) {
       console.warn('Change to Visible');
       this.triggerState(MediaState.VISIBLE);
@@ -198,6 +198,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     ).subscribe(toShow => {
       if (toShow?.clip?.id === this.clipId) {
         if (this.clipVisibility === VisibilityEnum.Toggle) {
+          console.info('toggle - just add it to the queue');
           this.queueTrigger.next(toShow);
           return;
         }
@@ -336,7 +337,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.clipVisibility = this.currentCombinedClip.clipSetting.visibility ?? VisibilityEnum.Play;
 
     setTimeout(() => {
-      if (lastVisibility !== VisibilityEnum.Play) {
+      if (
+        lastVisibility === VisibilityEnum.Static
+        && this.clipVisibility !== VisibilityEnum.Static
+      ) {
         this.isVisible$.next(false);
       }
 
@@ -430,6 +434,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.ANIMATE_IN:
       {
+        console.warn('changing to ANIMATE_IN');
         this.startAnimation(this.selectedInAnimation, this.currentCombinedClip.clipSetting.animationInDuration);
 
         this.isVisible$.next(true);
@@ -438,6 +443,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.VISIBLE:
       {
+        console.warn('changing to VISIBLE');
         this.isVisible$.next(true);
         this.removeAnimation(this.selectedInAnimation);
         this.triggerComponentIsShown();
@@ -510,6 +516,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private cleanAllAnimationClasses() {
+    this.element.nativeElement.classList.remove('isAnimating');
+
     const elementToAnimate = this.getElementToAddAnimation();
 
     const currentAnimateClasses: string[] = [];
