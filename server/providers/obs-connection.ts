@@ -1,8 +1,9 @@
-import {Service} from "@tsed/di";
+import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "./contracts";
 import {Persistence} from "../persistence";
 import OBSWebSocket from "obs-websocket-js";
+import {NamedLogger} from "./named-logger";
 
 @Service()
 export class ObsConnection {
@@ -10,7 +11,8 @@ export class ObsConnection {
   private obsConnectionPromise: Promise<void>;
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    @UseOpts({name: 'ObsConnection'}) public logger: NamedLogger,
   ) {
     const obsConfig = _persistence.getConfig(false).obs;
 
@@ -21,12 +23,16 @@ export class ObsConnection {
       ? this.obsConnection.connect({
         address: obsConfig?.hostname,
         password: obsConfig?.password
-      })
+      }, error => this.logger.error(error))
       : Promise.resolve();
   }
 
   async getCurrentConnection() : Promise<OBSWebSocket> {
-    await this.obsConnectionPromise;
+    try {
+      await this.obsConnectionPromise;
+    } catch (e) {
+      this.logger.error('Error while connecting to OBS', e);
+    }
 
     return this.obsConnection
   }
