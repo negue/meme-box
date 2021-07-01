@@ -1,6 +1,9 @@
 import {ChatUserstate} from "tmi.js";
 import {MediaType} from "./media.types";
 import {TriggerAction} from "./actions";
+import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
+
+// TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
 export interface HasId {
   id: string;
@@ -251,6 +254,7 @@ export interface FileInfo {
 export interface TwitchTriggerCommand {
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
+  twitchEvent?: AllTwitchEvents
 }
 
 export enum TargetScreenType {

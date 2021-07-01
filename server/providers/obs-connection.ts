@@ -12,7 +12,7 @@ export class ObsConnection {
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence
   ) {
-    const obsConfig = _persistence.getConfig().obs;
+    const obsConfig = _persistence.getConfig(false).obs;
 
     const obsConfigExists = !!obsConfig?.hostname;
 

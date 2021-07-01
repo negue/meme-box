@@ -83,6 +83,8 @@ export class TwitchHandler {
           targetScreen: trigger.command.screenId,
           origin: TriggerClipOrigin.TwitchEvent,
           originId: trigger.command.id,
+
+          byTwitch: trigger.twitchEvent
         });
       }
     }
