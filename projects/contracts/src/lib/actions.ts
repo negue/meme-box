@@ -84,6 +84,7 @@ export interface TriggerActionUpdate extends TriggerBase {
 }
 
 export enum ActionStateEnum {
+  Unset,
   Triggered,
   Active,
   Done

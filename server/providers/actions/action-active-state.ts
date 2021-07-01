@@ -32,10 +32,38 @@ export class ActionActiveState {
     }
   }
 
-  public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {
-    console.info('Created a waitUntilDoneAsync - ', mediaId);
+  public isCurrentlyActive (mediaId: string, screenId?: string) {
+    const mediaInState = this.state[mediaId];
 
-    // TODO ONCE SCREEN STATE is available check if the target screen is visible / opened
+    if (!mediaInState) {
+      return false;
+    }
+
+    if (screenId) {
+      const screenExists = mediaInState[screenId];
+
+      if (!screenExists) {
+        return false;
+      }
+
+      return screenExists === ActionStateEnum.Active;
+    }
+
+    const values = Object.values(mediaInState)
+
+    if (values.length === 0) {
+      return false;
+    }
+
+    return values.includes(ActionStateEnum.Active);
+  }
+
+  public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {
+    if (!this.isCurrentlyActive(mediaId, screenId)) {
+      return Promise.resolve();
+    }
+
+    console.info('Created a waitUntilDoneAsync - ', mediaId);
 
     // first try
     return this.mediaStateEventBus.AllEvents$.pipe(
