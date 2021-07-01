@@ -434,21 +434,21 @@ export class Persistence {
     this.saveData();
   }
 
-  public getConfig(): Config {
+  public getConfig(replaceTokens = true): Config {
     const mediaFolder = CLI_OPTIONS.MEDIA_PATH ?? this.data.config.mediaFolder;
 
     const twitchConfig = cloneDeep(this.data.config.twitch);
-    if (twitchConfig.token) {
+    if (replaceTokens && twitchConfig.token) {
       twitchConfig.token = TOKEN_EXISTS_MARKER;
     }
 
-    if (twitchConfig.bot?.auth?.token) {
+    if (replaceTokens && twitchConfig.bot?.auth?.token) {
       twitchConfig.bot.auth.token = TOKEN_EXISTS_MARKER;
     }
 
     const obsConfig = (cloneDeep(this.data.config.obs) || {}) as ObsConfig;
 
-    if (obsConfig.password) {
+    if (replaceTokens && obsConfig.password) {
       obsConfig.password = TOKEN_EXISTS_MARKER;
     }
 
