@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
-import { Clip, MediaType, Screen, Tag } from "@memebox/contracts";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
+import {Clip, MediaType, Screen, Tag} from "@memebox/contracts";
 
 @Component({
   selector: "app-media-card",
@@ -25,6 +25,8 @@ export class MediaCardComponent {
 
   @Output()
   onDelete = new EventEmitter();
+
+  menuIsOpened = false;
 
   readonly MEDIA_TYPE = MediaType;
 

@@ -1,6 +1,21 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title [matTooltip]="media.name">{{media.name}}</mat-card-title>
+
+    <button mat-icon-button [matMenuTriggerFor]="menu"
+            aria-label="action context menu" class="hide_until_hover"
+            (menuOpened)="menuIsOpened = true"
+            (menuClosed)="menuIsOpened = false"
+            [class.isOpened]="menuIsOpened">
+      <mat-icon svgIcon="more_vert"></mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item
+              (click)="onDelete.emit()">
+        <mat-icon svgIcon="delete" color="warn"></mat-icon>
+        <span>Delete media</span>
+      </button>
+    </mat-menu>
   </mat-card-header>
 
   <div mat-card-image [ngSwitch]="media.type">
@@ -74,13 +89,5 @@
     <button mat-raised-button color="accent" (click)="onEdit.emit()">Edit</button>
     <button mat-button color="primary" (click)="onPreview.emit()">Preview</button>
 
-    <button mat-icon-button
-            matTooltip="Delete media"
-            aria-label="Delete media"
-            class="mc__actions-container__supplemental"
-            (click)="onDelete.emit()"
-    >
-      <mat-icon svgIcon="delete"></mat-icon>
-    </button>
   </mat-card-actions>
 </mat-card>

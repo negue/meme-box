@@ -16,6 +16,22 @@
       white-space: nowrap;
     }
   }
+
+  .hide_until_hover:not(:active):not(:hover):not(.isOpened) {
+    opacity: 0;
+  }
+
+  &:hover {
+    .hide_until_hover {
+      opacity: 1 !important;
+    }
+  }
+}
+
+.mat-icon-button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
 }
 
 .mediaInfo__preview__img {
@@ -57,6 +73,14 @@
       &:not(:first-child) {
         margin-right: 12px;
       }
+    }
+  }
+
+
+  ::ng-deep {
+    .mat-expansion-indicator {
+      // otherwise it looks weird when its opening/closing while rotating
+      height: 26px;
     }
   }
 }
