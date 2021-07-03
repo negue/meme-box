@@ -1,9 +1,8 @@
 import {NgModule} from "@angular/core";
-import {MediaEditComponent} from "./media-edit.component";
+import {MediaEditComponent, MediaEditDialogPayload} from "./media-edit.component";
 import {CommonModule} from "@angular/common";
 import {DialogContract} from "../dialog.contract";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {Clip} from "@memebox/contracts";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -56,12 +55,11 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
   ],
   providers: [],
 })
-export class MediaEditModule implements DialogContract<Partial<Clip>> {
+export class MediaEditModule implements DialogContract<MediaEditDialogPayload> {
   constructor(private dialog: MatDialog) {
   }
 
-  // TODO refactor to use only the ID?
-  public openDialog (payload: Partial<Clip>): MatDialogRef<any> {
+  public openDialog (payload: MediaEditDialogPayload): MatDialogRef<any> {
     const dialogRef = this.dialog.open(MediaEditComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',

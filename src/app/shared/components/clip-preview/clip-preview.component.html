@@ -16,7 +16,7 @@
     </ng-container>
     <ng-template #canShowIframe>
 
-      <iframe
+      <iframe *ngIf="clip.path"
         [style.pointer-events]="'none'"
         [src]="clip.path | safeurl"
       ></iframe>

@@ -63,6 +63,10 @@
         <ng-container *transloco="let t; read: 'common' ">
           {{t(mediGroup.groupName)}}
         </ng-container>
+
+        <button mat-icon-button (click)="addNewActionByType(mediGroup)">
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
       </div>
 
       <div class="mo__casual-overview__group__medias">

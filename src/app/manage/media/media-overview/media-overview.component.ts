@@ -11,6 +11,7 @@ import {distinctUntilChanged, map, shareReplay} from 'rxjs/operators';
 import {OverviewUiMode, OverviewUiService} from './overview-ui.service';
 import isEqual from 'lodash/isEqual';
 import {ConfigService} from "../../../state/config.service";
+import {MediGroup} from "./group-by-media-type.pipe";
 
 @Component({
   selector: 'app-media-overview',
@@ -76,7 +77,9 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   showDialog(clipInfo: Partial<Clip>): void {
-    this._dialog.showMediaEditDialog(clipInfo);
+    this._dialog.showMediaEditDialog({
+      actionToEdit: clipInfo
+    });
   }
 
   async onDelete(clipId: string) {
@@ -129,5 +132,15 @@ export class MediaOverviewComponent implements OnInit {
 
   onDuplicate(itemId: string) {
     this.service.duplicateAction(itemId);
+  }
+
+  addNewActionByType(mediGroup: MediGroup) {
+
+    this._dialog.showMediaEditDialog({
+      actionToEdit: null,
+      defaults: {
+        type: mediGroup.mediaType
+      }
+    });
   }
 }

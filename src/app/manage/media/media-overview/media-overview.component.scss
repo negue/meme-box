@@ -48,6 +48,8 @@
       background-color: var(--palette-background-background);
       margin-bottom: 0;
       padding-bottom: 16px;
+      display: flex;
+      align-items: center;
     }
 
     &__medias {

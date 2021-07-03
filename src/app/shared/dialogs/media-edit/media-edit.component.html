@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
+  {{ (actionToEdit?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
 
   <mat-checkbox class="mobile-checkbox"
                 [checked]="showOnMobile"
@@ -178,7 +178,7 @@
       </mat-form-field>
     </div>
 
-    <mat-form-field *ngIf="data?.id == null && form.value.type !== MediaType.Meta">
+    <mat-form-field *ngIf="actionToEdit?.id == null && form.value.type !== MediaType.Meta">
       <mat-select placeholder="Also add to this Screen:"
                   [(value)]="selectedScreenId">
         <mat-option value="">None</mat-option>
@@ -193,8 +193,8 @@
         <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
         <div *ngFor="let variable of currentHtml?.variablesConfig">
           <app-widget-variable-input [variableType]="variable.type" [label]="variable.name"
-                                      [value]="data.extended[variable.name]"
-                                      (valueChanged)="data.extended[variable.name] = $event; triggerHTMLRefresh()">
+                                      [value]="actionToEdit.extended[variable.name]"
+                                      (valueChanged)="actionToEdit.extended[variable.name] = $event; triggerHTMLRefresh()">
 
           </app-widget-variable-input>
         </div>
@@ -230,7 +230,7 @@
       </button>
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
-      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
+      <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
@@ -254,7 +254,7 @@
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
 
-      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
+      <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
@@ -282,8 +282,8 @@
 
         <div *ngFor="let variable of currentScript?.variablesConfig">
           <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
-                                     [value]="data.extended[variable.name] || variable.fallback"
-                                     (valueChanged)="data.extended[variable.name] = $event;">
+                                     [value]="actionToEdit.extended[variable.name] || variable.fallback"
+                                     (valueChanged)="actionToEdit.extended[variable.name] = $event;">
           </app-script-variable-input>
         </div>
     </div>
@@ -303,7 +303,7 @@
 
 <mat-dialog-actions class="two-columns">
   <div class="column">
-    ID: {{data.id}} <button mat-icon-button (click)="copyIdToClipboard()">
+    ID: {{actionToEdit.id}} <button mat-icon-button (click)="copyIdToClipboard()">
     <mat-icon svgIcon="content_copy" style="width: 1rem;
     height: 1rem;line-height: 1rem"></mat-icon>
   </button>
@@ -312,6 +312,6 @@
     <button mat-button mat-dialog-close>Cancel</button>
     <button (click)="save()"
             color="accent"
-            mat-raised-button>{{ data?.id ? 'Update' : 'Add' }}</button>
+            mat-raised-button>{{ actionToEdit?.id ? 'Update' : 'Add' }}</button>
   </div>
 </mat-dialog-actions>

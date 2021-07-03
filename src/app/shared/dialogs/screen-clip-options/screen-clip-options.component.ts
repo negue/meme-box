@@ -146,7 +146,9 @@ export class ScreenClipOptionsComponent implements OnInit {
       map(clipMap => clipMap[this.data.clipId]),
       take(1)
     ).subscribe(clipInfo => {
-      this.dialogService.showMediaEditDialog(clipInfo);
+      this.dialogService.showMediaEditDialog({
+        actionToEdit: clipInfo
+      });
     });
   }
 }
