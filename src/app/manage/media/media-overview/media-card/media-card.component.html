@@ -11,11 +11,17 @@
     </button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item
-              (click)="onDelete.emit()">
-        <mat-icon svgIcon="delete" color="warn"></mat-icon>
-        <span>Delete media</span>
+              (click)="onDuplicate.emit()">
+        <mat-icon svgIcon="queue"></mat-icon>
+        <span>Duplicate</span>
       </button>
-    </mat-menu>
+      <mat-divider></mat-divider>
+    <button mat-menu-item
+            (click)="onDelete.emit()">
+      <mat-icon svgIcon="delete" color="warn"></mat-icon>
+      <span>Delete media</span>
+    </button>
+  </mat-menu>
   </mat-card-header>
 
   <div mat-card-image [ngSwitch]="media.type">

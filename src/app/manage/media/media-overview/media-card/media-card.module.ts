@@ -11,6 +11,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatMenuModule} from "@angular/material/menu";
+import {MatDividerModule} from "@angular/material/divider";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {MatMenuModule} from "@angular/material/menu";
     MatTooltipModule,
     MatExpansionModule,
     MatChipsModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDividerModule
   ]
 })
 export class MediaCardModule {

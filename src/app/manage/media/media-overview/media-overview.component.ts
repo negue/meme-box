@@ -126,4 +126,8 @@ export class MediaOverviewComponent implements OnInit {
   toggleViewModes() {
     this._uiService.toggleCurrentUiMode();
   }
+
+  onDuplicate(itemId: string) {
+    this.service.duplicateAction(itemId);
+  }
 }

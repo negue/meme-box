@@ -397,6 +397,23 @@ export class AppService {
     ).subscribe();
   }
 
+  public duplicateAction(actionId: string) {
+    // get the action byId
+    const action = this.appStore.getValue().clips[actionId];
+
+    // clone it && get a new ID
+    const newAction: Clip = {
+      ...action,
+      id: uuid(),
+      name: `Cloned from: "${action.name}"`
+    };
+
+
+    // save it
+    this.addOrUpdateClip(newAction);
+  }
+
+
   public async checkVersionUpdateAvailable (): Promise<UpdateState> {
     try {
       const newVersionResponse = await this.http.get<UpdateState>(`${API_BASE}${ENDPOINTS.STATE}/update_available`)

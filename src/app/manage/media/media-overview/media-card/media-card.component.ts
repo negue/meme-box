@@ -26,6 +26,9 @@ export class MediaCardComponent {
   @Output()
   onDelete = new EventEmitter();
 
+  @Output()
+  onDuplicate = new EventEmitter();
+
   menuIsOpened = false;
 
   readonly MEDIA_TYPE = MediaType;
