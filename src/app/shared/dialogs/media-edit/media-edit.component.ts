@@ -46,6 +46,8 @@ import {
   ScriptConfig
 } from "@memebox/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
+import {SnackbarService} from "../../../core/services/snackbar.service";
+import {Clipboard} from "@angular/cdk/clipboard";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -70,7 +72,7 @@ interface MediaTypeButton {
   name: string;
   icon: string;
 }
-
+// TODO REFACTOR!!
 // TODO maybe use "TYPES WITH PATH"
 // TODO extract these informs to the media dictionary?
 const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta, MediaType.Script];
@@ -190,7 +192,9 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     private appService: AppService,
     private appQuery: AppQueries,
     private dialogService: DialogService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private clipboard: Clipboard,
+    private snackbar: SnackbarService
   ) {
     this.data = Object.assign({}, INITIAL_CLIP, {
       // maybe helps for writeable propeties?! TODO refactor
@@ -491,6 +495,12 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
       this.currentScript = scriptConfig;
       this.cd.detectChanges();
+    }
+  }
+
+  async copyIdToClipboard() {
+    if (this.clipboard.copy(this.data.id)) {
+      this.snackbar.normal("The Action ID was copied to the clipboard");
     }
   }
 }

@@ -303,7 +303,10 @@
 
 <mat-dialog-actions class="two-columns">
   <div class="column">
-    ID: {{data.id}}
+    ID: {{data.id}} <button mat-icon-button (click)="copyIdToClipboard()">
+    <mat-icon svgIcon="content_copy" style="width: 1rem;
+    height: 1rem;line-height: 1rem"></mat-icon>
+  </button>
   </div>
   <div class="column" align="end" >
     <button mat-button mat-dialog-close>Cancel</button>

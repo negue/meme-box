@@ -24,6 +24,7 @@ import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ScriptVariableInputModule} from "../../components/script-variable-input/script-variable-input.module";
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import {ScriptVariableInputModule} from "../../components/script-variable-input/
     TranslocoModule,
     MatExpansionModule,
     CodemirrorModule,
-    ScriptVariableInputModule
+    ScriptVariableInputModule,
+    ClipboardModule
   ],
   providers: [],
 })
@@ -63,7 +65,8 @@ export class MediaEditModule implements DialogContract<Partial<Clip>> {
     const dialogRef = this.dialog.open(MediaEditComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',
-      maxWidth: '96vw'
+      maxWidth: '96vw',
+      autoFocus: false
     });
 
     return dialogRef;
