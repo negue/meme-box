@@ -5,6 +5,7 @@
   ::ng-deep {
     .mat-card-header-text, .mat-card-title {
       overflow: hidden;
+      margin-left: 0 !important;
     }
 
     .mat-card-image {

@@ -49,6 +49,12 @@
       padding-bottom: 16px;
       display: flex;
       align-items: center;
+
+      .mo__gt__amount {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
     }
 
     &__medias {
