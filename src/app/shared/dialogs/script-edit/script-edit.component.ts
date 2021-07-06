@@ -12,6 +12,8 @@ import {downloadFile} from "@gewd/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
 import {DialogService} from "../dialog.service";
 import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
+import {EditorState} from "@codemirror/state";
+import {ClipAssigningMode} from "@memebox/contracts";
 
 @Component({
   selector: 'app-script-edit',
@@ -139,5 +141,19 @@ export class ScriptEditComponent implements OnInit {
 
   openTutorialMarkdown() {
     this.dialogService.showMarkdownFile(SCRIPT_TUTORIAL);
+  }
+
+  async addActionAtCursor(editorState: EditorState) {
+    // console.info({ editorState });
+
+    const actionId = await this.dialogService.showClipSelectionDialog({
+      mode: ClipAssigningMode.Single,
+      dialogTitle: 'Action',
+      showMetaItems: true
+    });
+
+    const codeToAdd = `const myActionVar = memebox.getAction('${actionId}');\n`;
+
+    console.info({codeToAdd});
   }
 }
