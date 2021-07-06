@@ -2,6 +2,8 @@
 
 :host {
   width: 100%;
+  position: relative;
+  display: block;
 
   ::ng-deep .mat-checkbox-background {
     background-color: transparent !important;
@@ -24,7 +26,9 @@
 }
 
 .eventInfo__checkbox {
-  margin-top: 1rem;
+  position: absolute;
+  right: 0;
+  top: 0;
   margin-bottom: 1rem;
 
   div {
@@ -44,6 +48,7 @@
 
 .eventInfo__titleRow__name {
   margin-bottom: 0;
+  width: 100%;
 }
 
 .eventInfo__chip {

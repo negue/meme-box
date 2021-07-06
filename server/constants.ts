@@ -11,6 +11,12 @@ export interface MarkdownDialogPayload {
   githubName: string;
 }
 
+export const SCRIPT_TUTORIAL: MarkdownDialogPayload =
+    {
+      name: 'Media Type: Scripts',
+      githubName: 'scripts.md'
+    };
+
 export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
   {
     name: 'Getting Started',
@@ -24,10 +30,7 @@ export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
     name: 'Media Type: Meta',
     githubName: 'meta_media.md'
   },
-  {
-    name: 'Media Type: Scripts',
-    githubName: 'scripts.md'
-  },
+  SCRIPT_TUTORIAL,
   {
     name: 'Screen / Clip Advanced Settings',
     githubName: 'screen_clip_advanced_settings.md'

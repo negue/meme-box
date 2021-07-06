@@ -4,6 +4,7 @@ import groupBy from 'lodash/groupBy';
 
 export interface MediGroup {
   groupName: string;
+  mediaType: MediaType;
   medias: Clip[];
 }
 
@@ -21,10 +22,15 @@ export class GroupByMediaTypePipe implements PipeTransform {
 
     const groups = groupBy(medias, m => validTypes.includes(m.type) ? m.type : MediaType.Invalid);
 
-    return Object.keys(groups).map(gKey => ({
-      groupName: MEDIA_TYPE_INFORMATION[groups[gKey][0].type]?.translationKey ?? 'invalid',
-      medias: groups[gKey]
-    }));
+    return Object.keys(groups).map(gKey => {
+      const mediaType = groups[gKey][0].type;
+
+      return {
+        mediaType,
+        groupName: MEDIA_TYPE_INFORMATION[mediaType]?.translationKey ?? 'invalid',
+        medias: groups[gKey]
+      };
+    });
   }
 
 }

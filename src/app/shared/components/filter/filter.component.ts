@@ -57,4 +57,11 @@ export class FilterComponent implements OnInit {
 
     this.selected.emit(this.selectedArray);
   }
+
+  clearFilter($event: MouseEvent) {
+    $event.stopPropagation();
+
+    this.selectedArray.splice(0, this.selectedArray.length);
+    this.selected.emit(this.selectedArray);
+  }
 }

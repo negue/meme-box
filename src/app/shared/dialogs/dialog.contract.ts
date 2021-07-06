@@ -5,6 +5,10 @@ export interface DialogContract<TPayload> {
   openDialog(payload: TPayload): MatDialogRef<any>;
 }
 
+export interface DialogData<TPayload> {
+  data: TPayload;
+}
+
 export interface CustomHtmlDialogPayload {
   mediaId: string;
   name: string;

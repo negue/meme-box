@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   isDynamicIframeVariableValid,
@@ -6,12 +6,14 @@ import {
   ScriptConfig,
   ScriptVariable
 } from "@memebox/utils";
-import {BehaviorSubject} from "rxjs";
-import {debounceTime} from "rxjs/operators";
 import {CustomScriptDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {downloadFile} from "@gewd/utils";
-import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
+import {jsCodemirror} from "../../../core/codemirror.extensions";
+import {DialogService} from "../dialog.service";
+import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
+import {EditorState} from "@codemirror/state";
+import {ClipAssigningMode} from "@memebox/contracts";
 
 @Component({
   selector: 'app-script-edit',
@@ -26,15 +28,7 @@ export class ScriptEditComponent implements OnInit {
   @ViewChild('enablePreviewRefresh', {static: true})
   public autoRefreshCheckbox: MatCheckbox;
 
-  public iframeContentSubject$ = new BehaviorSubject(null);
-  public iframeContent$ = this.iframeContentSubject$.pipe(
-    debounceTime(400)
-  );
-
-
-  public cssExtensions = cssCodemirror;
   public jsExtensions = jsCodemirror;
-  public htmlExtensions = htmlCodemirror;
 
   private initDone = false;
   private newVarCounter = 0;
@@ -42,7 +36,7 @@ export class ScriptEditComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CustomScriptDialogPayload,
     private dialogRef: MatDialogRef<any>,
-    private cd: ChangeDetectorRef
+    private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +50,6 @@ export class ScriptEditComponent implements OnInit {
       ...payload
     };
     this.variablesList = Object.values(this.workingValue.variablesConfig);
-    this.iframeContentSubject$.next(this.workingValue);
   }
 
   save() {
@@ -88,10 +81,7 @@ export class ScriptEditComponent implements OnInit {
     const enableSubjectRefresh = force || this.autoRefreshCheckbox?.checked;
 
     if (this.initDone && enableSubjectRefresh) {
-      this.iframeContentSubject$.next({
-        ...this.workingValue,
-        variablesConfig: this.variablesList
-      });
+
     }
   }
 
@@ -147,5 +137,23 @@ export class ScriptEditComponent implements OnInit {
     console.info({jsonData, dataStr});
 
     downloadFile(this.data.name+'-script.json',dataStr);
+  }
+
+  openTutorialMarkdown() {
+    this.dialogService.showMarkdownFile(SCRIPT_TUTORIAL);
+  }
+
+  async addActionAtCursor(editorState: EditorState) {
+    // console.info({ editorState });
+
+    const actionId = await this.dialogService.showClipSelectionDialog({
+      mode: ClipAssigningMode.Single,
+      dialogTitle: 'Action',
+      showMetaItems: true
+    });
+
+    const codeToAdd = `const myActionVar = memebox.getAction('${actionId}');\n`;
+
+    console.info({codeToAdd});
   }
 }

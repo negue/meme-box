@@ -10,6 +10,7 @@ export const APP_ICONS = [
   'circle',
   'check_circle',
   'chevron_right',
+  'clear_all',
   'code',
   'collage',
   'content_copy',

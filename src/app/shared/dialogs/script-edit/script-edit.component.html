@@ -10,37 +10,23 @@
 <mat-dialog-content class="mat-typography">
 
 <div class="dialog-content">
-  <mat-accordion [multi]="true">
+  <mat-tab-group>
+    <mat-tab label="Variables">
+      <app-hint-panel>
+        You can define variables which can be set outside of the script. Useful if you want to share a script with others.
+      </app-hint-panel>
 
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Custom Variables
-        </mat-panel-title>
-        <mat-panel-description>
+      <app-variables-config [variablesList]="variablesList"
+                            (onEditVariable)="markForCheck()"
+                            (onDeleteVariable)="deleteVariable($event)"
+                            (onAddNewVariable)="addNewVariable()">
 
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-        <app-variables-config [variablesList]="variablesList"
-                              (onEditVariable)="markForCheck()"
-                              (onDeleteVariable)="deleteVariable($event)"
-                              (onAddNewVariable)="addNewVariable()">
-
-        </app-variables-config>
-    </mat-expansion-panel>
-
-
-
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Bootstrap Script
-        </mat-panel-title>
-        <mat-panel-description>
-          <div *ngIf="workingValue.bootstrapScript">Bootstrap is used</div>
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+      </app-variables-config>
+    </mat-tab>
+    <mat-tab label="Bootstrap Script">
+      <app-hint-panel>
+        If your script needs functions or objects that shouldn't be re-evaluated on each script call.
+      </app-hint-panel>
 
       <mat-form-field  floatLabel="always">
         <mat-label>Bootstrap Script</mat-label>
@@ -54,26 +40,34 @@
           </gewd-codemirror>
         </gewd-custom-form-control>
       </mat-form-field>
-    </mat-expansion-panel>
-  </mat-accordion>
+    </mat-tab>
+    <mat-tab label="Script to Execute">
+      <!--
+      Tools: <button mat-raised-button (click)="addActionAtCursor(codemirror.editorState)">Add Action at cursor</button>
+      -->
+      <gewd-codemirror [value]="workingValue.executionScript" #codemirror
+                       [codemirrorExtensions]="jsExtensions"
+                       (changed)="workingValue.executionScript = $event; markForCheck();">
 
-
-<div class="iframe-preview ">
-  Execution Script:
-  <gewd-codemirror [value]="workingValue.executionScript"
-                   [codemirrorExtensions]="jsExtensions"
-                   (changed)="workingValue.executionScript = $event; markForCheck();">
-
-  </gewd-codemirror>
-</div>
-
+      </gewd-codemirror>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="save()" cdkFocusInitial
-          color="accent"
-          mat-raised-button>Update</button>
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <button mat-flat-button (click)="openTutorialMarkdown()">
+      <mat-icon svgIcon="help"></mat-icon>
+
+      Open Help
+  </button>
+  </div>
+  <div class="column" align="end" >
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial
+            color="accent"
+            mat-raised-button>Update</button>
+  </div>
 </mat-dialog-actions>

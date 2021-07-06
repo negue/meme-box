@@ -41,6 +41,9 @@
       ],
       "@memebox/version": [
         "src/version_info.json"
+      ],
+      "@memebox/ui-components": [
+        "projects/ui-components/src/projects"
       ]
     }
   },
