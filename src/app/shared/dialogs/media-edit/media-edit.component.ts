@@ -509,7 +509,8 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     const dialogResult = await this.dialogService.showScriptEdit({
       mediaId: this.actionToEdit.id,
       name: this.actionToEdit.name,
-      scriptConfig
+      scriptConfig,
+      actionType: this.actionToEdit.type
     });
 
     if (dialogResult) {
