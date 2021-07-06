@@ -1,6 +1,7 @@
 import {Service} from "@tsed/di";
 import {ActionTriggerEventBus} from "../../action-trigger-event.bus";
 import {
+  MediaType,
   ScreenMediaOverridableProperies,
   TriggerActionOverrides,
   TriggerClipOrigin,
@@ -12,6 +13,9 @@ import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../../contracts";
 import {Persistence} from "../../../../persistence";
 import merge from 'lodash/merge';
+import {ScriptApiBase} from "./script-api.base";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 
 export class ActionApi {
@@ -106,15 +110,25 @@ export type ActionSelector = string  | {
   byTags: string[]
 }
 
-export class MemeboxApi {
+export class MemeboxApi implements ScriptApiBase {
+  private _destroy$ = new Subject();
+
+  // for permanent scripts
+  public onAction$ = this.actionTriggerEventBus.AllTriggerEvents$.pipe(
+    takeUntil(this._destroy$)
+  );
+
   constructor(
     public actionTriggerEventBus: ActionTriggerEventBus,
     public actionActiveState: ActionActiveState,
-    public scriptId: string
+    public scriptId: string,
+    public scriptType: MediaType
   ) {
-
+    // Only Permanent Scripts as allowed to subscribe to Events
+    if (scriptType === MediaType.Script) {
+      this._destroy$.next();
+    }
   }
-
 
   getAction(actionId: string): ActionApi {
     return new ActionApi(this, actionId);
@@ -122,6 +136,11 @@ export class MemeboxApi {
 
   getMedia(mediaid: string, screenId?: string): MediaApi {
     return new MediaApi(this, mediaid, screenId);
+  }
+
+  dispose(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 }
 
@@ -136,11 +155,12 @@ export class MemeboxApiFactory {
   ) {
   }
 
-  getApiFor(scriptId: string): MemeboxApi {
+  getApiFor(scriptId: string, scriptType: MediaType): MemeboxApi {
     return new MemeboxApi(
       this.actionTriggerEventBus,
       this.actionActiveState,
-      scriptId
+      scriptId,
+      scriptType
     );
   }
 }

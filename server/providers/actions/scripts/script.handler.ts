@@ -101,7 +101,7 @@ export class ScriptHandler implements ActionStoreAdapter {
         this._vm,
         this,
         script,
-        this.memeboxApiFactory.getApiFor(script.id),
+        this.memeboxApiFactory.getApiFor(script.id, script.type),
         this.logger,
         obsApi,
         this.twitchApi
@@ -132,8 +132,12 @@ export class ScriptHandler implements ActionStoreAdapter {
   }
 
   private async refreshCompiledScriptsAndStartPermanents() {
-    // TODO go through current scripts and call "dispose" on them
-    // ^ which hopefully unsubscribes from events
+    // go through all scripts and dispose the APIs/subscriptions
+    if (this._compiledScripts) {
+      for (const scriptContext of this._compiledScripts.values()) {
+        scriptContext.dispose();
+      }
+    }
 
     this._compiledScripts = new Map<string, ScriptContext>();
 

@@ -162,4 +162,8 @@ export class ScriptContext {
 
     await this.scriptToCall(scriptArguments);
   }
+
+  public dispose(): void {
+    this.memeboxApi.dispose();
+  }
 }
