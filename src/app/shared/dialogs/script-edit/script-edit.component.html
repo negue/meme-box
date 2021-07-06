@@ -54,8 +54,22 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="save()" cdkFocusInitial
-          color="accent"
-          mat-raised-button>Update</button>
+
+</mat-dialog-actions>
+
+
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <button mat-flat-button (click)="openTutorialMarkdown()">
+      <mat-icon svgIcon="help"></mat-icon>
+
+      Open Help
+  </button>
+  </div>
+  <div class="column" align="end" >
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial
+            color="accent"
+            mat-raised-button>Update</button>
+  </div>
 </mat-dialog-actions>
