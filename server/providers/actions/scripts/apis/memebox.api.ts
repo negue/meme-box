@@ -13,8 +13,7 @@ import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../../contracts";
 import {Persistence} from "../../../../persistence";
 import merge from 'lodash/merge';
-import {ScriptApiBase} from "./script-api.base";
-import {Subject} from "rxjs";
+import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
 
 
@@ -110,8 +109,7 @@ export type ActionSelector = string  | {
   byTags: string[]
 }
 
-export class MemeboxApi implements ScriptApiBase {
-  private _destroy$ = new Subject();
+export class MemeboxApi extends DisposableBase {
 
   // for permanent scripts
   public onAction$ = this.actionTriggerEventBus.AllTriggerEvents$.pipe(
@@ -124,6 +122,8 @@ export class MemeboxApi implements ScriptApiBase {
     public scriptId: string,
     public scriptType: MediaType
   ) {
+    super();
+
     // Only Permanent Scripts as allowed to subscribe to Events
     if (scriptType === MediaType.Script) {
       this._destroy$.next();
@@ -136,11 +136,6 @@ export class MemeboxApi implements ScriptApiBase {
 
   getMedia(mediaid: string, screenId?: string): MediaApi {
     return new MediaApi(this, mediaid, screenId);
-  }
-
-  dispose(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
   }
 }
 

@@ -2,7 +2,6 @@ import {Service} from "@tsed/di";
 import {ActionTriggerHandler} from "./actions/action-trigger.handler";
 import {TwitchBootstrap} from "./twitch/twitch.bootstrap";
 import {WebsocketBootstrap} from "./websockets/websocket.bootstrap";
-import {ObsConnection} from "./obs-connection";
 import {ScriptHandler} from "./actions/scripts/script.handler";
 
 /**
@@ -16,10 +15,7 @@ export class BootstrapServices {
     mediaTriggerHandler: ActionTriggerHandler,
     _twitchBootstrap: TwitchBootstrap,
     _websocketBootstrap: WebsocketBootstrap,
-    private obsConnection : ObsConnection,
-    private scriptHandler: ScriptHandler
+    scriptHandler: ScriptHandler
   ) {
-    // connect at the beginning so that scripts don't have to wait on the first call
-    obsConnection.getCurrentConnection();
   }
 }

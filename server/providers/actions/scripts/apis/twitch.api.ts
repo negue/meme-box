@@ -1,11 +1,9 @@
 import {TwitchConnector} from "../../../twitch/twitch.connector";
-import {ScriptApiBase} from "./script-api.base";
-import {Subject} from "rxjs";
+import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
 import {MediaType} from "@memebox/contracts";
 
-export class TwitchApi implements ScriptApiBase {
-  private _destroy$ = new Subject();
+export class TwitchApi extends DisposableBase {
 
   // for permanent scripts
   public onEvent$ = this.twitchConnector.twitchEvents$().pipe(
@@ -16,6 +14,8 @@ export class TwitchApi implements ScriptApiBase {
     private twitchConnector: TwitchConnector,
     private scriptType: MediaType
   ) {
+    super();
+
     // Only Permanent Scripts as allowed to subscribe to Events
     if (scriptType === MediaType.Script) {
       this._destroy$.next();
@@ -27,10 +27,5 @@ export class TwitchApi implements ScriptApiBase {
     const settings = this.twitchConnector.getTwitchSettings();
 
     tmiInstance.say(settings.channel, message);
-  }
-
-  dispose(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
   }
 }

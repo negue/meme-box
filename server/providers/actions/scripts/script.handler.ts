@@ -59,7 +59,9 @@ export class ScriptHandler implements ActionStoreAdapter {
       return this.obsApi;
     }
 
-    const obsWebsocket = await this.obsConnection.getCurrentConnection()
+    const obsWebsocket = await this.obsConnection.getCurrentConnection();
+
+    this.obsConnection.tryConnecting();
 
     return this.obsApi = new ObsApi(this.obsConnection, obsWebsocket);
   }
