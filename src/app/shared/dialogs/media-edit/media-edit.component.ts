@@ -73,11 +73,24 @@ interface MediaTypeButton {
   name: string;
   icon: string;
 }
-// TODO REFACTOR!!
+// TODO REFACTOR!!!!
 // TODO maybe use "TYPES WITH PATH"
 // TODO extract these informs to the media dictionary?
-const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta, MediaType.Script];
-const MEDIA_TYPES_WITHOUT_PLAYTIME = [MediaType.Meta, MediaType.WidgetTemplate, MediaType.Script];
+// TODO hide tag selection for types that cant use it anyway
+
+const MEDIA_TYPES_WITHOUT_PATH = [
+  MediaType.Widget,
+  MediaType.WidgetTemplate,
+  MediaType.Meta,
+  MediaType.Script,
+  MediaType.PermanentScript
+];
+const MEDIA_TYPES_WITHOUT_PLAYTIME = [
+  MediaType.Meta,
+  MediaType.WidgetTemplate,
+  MediaType.Script,
+  MediaType.PermanentScript
+];
 const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 export interface MediaEditDialogPayload {
@@ -222,7 +235,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
       this.executeHTMLRefresh();
     }
 
-    if (this.actionToEdit.type === MediaType.Script) {
+    if ([MediaType.Script, MediaType.PermanentScript].includes(this.actionToEdit.type)) {
       this.currentScript = clipDataToScriptConfig(this.actionToEdit);
     }
 
