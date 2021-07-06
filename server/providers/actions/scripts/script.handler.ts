@@ -20,7 +20,6 @@ import {TwitchApi} from "./apis/twitch.api";
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
   private obsApi: ObsApi;
-  private twitchApi: TwitchApi;
 
   private _compiledScripts = new Map<string, ScriptContext>();
 
@@ -52,7 +51,6 @@ export class ScriptHandler implements ActionStoreAdapter {
       this.refreshCompiledScriptsAndStartPermanents();
     })
 
-    this.twitchApi = new TwitchApi(twitchConnector);
     this.refreshCompiledScriptsAndStartPermanents();
   }
 
@@ -104,7 +102,7 @@ export class ScriptHandler implements ActionStoreAdapter {
         this.memeboxApiFactory.getApiFor(script.id, script.type),
         this.logger,
         obsApi,
-        this.twitchApi
+        new TwitchApi(this.twitchConnector, script.type)
       );
 
       try {

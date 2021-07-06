@@ -165,5 +165,6 @@ export class ScriptContext {
 
   public dispose(): void {
     this.memeboxApi.dispose();
+    this.twitchApi.dispose();
   }
 }
