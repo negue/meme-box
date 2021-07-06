@@ -3,6 +3,7 @@ import {ActionTriggerHandler} from "./actions/action-trigger.handler";
 import {TwitchBootstrap} from "./twitch/twitch.bootstrap";
 import {WebsocketBootstrap} from "./websockets/websocket.bootstrap";
 import {ObsConnection} from "./obs-connection";
+import {ScriptHandler} from "./actions/scripts/script.handler";
 
 /**
  * This file is used to bootstrap all services that "just" do some work
@@ -16,6 +17,7 @@ export class BootstrapServices {
     _twitchBootstrap: TwitchBootstrap,
     _websocketBootstrap: WebsocketBootstrap,
     private obsConnection : ObsConnection,
+    private scriptHandler: ScriptHandler
   ) {
     // connect at the beginning so that scripts don't have to wait on the first call
     obsConnection.getCurrentConnection();

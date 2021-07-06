@@ -1,6 +1,6 @@
 import {Service, UseOpts} from "@tsed/di";
 import {VM} from "vm2";
-import {ActionStateEnum, Clip, TriggerAction} from "@memebox/contracts";
+import {ActionStateEnum, Clip, MediaType, TriggerAction} from "@memebox/contracts";
 import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../contracts";
@@ -27,7 +27,8 @@ export class ScriptHandler implements ActionStoreAdapter {
   // TODO / check can it run multiple longer-scripts at once?
   private _vm = new VM({
     sandbox: {
-    }
+    },
+    eval: false
   });
 
   constructor(
@@ -43,14 +44,16 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     private twitchConnector: TwitchConnector
   ) {
+
     _persistence.dataUpdated$().subscribe(() => {
       // TODO get updated Path to know what kind of state needs to be refilled
       // for example the compiled scripts
 
-      this._compiledScripts = new Map<string, ScriptContext>();
+      this.refreshCompiledScriptsAndStartPermanents();
     })
 
     this.twitchApi = new TwitchApi(twitchConnector);
+    this.refreshCompiledScriptsAndStartPermanents();
   }
 
   public async getObsApi() : Promise<ObsApi> {
@@ -126,6 +129,20 @@ export class ScriptHandler implements ActionStoreAdapter {
       mediaId: script.id,
       state: ActionStateEnum.Done
     });
+  }
+
+  private async refreshCompiledScriptsAndStartPermanents() {
+    // TODO go through current scripts and call "dispose" on them
+    // ^ which hopefully unsubscribes from events
+
+    this._compiledScripts = new Map<string, ScriptContext>();
+
+    // start each permanent script after another
+    for (const action of this._persistence.listClips()) {
+      if (action.type === MediaType.PermanentScript) {
+        await this.handleScript(action, null);
+      }
+    }
   }
 }
 
