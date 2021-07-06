@@ -1,6 +1,6 @@
 import {Service, UseOpts} from "@tsed/di";
 import {VM} from "vm2";
-import {ActionStateEnum, Clip, TriggerAction} from "@memebox/contracts";
+import {ActionStateEnum, Clip, MediaType, TriggerAction} from "@memebox/contracts";
 import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../contracts";
@@ -20,14 +20,14 @@ import {TwitchApi} from "./apis/twitch.api";
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
   private obsApi: ObsApi;
-  private twitchApi: TwitchApi;
 
   private _compiledScripts = new Map<string, ScriptContext>();
 
   // TODO / check can it run multiple longer-scripts at once?
   private _vm = new VM({
     sandbox: {
-    }
+    },
+    eval: false
   });
 
   constructor(
@@ -43,14 +43,15 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     private twitchConnector: TwitchConnector
   ) {
+
     _persistence.dataUpdated$().subscribe(() => {
       // TODO get updated Path to know what kind of state needs to be refilled
       // for example the compiled scripts
 
-      this._compiledScripts = new Map<string, ScriptContext>();
+      this.refreshCompiledScriptsAndStartPermanents();
     })
 
-    this.twitchApi = new TwitchApi(twitchConnector);
+    this.refreshCompiledScriptsAndStartPermanents();
   }
 
   public async getObsApi() : Promise<ObsApi> {
@@ -58,7 +59,9 @@ export class ScriptHandler implements ActionStoreAdapter {
       return this.obsApi;
     }
 
-    const obsWebsocket = await this.obsConnection.getCurrentConnection()
+    const obsWebsocket = await this.obsConnection.getCurrentConnection();
+
+    this.obsConnection.tryConnecting();
 
     return this.obsApi = new ObsApi(this.obsConnection, obsWebsocket);
   }
@@ -98,10 +101,10 @@ export class ScriptHandler implements ActionStoreAdapter {
         this._vm,
         this,
         script,
-        this.memeboxApiFactory.getApiFor(script.id),
+        this.memeboxApiFactory.getApiFor(script.id, script.type),
         this.logger,
         obsApi,
-        this.twitchApi
+        new TwitchApi(this.twitchConnector, script.type)
       );
 
       try {
@@ -126,6 +129,24 @@ export class ScriptHandler implements ActionStoreAdapter {
       mediaId: script.id,
       state: ActionStateEnum.Done
     });
+  }
+
+  private async refreshCompiledScriptsAndStartPermanents() {
+    // go through all scripts and dispose the APIs/subscriptions
+    if (this._compiledScripts) {
+      for (const scriptContext of this._compiledScripts.values()) {
+        scriptContext.dispose();
+      }
+    }
+
+    this._compiledScripts = new Map<string, ScriptContext>();
+
+    // start each permanent script after another
+    for (const action of this._persistence.listClips()) {
+      if (action.type === MediaType.PermanentScript) {
+        await this.handleScript(action, null);
+      }
+    }
   }
 }
 

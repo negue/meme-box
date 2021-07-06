@@ -178,7 +178,7 @@
       </mat-form-field>
     </div>
 
-    <mat-form-field *ngIf="actionToEdit?.id == null && form.value.type !== MediaType.Meta">
+    <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
       <mat-select placeholder="Also add to this Screen:"
                   [(value)]="selectedScreenId">
         <mat-option value="">None</mat-option>
@@ -205,7 +205,7 @@
   <!-- Preview of a Media -->
   <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
        [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
-       [class.script]="MediaType.Script === form.value.type"
+       [class.script]="[MediaType.Script, MediaType.PermanentScript].includes(form.value.type)"
   >
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
@@ -272,7 +272,7 @@
 </ng-container>
     </div>
 
-    <div *ngSwitchCase="MediaType.Script">
+    <div *ngSwitchCase="MediaType.Script" >
 
      <button mat-raised-button color="primary" (click)="editScript()">
         Edit Script + Config
@@ -286,6 +286,24 @@
                                      (valueChanged)="actionToEdit.extended[variable.name] = $event;">
           </app-script-variable-input>
         </div>
+    </div>
+
+
+
+    <div *ngSwitchCase="MediaType.PermanentScript" >
+
+      <button mat-raised-button color="primary" (click)="editScript()">
+        Edit Script + Config
+      </button>
+
+      <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
+
+      <div *ngFor="let variable of currentScript?.variablesConfig">
+        <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
+                                   [value]="actionToEdit.extended[variable.name] || variable.fallback"
+                                   (valueChanged)="actionToEdit.extended[variable.name] = $event;">
+        </app-script-variable-input>
+      </div>
     </div>
 
     <!-- All others => AppClipType -->

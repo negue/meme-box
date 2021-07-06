@@ -9,6 +9,7 @@ import {NamedLogger} from "../../named-logger";
 import {LoggerApi} from "./apis/logger.api";
 import {ObsApi} from "./apis/obs.api";
 import {TwitchApi} from "./apis/twitch.api";
+import {CanDispose} from "./apis/disposableBase";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -39,7 +40,7 @@ type ExecutionScript = (
   payload: ExecutionScriptPayload
 ) => Promise<void>;
 
-export class ScriptContext {
+export class ScriptContext implements CanDispose {
   scriptConfig: ScriptConfig;
 
   // API Properties
@@ -161,5 +162,11 @@ export class ScriptContext {
     };
 
     await this.scriptToCall(scriptArguments);
+  }
+
+  public dispose(): void {
+    this.memeboxApi.dispose();
+    this.twitchApi.dispose();
+    this.obsApi.dispose();
   }
 }
