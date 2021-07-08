@@ -8,6 +8,7 @@ import {
   Dictionary,
   MediaType,
   Twitch,
+  TwitchEventFields,
   TwitchEventTypes,
   TwitchTypesArray,
   UnassignedFilterEnum
@@ -60,6 +61,36 @@ const TWITCH_LEVELS: TwitchLevelEntry[] = [
   }
 ];
 
+const TwitchEventFields: TwitchEventFields = {
+  [TwitchEventTypes.message]: {
+    fields: {}
+  },
+  [TwitchEventTypes.raid]: {
+    fields: {
+      minValue: { enable: true, placeholder: "min_viewers_in_raid" },
+      maxValue: { enable: true, placeholder: "max_viewers_in_raid" },
+    }
+  },
+  [TwitchEventTypes.bits]: {
+    fields: {
+      minValue: { enable: true, placeholder: "min_bits_given" },
+      maxValue: { enable: true, placeholder: "max_bits_given" },
+    }
+  },
+  [TwitchEventTypes.ban]: {
+    fields: {
+    }
+  },
+  [TwitchEventTypes.subscription]: {
+    fields: {
+    }
+  },
+  [TwitchEventTypes.gift]: {
+    fields: {
+    }
+  }
+}
+
 @Component({
   selector: 'app-twitch-edit',
   templateUrl: './twitch-edit.component.html',
@@ -75,6 +106,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     contains: "",
     minAmount: undefined,
     maxAmount: undefined,
+    response: undefined,
     cooldown: [undefined, Validators.max(1000*60*60*10)]
   });
 
@@ -84,6 +116,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   twitchEventTypes = TwitchEventTypes;
 
   selectedMediaId$ = new BehaviorSubject('');
+
+  twitchEventFields = TwitchEventFields;
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
   selectedMedia$ = combineLatest([

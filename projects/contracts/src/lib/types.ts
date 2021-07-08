@@ -134,11 +134,23 @@ export interface ScreenViewEntry extends Screen {
 
 export enum TwitchEventTypes {
   message = 'message',
-  sub = 'sub',
+  follow = 'follow',
   bits = 'bits',
   raid = 'raid',
   host = 'host',
-  channelPoints = 'channelPoints'
+  channelPoints = 'channelPoints',
+  ban = 'ban',
+  subscription = "subscription",
+  gift = "gift"
+}
+
+export interface TwitchEventFields {
+  [event:string]: {
+    fields: {
+      minValue?: { enable: boolean, placeholder?: string},
+      maxValue?: { enable: boolean, placeholder?: string},
+    }
+  }
 }
 
 export interface TimedClip extends HasId, HasClipId, HasTargetScreenId {

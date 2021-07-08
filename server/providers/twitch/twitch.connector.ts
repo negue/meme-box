@@ -1,11 +1,19 @@
 import * as tmi from 'tmi.js';
-import {ChatUserstate, Options} from 'tmi.js';
+import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, startWith} from 'rxjs/operators';
 import {Twitch, TwitchConfig, TwitchEventTypes, TwitchTriggerCommand} from '@memebox/contracts';
 import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
-import {TwitchChatMessage, TwitchCheerMessage, TwitchEvent, TwitchRaidedEvent} from "./twitch.connector.types";
+import {
+  TwitchBanEvent,
+  TwitchChatMessage,
+  TwitchCheerMessage,
+  TwitchEvent,
+  TwitchGiftEvent,
+  TwitchRaidedEvent,
+  TwitchSubEvent
+} from "./twitch.connector.types";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {Persistence} from "../../persistence";
 import {PERSISTENCE_DI} from "../contracts";
@@ -168,6 +176,117 @@ export class TwitchConnector {
       this._receivedTwitchEvents.next(new TwitchRaidedEvent({
         channel, username, viewers
       }));
+    });
+
+    //Reason is being returned as null even when one is provided when banning someone
+    this.tmiClient.on('ban', (channel: string, username:string, reason:string) => {
+      this._receivedTwitchEvents.next(new TwitchBanEvent({
+        username, reason
+      }));
+    });
+
+    this.tmiClient.on('anongiftpaidupgrade', (channel: string, username: string, userState: Userstate) => {
+      const twitchSubEvent = new TwitchSubEvent({
+        username,
+        userState,
+
+        methods: null,
+        message: '',
+        months: 1,
+        shouldShareStreak: false,
+        cumulativeMonths: 1,
+        gifter: null,
+        subtype: "anongiftpaidupgrade"
+      });
+
+      this._receivedTwitchEvents.next(twitchSubEvent);
+    });
+
+    this.tmiClient.on('giftpaidupgrade', (channel: string, username: string, sender: string, userState: Userstate) => {
+      const twitchSubEvent = new TwitchSubEvent({
+        username,
+        userState,
+
+        methods: null,
+        message: '',
+        months: 1,
+        shouldShareStreak: false,
+        cumulativeMonths: 1,
+        gifter: sender,
+        subtype: "giftpaidupgrade"
+      });
+
+      this._receivedTwitchEvents.next(twitchSubEvent);
+    });
+
+    this.tmiClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods : SubMethods) => {
+      const twitchSubEvent = new TwitchSubEvent({
+        username,
+        userState,
+
+        methods,
+        message,
+        months,
+        shouldShareStreak: userState["msg-param-should-share-streak"],
+        cumulativeMonths: ~~userState["msg-param-cumulative-months"],
+        gifter: null,
+        subtype: "resub"
+      });
+
+      this._receivedTwitchEvents.next(twitchSubEvent);
+    });
+
+    this.tmiClient.on('subgift', (channel: string, username:string, months:number, recipient: string, methods : SubMethods, userState: Userstate) => {
+      const twitchSubEvent = new TwitchGiftEvent({
+        gifter: username,
+        userState,
+
+        methods,
+        subtype: "subgift",
+        streakMonths: months,
+        gifts: months,
+        recipientId: userState["msg-param-recipient-id"],
+        recipientUserName: recipient,
+        recipientDisplayName: userState["msg-param-recipient-display-name"],
+        totalGifts: ~~userState["msg-param-sender-count"]
+      });
+
+      this._receivedTwitchEvents.next(twitchSubEvent);
+    });
+
+    this.tmiClient.on('submysterygift', (channel: string, username: string, numberOfSubs: number, methods: SubMethods, userState: Userstate) => {
+      const twitchSubEvent = new TwitchGiftEvent({
+        gifter: username,
+        userState,
+
+        methods,
+        gifts: numberOfSubs,
+        subtype: "submysterygift",
+        streakMonths: 0,
+        recipientId: null,
+        recipientUserName: null,
+        recipientDisplayName: null,
+        totalGifts: ~~userState["msg-param-sender-count"]
+      });
+
+      this._receivedTwitchEvents.next(twitchSubEvent);
+    });
+
+    this.tmiClient.on('subscription', (channel: string, username: string, methods: SubMethods, message: string, userState: Userstate) => {
+      const twitchSubEvent = new TwitchSubEvent({
+        username,
+        userState,
+
+        methods,
+        message,
+        months: 1,
+        shouldShareStreak: false,
+        cumulativeMonths: 1,
+        gifter: null,
+        subtype: "subscription"
+      });
+
+      this._receivedTwitchEvents.next(twitchSubEvent);
     });
   }
 

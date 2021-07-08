@@ -26,10 +26,12 @@ export const OPEN_FILES_PATH = `/files`;
 
 export const TwitchTypesArray = [
   // TwitchEventTypes.follow,
-  // TwitchEventTypes.sub,
   TwitchEventTypes.bits,
   // TwitchEventTypes.channelPoints,
   // TwitchEventTypes.host,
   TwitchEventTypes.message,
   TwitchEventTypes.raid,
+  TwitchEventTypes.ban,
+  TwitchEventTypes.subscription,
+  TwitchEventTypes.gift
 ];

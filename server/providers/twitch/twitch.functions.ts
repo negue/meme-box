@@ -111,10 +111,6 @@ function* returnAllCommandsByMessage (
   }
 }
 
-interface TwitchEventOptions {
-  amount: number
-}
-
 export function getLevelOfTags(userState: tmi.Userstate): string[] {
   const levels = ['user'];
 
