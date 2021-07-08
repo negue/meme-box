@@ -123,13 +123,8 @@ export enum TwitchEventTypes {
   host = 'host',
   channelPoints = 'channelPoints',
   ban = 'ban',
-  allSubEvents = "allSubEvents",
-  anonGiftPaidUpgrade = "anonGiftPaidUpgrade",
-  giftPaidUpgrade = "giftPaidUpgrade",
-  resub = "resub",
-  subGift = "subGift",
-  subMysteryGift = "subMysteryGift",
-  subscription = "subscription"
+  subscription = "subscription",
+  gift = "gift"
 }
 
 export interface TwitchEventFields {
