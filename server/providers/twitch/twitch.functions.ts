@@ -2,7 +2,6 @@ import {Twitch, TwitchEventTypes, TwitchTriggerCommand} from "@memebox/contracts
 import * as tmi from "tmi.js";
 import {ChatUserstate} from "tmi.js";
 import {AllTwitchEvents} from "./twitch.connector.types";
-import { SubMethods, Userstate } from 'tmi.js';
 
 declare module 'tmi.js' {
   export interface Badges {
@@ -110,20 +109,6 @@ function* returnAllCommandsByMessage (
       twitchEvent
     };
   }
-}
-
-interface TwitchEventOptions {
-  amount?: number,
-  username?: string,
-  reason?: string,
-  sender?: string,
-  userState?: Userstate,
-  months?: number,
-  message?:string,
-  methods?: SubMethods,
-  recipient?: string,
-  numberOfSubs?: number,
-  viewers?:number
 }
 
 export function getLevelOfTags(userState: tmi.Userstate): string[] {

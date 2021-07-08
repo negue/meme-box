@@ -169,7 +169,6 @@ export interface Twitch extends HasId, HasClipId, HasTargetScreenId {
   roles: string[]; // maybe enum
   minAmount?: number;
   maxAmount?: number;
-  response?:string;
 
   cooldown?: number;
 

@@ -44,7 +44,7 @@
             <mat-label>{{twitchEventFields[form.value.event].fields.minValue?.placeholder}}</mat-label>
             <input autocomplete="off"
                    formControlName="minAmount"
-                   placeholder="{{twitchEventFields[form.value.event].fields.minValue?.placeholder}}"
+                   [placeholder]="twitchEventFields[form.value.event].fields.minValue?.placeholder"
                    matInput>
           </mat-form-field>
 
@@ -52,7 +52,7 @@
             <mat-label>{{twitchEventFields[form.value.event].fields.maxValue?.placeholder}}</mat-label>
             <input autocomplete="off"
                    formControlName="maxAmount"
-                   placeholder="{{twitchEventFields[form.value.event].fields.maxValue?.placeholder}}"
+                   [placeholder]="twitchEventFields[form.value.event].fields.maxValue?.placeholder"
                    matInput>
           </mat-form-field>
         </div>
