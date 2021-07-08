@@ -7,7 +7,7 @@ export enum MediaType {
   Widget = 4,
   Script = 5,
 
-
+  PermanentScript = 98,
   WidgetTemplate = 99,
   Meta = 100
 }
@@ -76,6 +76,14 @@ export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = 
     icon: "code",
     sortOrder: 7,
     mediaType: MediaType.Script
+  },
+  [MediaType.PermanentScript]: {
+    translationKey: "mediaType.permanent_script",
+    labelFallback: "Permanent Script", // todo rename the property, add a "translationKey" to it
+    className: "",
+    icon: "code",
+    sortOrder: 8,
+    mediaType: MediaType.PermanentScript
   },
   [MediaType.WidgetTemplate]: {
     translationKey: "mediaType.widgetTemplate",

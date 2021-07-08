@@ -23,10 +23,12 @@ describe('GroupByMediaTypePipe', () => {
     expect(pipe.transform(clips as Clip[])).toEqual([
       {
         groupName: 'mediaType.image',
+        mediaType: 0,
         medias: [clips[2]]
       },
       {
         groupName: 'mediaType.audio',
+        mediaType: 1,
         medias: [clips[0], clips[1]]
       }
     ] as MediGroup[]);
@@ -53,6 +55,7 @@ describe('GroupByMediaTypePipe', () => {
     expect(pipe.transform(clips as Clip[])).toEqual([
       {
         groupName: 'invalid',
+        mediaType: -10,
         medias: clips
       }
     ] as MediGroup[]);

@@ -1,5 +1,9 @@
 import {ChatUserstate} from "tmi.js";
 import {MediaType} from "./media.types";
+import {TriggerAction} from "./actions";
+import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
+
+// TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
 export interface HasId {
   id: string;
@@ -9,6 +13,12 @@ export interface HasClipId {
   clipId: string;
 }
 
+
+export interface HasTargetScreenId {
+  screenId?: string;
+}
+
+// TODO replace by Record<TKey, TValue>
 export interface Dictionary<T> {
   [key: string]: T
 }
@@ -19,8 +29,13 @@ export enum MetaTriggerTypes {
   AllDelay
 }
 
-// TODO RENAME? (Media) Clip
-export interface Clip extends HasId {
+export interface ActionOverridableProperies {
+  // Empty for now
+}
+
+// TODO RENAME? (Media) Clip -- new name ACTIONS
+// - because media is visible and actions are just the scripts and stuff
+export interface Clip extends HasId, ActionOverridableProperies {
   name: string;
   previewUrl?: string;   // TODO generate dataurl as preview
   volumeSetting?: number; //  XX / 100 in percent
@@ -41,7 +56,6 @@ export interface Clip extends HasId {
 
   fromTemplate?: string; // GUID / Clip.Id of the Template
 }
-
 
 export interface Screen extends HasId {
   name: string;
@@ -74,7 +88,7 @@ export enum HideAfterType {
   Repeats // maybe?
 }
 
-export interface ScreenClip extends HasId {
+export interface ScreenMediaOverridableProperies {
   visibility: VisibilityEnum;
   loop?: boolean;
 
@@ -91,9 +105,6 @@ export interface ScreenClip extends HasId {
   transform?: string;
   imgFit?: string;
 
-  hideAfter?: HideAfterType;
-  hideAfterValue?: any;
-
   animationIn?: string | null;
   animationOut?: string | null;
 
@@ -103,7 +114,13 @@ export interface ScreenClip extends HasId {
   zIndex?: number;
 
   customCss?: string;
+}
 
+export interface ScreenClip extends HasId, ScreenMediaOverridableProperies {
+  hideAfter?: HideAfterType;
+  hideAfterValue?: any;
+
+  // settings view only
   arrangeLock?: {
     size: boolean;
     position: boolean;
@@ -136,14 +153,13 @@ export interface TwitchEventFields {
   }
 }
 
-export interface TimedClip extends HasId, HasClipId {
+export interface TimedClip extends HasId, HasClipId, HasTargetScreenId {
   // id => has nothing to do with clipID
-  screenId?: string;
   everyXms: number;
   active: boolean;
 }
 
-export interface Twitch extends HasId, HasClipId {
+export interface Twitch extends HasId, HasClipId, HasTargetScreenId {
   name: string;
   // screenId:      string; // TODO
   event: TwitchEventTypes;
@@ -202,13 +218,21 @@ export interface Config {
   mediaFolder: string;
   twitch: TwitchConfig;
   enableVersionCheck?: boolean;
+  obs: ObsConfig;
 }
 
 export interface TwitchConfig {
   channel: string;
   enableLog?: boolean;
-  bot?: TwitchBotConfig
+  bot?: TwitchBotConfig;
+  token: string;
 }
+
+export interface ObsConfig {
+  hostname: string;
+  password?: string;
+}
+
 
 export interface TwitchBotConfig {
   enabled: boolean;
@@ -243,6 +267,7 @@ export interface FileInfo {
 export interface TwitchTriggerCommand {
   command?: Twitch; // Config-Object
   tags?: ChatUserstate;
+  twitchEvent?: AllTwitchEvents
 }
 
 export enum TargetScreenType {
@@ -261,5 +286,12 @@ export interface FileResult {
 export interface CombinedClip {
   clip: Clip;
   clipSetting: ScreenClip;
+  originalClipSetting?: ScreenClip;
+  triggerPayload?: TriggerAction;
   backgroundColor?: string;
+}
+
+export interface Response {
+  ok: boolean;
+  id?: string;
 }

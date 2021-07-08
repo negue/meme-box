@@ -9,19 +9,20 @@ export const ENDPOINTS = {
   OBS_CLIPS: 'clips',
   ERROR: 'error',
   CONFIG: 'config',
+  OPEN: 'open',
   STATE: 'state',
 
   TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',
   TWITCH_TRIGGER: 'twitch_events/trigger',
   NETWORK_LIST: 'network_ip_list',
-  CONFIG_TWITCH_CHANNEL: 'config/twitchChannel',
-  CONFIG_TWITCH_BOT_INTEGRATION: 'config/twitchBotIntegration',
-  CONFIG_TWITCH_BOT: 'config/twitchBot',
-  CONFIG_TWITCH_LOG: 'config/twitchLog',
-  CONFIG_CUSTOM_PORT_PATH: 'config/customPort'
 }
 
+export const CONFIG_TWITCH = '/twitch';
+export const CONFIG_OBS = '/obs';
+export const CONFIG_CUSTOM_PORT_PATH = '/customPort';
+export const OPEN_CONFIG_PATH = `/config`;
+export const OPEN_FILES_PATH = `/files`;
 
 export const TwitchTypesArray = [
   // TwitchEventTypes.follow,

@@ -1,0 +1,73 @@
+<h2 mat-dialog-title class="title-wrapper">
+  Edit Script for "{{data.name}}"
+
+  <button mat-raised-button (click)="exportScript()">Export</button>
+  <button mat-raised-button (click)="fileSelection.click()" >Import</button>
+  <input type="file" style="display: none"
+         #fileSelection accept="application/json"
+         (change)="onFileInputChanged($event)">
+</h2>
+<mat-dialog-content class="mat-typography">
+
+<div class="dialog-content">
+  <mat-tab-group [selectedIndex]="data.actionType === 5 ? 2 : 1">
+    <mat-tab label="Variables">
+      <app-hint-panel>
+        You can define variables which can be set outside of the script. Useful if you want to share a script with others.
+      </app-hint-panel>
+
+      <app-variables-config [variablesList]="variablesList"
+                            (onEditVariable)="markForCheck()"
+                            (onDeleteVariable)="deleteVariable($event)"
+                            (onAddNewVariable)="addNewVariable()">
+
+      </app-variables-config>
+    </mat-tab>
+    <mat-tab label="Bootstrap Script" *ngIf="data.actionType === 5">
+      <app-hint-panel>
+        If your script needs functions or objects that shouldn't be re-evaluated on each script call.
+      </app-hint-panel>
+
+      <mat-form-field  floatLabel="always">
+        <mat-label>Bootstrap Script</mat-label>
+
+        <gewd-custom-form-control [value]="workingValue.bootstrapScript"
+        >
+          <gewd-codemirror [value]="workingValue.bootstrapScript"
+                           [codemirrorExtensions]="jsExtensions"
+                           (changed)="workingValue.bootstrapScript = $event; markForCheck();">
+
+          </gewd-codemirror>
+        </gewd-custom-form-control>
+      </mat-form-field>
+    </mat-tab>
+    <mat-tab label="Script to Execute">
+      <!--
+      Tools: <button mat-raised-button (click)="addActionAtCursor(codemirror.editorState)">Add Action at cursor</button>
+      -->
+      <gewd-codemirror [value]="workingValue.executionScript" #codemirror
+                       [codemirrorExtensions]="jsExtensions"
+                       (changed)="workingValue.executionScript = $event; markForCheck();">
+
+      </gewd-codemirror>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <button mat-flat-button (click)="openTutorialMarkdown()">
+      <mat-icon svgIcon="help"></mat-icon>
+
+      Open Help
+  </button>
+  </div>
+  <div class="column" align="end" >
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()" cdkFocusInitial
+            color="accent"
+            mat-raised-button>Update</button>
+  </div>
+</mat-dialog-actions>

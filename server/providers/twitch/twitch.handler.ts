@@ -3,13 +3,13 @@ import {TwitchConnector} from "./twitch.connector";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
-import {Dictionary, TwitchTriggerCommand} from "@memebox/contracts";
+import {Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
 import {TwitchLogger} from "./twitch.logger";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {ExampleTwitchCommandsSubject} from "../../shared";
-import {MediaTriggerEventBus} from "../media-trigger.event-bus";
+import {ActionTriggerEventBus} from "../actions/action-trigger-event.bus";
 
 @Injectable({
   type: ProviderType.SERVICE,
@@ -22,7 +22,7 @@ export class TwitchHandler {
     private _twitchConnector: TwitchConnector,
     private _twitchLogger: TwitchLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private _mediaTriggerEventBus: MediaTriggerEventBus
+    private _mediaTriggerEventBus: ActionTriggerEventBus
   ) {
 
     _twitchConnector
@@ -35,11 +35,7 @@ export class TwitchHandler {
 
         for (const command of foundCommandsIterator) {
           // todo add the correct twitchevent-types!
-          this.handle({
-            // event: TwitchEventTypes.message,
-            command,
-            tags: {}
-          });
+          this.handle(command);
         }
       })
 
@@ -71,12 +67,24 @@ export class TwitchHandler {
 
       const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
 
+      this._twitchLogger.log({
+        isBroadcaster,
+        foundLevels,
+        trigger
+      });
 
       if (allowedToTrigger) {
         this.cooldownDictionary[trigger.command.id] = Date.now();
 
+        this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
+
         this._mediaTriggerEventBus.triggerMedia({
-          id: trigger.command.clipId
+          id: trigger.command.clipId,
+          targetScreen: trigger.command.screenId,
+          origin: TriggerClipOrigin.TwitchEvent,
+          originId: trigger.command.id,
+
+          byTwitch: trigger.twitchEvent
         });
       }
     }

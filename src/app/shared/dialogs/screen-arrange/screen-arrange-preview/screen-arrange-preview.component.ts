@@ -10,7 +10,7 @@ import {
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import {Clip, CombinedClip, PositionEnum, Screen} from '@memebox/contracts';
+import {CombinedClip, PositionEnum, Screen} from '@memebox/contracts';
 import {DragResizeMediaComponent} from '../drag-resize-media/drag-resize-media.component';
 import {AppService} from '../../../../state/app.service';
 import {FormBuilder, FormControl} from '@angular/forms';
@@ -68,7 +68,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
 
   actionsExpanded = false;
 
-  trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
+  trackByClip: TrackByFunction<CombinedClip> = (index, item) => item.clip.id;
 
   get isDragEnabled(): boolean {
     return !this.currentSelectedClip?.clipSetting?.arrangeLock?.position;

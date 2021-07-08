@@ -1,6 +1,11 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {DynamicIframeContent, DynamicIframeVariable, isDynamicIframeVariableValid} from "@memebox/utils";
+import {
+  DynamicIframeContent,
+  DynamicIframeVariable,
+  isDynamicIframeVariableValid,
+  NOT_ALLOWED_WIDGET_VARIABLE_NAMES
+} from "@memebox/utils";
 import {BehaviorSubject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
 import type {CustomHtmlDialogPayload} from "../dialog.contract";
@@ -72,7 +77,7 @@ export class WidgetEditComponent implements OnInit {
     const variablesObject = {};
 
     for (const value of this.variablesList) {
-      const variableNameValid = isDynamicIframeVariableValid(value.name);
+      const variableNameValid = isDynamicIframeVariableValid(value.name, NOT_ALLOWED_WIDGET_VARIABLE_NAMES);
 
       if (!variableNameValid.ok){
         alert(variableNameValid.message);

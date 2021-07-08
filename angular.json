@@ -24,7 +24,7 @@
                 "output": "/assets/prism/"
               },
               {
-                "glob": "prism-plugin-(inline-color|bracket-match).worker-func.js",
+                "glob": "prism-plugin-@(inline-color|bracket-match).worker-func.js",
                 "input": "./node_modules/@gewd/components/highlight-editor",
                 "output": "/assets/prism/"
               },
@@ -292,6 +292,46 @@
             "tsConfig": [
               "projects/state/tsconfig.lib.json",
               "projects/state/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "ui-components": {
+      "projectType": "library",
+      "root": "projects/ui-components",
+      "sourceRoot": "projects/ui-components/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ui-components/tsconfig.lib.json",
+            "project": "projects/ui-components/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ui-components/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ui-components/src/test.ts",
+            "tsConfig": "projects/ui-components/tsconfig.spec.json",
+            "karmaConfig": "projects/ui-components/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ui-components/tsconfig.lib.json",
+              "projects/ui-components/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

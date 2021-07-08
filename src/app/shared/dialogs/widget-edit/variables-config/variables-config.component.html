@@ -20,12 +20,12 @@
         </mat-form-field>
       </td>
       <td>
-        <app-dynamic-variable-input [variableType]="customVariable.type"
+        <app-widget-variable-input [variableType]="customVariable.type"
                                     label="Fallback Value"
                                     [value]="customVariable.fallback"
                                     (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
 
-        </app-dynamic-variable-input>
+        </app-widget-variable-input>
 
 
         <mat-checkbox *ngIf="customVariable.type === 'textarea'"

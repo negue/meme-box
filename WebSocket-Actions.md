@@ -8,27 +8,11 @@
   ```ts
   {
      id: GUID,
-     targetOBS: GUID // optional
+     targetScreen: GUID // optional
      repeatX: number // optional
      repeatSeconds: number // optional
   }
   ```
-  
-  - optional on a target obs URL
-  - optional "repeat for X times" (open issue)
-  - optional repeat until X seconds have passed
-  
-- play while hold , stop on release
-
-  `START_CLIP` -  `STOP CLIP`
-
-  ```ts
-  {
-     id: GUID   
-  }
-  ```
-
-  
 
 - preview of the clip? background
 
@@ -50,7 +34,7 @@
 
 - listens to events
 
-  `TRIGGER_CLIP`  - `START_CLIP`  -  `STOP CLIP`
+  `TRIGGER_CLIP`
 
 - cache files ?
 

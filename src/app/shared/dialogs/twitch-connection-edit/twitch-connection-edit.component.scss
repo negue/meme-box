@@ -1,0 +1,59 @@
+.config-grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  grid-template-rows: min-content;
+
+  gap: 1rem 1rem;
+  grid-auto-rows: min-content;
+  grid-auto-flow: row;
+}
+
+
+
+
+.twitchSetting__input[readonly] {
+  opacity: 0.3;
+}
+
+.twitchSetting__button {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.mat-form-field {
+  display: block;
+}
+
+.twitchSetting__input[readonly] {
+  opacity: 0.3;
+}
+
+.twitchSetting__button {
+  margin-top: 2rem;
+}
+
+.mat-form-field {
+  display: block;
+}
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  margin-top: 1.5rem;
+}
+
+:host {
+  display: block;
+  min-height: 465px;
+}
+
+
+.twitchSetting__textarea {
+  min-height: 7rem;
+}
+
+:host ::ng-deep mat-tab-body {
+  min-height: 260px;
+}
+
+.twitchSetting__token-button {
+  margin-bottom: 1rem;
+}

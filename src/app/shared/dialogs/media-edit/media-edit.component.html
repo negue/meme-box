@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  {{ (data?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
+  {{ (actionToEdit?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
 
   <mat-checkbox class="mobile-checkbox"
                 [checked]="showOnMobile"
@@ -22,7 +22,7 @@
       </mat-error>
     </mat-form-field>
 
-    <div class="action-buttons" *transloco="let t; read: '$common$'">
+    <div class="action-buttons" *transloco="let t; read: 'common'">
       <button *ngFor="let button of mediaTypeList"
               mat-raised-button
 
@@ -178,7 +178,7 @@
       </mat-form-field>
     </div>
 
-    <mat-form-field *ngIf="data?.id == null && form.value.type !== MediaType.Meta">
+    <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
       <mat-select placeholder="Also add to this Screen:"
                   [(value)]="selectedScreenId">
         <mat-option value="">None</mat-option>
@@ -190,12 +190,13 @@
 
     <ng-container *ngIf="form.value.type === MediaType.Widget">
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
-        <div *ngFor="let variable of currentHtml.variablesConfig">
-          <app-dynamic-variable-input [variableType]="variable.type" [label]="variable.name"
-                                      [value]="data.extended[variable.name]"
-                                      (valueChanged)="data.extended[variable.name] = $event; triggerHTMLRefresh()">
+        <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
+        <div *ngFor="let variable of currentHtml?.variablesConfig">
+          <app-widget-variable-input [variableType]="variable.type" [label]="variable.name"
+                                      [value]="actionToEdit.extended[variable.name]"
+                                      (valueChanged)="actionToEdit.extended[variable.name] = $event; triggerHTMLRefresh()">
 
-          </app-dynamic-variable-input>
+          </app-widget-variable-input>
         </div>
       </ng-container>
     </ng-container>
@@ -204,7 +205,7 @@
   <!-- Preview of a Media -->
   <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
        [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
-       [class.script]="MediaType.Script === form.value.type"
+       [class.script]="[MediaType.Script, MediaType.PermanentScript].includes(form.value.type)"
   >
     <!-- Meta => AppClipType or list all assign clips by tags -->
     <div *ngSwitchCase="MediaType.Meta">
@@ -229,7 +230,7 @@
       </button>
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
-      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
+      <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
@@ -253,7 +254,7 @@
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
 
-      <app-dynamic-iframe [mediaId]="data.id" #dynamicIframeComponent
+      <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
                           [content]="currentHtml" class="preview-box">
 
       </app-dynamic-iframe>
@@ -271,15 +272,42 @@
 </ng-container>
     </div>
 
-    <gewd-codemirror *ngSwitchCase="MediaType.Script"
-                     [value]="data.extended['script'] || ''"
-                     [codemirrorExtensions]="jsExtensions"
-                     (changed)="data.extended['script'] = $event;">
+    <div *ngSwitchCase="MediaType.Script" >
 
-    </gewd-codemirror>
+     <button mat-raised-button color="primary" (click)="editScript()">
+        Edit Script + Config
+     </button>
+
+      <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
+
+        <div *ngFor="let variable of currentScript?.variablesConfig">
+          <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
+                                     [value]="actionToEdit.extended[variable.name] || variable.fallback"
+                                     (valueChanged)="actionToEdit.extended[variable.name] = $event;">
+          </app-script-variable-input>
+        </div>
+    </div>
+
+
+
+    <div *ngSwitchCase="MediaType.PermanentScript" >
+
+      <button mat-raised-button color="primary" (click)="editScript()">
+        Edit Script + Config
+      </button>
+
+      <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
+
+      <div *ngFor="let variable of currentScript?.variablesConfig">
+        <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
+                                   [value]="actionToEdit.extended[variable.name] || variable.fallback"
+                                   (valueChanged)="actionToEdit.extended[variable.name] = $event;">
+        </app-script-variable-input>
+      </div>
+    </div>
 
     <!-- All others => AppClipType -->
-    <gewd-auto-scale width="500" height="500"
+    <gewd-auto-scale [width]="500" [height]="500"
                      class="preview-box"
                      *ngSwitchDefault>
       <app-clip-preview [clip]="form.value"
@@ -293,12 +321,15 @@
 
 <mat-dialog-actions class="two-columns">
   <div class="column">
-    ID: {{data.id}}
+    ID: {{actionToEdit.id}} <button mat-icon-button (click)="copyIdToClipboard()">
+    <mat-icon svgIcon="content_copy" style="width: 1rem;
+    height: 1rem;line-height: 1rem"></mat-icon>
+  </button>
   </div>
   <div class="column" align="end" >
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="save()"
-          color="accent"
-          mat-raised-button>{{ data?.id ? 'Update' : 'Add' }}</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()"
+            color="accent"
+            mat-raised-button>{{ actionToEdit?.id ? 'Update' : 'Add' }}</button>
   </div>
 </mat-dialog-actions>

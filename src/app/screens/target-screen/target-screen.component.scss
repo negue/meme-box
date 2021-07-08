@@ -21,6 +21,10 @@ video, img, iframe, app-dynamic-iframe {
   height: var(--clip-setting-height, 100%);
   transform: var(--clip-setting-transform) !important;
 
+  &:not(.isAnimating) {
+    transition: all 1s;  // TODO override transition time
+  }
+
   .media-clip-holder {
     position: relative;
   }

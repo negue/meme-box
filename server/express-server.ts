@@ -1,15 +1,12 @@
-// @ts-ignore
 import express, {Express} from 'express';
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
   CLIP_ID_ENDPOINT,
-  CONFIG_ENDPOINT_PREFIX,
   DANGER_ENDPOINT,
   FILE_BY_ID_ENDPOINT,
   FILE_ENDPOINT,
   FILES_ENDPOINT,
-  FILES_OPEN_ENDPOINT,
   LOG_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
   STATE_ENDPOINT,
@@ -21,8 +18,6 @@ import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 
-// @ts-ignore
-import open from 'open';
 import {TAG_ROUTES} from "./rest-endpoints/tags";
 import {getAppRootPath, getFiles, isInElectron, mapFileInformations} from "./file.utilts";
 import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
@@ -31,7 +26,6 @@ import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
 import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
-import {CONFIG_ROUTES} from "./rest-endpoints/config";
 import {STATE_ROUTES} from "./rest-endpoints/state";
 import {SERVER_URL} from "@memebox/contracts";
 
@@ -59,6 +53,7 @@ app.get(`${API_PREFIX}/debugPaths`, (req, res) => {
   });
 })
 
+// todo split up endpoints
 
 app.get(API_PREFIX, (req,res) => {
   res.send(PersistenceInstance.fullState());
@@ -66,6 +61,7 @@ app.get(API_PREFIX, (req,res) => {
 
 // TODO Add CONTSTANTS Values
 // TODO better to register apis?
+// TODO EXTRACT Controllers as  TsED Controllers
 /**
  * Clips API
  */
@@ -103,21 +99,11 @@ app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 app.use(LOG_ENDPOINT, LOG_ROUTES);
 app.use(TWITCH_ENDPOINT, TWITCH_ROUTES);
 app.use(TIMED_ENDPOINT, TIMER_ROUTES);
-app.use(CONFIG_ENDPOINT_PREFIX, CONFIG_ROUTES);
 app.use(STATE_ENDPOINT, STATE_ROUTES);
 
 /**
  * OBS-Specific API
  */
-
-app.get(FILES_OPEN_ENDPOINT, async (req, res) => {
-
-  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
-
-  await open(mediaFolder);
-
-  res.send({open: true});
-});
 
 app.get(FILES_ENDPOINT, async (req, res) => {
 

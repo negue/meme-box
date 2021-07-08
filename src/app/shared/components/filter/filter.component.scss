@@ -10,18 +10,38 @@
   }
 }
 
+.mat-expansion-panel {
+  background: transparent;
+  box-shadow: none !important;
+}
+
+.mat-expansion-panel-header {
+  height: unset;
+  min-height: 48px;
+  padding-left: 0;
+}
+
 .filterRow {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin: 1rem 1rem 2rem 0;
+  width: 100%;
+
+  .mat-chip-list {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 }
 
 .filterRow__icon {
-  margin-right: 1rem;
-  height: 3rem;
-  width: 3rem;
+  align-self: baseline;
+  margin-right: 2rem;
+
+  .mat-icon {
+    height: 3rem;
+    width: 3rem;
+  }
 }
 
 .filterChip {

@@ -3,9 +3,6 @@
     <span class="eventInfo__titleRow__event">
       {{ item.event }}:
     </span>
-    {{item.name}}
-
-    <br />
 
     <code *ngIf="item.event === twitchEventTypes.message">{{item.contains}}</code>
     <code *ngIf="item.event !== twitchEventTypes.message">
@@ -21,18 +18,16 @@
 </div>
 
 <div class="eventInfo__checkbox">
-    <mat-chip class="eventInfo__chip"
-              [class.eventInfo__chip--selected]="item.active">
-      <mat-checkbox [checked]="item.active" (change)="onActiveChanged($event)">
-        {{item.active ? 'Event active' : 'Event inactive'}}
-      </mat-checkbox>
-    </mat-chip>
-
-
   <div *ngIf="item.cooldown">
     Cooldown: <code>{{item.cooldown | readableMs}}</code>
   </div>
 
+  <mat-chip class="eventInfo__chip"
+            [class.eventInfo__chip--selected]="item.active">
+    <mat-checkbox [checked]="item.active" (change)="onActiveChanged($event)">
+      {{item.active ? 'Event active' : 'Event inactive'}}
+    </mat-checkbox>
+  </mat-chip>
 </div>
 
 <div class="eventInfo__actionButtons">
@@ -43,7 +38,7 @@
   <button (click)="onPreview.emit()" color="primary" mat-button
           matTooltip="Preview this Trigger">
     <mat-icon svgIcon="preview"></mat-icon>
-    Preview
+    Trigger
   </button>
 </div>
 

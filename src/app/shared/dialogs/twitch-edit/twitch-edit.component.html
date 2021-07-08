@@ -2,17 +2,14 @@
   <code *ngIf="form.value.contains">{{form.value.contains}}</code>
 </h2>
 <mat-dialog-content class="mat-typography min-height-dialog">
-  <div class="two-columns">
+  <div class="two-columns" [formGroup]="form">
     <div class="column">
-      <form [formGroup]="form">
-
-        <div class="example-container">
-          <mat-form-field appearance="outline">
+        <div class="example-container" style="display: none">
+          <mat-form-field appearance="fill">
             <mat-label>Event Name</mat-label>
             <input autocomplete="off"
                    formControlName="name"
                    placeholder="Raided by whitep4nth3r"
-                   required
                    matInput>
           </mat-form-field>
 
@@ -20,7 +17,7 @@
         </div>
 
         <div class="example-container">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="fill">
             <mat-label>Twitch Event Type</mat-label>
             <mat-select [required]="true"
                         formControlName="event">
@@ -30,11 +27,10 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-
         </div>
 
         <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="fill">
             <mat-label>Message text to trigger event</mat-label>
             <input autocomplete="off"
                    formControlName="contains"
@@ -44,7 +40,7 @@
         </div>
 
         <div class="example-container">
-          <mat-form-field appearance="outline" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
+          <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
             <mat-label>{{twitchEventFields[form.value.event].fields.minValue?.placeholder}}</mat-label>
             <input autocomplete="off"
                    formControlName="minAmount"
@@ -52,7 +48,7 @@
                    matInput>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
+          <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
             <mat-label>{{twitchEventFields[form.value.event].fields.maxValue?.placeholder}}</mat-label>
             <input autocomplete="off"
                    formControlName="maxAmount"
@@ -62,7 +58,7 @@
         </div>
 
         <div class="example-container">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="fill">
             <mat-label>Cooldown between triggers</mat-label>
             <input autocomplete="off"
                    formControlName="cooldown"
@@ -75,11 +71,10 @@
             </mat-error>
           </mat-form-field>
         </div>
-      </form>
     </div>
     <div class="column">
       <div class="example-container">
-        <h2>Select media</h2>
+        <h2>Select action</h2>
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
@@ -93,7 +88,7 @@
             </ng-container>
 
             <ng-template #notSelected>
-              Choose your media-clip to trigger
+              Choose action to trigger
             </ng-template>
           </span>
 
@@ -118,6 +113,22 @@
         </div>
 
       </div>
+
+      <br/>
+
+      <div class="example-container" *ngIf="showScreenSelection$ | async">
+        <mat-form-field appearance="fill">
+          <mat-label>Target Screen</mat-label>
+          <mat-select formControlName="screenId">
+            <mat-option [value]="''">All</mat-option>
+            <mat-option *ngFor="let screen of screenList$ | async"
+                        [value]="screen.id">
+              {{ screen.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
     </div>
   </div>
 </mat-dialog-content>

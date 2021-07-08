@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ACTIONS, TriggerClip} from "@memebox/contracts";
+import {ActionActiveStatePayload, ACTIONS, ActionStateEnum, TriggerAction, TriggerClipOrigin} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {AppConfig} from "@memebox/app/env";
@@ -25,7 +25,8 @@ export class WebsocketService {
   public onReconnection$ = new Subject();
   public onUpdateData$ = new Subject();
   public onReloadScreen$ = new Subject();
-  public onTriggerClip$ = new Subject<TriggerClip>();
+  public onTriggerClip$ = new Subject<TriggerAction>();
+  public onUpdateMedia$ = new Subject<TriggerAction>();
   public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.NONE)
 
   private ws: WebSocket;
@@ -51,12 +52,24 @@ export class WebsocketService {
     this.ws.send(`${action}=${payload}`);
   }
 
+  public updateMediaState(mediaId: string, screenId: string, showing: boolean) {
+    const triggerObj: ActionActiveStatePayload = {
+      mediaId,
+      screenId,
+      state: showing ? ActionStateEnum.Active : ActionStateEnum.Done,
+    };
+
+    this.ws.send(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);
+  }
+
   public triggerClipOnScreen(clipId: string, screenId?: string | null) {
-    const triggerObj: TriggerClip = {
+    const triggerObj: TriggerAction = {
       id: clipId,
       targetScreen: screenId,
       repeatX: 0,  // todo after streamdeck ?
       repeatSecond: 0,
+
+      origin: TriggerClipOrigin.AppPreview
     }
 
     this.ws.send(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);
@@ -79,9 +92,16 @@ export class WebsocketService {
 
     switch (action) {
       case ACTIONS.TRIGGER_CLIP: {
-        const payloadObj: TriggerClip = JSON.parse(payload);
+        const payloadObj: TriggerAction = JSON.parse(payload);
 
         this.onTriggerClip$.next(payloadObj);
+
+        break;
+      }
+      case ACTIONS.UPDATE_MEDIA: {
+        const payloadObj: TriggerAction = JSON.parse(payload);
+
+        this.onUpdateMedia$.next(payloadObj);
 
         break;
       }

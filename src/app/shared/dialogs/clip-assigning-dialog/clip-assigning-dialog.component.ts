@@ -20,8 +20,8 @@ export interface ClipAssigningDialogOptions {
 
   showMetaItems: boolean;
 
-  showOnlyUnassignedFilter: boolean;
-  unassignedFilterType: UnassignedFilterEnum;
+  showOnlyUnassignedFilter?: boolean;
+  unassignedFilterType?: UnassignedFilterEnum;
 }
 
 function unassignedFilterToString(  unassignedFilterType: UnassignedFilterEnum) {
@@ -34,7 +34,7 @@ function unassignedFilterToString(  unassignedFilterType: UnassignedFilterEnum) 
   return '';
 }
 
-const ignoreMediaTypes = [MediaType.WidgetTemplate];
+const ignoreMediaTypes = [MediaType.WidgetTemplate, MediaType.PermanentScript];
 
 @Component({
   selector: 'app-clip-assigning-dialog',

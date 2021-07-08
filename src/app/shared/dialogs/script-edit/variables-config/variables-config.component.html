@@ -1,0 +1,47 @@
+
+<table>
+  <ng-container *ngFor="let customVariable of variablesList">
+    <tr>
+      <td>
+        <mat-form-field appearance="outline">
+          <mat-label>Your Variable Name</mat-label>
+          <input matInput [(ngModel)]="customVariable.name"
+                 (ngModelChange)="onEditVariable.emit(customVariable)" type="text">
+        </mat-form-field>
+        <mat-form-field  appearance="outline">
+          <mat-label>Variable Type selection</mat-label>
+          <mat-select [(value)]="customVariable.type"
+                      (selectionChange)="onEditVariable.emit(customVariable)">
+            <mat-option value="text">Text</mat-option>
+            <mat-option value="textarea">Textarea</mat-option>
+            <mat-option value="number">Number</mat-option>
+            <mat-option value="boolean">Boolean</mat-option>
+            <!--<mat-option value="media">Media</mat-option>-->
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td>
+        <app-script-variable-input [variableType]="customVariable.type"
+                                    label="Fallback Value" [inConfigMode]="true"
+                                    [value]="customVariable.fallback"
+                                    (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
+
+        </app-script-variable-input>
+      </td>
+      <td>
+        <button mat-icon-button color="warn"
+                (click)="onDeleteVariable.emit(customVariable)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </td>
+    </tr>
+  </ng-container>
+  <tr>
+    <td colspan="3">
+      <button mat-raised-button (click)="onAddNewVariable.emit()">
+        Add new variable
+      </button>
+
+    </td>
+  </tr>
+</table>

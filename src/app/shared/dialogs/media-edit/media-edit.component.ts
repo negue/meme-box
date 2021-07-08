@@ -39,10 +39,16 @@ import {MatChipInputEvent} from "@angular/material/chips";
 import {DialogService} from "../dialog.service";
 import {
   applyDynamicIframeContentToClipData,
+  applyScriptConfigToClipData,
   clipDataToDynamicIframeContent,
-  DynamicIframeContent
+  clipDataToScriptConfig,
+  DynamicIframeContent,
+  ScriptConfig
 } from "@memebox/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
+import {SnackbarService} from "../../../core/services/snackbar.service";
+import {Clipboard} from "@angular/cdk/clipboard";
+import {DialogData} from "../dialog.contract";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -67,11 +73,30 @@ interface MediaTypeButton {
   name: string;
   icon: string;
 }
-
+// TODO REFACTOR!!!!
 // TODO maybe use "TYPES WITH PATH"
-const MEDIA_TYPES_WITHOUT_PATH = [MediaType.Widget, MediaType.WidgetTemplate, MediaType.Meta, MediaType.Script];
-const MEDIA_TYPES_WITHOUT_PLAYTIME = [MediaType.Meta, MediaType.WidgetTemplate, MediaType.Script];
+// TODO extract these informs to the media dictionary?
+// TODO hide tag selection for types that cant use it anyway
+
+const MEDIA_TYPES_WITHOUT_PATH = [
+  MediaType.Widget,
+  MediaType.WidgetTemplate,
+  MediaType.Meta,
+  MediaType.Script,
+  MediaType.PermanentScript
+];
+const MEDIA_TYPES_WITHOUT_PLAYTIME = [
+  MediaType.Meta,
+  MediaType.WidgetTemplate,
+  MediaType.Script,
+  MediaType.PermanentScript
+];
 const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
+
+export interface MediaEditDialogPayload {
+  actionToEdit: Partial<Clip>,
+  defaults?: Partial<Clip>
+}
 
 @Component({
   selector: "app-media-edit",
@@ -79,7 +104,11 @@ const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Pictur
   styleUrls: ["./media-edit.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MediaEditComponent implements OnInit, OnDestroy {
+export class MediaEditComponent
+  implements OnInit, OnDestroy,  DialogData<MediaEditDialogPayload>
+{
+  public actionToEdit: Clip;
+
   public form = new FormBuilder().group({
     id: "",
     name: "",
@@ -140,6 +169,8 @@ export class MediaEditComponent implements OnInit, OnDestroy {
   currentHtmlToPreview$ = new BehaviorSubject<DynamicIframeContent>(null);
   triggerHtmlRefresh$ = new Subject();
 
+  currentScript: ScriptConfig = null;
+
   // Get all clips that have the assigned tags
   taggedClips$ = combineLatest([
     this.currentTags$,
@@ -152,7 +183,7 @@ export class MediaEditComponent implements OnInit, OnDestroy {
 
       const currentTagsSet = new Set(currentTags.map(t => t.id));
 
-      return allClips.filter(c => c.id !== this.data.id && c.tags?.some(t => currentTagsSet.has(t)));
+      return allClips.filter(c => c.id !== this.actionToEdit.id && c.tags?.some(t => currentTagsSet.has(t)));
     })
   )
 
@@ -179,26 +210,38 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   private _destroy$ = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Partial<Clip>,
+    @Inject(MAT_DIALOG_DATA) public data: MediaEditDialogPayload,
     private dialogRef: MatDialogRef<any>,
     private appService: AppService,
     private appQuery: AppQueries,
     private dialogService: DialogService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private clipboard: Clipboard,
+    private snackbar: SnackbarService
   ) {
-    this.data = Object.assign({}, INITIAL_CLIP, {
-      // maybe helps for writeable propeties?! TODO refactor
-      ...this.data,
+    const defaultValues = Object.assign({}, INITIAL_CLIP, this.data.defaults ?? {});
+
+    this.actionToEdit = Object.assign({}, defaultValues, {
+      ...this.data.actionToEdit,
       extended: {
-        ...this.data?.extended
+        ...this.data.actionToEdit?.extended
       }
-    });
+    }) as Clip;
 
-    this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
-    this.executeHTMLRefresh();
-    this.showOnMobile = this.data.showOnMobile;
 
-    this.currentMediaType$.next(this.data.type);
+    if (this.actionToEdit.type === MediaType.Widget
+      || this.actionToEdit.type === MediaType.IFrame) {
+      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.actionToEdit);
+      this.executeHTMLRefresh();
+    }
+
+    if ([MediaType.Script, MediaType.PermanentScript].includes(this.actionToEdit.type)) {
+      this.currentScript = clipDataToScriptConfig(this.actionToEdit);
+    }
+
+    this.showOnMobile = this.actionToEdit.showOnMobile;
+
+    this.currentMediaType$.next(this.actionToEdit.type);
   }
 
   get MediaType() {
@@ -206,7 +249,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   ngOnInit(): void {
-    this.form.reset(this.data);
+    this.form.reset(this.actionToEdit);
     this.appService.listFiles();
 
     this.form.valueChanges
@@ -253,7 +296,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.availableTags$.pipe(
       take(1)
     ).subscribe(allTags => {
-      this.currentTags$.next(allTags.filter(tag => this.data.tags.includes(tag.id)));
+      this.currentTags$.next(allTags.filter(tag => this.actionToEdit.tags.includes(tag.id)));
     });
 
     this.filteredTags$ = combineLatest([
@@ -274,8 +317,8 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     });
 
 
-    if (this.data.fromTemplate) {
-      this.onTemplateChanged(this.data.fromTemplate);
+    if (this.actionToEdit.fromTemplate) {
+      this.onTemplateChanged(this.actionToEdit.fromTemplate);
     }
   }
 
@@ -295,7 +338,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     const { value } = this.form;
 
     const valueAsClip: Clip = {
-      ...this.data,
+      ...this.actionToEdit, // base props that are not in the form
       ...value
     };
 
@@ -414,20 +457,18 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   // endregion
 
   async editHTML() {
-    const dynamicIframeContent = clipDataToDynamicIframeContent(this.data);
-
-    console.info({data: this.data, iframe: dynamicIframeContent});
+    const dynamicIframeContent = clipDataToDynamicIframeContent(this.actionToEdit);
 
     const dialogResult = await this.dialogService.showWidgetEdit({
-      mediaId: this.data.id,
-      name: this.data.name,
+      mediaId: this.actionToEdit.id,
+      name: this.actionToEdit.name,
       iframePayload: dynamicIframeContent
     });
 
     if (dialogResult) {
-      applyDynamicIframeContentToClipData(dialogResult, this.data);
+      applyDynamicIframeContentToClipData(dialogResult, this.actionToEdit);
 
-      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.data);
+      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.actionToEdit);
       this.executeHTMLRefresh();
       this.cd.detectChanges();
     }
@@ -438,7 +479,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   executeHTMLRefresh () {
-    const currentExtendedValues = this.data.extended;
+    const currentExtendedValues = this.actionToEdit.extended;
 
     const updatedHtmlDataset: DynamicIframeContent  = {
       ...this.currentHtmlConfig,
@@ -460,5 +501,29 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.currentHtmlConfig = clipDataToDynamicIframeContent(template);
     this.executeHTMLRefresh();
     this.cd.detectChanges();
+  }
+
+  async editScript() {
+    const scriptConfig = clipDataToScriptConfig(this.actionToEdit);
+
+    const dialogResult = await this.dialogService.showScriptEdit({
+      mediaId: this.actionToEdit.id,
+      name: this.actionToEdit.name,
+      scriptConfig,
+      actionType: this.actionToEdit.type
+    });
+
+    if (dialogResult) {
+      applyScriptConfigToClipData(dialogResult, this.actionToEdit);
+
+      this.currentScript = scriptConfig;
+      this.cd.detectChanges();
+    }
+  }
+
+  async copyIdToClipboard() {
+    if (this.clipboard.copy(this.actionToEdit.id)) {
+      this.snackbar.normal("The Action ID was copied to the clipboard");
+    }
   }
 }

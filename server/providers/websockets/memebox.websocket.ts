@@ -1,9 +1,10 @@
 import {Service, UseOpts} from "@tsed/di";
 import {NamedLogger} from "../named-logger";
 import * as WebSocket from "ws";
-import {ACTIONS, Dictionary, TriggerClip} from "@memebox/contracts";
+import {ActionActiveStatePayload, ACTIONS, Dictionary, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
-import {MediaTriggerEventBus} from "../media-trigger.event-bus";
+import {ActionTriggerEventBus} from "../actions/action-trigger-event.bus";
+import {ActionActiveStateEventBus} from "../actions/action-active-state-event.bus";
 
 // todo maybe extract?
 interface WebSocketType {
@@ -26,7 +27,8 @@ export class MemeboxWebsocket {
 
   constructor(
     @UseOpts({name: 'WS.MemeBox'}) public logger: NamedLogger,
-    private mediaTriggerEventBus: MediaTriggerEventBus
+    private mediaTriggerEventBus: ActionTriggerEventBus,
+    private mediaStateEventBus: ActionActiveStateEventBus
   ) {
     CURRENT_MEMEBOX_WEBSOCKET = this;
 
@@ -97,10 +99,12 @@ export class MemeboxWebsocket {
         break;
       }
       case ACTIONS.TRIGGER_CLIP: {
-        const payloadObs: TriggerClip = JSON.parse(payload);
-
+        const payloadObs: TriggerAction = JSON.parse(payload);
+        payloadObs.fromWebsocket = true;
 
         this.logger.info(`TRIGGER DATA TO - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
+
+        // TODO refactor this dependency pingpong
 
         if (!payloadObs.targetScreen) {
           this.mediaTriggerEventBus.triggerMedia(payloadObs);
@@ -112,6 +116,13 @@ export class MemeboxWebsocket {
       }
       case ACTIONS.RELOAD_SCREEN: {
         this.sendDataToScreen(payload, message);
+        break;
+      }
+      case ACTIONS.MEDIA_STATE: {
+        const mediaStatePayload: ActionActiveStatePayload = JSON.parse(payload);
+
+        this.mediaStateEventBus.updateActionState(mediaStatePayload);
+
         break;
       }
     }

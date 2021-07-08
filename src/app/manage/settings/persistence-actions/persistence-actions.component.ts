@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { WebsocketService } from "../../../core/services/websocket.service";
-import { AppService } from "../../../state/app.service";
-import { DialogService } from "../../../shared/dialogs/dialog.service";
-import { ImportMediaFilesDialogComponent } from "./import-media-files-dialog/import-media-files-dialog.component";
+import {Component, OnInit} from '@angular/core';
+import {WebsocketService} from "../../../core/services/websocket.service";
+import {DialogService} from "../../../shared/dialogs/dialog.service";
+import {ImportMediaFilesDialogComponent} from "./import-media-files-dialog/import-media-files-dialog.component";
+import {ConfigService} from "../../../state/config.service";
 
 @Component({
   selector: 'app-persistence-actions',
@@ -12,7 +12,7 @@ import { ImportMediaFilesDialogComponent } from "./import-media-files-dialog/imp
 export class PersistenceActionsComponent implements OnInit {
 
   constructor(private wsService: WebsocketService,
-              private appService: AppService,
+              private configService: ConfigService,
               private dialog: DialogService) { }
 
   ngOnInit(): void {
@@ -25,7 +25,7 @@ export class PersistenceActionsComponent implements OnInit {
     })
 
     if (confirmed) {
-      this.appService.deleteAll();
+      this.configService.deleteAll();
     }
   }
 

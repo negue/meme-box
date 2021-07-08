@@ -49,7 +49,7 @@ A complete management app for [`image / audio / video / iframe / widgets`](/tuto
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 
-[URL_META_CLIPS]: ./tutorials/meta_clips.md
+[URL_META_CLIPS]: tutorials/meta_media.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
 
 ___
@@ -70,9 +70,8 @@ ___
 * [x] Custom Port Settings, default Port now on 6363
 * [x] Electron can be hidden into the Tray
 * [x] "Media Type": `Scripts` for more advanced features
-  * [ ] Wait once a triggered clip (inside the script) is done to trigger other stuff
-  * [ ] Use custom variables like in the Widget-Variables for easier configs
-* [ ] Overview of local media files not existing anymore
+  * [x] Wait once a triggered clip (inside the script) is done to trigger other stuff
+  * [x] Use custom variables like in the Widget-Variables for easier configs
 * [ ] Overhaul of the Media Creation Dialog(s) 
 
 ### 2021.4.0
@@ -82,6 +81,7 @@ ___
 * [ ] OBS Websockets
   * [ ] "Media Type": `OBS Command`
   * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
+* [ ] Overview of local media files not existing anymore
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
@@ -91,7 +91,7 @@ ___
 ## How to help / contribute?
 * Improve Docs / Translations
 * Find bugs
-* Help fix bugs / improve features
+* Help fix bugs / improve features [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue) [Open for Contribution](https://github.com/negue/meme-box/labels/open%20for%20contribution)
 * Star it :)
 
 ## Contributors ✨
