@@ -4,7 +4,6 @@ import type {DialogContract} from "../dialog.contract";
 import {CustomScriptDialogPayload} from "../dialog.contract";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {ScriptEditComponent} from "./script-edit.component";
-import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
 import {CommonModule} from "@angular/common";
@@ -17,6 +16,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {VariablesConfigComponent} from './variables-config/variables-config.component';
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ScriptVariableInputModule} from "../../components/script-variable-input/script-variable-input.module";
+import {MatTabsModule} from "@angular/material/tabs";
+import {HintPanelModule} from "@memebox/ui-components";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,6 @@ import {ScriptVariableInputModule} from "../../components/script-variable-input/
   ],
   imports: [
     MatDialogModule,
-    MatExpansionModule,
     MatFormFieldModule,
     CustomFormControlModule,
     CommonModule,
@@ -36,7 +36,9 @@ import {ScriptVariableInputModule} from "../../components/script-variable-input/
     FormsModule,
     MatCheckboxModule,
     CodemirrorModule,
-    ScriptVariableInputModule
+    ScriptVariableInputModule,
+    MatTabsModule,
+    HintPanelModule
   ],
   providers: [],
 })

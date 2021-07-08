@@ -1,6 +1,6 @@
 import {Compiler, Injectable, Injector, TemplateRef, Type} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {Clip, Screen, TimedClip, Twitch} from "@memebox/contracts";
+import {Screen, TimedClip, Twitch} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
 import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
@@ -9,6 +9,7 @@ import type {ScreenClipOptionsPayload} from "./screen-clip-options/screen-clip-o
 import type {ClipAssigningDialogOptions} from "./clip-assigning-dialog/clip-assigning-dialog.component";
 import {MarkdownDialogPayload} from "../../../../server/constants";
 import {CustomHtmlDialogPayload, CustomScriptDialogPayload, DialogContract} from "./dialog.contract";
+import {MediaEditDialogPayload} from "./media-edit/media-edit.component";
 
 @Injectable()
 export class DialogService {
@@ -30,7 +31,7 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  showMediaEditDialog(clipInfo: Partial<Clip>) {
+  showMediaEditDialog(clipInfo: MediaEditDialogPayload) {
     this.loadAndOpen(
       import('./media-edit/media-edit.module'),
       clipInfo
@@ -114,6 +115,20 @@ export class DialogService {
     );
   }
 
+  openTwitchConnectionConfig() {
+    this.loadAndOpen(
+      import('./twitch-connection-edit/twitch-connection-edit.module'),
+      null
+    );
+  }
+
+  openObsConnectionDialog() {
+    this.loadAndOpen(
+      import('./obs-connection-edit/obs-connection-edit.module'),
+      null
+    );
+  }
+
   async loadAndOpen<TPayload, TDialogModule extends DialogContract<TPayload>>(
     // typesafety for module lazy loads :), it has to use the same TPayload you pass
     lazyDialogImport: Promise<{[moduleExport: string]: Type<TDialogModule>}>,
@@ -137,4 +152,5 @@ export class DialogService {
   ): MatDialogRef<T, R> {
     return this._dialog.open(componentOrTemplateRef, config);
   }
+
 }

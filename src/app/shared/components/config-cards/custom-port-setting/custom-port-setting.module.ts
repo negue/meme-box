@@ -6,6 +6,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
+import {ConfigCardModule} from "../config-card/config-card.module";
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {MatButtonModule} from "@angular/material/button";
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    ConfigCardModule
   ]
 })
 export class CustomPortSettingModule { }

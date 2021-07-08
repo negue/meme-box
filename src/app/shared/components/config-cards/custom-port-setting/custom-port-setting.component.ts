@@ -5,6 +5,7 @@ import {filter, take} from 'rxjs/operators';
 import {AppQueries} from '../../../../state/app.queries';
 import {AppService} from '../../../../state/app.service';
 import {DEFAULT_PORT} from "../../../../../../server/constants";
+import {ConfigService} from "../../../../state/config.service";
 
 @Component({
   selector: 'app-custom-port-setting',
@@ -26,7 +27,8 @@ export class CustomPortSettingComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
 
   constructor(private appQuery: AppQueries,
-              private appService: AppService) {
+              private appService: AppService,
+              private configService: ConfigService) {
 
   }
 
@@ -58,7 +60,7 @@ export class CustomPortSettingComponent implements OnInit, OnDestroy {
     }
 
     this.editMode = false;
-    await this.appService.updateCustomPort(this.form.value.port);
+    await this.configService.updateCustomPort(this.form.value.port);
   }
 
   toggleOrSave() {

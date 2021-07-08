@@ -2,7 +2,6 @@ import {
   TRANSLOCO_CONFIG,
   TRANSLOCO_FALLBACK_STRATEGY,
   TRANSLOCO_LOADER,
-  TRANSLOCO_SCOPE,
   translocoConfig,
   TranslocoFallbackStrategy,
   TranslocoModule
@@ -11,6 +10,7 @@ import {NgModule} from '@angular/core';
 import {AppConfig} from '@memebox/app/env';
 import {TranslocoHttpLoader} from "./transloco-http-loader.service";
 import {getSelectedLang} from "./transloco-selected-lang.service";
+import {TRANSLOCO_COMMON_SCOPE, TRANSLOCO_CONFIG_SCOPE} from "./transloco.scopes";
 
 
 export class CustomStrategy implements TranslocoFallbackStrategy {
@@ -41,11 +41,12 @@ const activeLang = getSelectedLang();
         // Remove this option if your application doesn't support changing language in runtime.
         reRenderOnLangChange: false,
         prodMode: AppConfig.production,
-        fallbackLang: 'en'
+        fallbackLang: 'en',
       })
     },
     { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader },
-    { provide: TRANSLOCO_SCOPE, useValue: { scope: 'common', alias: '$common$'}, multi: true}
+    TRANSLOCO_COMMON_SCOPE,
+    TRANSLOCO_CONFIG_SCOPE
   ]
 })
 export class TranslocoRootModule {}

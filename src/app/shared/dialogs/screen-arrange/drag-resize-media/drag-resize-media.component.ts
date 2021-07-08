@@ -9,8 +9,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { Clip, PositionEnum, ScreenClip } from '@memebox/contracts';
-import { NgxMoveableComponent } from 'ngx-moveable';
+import {Clip, PositionEnum, Screen, ScreenClip} from '@memebox/contracts';
+import {NgxMoveableComponent} from 'ngx-moveable';
 
 export interface TranslatedSize {
   x: string;
@@ -37,7 +37,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   public settings: ScreenClip;
 
   @Input()
-  public sizeType: 'px';
+  public sizeType: 'px'|'%';
 
   @Input()
   public transformOrigin = '';

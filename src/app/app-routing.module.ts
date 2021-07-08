@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AppConfig} from "@memebox/app/env";
+import {OAuthGuard} from "./o-auth.guard";
 
 // root
 // | main page (with sidebar)
@@ -35,7 +36,9 @@ const rootRoutes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'manage'
+    canActivate:[OAuthGuard],
+    loadChildren: () => import('./oauth-target/o-auth-target.module')
+      .then(module => module.OAuthTargetModule)
   }
 ];
 

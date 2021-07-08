@@ -5,6 +5,9 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatListModule} from "@angular/material/list";
 import {TranslocoModule} from "@ngneat/transloco";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatBadgeModule} from "@angular/material/badge";
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
@@ -17,7 +20,10 @@ import {TranslocoModule} from "@ngneat/transloco";
     MatIconModule,
     MatChipsModule,
     MatListModule,
-    TranslocoModule
+    TranslocoModule,
+    MatExpansionModule,
+    MatBadgeModule,
+    MatButtonModule
   ]
 })
 export class FilterModule { }

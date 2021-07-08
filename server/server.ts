@@ -16,7 +16,10 @@ bootstrapTsED().then(async ({expressServer}) => {
 
     await waitForLocalhost({port: 4200});
 
-    open(`http://localhost:4200?port=${port}`);
+    if (CLI_OPTIONS.OPEN_BROWSER) {
+      open(`http://localhost:4200?port=${port}`);
+    }
+
     LOGGER.info('== DEV-MODE == Server is ready');
   } else {
     LOGGER.info('Server is ready');

@@ -4,13 +4,12 @@
 <mat-dialog-content class="mat-typography min-height-dialog">
   <div class="two-columns" [formGroup]="form">
     <div class="column">
-        <div class="example-container">
+        <div class="example-container" style="display: none">
           <mat-form-field appearance="fill">
             <mat-label>Event Name</mat-label>
             <input autocomplete="off"
                    formControlName="name"
                    placeholder="Raided by whitep4nth3r"
-                   required
                    matInput>
           </mat-form-field>
 
@@ -40,20 +39,20 @@
           </mat-form-field>
         </div>
 
-        <div class="example-container" *ngIf="form.value.event !== twitchEventTypes.message">
-          <mat-form-field appearance="fill">
-            <mat-label>Minimum amount to trigger the media</mat-label>
+        <div class="example-container">
+          <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
+            <mat-label>{{twitchEventFields[form.value.event].fields.minValue?.placeholder}}</mat-label>
             <input autocomplete="off"
                    formControlName="minAmount"
-                   placeholder="100"
+                   [placeholder]="twitchEventFields[form.value.event].fields.minValue?.placeholder"
                    matInput>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Maximum amount to trigger the media</mat-label>
+          <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
+            <mat-label>{{twitchEventFields[form.value.event].fields.maxValue?.placeholder}}</mat-label>
             <input autocomplete="off"
                    formControlName="maxAmount"
-                   placeholder="100"
+                   [placeholder]="twitchEventFields[form.value.event].fields.maxValue?.placeholder"
                    matInput>
           </mat-form-field>
         </div>
@@ -75,7 +74,7 @@
     </div>
     <div class="column">
       <div class="example-container">
-        <h2>Select media</h2>
+        <h2>Select action</h2>
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
@@ -89,7 +88,7 @@
             </ng-container>
 
             <ng-template #notSelected>
-              Choose your media-clip to trigger
+              Choose action to trigger
             </ng-template>
           </span>
 

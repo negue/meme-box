@@ -1,4 +1,4 @@
-import {ChatUserstate} from "tmi.js";
+import {ChatUserstate, SubMethods, Userstate} from "tmi.js";
 import {TwitchEventTypes} from "@memebox/contracts";
 
 export interface TwitchEvent {
@@ -65,6 +65,56 @@ export class TwitchRaidedEvent implements TwitchEvent {
   }
 }
 
+
+export class TwitchBanEvent implements TwitchEvent {
+  readonly type = TwitchEventTypes.ban;
+
+  constructor(public payload: {
+                username: string,
+                reason: string
+              }
+  ) {
+  }
+}
+
+export class TwitchSubEvent implements TwitchEvent {
+  readonly type = TwitchEventTypes.subscription;
+
+  constructor(public payload: {
+    subtype: 'anongiftpaidupgrade'|'giftpaidupgrade'|'resub'|'subscription',
+    username: string,
+    userState: Userstate,  // todo remove to own types?
+    gifter: string,
+    months: number,
+    message: string,
+    cumulativeMonths: number,
+    shouldShareStreak: boolean,
+    methods: SubMethods,
+              }
+  ) {
+  }
+}
+
+export class TwitchGiftEvent implements TwitchEvent {
+  readonly type = TwitchEventTypes.subscription;
+
+  constructor(public payload: {
+                subtype: 'subgift' | 'submysterygift',
+                gifter: string,
+                streakMonths: number,
+                userState: Userstate,  // todo remove to own types?
+
+                methods: SubMethods,
+                gifts: number,
+                totalGifts: number,
+                recipientId: number,
+                recipientUserName: string,
+                recipientDisplayName: string,
+              }
+  ) {
+  }
+}
+
 export class TwitchChannelPointRedemptionEvent implements TwitchEvent {
   readonly type = TwitchEventTypes.channelPoints;
 
@@ -83,4 +133,5 @@ export class TwitchChannelPointRedemptionEvent implements TwitchEvent {
 }
 
 export type AllTwitchEvents = TwitchChatMessage | TwitchCheerMessage
-  | TwitchRaidedEvent | TwitchChannelPointRedemptionEvent;
+  | TwitchRaidedEvent | TwitchBanEvent | TwitchSubEvent | TwitchGiftEvent
+  | TwitchChannelPointRedemptionEvent;

@@ -1,9 +1,8 @@
 import {WebsocketHandler} from "../../../core/services/websocket.handler";
-import {TriggerClip, TwitchEventTypes} from "@memebox/contracts";
+import {TriggerAction, TwitchEventTypes} from "@memebox/contracts";
 import {AllTwitchEvents} from "../../../../../server/providers/twitch/twitch.connector.types";
-import {BehaviorSubject, Subject, Subscription} from "rxjs";
-import {debounceTime, skip, take} from "rxjs/operators";
-import {API_BASE, AppService} from "../../../state/app.service";
+import {Subject, Subscription} from "rxjs";
+import {ActionStoreAdapter, ActionStoreApi} from "@memebox/state";
 
 type TwitchEventCallback = (twitchEvent: AllTwitchEvents) => void;
 
@@ -71,142 +70,22 @@ export class WidgetTwitchApi {
  4. widget store preview?
  */
 
-type WidgetStore = Record<string, string|number|object>;
-
-class WidgetStoreApi {
-  private _state: WidgetStore = {};
-  private _state$ = new BehaviorSubject<WidgetStore>({});
-  private _state$$: Subscription;
-  private _loaded : Promise<boolean>;
-
-  constructor(
-    private mediaId: string,
-    private instanceId: string,
-    private appService: AppService,
-    private _errorSubject$: Subject<string>
-  ) {
-    // todo extract / refactor to have only one store for all widgets on the browser / tab
-    this._loaded = new Promise(async (resolve, reject) => {
-      const stateResult = await this.appService.http.get<WidgetStore>(`${API_BASE}widget-state/${mediaId}`)
-        .pipe(
-          take(1)
-        ).toPromise();
-
-      this._state = stateResult;
-      this._state$.next(stateResult);
-
-      resolve(true);
-    })
-
-    // Load the Current State from API
-    // MediaID
-    this._state$$ = this._state$
-      .pipe(
-        skip(1),  // this is current state loaded once from API
-        debounceTime(1500)
-      )
-      .subscribe(newStore => {
-        this.appService.tryHttpPut(`${API_BASE}widget-state/${mediaId}/${instanceId}`, newStore);
-      })
-  }
-
-  public ready() {
-    return this._loaded;
-  }
-
-  public getString(key: string, defaultValue: string): string {
-    const value = this._state[key];
-
-    if (typeof value === 'string') {
-      return value;
-    }
-
-    return defaultValue;
-  }
-
-  public setString(key: string, value: unknown) {
-    if (typeof value !== 'string') {
-      this._errorSubject$.next(`The "${key}" value needs to be a string`);
-      return;
-    }
-
-    this._state[key] = value;
-
-    this.updateObservable();
-  }
-
-
-  public getNumber(key: string, defaultValue: number): number {
-    const value = this._state[key];
-
-    if (typeof value === 'number') {
-      return value;
-    }
-
-    return defaultValue;
-  }
-
-  public setNumber(key: string, value: unknown) {
-    if (typeof value !== 'number') {
-      this._errorSubject$.next(`The "${key}" value needs to be a number`);
-      return;
-    }
-
-    this._state[key] = value;
-
-    this.updateObservable();
-  }
-
-  public getObject(key: string, defaultValue: object): object {
-    const value = this._state[key];
-
-    if (typeof value === 'object') {
-      return value ?? defaultValue;
-    }
-
-    return defaultValue;
-  }
-
-  public setObject(key: string, value: unknown) {
-    if (typeof value !== 'object') {
-      this._errorSubject$.next(`The "${key}" value needs to be an object`);
-      return;
-    }
-
-    this._state[key] = value;
-
-    this.updateObservable();
-  }
-
-  dispose() {
-    this._state$$.unsubscribe();
-  }
-
-  public get state$ () {
-    return this._state$.asObservable();
-  }
-
-  private updateObservable() {
-    this._state$.next(this._state);
-  }
-}
-
-type TriggeredEventCallback = (currentTriggeredPayload: TriggerClip) => void;
+type TriggeredEventCallback = (currentTriggeredPayload: TriggerAction) => void;
 
 export class WidgetApi {
   public twitch: WidgetTwitchApi;
-  public store: WidgetStoreApi;
+  public store: ActionStoreApi;
   private triggeredCallback: TriggeredEventCallback;
 
   constructor (
     mediaId: string,
     instanceId: string,
-    appService: AppService,
+    storeAdapter: ActionStoreAdapter,
     private websocketHandler: WebsocketHandler,
     private _errorSubject$: Subject<string>
   ) {
     this.twitch = new WidgetTwitchApi(websocketHandler, _errorSubject$);
-    this.store = new WidgetStoreApi(mediaId, instanceId, appService, _errorSubject$);
+    this.store = new ActionStoreApi(mediaId, instanceId, storeAdapter, _errorSubject$);
   }
 
   public triggered(callback: TriggeredEventCallback) {
@@ -217,7 +96,7 @@ export class WidgetApi {
     this.twitch.dispose();
   }
 
-  triggerIsShown(currentTriggeredPayload: TriggerClip) {
+  triggerIsShown(currentTriggeredPayload: TriggerAction) {
     if (this.triggeredCallback) {
       try {
         console.info({currentTriggeredPayload});

@@ -105,7 +105,7 @@
         <app-animation-preview [animationList]="animateInList"
                                *ngIf="animationExpansionPanel.expanded"
                                [selectedAnimationConfig]="animationInSelect.value"
-                               [animationDuration]="animationInDuration.value"
+                               [animationDuration]="+animationInDuration.value"
         ></app-animation-preview>
 
         <br/>
@@ -133,7 +133,7 @@
              <app-animation-preview [animationList]="animateOutList"
                                     *ngIf="animationExpansionPanel.expanded"
                                [selectedAnimationConfig]="animationOutSelect.value"
-                               [animationDuration]="animationOutDuration.value"
+                               [animationDuration]="+animationOutDuration.value"
         ></app-animation-preview>
 
       </mat-expansion-panel>

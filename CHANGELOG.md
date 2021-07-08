@@ -20,6 +20,9 @@
   * [x] Wait once a triggered clip (inside the script) is done to trigger other stuff
   * [x] Use custom variables like in the Widget-Variables for easier configs
 * [x] Timers / Twitch Events can now select the Target Screen
+* [x] Add new twitch events to the trigger section
+  * [x] All the sub events were added
+  * [x] Ban event
 
 ### Fixes
 
