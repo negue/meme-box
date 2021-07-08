@@ -11,6 +11,7 @@ export const ENDPOINTS = {
   CONFIG: 'config',
   OPEN: 'open',
   STATE: 'state',
+  TWITCH_DATA: 'twitchData',
 
   TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',
@@ -27,7 +28,7 @@ export const OPEN_FILES_PATH = `/files`;
 export const TwitchTypesArray = [
   // TwitchEventTypes.follow,
   TwitchEventTypes.bits,
-  // TwitchEventTypes.channelPoints,
+  TwitchEventTypes.channelPoints,
   // TwitchEventTypes.host,
   TwitchEventTypes.message,
   TwitchEventTypes.raid,

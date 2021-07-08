@@ -7,6 +7,7 @@ import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
 import {
   TwitchBanEvent,
+  TwitchChannelPointRedemptionEvent,
   TwitchChatMessage,
   TwitchCheerMessage,
   TwitchEvent,
@@ -19,6 +20,9 @@ import {Persistence} from "../../persistence";
 import {PERSISTENCE_DI} from "../contracts";
 import {NamedLogger} from "../named-logger";
 import {getLevelOfTags} from "./twitch.functions";
+import {PubSubClient} from 'twitch-pubsub-client';
+import {ApiClient, StaticAuthProvider} from "twitch";
+import {TwitchAuthInformation} from "./twitch.auth";
 
 @Service()
 export class TwitchConnector {
@@ -37,7 +41,10 @@ export class TwitchConnector {
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
 
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
+
+    private twitchAuth: TwitchAuthInformation
   ) {
+
     // TODO better way to find out the config has changed
     let currentConfigJsonString = "";
 
@@ -100,7 +107,8 @@ export class TwitchConnector {
 
           this.tmiClient = tmi.Client(tmiConfig);
 
-          this.connectAndListen();
+          this.connectAndListenTMI();
+          this.connectAndListenPubSub();
         }
       });
   }
@@ -121,7 +129,7 @@ export class TwitchConnector {
     this.tmiClient?.disconnect();
   }
 
-  private async connectAndListen() {
+  private async connectAndListenTMI() {
     for (let tryOut = 0; tryOut < 3; tryOut++) {
       try {
         await this.tmiClient.connect();
@@ -288,6 +296,53 @@ export class TwitchConnector {
 
       this._receivedTwitchEvents.next(twitchSubEvent);
     });
+  }
+
+  private async connectAndListenPubSub() {
+    const twitchAuth = await this.twitchAuth.getTwitchAuthAsync();
+
+    if (!twitchAuth) {
+      return;
+    }
+
+    const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
+    const apiClient = new ApiClient({ authProvider });
+
+
+    const pubSubClient = new PubSubClient();
+    const userId = await pubSubClient.registerUserListener(apiClient);
+
+    pubSubClient.onRedemption(userId, channelPointRedemption => {
+
+      // Extracting all properties because of the channelPointRedemption overrides the toString and with that the object
+      // cant be logged
+
+      const {
+        id,
+        message,
+        redemptionDate,
+        rewardId,
+        rewardName,
+        rewardPrompt,
+        rewardCost,
+
+        userId,
+        userName,
+        userDisplayName
+      } = channelPointRedemption;
+
+      this._receivedTwitchEvents.next(new TwitchChannelPointRedemptionEvent({
+        message,
+        redemptionDate,
+        rewardId,
+        rewardName,
+        rewardCost,
+        userId,
+        userName,
+        userDisplayName
+      }));
+    });
+
   }
 
   handleCommandsRequest(tags: tmi.ChatUserstate, message: string): void {

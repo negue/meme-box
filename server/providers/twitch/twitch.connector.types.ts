@@ -115,6 +115,22 @@ export class TwitchGiftEvent implements TwitchEvent {
   }
 }
 
+export class TwitchChannelPointRedemptionEvent implements TwitchEvent {
+  readonly type = TwitchEventTypes.channelPoints;
+
+  constructor(public payload: {
+    userId: string,
+    userName: string,
+    userDisplayName: string,
+    redemptionDate: Date,
+    rewardId: string,
+    rewardName: string,
+    rewardCost: number,
+    message: string
+  }) {
+  }
+}
 
 export type AllTwitchEvents = TwitchChatMessage | TwitchCheerMessage
-  | TwitchRaidedEvent | TwitchBanEvent | TwitchSubEvent | TwitchGiftEvent;
+  | TwitchRaidedEvent | TwitchBanEvent | TwitchSubEvent | TwitchGiftEvent
+  | TwitchChannelPointRedemptionEvent;

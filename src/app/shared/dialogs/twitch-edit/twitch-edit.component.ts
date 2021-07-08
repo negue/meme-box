@@ -61,7 +61,7 @@ const TWITCH_LEVELS: TwitchLevelEntry[] = [
   }
 ];
 
-const TwitchEventFields: TwitchEventFields = {
+const TwitchEventFieldConfig: TwitchEventFields = {
   [TwitchEventTypes.message]: {
     fields: {}
   },
@@ -88,7 +88,13 @@ const TwitchEventFields: TwitchEventFields = {
   [TwitchEventTypes.gift]: {
     fields: {
     }
-  }
+  },
+
+  [TwitchEventTypes.channelPoints]: {
+    fields: {
+      channelPointId: {enable: true}
+    }
+  },
 }
 
 @Component({
@@ -104,11 +110,14 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     clipId: "",
     screenId: "",
     contains: "",
+    channelPointId: "",
     minAmount: undefined,
     maxAmount: undefined,
     response: undefined,
     cooldown: [undefined, Validators.max(1000*60*60*10)]
   });
+
+  channelPoints$ = this.appService.channelPoints$();
 
   twitchEvents = TwitchTypesArray;
   TWITCH_LEVELS = TWITCH_LEVELS;
@@ -117,7 +126,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   selectedMediaId$ = new BehaviorSubject('');
 
-  twitchEventFields = TwitchEventFields;
+  twitchEventFields = TwitchEventFieldConfig;
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
   selectedMedia$ = combineLatest([

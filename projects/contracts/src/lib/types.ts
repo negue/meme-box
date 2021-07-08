@@ -149,6 +149,7 @@ export interface TwitchEventFields {
     fields: {
       minValue?: { enable: boolean, placeholder?: string},
       maxValue?: { enable: boolean, placeholder?: string},
+      channelPointId?: { enable: boolean }
     }
   }
 }
@@ -171,6 +172,8 @@ export interface Twitch extends HasId, HasClipId, HasTargetScreenId {
   maxAmount?: number;
 
   cooldown?: number;
+
+  channelPointId?: string;
 
   // !magic
   // TODO other options per type
