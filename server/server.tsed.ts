@@ -9,6 +9,7 @@ import {BootstrapServices} from "./providers/bootstrap.services";
 import * as fs from "fs";
 import {ConfigController} from "./controllers/config.controller";
 import {OpenController} from "./controllers/open.controller";
+import {TwitchDataController} from "./controllers/twitch-data.controller";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -27,7 +28,8 @@ const rootDir = __dirname;
       ScreenController,
       WidgetStateController,
       ConfigController,
-      OpenController
+      OpenController,
+      TwitchDataController
     ]
   },
   logger: {

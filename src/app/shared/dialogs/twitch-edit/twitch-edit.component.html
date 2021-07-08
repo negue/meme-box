@@ -39,7 +39,21 @@
           </mat-form-field>
         </div>
 
-        <div class="example-container">
+      <div class="example-container" *ngIf="twitchEventFields[form.value.event].fields.channelPointId?.enable">
+        <mat-form-field appearance="fill">
+          <mat-label>Choose ChannelPoint Redemption</mat-label>
+          <mat-select [required]="true"
+                      formControlName="channelPointId">
+            <mat-option *ngFor="let item of channelPoints$ | async"
+                        [value]="item.id">
+              {{ item.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+
+      <div class="example-container">
           <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
             <mat-label>{{twitchEventFields[form.value.event].fields.minValue?.placeholder}}</mat-label>
             <input autocomplete="off"

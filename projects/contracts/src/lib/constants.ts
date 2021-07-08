@@ -11,6 +11,7 @@ export const ENDPOINTS = {
   CONFIG: 'config',
   OPEN: 'open',
   STATE: 'state',
+  TWITCH_DATA: 'twitchData',
 
   TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',

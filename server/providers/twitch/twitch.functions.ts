@@ -59,7 +59,36 @@ export function* getCommandsOfTwitchEvent(
 
       break;
     }
+    case TwitchEventTypes.channelPoints: {
+      for (const twitchSetting of onlyActiveConfigs) {
+        if (twitchEvent.type === twitchSetting.event
+          && twitchEvent.payload.rewardId === twitchSetting.channelPointId) {
+          yield {
+            command: twitchSetting,
+            twitchEvent
+          };
+        }
+      }
 
+      break;
+    }
+
+    // add gift if special config is added
+    // add subs if special config is added
+
+    // otherwise the default will be called
+    default: {
+      for (const twitchSetting of onlyActiveConfigs) {
+        if (twitchEvent.type === twitchSetting.event) {
+          yield {
+            command: twitchSetting,
+            twitchEvent
+          };
+        }
+      }
+
+      break;
+    }
   }
 }
 

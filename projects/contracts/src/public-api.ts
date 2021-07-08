@@ -10,3 +10,4 @@ export * from './lib/actions';
 export * from './lib/animations';
 export * from './lib/placeholders';
 export * from './lib/dialogs-contracts';
+export * from './lib/twitch-data.types';

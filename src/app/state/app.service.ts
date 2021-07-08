@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {AppStore} from './app.store';
 import {HttpClient} from '@angular/common/http';
 import {
+  ChannelPointRedemption,
   Clip,
   ENDPOINTS,
   FileInfo,
@@ -20,6 +21,7 @@ import {AppConfig} from '@memebox/app/env';
 import {addOrUpdateScreenClip, deleteClip, fillDefaultsScreenClip} from '@memebox/state';
 import {take} from 'rxjs/operators';
 import {uuid} from "@gewd/utils";
+import {Observable} from "rxjs";
 
 console.warn('APP.SERVICE.TS - AppConfig', AppConfig);
 
@@ -433,6 +435,13 @@ export class AppService {
         version: 'none'
       };
     }
+  }
+
+
+  public channelPoints$(): Observable<ChannelPointRedemption[]> {
+    return this.http.get<ChannelPointRedemption[]>(
+      `${API_BASE}${ENDPOINTS.TWITCH_DATA}/currentChannelPointRedemptions`
+    );
   }
 
   public tryHttpPostReturnString(url: string, data: unknown, offlineFallback: string){

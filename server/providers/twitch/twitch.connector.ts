@@ -7,6 +7,7 @@ import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
 import {
   TwitchBanEvent,
+  TwitchChannelPointRedemptionEvent,
   TwitchChatMessage,
   TwitchCheerMessage,
   TwitchEvent,
@@ -21,7 +22,7 @@ import {NamedLogger} from "../named-logger";
 import {getLevelOfTags} from "./twitch.functions";
 import {PubSubClient} from 'twitch-pubsub-client';
 import {ApiClient, StaticAuthProvider} from "twitch";
-import fetch from 'node-fetch';
+import {TwitchAuthInformation} from "./twitch.auth";
 
 @Service()
 export class TwitchConnector {
@@ -40,6 +41,8 @@ export class TwitchConnector {
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
 
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
+
+    private twitchAuth: TwitchAuthInformation
   ) {
 
     // TODO better way to find out the config has changed
@@ -296,57 +299,13 @@ export class TwitchConnector {
   }
 
   private async connectAndListenPubSub() {
-    const botSettings = this._currentTwitchConfig?.bot;
+    const twitchAuth = await this.twitchAuth.getTwitchAuthAsync();
 
-    if (!botSettings?.enabled || botSettings?.auth?.token == '') {
-      return;
-    }
-    const channel = this._currentTwitchConfig.channel;
-    const password = botSettings.auth.token.replace( "oauth:", "" );
-
-    let validation = await fetch( "https://id.twitch.tv/oauth2/validate", {
-      headers: {
-        "Authorization": `OAuth ${password}`
-      }
-    }).then( r => r.json() );
-
-    console.warn('Step 1');
-
-    if( !validation.client_id
-      || !validation.scopes.includes( "channel:read:redemptions" )
-      || !validation.scopes.includes( "user:read:email" ) ) {
-      console.error( "Invalid Password or Permission Scopes (channel:read:redemptions, user:read:email)" );
+    if (!twitchAuth) {
       return;
     }
 
-    console.warn('Step 2');
-
-    let userInfo = await fetch( "https://api.twitch.tv/helix/users?login=" + channel, {
-      headers: {
-        "Client-ID": validation.client_id,
-        "Authorization": `Bearer ${password}`
-      }
-    }).then( r => r.json() );
-    let channelId = userInfo.data[ 0 ].id;
-
-    console.warn('Step 3', {
-     // validation,
-     // userInfo: userInfo.data[0]
-    });
-
-    let channelRewards = await fetch( " https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id="+channelId, {
-      headers: {
-        "Client-ID": validation.client_id,
-        "Authorization": `Bearer ${password}`
-      }
-    }).then( r => r.json() );
-
-    console.warn('Step 4', {
-      channelRewards: channelRewards.data,
-    });
-
-    const accessToken = `${password}`;
-    const authProvider = new StaticAuthProvider(validation.client_id, accessToken);
+    const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
     const apiClient = new ApiClient({ authProvider });
 
 
@@ -373,7 +332,6 @@ export class TwitchConnector {
       } = channelPointRedemption;
 
       this._receivedTwitchEvents.next(new TwitchChannelPointRedemptionEvent({
-        id,
         message,
         redemptionDate,
         rewardId,
