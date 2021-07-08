@@ -132,7 +132,6 @@ export interface TwitchEventFields {
     fields: {
       minValue?: { enable: boolean, placeholder?: string},
       maxValue?: { enable: boolean, placeholder?: string},
-      response?: { enable: boolean, placeholder?: string},
     }
   }
 }

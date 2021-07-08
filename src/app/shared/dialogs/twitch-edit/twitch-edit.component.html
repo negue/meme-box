@@ -59,14 +59,6 @@
                    placeholder="{{twitchEventFields[form.value.event].fields.maxValue?.placeholder}}"
                    matInput>
           </mat-form-field>
-
-          <mat-form-field appearance="outline" *ngIf="twitchEventFields[form.value.event].fields.response?.enable">
-            <mat-label>{{twitchEventFields[form.value.event].fields.response?.placeholder}}</mat-label>
-            <input autocomplete="off"
-                   formControlName="response"
-                   placeholder="{{twitchEventFields[form.value.event].fields.response?.placeholder}}"
-                   matInput>
-          </mat-form-field>
         </div>
 
         <div class="example-container">

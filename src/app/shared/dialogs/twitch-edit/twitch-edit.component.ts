@@ -6,7 +6,8 @@ import {
   Clip,
   ClipAssigningMode,
   Dictionary,
-  Twitch, TwitchEventFields,
+  Twitch,
+  TwitchEventFields,
   TwitchEventTypes,
   TwitchTypesArray,
   UnassignedFilterEnum
@@ -58,6 +59,36 @@ const TWITCH_LEVELS: TwitchLevelEntry[] = [
   }
 ];
 
+const TwitchEventFields: TwitchEventFields = {
+  [TwitchEventTypes.message]: {
+    fields: {}
+  },
+  [TwitchEventTypes.raid]: {
+    fields: {
+      minValue: { enable: true, placeholder: "min_viewers_in_raid" },
+      maxValue: { enable: true, placeholder: "max_viewers_in_raid" },
+    }
+  },
+  [TwitchEventTypes.bits]: {
+    fields: {
+      minValue: { enable: true, placeholder: "min_bits_given" },
+      maxValue: { enable: true, placeholder: "max_bits_given" },
+    }
+  },
+  [TwitchEventTypes.ban]: {
+    fields: {
+    }
+  },
+  [TwitchEventTypes.subscription]: {
+    fields: {
+    }
+  },
+  [TwitchEventTypes.gift]: {
+    fields: {
+    }
+  }
+}
+
 @Component({
   selector: 'app-twitch-edit',
   templateUrl: './twitch-edit.component.html',
@@ -81,72 +112,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   twitchEventTypes = TwitchEventTypes;
 
-  twitchEventFields: TwitchEventFields = {
-    [TwitchEventTypes.message]: {
-      fields: {}
-    },
-    [TwitchEventTypes.raid]: {
-      fields: {
-        minValue: { enable: true, placeholder: "min_viewers_in_raid" },
-        maxValue: { enable: true, placeholder: "max_viewers_in_raid" },
-        response: { enable: true, placeholder: "message_shown_on_screen"}
-      }
-    },
-    [TwitchEventTypes.bits]: {
-      fields: {
-        minValue: { enable: true, placeholder: "min_bits_given" },
-        maxValue: { enable: true, placeholder: "max_bits_given" },
-        response: { enable: true, placeholder: "message_shown_on_screen"}
-      }
-    },
-    [TwitchEventTypes.ban]: {
-      fields: {
-        response: { enable: true, placeholder: "message_shown_on_screen" }
-
-      }
-    },
-    [TwitchEventTypes.allSubEvents]: {
-      fields: {
-        response: { enable: true, placeholder: "message_shown_on_screen" }
-      }
-    },
-    [TwitchEventTypes.anonGiftPaidUpgrade]: {
-      fields: {
-        response: { enable: true, placeholder: "message_shown_on_screen" }
-      }
-    },
-    [TwitchEventTypes.giftPaidUpgrade]: {
-      fields: {
-        response: { enable: true, placeholder: 'message_shown_on_screen' }
-      }
-    },
-    [TwitchEventTypes.resub]: {
-      fields: {
-        minValue: { enable: true, placeholder: "min_number_of_months" },
-        maxValue: { enable: true, placeholder: "max_number_of_months" },
-        response: { enable: true, placeholder: "message_shown_on_screen"}
-      }
-    },
-    [TwitchEventTypes.subGift]: {
-      fields: {
-        minValue: { enable: true, placeholder: "min_number_of_months" },
-        maxValue: { enable: true, placeholder: "max_number_of_months" },
-        response: { enable: true, placeholder: "message_shown_on_screen"}
-      }
-    },
-    [TwitchEventTypes.subMysteryGift]: {
-      fields: {
-        minValue: { enable: true, placeholder: "min_number_of_subs_gifted" },
-        maxValue: { enable: true, placeholder: "max_number_of_subs_gifted" },
-        response: { enable: true, placeholder: "message_shown_on_screen"}
-      }
-    },
-    [TwitchEventTypes.subscription]: {
-      fields: {
-        response: { enable: true, placeholder: "message_shown_on_screen" }
-      }
-    }
-  }
+  twitchEventFields = TwitchEventFields;
 
   clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
 
