@@ -107,6 +107,7 @@ export interface MediaEditDialogPayload {
 export class MediaEditComponent
   implements OnInit, OnDestroy,  DialogData<MediaEditDialogPayload>
 {
+  public isEditMode = false;
   public actionToEdit: Clip;
 
   public form = new FormBuilder().group({
@@ -227,6 +228,8 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
         ...this.data.actionToEdit?.extended
       }
     }) as Clip;
+
+    this.isEditMode = !!this.data.actionToEdit;
 
 
     if (this.actionToEdit.type === MediaType.Widget

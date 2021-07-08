@@ -22,18 +22,21 @@
       </mat-error>
     </mat-form-field>
 
+    <ng-container *ngIf="!isEditMode">
     <div class="action-buttons" *transloco="let t; read: 'common'">
-      <button *ngFor="let button of mediaTypeList"
-              mat-raised-button
 
-              (click)="updateMediaType(button.type)"
-              [color]="form.value.type === button.type ? 'primary' : 'accent'"
+        <button *ngFor="let button of mediaTypeList"
+                mat-raised-button
 
-      >
-        <mat-icon [svgIcon]="button.icon"></mat-icon>
-        {{ t(button.name) }}
-      </button>
+                (click)="updateMediaType(button.type)"
+                [color]="form.value.type === button.type ? 'primary' : 'accent'"
+
+        >
+          <mat-icon [svgIcon]="button.icon"></mat-icon>
+          {{ t(button.name) }}
+        </button>
     </div>
+    </ng-container>
 
     <mat-form-field *ngIf="false">
       <input autocomplete="off"
