@@ -1,8 +1,8 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
 import {ENDPOINTS, HasId, TimedClip, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
 import {Observable} from "rxjs";
-import {AppQueries} from "../../../state/app.queries";
-import {API_BASE, AppService} from "../../../state/app.service";
+import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
+import {API_BASE, AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";

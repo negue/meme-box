@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
-import {ActionStore, ActionStoreAdapter} from "@memebox/state";
-import {API_BASE, AppService} from "../../../state/app.service";
+import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
+import {API_BASE, AppService} from "@memebox/app-state";
 import {take} from "rxjs/operators";
 
 @Injectable()

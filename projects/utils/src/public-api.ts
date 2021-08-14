@@ -1,6 +1,7 @@
 export * from './lib/dynamicIframe';
 export * from './lib/script';
 export * from './lib/files';
+export * from './lib/observable-input';
 export * from './lib/simple-date-string';
 export * from './lib/sort-clips';
 export * from './lib/utils';

@@ -15,7 +15,7 @@ import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {VariablesConfigComponent} from './variables-config/variables-config.component';
 import {CodemirrorModule} from "@gewd/components/codemirror";
-import {ScriptVariableInputModule} from "../../components/script-variable-input/script-variable-input.module";
+import {ActionVariableInputModule} from "../../../../../projects/action-variables-ui/src/lib/action-variable-input/action-variable-input.module";
 import {MatTabsModule} from "@angular/material/tabs";
 import {HintPanelModule} from "@memebox/ui-components";
 
@@ -36,7 +36,7 @@ import {HintPanelModule} from "@memebox/ui-components";
     FormsModule,
     MatCheckboxModule,
     CodemirrorModule,
-    ScriptVariableInputModule,
+    ActionVariableInputModule,
     MatTabsModule,
     HintPanelModule
   ],

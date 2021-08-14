@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {TargetScreenType} from "@memebox/contracts";
-import {ConfigService} from "../../../../state/config.service";
+import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
 @Component({
   selector: 'app-import-media-files-dialog',

@@ -1,17 +1,13 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {
-  DynamicIframeContent,
-  DynamicIframeVariable,
-  isDynamicIframeVariableValid,
-  NOT_ALLOWED_WIDGET_VARIABLE_NAMES
-} from "@memebox/utils";
+import {DynamicIframeContent, isDynamicIframeVariableValid, NOT_ALLOWED_WIDGET_VARIABLE_NAMES} from "@memebox/utils";
 import {BehaviorSubject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
 import type {CustomHtmlDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {downloadFile} from "@gewd/utils";
 import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
+import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
 
 @Component({
   selector: 'app-widget-edit',
@@ -21,7 +17,7 @@ import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemir
 export class WidgetEditComponent implements OnInit {
 
   public workingValue: DynamicIframeContent = {};
-  public variablesList: DynamicIframeVariable[] = [];
+  public variablesList: ActionVariableConfig[] = [];
 
   @ViewChild('enablePreviewRefresh', {static: true})
   public autoRefreshCheckbox: MatCheckbox;
@@ -114,13 +110,13 @@ export class WidgetEditComponent implements OnInit {
       hint: '',
       name: `myVar${++this.newVarCounter}`,
       fallback: '',
-      type: 'text'
+      type: ActionVariableTypes.text
     });
 
     this.markForCheck();
   }
 
-  deleteVariable($event: DynamicIframeVariable) {
+  deleteVariable($event: ActionVariableConfig) {
     // TODO "Are you sure?"
 
     const foundIndex = this.variablesList.findIndex(value => value.name === $event.name);

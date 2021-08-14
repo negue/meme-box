@@ -1,11 +1,6 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {
-  isDynamicIframeVariableValid,
-  NOT_ALLOWED_SCRIPT_VARIABLE_NAMES,
-  ScriptConfig,
-  ScriptVariable
-} from "@memebox/utils";
+import {isDynamicIframeVariableValid, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES, ScriptConfig} from "@memebox/utils";
 import {CustomScriptDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {downloadFile} from "@gewd/utils";
@@ -14,6 +9,7 @@ import {DialogService} from "../dialog.service";
 import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
 import {EditorState} from "@codemirror/state";
 import {ClipAssigningMode} from "@memebox/contracts";
+import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
 
 @Component({
   selector: 'app-script-edit',
@@ -23,7 +19,7 @@ import {ClipAssigningMode} from "@memebox/contracts";
 export class ScriptEditComponent implements OnInit {
 
   public workingValue: Partial<ScriptConfig> = {};
-  public variablesList: ScriptVariable[] = [];
+  public variablesList: ActionVariableConfig[] = [];
 
   @ViewChild('enablePreviewRefresh', {static: true})
   public autoRefreshCheckbox: MatCheckbox;
@@ -90,13 +86,13 @@ export class ScriptEditComponent implements OnInit {
       hint: '',
       name: `myVar${++this.newVarCounter}`,
       fallback: '',
-      type: 'text'
+      type: ActionVariableTypes.text
     });
 
     this.markForCheck();
   }
 
-  deleteVariable($event: ScriptVariable) {
+  deleteVariable($event: ActionVariableConfig) {
     // TODO "Are you sure?"
 
     const foundIndex = this.variablesList.findIndex(value => value.name === $event.name);

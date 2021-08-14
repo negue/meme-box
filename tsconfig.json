@@ -27,6 +27,15 @@
       "@memebox/contracts": [
         "projects/contracts/src/public-api"
       ],
+      "@memebox/app-state": [
+        "projects/app-state/src/projects"
+      ],
+      "@memebox/action-variables": [
+        "projects/action-variables/src/projects"
+      ],
+      "@memebox/action-variables/ui": [
+        "projects/action-variables-ui/src/projects"
+      ],
       "@memebox/app/env": [
         "src/environments/environment"
       ],
@@ -36,14 +45,17 @@
       "@memebox/utils": [
         "projects/utils/src/public-api"
       ],
-      "@memebox/state": [
-        "projects/state/src/public-api"
+      "@memebox/shared-state": [
+        "projects/shared-state/src/public-api"
       ],
       "@memebox/version": [
         "src/version_info.json"
       ],
       "@memebox/ui-components": [
         "projects/ui-components/src/projects"
+      ],
+      "@memebox/state-components": [
+        "projects/state-components/src/projects"
       ]
     }
   },

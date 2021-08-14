@@ -14,9 +14,9 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {AnimationPreviewComponent} from './animation-preview/animation-preview.component';
 import {PreventAnimationOnFirstViewDirective} from './prevent-animation-on-first-view.directive';
-import {PipesModule} from "../../../core/pipes/pipes.module";
+import {PipesModule} from "../../../../../projects/ui-components/src/lib/pipes/pipes.module";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {ClipTypeModule} from "../../components/clip-type/clip-type.module";
+import {ClipTypeModule} from "../../../../../projects/state-components/src/lib/clip-type/clip-type.module";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 
 @NgModule({

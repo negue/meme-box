@@ -1,18 +1,11 @@
 import {Clip, Dictionary} from "@memebox/contracts";
+import {ActionVariableConfig} from "@memebox/action-variables";
 
-export type ScriptVariableTypes = 'text'|'number'|'textarea'|'boolean'|'media'|'mediaList';
-
-export interface ScriptVariable {
-  name: string; // TODO validations?
-  hint: string;
-  type: ScriptVariableTypes;
-  fallback: any; // TODO - might need some typesafety .. maybe during runtime
-}
 
 export interface ScriptConfig {
   executionScript: string;
   bootstrapScript: string;
-  variablesConfig?: ScriptVariable[];
+  variablesConfig?: ActionVariableConfig[];
   settings?: {
   }
 }
@@ -20,7 +13,7 @@ export interface ScriptConfig {
 
 const SCRIPT_EXECUTION_KEY = '_executionScript';
 const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
-const SCRIPT_VARIABLES_KEY = '_variables';
+export const SCRIPT_VARIABLES_KEY = '_variables';
 const SCRIPT_SETTINGS_KEY = '_settings';
 
 export function clipDataToScriptConfig (clip: Partial<Clip>) {
@@ -33,7 +26,7 @@ export function clipDataToScriptConfig (clip: Partial<Clip>) {
     bootstrapScript: clip.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
   };
 
-  const customVariables: ScriptVariable[] = JSON.parse(clip.extended[SCRIPT_VARIABLES_KEY] ?? '[]');
+  const customVariables: ActionVariableConfig[] = JSON.parse(clip.extended[SCRIPT_VARIABLES_KEY] ?? '[]');
   dynamicContent.variablesConfig = customVariables;
 
   // todo add a settings type

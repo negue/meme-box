@@ -11,15 +11,15 @@ import {
   ViewChild
 } from '@angular/core';
 import {dynamicIframe, DynamicIframeContent} from "@memebox/utils";
-import {WebsocketHandler} from "../../../core/services/websocket.handler";
+import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
 import {BehaviorSubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
 import {TriggerAction} from "@memebox/contracts";
-import {WebsocketService} from "../../../core/services/websocket.service";
+import {WebsocketService} from "../../../../../projects/app-state/src/lib/services/websocket.service";
 import {guid} from "@datorama/akita";
-import {AppService} from "../../../state/app.service";
+import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
 import {WidgetStoreRemoteAdapter} from "./widget-store-remote-adapter.service";
 
 @Component({

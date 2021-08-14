@@ -1,7 +1,6 @@
 import {ErrorHandler, Injectable, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {AppService} from "../state/app.service";
-import {StateModule} from "../state/state.module";
+import {AppService} from "@memebox/app-state";
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +20,7 @@ export class ErrorHandlerService implements ErrorHandler {
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
-    StateModule,
+    CommonModule
   ],
   providers: [
     ErrorHandlerService,

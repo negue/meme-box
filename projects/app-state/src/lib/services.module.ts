@@ -7,6 +7,7 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {SnackbarService} from "./services/snackbar.service";
 import {AppQueries} from "./state";
 import {AppService} from "./state/app.service";
+import {ConfigService} from "./services/config.service";
 
 @NgModule({
   imports: [
@@ -20,7 +21,8 @@ import {AppService} from "./state/app.service";
     WebsocketService,
 
     AppQueries,
-    AppService
+    AppService,
+    ConfigService
   ]
 })
 export class ServicesModule {

@@ -13,9 +13,7 @@ import {
   TwitchTypesArray,
   UnassignedFilterEnum
 } from '@memebox/contracts';
-import {AppService} from '../../../state/app.service';
-import {AppQueries} from '../../../state/app.queries';
-import {SnackbarService} from '../../../core/services/snackbar.service';
+import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
 
@@ -26,7 +24,8 @@ const INITIAL_TWITCH: Partial<Twitch> = {
   contains: '',
   screenId: '',
   active: true,
-  roles: ['user']
+  roles: ['user'],
+  extended: {}
 };
 
 interface TwitchLevelEntry {

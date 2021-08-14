@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
 import {Clip, Screen} from "@memebox/contracts";
-import {AppQueries} from "../../../state/app.queries";
+import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
 import {DialogService} from "../../dialogs/dialog.service";
 import {ConfigMediaPathComponent} from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
 import {map} from "rxjs/operators";
-import {ConfigService} from "../../../state/config.service";
+import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 
 @Component({
   selector: 'app-getting-started',

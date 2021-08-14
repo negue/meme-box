@@ -2,11 +2,11 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Clip, ScreenViewEntry} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {filter, map, tap} from "rxjs/operators";
-import {AppQueries} from "../../../../state/app.queries";
+import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {EXPRESS_BASE} from "../../../../state/app.service";
-import {NetworkInterfacesService} from "../../../../core/services/network-interfaces.service";
+import {EXPRESS_BASE} from "../../../../../../projects/app-state/src/lib/state/app.service";
+import {NetworkInterfacesService} from "../../../../../../projects/app-state/src/lib/services/network-interfaces.service";
 import {sortClips} from "../../../../../../projects/utils/src/lib/sort-clips";
 
 function createLocalOrProductionUrlBase() {

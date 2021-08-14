@@ -13,11 +13,11 @@ import {
   TriggerAction
 } from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
-import {AppQueries} from "../../state/app.queries";
-import {AppService} from "../../state/app.service";
+import {AppQueries} from "../../../../projects/app-state/src/lib/state/app.queries";
+import {AppService} from "../../../../projects/app-state/src/lib/state/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
-import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
+import {ConnectionState, WebsocketService} from "../../../../projects/app-state/src/lib/services/websocket.service";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 

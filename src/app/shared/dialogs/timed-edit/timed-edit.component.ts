@@ -3,9 +3,7 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Clip, ClipAssigningMode, Dictionary, MediaType, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
-import {AppService} from '../../../state/app.service';
-import {AppQueries} from '../../../state/app.queries';
-import {SnackbarService} from '../../../core/services/snackbar.service';
+import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {filter, map} from "rxjs/operators";
 

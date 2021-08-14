@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {CombinedClip, PositionEnum, Screen} from '@memebox/contracts';
 import {DragResizeMediaComponent} from '../drag-resize-media/drag-resize-media.component';
-import {AppService} from '../../../../state/app.service';
+import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
 import {FormBuilder, FormControl} from '@angular/forms';
 import {AutoScaleComponent} from '@gewd/components/auto-scale';
 

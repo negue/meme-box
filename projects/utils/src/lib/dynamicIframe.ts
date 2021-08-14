@@ -1,19 +1,10 @@
 import {Clip, Dictionary} from "@memebox/contracts";
 import {replaceVariablesInString} from "./utils";
+import {ActionVariableConfig} from "@memebox/action-variables";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
   src: string;
-}
-
-export type DynamicIframeVariableTypes = 'text'|'number'|'textarea'|'boolean';
-
-export interface DynamicIframeVariable {
-  name: string; // TODO validations?
-  hint: string;
-  type: DynamicIframeVariableTypes;
-  htmlNewLineBreak?: boolean;
-  fallback: any; // TODO - might need some typesafety .. maybe during runtime
 }
 
 export interface DynamicIframeContent {
@@ -21,7 +12,7 @@ export interface DynamicIframeContent {
   html?: string;
   js?: string;
   libraries?: HtmlExternalFile[];
-  variablesConfig?: DynamicIframeVariable[];
+  variablesConfig?: ActionVariableConfig[];
   variables?: Dictionary<any>;
   settings?: {
     subscribeToTwitchEvent?: boolean;
@@ -161,7 +152,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   }
 }
 
-function getVariableValueOrFallback (config: DynamicIframeVariable,
+function getVariableValueOrFallback (config: ActionVariableConfig,
                                      valueBag: Dictionary<any>,
                                      justReturnIt: boolean = false) {
   const valueToReturn = valueBag[config.name] || config.fallback;
@@ -178,7 +169,7 @@ function getVariableValueOrFallback (config: DynamicIframeVariable,
   return `"${valueToReturn}"`;
 }
 
-function getJsCustomVariables(variables: DynamicIframeVariable[], valueBag: Dictionary<any>) {
+function getJsCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
   return variables
     .filter(config => !!config.fallback)
     .map(config => {
@@ -187,7 +178,7 @@ function getJsCustomVariables(variables: DynamicIframeVariable[], valueBag: Dict
 }
 
 
-function getCssCustomVariables(variables: DynamicIframeVariable[], valueBag: Dictionary<any>) {
+function getCssCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
   return variables
     .filter(config => !!config.fallback && config.type !== "textarea" && config.type !== "boolean")
     .map(config => { return `--${config.name}: ${getVariableValueOrFallback(config, valueBag, true)};`;
@@ -220,7 +211,7 @@ export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
   const externalFiles: HtmlExternalFile[] = JSON.parse(clip.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
   dynamicContent.libraries = externalFiles;
 
-  const customVariables: DynamicIframeVariable[] = JSON.parse(clip.extended[DYNAMIC_IFRAME_VARIABLES_KEY] ?? '[]');
+  const customVariables: ActionVariableConfig[] = JSON.parse(clip.extended[DYNAMIC_IFRAME_VARIABLES_KEY] ?? '[]');
   dynamicContent.variablesConfig = customVariables;
 
   console.info('json', JSON.stringify(dynamicContent));

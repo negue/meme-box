@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {ConfigMediaPathComponent} from "../../media/media-overview/config-media-path/config-media-path.component";
 import {Observable} from "rxjs";
 import {Config} from "@memebox/contracts";
-import {AppService} from "../../../state/app.service";
+import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
-import {AppQueries} from "../../../state/app.queries";
+import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
 import {TranslocoService} from "@ngneat/transloco";
 import {TranslocoSelectedLangService} from "../../../transloco/transloco-selected-lang.service";
-import {ConfigService} from "../../../state/config.service";
+import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 
 const dummyItemsCreatorLazy = () => import('./dummyItemsCreator');
 

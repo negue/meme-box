@@ -1,16 +1,16 @@
 import {ChangeDetectionStrategy, Component, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {Clip, Screen, Tag} from '@memebox/contracts';
-import {AppService} from '../../../state/app.service';
-import {AppQueries} from '../../../state/app.queries';
-import {WebsocketService} from '../../../core/services/websocket.service';
+import {AppService} from '../../../../../projects/app-state/src/lib/state/app.service';
+import {AppQueries} from '../../../../../projects/app-state/src/lib/state/app.queries';
+import {WebsocketService} from '../../../../../projects/app-state/src/lib/services/websocket.service';
 import {DialogService} from '../../../shared/dialogs/dialog.service';
 import {IFilterItem} from '../../../shared/components/filter/filter.component';
 import {createCombinedFilterItems$, filterClips$} from '../../../shared/components/filter/filter.methods';
 import {distinctUntilChanged, map, shareReplay} from 'rxjs/operators';
 import {OverviewUiMode, OverviewUiService} from './overview-ui.service';
 import isEqual from 'lodash/isEqual';
-import {ConfigService} from "../../../state/config.service";
+import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {MediGroup} from "./group-by-media-type.pipe";
 
 @Component({

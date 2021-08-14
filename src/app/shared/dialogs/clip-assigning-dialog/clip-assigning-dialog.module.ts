@@ -1,15 +1,15 @@
-import { NgModule } from "@angular/core";
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
-import { MatButtonModule } from "@angular/material/button";
-import { CommonModule } from "@angular/common";
-import { DialogContract } from "../dialog.contract";
-import { MatDialogRef } from "@angular/material/dialog/dialog-ref";
-import { ClipAssigningDialogComponent, ClipAssigningDialogOptions } from "./clip-assigning-dialog.component";
-import { FilterModule } from "../../components/filter/filter.module";
-import { ClipTypeModule } from "../../components/clip-type/clip-type.module";
-import { MatIconModule } from "@angular/material/icon";
-import { MatListModule } from "@angular/material/list";
-import { PipesModule } from "../../../core/pipes/pipes.module";
+import {NgModule} from "@angular/core";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {MatButtonModule} from "@angular/material/button";
+import {CommonModule} from "@angular/common";
+import {DialogContract} from "../dialog.contract";
+import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {ClipAssigningDialogComponent, ClipAssigningDialogOptions} from "./clip-assigning-dialog.component";
+import {FilterModule} from "../../components/filter/filter.module";
+import {ClipTypeModule} from "../../../../../projects/state-components/src/lib/clip-type/clip-type.module";
+import {MatIconModule} from "@angular/material/icon";
+import {MatListModule} from "@angular/material/list";
+import {PipesModule} from "../../../../../projects/ui-components/src/lib/pipes/pipes.module";
 
 @NgModule({
   declarations: [

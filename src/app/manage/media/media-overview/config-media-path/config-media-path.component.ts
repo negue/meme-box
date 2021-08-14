@@ -1,12 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
-import {AppService} from "../../../../state/app.service";
-import {AppQueries} from "../../../../state/app.queries";
+import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
-import {SnackbarService} from "../../../../core/services/snackbar.service";
-import {ConfigService} from "../../../../state/config.service";
+import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
 @Component({
   selector: 'app-config-media-path',

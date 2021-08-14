@@ -11,7 +11,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ScreenOverviewComponent} from "./screen-overview/screen-overview.component";
 import {ScreenInfoComponent} from "./screen-overview/screen-info/screen-info.component";
-import {ClipTypeModule} from "../../shared/components/clip-type/clip-type.module";
+import {ClipTypeModule} from "../../../../projects/state-components/src/lib/clip-type/clip-type.module";
 import {GettingStartedModule} from "../../shared/components/getting-started/getting-started.module";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {MatTooltipModule} from "@angular/material/tooltip";

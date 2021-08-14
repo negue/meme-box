@@ -195,11 +195,11 @@
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
         <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
         <div *ngFor="let variable of currentHtml?.variablesConfig">
-          <app-widget-variable-input [variableType]="variable.type" [label]="variable.name"
+          <app-action-variable-input [variableType]="variable.type" [label]="variable.name"
                                       [value]="actionToEdit.extended[variable.name]"
                                       (valueChanged)="actionToEdit.extended[variable.name] = $event; triggerHTMLRefresh()">
 
-          </app-widget-variable-input>
+          </app-action-variable-input>
         </div>
       </ng-container>
     </ng-container>
@@ -284,10 +284,10 @@
       <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
 
         <div *ngFor="let variable of currentScript?.variablesConfig">
-          <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
+          <app-action-variable-input [variableType]="variable.type" [label]="variable.name"
                                      [value]="actionToEdit.extended[variable.name] || variable.fallback"
                                      (valueChanged)="actionToEdit.extended[variable.name] = $event;">
-          </app-script-variable-input>
+          </app-action-variable-input>
         </div>
     </div>
 
@@ -302,10 +302,10 @@
       <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
 
       <div *ngFor="let variable of currentScript?.variablesConfig">
-        <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
+        <app-action-variable-input [variableType]="variable.type" [label]="variable.name"
                                    [value]="actionToEdit.extended[variable.name] || variable.fallback"
                                    (valueChanged)="actionToEdit.extended[variable.name] = $event;">
-        </app-script-variable-input>
+        </app-action-variable-input>
       </div>
     </div>
 

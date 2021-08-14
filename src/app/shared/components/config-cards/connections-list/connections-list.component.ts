@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DialogService} from "../../../dialogs/dialog.service";
 import {Observable} from "rxjs";
-import {AppQueries} from "../../../../state/app.queries";
+import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
 import {map} from "rxjs/operators";
 
 interface ConnectionEntry {

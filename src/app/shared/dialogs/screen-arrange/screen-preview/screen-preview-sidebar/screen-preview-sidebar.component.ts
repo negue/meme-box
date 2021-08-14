@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { CombinedClip, Screen } from '@memebox/contracts';
-import { WebsocketService } from '../../../../../core/services/websocket.service';
+import {Component, Input} from '@angular/core';
+import {CombinedClip, Screen} from '@memebox/contracts';
+import {WebsocketService} from '../../../../../../../projects/app-state/src/lib/services/websocket.service';
 
 @Component({
   selector: 'app-screen-preview-sidebar',

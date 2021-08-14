@@ -19,8 +19,7 @@ import {
   Tag
 } from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {AppService} from "../../../state/app.service";
-import {AppQueries} from "../../../state/app.queries";
+import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -46,7 +45,6 @@ import {
   ScriptConfig
 } from "@memebox/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
-import {SnackbarService} from "../../../core/services/snackbar.service";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
 
