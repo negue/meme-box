@@ -1,0 +1,8 @@
+<div *ngIf="variablesConfig$ | async as variablesConfig">
+  <div *ngFor="let variable of variablesConfig">
+    <app-script-variable-input [variableType]="variable.type" [label]="variable.name"
+                               [value]="data[variable.name] || variable.fallback"
+                               (valueChanged)="variableChanged(variable.name, $event)">
+    </app-script-variable-input>
+  </div>
+</div>

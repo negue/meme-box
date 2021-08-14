@@ -1,37 +1,37 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ScriptVariableTypes} from "@memebox/utils";
-import {DialogService} from "../../dialogs/dialog.service";
-import {ClipAssigningMode, UnassignedFilterEnum} from "@memebox/contracts";
+import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
+import {ClipAssigningMode} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest} from "rxjs";
-import {AppQueries} from "../../../state/app.queries";
+import {AppQueries} from "@memebox/app-state";
 import {map} from "rxjs/operators";
+import {ActionVariableTypes} from "@memebox/action-variables";
 
 @Component({
-  selector: 'app-script-variable-input',
-  templateUrl: './script-variable-input.component.html',
-  styleUrls: ['./script-variable-input.component.scss']
+  selector: 'app-action-variable-input',
+  templateUrl: './action-variable-input.component.html',
+  styleUrls: ['./action-variable-input.component.scss']
 })
-export class ScriptVariableInputComponent implements OnInit, OnChanges {
+export class ActionVariableInputComponent implements OnInit, OnChanges {
 
   @Input()
-  public variableType: ScriptVariableTypes;
+  public variableType: ActionVariableTypes;
 
   @Input()
   public label: string;
 
   @Input()
-  public value: any;
+  public value: unknown;
 
   @Output()
-  public valueChanged = new EventEmitter<any>();
+  public valueChanged = new EventEmitter<unknown>();
 
   @Input()
   inConfigMode = false;
 
-  public visibleMediaIdList$ = new BehaviorSubject<string[]>([]);
+  public visibleActionIdList$ = new BehaviorSubject<string[]>([]);
 
   public visibleMedia$ = combineLatest([
-    this.visibleMediaIdList$,
+    this.visibleActionIdList$,
     this.appQueries.clipMap$
   ]).pipe(
     map(([mediaIdList, mediaMap]) => {
@@ -45,39 +45,39 @@ export class ScriptVariableInputComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    if (this.variableType === "media" && this.value ) {
+    if (this.variableType === ActionVariableTypes.action
+      && typeof this.value === 'string' ) {
       console.info('nginit', this.value);
 
-      this.visibleMediaIdList$.next([this.value]);
+      this.visibleActionIdList$.next([this.value]);
     }
   }
 
   ngOnChanges({ value }: SimpleChanges): void {
     console.info({value});
-    if (this.variableType === "media" && value && value.currentValue) {
+    if (this.variableType === ActionVariableTypes.action && value && value.currentValue) {
       console.info('ngOnChanges', value.currentValue);
 
-      this.visibleMediaIdList$.next([value.currentValue]);
+      this.visibleActionIdList$.next([value.currentValue]);
     }
   }
 
   async selectSingleMedia() {
-    const clipId = await this.dialogService.showClipSelectionDialog({
+    const actionId = await this.dialogService.showClipSelectionDialog({
       mode: ClipAssigningMode.Single,
-      selectedItemId: this.visibleMediaIdList$.value[0] ?? null,
-      dialogTitle: 'Media Variable',
+      selectedItemId: this.visibleActionIdList$.value[0] ?? null,
+      dialogTitle: 'Action Variable',
       showMetaItems: true,
 
-      unassignedFilterType: UnassignedFilterEnum.Twitch,
       showOnlyUnassignedFilter: true
     });
 
-    if (clipId) {
-      console.info({clipId});
+    if (actionId) {
+      console.info({clipId: actionId});
 
-      this.visibleMediaIdList$.next([clipId]);
-      this.value = clipId;
-      this.valueChanged.next(clipId);
+      this.visibleActionIdList$.next([actionId]);
+      this.value = actionId;
+      this.valueChanged.next(actionId);
     }
   }
 

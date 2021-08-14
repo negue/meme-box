@@ -1,19 +1,19 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ScriptVariableInputComponent} from './script-variable-input.component';
+import {ActionVariableInputComponent} from './action-variable-input.component';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {CompactClipCardModule} from "../compact-clip-card/compact-clip-card.module";
+import {CompactClipCardModule} from "@memebox/state-components";
 
 
 @NgModule({
   declarations: [
-    ScriptVariableInputComponent
+    ActionVariableInputComponent
   ],
   exports: [
-    ScriptVariableInputComponent
+    ActionVariableInputComponent
   ],
   imports: [
     CommonModule,
@@ -24,4 +24,4 @@ import {CompactClipCardModule} from "../compact-clip-card/compact-clip-card.modu
     CompactClipCardModule
   ]
 })
-export class ScriptVariableInputModule { }
+export class ActionVariableInputModule { }
