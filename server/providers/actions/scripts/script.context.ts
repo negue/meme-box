@@ -1,6 +1,6 @@
 import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 import {VM, VMScript} from "vm2";
-import {ActionStoreAdapter, ActionStoreApi} from "@memebox/state";
+import {ActionStoreAdapter, ActionStoreApi} from "@memebox/shared-state";
 import {Clip, Dictionary, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {Sleep, sleep} from "./apis/sleep.api";

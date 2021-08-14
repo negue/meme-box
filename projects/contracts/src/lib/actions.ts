@@ -29,7 +29,10 @@ export enum TriggerClipOrigin {
   Scripts
 }
 
-export interface TriggerBase {
+/**
+ * TODO RENAME because of the other TriggerBase
+ */
+export interface InternalActionTriggerBase {
 
   id: string;   // actionId
   targetScreen?: string;
@@ -65,7 +68,7 @@ export interface TriggerActionOverrides {
 
 }
 
-export interface TriggerAction extends TriggerBase {
+export interface TriggerAction extends InternalActionTriggerBase {
   // TODO an unique triggerActionId to follow
 
   repeatX?: number;
@@ -79,7 +82,7 @@ export interface TriggerAction extends TriggerBase {
   byTwitch?: AllTwitchEvents;
 }
 
-export interface TriggerActionUpdate extends TriggerBase {
+export interface TriggerActionUpdate extends InternalActionTriggerBase {
   screenMedia?: ScreenMediaOverridableProperies
 }
 

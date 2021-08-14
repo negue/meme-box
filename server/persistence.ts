@@ -26,7 +26,7 @@ import {
   uuidv4
 } from "@memebox/utils";
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {operations} from '../projects/state/src/public-api';
+import {operations} from '@memebox/shared-state';
 import {debounceTime} from "rxjs/operators";
 import {LOGGER} from "./logger.utils";
 import {registerProvider} from "@tsed/di";

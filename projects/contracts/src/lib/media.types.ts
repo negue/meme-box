@@ -1,3 +1,5 @@
+// TODO RENAME MediaType to ActionType
+
 export enum MediaType {
   Invalid = -1,
   Picture = 0,
