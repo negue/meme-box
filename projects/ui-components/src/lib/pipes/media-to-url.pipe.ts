@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {EXPRESS_BASE} from "../../state/app.service";
+import {EXPRESS_BASE} from "../../../../app-state/src/lib/state/app.service";
 import {Clip, SERVER_URL} from "@memebox/contracts";
 
 @Pipe({

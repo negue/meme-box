@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Clip} from "@memebox/contracts";
-import {clipDataToDynamicIframeContent, DynamicIframeContent} from "../../../../projects/utils/src/lib/dynamicIframe";
+import {clipDataToDynamicIframeContent, DynamicIframeContent} from "../../../../utils/src/lib/dynamicIframe";
 
 @Pipe({
   name: 'clipToIframe'

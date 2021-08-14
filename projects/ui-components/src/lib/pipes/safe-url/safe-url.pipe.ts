@@ -1,5 +1,5 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import {Pipe, PipeTransform} from "@angular/core";
+import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 
 /**
  * We need to sanitize a url for a IFrame to avoid unsafe value error.

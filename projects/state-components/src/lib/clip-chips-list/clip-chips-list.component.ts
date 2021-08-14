@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Clip, Screen, Tag} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {AppQueries} from "../../../state/app.queries";
+import {AppQueries} from "@memebox/app-state";
 
 @Component({
   selector: 'app-clip-chips-list',

@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ClipPreviewComponent} from './clip-preview.component';
-import {PipesModule} from "../../../core/pipes/pipes.module";
+import {PipesModule} from "@memebox/ui-components";
 import {ClipTypeModule} from "../clip-type/clip-type.module";
 
 
