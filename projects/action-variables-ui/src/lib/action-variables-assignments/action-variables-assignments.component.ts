@@ -2,9 +2,9 @@ import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges
 import {AppQueries} from "@memebox/app-state";
 import {filter, map} from "rxjs/operators";
 import {combineLatest} from "rxjs";
-import {ObservableInputs, SCRIPT_VARIABLES_KEY} from '@memebox/utils';
+import {ObservableInputs} from '@memebox/utils';
 import {Dictionary} from "@memebox/contracts";
-import {ActionVariableConfig} from "@memebox/action-variables";
+import {ActionVariableTypes, getVariablesListOfAction} from "@memebox/action-variables";
 
 @Component({
   selector: 'app-action-variables-assignments',
@@ -15,10 +15,10 @@ export class ActionVariablesAssignmentsComponent implements OnInit, OnChanges {
   private readonly inputs = new ObservableInputs();
 
   @Input()
-  public data: Dictionary<unknown> = {};
+  public data: Dictionary<string> = {};
 
   @Output()
-  public dataChanged = new EventEmitter<Record<string, unknown>>();
+  public dataChanged = new EventEmitter<Dictionary<string>>();
 
   @Input()
   public actionId: string;
@@ -33,7 +33,7 @@ export class ActionVariablesAssignmentsComponent implements OnInit, OnChanges {
   );
 
   variablesConfig$ = this.action$.pipe(
-    map(action => JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] ?? '[]') as ActionVariableConfig[])
+    map(action => getVariablesListOfAction(action))
   );
 
   constructor(
@@ -47,9 +47,23 @@ export class ActionVariablesAssignmentsComponent implements OnInit, OnChanges {
     this.inputs.onChanges();
   }
 
-  variableChanged(name: string, value: unknown) {
-    this.data[name] = value;
+  variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown) {
+    const newDataObject = {
+      ...this.data
+    };
 
-    this.dataChanged.next(this.data);
+    switch (valueType) {
+      case ActionVariableTypes.actionList:
+      {
+        newDataObject[name] = JSON.stringify($event);
+      }
+      default: {
+
+        newDataObject[name] = $event+'';
+      }
+    }
+
+
+    this.dataChanged.next(newDataObject);
   }
 }

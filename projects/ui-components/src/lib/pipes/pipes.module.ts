@@ -9,13 +9,14 @@ import {SettingsToSizingTypePipe} from "./settings-to-sizing-type.pipe";
 import {VisibilityToStringPipe} from "./visibility-to-string.pipe";
 import {MediaToUrlPipe} from "./media-to-url.pipe";
 import {LazyArrayPipe} from "./lazy-array.pipe";
+import {VariableConverterPipe} from "./variable-converter.pipe";
 
 const PIPES = [
   SafePipe,
   ReadableMsPipe, ClipToIframePipe,
   PositionToStringPipe, SettingsToSizingTypePipe,
   VisibilityToStringPipe, MediaToUrlPipe,
-  LazyArrayPipe
+  LazyArrayPipe, VariableConverterPipe
 ];
 
 @NgModule({

@@ -135,7 +135,8 @@ export class ScriptContext implements CanDispose {
 
     const variables = getScriptVariablesOrFallbackValues(
       this.scriptConfig,
-      this.script.extended
+      this.script.extended,
+      payloadObs?.overrides?.action?.variables
     );
 
 

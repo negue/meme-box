@@ -1,8 +1,8 @@
 <div *ngIf="variablesConfig$ | async as variablesConfig">
   <div *ngFor="let variable of variablesConfig">
     <app-action-variable-input [variableType]="variable.type" [label]="variable.name"
-                               [value]="data[variable.name] || variable.fallback"
-                               (valueChanged)="variableChanged(variable.name, $event)">
+                               [value]="(data[variable.name] || variable.fallback) | variableConverter: variable.type"
+                               (valueChanged)="variableChanged(variable.name, variable.type, $event)">
     </app-action-variable-input>
   </div>
 </div>

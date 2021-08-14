@@ -90,7 +90,7 @@ export enum HideAfterType {
   Repeats // maybe?
 }
 
-export interface ScreenMediaOverridableProperies {
+export interface ScreenMediaOverridableProperties {
   visibility: VisibilityEnum;
   loop?: boolean;
 
@@ -118,7 +118,7 @@ export interface ScreenMediaOverridableProperies {
   customCss?: string;
 }
 
-export interface ScreenClip extends HasId, ScreenMediaOverridableProperies {
+export interface ScreenClip extends HasId, ScreenMediaOverridableProperties {
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
 

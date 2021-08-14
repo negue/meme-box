@@ -1,5 +1,5 @@
 import {Clip, Dictionary} from "@memebox/contracts";
-import {ActionVariableConfig} from "@memebox/action-variables";
+import {ActionVariableConfig, convertExtendedToTypeValues} from "@memebox/action-variables";
 
 
 export interface ScriptConfig {
@@ -68,12 +68,21 @@ export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [
 
 export function getScriptVariablesOrFallbackValues (
   config: ScriptConfig,
-  valueBag: Dictionary<any>
+  scriptAssignedValues: Dictionary<any>,
+  payloadAssignedValues?: Dictionary<any>
 ): Dictionary<unknown> {
   const newValueBag: Dictionary<unknown> = {};
 
   for (const variablesConfigElement of (config.variablesConfig || [])) {
-    newValueBag[variablesConfigElement.name] = valueBag[variablesConfigElement.name] || variablesConfigElement.fallback;
+
+    // Payload -> Script Assigned -> Fallback
+    const valueOfVariable = convertExtendedToTypeValues(
+      payloadAssignedValues?.[variablesConfigElement.name]
+      ?? scriptAssignedValues[variablesConfigElement.name]
+      ?? variablesConfigElement.fallback, variablesConfigElement.type
+    );
+
+    newValueBag[variablesConfigElement.name] = valueOfVariable;
   }
 
   return newValueBag;

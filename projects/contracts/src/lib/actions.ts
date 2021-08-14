@@ -1,4 +1,4 @@
-import {ScreenMediaOverridableProperies} from "./types";
+import {Dictionary, ScreenMediaOverridableProperties} from "./types";
 import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
 
 export const ACTIONS = {
@@ -42,6 +42,10 @@ export interface InternalActionTriggerBase {
   originId?: string;
 }
 
+export interface ActionOverridableProperties {
+  variables?: Dictionary<unknown>;
+}
+
 export interface TriggerActionOverrides {
   /** examples / ideas
    *
@@ -64,7 +68,10 @@ export interface TriggerActionOverrides {
 
    *
    */
-  screenMedia: ScreenMediaOverridableProperies
+
+  action?: ActionOverridableProperties;
+
+  screenMedia?: ScreenMediaOverridableProperties
 
 }
 
@@ -83,7 +90,7 @@ export interface TriggerAction extends InternalActionTriggerBase {
 }
 
 export interface TriggerActionUpdate extends InternalActionTriggerBase {
-  screenMedia?: ScreenMediaOverridableProperies
+  screenMedia?: ScreenMediaOverridableProperties
 }
 
 export enum ActionStateEnum {
