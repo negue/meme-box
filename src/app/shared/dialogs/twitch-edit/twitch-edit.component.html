@@ -85,15 +85,31 @@
             </mat-error>
           </mat-form-field>
         </div>
+
+      <br/>
+
+      <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
+        <h2>Select Twitch Roles</h2>
+
+        <div class="simple-wrap">
+          <div *ngFor="let levelEntry of TWITCH_LEVELS">
+            <mat-checkbox [checked]="data.roles?.includes(levelEntry.type)"
+                          (change)="toggleRole(levelEntry.type)">
+              {{levelEntry.label}}
+            </mat-checkbox>
+          </div>
+        </div>
+
+      </div>
     </div>
-    <div class="column">
+    <div class="column" *ngIf="clipDictionary$ | async as clipDictionary">
       <div class="example-container">
         <h2>Select action</h2>
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
                 [color]="showWarningClipSelection ? 'warn' : 'accent'">
-          <span *ngIf="clipDictionary$ | async as clipDictionary">
+          <span>
             <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
 
               <app-clip-preview [clip]="clipDictionary[form.value.clipId]"
@@ -114,20 +130,15 @@
 
       <br />
 
-      <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
-        <h2>Select Twitch Roles</h2>
+      <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name">
 
-        <div class="simple-wrap">
-          <div *ngFor="let levelEntry of TWITCH_LEVELS">
-            <mat-checkbox [checked]="data.roles?.includes(levelEntry.type)"
-                          (change)="toggleRole(levelEntry.type)">
-              {{levelEntry.label}}
-            </mat-checkbox>
-          </div>
-        </div>
+        <app-action-variables-assignments [actionId]="form.value.clipId"
+                                          [data]="data.extended"
+        (dataChanged)="data.extended = $event">
 
-      </div>
+        </app-action-variables-assignments>
 
+      </ng-container>
       <br/>
 
       <div class="example-container" *ngIf="showScreenSelection$ | async">

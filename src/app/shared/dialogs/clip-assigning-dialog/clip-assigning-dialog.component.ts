@@ -5,8 +5,8 @@ import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {map, takeUntil, withLatestFrom} from "rxjs/operators";
 import {IFilterItem} from "../../components/filter/filter.component";
 import {createCombinedFilterItems$, filterClips$} from "../../components/filter/filter.methods";
-import {AppQueries} from "../../../state/app.queries";
-import {AppService} from "../../../state/app.service";
+import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
+import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
 
 
 export interface ClipAssigningDialogOptions {

@@ -2,7 +2,7 @@ import {Service} from "@tsed/di";
 import {FileHandler} from "../../utils/file-handler";
 import path from "path";
 import {NEW_CONFIG_PATH} from "../../path.utils";
-import {ActionStore} from "@memebox/state";
+import {ActionStore} from "@memebox/shared-state";
 
 @Service()
 export class ActionPersistentStateHandler {

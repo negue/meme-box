@@ -7,7 +7,6 @@ import {MatListModule} from "@angular/material/list";
 import {QRCodeModule} from "angular2-qrcode";
 import {MatButtonModule} from "@angular/material/button";
 import {NavigationModule} from "../navigation/navigation.module";
-import {StateModule} from "../../state/state.module";
 import {DialogsModule} from "../../shared/dialogs/dialogs.module";
 
 
@@ -55,7 +54,6 @@ const routes: Routes = [
     QRCodeModule,
     MatButtonModule,
     NavigationModule,
-    StateModule,
     DialogsModule
   ]
 })

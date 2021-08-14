@@ -2,7 +2,7 @@ import {Service} from "@tsed/di";
 import {ActionTriggerEventBus} from "../../action-trigger-event.bus";
 import {
   MediaType,
-  ScreenMediaOverridableProperies,
+  ScreenMediaOverridableProperties,
   TriggerActionOverrides,
   TriggerClipOrigin,
   VisibilityEnum
@@ -54,7 +54,7 @@ export class MediaApi extends ActionApi {
     super(memeboxApi, actionId, screenId);
   }
 
-  updateScreenOptions(overrides: ScreenMediaOverridableProperies): Promise<void> {
+  updateScreenOptions(overrides: ScreenMediaOverridableProperties): Promise<void> {
     this.memeboxApi.actionTriggerEventBus.updateMedia({
       id: this.actionId,
       origin: TriggerClipOrigin.Scripts,

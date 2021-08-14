@@ -1,10 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Screen } from "@memebox/contracts";
-import { FormBuilder } from "@angular/forms";
-import { AppService } from "../../../state/app.service";
-import { SnackbarService } from "../../../core/services/snackbar.service";
-import { cssCodemirror } from "../../../core/codemirror.extensions";
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Screen} from "@memebox/contracts";
+import {FormBuilder} from "@angular/forms";
+import {AppService, SnackbarService} from "@memebox/app-state";
+import {cssCodemirror} from "../../../core/codemirror.extensions";
 
 @Component({
   selector: 'app-obs-edit',

@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppQueries} from "../../state/app.queries";
-import {AppService} from "../../state/app.service";
+import {AppQueries} from "../../../../projects/app-state/src/lib/state/app.queries";
+import {AppService} from "../../../../projects/app-state/src/lib/state/app.service";
 import {Observable, Subject} from "rxjs";
 import {Clip, MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
-import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
-import {SettingsService} from "../../core/services/settings.service";
+import {ConnectionState, WebsocketService} from "../../../../projects/app-state/src/lib/services/websocket.service";
+import {SettingsService} from "../../../../projects/app-state/src/lib/services/settings.service";
 import {map, take, takeUntil, tap} from "rxjs/operators";
 import {sortClips} from "../../../../projects/utils/src/lib/sort-clips";
 import orderBy from 'lodash/orderBy';

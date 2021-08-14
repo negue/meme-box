@@ -7,9 +7,8 @@ import {MatCardModule} from "@angular/material/card";
 import {MatRippleModule} from "@angular/material/core";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
-import {ClipTypeModule} from "../shared/components/clip-type/clip-type.module";
+import {ClipTypeModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
-import {StateModule} from "../state/state.module";
 
 
 const routes: Routes = [
@@ -32,7 +31,6 @@ const routes: Routes = [
     ClipTypeModule,
     MatIconModule,
     MatSelectModule,
-    StateModule,
   ]
 })
 export class MobileModule {

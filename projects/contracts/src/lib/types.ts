@@ -19,9 +19,7 @@ export interface HasTargetScreenId {
 }
 
 // TODO replace by Record<TKey, TValue>
-export interface Dictionary<T> {
-  [key: string]: T
-}
+export interface Dictionary<T> extends Record<string, T> { }
 
 export enum MetaTriggerTypes {
   Random,
@@ -33,9 +31,14 @@ export interface ActionOverridableProperies {
   // Empty for now
 }
 
+export interface HasExtendedData {
+  // used for Widgets and/or variables / -config
+  extended?: Dictionary<string>;
+}
+
 // TODO RENAME? (Media) Clip -- new name ACTIONS
 // - because media is visible and actions are just the scripts and stuff
-export interface Clip extends HasId, ActionOverridableProperies {
+export interface Clip extends HasId, ActionOverridableProperies, HasExtendedData {
   name: string;
   previewUrl?: string;   // TODO generate dataurl as preview
   volumeSetting?: number; //  XX / 100 in percent
@@ -52,7 +55,6 @@ export interface Clip extends HasId, ActionOverridableProperies {
 
   showOnMobile?: boolean;
 
-  extended?: Dictionary<string>; // only used for HTML - Type
 
   fromTemplate?: string; // GUID / Clip.Id of the Template
 }
@@ -88,7 +90,7 @@ export enum HideAfterType {
   Repeats // maybe?
 }
 
-export interface ScreenMediaOverridableProperies {
+export interface ScreenMediaOverridableProperties {
   visibility: VisibilityEnum;
   loop?: boolean;
 
@@ -116,7 +118,7 @@ export interface ScreenMediaOverridableProperies {
   customCss?: string;
 }
 
-export interface ScreenClip extends HasId, ScreenMediaOverridableProperies {
+export interface ScreenClip extends HasId, ScreenMediaOverridableProperties {
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
 
@@ -154,13 +156,20 @@ export interface TwitchEventFields {
   }
 }
 
-export interface TimedClip extends HasId, HasClipId, HasTargetScreenId {
+export interface TriggerBase
+  extends HasId, HasClipId, HasTargetScreenId, HasExtendedData {
+
+}
+
+// TODO RENAME TimedClip / Twitch so that those are recognized to be a trigger
+
+export interface TimedClip extends TriggerBase {
   // id => has nothing to do with clipID
   everyXms: number;
   active: boolean;
 }
 
-export interface Twitch extends HasId, HasClipId, HasTargetScreenId {
+export interface Twitch extends TriggerBase {
   name: string;
   // screenId:      string; // TODO
   event: TwitchEventTypes;

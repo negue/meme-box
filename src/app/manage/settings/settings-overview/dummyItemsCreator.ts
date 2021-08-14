@@ -1,4 +1,4 @@
-import {AppService} from "../../../state/app.service";
+import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
 import {Clip, MediaType, Screen, Tag} from "@memebox/contracts";
 import {sleep, uuid} from "@gewd/utils";
 

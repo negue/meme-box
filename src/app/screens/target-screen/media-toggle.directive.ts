@@ -16,7 +16,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
 import {takeUntil, withLatestFrom} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
-import {WebsocketService} from "../../core/services/websocket.service";
+import {WebsocketService} from "../../../../projects/app-state/src/lib/services/websocket.service";
 
 export enum MediaState {
   HIDDEN,

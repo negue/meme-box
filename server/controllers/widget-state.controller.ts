@@ -2,7 +2,7 @@ import {BodyParams, Controller, Get, PathParams, Put} from "@tsed/common";
 import {WidgetConnectionState} from "../providers/widget-connection.state";
 import {UseOpts} from "@tsed/di";
 import {NamedLogger} from "../providers/named-logger";
-import {ActionStore} from "@memebox/state";
+import {ActionStore} from "@memebox/shared-state";
 import {ActionPersistentStateHandler} from "../providers/actions/action-persistent-state.handler";
 
 // TODO extract the endpoint path as constant

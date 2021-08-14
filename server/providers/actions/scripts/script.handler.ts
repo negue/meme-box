@@ -8,7 +8,7 @@ import {Persistence} from "../../../persistence";
 import {ActionTriggerEventBus} from "../action-trigger-event.bus";
 import {ActionActiveState} from "../action-active-state";
 import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
-import {ActionStore, ActionStoreAdapter} from "@memebox/state";
+import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
 import {ScriptContext} from "./script.context";
 import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 import {MemeboxApiFactory} from "./apis/memebox.api";

@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {AppQueries} from "../../../state/app.queries";
+import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {combineLatest, Observable, Subject} from "rxjs";
 import {
   ANIMATION_IN_ARRAY,
@@ -13,8 +13,6 @@ import {
 import {map, take} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
-import {AppService} from "../../../state/app.service";
-import {SnackbarService} from "../../../core/services/snackbar.service";
 import {DialogService} from "../dialog.service";
 import {cssCodemirror} from "../../../core/codemirror.extensions";
 

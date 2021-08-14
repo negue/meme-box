@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {AppQueries} from "../../state/app.queries";
+import {AppQueries} from "../../../../projects/app-state/src/lib/state/app.queries";
 import {Observable} from "rxjs";
 import {clipDataToDynamicIframeContent, DynamicIframeContent} from "@memebox/utils";
 import {distinctUntilChanged, map} from "rxjs/operators";

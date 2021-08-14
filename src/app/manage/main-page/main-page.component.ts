@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { AppService } from "../../state/app.service";
-import { HotkeysService } from "@ngneat/hotkeys";
-import { DialogService } from "../../shared/dialogs/dialog.service";
+import {Component, OnInit} from '@angular/core';
+import {AppService} from "../../../../projects/app-state/src/lib/state/app.service";
+import {HotkeysService} from "@ngneat/hotkeys";
+import {DialogService} from "../../shared/dialogs/dialog.service";
 
 @Component({
   selector: 'app-main-page',

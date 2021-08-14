@@ -9,8 +9,8 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {ClipPreviewModule} from "../../components/clip-preview/clip-preview.module";
-import {PipesModule} from "../../../core/pipes/pipes.module";
+import {ClipPreviewModule} from "../../../../../projects/state-components/src/lib/clip-preview/clip-preview.module";
+import {PipesModule} from "../../../../../projects/ui-components/src/lib/pipes/pipes.module";
 import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({

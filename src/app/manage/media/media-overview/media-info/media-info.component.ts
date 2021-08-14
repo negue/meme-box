@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DomSanitizer } from "@angular/platform-browser";
-import { Clip, Screen, Tag, Twitch } from "@memebox/contracts";
-import { combineLatest, Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { AppQueries } from "../../../../state/app.queries";
-import { DialogService } from "../../../../shared/dialogs/dialog.service";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {DomSanitizer} from "@angular/platform-browser";
+import {Clip, Screen, Tag, Twitch} from "@memebox/contracts";
+import {combineLatest, Observable} from "rxjs";
+import {map} from "rxjs/operators";
+import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
+import {DialogService} from "../../../../shared/dialogs/dialog.service";
 
 @Component({
   selector: 'app-media-info',

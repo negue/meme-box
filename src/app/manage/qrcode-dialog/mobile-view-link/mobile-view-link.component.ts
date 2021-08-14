@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NetworkInterfacesService} from "../../../core/services/network-interfaces.service";
+import {NetworkInterfacesService} from "../../../../../projects/app-state/src/lib/services/network-interfaces.service";
 
 @Component({
   selector: 'app-mobile-view-link',

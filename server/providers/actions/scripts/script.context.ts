@@ -1,6 +1,6 @@
 import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 import {VM, VMScript} from "vm2";
-import {ActionStoreAdapter, ActionStoreApi} from "@memebox/state";
+import {ActionStoreAdapter, ActionStoreApi} from "@memebox/shared-state";
 import {Clip, Dictionary, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {Sleep, sleep} from "./apis/sleep.api";
@@ -135,7 +135,8 @@ export class ScriptContext implements CanDispose {
 
     const variables = getScriptVariablesOrFallbackValues(
       this.scriptConfig,
-      this.script.extended
+      this.script.extended,
+      payloadObs?.overrides?.action?.variables
     );
 
 

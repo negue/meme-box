@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ScriptVariable} from "@memebox/utils";
+import {ActionVariableConfig} from "@memebox/action-variables";
 
 @Component({
   selector: 'app-variables-config',
@@ -9,16 +9,16 @@ import {ScriptVariable} from "@memebox/utils";
 export class VariablesConfigComponent implements OnInit {
 
   @Input()
-  public variablesList: ScriptVariable[] = [];
+  public variablesList: ActionVariableConfig[] = [];
 
   @Output()
   public onAddNewVariable = new EventEmitter();
 
   @Output()
-  public onEditVariable = new EventEmitter<ScriptVariable>();
+  public onEditVariable = new EventEmitter<ActionVariableConfig>();
 
   @Output()
-  public onDeleteVariable = new EventEmitter<ScriptVariable>();
+  public onDeleteVariable = new EventEmitter<ActionVariableConfig>();
 
   constructor() { }
 

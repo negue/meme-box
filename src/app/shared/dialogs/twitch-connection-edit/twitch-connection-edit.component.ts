@@ -1,12 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import {FormBuilder} from '@ngneat/reactive-forms';
 import {Subject} from "rxjs";
-import {AppQueries} from "../../../state/app.queries";
-import {AppService} from "../../../state/app.service";
+import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
+import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
 import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {Config} from "@memebox/contracts";
-import {ConfigService} from "../../../state/config.service";
+import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {TwitchOAuthHandler} from "./twitch.oauth";
 
 const currentUrl = `${location.origin}`;

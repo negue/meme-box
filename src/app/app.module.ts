@@ -20,7 +20,7 @@ import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
 import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
-import {ServicesModule} from "./core/services/services.module";
+import {ServicesModule, WebSocketBasePathInjectionToken} from "@memebox/app-state";
 import {TranslocoRootModule} from './transloco/transloco-root.module';
 import {RegisterIconsModule} from "@gewd/mat-utils/material-icons";
 
@@ -81,7 +81,7 @@ const markdownWorker = () => new Worker('./markdown.worker.ts', {
     TranslocoRootModule
   ],
   providers: [
-    // todo extract to custom markdown
+    // todo extract to custom markdown module
     {
       provide: MarkdownOptionsInjectorToken,
       useValue: {
@@ -110,8 +110,11 @@ const markdownWorker = () => new Worker('./markdown.worker.ts', {
       provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {
         color: 'primary'
       } as MatCheckboxDefaultOptions
+    },
+    {
+      provide: WebSocketBasePathInjectionToken,
+      useValue: AppConfig.wsBase
     }
-
   ],
   bootstrap: [AppComponent]
 })
