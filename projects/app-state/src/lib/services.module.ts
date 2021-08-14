@@ -1,10 +1,12 @@
 import {NgModule, Optional, SkipSelf} from "@angular/core";
 import {CommonModule} from "@angular/common";
-import {NetworkInterfacesService} from "./network-interfaces.service";
-import {SettingsService} from "./settings.service";
-import {SnackbarService} from "./snackbar.service";
-import {WebsocketService} from "./websocket.service";
+import {NetworkInterfacesService} from "./services/network-interfaces.service";
+import {SettingsService} from "./services/settings.service";
+import {WebsocketService} from "./services/websocket.service";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {SnackbarService} from "./services/snackbar.service";
+import {AppQueries} from "./state";
+import {AppService} from "./state/app.service";
 
 @NgModule({
   imports: [
@@ -15,7 +17,10 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
     NetworkInterfacesService,
     SettingsService,
     SnackbarService,
-    WebsocketService
+    WebsocketService,
+
+    AppQueries,
+    AppService
   ]
 })
 export class ServicesModule {

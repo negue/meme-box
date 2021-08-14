@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AppStore} from './app.store';
+import {AppStore} from '../state/app.store';
 import {HttpClient} from '@angular/common/http';
 import {
   Config,
@@ -12,11 +12,11 @@ import {
   OPEN_FILES_PATH,
   TwitchConfig
 } from '@memebox/contracts';
-import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../server/constants';
-import {SnackbarService} from '../core/services/snackbar.service';
-import {setDummyData} from './app.dummy.data';
-import {WebsocketService} from "../core/services/websocket.service";
-import {API_BASE, AppService, EXPRESS_BASE} from "./app.service";
+import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../../../server/constants';
+import {setDummyData} from '../state/app.dummy.data';
+import {WebsocketService} from "./websocket.service";
+import {API_BASE, AppService, EXPRESS_BASE} from "../state/app.service";
+import {SnackbarService} from "./snackbar.service";
 
 const NOT_POSSIBLE_OFFLINE = 'Not possible in Offline-Mode.';
 

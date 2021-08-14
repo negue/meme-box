@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSnackBarConfig } from "@angular/material/snack-bar/snack-bar-config";
+import {Injectable} from '@angular/core';
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatSnackBarConfig} from "@angular/material/snack-bar/snack-bar-config";
 import merge from 'lodash/merge';
 
 const EMOTES = [

@@ -1,8 +1,7 @@
-import { Injectable } from "@angular/core";
-import { Query } from "@datorama/akita";
-import { AppState } from "@memebox/contracts";
-import { AppStore } from "./app.store";
-import { AppService } from "./app.service";
+import {Injectable} from "@angular/core";
+import {Query} from "@datorama/akita";
+import {AppState} from "@memebox/contracts";
+import {AppStore} from "./app.store";
 
 @Injectable()
 export class AppQueries extends Query<AppState> {
@@ -26,8 +25,7 @@ export class AppQueries extends Query<AppState> {
   currentMediaFile$ = this.select(store => store.currentMediaFiles);
   inOfflineMode$ = this.select(store => store.offlineMode);
 
-  constructor(protected store: AppStore,
-              protected service: AppService) {
+  constructor(protected store: AppStore) {
     super(store);
   }
 }

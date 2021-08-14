@@ -1,8 +1,4 @@
 import {BehaviorSubject, Subject} from "rxjs";
-import {AppConfig} from "@memebox/app/env";
-
-
-console.warn('WEBSOCKET - AppConfig', AppConfig);
 
 export enum ConnectionState{
   NONE,

@@ -1,12 +1,8 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, InjectionToken} from '@angular/core';
 import {ActionActiveStatePayload, ACTIONS, ActionStateEnum, TriggerAction, TriggerClipOrigin} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
-import {AppConfig} from "@memebox/app/env";
 import {filter, mapTo, take} from "rxjs/operators";
-
-
-console.warn('WEBSOCKET - AppConfig', AppConfig);
 
 export enum ConnectionState{
   NONE,
@@ -18,6 +14,10 @@ export enum ConnectionState{
 }
 
 // TODO Refactor
+
+
+export const WebSocketBasePathInjectionToken
+  = new InjectionToken<string>('WebSocketBasePathInjectionToken');
 
 @Injectable()
 export class WebsocketService {
@@ -35,7 +35,9 @@ export class WebsocketService {
   private intervalId = 0;
   private allowReconnections = true;
 
-  constructor(private snackbar: SnackbarService) {
+  constructor(private snackbar: SnackbarService,
+              @Inject(WebSocketBasePathInjectionToken)
+              readonly wsBasePath: string) {
     setTimeout(() => this.connect(), 150);
   }
 
@@ -142,7 +144,7 @@ export class WebsocketService {
 
     this.connectionState$.next(ConnectionState.Reconnecting);
 
-    this.ws = new WebSocket(AppConfig.wsBase);
+    this.ws = new WebSocket(this.wsBasePath);
 
     this.ws.onopen = ev => {
       this.isConnected = true;

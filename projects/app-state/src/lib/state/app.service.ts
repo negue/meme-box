@@ -15,13 +15,13 @@ import {
   UpdateState,
   VisibilityEnum
 } from '@memebox/contracts';
-import {API_PREFIX, FILES_ENDPOINT} from '../../../server/constants';
-import {SnackbarService} from '../core/services/snackbar.service';
+import {API_PREFIX, FILES_ENDPOINT} from '../../../../../server/constants'; // TODO extract to shared library
 import {AppConfig} from '@memebox/app/env';
-import {addOrUpdateScreenClip, deleteClip, fillDefaultsScreenClip} from '@memebox/state';
+import {addOrUpdateScreenClip, deleteClip, fillDefaultsScreenClip} from '@memebox/shared-state';
 import {take} from 'rxjs/operators';
 import {uuid} from "@gewd/utils";
 import {Observable} from "rxjs";
+import {SnackbarService} from "../services/snackbar.service";
 
 console.warn('APP.SERVICE.TS - AppConfig', AppConfig);
 
