@@ -22,15 +22,101 @@ A complete management app for [`image / audio / video / iframe / widgets`](/tuto
 
 ## Working Features
 
-* [x] [Custom CSS per Media / Screen][URL_ADVANCED_SETTINGS]
-* [x] [Custom Position per Media / Screen][URL_ADVANCED_SETTINGS]
-* [x] [Custom Visibility States: Play, Toggle and Static][URL_ADVANCED_SETTINGS]
-* [x] Trigger Media by twitch messages / bits / raids
-* [x] Trigger Media by timers
-* [x] Trigger Media by mobile view (to use your phone / tablet)
-* [x] Trigger Media by [`streamdeck-plugin`](./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin)
-* [x] [`Trigger multiple / random Media`][URL_META_CLIPS]
-* [x] Create / use dynamic Widgets that can react on Twitch Events
+<table>
+  <tr>
+    <th>Show Media</th>
+    <th>Screens (in OBS) </th>
+    <th colspan=2>Triggers </th>
+  </tr>
+  <tr>
+    <td>Images</td>
+    <td rowspan=7>
+
+Animations on show / hide
+[Visibility][URL_ADVANCED_SETTINGS]:
+- Play (on a trigger)
+- Toggle (per trigger)
+- Always Visible
+
+[Custom Position per Media / Screen][URL_ADVANCED_SETTINGS]:
+- Fullscreen
+- Fixed (on a position)
+- Centered
+- Random
+
+Misc:
+- [Custom CSS per Media / Screen][URL_ADVANCED_SETTINGS]
+- drag&drop for better position items
+- rotate/size/warp items
+</td>
+<td rowspan=7 valign="top">
+  
+[✅ `Streamdeck Plugin`][STREAMDECK_PLUGIN]
+  <br/>
+ ✅ Timers <br/>
+ ✅ Mobile View <br/>
+ ✅ Twitch Events<br/>
+<ul>
+    <li> Bits </li>
+    <li> Channel Points </li>
+    <li> Message </li>
+    <li> Raid </li>
+    <li> User Ban </li>
+    <li> Subscription </li>
+    <li> Gift Sub </li>
+</ul>
+
+</td>
+  </tr>
+  <tr>
+    <td>Videos</td>
+  </tr>
+  <tr>
+    <td>Iframes</td>
+  </tr>
+  <tr>
+    <td>Widgets</td>
+  </tr>
+  <tr>
+    <td>Play Audio</td>
+  </tr>
+   <tr>
+    <th>Actions</th>
+  </tr>
+
+  <tr>
+    <td>
+      
+[`Trigger multiple / random Media`][URL_META_CLIPS]
+    </td>
+  </tr>
+   <tr>
+    <th colspan=3>Scripts (Action)</th>
+  </tr>
+
+  <tr>
+    <td colspan=3>
+
+- Trigger other Actions with custom logic/timeouts/overrides
+- Trigger OBS functions 
+- Write to Twitch Chat
+</td>
+
+</tr>
+   <tr>
+    <th colspan=3>Permanent Script</th>
+  </tr>
+
+<tr>
+    <td  colspan=3>
+Same as Scripts just that those will run and stay active all the time. 
+<br /> Used for Bots or other functionalities 
+
+      
+React on custom callbacks from Twitch / OBS Events
+  </td>
+  </tr>
+</table>
 
 -----
 
@@ -51,6 +137,7 @@ A complete management app for [`image / audio / video / iframe / widgets`](/tuto
 
 [URL_META_CLIPS]: tutorials/meta_media.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
+[STREAMDECK_PLUGIN]: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
 
 ___
 
