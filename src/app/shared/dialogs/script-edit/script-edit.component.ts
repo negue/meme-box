@@ -10,6 +10,13 @@ import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
 import {EditorState} from "@codemirror/state";
 import {ClipAssigningMode} from "@memebox/contracts";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
+import {BehaviorSubject} from "rxjs";
+import {
+  ActionEntry,
+  returnDeclaredActionEntries
+} from "../../../../../projects/utils/src/lib/script-information.parser";
+import {AppQueries} from "@memebox/app-state";
+import {map, withLatestFrom} from "rxjs/operators";
 
 @Component({
   selector: 'app-script-edit',
@@ -17,6 +24,15 @@ import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variabl
   styleUrls: ['./script-edit.component.scss']
 })
 export class ScriptEditComponent implements OnInit {
+
+  public declaredActionsEntries$ = new BehaviorSubject<ActionEntry[]>([]);
+
+  public declaredActionInformation$ = this.declaredActionsEntries$.pipe(
+    withLatestFrom(this.appQuery.clipMap$),
+    map(([declaredActions, clipMap]) => {
+      return declaredActions.map(action => clipMap[action.uuid])
+    })
+  );
 
   public workingValue: Partial<ScriptConfig> = {};
   public variablesList: ActionVariableConfig[] = [];
@@ -32,11 +48,14 @@ export class ScriptEditComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CustomScriptDialogPayload,
     private dialogRef: MatDialogRef<any>,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private appQuery: AppQueries
   ) { }
 
   ngOnInit(): void {
     this.setWorkingValues(this.data.scriptConfig);
+
+    this.declaredActionsEntries$.next(returnDeclaredActionEntries(this.workingValue.executionScript));
     this.initDone = true;
   }
 
@@ -151,5 +170,13 @@ export class ScriptEditComponent implements OnInit {
     const codeToAdd = `const myActionVar = memebox.getAction('${actionId}');\n`;
 
     console.info({codeToAdd});
+  }
+
+  updateExecutionScript(newExecutionScriptCode: string) {
+    this.workingValue.executionScript = newExecutionScriptCode;
+
+    this.declaredActionsEntries$.next(returnDeclaredActionEntries(newExecutionScriptCode));
+
+    this.markForCheck();
   }
 }

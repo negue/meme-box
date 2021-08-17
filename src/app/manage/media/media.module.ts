@@ -33,7 +33,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [MediaOverviewComponent, MediaInfoComponent, GroupByMediaTypePipe],
-  exports: [MediaOverviewComponent],
+  exports: [MediaOverviewComponent, MediaInfoComponent],
   imports: [
     PipesModule,
     CommonModule,

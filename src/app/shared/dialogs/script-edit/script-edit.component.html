@@ -42,14 +42,32 @@
       </mat-form-field>
     </mat-tab>
     <mat-tab label="Script to Execute">
-      <!--
-      Tools: <button mat-raised-button (click)="addActionAtCursor(codemirror.editorState)">Add Action at cursor</button>
-      -->
-      <gewd-codemirror [value]="workingValue.executionScript" #codemirror
-                       [codemirrorExtensions]="jsExtensions"
-                       (changed)="workingValue.executionScript = $event; markForCheck();">
 
-      </gewd-codemirror>
+      <div class="two-columns" style="height: 100%">
+        <div style="flex: 1">
+
+          <!--
+          Tools: <button mat-raised-button (click)="addActionAtCursor(codemirror.editorState)">Add Action at cursor</button>
+          -->
+          <gewd-codemirror [value]="workingValue.executionScript" #codemirror
+                           [codemirrorExtensions]="jsExtensions"
+                           (changed)="updateExecutionScript($event)">
+
+          </gewd-codemirror>
+        </div>
+        <div style="width: 400px; padding: 1rem">
+          Actions Details:
+
+          <ng-container *ngIf="declaredActionInformation$ | async as declaredActions">
+            <app-compact-clip-card *ngFor="let assignedClip of declaredActions"
+                                   [clip]="assignedClip">
+
+            </app-compact-clip-card>
+
+          </ng-container>
+        </div>
+      </div>
+
     </mat-tab>
   </mat-tab-group>
 </div>
