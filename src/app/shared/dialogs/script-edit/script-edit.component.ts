@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {isDynamicIframeVariableValid, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES, ScriptConfig} from "@memebox/utils";
 import {CustomScriptDialogPayload} from "../dialog.contract";
@@ -7,8 +7,7 @@ import {downloadFile} from "@gewd/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
 import {DialogService} from "../dialog.service";
 import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
-import {EditorState} from "@codemirror/state";
-import {ClipAssigningMode} from "@memebox/contracts";
+import {ClipAssigningMode, MediaType} from "@memebox/contracts";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
 import {BehaviorSubject} from "rxjs";
 import {
@@ -16,14 +15,15 @@ import {
   returnDeclaredActionEntries
 } from "../../../../../projects/utils/src/lib/script-information.parser";
 import {AppQueries} from "@memebox/app-state";
-import {map, withLatestFrom} from "rxjs/operators";
+import {map, take, withLatestFrom} from "rxjs/operators";
+import {CodemirrorComponent} from "@gewd/components/codemirror";
 
 @Component({
   selector: 'app-script-edit',
   templateUrl: './script-edit.component.html',
   styleUrls: ['./script-edit.component.scss']
 })
-export class ScriptEditComponent implements OnInit {
+export class ScriptEditComponent implements OnInit, AfterViewInit {
 
   public declaredActionsEntries$ = new BehaviorSubject<ActionEntry[]>([]);
 
@@ -39,6 +39,10 @@ export class ScriptEditComponent implements OnInit {
 
   @ViewChild('enablePreviewRefresh', {static: true})
   public autoRefreshCheckbox: MatCheckbox;
+
+  @ViewChild('codemirrorExecScript', {static: true})
+  public codemirrorComponent: CodemirrorComponent;
+
 
   public jsExtensions = jsCodemirror;
 
@@ -57,6 +61,19 @@ export class ScriptEditComponent implements OnInit {
 
     this.declaredActionsEntries$.next(returnDeclaredActionEntries(this.workingValue.executionScript));
     this.initDone = true;
+  }
+
+  ngAfterViewInit(): void {
+    this.codemirrorComponent.ngOnChanges({
+      value: {
+        currentValue: this.workingValue.executionScript,
+        previousValue: null,
+        firstChange: true,
+        isFirstChange(): boolean {
+          return true
+        }
+      }
+    })
   }
 
   private setWorkingValues (payload: ScriptConfig) {
@@ -158,7 +175,7 @@ export class ScriptEditComponent implements OnInit {
     this.dialogService.showMarkdownFile(SCRIPT_TUTORIAL);
   }
 
-  async addActionAtCursor(editorState: EditorState) {
+  async addActionAtCursor(codemirrorComponent: CodemirrorComponent) {
     // console.info({ editorState });
 
     const actionId = await this.dialogService.showClipSelectionDialog({
@@ -167,9 +184,24 @@ export class ScriptEditComponent implements OnInit {
       showMetaItems: true
     });
 
-    const codeToAdd = `const myActionVar = memebox.getAction('${actionId}');\n`;
+    const clipMap = await this.appQuery.clipMap$.pipe(
+      take(1)
+    ).toPromise();
 
-    console.info({codeToAdd});
+      const selectedAction = clipMap[actionId];
+
+      // todo get a variable name from the action name
+
+      const isAction = [MediaType.Script, MediaType.Meta].includes(selectedAction.type);
+
+    const codeToAdd = `const myActionVar = memebox.get${isAction ? 'Action' : 'Media'}('${actionId}');\n`;
+
+    const selection = codemirrorComponent.selectedRange;
+
+    codemirrorComponent.insertText(
+      selection.from, selection.from,
+      codeToAdd
+    );
   }
 
   updateExecutionScript(newExecutionScriptCode: string) {
@@ -179,4 +211,5 @@ export class ScriptEditComponent implements OnInit {
 
     this.markForCheck();
   }
+
 }
