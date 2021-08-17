@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, TrackByFunction} from '@angular/core';
 import {MEDIA_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
 
@@ -39,6 +39,9 @@ export class FilterComponent implements OnInit {
   public selected = new EventEmitter<IFilterItem[]>();
 
   public selectedArray: IFilterItem[] = [];
+  trackByFilterItem: TrackByFunction<IFilterItem> = (index, item) => {
+    return item.type+item.value;
+  };
 
 
   constructor() { }

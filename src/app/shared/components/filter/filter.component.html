@@ -1,4 +1,4 @@
-<mat-expansion-panel >
+<mat-expansion-panel [expanded]="false">
   <mat-expansion-panel-header>
 
     <div class="filterRow">
@@ -15,7 +15,7 @@
         </div>
 
         <mat-chip-list aria-label="Filter media type" *transloco="let t; read: 'common' " >
-          <ng-container *ngFor="let item of selectedArray">
+          <ng-container *ngFor="let item of selectedArray; trackBy: trackByFilterItem">
             <mat-chip (click)="toggleFilter(item)"
                       [class.filterChip--selected]="selectedArray.includes(item)"
                       class="filterChip">
@@ -37,7 +37,7 @@
   </mat-expansion-panel-header>
 
   <mat-chip-list aria-label="Filter media type" *transloco="let t; read: 'common' " >
-    <ng-container *ngFor="let item of items">
+    <ng-container *ngFor="let item of items; trackBy: trackByFilterItem">
       <mat-chip (click)="toggleFilter(item)"
                 [class.filterChip--selected]="selectedArray.includes(item)"
                 class="filterChip">

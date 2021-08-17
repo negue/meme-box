@@ -18,6 +18,7 @@ import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ActionVariableInputModule} from "../../../../../projects/action-variables-ui/src/lib/action-variable-input/action-variable-input.module";
 import {MatTabsModule} from "@angular/material/tabs";
 import {HintPanelModule} from "@memebox/ui-components";
+import {CompactClipCardModule} from "@memebox/state-components";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {HintPanelModule} from "@memebox/ui-components";
     CodemirrorModule,
     ActionVariableInputModule,
     MatTabsModule,
-    HintPanelModule
+    HintPanelModule,
+    CompactClipCardModule
   ],
   providers: [],
 })

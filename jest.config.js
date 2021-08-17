@@ -15,6 +15,7 @@ module.exports = {
     "<rootDir>/out*",
     "<rootDir>/memebox-streamdeck"
   ],
+  rootDir: __dirname,
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
 };

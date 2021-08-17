@@ -1,4 +1,4 @@
-import {GroupByMediaTypePipe, MediGroup} from './group-by-media-type.pipe';
+import {ActionTypeGroup, GroupByMediaTypePipe} from './group-by-media-type.pipe';
 import {Clip, MediaType} from '@memebox/contracts';
 
 describe('GroupByMediaTypePipe', () => {
@@ -31,7 +31,7 @@ describe('GroupByMediaTypePipe', () => {
         mediaType: 1,
         medias: [clips[0], clips[1]]
       }
-    ] as MediGroup[]);
+    ] as ActionTypeGroup[]);
   });
 
   it('groups unknown types to the unknown category', () => {
@@ -58,6 +58,6 @@ describe('GroupByMediaTypePipe', () => {
         mediaType: -10,
         medias: clips
       }
-    ] as MediGroup[]);
+    ] as ActionTypeGroup[]);
   });
 });
