@@ -7,9 +7,9 @@ import {downloadFile} from "@gewd/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
 import {DialogService} from "../dialog.service";
 import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
-import {ClipAssigningMode, MediaType} from "@memebox/contracts";
+import {Clip, ClipAssigningMode, MediaType} from "@memebox/contracts";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {
   ActionEntry,
   returnDeclaredActionEntries
@@ -27,7 +27,7 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
 
   public declaredActionsEntries$ = new BehaviorSubject<ActionEntry[]>([]);
 
-  public declaredActionInformation$ = this.declaredActionsEntries$.pipe(
+  public declaredActionInformation$: Observable<Clip[]> = this.declaredActionsEntries$.pipe(
     withLatestFrom(this.appQuery.clipMap$),
     map(([declaredActions, clipMap]) => {
       return declaredActions.map(action => clipMap[action.uuid])
@@ -64,6 +64,7 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    // until the codemirror components works with default values again...
     this.codemirrorComponent.ngOnChanges({
       value: {
         currentValue: this.workingValue.executionScript,
@@ -183,6 +184,10 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
       dialogTitle: 'Action',
       showMetaItems: true
     });
+
+    if (!actionId) {
+      return;
+    }
 
     const clipMap = await this.appQuery.clipMap$.pipe(
       take(1)

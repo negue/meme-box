@@ -44,9 +44,7 @@
     <mat-tab label="Script to Execute">
 
       <div class="two-columns" style="height: 100%">
-        <div style="flex: 1">
-          Tools: <button mat-raised-button (click)="addActionAtCursor(codemirrorExecScript)">Add Action at cursor</button>
-
+        <div style="flex: 1; height: 100%">
           <gewd-codemirror [value]="workingValue.executionScript" #codemirrorExecScript
                            [codemirrorExtensions]="jsExtensions"
                            (changed)="updateExecutionScript($event)">
@@ -54,14 +52,22 @@
           </gewd-codemirror>
         </div>
         <div style="width: 400px; padding: 1rem">
+          <button mat-raised-button style="margin-right: 1rem;margin-bottom: 1rem"
+                  (click)="addActionAtCursor(codemirrorExecScript)">
+            Add Action at cursor
+          </button>
+
           Actions Details:
 
           <ng-container *ngIf="declaredActionInformation$ | async as declaredActions">
-            <app-compact-clip-card *ngFor="let assignedClip of declaredActions"
-                                   [clip]="assignedClip">
+            <ng-container  *ngFor="let assignedClip of declaredActions"
+            >
+              #{{assignedClip.id}}
+            <app-compact-clip-card [clip]="assignedClip">
 
             </app-compact-clip-card>
 
+            </ng-container>
           </ng-container>
         </div>
       </div>

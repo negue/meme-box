@@ -6,10 +6,10 @@ import {DialogContract} from "../dialog.contract";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {ClipAssigningDialogComponent, ClipAssigningDialogOptions} from "./clip-assigning-dialog.component";
 import {FilterModule} from "../../components/filter/filter.module";
-import {ClipTypeModule} from "../../../../../projects/state-components/src/lib/clip-type/clip-type.module";
+import {ClipTypeModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
-import {PipesModule} from "../../../../../projects/ui-components/src/lib/pipes/pipes.module";
+import {PipesModule} from "@memebox/ui-components";
 
 @NgModule({
   declarations: [
@@ -36,7 +36,8 @@ export class ClipAssigningDialogModule implements DialogContract<ClipAssigningDi
     const dialogRef = this.dialog.open(ClipAssigningDialogComponent, {
       data: payload,
       width: '800px',
-      panelClass: ['max-height-dialog', 'dialog-without-right-padding']
+      panelClass: ['max-height-dialog', 'dialog-without-right-padding'],
+      autoFocus: false
     });
 
     return dialogRef;

@@ -2,7 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Clip, MEDIA_TYPE_INFORMATION, MediaType} from '@memebox/contracts';
 import groupBy from 'lodash/groupBy';
 
-export interface MediGroup {
+export interface ActionTypeGroup {
   groupName: string;
   mediaType: MediaType;
   medias: Clip[];
@@ -13,7 +13,7 @@ export interface MediGroup {
 })
 export class GroupByMediaTypePipe implements PipeTransform {
 
-  transform(medias: Clip[]): MediGroup[] {
+  transform(medias: Clip[]): ActionTypeGroup[] {
     if (medias == null || medias.length === 0) {
       return [];
     }

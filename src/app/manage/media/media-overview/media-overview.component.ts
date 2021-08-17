@@ -1,9 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {Clip, Screen, Tag} from '@memebox/contracts';
-import {AppService} from '../../../../../projects/app-state/src/lib/state/app.service';
-import {AppQueries} from '../../../../../projects/app-state/src/lib/state/app.queries';
-import {WebsocketService} from '../../../../../projects/app-state/src/lib/services/websocket.service';
+import {AppQueries, AppService, WebsocketService} from '@memebox/app-state';
 import {DialogService} from '../../../shared/dialogs/dialog.service';
 import {IFilterItem} from '../../../shared/components/filter/filter.component';
 import {createCombinedFilterItems$, filterClips$} from '../../../shared/components/filter/filter.methods';
@@ -11,7 +9,7 @@ import {distinctUntilChanged, map, shareReplay} from 'rxjs/operators';
 import {OverviewUiMode, OverviewUiService} from './overview-ui.service';
 import isEqual from 'lodash/isEqual';
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
-import {MediGroup} from "./group-by-media-type.pipe";
+import {ActionTypeGroup} from "./group-by-media-type.pipe";
 
 @Component({
   selector: 'app-media-overview',
@@ -57,6 +55,10 @@ export class MediaOverviewComponent implements OnInit {
     return item.id;
   };
 
+  public trackByGroup: TrackByFunction<ActionTypeGroup> = (index, item) => {
+    return item.mediaType;
+  }
+
   constructor(public service: AppService,
               public query: AppQueries,
               private _dialog: DialogService,
@@ -101,6 +103,7 @@ export class MediaOverviewComponent implements OnInit {
   }
 
   //TODO - the name and other information should come from the state
+
   onClipOptions(item: Clip, screen: Screen): void {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
@@ -134,7 +137,7 @@ export class MediaOverviewComponent implements OnInit {
     this.service.duplicateAction(itemId);
   }
 
-  addNewActionByType(mediGroup: MediGroup) {
+  addNewActionByType(mediGroup: ActionTypeGroup) {
 
     this._dialog.showMediaEditDialog({
       actionToEdit: null,
