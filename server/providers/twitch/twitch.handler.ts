@@ -91,10 +91,12 @@ export class TwitchHandler {
 
         const variableValues: Dictionary<unknown> = {}
 
-        for (let actionVariableConfig of variablesOfAction) {
-          variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
-            trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
-          )
+        if (trigger.command.extended) {
+          for (let actionVariableConfig of variablesOfAction) {
+            variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
+              trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
+            )
+          }
         }
 
         this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
