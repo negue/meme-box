@@ -121,19 +121,6 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     });
   }
 
-  onToggleMobileShow(item: Clip) {
-    const newClip = {
-      ...item,
-      showOnMobile: !item.showOnMobile
-    } as Clip;
-
-    this.service.addOrUpdateClip(newClip);
-  }
-
-  onToggleTwitchEvent(item: Clip, twitchId: string) {
-    this.service.toggleTwitchActiveState(twitchId);
-  }
-
   openHelpOverview() {
     this._dialog.showHelpOverview();
   }

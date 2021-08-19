@@ -23,6 +23,7 @@ import {AutoScaleModule} from '@gewd/components/auto-scale';
 import {MediaCardModule} from './media-overview/media-card/media-card.module';
 import {GroupByMediaTypePipe} from './media-overview/group-by-media-type.pipe';
 import {TranslocoModule} from "@ngneat/transloco";
+import {ActionShortcutToolbarModule} from "./media-overview/action-shortcut-toolbar/action-shortcut-toolbar.module";
 
 const routes: Routes = [
   {
@@ -55,7 +56,8 @@ const routes: Routes = [
     MatTooltipModule,
     AutoScaleModule,
     MediaCardModule,
-    TranslocoModule
+    TranslocoModule,
+    ActionShortcutToolbarModule
   ]
 })
 export class MediaModule {}
