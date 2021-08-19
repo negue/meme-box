@@ -2,31 +2,9 @@
   <div class="mediaInfo__titleRow">
     <h2 class="mat-h2 mediaInfo__titleRow__name">{{info.name}}</h2>
     <span class="mediaInfo__iconWrapper">
-      <ng-container *ngIf="twitchEvents$ | async as twitchEvents">
-        <ng-container *ngIf="twitchEvents.length === 1">
-          <button mat-icon-button (click)="onToggleTwitchEvent.emit(twitchEvents[0].id)"
-                  [class.inactive]="!twitchEvents[0].active"
-                  [color]="twitchEvents[0].active ? 'primary' : 'warn' "
-                  class="twitch_icon"
-                  [matTooltip]="twitchEvents[0].active ? 'Disable Twitch-Command' : 'Enable Twitch-Command'">
-          <mat-icon svgIcon="twitch"></mat-icon>
-        </button>
-        </ng-container>
-            <ng-container *ngIf="twitchEvents.length > 1">
-              <button mat-icon-button (click)="onlyWithOneEventPossible()"
-                      color="primary"
-                      class="twitch_icon"
-                      matTooltip="Multiple Twitch-Commands assigned">
-          <mat-icon svgIcon="twitch"></mat-icon>
-        </button>
-            </ng-container>
-      </ng-container>
 
-      <button mat-icon-button (click)="onToggleMobileShow.emit()"
-              [color]="info.showOnMobile ? 'primary' : 'warn' "
-              [matTooltip]="info.showOnMobile ? 'Hide on Mobile-View' : 'Show on Mobile-View'">
-        <mat-icon [svgIcon]="info.showOnMobile ? 'mobile_friendly' : 'mobile_off'"></mat-icon>
-      </button>
+      <app-action-shortcut-toolbar [action]="info"></app-action-shortcut-toolbar>
+
       <app-clip-type [type]="info.type"></app-clip-type>
     </span>
   </div>
