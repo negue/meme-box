@@ -1,5 +1,6 @@
 <app-filter *ngIf="!(showGettingStarted$ | async)"
             [items]="filterItems$ | async"
+            [selectedArray]="filteredItems$ | async"
             (selected)="filteredItems$.next($event)"></app-filter>
 
 <div class="mo__content-container" *ngIf="mediaList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
