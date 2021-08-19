@@ -12,15 +12,16 @@
   ::ng-deep .mat-chip {
     &.mat-chip.mat-standard-chip {
       background-color: var(--palette-background-background);
+    }
+  }
 
-      &.eventInfo__chip--selected {
-        background-color: #0be881; //TODO - make a var
-        color: var(--palette-background-background);
+  .hide_until_hover:not(:active):not(:hover):not(.isOpened) {
+    opacity: 0;
+  }
 
-        .mat-checkbox-frame {
-          border-color: var(--palette-background-background);
-        }
-      }
+  &:hover {
+    .hide_until_hover {
+      opacity: 1 !important;
     }
   }
 }
@@ -71,8 +72,8 @@
   margin-top: 2rem;
   margin-bottom: 2rem;
 
-  button {
-    width: 45%;
+  button:not(.mat-icon-button) {
+    width: 42%;
   }
 }
 

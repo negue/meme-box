@@ -17,6 +17,7 @@ import {TimedEventInfoComponent} from "./events-overview/twitch-event-info/timed
 import {TwitchEventInfoComponent} from "./events-overview/timed-event-info/twitch-event-info.component";
 import {PipesModule} from "../../../../projects/ui-components/src/lib/pipes/pipes.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
 
 const routes: Routes = [
   {
@@ -43,6 +44,7 @@ const routes: Routes = [
     ClipPreviewModule,
     PipesModule,
     MatTooltipModule,
+    MatMenuModule
   ]
 })
 export class TriggersModule {

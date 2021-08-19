@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
 import {AppQueries} from '../../../../../../projects/app-state/src/lib/state/app.queries';
 import {map} from 'rxjs/operators';
-import {MatCheckboxChange} from '@angular/material/checkbox';
 import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
 
 @Component({
@@ -38,6 +37,8 @@ export class TwitchEventInfoComponent implements OnInit {
   @Output()
   onPreview = new EventEmitter<any>();
 
+  menuIsOpened = false;
+
   constructor(private appQueries: AppQueries,
               private appService: AppService) {
   }
@@ -45,7 +46,7 @@ export class TwitchEventInfoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onActiveChanged($event: MatCheckboxChange) {
+  onActiveChanged() {
     this.appService.toggleTwitchActiveState(this.item.id);
   }
 }
