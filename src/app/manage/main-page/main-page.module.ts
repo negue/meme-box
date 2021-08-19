@@ -12,7 +12,7 @@ import {DialogsModule} from "../../shared/dialogs/dialogs.module";
 
 const mainRoutes: Routes = [
   {
-    path: 'media',
+    path: 'actions',
     loadChildren: () => import('../media/media.module').then(module => module.MediaModule)
   },
   {
@@ -29,7 +29,7 @@ const mainRoutes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'media',
+    redirectTo: 'actions',
     pathMatch: 'full'
   }
 ];
