@@ -298,6 +298,11 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
       nativeElement.style.height = this.settings.height;
     }
 
+    if (this.settings.position === PositionEnum.FullScreen){
+      nativeElement.style.width = '100%';
+      nativeElement.style.height = '100%';
+    }
+
     if (this.settings.position === PositionEnum.Absolute) {
       nativeElement.style.top = this.settings.top;
       nativeElement.style.left = this.settings.left;
