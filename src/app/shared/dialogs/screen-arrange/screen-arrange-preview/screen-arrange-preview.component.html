@@ -21,13 +21,17 @@
 
       <!--      TODO: Find solution/control to show user it can only be resize OR warp.-->
       <mat-button-toggle [value]="GlobalArrangeOptions.Resize"
-                         [disabled]="!isResizeEnabled"
+
+                         (change)="warpButton.checked = false"
+                         [disabled]="!isResizeEnabled" #resizeButton
       >
         Resize
       </mat-button-toggle>
 
       <mat-button-toggle [value]="GlobalArrangeOptions.Warp"
-                         [disabled]="!isWarpEnabled"
+
+                         (change)="resizeButton.checked = false"
+                         [disabled]="!isWarpEnabled" #warpButton
       >
         Warp
       </mat-button-toggle>
