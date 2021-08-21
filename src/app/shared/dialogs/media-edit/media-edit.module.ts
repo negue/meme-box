@@ -14,7 +14,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {ClipPreviewModule, CompactClipCardModule} from "@memebox/state-components";
+import {ClipPreviewModule, ClipTypeModule, CompactClipCardModule} from "@memebox/state-components";
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {TranslocoModule} from "@ngneat/transloco";
@@ -22,6 +22,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ActionVariableInputModule} from "../../../../../projects/action-variables-ui/src/lib/action-variable-input/action-variable-input.module";
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {PipesModule} from "@memebox/ui-components";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,9 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
     MatExpansionModule,
     CodemirrorModule,
     ActionVariableInputModule,
-    ClipboardModule
+    ClipboardModule,
+    PipesModule,
+    ClipTypeModule
   ],
   providers: [],
 })

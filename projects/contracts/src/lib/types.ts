@@ -40,7 +40,7 @@ export interface HasExtendedData {
 // - because media is visible and actions are just the scripts and stuff
 export interface Clip extends HasId, ActionOverridableProperies, HasExtendedData {
   name: string;
-  previewUrl?: string;   // TODO generate dataurl as preview
+  previewUrl?: string;
   volumeSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip

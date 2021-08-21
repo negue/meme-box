@@ -1,20 +1,25 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {EXPRESS_BASE} from "@memebox/app-state";
-import {Clip, SERVER_URL} from "@memebox/contracts";
+import {Clip, MediaType, SERVER_URL} from "@memebox/contracts";
 
 @Pipe({
-  name: 'mediaToUrl'
+  name: 'mediaToPreviewUrl'
 })
-export class MediaToUrlPipe implements PipeTransform {
+export class MediaToPreviewUrlPipe implements PipeTransform {
 
   transform(media: Clip, useOldWay = false): string {
-    if (media.path?.includes(SERVER_URL) && media.id && !useOldWay) {
+    const pathToPreview = media.type === MediaType.Video
+      ? media.previewUrl
+      : (media.previewUrl || media.path);
+
+    if (pathToPreview?.includes(SERVER_URL) && media.id && !useOldWay) {
       return `${EXPRESS_BASE}/fileById/${media.id}`;
     } else {
       // Online URL (not local) OR new media dialog
-      return replaceholder(media.path);
+      return replaceholder(pathToPreview);
     }
   }
+
 }
 
 function replaceholder (value: string): string{
@@ -23,14 +28,4 @@ function replaceholder (value: string): string{
   }
 
   return '';
-}
-
-@Pipe({
-  name: 'mediaPathToUrl'
-})
-export class MediaPathToUrlPipe implements PipeTransform {
-
-  transform(mediaPath: string): string {
-    return replaceholder(mediaPath);
-  }
 }

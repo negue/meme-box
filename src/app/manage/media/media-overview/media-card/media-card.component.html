@@ -28,7 +28,7 @@
     <ng-container *ngSwitchCase="MEDIA_TYPE.Picture">
       <img *ngIf="media.previewUrl || media.path; else noPictureTemplate"
            class="mediaInfo__preview__img"
-           [src]="media | mediaToUrl | safeurl"
+           [src]="media | mediaToPreviewUrl | safeurl"
            [alt]="media.name" />
 
       <ng-template #noPictureTemplate>
@@ -38,6 +38,12 @@
 
         </app-clip-type>
       </ng-template>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="MEDIA_TYPE.Video">
+     <app-clip-preview [clip]="media" height="188px"
+                       [style.--clip-setting-img-fit]="'contains'"
+                       class="mediaInfo__preview__img"></app-clip-preview>
     </ng-container>
 
     <ng-container *ngSwitchDefault>
