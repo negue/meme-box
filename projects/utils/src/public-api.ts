@@ -6,4 +6,5 @@ export * from './lib/simple-date-string';
 export * from './lib/sort-clips';
 export * from './lib/utils';
 export * from './lib/uuid';
+export * from './lib/browser-rxjs';
 export * from './lib/variable.utils';

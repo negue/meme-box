@@ -3,9 +3,8 @@ import {DialogService} from "../../shared/dialogs/dialog.service";
 import {QrcodeDialogComponent} from "../qrcode-dialog/qrcode-dialog.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {take} from "rxjs/operators";
-import {AppService} from "../../../../projects/app-state/src/lib/state/app.service";
+import {AppQueries, AppService} from "@memebox/app-state";
 import {RELEASE_PAGE} from "../../../../server/constants";
-import {AppQueries} from "../../../../projects/app-state/src/lib/state/app.queries";
 
 interface LinkEntry {
   path: string;
@@ -28,7 +27,7 @@ export class NavigationComponent implements OnInit {
               private appQuery: AppQueries) {
 
     this.links = [
-      {path: './media', displayName: 'media'},
+      {path: './actions', displayName: 'actions'},
       {path: './screens', displayName: 'screens'},
       {path: './triggers', displayName: 'triggers'}
     ];

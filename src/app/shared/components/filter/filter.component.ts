@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output, TrackByFunction} from '@angular/core';
 import {MEDIA_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
+import {isItemTheSame} from "./is-selected.pipe";
 
 export interface IFilterItem {
   label: string;
@@ -8,6 +9,7 @@ export interface IFilterItem {
   type: any; // string type to see / filter what kind of filter-item-type it is
   value: any; // todo change to generic?
   translateLabel?: boolean;
+  sortOrder?: number;
 }
 
 export const MEDIA_FILTER_TYPE = 'MEDIA_TYPE';
@@ -38,7 +40,9 @@ export class FilterComponent implements OnInit {
   @Output()
   public selected = new EventEmitter<IFilterItem[]>();
 
+  @Input()
   public selectedArray: IFilterItem[] = [];
+
   trackByFilterItem: TrackByFunction<IFilterItem> = (index, item) => {
     return item.type+item.value;
   };
@@ -50,8 +54,8 @@ export class FilterComponent implements OnInit {
   }
 
   toggleFilter(item: IFilterItem) {
-    if (this.selectedArray.includes(item)) {
-      var indexOfItem = this.selectedArray.indexOf(item);
+    if (this.selectedArray.some(isItemTheSame(item))) {
+      var indexOfItem = this.selectedArray.findIndex(isItemTheSame(item));
 
       this.selectedArray.splice(indexOfItem, 1);
     } else {

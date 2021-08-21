@@ -147,6 +147,11 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     // If a drag event has already occurred, there is no dragStart.
     dragStart && dragStart.set(this.frame.translate);
 
+    const preResizeTransforms = this.generateTransformString();
+
+    // smooth resizing from left / top
+    target.style.transform = `${preResizeTransforms} translate(${this.frame.translate[0]}px, ${this.frame.translate[1]}px)`;
+
     this.elementChanged.emit();
   }
   onResize({ target, width, height, drag }) {
@@ -155,13 +160,15 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     this.updateCSSVar('width', newPosition.x);
     this.updateCSSVar('height', newPosition.y);
 
-    const beforeTranslate = drag.beforeTranslate;
+   /* const beforeTranslate = drag.beforeTranslate;
 
     this.frame.translate = beforeTranslate;
 
     // smooth resizing from left / top
     target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
 
+
+    */
     this.elementChanged.emit();
   }
   onResizeEnd({ target, isDrag, clientX, clientY }) {
@@ -296,6 +303,11 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     if (this.settings.position !== PositionEnum.FullScreen){
       nativeElement.style.width = this.settings.width;
       nativeElement.style.height = this.settings.height;
+    }
+
+    if (this.settings.position === PositionEnum.FullScreen){
+      nativeElement.style.width = '100%';
+      nativeElement.style.height = '100%';
     }
 
     if (this.settings.position === PositionEnum.Absolute) {

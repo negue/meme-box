@@ -82,15 +82,15 @@ $custom-typography: mat-typography-config(
   .mat-flat-button, .mat-icon-button {
     &:hover {
       &.mat-accent {
-        background-color: rgba(var(--palette-accent-700), 1) !important;
+        background-color: rgba(var(--palette-accent-700), 0.25) !important;
       }
 
       &.mat-primary {
-        background-color: rgba(var(--palette-primary-900), 1) !important;
+        background-color: rgba(var(--palette-primary-900), 0.25) !important;
       }
 
       &.mat-warn {
-        background-color: rgba(var(--palette-warn-A400), 1) !important;
+        background-color: rgba(var(--palette-warn-A400), 0.25) !important;
       }
     }
   }

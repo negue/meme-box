@@ -1,3 +1,17 @@
+<ng-container *ngIf="clip?.previewUrl; else noPreviewAvailable">
+  <!-- Image => Preview -->
+  <img [style.height]="height"
+       [style.width]="width"
+
+       [style.--clip-setting-img-fit]="setting?.imgFit"
+       [src]="clip | mediaToPreviewUrl: useOldPathEndpoint"
+       draggable="false"/>
+
+</ng-container>
+
+<ng-template #noPreviewAvailable>
+
+
 <ng-container [ngSwitch]="clip?.type">
   <!-- Image => Preview -->
   <img *ngSwitchCase="MediaType.Picture"
@@ -5,7 +19,7 @@
        [style.width]="width"
 
        [style.--clip-setting-img-fit]="setting?.imgFit"
-       [src]="clip | mediaToUrl: useOldPathEndpoint"
+       [src]="clip | mediaToPreviewUrl: useOldPathEndpoint"
        draggable="false"/>
 
   <!-- Iframe => Iframe -->
@@ -23,10 +37,11 @@
     </ng-template>
   </ng-container>
 
-
   <!-- All others => AppClipType -->
   <app-clip-type *ngSwitchDefault
                  [type]="clip?.type"
                  [iconSize]="height || width"></app-clip-type>
 
 </ng-container>
+
+</ng-template>

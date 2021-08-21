@@ -52,7 +52,7 @@
       <mat-form-field>
         <input autocomplete="off"
                formControlName="path"
-               matInput
+               matInput #mediaPathInput
                [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
                [placeholder]="form.value.type !== MediaType.IFrame ? 'File' : 'URL'"
                type="text" (keyup)="markForCheck()"
@@ -309,6 +309,22 @@
       </div>
     </div>
 
+    <div *ngSwitchCase="MediaType.Video" >
+
+<div *ngIf="mediaPathInput.value">
+  <video width="320" height="240" controls #videoElement
+         [src]="mediaPathInput.value | mediaPathToUrl"
+           crossorigin="anonymous" (loadeddata)="onVideoLoaded($event, videoElement)">
+       Your browser does not support the video tag.
+      <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+    </video>
+
+      <button mat-raised-button
+              (click)="makeScreenshot(videoElement)">
+        Set current video position as screenshot
+      </button>
+</div>
+    </div>
     <!-- All others => AppClipType -->
     <gewd-auto-scale [width]="500" [height]="500"
                      class="preview-box"

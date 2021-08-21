@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, OnInit, TrackByFunction} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {Clip, Screen, Tag} from '@memebox/contracts';
 import {AppQueries, AppService, WebsocketService} from '@memebox/app-state';
 import {DialogService} from '../../../shared/dialogs/dialog.service';
@@ -10,6 +10,7 @@ import {OverviewUiMode, OverviewUiService} from './overview-ui.service';
 import isEqual from 'lodash/isEqual';
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {ActionTypeGroup} from "./group-by-media-type.pipe";
+import {savedBehaviorSubject} from "@memebox/utils";
 
 @Component({
   selector: 'app-media-overview',
@@ -17,7 +18,7 @@ import {ActionTypeGroup} from "./group-by-media-type.pipe";
   styleUrls: ['./media-overview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MediaOverviewComponent implements OnInit {
+export class MediaOverviewComponent implements OnInit, OnDestroy{
   public uiMode$ = this._uiService.getCurrentUiMode$().pipe(
     shareReplay({ refCount: true, bufferSize: 1 })
   );
@@ -59,15 +60,23 @@ export class MediaOverviewComponent implements OnInit {
     return item.mediaType;
   }
 
+  private destroy$ = new Subject<void>();
+
   constructor(public service: AppService,
               public query: AppQueries,
               private _dialog: DialogService,
               private _wsService: WebsocketService,
               private _uiService: OverviewUiService,
               private configService: ConfigService,) {
+    savedBehaviorSubject('mediaOverviewFilter', this.filteredItems$, this.destroy$);
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   addNewItem(): any {
@@ -110,19 +119,6 @@ export class MediaOverviewComponent implements OnInit {
       screenId: screen.id,
       name: item.name
     });
-  }
-
-  onToggleMobileShow(item: Clip) {
-    const newClip = {
-      ...item,
-      showOnMobile: !item.showOnMobile
-    } as Clip;
-
-    this.service.addOrUpdateClip(newClip);
-  }
-
-  onToggleTwitchEvent(item: Clip, twitchId: string) {
-    this.service.toggleTwitchActiveState(twitchId);
   }
 
   openHelpOverview() {

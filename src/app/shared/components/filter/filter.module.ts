@@ -8,10 +8,11 @@ import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatButtonModule} from "@angular/material/button";
+import {IsSelectedPipe} from './is-selected.pipe';
 
 
 @NgModule({
-  declarations: [FilterComponent],
+  declarations: [FilterComponent, IsSelectedPipe],
   exports: [
     FilterComponent
   ],

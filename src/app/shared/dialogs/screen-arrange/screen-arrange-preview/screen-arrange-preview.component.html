@@ -21,13 +21,17 @@
 
       <!--      TODO: Find solution/control to show user it can only be resize OR warp.-->
       <mat-button-toggle [value]="GlobalArrangeOptions.Resize"
-                         [disabled]="!isResizeEnabled"
+
+                         (change)="warpButton.checked = false"
+                         [disabled]="!isResizeEnabled" #resizeButton
       >
         Resize
       </mat-button-toggle>
 
       <mat-button-toggle [value]="GlobalArrangeOptions.Warp"
-                         [disabled]="!isWarpEnabled"
+
+                         (change)="resizeButton.checked = false"
+                         [disabled]="!isWarpEnabled" #warpButton
       >
         Warp
       </mat-button-toggle>
@@ -177,17 +181,24 @@
          [style.height.px]="screen?.height || 1080"
     >
       <ng-container *ngFor="let pair of visibleItems; trackBy: trackByClip">
+        <!-- todo create a directive that handles all of those properties -->
+
         <!-- improve the duplicate settings -->
         <app-clip-preview *ngIf="pair.clipSetting.position === PositionEnum.FullScreen"
                           [clip]="pair.clip"
                           [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                           [style.position]="'absolute'"
+                          [style.width.%]="100"
+                          [style.height.%]="100"
+                          [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
+                          [style.--clip-setting-img-fit]="pair.clipSetting.imgFit"
                           draggable="false"
                           class="preview-box"></app-clip-preview>
 
         <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Centered"
                                [clip]="pair.clip"
                                [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+                               [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
                                [screen]="screen"
                                [sizeType]="sizeSelection"
                                [showResizeBorder]="pair === currentSelectedClip"
@@ -209,6 +220,7 @@
         <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Random"
                                [clip]="pair.clip"
                                [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+                               [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
                                [screen]="screen"
                                [sizeType]="sizeSelection"
                                [showResizeBorder]="pair === currentSelectedClip"
@@ -231,6 +243,7 @@
           [screen]="screen"
           [sizeType]="sizeSelection"
           [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+          [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
           [showResizeBorder]="pair === currentSelectedClip"
           (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
           [settings]="pair.clipSetting" #dragResizeMediaComponent

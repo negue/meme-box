@@ -79,12 +79,6 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   get isResizeEnabled(): boolean {
-    const warpEnabled = !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform;
-    const warpSet = this.globalActionsForm.value.includes(GlobalArrangeOptions.Warp);
-    if (warpEnabled && warpSet) {
-      return false;
-    }
-
     return !this.currentSelectedClip?.clipSetting?.arrangeLock?.size;
   }
 
@@ -101,12 +95,6 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   get isWarpEnabled(): boolean {
-    const resizeEnabled = !this.currentSelectedClip?.clipSetting?.arrangeLock?.size;
-    const resizeSet = this.globalActionsForm.value.includes(GlobalArrangeOptions.Resize);
-    if (resizeEnabled && resizeSet) {
-      return false;
-    }
-
     return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform;
   }
 

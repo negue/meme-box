@@ -7,16 +7,18 @@ import {ClipToIframePipe} from './clip-to-iframe.pipe';
 import {PositionToStringPipe} from "./position-to-string.pipe";
 import {SettingsToSizingTypePipe} from "./settings-to-sizing-type.pipe";
 import {VisibilityToStringPipe} from "./visibility-to-string.pipe";
-import {MediaToUrlPipe} from "./media-to-url.pipe";
+import {MediaPathToUrlPipe, MediaToUrlPipe} from "./media-to-url.pipe";
 import {LazyArrayPipe} from "./lazy-array.pipe";
 import {VariableConverterPipe} from "./variable-converter.pipe";
+import {MediaToPreviewUrlPipe} from "./media-to-preview-url.pipe";
 
 const PIPES = [
   SafePipe,
   ReadableMsPipe, ClipToIframePipe,
   PositionToStringPipe, SettingsToSizingTypePipe,
   VisibilityToStringPipe, MediaToUrlPipe,
-  LazyArrayPipe, VariableConverterPipe
+  LazyArrayPipe, VariableConverterPipe,
+  MediaToPreviewUrlPipe, MediaPathToUrlPipe
 ];
 
 @NgModule({
