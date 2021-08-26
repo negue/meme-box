@@ -27,7 +27,7 @@ export function* getCommandsOfTwitchEvent(
     } break;
     case TwitchEventTypes.bits: {
       yield* returnAllCommandsByType(
-        twitchSettingsList,
+        onlyActiveConfigs,
         twitchEvent,
         (currentTriggerConfig, event) =>
           checkEventInRange(event.payload.bits, currentTriggerConfig)
@@ -44,7 +44,7 @@ export function* getCommandsOfTwitchEvent(
     }
     case TwitchEventTypes.raid: {
       yield* returnAllCommandsByType(
-        twitchSettingsList,
+        onlyActiveConfigs,
         twitchEvent,
         (currentTriggerConfig, event) =>
           checkEventInRange(event.payload.viewers, currentTriggerConfig)
@@ -54,7 +54,7 @@ export function* getCommandsOfTwitchEvent(
     }
     case TwitchEventTypes.channelPoints: {
       yield* returnAllCommandsByType(
-        twitchSettingsList,
+        onlyActiveConfigs,
         twitchEvent,
         (currentTriggerConfig, event) => event.payload.rewardId === currentTriggerConfig.channelPointId
       );
@@ -78,7 +78,7 @@ export function* getCommandsOfTwitchEvent(
       );
 
       yield* returnAllCommandsByType(
-        twitchSettingsList,
+        onlyActiveConfigs,
         twitchEvent
       );
 
@@ -87,7 +87,7 @@ export function* getCommandsOfTwitchEvent(
     // otherwise the default will be called
     default: {
       yield* returnAllCommandsByType(
-        twitchSettingsList,
+        onlyActiveConfigs,
         twitchEvent
       );
 
