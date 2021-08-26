@@ -1,8 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Twitch, TwitchEventTypes, TwitchTypesArray} from '@memebox/contracts';
-import {AppQueries} from '../../../../../../projects/app-state/src/lib/state/app.queries';
+import {TwitchEventTypes, TwitchTrigger, TwitchTypesArray} from '@memebox/contracts';
+import {AppQueries, AppService} from '@memebox/app-state';
 import {map} from 'rxjs/operators';
-import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
 
 @Component({
   selector: 'app-twitch-info',
@@ -12,7 +11,7 @@ import {AppService} from '../../../../../../projects/app-state/src/lib/state/app
 export class TwitchEventInfoComponent implements OnInit {
   twitchEvents = TwitchTypesArray;
   @Input()
-  item: Twitch;
+  item: TwitchTrigger;
 
   twitchEventTypes = TwitchEventTypes;
 

@@ -1,6 +1,6 @@
 import {Compiler, Injectable, Injector, TemplateRef, Type} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {Screen, TimedClip, Twitch} from "@memebox/contracts";
+import {Screen, TimedClip, TwitchTrigger} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
 import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
@@ -52,7 +52,7 @@ export class DialogService {
     )
   }
 
-  showTwitchEditDialog(info: Twitch) {
+  showTwitchEditDialog(info: TwitchTrigger) {
     this.loadAndOpen(
       import('./twitch-edit/twitch-edit.module'),
       info

@@ -11,7 +11,7 @@ import {
   ScreenClip,
   Tag,
   TimedClip,
-  Twitch,
+  TwitchTrigger,
   UpdateState,
   VisibilityEnum
 } from '@memebox/contracts';
@@ -322,7 +322,7 @@ export class AppService {
     this.snackbar.normal('Timer removed!');
   }
 
-  public async addOrUpdateTwitchEvent(event: Twitch) {
+  public async addOrUpdateTwitchEvent(event: TwitchTrigger) {
     let newId = event?.id ?? '';
 
     if (newId === '') {

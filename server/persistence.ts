@@ -11,8 +11,8 @@ import {
   SettingsState,
   Tag,
   TimedClip,
-  Twitch,
   TwitchConfig,
+  TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
 import {Observable, Subject} from "rxjs";
@@ -277,7 +277,7 @@ export class Persistence {
    *  Twitch Event Settings
    */
 
-  public addTwitchEvent(twitchEvent: Twitch) {
+  public addTwitchEvent(twitchEvent: TwitchTrigger) {
     twitchEvent.id = uuidv4();
     this.data.twitchEvents[twitchEvent.id] = twitchEvent;
 
@@ -285,7 +285,7 @@ export class Persistence {
     return twitchEvent.id;
   }
 
-  public updateTwitchEvent(id: string, twitchEvent: Twitch) {
+  public updateTwitchEvent(id: string, twitchEvent: TwitchTrigger) {
     twitchEvent.id = id;
 
     updateItemInDictionary(this.data.twitchEvents, twitchEvent);
@@ -300,7 +300,7 @@ export class Persistence {
     this.saveData();
   }
 
-  public listTwitchEvents(): Twitch[] {
+  public listTwitchEvents(): TwitchTrigger[] {
     return Object.values(this.data.twitchEvents);
   }
 

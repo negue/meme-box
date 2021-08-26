@@ -2,7 +2,7 @@ import * as tmi from 'tmi.js';
 import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
 import {Observable, Subject} from 'rxjs';
 import {debounceTime, startWith} from 'rxjs/operators';
-import {Twitch, TwitchConfig, TwitchEventTypes, TwitchTriggerCommand} from '@memebox/contracts';
+import {TwitchConfig, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from '@memebox/contracts';
 import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
 import {
@@ -32,7 +32,7 @@ export class TwitchConnector {
   private _currentTwitchConfig: TwitchConfig;
 
 
-  public twitchSettings: Twitch[] = [];
+  public twitchSettings: TwitchTrigger[] = [];
 
   constructor(
     // currently the twitch config is inside the Persistence,

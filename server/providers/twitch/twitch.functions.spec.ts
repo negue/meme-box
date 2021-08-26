@@ -1,4 +1,4 @@
-import {Twitch, TwitchEventTypes} from "@memebox/contracts";
+import {TwitchEventTypes, TwitchTrigger} from "@memebox/contracts";
 import {getCommandsOfTwitchEvent} from "./twitch.functions";
 import {TwitchCheerMessage} from "./twitch.connector.types";
 import {ChatUserstate} from "tmi.js";
@@ -6,7 +6,7 @@ import {ChatUserstate} from "tmi.js";
 describe('twitch functions', () => {
 
   it('should return two commands based on cheers' , () => {
-    const allTwitchItems: Twitch[] = [
+    const allTwitchItems: TwitchTrigger[] = [
       {
         id: '1',
         active: true,

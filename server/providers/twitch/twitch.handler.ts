@@ -55,68 +55,72 @@ export class TwitchHandler {
   }
 
   handle(trigger: TwitchTriggerCommand) {
-    if (trigger.command) {
-      this._twitchLogger.log(`Trigger "${trigger.command.name}" Type - ${trigger.command.event}`);
+    if (!trigger.command) {
+      return;
+    }
 
-      this._twitchLogger.log({
-        message: 'Trigger Tags',
-        tags: trigger.tags
-      });
+    this._twitchLogger.log(`Trigger "${trigger.command.name}" Type - ${trigger.command.event}`);
 
-      const foundLevels = getLevelOfTags(trigger.tags);
+    this._twitchLogger.log({
+      message: 'Trigger Tags',
+      tags: trigger.tags
+    });
 
-      const isBroadcaster = foundLevels.includes('broadcaster');
-      const allowedByRole = isAllowedToTrigger(trigger, foundLevels);
+    const foundLevels = getLevelOfTags(trigger.tags);
+
+    const isBroadcaster = foundLevels.includes('broadcaster');
+    const allowedByRole = isAllowedToTrigger(trigger, foundLevels);
 
 
-      const cooldownEntry = this.cooldownDictionary[trigger.command.id];
-      const allowedByCooldown = cooldownEntry && trigger.command.cooldown
-        ? (Date.now() - cooldownEntry) > trigger.command.cooldown
-        : true;
+    const cooldownEntry = this.cooldownDictionary[trigger.command.id];
+    const allowedByCooldown = cooldownEntry && trigger.command.cooldown
+      ? (Date.now() - cooldownEntry) > trigger.command.cooldown
+      : true;
 
-      const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
+    const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
 
-      this._twitchLogger.log({
-        isBroadcaster,
-        foundLevels,
-        trigger
-      });
+    this._twitchLogger.log({
+      isBroadcaster,
+      foundLevels,
+      trigger
+    });
 
-      if (allowedToTrigger) {
-        this.cooldownDictionary[trigger.command.id] = Date.now();
+    if (!allowedToTrigger) {
+      return;
+    }
 
-        const action = this.actionsMap[trigger.command.clipId];
+    this.cooldownDictionary[trigger.command.id] = Date.now();
 
-        const variablesOfAction = getVariablesListOfAction(action);
+    const action = this.actionsMap[trigger.command.clipId];
 
-        const variableValues: Dictionary<unknown> = {}
+    const variablesOfAction = getVariablesListOfAction(action);
 
-        if (trigger.command.extended) {
-          for (let actionVariableConfig of variablesOfAction) {
-            variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
-              trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
-            )
-          }
-        }
+    const variableValues: Dictionary<unknown> = {}
 
-        this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
-
-        this._mediaTriggerEventBus.triggerMedia({
-          id: trigger.command.clipId,
-          targetScreen: trigger.command.screenId,
-          origin: TriggerClipOrigin.TwitchEvent,
-          originId: trigger.command.id,
-
-          byTwitch: trigger.twitchEvent,
-
-          overrides: {
-            action: {
-              variables: variableValues
-            }
-          }
-        });
+    if (trigger.command.extended) {
+      for (let actionVariableConfig of variablesOfAction) {
+        variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
+          trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
+        )
       }
     }
+
+    this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
+
+    this._mediaTriggerEventBus.triggerMedia({
+      id: trigger.command.clipId,
+      targetScreen: trigger.command.screenId,
+      origin: TriggerClipOrigin.TwitchEvent,
+      originId: trigger.command.id,
+
+      byTwitch: trigger.twitchEvent,
+
+      overrides: {
+        action: {
+          variables: variableValues
+        }
+      }
+    });
   }
 
   private fillActionMap() {

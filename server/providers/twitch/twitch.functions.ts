@@ -1,6 +1,6 @@
-import {Twitch, TwitchEventTypes, TwitchTriggerCommand} from "@memebox/contracts";
+import {TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
 import * as tmi from "tmi.js";
-import {ChatUserstate} from "tmi.js";
+import {CommonUserstate} from "tmi.js";
 import {AllTwitchEvents} from "./twitch.connector.types";
 
 declare module 'tmi.js' {
@@ -10,7 +10,7 @@ declare module 'tmi.js' {
 }
 
 export function* getCommandsOfTwitchEvent(
-  twitchSettingsList: Twitch[],
+  twitchSettingsList: TwitchTrigger[],
   twitchEvent: AllTwitchEvents
 ): IterableIterator<TwitchTriggerCommand> {
   const onlyActiveConfigs = twitchSettingsList.filter(s => s.active);
@@ -26,16 +26,12 @@ export function* getCommandsOfTwitchEvent(
 
     } break;
     case TwitchEventTypes.bits: {
-      for (const twitchSetting of onlyActiveConfigs) {
-        if (twitchEvent.type === twitchSetting.event
-          && checkEventInRange(twitchEvent.payload.bits, twitchSetting)) {
-          yield {
-            command: twitchSetting,
-            tags: twitchEvent.payload.userstate,
-            twitchEvent
-          };
-        }
-      }
+      yield* returnAllCommandsByType(
+        twitchSettingsList,
+        twitchEvent,
+        (currentTriggerConfig, event) =>
+          checkEventInRange(event.payload.bits, currentTriggerConfig)
+      );
 
       yield* returnAllCommandsByMessage(
         onlyActiveConfigs,
@@ -47,66 +43,89 @@ export function* getCommandsOfTwitchEvent(
       break;
     }
     case TwitchEventTypes.raid: {
-      for (const twitchSetting of onlyActiveConfigs) {
-        if (twitchEvent.type === twitchSetting.event
-          && checkEventInRange(twitchEvent.payload.viewers, twitchSetting)) {
-          yield {
-            command: twitchSetting,
-            twitchEvent
-          };
-        }
-      }
+      yield* returnAllCommandsByType(
+        twitchSettingsList,
+        twitchEvent,
+        (currentTriggerConfig, event) =>
+          checkEventInRange(event.payload.viewers, currentTriggerConfig)
+      );
 
       break;
     }
     case TwitchEventTypes.channelPoints: {
-      for (const twitchSetting of onlyActiveConfigs) {
-        if (twitchEvent.type === twitchSetting.event
-          && twitchEvent.payload.rewardId === twitchSetting.channelPointId) {
-          yield {
-            command: twitchSetting,
-            twitchEvent
-          };
-        }
-      }
+      yield* returnAllCommandsByType(
+        twitchSettingsList,
+        twitchEvent,
+        (currentTriggerConfig, event) => event.payload.rewardId === currentTriggerConfig.channelPointId
+      );
+
+      yield* returnAllCommandsByMessage(
+        onlyActiveConfigs,
+        twitchEvent.payload.message,
+        null,
+        twitchEvent
+      );
 
       break;
     }
 
-    // add gift if special config is added
-    // add subs if special config is added
+    case TwitchEventTypes.subscription: {
+      yield* returnAllCommandsByMessage(
+        onlyActiveConfigs,
+        twitchEvent.payload.message,
+        twitchEvent.payload.userState,
+        twitchEvent
+      );
+
+      yield* returnAllCommandsByType(
+        twitchSettingsList,
+        twitchEvent
+      );
+
+    } break;
 
     // otherwise the default will be called
     default: {
-      for (const twitchSetting of onlyActiveConfigs) {
-        if (twitchEvent.type === twitchSetting.event) {
-          yield {
-            command: twitchSetting,
-            twitchEvent
-          };
-        }
-      }
+      yield* returnAllCommandsByType(
+        twitchSettingsList,
+        twitchEvent
+      );
 
       break;
     }
   }
 }
 
-function checkEventInRange(amount: number, twitchSetting: Twitch) {
+function checkEventInRange(amount: number, twitchSetting: TwitchTrigger) {
   const minAmount = twitchSetting.minAmount || 0;
   const maxAmount = twitchSetting.maxAmount || Infinity;
 
   return amount >= minAmount && amount <= maxAmount;
 }
 
+function* returnAllCommandsByType<TTwitchEvent extends AllTwitchEvents> (
+  twitchSettingsList: TwitchTrigger[],
+  twitchEvent: TTwitchEvent,
+  condition: (currentTriggerConfig: TwitchTrigger, event: TTwitchEvent) => boolean = () => true
+) : IterableIterator<TwitchTriggerCommand> {
+  for (const twitchSetting of twitchSettingsList) {
+    if (twitchEvent.type === twitchSetting.event && condition(twitchSetting, twitchEvent)) {
+      yield {
+        command: twitchSetting,
+        twitchEvent
+      };
+    }
+  }
+}
+
 function* returnAllCommandsByMessage (
-  twitchSettingsList: Twitch[],
+  twitchSettingsList: TwitchTrigger[],
   message: string,
-  chatUserState: ChatUserstate,
+  chatUserState: CommonUserstate,
   twitchEvent: AllTwitchEvents
 ) : IterableIterator<TwitchTriggerCommand> {
 
-  let foundCommand: Twitch = null;
+  let foundCommand: TwitchTrigger = null;
   for (const twitchSetting of twitchSettingsList) {
     // check if the Twitch Event Config is triggered by "message"
     if (twitchSetting.event !== TwitchEventTypes.message) {
