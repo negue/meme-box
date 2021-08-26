@@ -130,8 +130,8 @@
            class="external-file-row">
 
         <mat-form-field class="file-type-select">
+          <mat-label>Type</mat-label>
           <mat-select [(value)]="externalFile.type"
-                      placeholder="Type"
                       (change)="saveExternalArray()">
             <mat-option value="css">CSS</mat-option>
             <mat-option value="script">Script</mat-option>
@@ -139,8 +139,8 @@
         </mat-form-field>
 
         <mat-form-field class="file-url">
+          <mat-label>Source</mat-label>
           <input matInput [(ngModel)]="externalFile.src"
-                 placeholder="Source"
                  (change)="saveExternalArray()"
                  autocomplete="off"/>
         </mat-form-field>

@@ -9,7 +9,7 @@ export class HintPanelComponent implements OnInit {
 
   @Input()
   @HostBinding('class.add-bottom-padding')
-  public addBottomPadding = true;
+  public addBottomPadding = false;
 
   constructor() { }
 

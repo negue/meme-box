@@ -1,11 +1,11 @@
 <ng-container [ngSwitch]="variableType">
-  <mat-form-field *ngSwitchCase="'text'"  appearance="outline">
+  <mat-form-field *ngSwitchCase="'text'" >
     <mat-label>{{label}}</mat-label>
     <input matInput [(ngModel)]="value" type="text" autocomplete="off"
            (ngModelChange)="valueChanged.emit(value)">
   </mat-form-field>
 
-  <mat-form-field *ngSwitchCase="'textarea'"  appearance="outline">
+  <mat-form-field *ngSwitchCase="'textarea'">
     <mat-label>{{label}}</mat-label>
     <textarea matInput [(ngModel)]="value"
            (ngModelChange)="valueChanged.emit(value)">
@@ -14,7 +14,7 @@
 
   </mat-form-field>
 
-  <mat-form-field *ngSwitchCase="'number'" appearance="outline">
+  <mat-form-field *ngSwitchCase="'number'" >
     <mat-label>{{label}}</mat-label>
     <input matInput [(ngModel)]="value" type="number"
            autocomplete="off"

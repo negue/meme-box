@@ -12,8 +12,9 @@
 <div class="dialog-content">
   <mat-tab-group [selectedIndex]="data.actionType === 5 ? 2 : 1">
     <mat-tab label="Variables">
-      <app-hint-panel>
+      <app-hint-panel [addBottomPadding]="true">
         You can define variables which can be set outside of the script. Useful if you want to share a script with others.
+
       </app-hint-panel>
 
       <app-variables-config [variablesList]="variablesList"
@@ -24,7 +25,7 @@
       </app-variables-config>
     </mat-tab>
     <mat-tab label="Bootstrap Script" *ngIf="data.actionType === 5">
-      <app-hint-panel>
+      <app-hint-panel [addBottomPadding]="true">
         If your script needs functions or objects that shouldn't be re-evaluated on each script call.
       </app-hint-panel>
 

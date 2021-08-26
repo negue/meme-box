@@ -14,16 +14,18 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {AnimationPreviewComponent} from './animation-preview/animation-preview.component';
 import {PreventAnimationOnFirstViewDirective} from './prevent-animation-on-first-view.directive';
-import {PipesModule} from "../../../../../projects/ui-components/src/lib/pipes/pipes.module";
+import {HintPanelModule, PipesModule} from "@memebox/ui-components";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {ClipTypeModule} from "../../../../../projects/state-components/src/lib/clip-type/clip-type.module";
+import {ClipTypeModule} from "@memebox/state-components";
 import {CodemirrorModule} from "@gewd/components/codemirror";
+import {AnimationLabelPipe} from './animation-label.pipe';
 
 @NgModule({
   declarations: [
     ScreenClipOptionsComponent,
     AnimationPreviewComponent,
-    PreventAnimationOnFirstViewDirective
+    PreventAnimationOnFirstViewDirective,
+    AnimationLabelPipe
   ],
   imports: [
     CommonModule,
@@ -39,7 +41,8 @@ import {CodemirrorModule} from "@gewd/components/codemirror";
     PipesModule,
     MatButtonToggleModule,
     ClipTypeModule,
-    CodemirrorModule
+    CodemirrorModule,
+    HintPanelModule
   ],
   providers: [],
 })

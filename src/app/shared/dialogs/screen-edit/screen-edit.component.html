@@ -4,7 +4,7 @@
   <form [formGroup]="form">
 
     <div class="form-control">
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Name</mat-label>
         <input autocomplete="off"
                formControlName="name"
@@ -19,7 +19,7 @@
     </div>
 
     <div class="form-control">
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Width (px)</mat-label>
         <input autocomplete="off" type="number"
                formControlName="width"
@@ -30,7 +30,7 @@
     </div>
 
     <div class="form-control">
-      <mat-form-field appearance="outline">
+      <mat-form-field>
         <mat-label>Height (px)</mat-label>
         <input autocomplete="off" type="number"
                formControlName="height"
@@ -45,7 +45,7 @@
 
 
     <div class="form-control textarea">
-      <mat-form-field appearance="outline" floatLabel="always">
+      <mat-form-field floatLabel="always">
         <mat-label>Custom CSS</mat-label>
 
         <gewd-custom-form-control formControlName="customCss"

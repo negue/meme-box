@@ -33,7 +33,6 @@ export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(MEDIA_TYPE_INFORMATION_A
   styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent implements OnInit {
-
   @Input()
   public items: IFilterItem[] = [];
 

@@ -3,12 +3,12 @@
   <ng-container *ngFor="let customVariable of variablesList">
     <tr>
       <td>
-        <mat-form-field appearance="outline">
+        <mat-form-field>
           <mat-label>Your Variable Name</mat-label>
           <input matInput [(ngModel)]="customVariable.name"
                  (ngModelChange)="onEditVariable.emit(customVariable)" type="text">
         </mat-form-field>
-        <mat-form-field  appearance="outline">
+        <mat-form-field>
           <mat-label>Variable Type selection</mat-label>
           <mat-select [(value)]="customVariable.type"
                       (selectionChange)="onEditVariable.emit(customVariable)">
