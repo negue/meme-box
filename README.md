@@ -109,11 +109,22 @@ Misc:
 
 <tr>
     <td  colspan=3>
-Same as Scripts just that those will run and stay active all the time. 
-<br /> Used for Bots or other functionalities 
-
       
-React on custom callbacks from Twitch / OBS Events
+- Same as Scripts just that those will run and stay active all the time. 
+- Used for Bots or other functionalities 
+- React on custom callbacks from Twitch / OBS Events
+  </td>
+  </tr>
+  
+     <tr>
+    <th colspan=3>API for Developers</th>
+  </tr>
+
+<tr>
+    <td  colspan=3>
+      
+- Trigger Actions with WebSockets 
+- Receive all Twitch Events to use in other Apps / Overlays
   </td>
   </tr>
 </table>
