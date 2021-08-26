@@ -4,7 +4,7 @@ import * as express from 'express';
 import {ExampleTwitchCommandsSubject} from "../shared";
 import {body} from "express-validator";
 import {validOrLeave} from "../validations";
-import {Twitch} from "../../projects/contracts/src/lib/types";
+import {TwitchTrigger} from "@memebox/contracts";
 
 const twitchPostValidator = [
   body('clipId').isString(),
@@ -37,7 +37,7 @@ TWITCH_ROUTES
 
 // Put = Update
   .put('/:eventId', twitchPutValidator, validOrLeave, (req, res) => {
-    const updatedTwitchObject: Twitch = req.body;
+    const updatedTwitchObject: TwitchTrigger = req.body;
 
     PersistenceInstance.updateTwitchEvent(req.params['eventId'], updatedTwitchObject)
 

@@ -15,8 +15,8 @@
   <form [formGroup]="form" class="two-columns">
     <div class="column">
       <mat-form-field>
+        <mat-label>Visibility</mat-label>
         <mat-select formControlName="visibility"
-                    placeholder="Visibility"
                     #visibilitySelect
                     value="0">
           <mat-option [value]="0">{{0 | visibilityToString}}</mat-option>
@@ -43,16 +43,16 @@
               </mat-expansion-panel-header>
 
               <mat-form-field *ngIf="clipInfo.type === MediaType.Video">
+                <mat-label>Loop Media Clip</mat-label>
                 <mat-select formControlName="loop"
-                            placeholder="Loop Media Clip"
                             value="0">
                   <mat-option [value]="false">No</mat-option>
                   <mat-option [value]="true">Yes</mat-option>
                 </mat-select>
               </mat-form-field>
              <mat-form-field>
+               <mat-label>Object-Fit</mat-label>
                     <mat-select formControlName="imgFit"
-                                placeholder="Object-Fit"
                                 value="contain">
                       <mat-option value="contain">Contain</mat-option>
                       <mat-option value="fill">Fill</mat-option>
@@ -73,30 +73,30 @@
       </mat-panel-title>
       <mat-panel-description>
         <ng-container *ngIf="form.value.animationIn">
-          IN: {{form.value.animationIn}} <br/>
+          IN: {{form.value.animationIn  | animationLabel}} <br/>
         </ng-container>
         <ng-container *ngIf="form.value.animationOut">
-          OUT: {{form.value.animationOut}}
+          OUT: {{form.value.animationOut | animationLabel}}
         </ng-container>
       </mat-panel-description>
               </mat-expansion-panel-header>
 
 
               <mat-form-field>
-                <mat-select placeholder="Animate IN"
-                            formControlName="animationIn"
+                <mat-label>Animate IN</mat-label>
+                <mat-select formControlName="animationIn"
                             #animationInSelect>
                   <mat-option value="">None</mat-option>
                   <mat-option value="random">Random</mat-option>
-                  <mat-option *ngFor="let animation of animateInList" [value]="animation">{{animation}}</mat-option>
+                  <mat-option *ngFor="let animation of animateInList" [value]="animation">{{animation | animationLabel}}</mat-option>
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field>
+              <mat-form-field class="duration-form-field">
+                <mat-label>Duration</mat-label>
                 <input autocomplete="off"
                        formControlName="animationInDuration"
                        matInput #animationInDuration
-                       placeholder="Animate In - Duration"
                        type="number">
 
                 <span matSuffix>ms</span>
@@ -111,20 +111,21 @@
         <br/>
 
               <mat-form-field>
-                <mat-select placeholder="Animate OUT" #animationOutSelect
+                <mat-label>Animate OUT</mat-label>
+                <mat-select #animationOutSelect
                             formControlName="animationOut">
                   <mat-option value="">None</mat-option>
                   <mat-option value="random">Random</mat-option>
 
-                  <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation}}</mat-option>
+                  <mat-option *ngFor="let animation of animateOutList" [value]="animation">{{animation | animationLabel}}</mat-option>
                 </mat-select>
               </mat-form-field>
 
-              <mat-form-field>
+              <mat-form-field class="duration-form-field">
+                <mat-label>Duration</mat-label>
                 <input autocomplete="off"
                        formControlName="animationOutDuration"
                        matInput #animationOutDuration
-                       placeholder="Animate Out - Duration"
                        type="number">
 
                 <span matSuffix>ms</span>
@@ -136,15 +137,25 @@
                                [animationDuration]="+animationOutDuration.value"
         ></app-animation-preview>
 
+        <br/>
+
+        <app-hint-panel>
+          Animation Examples/Overview:
+          <a href="https://animate.style" mat-flat-button target="_blank">
+          https://animate.style
+            <mat-icon svgIcon="launch"></mat-icon>
+        </a>
+        </app-hint-panel>
+
       </mat-expansion-panel>
     </div>
 
     <div class="column">
       <mat-form-field>
+        <mat-label>Position</mat-label>
         <mat-select #positionSelection
                     [value]="clipInfo?.position || 0"
-                    formControlName="position"
-                    placeholder="Position">
+                    formControlName="position">
           <mat-option [value]="0">{{0 | positionToString}}</mat-option>
           <mat-option [value]="1">{{1 | positionToString}}</mat-option>
           <mat-option [value]="2">{{2 | positionToString}}</mat-option>
@@ -194,58 +205,65 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
 
+        <div class="position-inputs">
 
         <mat-form-field>
+          <mat-label>Width (px, %, rem, em)</mat-label>
           <input autocomplete="off" formControlName="width"
                  matInput
-                 placeholder="Width (px, %, rem, em)"
                  type="text">
         </mat-form-field>
 
         <mat-form-field>
+          <mat-label>Height (px, %, rem, em)</mat-label>
           <input autocomplete="off" formControlName="height"
                  matInput
-                 placeholder="Height (px, %, rem, em)"
                  type="text">
         </mat-form-field>
+
+        </div>
 
       <ng-container *ngIf="positionSelection.value === 1">
+        <div class="position-inputs">
+
         <mat-form-field>
+          <mat-label>Left (px, %, rem, em)</mat-label>
           <input autocomplete="off" formControlName="left"
                  matInput
-                 placeholder="Left (px, %, rem, em)"
                  type="text">
         </mat-form-field>
 
 
         <mat-form-field>
+          <mat-label>Right (px, %, rem, em)</mat-label>
           <input autocomplete="off" formControlName="right"
                  matInput
-                 placeholder="Right (px, %, rem, em)"
                  type="text">
         </mat-form-field>
 
         <mat-form-field>
+          <mat-label>Top (px, %, rem, em)</mat-label>
           <input autocomplete="off" formControlName="top"
                  matInput
-                 placeholder="Top (px, %, rem, em)"
                  type="text">
         </mat-form-field>
 
 
         <mat-form-field>
+          <mat-label>Bottom (px, %, rem, em)</mat-label>
           <input autocomplete="off" formControlName="bottom"
                  matInput
-                 placeholder="Bottom (px, %, rem, em)"
                  type="text">
         </mat-form-field>
+
+        </div>
 
         <h3>Advanced</h3>
         <mat-form-field>
+          <mat-label>CSS Transform</mat-label>
           <textarea formControlName="transform"
                     matInput
                     [rows]="6"
-                    placeholder="CSS Transform"
                     type="text">
           </textarea>
         </mat-form-field>
@@ -292,9 +310,9 @@
         </mat-expansion-panel-header>
 
         <mat-form-field>
+          <mat-label>z-index</mat-label>
         <input autocomplete="off" formControlName="zIndex"
                matInput
-               placeholder="z-index"
                type="number">
       </mat-form-field>
 
@@ -312,15 +330,14 @@
           </gewd-codemirror>
         </gewd-custom-form-control>
 
-        <mat-hint>
+
+      </mat-form-field>
+        <app-hint-panel [addBottomPadding]="false">
           Hints: <br/>
           <strong>.clip-holder</strong> can be used to style the holding element of the clip itself. <br/>
           Everything else will be applied inside the holder itself.
-        </mat-hint>
-      </mat-form-field>
+        </app-hint-panel>
 
-        <br>
-        <br>
       </mat-expansion-panel>
     </div>
   </form>

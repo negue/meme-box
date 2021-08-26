@@ -15,14 +15,14 @@ import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} fro
 
 import {APP_ICONS} from "./app.icons";
 import {ServiceWorkerModule} from '@angular/service-worker';
-import {DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions} from "@gewd/markdown/contracts";
-import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
 import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
 import {ServicesModule, WebSocketBasePathInjectionToken} from "@memebox/app-state";
 import {TranslocoRootModule} from './transloco/transloco-root.module';
 import {RegisterIconsModule} from "@gewd/mat-utils/material-icons";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions} from "@angular/material/form-field";
+import {MarkdownModule} from "./markdown.module";
 
 export const StyleguideColors = {
   // var(--palette-background-background)
@@ -39,10 +39,6 @@ export const StyleguideColors = {
 
 console.warn('APP.MODULE.TS - AppConfig', AppConfig);
 
-const markdownWorker = () => new Worker('./markdown.worker.ts', {
-  name: 'markdown',
-  type: "module"
-});
 
 @NgModule({
   declarations: [
@@ -78,38 +74,20 @@ const markdownWorker = () => new Worker('./markdown.worker.ts', {
       iconArray: ['twitch'],
       pathToIcons: './assets/'
     }),
-    TranslocoRootModule
+    TranslocoRootModule,
+    MarkdownModule
   ],
   providers: [
-    // todo extract to custom markdown module
-    {
-      provide: MarkdownOptionsInjectorToken,
-      useValue: {
-        getWorker: markdownWorker,
-        options: {
-          prism: {
-            ...DEFAULT_PRISM_OPTIONS,
-
-            /** if needed **/
-            languageFileType: 'min.js',  // if you want to use the minified assets
-            languageMap: {               // alias to load the real file
-              ts: 'typescript',          // default
-              cs: 'csharp'               // additional
-            },
-            highlightMarkdownCode: true,
-            additionalPluginPaths: [
-              'assets/prism/prism-css-extras.min.js',  // needed for the inline color
-              'assets/prism/prism-plugin-inline-color.worker-func.js',
-              'assets/prism/prism-plugin-bracket-match.worker-func.js'
-            ]
-          }
-        }
-      } as MarkdownServiceOptions
-    },
     {
       provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {
         color: 'primary'
       } as MatCheckboxDefaultOptions
+    },
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {
+        appearance: 'fill',
+        floatLabel: "auto"
+      } as MatFormFieldDefaultOptions
     },
     {
       provide: WebSocketBasePathInjectionToken,

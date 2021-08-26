@@ -7,9 +7,9 @@ import {
   ClipAssigningMode,
   Dictionary,
   MediaType,
-  Twitch,
   TwitchEventFields,
   TwitchEventTypes,
+  TwitchTrigger,
   TwitchTypesArray,
   UnassignedFilterEnum
 } from '@memebox/contracts';
@@ -18,7 +18,7 @@ import {DialogService} from "../dialog.service";
 import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
 
 // TODO better class/interface name?
-const INITIAL_TWITCH: Partial<Twitch> = {
+const INITIAL_TWITCH: Partial<TwitchTrigger> = {
   name: '',
   event: TwitchEventTypes.message,
   contains: '',
@@ -152,7 +152,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: Twitch,
+    @Inject(MAT_DIALOG_DATA) public data: TwitchTrigger,
     private dialogRef: MatDialogRef<any>,
     private matDialog: MatDialog,
     private appService: AppService,
@@ -190,7 +190,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newTwitchValue: Twitch = {
+    const newTwitchValue: TwitchTrigger = {
       ...this.data,
       ...value
     };

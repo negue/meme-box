@@ -1,8 +1,7 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {ENDPOINTS, HasId, TimedClip, Twitch, TwitchTriggerCommand} from "@memebox/contracts";
+import {ENDPOINTS, HasId, TimedClip, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
 import {Observable} from "rxjs";
-import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
-import {API_BASE, AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
+import {API_BASE, AppQueries, AppService} from "@memebox/app-state";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
@@ -15,7 +14,7 @@ import orderBy from 'lodash/orderBy';
 })
 export class EventsOverviewComponent implements OnInit {
 
-  twitchEventsList$: Observable<Twitch[]> = this.queries.twitchEvents$.pipe(
+  twitchEventsList$: Observable<TwitchTrigger[]> = this.queries.twitchEvents$.pipe(
     map(allEvents => orderBy(allEvents, e => e.name.toLowerCase()))
   );
   timedEventsList$: Observable<TimedClip[]> = this.queries.timedEvents$.pipe(
@@ -49,7 +48,7 @@ export class EventsOverviewComponent implements OnInit {
     this.appService.deleteTwitchEvent(id);
   }
 
-  editTwitchEvent(twitchEventItem: Twitch) {
+  editTwitchEvent(twitchEventItem: TwitchTrigger) {
     this.dialogService.showTwitchEditDialog( twitchEventItem);
   }
 
@@ -61,7 +60,7 @@ export class EventsOverviewComponent implements OnInit {
     this.dialogService.showTimedEditDialog( twitchEventItem);
   }
 
-  previewEvent(item: Twitch) {
+  previewEvent(item: TwitchTrigger) {
     const badges = {};
 
     for(const role of item.roles ) {

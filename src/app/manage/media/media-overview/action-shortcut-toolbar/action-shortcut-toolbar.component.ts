@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Clip, Twitch} from "@memebox/contracts";
+import {Clip, TwitchTrigger} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {AppQueries, AppService} from "@memebox/app-state";
@@ -16,7 +16,7 @@ export class ActionShortcutToolbarComponent implements OnInit {
   public action: Clip;
 
 
-  public twitchEvents$: Observable<Twitch[]> = this.appQueries.twitchEvents$.pipe(
+  public twitchEvents$: Observable<TwitchTrigger[]> = this.appQueries.twitchEvents$.pipe(
     map(twitchEvents => twitchEvents.filter(twitchEvent => twitchEvent.clipId == this.action.id))
   );
 

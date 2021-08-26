@@ -10,6 +10,12 @@
   }
 }
 
+// disable the "auto-opened-up" expansion panel ... even if its marked to be closed ..
+:not(.mat-expanded) ::ng-deep .mat-expansion-panel-content {
+  visibility: hidden;
+  height: 0;
+}
+
 .mat-expansion-panel {
   background: transparent;
   box-shadow: none !important;

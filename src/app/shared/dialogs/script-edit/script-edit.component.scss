@@ -29,28 +29,6 @@ form {
   flex-wrap: wrap;
 }
 
-.external-file-panel ::ng-deep .mat-expansion-panel-body {
-  padding-right: 0.5rem;
-}
-
-.external-file-row {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-
-  .file-type-select {
-    width: 100px;
-  }
-
-  .file-url {
-    flex: 1;
-  }
-
-  button {
-    margin-top: 0.5rem;
-  }
-}
-
 .dialog-content {
   display: flex;
   flex-direction: row;

@@ -76,9 +76,24 @@ mat-expansion-panel {
 
 
 .animation-expansion-panel {
+  .duration-form-field {
+    width: 8rem;
+  }
+
   ::ng-deep .mat-expansion-panel-body {
     padding-right: 0;
-    min-width: 455px;
+    min-width: 450px;
+  }
+}
+
+.position-inputs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 1rem;
+
+  .mat-form-field {
+    width: calc(50% - 0.5rem);
   }
 }
 

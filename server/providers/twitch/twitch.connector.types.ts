@@ -96,7 +96,7 @@ export class TwitchSubEvent implements TwitchEvent {
 }
 
 export class TwitchGiftEvent implements TwitchEvent {
-  readonly type = TwitchEventTypes.subscription;
+  readonly type = TwitchEventTypes.gift;
 
   constructor(public payload: {
                 subtype: 'subgift' | 'submysterygift',

@@ -169,7 +169,7 @@ export interface TimedClip extends TriggerBase {
   active: boolean;
 }
 
-export interface Twitch extends TriggerBase {
+export interface TwitchTrigger extends TriggerBase {
   name: string;
   // screenId:      string; // TODO
   event: TwitchEventTypes;
@@ -201,7 +201,7 @@ export interface Tag extends HasId {
 export interface SettingsState {
   version: number;
   clips: Dictionary<Clip>;
-  twitchEvents: Dictionary<Twitch>;
+  twitchEvents: Dictionary<TwitchTrigger>;
   timers: Dictionary<TimedClip>;
   screen: Dictionary<Screen>;
   tags: Dictionary<Tag>;
@@ -276,7 +276,7 @@ export interface FileInfo {
 }
 
 export interface TwitchTriggerCommand {
-  command?: Twitch; // Config-Object
+  command?: TwitchTrigger; // Config-Object
   tags?: ChatUserstate;
   twitchEvent?: AllTwitchEvents
 }
