@@ -226,8 +226,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
       const randomPosition = () => Math.floor(Math.random()*100);
 
-      const randomLeft = `calc(${randomPosition()}% - ${width})`;
-      const randomTop = `calc(${randomPosition()}% - ${height})`;
+      const randomLeft = `max(0px, calc(${randomPosition()}% - ${width}))`;
+      const randomTop = `max(0px, calc(${randomPosition()}% - ${height}))`;
 
       this.element.nativeElement.style.setProperty('--clip-setting-left', randomLeft);
       this.element.nativeElement.style.setProperty('--clip-setting-top', randomTop);
