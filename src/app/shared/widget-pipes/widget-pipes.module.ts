@@ -1,12 +1,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ClipTemplatePipe} from "./clip-template.pipe";
-
+import {WidgetTemplatePipe} from "./clip-template.pipe";
 
 @NgModule({
-  declarations: [ClipTemplatePipe],
+  declarations: [WidgetTemplatePipe],
   exports: [
-    ClipTemplatePipe
+    WidgetTemplatePipe
   ],
   imports: [
     CommonModule

@@ -125,7 +125,14 @@ function* returnAllCommandsByMessage (
   twitchEvent: AllTwitchEvents
 ) : IterableIterator<TwitchTriggerCommand> {
 
+  if (!message) {
+    return;
+  }
+
   let foundCommand: TwitchTrigger = null;
+
+  const toLoweredMessage = message.toLowerCase();
+
   for (const twitchSetting of twitchSettingsList) {
     // check if the Twitch Event Config is triggered by "message"
     if (twitchSetting.event !== TwitchEventTypes.message) {
@@ -134,7 +141,7 @@ function* returnAllCommandsByMessage (
 
     // TODO improve multiple twitch commands with the same start name
     // TODO maybe with an order and "stop handling after this" ???
-    if (message.toLowerCase().includes(twitchSetting.contains.toLowerCase())) {
+    if (toLoweredMessage.includes(twitchSetting.contains.toLowerCase())) {
       if (!foundCommand) {
         foundCommand = twitchSetting;
       } else {

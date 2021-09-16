@@ -38,6 +38,7 @@ export class ActionApi {
       id: this.actionId,
       origin: TriggerClipOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
+      targetScreen: this.screenId,
       overrides
     });
 

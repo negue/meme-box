@@ -76,12 +76,10 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   const elementsToReplace: string[] = [];
 
   if (content.html) {
-    const availableVariables = variablesConfig
-      .filter(config => !!config.fallback);
 
     const htmlValueBag: Record<string, unknown> = {};
 
-    availableVariables
+    variablesConfig
       .forEach(config => {
         htmlValueBag[config.name] = getVariableValueOrFallback(config, valueBag, true);
 
@@ -96,9 +94,11 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
         }
       });
 
+    const replacedHtmlWithVariablesContent = replaceVariablesInString(content.html, variablesConfig.map(v => v.name), htmlValueBag);
+
     elementsToReplace.push(`
       <div>
-        ${replaceVariablesInString(content.html, availableVariables.map(v => v.name), htmlValueBag)}
+        ${replacedHtmlWithVariablesContent}
       </div>
     `);
   }
@@ -194,7 +194,7 @@ const DYNAMIC_IFRAME_EXTERNAL_KEY = 'external';
 const DYNAMIC_IFRAME_VARIABLES_KEY = '_variables';
 const DYNAMIC_IFRAME_SETTINGS_KEY = '_settings';
 
-export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
+export function clipDataToDynamicIframeContent (clip: Partial<Clip>): DynamicIframeContent|null {
   if (!clip?.extended) {
     return null;
   }

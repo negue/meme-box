@@ -11,12 +11,13 @@ import {
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import {CombinedClip, MediaType, PositionEnum, VisibilityEnum} from "@memebox/contracts";
+import {Clip, CombinedClip, Dictionary, MediaType, PositionEnum, VisibilityEnum} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
 import {takeUntil, withLatestFrom} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
-import {WebsocketService} from "../../../../projects/app-state/src/lib/services/websocket.service";
+import {AppQueries, WebsocketService} from "@memebox/app-state";
+import {clipDataToDynamicIframeContent, DynamicIframeContent} from "@memebox/utils";
 
 export enum MediaState {
   HIDDEN,
@@ -58,11 +59,18 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private currentCombinedClip: CombinedClip;
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
+  private clipMap: Dictionary<Clip>;
 
   constructor(private element: ElementRef<HTMLElement>,
               private parentComp: TargetScreenComponent,
               private webSocket: WebsocketService,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              private appQueries: AppQueries) {
+    this.appQueries.clipMap$.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(value => {
+      this.clipMap = value;
+    })
   }
 
   @HostListener('animationend', ['$event'])
@@ -417,6 +425,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         console.warn('changing to ANIMATE_IN');
         this.startAnimation(this.currentCombinedClip.clipSetting.animationIn, this.currentCombinedClip.clipSetting.animationInDuration);
 
+        if (this.currentCombinedClip.clip.type === MediaType.Widget) {
+          this.applyWidgetContent();
+        }
+
         this.isVisible$.next(true);
 
         break;
@@ -521,6 +533,45 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
     if (control instanceof DynamicIframeComponent) {
       control.componentIsShown(this.currentCombinedClip.triggerPayload);
+    }
+  }
+
+  private applyWidgetContent() {
+
+    const variableOverrides = this.currentCombinedClip.triggerPayload?.overrides?.action?.variables ?? {};
+
+    const media = this.currentCombinedClip.clip;
+
+    let config: DynamicIframeContent;
+
+    if (media.fromTemplate) {
+      const widgetTemplate = this.clipMap[media.fromTemplate];
+
+      config = {
+        ...clipDataToDynamicIframeContent(widgetTemplate),
+        variables: {
+          ...media.extended,
+          ...variableOverrides
+        }
+      };
+    } else {
+      config = {
+        ...clipDataToDynamicIframeContent(media),
+        variables: variableOverrides
+      };
+
+    }
+
+    console.info({
+      variableOverrides,
+      config
+    })
+
+    const control = this.parentComp.clipToControlMap.get(this.currentCombinedClip.clip.id);
+
+    if (control instanceof DynamicIframeComponent) {
+      control.content = config;
+      control.handleContentUpdate();
     }
   }
 }

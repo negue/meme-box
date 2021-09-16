@@ -105,7 +105,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
     this._widgetApi.triggerIsShown(currentTriggeredPayload);
   }
 
-  private handleContentUpdate() {
+  public handleContentUpdate() {
     if (this.content && this._widgetApi) {
       // yes, as any, because we need to add a property to it
       const iframeWindow = this.targetIframe.nativeElement.contentWindow as any;
