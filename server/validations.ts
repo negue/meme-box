@@ -1,9 +1,25 @@
 import {body, validationResult} from "express-validator";
 import {MediaType} from "@memebox/contracts";
 
+// TODO refactor those MediaType Checks
+export const MediaTypesWithoutPath = [
+  MediaType.Widget,
+  MediaType.WidgetTemplate,
+  MediaType.Script,
+  MediaType.Meta,
+  MediaType.PermanentScript
+]
+
 export const clipValidations = [
   body('name').isString(),
-  body('path').isString(),
+  body('path').if((value, {req }, ...rest) => {
+    const bodyJson = req.body;
+
+
+    const bodyType: MediaType = bodyJson.type;
+
+    return !MediaTypesWithoutPath.includes(bodyType);
+  }).isString(),
   body('type').not().isEmpty(),
   body('playLength').custom((value, {req }, ...rest) => {
     const bodyJson = req.body;

@@ -32,7 +32,7 @@ export class ActionActiveState {
     }
   }
 
-  public isCurrentlyActive (mediaId: string, screenId?: string) {
+  public isCurrently (activeState: ActionStateEnum, mediaId: string, screenId?: string) {
     const mediaInState = this.state[mediaId];
 
     if (!mediaInState) {
@@ -46,7 +46,7 @@ export class ActionActiveState {
         return false;
       }
 
-      return screenExists === ActionStateEnum.Active;
+      return screenExists === activeState;
     }
 
     const values = Object.values(mediaInState)
@@ -55,11 +55,13 @@ export class ActionActiveState {
       return false;
     }
 
-    return values.includes(ActionStateEnum.Active);
+    return values.includes(activeState);
   }
 
   public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {
-    if (!this.isCurrentlyActive(mediaId, screenId)) {
+    if (!this.isCurrently(ActionStateEnum.Active, mediaId, screenId)
+    && !this.isCurrently(ActionStateEnum.Triggered, mediaId, screenId)) {
+
       return Promise.resolve();
     }
 

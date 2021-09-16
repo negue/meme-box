@@ -56,6 +56,7 @@ export class ActionTriggerHandler {
 
     this.actionStateEventBus.updateActionState({
       mediaId: payloadObs.id,
+      screenId: payloadObs.targetScreen,
       state: ActionStateEnum.Triggered
     });
 

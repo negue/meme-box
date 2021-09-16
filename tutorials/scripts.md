@@ -23,8 +23,10 @@ The `Execution Script` which is called each time per trigger, does the actual "s
 |*both*| `sleep` | Check `Sleep API` below |
 |*both*| `logger` | Check `Logger API` below |
 |*both*| `obs` | Check `OBS API` below |
+|*both*| `memebox` | Check `MemeBox API` below |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
 |`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
+|**only Permanent Scripts**| `wss` | Create your custom websocket server - Check `WSS API` below |
 
 ### Sleep API
 
@@ -46,9 +48,7 @@ sleep.TYPE.MINUTES
 ```js
 logger.log('Something', 1234)
 logger.error('er')
-
 ```
-
 
 ### Obs API
 
@@ -57,25 +57,93 @@ obs.getFilter('SourceName', 'FilterName')
   .updateEnabled(true / false)
 
 obs.raw // using the Obs WebSocket JS Library https://github.com/obs-websocket-community-projects/obs-websocket-js#sending-requests
-
 ```
 
-## Pre-Defined Functions
+### WSS API
 
-Functions are able to be called on *both* Script-Types
+> Note: This only works inside Permanent Scripts
 
-|Function Name|Description|
-|--|--|
-| `console.info` | To log stuff |
-| `waitMillisecondsAsync(ms)` | waits for `ms` |
-| `triggerMediaAsync(mediaId, screenId?)` | It will trigger this media and wait until its done |
+```js
+// creates a new websocket server running at port: 1337
+const myWSS = wss.createWSS({
+  port: 1337
+});
 
+logger.log('address: ', myWSS.address())
 
-### `TriggerPayload`
+myWSS.on('connection', function connection(ws) {
+  
+  // the normal websocket client reference
+  ws.on('message', function incoming(message) {
+    logger.log('received: %s', message);
 
-```json 
+    ws.send('result: '+ message);
+  });
+
+  ws.send('something');
+});
+```
+
+### MemeBox API
+
+```js
+// Get your action by ActionID and ScreenId (use the button "Add action at cursor")
+const myActionVar = memebox.getMedia(
+  'cab50f01-2cd5-4797-9c7b-40dc3217272d',
+  '696f0c9a-bf99-42c2-becf-45e0efa87fbe'
+);
+
+// memebox.getAction for everything, that doesn't need `triggerWhile`
+
+// only for media: trigger it and have it visible all the time, 
+// while this (callback) code is running 
+// the await part is a promise and it will wait until this media is hidden again
+await myActionVar.triggerWhile(async (helpers) => {
+  await sleep.secondsAsync(1);
+
+  // move your media to these positions, this is done in a transition (animation)
+  await myActionVar.updateScreenOptions({
+    position: 1,  // Absolute
+    top: '10%',
+    left: '15%'
+  })
+
+  await sleep.secondsAsync(2);
+
+  await myActionVar.updateScreenOptions({
+    position: 1,  // Absolute 
+    top: '40%',
+    left: '35%'
+  });
+  
+  await sleep.secondsAsync(2);
+
+  // if none of these helpers are called, the last change of "updateScreenOptions" will be still applied
+  helpers.resetAfterDone(250);
+  // helpers.reset()    
+  // ^ this resets the media while its still "visible", 
+  // so it might break the previous animation flow
+}, 
+  // the options to trigger this media,
+  // for example here with a custom variable value
   {
-     id: MediaId,
-     targetScreen: ScreenId // optional
+  action: {
+    variables: {
+      text_to_show: "This is the first message"
+    }
   }
+});
+
+// these can be used for actions and media
+// just a simple memebox action trigger (with variables example)
+await myActionVar.trigger({
+  action: {
+    variables: {
+      text_to_show: "This is the second message"
+    }
+  }
+});
+
+// simple trigger without anything
+await myActionVar.trigger();
 ```

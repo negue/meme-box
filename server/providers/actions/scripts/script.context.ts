@@ -1,7 +1,7 @@
 import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 import {VM, VMScript} from "vm2";
 import {ActionStoreAdapter, ActionStoreApi} from "@memebox/shared-state";
-import {Clip, Dictionary, TriggerAction} from "@memebox/contracts";
+import {Clip, Dictionary, MediaType, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {Sleep, sleep} from "./apis/sleep.api";
 import {MemeboxApi} from "./apis/memebox.api";
@@ -10,6 +10,7 @@ import {LoggerApi} from "./apis/logger.api";
 import {ObsApi} from "./apis/obs.api";
 import {TwitchApi} from "./apis/twitch.api";
 import {CanDispose} from "./apis/disposableBase";
+import {DummyWebSocketServer, RealWebSocketServer, WebSocketServerApi} from "./apis/wss.api";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -27,9 +28,10 @@ interface SharedScriptPayload {
   logger: LoggerApi;
   obs: ObsApi;
   twitch: TwitchApi;
+  wss: WebSocketServerApi;
 }
 
-const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs, twitch';
+const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs, twitch, wss';
 
 interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
@@ -46,6 +48,7 @@ export class ScriptContext implements CanDispose {
   // API Properties
   store: ActionStoreApi;
   logger: LoggerApi;
+  wss: WebSocketServerApi;
 
   // VMScript Parts
   isBootstrapped: boolean;
@@ -67,6 +70,8 @@ export class ScriptContext implements CanDispose {
   ) {
     this.scriptConfig = clipDataToScriptConfig(script);
 
+    const isPermanentScript = this.script.type === MediaType.PermanentScript;
+
     // TODO error$ subject for logger or other stuff
     var error$ = new Subject<string>();
 
@@ -78,6 +83,10 @@ export class ScriptContext implements CanDispose {
     );
 
     this.logger = new LoggerApi(script.name, baseLogger);
+
+    this.wss = isPermanentScript
+      ? new RealWebSocketServer()
+      : new DummyWebSocketServer();
   }
 
   public compile() {
@@ -122,7 +131,8 @@ export class ScriptContext implements CanDispose {
         memebox: this.memeboxApi,
         logger: this.logger,
         obs: this.obsApi,
-        twitch: this.twitchApi
+        twitch: this.twitchApi,
+        wss: this.wss,
       }
 
       this.bootstrap_variables = await bootstrapFunc(bootstrapPayload);
@@ -149,6 +159,7 @@ export class ScriptContext implements CanDispose {
       this.scriptToCall = this._vm.run(this.compiledExecutionScript);
     }
 
+
     // these are the available APIs / variables that can be used inside
     const scriptArguments: ExecutionScriptPayload = {
       variables,
@@ -159,7 +170,8 @@ export class ScriptContext implements CanDispose {
       memebox: this.memeboxApi,
       logger: this.logger,
       obs: this.obsApi,
-      twitch: this.twitchApi
+      twitch: this.twitchApi,
+      wss: this.wss,
     };
 
     await this.scriptToCall(scriptArguments);
@@ -169,5 +181,6 @@ export class ScriptContext implements CanDispose {
     this.memeboxApi.dispose();
     this.twitchApi.dispose();
     this.obsApi.dispose();
+    this.wss.dispose();
   }
 }
