@@ -1,7 +1,7 @@
 # Meme-Box
 
 <p align="center">
-  
+
 <img src="./assets/memebox-optimized.svg" width="128" height="128">
 
 </p>
@@ -14,7 +14,7 @@
 
 [Nightly Builds](https://github.com/negue/meme-box-nightly/releases)
 
-A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "medias" to be used inside OBS.
+A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "media" to be used inside OBS. Or trigger other custom actions.
 
 |**Media Setup Example + Mobile View**|**Setup a Twitch-Trigger**|
 |--|--|
@@ -50,12 +50,12 @@ Misc:
 - rotate/size/warp items
 </td>
 <td rowspan=7 valign="top">
-  
+
 [✅ `Streamdeck Plugin`][STREAMDECK_PLUGIN]
-  <br/>
- ✅ Timers <br/>
- ✅ Mobile View <br/>
- ✅ Twitch Events<br/>
+<br/>
+✅ Timers <br/>
+✅ Mobile View <br/>
+✅ Twitch Events<br/>
 <ul>
     <li> Bits </li>
     <li> Channel Points </li>
@@ -86,9 +86,9 @@ Misc:
 
   <tr>
     <td>
-      
+
 [`Trigger multiple / random Media`][URL_META_CLIPS]
-    </td>
+</td>
   </tr>
    <tr>
     <th colspan=3>Scripts (Action)</th>
@@ -98,7 +98,7 @@ Misc:
     <td colspan=3>
 
 - Trigger other Actions with custom logic/timeouts/overrides
-- Trigger OBS functions 
+- Trigger OBS functions
 - Write to Twitch Chat
 </td>
 
@@ -108,22 +108,23 @@ Misc:
   </tr>
 
 <tr>
-    <td  colspan=3>
-      
-- Same as Scripts just that those will run and stay active all the time. 
-- Used for Bots or other functionalities 
+    <td colspan=3>
+
+- Same as Scripts just that those will run and stay active all the time.
+- Used for Bots or other functionalities
 - React on custom callbacks from Twitch / OBS Events
-  </td>
+- Create your own WebSocket-Server - see [`Script-API examples`][URL_SCRIPTS]
+</td>
   </tr>
-  
-     <tr>
+
+  <tr>
     <th colspan=3>API for Developers</th>
   </tr>
 
-<tr>
-    <td  colspan=3>
-      
-- Trigger Actions with WebSockets 
+  <tr>
+    <td colspan=3>
+
+- Trigger Actions with WebSockets
 - Receive all Twitch Events to use in other Apps / Overlays
   </td>
   </tr>
@@ -134,7 +135,7 @@ Misc:
 ## Getting Started
 
 > Note: These are the current `Getting Started` / Tutorials for this branch.
-> 
+>
 > To see the updated `Getting Started` / Tutorials from the released version - [click here!](https://github.com/negue/meme-box/tree/release#getting-started)
 
 [`1. Installation`](./tutorials/installation.md)
@@ -145,8 +146,10 @@ Misc:
 
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
+- [`Scripts`][URL_SCRIPTS]
 
 [URL_META_CLIPS]: tutorials/meta_media.md
+[URL_SCRIPTS]: tutorials/scripts.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
 [STREAMDECK_PLUGIN]: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
 
@@ -156,10 +159,10 @@ ___
 
 ___
 
-## Roadmap 
+## Roadmap
 
 ### 2021.3.0
-* [x] Widgets (previously `HTML`) 
+* [x] Widgets (previously `HTML`)
   * [x] API for Twitch or Events that its shown and so on
   * [x] Templates
   * [x] Widget-Variables
@@ -167,10 +170,13 @@ ___
   * [x] Persistence of the Widget State across Screens
 * [x] Custom Port Settings, default Port now on 6363
 * [x] Electron can be hidden into the Tray
-* [x] "Media Type": `Scripts` for more advanced features
+* [x] "Action Type": `Scripts` for more advanced features
   * [x] Wait once a triggered clip (inside the script) is done to trigger other stuff
   * [x] Use custom variables like in the Widget-Variables for easier configs
-* [ ] Overhaul of the Media Creation Dialog(s) 
+* [x] "Action Type": `Permanent Scripts` for even more advanced features
+  * [x] Create your own custom WebSocket Server
+  * [*] Create your own logic to react on "stuff"
+* [ ] Overhaul of the Media Creation Dialog(s)
 
 ### 2021.4.0
 * [ ] Labels on or around the Media, each with their own Position / Animation
@@ -183,7 +189,7 @@ ___
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
-* [ ] Stats per commands / media / or something last cheerer and so on 
+* [ ] Stats per commands / media / or something last cheerer and so on
 * [ ] more to be added :)
 
 ## How to help / contribute?
