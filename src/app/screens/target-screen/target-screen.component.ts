@@ -402,6 +402,7 @@ export function mergeCombinedClipWithOverrides (
 
   return {
     ...sourceCombinedClip,
-    clipSetting
+    clipSetting,
+    triggerPayload
   };
 }

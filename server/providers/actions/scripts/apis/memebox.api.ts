@@ -73,6 +73,7 @@ export class MediaApi extends ActionApi {
     helpers:
     {
       reset: () => void,
+      resetAfterDone: (delayAfterTriggered: number) => void,
     }
   ) => Promise<void>, overrides?: TriggerActionOverrides | undefined) {
     // if there is one already running
@@ -95,11 +96,20 @@ export class MediaApi extends ActionApi {
       useOverridesAsBase: true
     })
 
+    let resetAfterDone = 0;
+
     await executionFunction({
-      reset: () => this.updateScreenOptions(null)
+      reset: () => this.updateScreenOptions(null),
+      resetAfterDone: (delayAfterTriggered) => resetAfterDone  = delayAfterTriggered
     });
 
     await this.trigger(null);
+
+    if (resetAfterDone) {
+      await timeoutAsync(resetAfterDone);
+
+      this.updateScreenOptions(null)
+    }
   }
 }
 
