@@ -175,7 +175,7 @@ ___
   * [x] Use custom variables like in the Widget-Variables for easier configs
 * [x] "Action Type": `Permanent Scripts` for even more advanced features
   * [x] Create your own custom WebSocket Server
-  * [*] Create your own logic to react on "stuff"
+  * [x] Create your own logic to react on "stuff"
 * [ ] Overhaul of the Media Creation Dialog(s)
 
 ### 2021.4.0
