@@ -8,20 +8,29 @@ export const ENDPOINTS = {
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
   ERROR: 'error',
-  CONFIG: 'config',
   OPEN: 'open',
   STATE: 'state',
-  TWITCH_DATA: 'twitchData',
 
   TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',
   TWITCH_TRIGGER: 'twitch_events/trigger',
   NETWORK_LIST: 'network_ip_list',
+
+  CONFIG: {
+    PREFIX: 'config',
+    TWITCH: '/twitch',
+    OBS: '/obs',
+    CUSTOM_PORT: '/customPort'
+  },
+
+  TWITCH_DATA: {
+    PREFIX: 'twitchData',
+    HELIX: '/helix',
+    AUTH_INFORMATIONS: '/authInformations',
+    CHANNEL_POINT_LIST: '/currentChannelPointRedemptions'
+  }
 }
 
-export const CONFIG_TWITCH = '/twitch';
-export const CONFIG_OBS = '/obs';
-export const CONFIG_CUSTOM_PORT_PATH = '/customPort';
 export const OPEN_CONFIG_PATH = `/config`;
 export const OPEN_FILES_PATH = `/files`;
 

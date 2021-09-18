@@ -1,5 +1,3 @@
-
-
 export interface ChannelPointRedemption {
   broadcaster_name: string;
   broadcaster_login: string;
@@ -38,4 +36,20 @@ export interface DefaultImage {
   url_1x: string;
   url_2x: string;
   url_4x: string;
+}
+
+export interface TwitchAuthResult {
+  clientId: string;
+  userId: string;
+  token: string;
+  login: string;
+  expires_in: number;
+  scopes: string[];
+  valid: boolean;
+  reason?: string;
+}
+
+export interface TwitchAuthInformation {
+  type: 'main'|'bot',
+  authResult: TwitchAuthResult;
 }

@@ -125,7 +125,8 @@ Misc:
     <td colspan=3>
 
 - Trigger Actions with WebSockets
-- Receive all Twitch Events to use in other Apps / Overlays
+- Receive all Twitch Events using WebSockets `/ws/twitch_events` to use in other Apps / Overlays
+- Twitch Helix REST bridge `/api/twitchData/helix/*` instead of `https://api.twitch.tv/helix/`
   </td>
   </tr>
 </table>
@@ -183,7 +184,7 @@ ___
   * [ ] Changeable by Trigger Variables
   * [ ] Can be placed like in the Arrange View
 * [ ] OBS Websockets
-  * [ ] "Media Type": `OBS Command`
+  * [ ] "Action Type": `OBS Command`
   * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
 * [ ] Overview of local media files not existing anymore
 

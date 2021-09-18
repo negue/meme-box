@@ -20,7 +20,7 @@ import {AppConfig} from '@memebox/app/env';
 import {addOrUpdateScreenClip, deleteClip, fillDefaultsScreenClip} from '@memebox/shared-state';
 import {take} from 'rxjs/operators';
 import {uuid} from "@gewd/utils";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {SnackbarService} from "../services/snackbar.service";
 
 console.warn('APP.SERVICE.TS - AppConfig', AppConfig);
@@ -35,7 +35,7 @@ export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 @Injectable()
 export class AppService {
-  private offlineMode = true;
+  private offlineMode$ = new BehaviorSubject<boolean>(true);
 
   constructor(private appStore: AppStore,
               public http: HttpClient,  // todo extract http client and api_url base including the offline checks
@@ -43,7 +43,11 @@ export class AppService {
   }
 
   public isOffline() {
-    return this.offlineMode;
+    return this.offlineMode$.value;
+  }
+
+  public isOffline$() {
+    return this.offlineMode$.asObservable();
   }
 
   public loadState() {
@@ -54,7 +58,7 @@ export class AppService {
       // delay(5000)
     ).subscribe(
       value => {
-        this.offlineMode = false;
+        this.offlineMode$.next(false);
         console.info('LOADED STATE', value);
         this.appStore.update(state => value);
 
@@ -65,7 +69,7 @@ export class AppService {
           this.appStore.update(state => {
             state.offlineMode = true;
           });
-          this.offlineMode = true;
+          this.offlineMode$.next(true);
           console.error('Changing into offline mode', error);
         }
       }
@@ -384,7 +388,7 @@ export class AppService {
 
     // testing what is broken on the preview
     debugger;
-    if (this.offlineMode) {
+    if (this.isOffline()) {
       return;
     }
 
@@ -445,7 +449,7 @@ export class AppService {
   }
 
   public tryHttpPostReturnString(url: string, data: unknown, offlineFallback: string){
-    if (this.offlineMode) {
+    if (this.isOffline()) {
       return Promise.resolve(offlineFallback);
     }
 
@@ -455,15 +459,25 @@ export class AppService {
   }
 
   public tryHttpPost<TReturn>(url: string, data: unknown, offlineFallback: TReturn): Promise<TReturn> {
-    if (this.offlineMode) {
+    if (this.isOffline()) {
       return Promise.resolve(offlineFallback);
     }
 
     return this.http.post<TReturn>(url, data).toPromise();
   }
 
+
+  public tryHttpGet<TResult>(url: string): Promise<TResult|undefined> {
+    if (this.isOffline()) {
+      return Promise.resolve<TResult>(undefined);
+    }
+
+
+    return this.http.get<TResult>(url).toPromise();
+  }
+
   public tryHttpPut(url: string, postData: unknown){
-    if (this.offlineMode) {
+    if (this.isOffline()) {
       return Promise.resolve();
     }
 
@@ -471,7 +485,7 @@ export class AppService {
   }
 
   public tryHttpDelete(url: string){
-    if (this.offlineMode) {
+    if (this.isOffline()) {
       return Promise.resolve();
     }
 

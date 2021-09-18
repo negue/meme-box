@@ -11,6 +11,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {PipesModule} from "@memebox/ui-components";
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import {MatIconModule} from "@angular/material/icon";
     MatTabsModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    PipesModule
   ]
 })
 export class TwitchConnectionEditModule implements DialogContract<void> {
