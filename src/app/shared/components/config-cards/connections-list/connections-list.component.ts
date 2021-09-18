@@ -1,13 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {DialogService} from "../../../dialogs/dialog.service";
-import {Observable} from "rxjs";
-import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
-import {map} from "rxjs/operators";
+import {combineLatest, Observable} from "rxjs";
+import {AppQueries, AppService} from "@memebox/app-state";
+import {switchMap} from "rxjs/operators";
+import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
+import {readableSeconds} from "../../../../../../projects/ui-components/src/lib/pipes/utils";
 
 interface ConnectionEntry {
   isConfigured: boolean;
   connectedAccount: string;
   hasAuthToken: boolean;
+  isValid: boolean;
+  validUntil?: string;
   openConfig: () => void;
 }
 
@@ -31,20 +35,37 @@ export class ConnectionsListComponent implements OnInit {
   public config$ = this.appQuery.config$;
 
 
-  groupedConnections$: Observable<Record<string, ConnectionEntry[]>> =  this.config$.pipe(
-    map(config => {
+  groupedConnections$: Observable<Record<string, ConnectionEntry[]>> =
+    combineLatest([
+      this.config$,
+      this.appService.isOffline$()
+  ]).pipe(
+    switchMap(async ([config, isOffline]) => {
+      const authInformation = isOffline
+        ? []
+        : await this.configService.loadTwitchAuthInformations();
+
+      const mainTwitchAuthInfo = authInformation?.find(a => a.type === 'main');
+      const botTwitchAuthInfo = authInformation?.find(a => a.type === 'bot');
+
       return {
         'Twitch':  [
           {
             isConfigured: !!config.twitch.channel,
-            connectedAccount: 'Main: ' + config.twitch.channel,
-            hasAuthToken: false,
+            connectedAccount: 'Main: ' + (mainTwitchAuthInfo?.authResult?.reason ??
+               config.twitch.channel),
+            hasAuthToken: !!config.twitch.token,
+            isValid: mainTwitchAuthInfo?.authResult?.valid,
+            validUntil: readableSeconds(mainTwitchAuthInfo?.authResult?.expires_in).string,
             openConfig: () => this.dialogService.openTwitchConnectionConfig()
           },
           {
             isConfigured: !!config.twitch.bot?.auth?.name,
-            connectedAccount: 'Bot: '+config.twitch.bot?.auth?.name,
+            connectedAccount:  'Bot: '+ (botTwitchAuthInfo?.authResult?.reason ??
+             config.twitch.bot?.auth?.name),
             hasAuthToken: !!config.twitch.bot?.auth?.name,
+            isValid: botTwitchAuthInfo?.authResult?.valid,
+            validUntil: readableSeconds(botTwitchAuthInfo?.authResult?.expires_in).string,
             openConfig: () => this.dialogService.openTwitchConnectionConfig()
           }
         ],
@@ -58,13 +79,14 @@ export class ConnectionsListComponent implements OnInit {
         ],
        */ 'OBS':  [
           {
-            isConfigured: false,
+            isConfigured: !!config.obs?.hostname,
             connectedAccount: config.obs?.hostname,
             hasAuthToken: !!config.obs?.password,
+            isValid: !!config.obs?.hostname,
             openConfig: () => this.dialogService.openObsConnectionDialog()
           },
         ]
-      };
+      } as Record<string, ConnectionEntry[]>;
     })
   );
 
@@ -74,6 +96,8 @@ export class ConnectionsListComponent implements OnInit {
 
   constructor(private dialogService: DialogService,
               private appQuery: AppQueries,
+              private appService: AppService,
+              private configService: ConfigService
               ) { }
 
   ngOnInit(): void {

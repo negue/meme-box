@@ -1,7 +1,15 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from '../state/app.store';
 import {HttpClient} from '@angular/common/http';
-import {Config, ENDPOINTS, ObsConfig, OPEN_CONFIG_PATH, OPEN_FILES_PATH, TwitchConfig} from '@memebox/contracts';
+import {
+  Config,
+  ENDPOINTS,
+  ObsConfig,
+  OPEN_CONFIG_PATH,
+  OPEN_FILES_PATH,
+  TwitchAuthInformation,
+  TwitchConfig
+} from '@memebox/contracts';
 import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../../../server/constants';
 import {setDummyData} from '../state/app.dummy.data';
 import {WebsocketService} from "./websocket.service";
@@ -116,6 +124,12 @@ export class ConfigService {
       location.reload();
     }
   }
+
+
+  public loadTwitchAuthInformations(): Promise<TwitchAuthInformation[]|undefined> {
+    return this.appService.tryHttpGet<TwitchAuthInformation[]>(`${API_BASE}${ENDPOINTS.TWITCH_DATA.PREFIX}${ENDPOINTS.TWITCH_DATA.AUTH_INFORMATIONS}`);
+  }
+
 
   private configEndpoint(endpoint: string) {
     return `${API_BASE}${ENDPOINTS.CONFIG.PREFIX}${endpoint}`;

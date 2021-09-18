@@ -11,11 +11,19 @@ export class ReadableMsPipe implements PipeTransform {
       value = +value;
     }
 
-    const valueInSeconds = value / 1000;
-
-    const readableResult = readableSeconds(valueInSeconds);
-
-    return valueInSeconds >= 1 ? readableResult.string : `${value}ms`;
+    return msToString(value);
   }
 
+}
+
+export function msToString (value: number) {
+  if (!value) {
+    return '';
+  }
+
+  const valueInSeconds = value / 1000;
+
+  const readableResult = readableSeconds(valueInSeconds);
+
+  return valueInSeconds >= 1 ? readableResult.string : `${value}ms`;
 }
