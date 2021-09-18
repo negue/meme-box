@@ -58,12 +58,11 @@ export function checkToken() {
 
   const jwt = jwtDecode(tokenId!);
 
-
   const {preferred_username: userName, sub: userId} = jwt as any;
 
   setTimeout(() => {
-    window.opener.gotToken(userName, userId, tokenId, accessToken);
-    window.close();
+   window.opener.gotToken(userName, userId, tokenId, accessToken);
+   window.close();
   }, 4000);
 
   return true;

@@ -21,7 +21,7 @@ export class TwitchAuthInformationProvider {
       return null;
     }
 
-    return this.getTwitchTokenAuthAsync(currentTwitchConfig.token);
+    return TwitchAuthInformationProvider.getTwitchTokenAuthAsync(currentTwitchConfig.token);
   }
 
   public getBotAuthAsync (): Promise<TwitchAuthResult|null> {
@@ -33,10 +33,10 @@ export class TwitchAuthInformationProvider {
       return null;
     }
 
-    return this.getTwitchTokenAuthAsync(currentTwitchConfig.token);
+    return TwitchAuthInformationProvider.getTwitchTokenAuthAsync(currentTwitchConfig.token);
   }
 
-  private async getTwitchTokenAuthAsync (token: string): Promise<TwitchAuthResult|null> {
+  private static async getTwitchTokenAuthAsync (token: string): Promise<TwitchAuthResult|null> {
     const password = token.replace( "oauth:", "" );
 
     const validation = await fetch( "https://id.twitch.tv/oauth2/validate", {

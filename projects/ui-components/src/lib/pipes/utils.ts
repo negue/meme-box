@@ -7,7 +7,7 @@ export function readableSeconds(differenceInSeconds: number) {
   const stringValues = [];
 
   if (days) {
-    stringValues.push(`${hour}d`);
+    stringValues.push(`${days}d`);
   }
 
   if (hour) {
