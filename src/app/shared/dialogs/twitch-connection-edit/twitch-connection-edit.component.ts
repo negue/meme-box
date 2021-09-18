@@ -1,16 +1,18 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder} from '@ngneat/reactive-forms';
 import {Subject} from "rxjs";
-import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
-import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
+import {AppQueries, AppService} from "@memebox/app-state";
 import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {Config, TwitchAuthInformation} from "@memebox/contracts";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {TwitchOAuthHandler} from "./twitch.oauth";
 import {MatDialogRef} from "@angular/material/dialog";
+import {DialogService} from "../dialog.service";
 
 const currentUrl = `${location.origin}`;
+const isValidTwitchAuthUrl = ['localhost:4200', 'localhost:6363'].some(url => currentUrl.includes(url));
+
 const scopes = [
   // 'user:read:email',            // ???
   'chat:read',                     // TMI - Chat
@@ -67,6 +69,7 @@ export class TwitchConnectionEditComponent implements OnInit {
   constructor(private appQuery: AppQueries,
               private appService: AppService,
               private configService: ConfigService,
+              private dialogService: DialogService,
               private dialogRef: MatDialogRef<any>,) {
 
   }
@@ -166,6 +169,17 @@ export class TwitchConnectionEditComponent implements OnInit {
   }
 
   async tryAuthentication(type: string) {
+    if (!isValidTwitchAuthUrl) {
+      this.dialogService.showConfirmationDialog({
+        content: 'Twitch Auth can be only done on the normal memebox Port (6363)',
+        title: 'Start Memebox without the custom Port.',
+        overrideButtons: true,
+        noButton: '',
+        yesButton: 'OK'
+      });
+      return;
+    }
+
     const oauthHandler = new TwitchOAuthHandler(
       clientId, scopes, currentUrl, true
     );
