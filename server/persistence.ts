@@ -389,7 +389,8 @@ export class Persistence {
 
     twitchConfig.enableLog = newTwitchConfig.enableLog;
     twitchConfig.channel  = newTwitchConfig.channel;
-    if (newTwitchConfig.token && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
+    if (typeof newTwitchConfig.token !== 'undefined'
+      && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.token = newTwitchConfig.token;
     }
 
@@ -417,7 +418,8 @@ export class Persistence {
     twitchConfig.bot.response = newTwitchConfig.bot.response;
     twitchConfig.bot.auth.name = newTwitchConfig.bot.auth.name;
 
-    if (newTwitchConfig.bot.auth.token && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
+    if (typeof newTwitchConfig.bot.auth.token !== 'undefined'
+      && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
       console.info('updating bot auth token?');
     }

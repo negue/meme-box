@@ -34,6 +34,11 @@
 
     <div>
       <div>
+        <h4>Twitch Main: Valid: {{mainAuthInformation?.authResult?.valid || false}} {{mainAuthInformation?.authResult?.reason}} </h4>
+        <h5 *ngIf="mainAuthInformation?.authResult?.valid">
+          Login: {{mainAuthInformation?.authResult?.login}} - Expires in: {{ (mainAuthInformation?.authResult?.expires_in * 1000) | readableMs }}
+        </h5>
+
         <button *ngIf="!mainAccountForm.value.authToken"
                 mat-raised-button color="accent"
                 (click)="tryAuthentication('main')" >
@@ -61,6 +66,11 @@
 
     <div *ngIf="config$ | async as config">
       <div>
+        <h4>Twitch Bot: Valid: {{botAuthInformation?.authResult?.valid || false}} {{botAuthInformation?.authResult?.reason}} </h4>
+        <h5 *ngIf="botAuthInformation?.authResult?.valid">
+          Login: {{botAuthInformation?.authResult?.login}} - Expires in: {{ (botAuthInformation?.authResult?.expires_in * 1000) | readableMs }}
+        </h5>
+
         <button *ngIf="!mainAccountForm.value.botToken"
                 mat-raised-button color="accent"
                 (click)="tryAuthentication('bot')" >
