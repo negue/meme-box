@@ -22,7 +22,7 @@ import {NamedLogger} from "../named-logger";
 import {getLevelOfTags} from "./twitch.functions";
 import {PubSubClient} from 'twitch-pubsub-client';
 import {ApiClient, StaticAuthProvider} from "twitch";
-import {TwitchAuthInformation} from "./twitch.auth";
+import {TwitchAuthInformationProvider} from "./twitch.auth";
 
 @Service()
 export class TwitchConnector {
@@ -42,7 +42,7 @@ export class TwitchConnector {
 
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
 
-    private twitchAuth: TwitchAuthInformation
+    private twitchAuth: TwitchAuthInformationProvider
   ) {
 
     // TODO better way to find out the config has changed

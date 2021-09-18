@@ -1,17 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AppStore} from '../state/app.store';
 import {HttpClient} from '@angular/common/http';
-import {
-  Config,
-  CONFIG_CUSTOM_PORT_PATH,
-  CONFIG_OBS,
-  CONFIG_TWITCH,
-  ENDPOINTS,
-  ObsConfig,
-  OPEN_CONFIG_PATH,
-  OPEN_FILES_PATH,
-  TwitchConfig
-} from '@memebox/contracts';
+import {Config, ENDPOINTS, ObsConfig, OPEN_CONFIG_PATH, OPEN_FILES_PATH, TwitchConfig} from '@memebox/contracts';
 import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../../../server/constants';
 import {setDummyData} from '../state/app.dummy.data';
 import {WebsocketService} from "./websocket.service";
@@ -47,7 +37,7 @@ export class ConfigService {
     };
 
     // update path & await
-    await this.appService.tryHttpPut( this.configEndpoint(CONFIG_CUSTOM_PORT_PATH), newConfig);
+    await this.appService.tryHttpPut( this.configEndpoint(ENDPOINTS.CONFIG.CUSTOM_PORT), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -60,7 +50,7 @@ export class ConfigService {
 
   public async updateObsConfig(newConfig: Partial<ObsConfig>) {
     // update path & await
-    await this.appService.tryHttpPut(this.configEndpoint(CONFIG_OBS), newConfig);
+    await this.appService.tryHttpPut(this.configEndpoint(ENDPOINTS.CONFIG.OBS), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -73,7 +63,7 @@ export class ConfigService {
 
   public async updateTwitchConfig(newConfig: Partial<TwitchConfig>) {
     // update path & await
-    await this.appService.tryHttpPut(this.configEndpoint(CONFIG_TWITCH), newConfig);
+    await this.appService.tryHttpPut(this.configEndpoint(ENDPOINTS.CONFIG.TWITCH), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -128,7 +118,7 @@ export class ConfigService {
   }
 
   private configEndpoint(endpoint: string) {
-    return `${API_BASE}${ENDPOINTS.CONFIG}${endpoint}`;
+    return `${API_BASE}${ENDPOINTS.CONFIG.PREFIX}${endpoint}`;
   }
 
   private openEndpoint(endpoint: string) {

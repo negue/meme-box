@@ -1,13 +1,4 @@
-import {
-  Config,
-  CONFIG_CUSTOM_PORT_PATH,
-  CONFIG_OBS,
-  CONFIG_TWITCH,
-  ENDPOINTS,
-  ObsConfig,
-  Response,
-  TwitchConfig
-} from "@memebox/contracts";
+import {Config, ENDPOINTS, ObsConfig, Response, TwitchConfig} from "@memebox/contracts";
 import {allowedFileUrl} from "../validations";
 import {existsSync} from "fs";
 import {sep} from 'path';
@@ -19,7 +10,7 @@ import {Persistence} from "../persistence";
 // TODO allow config generic put endpoint
 // todo validations
 
-@Controller(`/${ENDPOINTS.CONFIG}`)
+@Controller(`/${ENDPOINTS.CONFIG.PREFIX}`)
 export class ConfigController {
 
   constructor(
@@ -32,7 +23,7 @@ export class ConfigController {
     return this._persistence.getConfig();
   }
 
-  @Put(CONFIG_TWITCH)
+  @Put(ENDPOINTS.CONFIG.TWITCH)
   updateTwitchConfig(
     @BodyParams() twitchConfigBody: TwitchConfig
   ): Response {
@@ -43,7 +34,7 @@ export class ConfigController {
     };
   }
 
-  @Put(CONFIG_OBS)
+  @Put(ENDPOINTS.CONFIG.OBS)
   updateObsConfig(
     @BodyParams() obsConfigPayload: ObsConfig
   ): Response {
@@ -83,7 +74,7 @@ export class ConfigController {
     };
   }
 
-  @Put(CONFIG_CUSTOM_PORT_PATH)
+  @Put(ENDPOINTS.CONFIG.CUSTOM_PORT)
   updatePort(
     @BodyParams('newPort') newPort: string
   ): Response {
