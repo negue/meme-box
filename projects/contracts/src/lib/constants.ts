@@ -25,6 +25,7 @@ export const ENDPOINTS = {
 
   TWITCH_DATA: {
     PREFIX: 'twitchData',
+    HELIX: '/helix',
     AUTH_INFORMATIONS: '/authInformations',
     CHANNEL_POINT_LIST: '/currentChannelPointRedemptions'
   }

@@ -1,4 +1,4 @@
-import {Controller, Get, Inject} from "@tsed/common";
+import {Controller, Get, Inject, PathParams, QueryParams} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
 import {Persistence} from "../persistence";
 import {ChannelPointRedemption, ENDPOINTS, TwitchAuthInformation, TwitchAuthResult} from "@memebox/contracts";
@@ -16,6 +16,40 @@ export class TwitchDataController {
      private twitchAuth: TwitchAuthInformationProvider
   ) {
   }
+
+
+  @Get(ENDPOINTS.TWITCH_DATA.HELIX+'/*')
+  async getHelixData(
+    @PathParams() rawEndpoint: Record<number, string>,
+    @QueryParams() params: Record<string, unknown>
+  ): Promise<unknown> {
+    const endpoint = Object.values(rawEndpoint)?.[0] ?? '';
+
+    const twitchAuth = await this._getMainTwitchAuth();
+
+    if (twitchAuth === null) {
+      return {
+        ok: false,
+        message: 'Not authorized.'
+      };
+    }
+
+    const queryArguments = Object.entries(params)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('&');
+
+    const apiURL = `https://api.twitch.tv/helix/${endpoint}?${queryArguments}`;
+
+    const result = await fetch(apiURL, {
+      headers: {
+        "Client-ID": twitchAuth.clientId,
+        "Authorization": `Bearer ${twitchAuth.token}`
+      }
+    }).then( r => r.json() );
+
+    return result;
+  }
+
 
   @Get(ENDPOINTS.TWITCH_DATA.AUTH_INFORMATIONS)
   async getTwitchAuthInformations(): Promise<TwitchAuthInformation[]> {
@@ -51,7 +85,7 @@ export class TwitchDataController {
       return [];
     }
 
-    const channelRewardsUrl = ` https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${this._savedMainTwitchAuth.userId}`;
+    const channelRewardsUrl = `https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${this._savedMainTwitchAuth.userId}`;
 
     const channelRewardsResult = await fetch(channelRewardsUrl, {
       headers: {
