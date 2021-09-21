@@ -444,7 +444,7 @@ export class AppService {
 
   public channelPoints$(): Observable<ChannelPointRedemption[]> {
     return this.http.get<ChannelPointRedemption[]>(
-      `${API_BASE}${ENDPOINTS.TWITCH_DATA}/currentChannelPointRedemptions`
+      `${API_BASE}${ENDPOINTS.TWITCH_DATA.PREFIX}/currentChannelPointRedemptions`
     );
   }
 

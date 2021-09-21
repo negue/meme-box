@@ -25,7 +25,7 @@ const INITIAL_TWITCH: Partial<TwitchTrigger> = {
   screenId: '',
   active: true,
   roles: ['user'],
-  extended: {}
+  extended: {},
 };
 
 interface TwitchLevelEntry {
@@ -116,6 +116,9 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     cooldown: [undefined, Validators.max(1000*60*60*10)]
   });
 
+  twitchNotAuthenticated$ = this.appQuery.config$.pipe(
+    map(config => !config.twitch?.token)
+  );
   channelPoints$ = this.appService.channelPoints$();
 
   twitchEvents = TwitchTypesArray;
@@ -216,6 +219,23 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
           return;
         }
       }
+    }
+
+    if (newTwitchValue.event === TwitchEventTypes.channelPoints) {
+      const allChannelPoints = await this.channelPoints$.pipe(
+        take(1)
+      ).toPromise();
+
+      const selectedChannelPointData = allChannelPoints.find(c => c.id === newTwitchValue.channelPointId);
+
+      newTwitchValue.channelPointData = {
+        id: selectedChannelPointData.id,
+        cost: selectedChannelPointData.cost,
+        title: selectedChannelPointData.title,
+        background_color: selectedChannelPointData.background_color,
+        default_image: selectedChannelPointData.default_image,
+        image: selectedChannelPointData.image
+      };
     }
 
     await this.appService.addOrUpdateTwitchEvent(newTwitchValue);

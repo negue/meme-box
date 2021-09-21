@@ -17,7 +17,7 @@ import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 
 @NgModule({
   declarations: [
-    TwitchEditComponent
+    TwitchEditComponent,
   ],
   imports: [
     CommonModule,

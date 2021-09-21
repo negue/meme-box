@@ -17,7 +17,7 @@ import {VersionCardModule} from "../../shared/components/config-cards/version-ca
 import {CustomPortSettingModule} from "../../shared/components/config-cards/custom-port-setting/custom-port-setting.module";
 import {ConnectionsListModule} from "../../shared/components/config-cards/connections-list/connections-list.module";
 import {ConfigCardModule} from "../../shared/components/config-cards/config-card/config-card.module";
-import {ShowOnlyLastCharactersPipe} from './settings-overview/show-only-last-characters.pipe';
+import {PipesModule} from "@memebox/ui-components";
 
 const routes: Routes = [
   {
@@ -27,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [SettingsOverviewComponent, PersistenceActionsComponent, ImportMediaFilesDialogComponent, ShowOnlyLastCharactersPipe],
+  declarations: [SettingsOverviewComponent, PersistenceActionsComponent, ImportMediaFilesDialogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -44,6 +44,7 @@ const routes: Routes = [
     CustomPortSettingModule,
     ConnectionsListModule,
     ConfigCardModule,
+    PipesModule
   ]
 })
 export class SettingsModule {
