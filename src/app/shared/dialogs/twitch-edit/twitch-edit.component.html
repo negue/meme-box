@@ -45,22 +45,27 @@
           <mat-select [required]="true"
                       formControlName="channelPointId">
             <mat-option *ngFor="let item of channelPoints$ | async"
-                        [value]="item.id">
-              {{ item.title }}
+                        [value]="item.id"
+                        [style.background]="item.background_color"
+                        [style.color]="item.background_color | fontColorContrast"
+            >
+              {{ item.title }} [{{ item.cost}}]
+            </mat-option>
+            <mat-option [disabled]="true" *ngIf="twitchNotAuthenticated$|async">
+              You need to be authenticated with your Twitch-Account to use Channelpoint Redemptions.
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
 
-
       <div class="example-container">
-          <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
-            <mat-label>{{twitchEventFields[form.value.event].fields.minValue?.placeholder}}</mat-label>
-            <input autocomplete="off"
-                   formControlName="minAmount"
-                   [placeholder]="twitchEventFields[form.value.event].fields.minValue?.placeholder"
-                   matInput>
-          </mat-form-field>
+        <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
+          <mat-label>{{twitchEventFields[form.value.event].fields.minValue?.placeholder}}</mat-label>
+          <input autocomplete="off"
+                 formControlName="minAmount"
+                 [placeholder]="twitchEventFields[form.value.event].fields.minValue?.placeholder"
+                 matInput>
+        </mat-form-field>
 
           <mat-form-field appearance="fill" *ngIf="twitchEventFields[form.value.event].fields.minValue?.enable">
             <mat-label>{{twitchEventFields[form.value.event].fields.maxValue?.placeholder}}</mat-label>

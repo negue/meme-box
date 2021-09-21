@@ -31,7 +31,7 @@
   </app-card-overview>
 
   <div class="mo__casual-overview" *ngSwitchCase="OVERVIEW_MODES.casual">
-    <div *ngIf="showGettingStarted$ | async" class="getting-started-info-pane">
+    <div *ngIf="dontHaveActions$ | async" class="getting-started-info-pane">
       <div *ngIf="inOfflineMode$ | async">
         <mat-icon inline svgIcon="warning" color="warn" class="getting-started-info-pane__icon"></mat-icon>
         <span>You are currently in offline mode. Press

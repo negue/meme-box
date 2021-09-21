@@ -5,7 +5,14 @@
     </span>
 
     <code *ngIf="item.event === twitchEventTypes.message">{{item.contains}}</code>
-    <code *ngIf="item.event !== twitchEventTypes.message">
+    <code *ngIf="item.event === twitchEventTypes.channelPoints"
+
+          [style.background]="item.channelPointData?.background_color"
+          [style.color]="item.channelPointData?.background_color | fontColorContrast"
+    >
+      {{item.channelPointData?.title | showOnlyLastCharacters: 15}}
+    </code>
+    <code *ngIf="item.event !== twitchEventTypes.message && item.event !== twitchEventTypes.channelPoints">
       <ng-container *ngIf="item.minAmount || item.maxAmount">
         {{item.minAmount}} - {{item.maxAmount}}
       </ng-container>
@@ -70,4 +77,3 @@
 <div *ngIf="item.cooldown">
   Cooldown: <code>{{item.cooldown | readableMs}}</code>
 </div>
-

@@ -2,6 +2,7 @@ import {ChatUserstate} from "tmi.js";
 import {MediaType} from "./media.types";
 import {TriggerAction} from "./actions";
 import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
+import {DefaultImage} from "./twitch-data.types";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -184,8 +185,19 @@ export interface TwitchTrigger extends TriggerBase {
 
   channelPointId?: string;
 
+  channelPointData?:TwitchTriggerChannelPointData;
+
   // !magic
   // TODO other options per type
+}
+
+export interface TwitchTriggerChannelPointData {
+  id: string;
+  image?: null;
+  background_color: string;
+  cost: number;
+  title: string;
+  default_image: DefaultImage;
 }
 
 export interface Tag extends HasId {

@@ -1,6 +1,6 @@
 import {createExpress} from "./express-server";
 import {sendDataToAllSockets} from "./websocket-server";
-import {DEFAULT_PORT, REMOTE_VERSION_FILE} from "./constants";
+import {DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith, take} from "rxjs/operators";
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS} from "@memebox/contracts";
@@ -97,33 +97,57 @@ function cmpVersions (a, b) {
 
 PersistenceInstance.configLoaded$.pipe(
   take(1)
-).subscribe(() => {
+).subscribe(async () => {
 
   const versionCheckEnabled = PersistenceInstance.getConfig().enableVersionCheck;
   console.info({ versionCheckEnabled });
 
   if (versionCheckEnabled) {
-    https.get(REMOTE_VERSION_FILE, function(res){
-      var body = '';
+    if (IS_NIGHTLY) {
+      const {VERSION_TAG} = JSON.parse(await loadJsonAsync(REMOTE_NIGHTLY_VERSION_FILE));
 
-      res.on('data', function(chunk){
-        body += chunk;
-      });
+      const local = currentVersionJson.VERSION_TAG;
 
-      res.on('end', function(){
-        const {version} = JSON.parse(body);
+      const isRemoteNewer = VERSION_TAG > local;
 
-        const local = currentVersionJson.VERSION_TAG;
+      LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, {remote: VERSION_TAG, local});
 
-        const isRemoteNewer = cmpVersions(version, local) > 0;
+      STATE_OBJECT.update.available = isRemoteNewer;
+      STATE_OBJECT.update.version = VERSION_TAG;
+    } else {
+      // Release
+      const {version} = JSON.parse(await loadJsonAsync(REMOTE_RELEASE_VERSION_FILE));
 
-        LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, { remote: version, local });
+      const local = currentVersionJson.VERSION_TAG;
 
-        STATE_OBJECT.update.available = isRemoteNewer;
-        STATE_OBJECT.update.version = version;
-      });
-    }).on('error', function(e){
-      LOGGER.error("Error loading version json: ", e);
-    });
+      const isRemoteNewer = cmpVersions(version, local) > 0;
+
+      LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, {remote: version, local});
+
+      STATE_OBJECT.update.available = isRemoteNewer;
+      STATE_OBJECT.update.version = version;
+    }
   }
 });
+
+
+function loadJsonAsync (url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+
+  https.get(url, function(res){
+    var body = '';
+
+    res.on('data', function(chunk){
+      body += chunk;
+    });
+
+    res.on('end', function(){
+
+      resolve(body);
+    });
+  }).on('error', function(e){
+    LOGGER.error("Error loading version json: ", e);
+  });
+
+  });
+}

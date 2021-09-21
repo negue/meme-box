@@ -20,7 +20,7 @@ function createInitialScreenClipObj(): ScreenClip {
     visibility: VisibilityEnum.Play,
     position: PositionEnum.FullScreen,
     id: '',
-    // imgFit: todo Object/Image Fit Enum
+    imgFit: 'contain'
   }
 }
 

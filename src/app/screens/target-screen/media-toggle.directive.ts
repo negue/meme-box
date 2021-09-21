@@ -133,6 +133,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
       this.updateNeededVariables();
       this.applyPositions();
+      this.applyWidgetContent();
     });
 
     this.webSocket.onUpdateMedia$.pipe(
@@ -206,6 +207,16 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         }
       }
     });
+
+    this.parentComp.mediaClipControlAdded$.pipe(
+      takeUntil(this._destroy$)
+    ).subscribe(componentAdded => {
+      if (componentAdded === this.clipId) {
+        this.updateNeededVariables();
+        this.applyPositions();
+        this.applyWidgetContent();
+      }
+    })
   }
 
   private applyPositions() {

@@ -11,6 +11,8 @@ import {MediaPathToUrlPipe, MediaToUrlPipe} from "./media-to-url.pipe";
 import {LazyArrayPipe} from "./lazy-array.pipe";
 import {VariableConverterPipe} from "./variable-converter.pipe";
 import {MediaToPreviewUrlPipe} from "./media-to-preview-url.pipe";
+import {ShowOnlyLastCharactersPipe} from "./show-only-last-characters.pipe";
+import {FontColorContrastPipe} from "./font-color-contrast.pipe";
 
 const PIPES = [
   SafePipe,
@@ -18,7 +20,8 @@ const PIPES = [
   PositionToStringPipe, SettingsToSizingTypePipe,
   VisibilityToStringPipe, MediaToUrlPipe,
   LazyArrayPipe, VariableConverterPipe,
-  MediaToPreviewUrlPipe, MediaPathToUrlPipe
+  MediaToPreviewUrlPipe, MediaPathToUrlPipe,
+  ShowOnlyLastCharactersPipe, FontColorContrastPipe
 ];
 
 @NgModule({

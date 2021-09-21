@@ -1,7 +1,7 @@
 <app-card-overview>
   <app-overview-item>
     <app-config-card title="Media Folder" icon="folder">
-      <p class="media-folder-name">{{ (config$ | async).mediaFolder}}</p>
+      <p class="media-folder-name">{{ (config$ | async).mediaFolder | showOnlyLastCharacters: 30}}</p>
 
       <div class="explanation">You need this "Media Folder" if you want to select local media files from it.</div>
 

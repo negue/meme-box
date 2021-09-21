@@ -68,6 +68,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     })
   );
   mediaClipToShow$ = new BehaviorSubject<CombinedClip>(null);
+  mediaClipControlAdded$ = new BehaviorSubject<string>(null);
   clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement | HTMLIFrameElement>();
 
   showOfflineIcon$ = this.wsService.connectionState$.pipe(
@@ -241,6 +242,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         // custom css for custom html?!
       } )
     }
+
+    this.mediaClipControlAdded$.next(value.id);
   }
 
   random_rgba() {

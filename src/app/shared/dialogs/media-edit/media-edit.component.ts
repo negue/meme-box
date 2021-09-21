@@ -218,16 +218,16 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     private clipboard: Clipboard,
     private snackbar: SnackbarService
   ) {
-    const defaultValues = Object.assign({}, INITIAL_CLIP, this.data.defaults ?? {});
+    const defaultValues = Object.assign({}, INITIAL_CLIP, this.data?.defaults ?? {});
 
     this.actionToEdit = Object.assign({}, defaultValues, {
-      ...this.data.actionToEdit,
+      ...this.data?.actionToEdit,
       extended: {
-        ...this.data.actionToEdit?.extended
+        ...this.data?.actionToEdit?.extended
       }
     }) as Clip;
 
-    this.isEditMode = !!this.data.actionToEdit;
+    this.isEditMode = !!this.data?.actionToEdit;
 
 
     if (this.actionToEdit.type === MediaType.Widget
