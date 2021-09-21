@@ -255,7 +255,7 @@ export class AppService {
 
     // add to the state
     this.appStore.update(state => {
-      state.screen[screenId].clips[clipId] = screenClip;
+      addOrUpdateScreenClip(state, screenId, screenClip);
     });
 
 
