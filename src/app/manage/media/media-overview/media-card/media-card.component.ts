@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
 import {Clip, MediaType, Screen, Tag} from "@memebox/contracts";
+import {ActivityQueries} from "../../../../../../projects/app-state/src/lib/activity-state/app.queries";
 
 @Component({
   selector: "app-media-card",
@@ -32,6 +33,13 @@ export class MediaCardComponent {
   menuIsOpened = false;
 
   readonly MEDIA_TYPE = MediaType;
+
+  constructor(
+    public activityState: ActivityQueries
+  ) {
+
+  }
+
 
   get appearsInScreens(): Screen[] {
     const screensEmpty = this.screens == null || this.screens.length === 0;

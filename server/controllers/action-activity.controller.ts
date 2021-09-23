@@ -1,6 +1,7 @@
 import {Controller, Get} from "@tsed/common";
 import {ENDPOINTS} from "@memebox/contracts";
-import {ActionActiveState, ActionStateEntries} from "../providers/actions/action-active-state";
+import {ActionActiveState} from "../providers/actions/action-active-state";
+import {ActionStateEntries} from "@memebox/shared-state";
 
 @Controller(`/${ENDPOINTS.ACTION_ACTIVITY.PREFIX}`)
 export class ActionActivityController {

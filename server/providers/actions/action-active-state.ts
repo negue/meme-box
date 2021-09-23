@@ -2,9 +2,7 @@ import {Service} from "@tsed/di";
 import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
 import {filter, map, take} from "rxjs/operators";
 import {ActionStateEnum} from "@memebox/contracts";
-
-
-export type ActionStateEntries = Record<string, Record<string, ActionStateEnum>>;
+import {ActionStateEntries, isActionCurrently, updateActivityInState} from "@memebox/shared-state";
 
 @Service()
 export class ActionActiveState {
@@ -16,11 +14,7 @@ export class ActionActiveState {
   ) {
     mediaStateEventBus.AllEvents$.subscribe(
       value => {
-        if (!this.state[value.mediaId]) {
-          this.state[value.mediaId] = {};
-        }
-
-        this.state[value.mediaId][value.screenId ?? value.mediaId] = value.state;
+        updateActivityInState(this.state, value)
       }
     )
   }
@@ -32,30 +26,8 @@ export class ActionActiveState {
     }
   }
 
-  public isCurrently (activeState: ActionStateEnum, mediaId: string, screenId?: string) {
-    const mediaInState = this.state[mediaId];
-
-    if (!mediaInState) {
-      return false;
-    }
-
-    if (screenId) {
-      const screenExists = mediaInState[screenId];
-
-      if (!screenExists) {
-        return false;
-      }
-
-      return screenExists === activeState;
-    }
-
-    const values = Object.values(mediaInState)
-
-    if (values.length === 0) {
-      return false;
-    }
-
-    return values.includes(activeState);
+  public isCurrently (activeState: ActionStateEnum, actionId: string, screenId?: string) {
+    return isActionCurrently(this.state, activeState, actionId, screenId)
   }
 
   public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {

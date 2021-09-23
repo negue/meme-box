@@ -16,7 +16,7 @@ export class WebsocketHandler {
 
   public onMessage$ = new Subject<string>();
 
-  private ws: WebSocket;
+  private ws?: WebSocket|null;
   private firstConnectionWorked = true;
   private isConnected = false;
   private intervalId = 0;

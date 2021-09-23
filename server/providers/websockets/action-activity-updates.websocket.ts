@@ -2,6 +2,7 @@ import {Service} from "@tsed/di";
 import * as WebSocket from "ws";
 import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
 import {ActionActiveStateEventBus} from "../actions/action-active-state-event.bus";
+import {WEBSOCKET_PATHS} from "@memebox/contracts";
 
 @Service()
 export class ActionActivityUpdatesWebsocket extends AbstractWebsocketHandler {
@@ -11,10 +12,11 @@ export class ActionActivityUpdatesWebsocket extends AbstractWebsocketHandler {
     // @UseOpts({name: 'WS.Twitch'}) public logger: NamedLogger,
     private activityEventBus: ActionActiveStateEventBus
   ) {
-    super('/ws/action_activitiy');
+    super(WEBSOCKET_PATHS.ACTION_ACTIVITY);
 
     activityEventBus.AllEvents$.subscribe(value => {
-      this.sendDataToAllSockets(value);
+      const activityAsJson = JSON.stringify(value);
+      this.sendDataToAllSockets(activityAsJson);
     });
   }
 

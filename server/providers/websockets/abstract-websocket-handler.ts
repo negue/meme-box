@@ -23,7 +23,7 @@ export abstract class AbstractWebsocketHandler {
   }
 
 
-  protected sendDataToAllSockets (message: unknown) {
+  protected sendDataToAllSockets (message: string) {
     if (this._connectedSocketList.length === 0) {
       return;
     }

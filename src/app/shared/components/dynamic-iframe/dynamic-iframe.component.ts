@@ -16,10 +16,9 @@ import {AppConfig} from "@memebox/app/env";
 import {BehaviorSubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
-import {TriggerAction} from "@memebox/contracts";
-import {WebsocketService} from "../../../../../projects/app-state/src/lib/services/websocket.service";
+import {TriggerAction, WEBSOCKET_PATHS} from "@memebox/contracts";
+import {AppService, WebsocketService} from "@memebox/app-state";
 import {guid} from "@datorama/akita";
-import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
 import {WidgetStoreRemoteAdapter} from "./widget-store-remote-adapter.service";
 
 @Component({
@@ -50,7 +49,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private websocket: WebsocketService,
               private appService: AppService,
               private remoteStoreApiAdapter: WidgetStoreRemoteAdapter) {
-    this.wsHandler = new WebsocketHandler(AppConfig.wsBase+'/ws/twitch_events', 3000);
+    this.wsHandler = new WebsocketHandler(AppConfig.wsBase+WEBSOCKET_PATHS.TWITCH_EVENTS, 3000);
 
   }
 

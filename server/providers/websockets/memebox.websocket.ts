@@ -39,6 +39,9 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
     }
   }
 
+  sendDataToAllSockets(message) {
+    super.sendDataToAllSockets(message);
+  }
 
   handleWebSocketMessage(ws: WebSocket, message: string) {
     //log the received message and send it back to the client
@@ -89,6 +92,8 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
       }
       case ACTIONS.MEDIA_STATE: {
         const mediaStatePayload: ActionActiveStatePayload = JSON.parse(payload);
+
+        console.warn('RECEIVED MEDIA STATE', mediaStatePayload);
 
         this.mediaStateEventBus.updateActionState(mediaStatePayload);
 

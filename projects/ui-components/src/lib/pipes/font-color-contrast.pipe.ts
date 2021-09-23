@@ -6,6 +6,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class FontColorContrastPipe implements PipeTransform {
 
   transform(backgroundColor: string): unknown {
+    if (!backgroundColor) {
+      return 'black';
+    }
+
     return getContrastYIQ(backgroundColor);
   }
 
