@@ -5,23 +5,16 @@ import {ActionActiveStatePayload, ACTIONS, Dictionary, TriggerAction} from "@mem
 import {Subject} from "rxjs";
 import {ActionTriggerEventBus} from "../actions/action-trigger-event.bus";
 import {ActionActiveStateEventBus} from "../actions/action-active-state-event.bus";
-
-// todo maybe extract?
-interface WebSocketType {
-  send(message: string);
-  readyState: number;
-}
+import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
 
 // UNTIL everything in the backend is refactored to TSED, we need some global instance
 export let CURRENT_MEMEBOX_WEBSOCKET: MemeboxWebsocket;
 
 @Service()
-export class MemeboxWebsocket {
-  private _socketsPerScreen: Dictionary<WebSocketType[]> = {};
-  private _connectedSocketList: WebSocketType[] = [];
+export class MemeboxWebsocket extends AbstractWebsocketHandler {
+  private _socketsPerScreen: Dictionary<WebSocket[]> = {};
 
   private _receivedActions$ = new Subject<{type: string, payload: string, ws: WebSocket}>();
-  private _wss = new WebSocket.Server({  noServer: true });
 
   public ReceivedActions$ = this._receivedActions$.asObservable();
 
@@ -30,24 +23,9 @@ export class MemeboxWebsocket {
     private mediaTriggerEventBus: ActionTriggerEventBus,
     private mediaStateEventBus: ActionActiveStateEventBus
   ) {
+    super('');
+
     CURRENT_MEMEBOX_WEBSOCKET = this;
-
-    this._wss.on("connection", (ws: WebSocket) => {
-      //connection is up, let's add a simple simple event
-      ws.on("message", (message: string) => {
-        this.handleWebSocketMessage(ws, message);
-      });
-
-      //send immediatly a feedback to the incoming connection
-      ws.send("Hi there, I am a WebSocket server");
-    });
-
-  }
-
-  handleUpgrade(request: any, socket: any, head: any) {
-    this._wss.handleUpgrade(request, socket, head, (ws) => {
-      this._wss.emit('connection', ws, request);
-    });
   }
 
   sendDataToScreen(targetId: string|null, message: string) {
@@ -61,14 +39,8 @@ export class MemeboxWebsocket {
     }
   }
 
-  sendDataToAllSockets (message: string) {
-    this._connectedSocketList.forEach(ws => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(message);
-
-        this.logger.info('SENT DATA TO ALL:', {message});
-      }
-    });
+  sendDataToAllSockets(message) {
+    super.sendDataToAllSockets(message);
   }
 
   handleWebSocketMessage(ws: WebSocket, message: string) {
@@ -120,6 +92,8 @@ export class MemeboxWebsocket {
       }
       case ACTIONS.MEDIA_STATE: {
         const mediaStatePayload: ActionActiveStatePayload = JSON.parse(payload);
+
+        console.warn('RECEIVED MEDIA STATE', mediaStatePayload);
 
         this.mediaStateEventBus.updateActionState(mediaStatePayload);
 

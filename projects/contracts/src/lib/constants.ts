@@ -28,6 +28,12 @@ export const ENDPOINTS = {
     HELIX: '/helix',
     AUTH_INFORMATIONS: '/authInformations',
     CHANNEL_POINT_LIST: '/currentChannelPointRedemptions'
+  },
+
+
+  ACTION_ACTIVITY: {
+    PREFIX: 'actionActivity',
+    CURRENT: '/current'
   }
 }
 
@@ -45,3 +51,8 @@ export const TwitchTypesArray = [
   TwitchEventTypes.subscription,
   TwitchEventTypes.gift
 ];
+
+export const WEBSOCKET_PATHS = {
+  TWITCH_EVENTS: '/ws/twitch_events',
+  ACTION_ACTIVITY: '/ws/action_activity'
+}

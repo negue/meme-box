@@ -45,7 +45,8 @@
     <span *ngFor="let clip of groupedClip.clips" class="item">
 
     <mat-card (click)="onPreview(clip)"
-              mat-ripple>
+              mat-ripple
+              [class.media-active]="activityState.isActive$(clip.id) | async">
 
       <app-clip-type [type]="clip.type"></app-clip-type>
       <span>{{clip.name}}</span>

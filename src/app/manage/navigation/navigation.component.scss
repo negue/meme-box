@@ -5,6 +5,7 @@
   width: 100%;
   // no mat-css-scss function?
   background: rgb(var(--palette-background-background));
+  z-index: 2;
 
   ::ng-deep {
     .mat-tab-links {

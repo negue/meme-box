@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card [class.media-active]="activityState.isActive$(media.id) | async">
   <mat-card-header>
     <mat-card-title [matTooltip]="media.name">{{media.name}}</mat-card-title>
 

@@ -8,6 +8,7 @@ import {SettingsService} from "../../../../projects/app-state/src/lib/services/s
 import {map, take, takeUntil, tap} from "rxjs/operators";
 import {sortClips} from "../../../../projects/utils/src/lib/sort-clips";
 import orderBy from 'lodash/orderBy';
+import {ActivityQueries} from "../../../../projects/app-state/src/lib/activity-state/app.queries";
 
 // once the tsconfig paths are working for server/app
 // extract this to its own "library"
@@ -67,11 +68,11 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
   ConnectionState = ConnectionState;
 
   private _destroy$ = new Subject();
-
   constructor(private appQueries: AppQueries,
               private appService: AppService,
               private _wsService: WebsocketService,
-              private _settingsService: SettingsService) {
+              private _settingsService: SettingsService,
+              public activityState: ActivityQueries) {
     const savedColumnSizeStringValue = this._settingsService.loadSetting(SettingMobileColumnSize, '50');
 
     // refactor later...
