@@ -4,7 +4,7 @@ import {filter, map, take} from "rxjs/operators";
 import {ActionStateEnum} from "@memebox/contracts";
 
 
-type ActionStateEntries = Record<string, Record<string, ActionStateEnum>>;
+export type ActionStateEntries = Record<string, Record<string, ActionStateEnum>>;
 
 @Service()
 export class ActionActiveState {

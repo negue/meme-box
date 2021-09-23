@@ -1,15 +1,11 @@
 import {BeforeInit, BeforeRoutesInit, Configuration, HttpServer, Inject, PlatformApplication} from "@tsed/common";
 import {API_PREFIX} from "./constants";
-import {ScreenController} from "./controllers/screen.controller";
 import {Env} from "@tsed/core";
 import {LOG_PATH} from "./path.utils";
 import {Logger} from "@tsed/logger";
-import {WidgetStateController} from "./controllers/widget-state.controller";
 import {BootstrapServices} from "./providers/bootstrap.services";
 import * as fs from "fs";
-import {ConfigController} from "./controllers/config.controller";
-import {OpenController} from "./controllers/open.controller";
-import {TwitchDataController} from "./controllers/twitch-data.controller";
+import {CONTROLLERS} from "./controllers";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -24,13 +20,7 @@ const rootDir = __dirname;
   rootDir,
   acceptMimes: ["application/json"],
   mount: {
-    [API_PREFIX]: [
-      ScreenController,
-      WidgetStateController,
-      ConfigController,
-      OpenController,
-      TwitchDataController
-    ]
+    [API_PREFIX]: CONTROLLERS
   },
   logger: {
     debug: false,

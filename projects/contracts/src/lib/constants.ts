@@ -28,6 +28,12 @@ export const ENDPOINTS = {
     HELIX: '/helix',
     AUTH_INFORMATIONS: '/authInformations',
     CHANNEL_POINT_LIST: '/currentChannelPointRedemptions'
+  },
+
+
+  ACTION_ACTIVITY: {
+    PREFIX: 'actionActivity',
+    CURRENT: '/current'
   }
 }
 
