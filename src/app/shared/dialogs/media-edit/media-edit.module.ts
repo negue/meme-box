@@ -20,9 +20,9 @@ import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {CodemirrorModule} from "@gewd/components/codemirror";
-import {ActionVariableInputModule} from "../../../../../projects/action-variables-ui/src/lib/action-variable-input/action-variable-input.module";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {PipesModule} from "@memebox/ui-components";
+import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 
 @NgModule({
   declarations: [
@@ -48,10 +48,10 @@ import {PipesModule} from "@memebox/ui-components";
     TranslocoModule,
     MatExpansionModule,
     CodemirrorModule,
-    ActionVariableInputModule,
     ClipboardModule,
     PipesModule,
-    ClipTypeModule
+    ClipTypeModule,
+    ActionVariablesAssignmentsModule
   ],
   providers: [],
 })
