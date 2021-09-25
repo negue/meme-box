@@ -1,50 +1,30 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {AppQueries} from "@memebox/app-state";
-import {filter, map} from "rxjs/operators";
-import {combineLatest} from "rxjs";
-import {ObservableInputs} from '@memebox/utils';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Dictionary} from "@memebox/contracts";
-import {ActionVariableTypes, getVariablesListOfAction} from "@memebox/action-variables";
+import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-action-variables-assignments',
   templateUrl: './action-variables-assignments.component.html',
   styleUrls: ['./action-variables-assignments.component.scss']
 })
-export class ActionVariablesAssignmentsComponent implements OnInit, OnChanges {
-  private readonly inputs = new ObservableInputs();
+export class ActionVariablesAssignmentsComponent implements OnInit {
 
   @Input()
   public data: Dictionary<string> = {};
+
+  @Input()
+  public fallbackData: Dictionary<string> = {};
 
   @Output()
   public dataChanged = new EventEmitter<Dictionary<string>>();
 
   @Input()
-  public actionId: string;
-  actionId$ = this.inputs.observe(() => this.actionId);
+  public variablesConfig: ActionVariableConfig[];
 
-  action$ = combineLatest([
-    this.actionId$,
-    this.appQueries.clipMap$
-  ]).pipe(
-    map(([actionId, clipMap]) => clipMap[actionId]),
-    filter(action => !!action)
-  );
-
-  variablesConfig$ = this.action$.pipe(
-    map(action => getVariablesListOfAction(action))
-  );
-
-  constructor(
-    private appQueries: AppQueries
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    this.inputs.onChanges();
   }
 
   variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown) {
@@ -59,11 +39,21 @@ export class ActionVariablesAssignmentsComponent implements OnInit, OnChanges {
       }
       default: {
 
-        newDataObject[name] = $event+'';
+        newDataObject[name] = typeof $event !== 'undefined'
+          ? $event+''
+          : undefined;
       }
     }
 
 
     this.dataChanged.next(newDataObject);
+  }
+
+  unsetValue($event: MatCheckboxChange, variable: ActionVariableConfig) {
+    if ($event.checked) {
+      return;
+    }
+
+    this.variableChanged(variable.name, variable.type, undefined)
   }
 }

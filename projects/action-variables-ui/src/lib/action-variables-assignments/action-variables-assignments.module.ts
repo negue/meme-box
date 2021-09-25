@@ -3,19 +3,31 @@ import {CommonModule} from '@angular/common';
 import {ActionVariablesAssignmentsComponent} from './action-variables-assignments.component';
 import {ActionVariableInputModule} from "../action-variable-input/action-variable-input.module";
 import {PipesModule} from "@memebox/ui-components";
+import {VariablesConfigByActionIdDirective} from './variables-config-by-action-id.directive';
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {VariableValueOrFallbackPipe} from './variable-value-or-fallback.pipe';
+import {IsUndefinedPipe} from './is-undefined.pipe';
+import {MatInputModule} from "@angular/material/input";
 
 
 @NgModule({
   declarations: [
-    ActionVariablesAssignmentsComponent
+    ActionVariablesAssignmentsComponent,
+    VariablesConfigByActionIdDirective,
+    VariableValueOrFallbackPipe,
+    IsUndefinedPipe
   ],
   exports: [
-    ActionVariablesAssignmentsComponent
+    ActionVariablesAssignmentsComponent,
+
+    VariablesConfigByActionIdDirective
   ],
   imports: [
     CommonModule,
     ActionVariableInputModule,
-    PipesModule
+    PipesModule,
+    MatCheckboxModule,
+    MatInputModule
   ]
 })
 export class ActionVariablesAssignmentsModule { }

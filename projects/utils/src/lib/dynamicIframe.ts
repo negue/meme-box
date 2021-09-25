@@ -155,14 +155,17 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 function getVariableValueOrFallback (config: ActionVariableConfig,
                                      valueBag: Dictionary<any>,
                                      justReturnIt: boolean = false) {
-  const valueToReturn = valueBag[config.name] || config.fallback;
+  const valueOfBag = valueBag[config.name];
+  const valueToReturn = typeof valueOfBag === 'undefined'
+    ? config.fallback
+    : valueOfBag;
 
   if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
     return valueToReturn;
   }
 
   if (config.type === 'textarea') {
-    return "`"+valueToReturn+"`";
+    return "`" + valueToReturn + "`";
   }
 
   // string

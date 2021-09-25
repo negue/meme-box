@@ -1,13 +1,29 @@
 
-<table>
+<table class="config-table">
+  <tr>
+    <td colspan="4">
+    <button mat-raised-button (click)="onAddNewVariable.emit()">
+      Add new variable
+    </button>
+
+    </td>
+  </tr>
   <ng-container *ngFor="let customVariable of variablesList">
     <tr>
+      <td>
+        <button mat-icon-button color="warn"
+                (click)="onDeleteVariable.emit(customVariable)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </td>
       <td>
         <mat-form-field>
           <mat-label>Your Variable Name</mat-label>
           <input matInput [(ngModel)]="customVariable.name"
                  (ngModelChange)="onEditVariable.emit(customVariable)" type="text">
         </mat-form-field>
+      </td>
+      <td>
         <mat-form-field>
           <mat-label>Variable Type selection</mat-label>
           <mat-select [(value)]="customVariable.type"
@@ -19,7 +35,20 @@
           </mat-select>
         </mat-form-field>
       </td>
-      <td>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan="2">
+        <mat-form-field>
+          <mat-label>Hint (for this variable)</mat-label>
+          <input matInput [(ngModel)]="customVariable.hint"
+                 (ngModelChange)="onEditVariable.emit(customVariable)" type="text">
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan="2">
         <app-action-variable-input [variableType]="customVariable.type"
                                     label="Fallback Value"
                                     [value]="customVariable.fallback"
@@ -34,20 +63,6 @@
           HTML: Replace new lines with &lt;br&gt;
         </mat-checkbox>
       </td>
-      <td>
-        <button mat-icon-button color="warn"
-                (click)="onDeleteVariable.emit(customVariable)">
-          <mat-icon svgIcon="delete"></mat-icon>
-        </button>
-      </td>
     </tr>
   </ng-container>
-  <tr>
-    <td colspan="3">
-      <button mat-raised-button (click)="onAddNewVariable.emit()">
-        Add new variable
-      </button>
-
-    </td>
-  </tr>
 </table>

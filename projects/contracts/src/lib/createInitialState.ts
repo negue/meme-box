@@ -10,6 +10,7 @@ export function createInitialState (): SettingsState {
         bot: {
           enabled: false,
           response: null,
+          command: '!commands',
           auth: {
             name: '',
             token: ''

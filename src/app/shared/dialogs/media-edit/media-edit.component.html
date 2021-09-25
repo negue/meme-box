@@ -192,13 +192,11 @@
     <ng-container *ngIf="form.value.type === MediaType.Widget">
       <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
         <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
-        <div *ngFor="let variable of currentHtml?.variablesConfig">
-          <app-action-variable-input [variableType]="variable.type" [label]="variable.name"
-                                      [value]="actionToEdit.extended[variable.name]"
-                                      (valueChanged)="actionToEdit.extended[variable.name] = $event; triggerHTMLRefresh()">
+        <app-action-variables-assignments [variablesConfig]="currentHtml?.variablesConfig"
+                                          [data]="actionToEdit.extended"
+                                          (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()">
 
-          </app-action-variable-input>
-        </div>
+        </app-action-variables-assignments>
       </ng-container>
     </ng-container>
   </form>
@@ -281,12 +279,11 @@
 
       <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
 
-        <div *ngFor="let variable of currentScript?.variablesConfig">
-          <app-action-variable-input [variableType]="variable.type" [label]="variable.name"
-                                     [value]="actionToEdit.extended[variable.name] || variable.fallback"
-                                     (valueChanged)="actionToEdit.extended[variable.name] = $event;">
-          </app-action-variable-input>
-        </div>
+      <app-action-variables-assignments [variablesConfig]="currentScript?.variablesConfig"
+                                        [data]="actionToEdit.extended"
+                                        (dataChanged)="actionToEdit.extended = $event">
+
+      </app-action-variables-assignments>
     </div>
 
 
@@ -299,12 +296,11 @@
 
       <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
 
-      <div *ngFor="let variable of currentScript?.variablesConfig">
-        <app-action-variable-input [variableType]="variable.type" [label]="variable.name"
-                                   [value]="actionToEdit.extended[variable.name] || variable.fallback"
-                                   (valueChanged)="actionToEdit.extended[variable.name] = $event;">
-        </app-action-variable-input>
-      </div>
+      <app-action-variables-assignments [variablesConfig]="currentScript?.variablesConfig"
+                                        [data]="actionToEdit.extended"
+                                        (dataChanged)="actionToEdit.extended = $event">
+
+      </app-action-variables-assignments>
     </div>
 
     <div *ngSwitchCase="MediaType.Video" >

@@ -13,17 +13,15 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {VariablesConfigComponent} from './variables-config/variables-config.component';
 import {CodemirrorModule} from "@gewd/components/codemirror";
-import {ActionVariableInputModule} from "../../../../../projects/action-variables-ui/src/lib/action-variable-input/action-variable-input.module";
 import {MatTabsModule} from "@angular/material/tabs";
 import {HintPanelModule} from "@memebox/ui-components";
 import {CompactClipCardModule} from "@memebox/state-components";
+import {ActionVariablesConfigModule} from "@memebox/action-variables/ui";
 
 @NgModule({
   declarations: [
     ScriptEditComponent,
-    VariablesConfigComponent
   ],
   imports: [
     MatDialogModule,
@@ -37,12 +35,14 @@ import {CompactClipCardModule} from "@memebox/state-components";
     FormsModule,
     MatCheckboxModule,
     CodemirrorModule,
-    ActionVariableInputModule,
     MatTabsModule,
     HintPanelModule,
-    CompactClipCardModule
+    CompactClipCardModule,
+    ActionVariablesConfigModule
   ],
   providers: [],
+  exports: [
+  ]
 })
 export class ScriptEditModule implements DialogContract<CustomScriptDialogPayload> {
   constructor(private dialog: MatDialog) {
