@@ -43,7 +43,7 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
       if (this.selectedItem) {
         this.selectedItem = items.find(i => i.ifname === this.selectedItem.ifname);
       } else {
-        this.selectedItem = items[0];
+        this.selectedItem = items.find(i => !i.address.includes('localhost'));
       }
 
       this.cd.markForCheck();

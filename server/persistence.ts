@@ -121,7 +121,8 @@ export class Persistence {
           enableLog: configV0.twitchLog,
           bot: {
             enabled: false,
-            response: ''
+            response: '',
+            command: '!command'
           }
         };
 
@@ -399,6 +400,7 @@ export class Persistence {
       twitchConfig.bot = {
         enabled: false,
         response: '',
+        command: '!commands',
         auth: {
           name: '',
           token: ''
@@ -416,6 +418,7 @@ export class Persistence {
 
     twitchConfig.bot.enabled = newTwitchConfig.bot.enabled;
     twitchConfig.bot.response = newTwitchConfig.bot.response;
+    twitchConfig.bot.command = newTwitchConfig.bot.command;
     twitchConfig.bot.auth.name = newTwitchConfig.bot.auth.name;
 
     if (typeof newTwitchConfig.bot.auth.token !== 'undefined'

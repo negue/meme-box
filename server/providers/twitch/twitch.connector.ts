@@ -163,7 +163,7 @@ export class TwitchConnector {
       this._receivedTwitchEvents.next(twitchEvent);
 
       // This is the bot handler, nothing after that needs to be handled
-      if (this._twitchBotEnabled && message === '!commands') {
+      if (this._twitchBotEnabled && message === (this._currentTwitchConfig.bot?.command ?? '!commands')) {
         this.handleCommandsRequest(userstate, message);
 
         return false;

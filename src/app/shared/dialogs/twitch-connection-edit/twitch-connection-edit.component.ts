@@ -33,6 +33,7 @@ interface AdditionalForm {
   bot: boolean;
   log: boolean;
   botResponse: string;
+  command: string;
 }
 
 @Component({
@@ -54,7 +55,8 @@ export class TwitchConnectionEditComponent implements OnInit {
   public additionalForm = new FormBuilder().group<AdditionalForm>({
     bot: false,
     log: false,
-    botResponse: ''
+    botResponse: '',
+    command: '!command'
   });
 
   public config$ = this.appQuery.config$;
@@ -98,7 +100,9 @@ export class TwitchConnectionEditComponent implements OnInit {
 
       this.additionalForm.reset({
         botResponse: value.twitch?.bot?.response ?? '',
-        bot: value.twitch.bot.enabled
+        bot: value.twitch.bot.enabled,
+        command: value.twitch.bot.command,
+        log: value.twitch.enableLog
       });
 
     });
@@ -144,6 +148,7 @@ export class TwitchConnectionEditComponent implements OnInit {
       enableLog: botValues.log,
       bot: {
         enabled: botValues.bot,
+        command: botValues.command,
         response: botValues.botResponse,
         auth: {
           name: mainAccountValues.botName,

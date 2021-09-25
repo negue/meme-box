@@ -259,7 +259,8 @@ export interface ObsConfig {
 
 export interface TwitchBotConfig {
   enabled: boolean;
-  response: string,
+  response: string;
+  command: string;
   auth?: {
     name: string;
     token: string;
