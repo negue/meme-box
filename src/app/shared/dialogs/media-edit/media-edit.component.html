@@ -194,7 +194,7 @@
         <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
         <app-action-variables-assignments [variablesConfig]="currentHtml?.variablesConfig"
                                           [data]="actionToEdit.extended"
-                                          (dataChanged)="actionToEdit.extended = $event">
+                                          (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()">
 
         </app-action-variables-assignments>
       </ng-container>

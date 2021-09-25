@@ -135,9 +135,11 @@
       <br />
 
       <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name">
+        Variables:
 
         <app-action-variables-assignments [appVariablesConfigByActionId]="form.value.clipId"
                                           [data]="data.extended"
+                                          [fallbackData]="clipDictionary[form.value.clipId].extended"
         (dataChanged)="data.extended = $event">
 
         </app-action-variables-assignments>

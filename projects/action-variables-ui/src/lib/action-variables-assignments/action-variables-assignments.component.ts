@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
+import {MatCheckboxChange} from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-action-variables-assignments',
@@ -11,6 +12,9 @@ export class ActionVariablesAssignmentsComponent implements OnInit {
 
   @Input()
   public data: Dictionary<string> = {};
+
+  @Input()
+  public fallbackData: Dictionary<string> = {};
 
   @Output()
   public dataChanged = new EventEmitter<Dictionary<string>>();
@@ -35,11 +39,21 @@ export class ActionVariablesAssignmentsComponent implements OnInit {
       }
       default: {
 
-        newDataObject[name] = $event+'';
+        newDataObject[name] = typeof $event !== 'undefined'
+          ? $event+''
+          : undefined;
       }
     }
 
 
     this.dataChanged.next(newDataObject);
+  }
+
+  unsetValue($event: MatCheckboxChange, variable: ActionVariableConfig) {
+    if ($event.checked) {
+      return;
+    }
+
+    this.variableChanged(variable.name, variable.type, undefined)
   }
 }
