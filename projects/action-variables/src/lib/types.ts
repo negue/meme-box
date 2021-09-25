@@ -17,7 +17,7 @@ export interface ActionVariableConfig {
   fallback: any; // TODO - might need some typesafety .. maybe during runtime
 }
 
-export function GetVariableTypesByAction(actionType: MediaType) {
+export function getVariableTypesByAction(actionType: MediaType) {
   if (actionType === MediaType.Widget) {
     return [
       ActionVariableTypes.number,

@@ -14,14 +14,12 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {VariablesConfigComponent} from './variables-config/variables-config.component';
 import {CodemirrorModule} from "@gewd/components/codemirror";
-import {ActionVariableInputModule} from "../../../../../projects/action-variables-ui/src/lib/action-variable-input/action-variable-input.module";
+import {ActionVariablesConfigModule} from "@memebox/action-variables/ui";
 
 @NgModule({
   declarations: [
     WidgetEditComponent,
-    VariablesConfigComponent
   ],
   imports: [
     MatDialogModule,
@@ -36,8 +34,8 @@ import {ActionVariableInputModule} from "../../../../../projects/action-variable
     FormsModule,
     DynamicIframeModule,
     MatCheckboxModule,
-    ActionVariableInputModule,
-    CodemirrorModule
+    CodemirrorModule,
+    ActionVariablesConfigModule
   ],
   providers: [],
 })
