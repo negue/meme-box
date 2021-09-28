@@ -71,7 +71,9 @@ obs.onEvent$('eventName') // to subscribe to changes
 ```
 
 > `obs.raw` the commands/docs of OBS WebSocket (js) and Plugin 4.9 
+> 
 > OBS WebsocketJS https://github.com/obs-websocket-community-projects/obs-websocket-js/tree/v4
+> 
 > OBS Protocol: https://github.com/Palakis/obs-websocket/blob/4.x-current/docs/generated/protocol.md
 
 
