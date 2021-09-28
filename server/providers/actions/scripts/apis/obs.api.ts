@@ -55,6 +55,19 @@ export class ObsApi extends DisposableBase {
     return this.obsConnectionService.connectIfNot();
   }
 
+  public replaceBrowserSourceUrl(
+    sourceName: string,
+    url: string
+  ){
+    return this.raw.send('SetSourceSettings', {
+      sourceName,
+      sourceType: 'browser_source',
+      sourceSettings: {
+        url
+      }
+    });
+  }
+
   // todo add types once OBSWebsocketJS is built completely on types
   public onEvent$(type: string) {
     return fromEventPattern(

@@ -24,6 +24,7 @@ The `Execution Script` which is called each time per trigger, does the actual "s
 |*both*| `logger` | Check `Logger API` below |
 |*both*| `obs` | Check `OBS API` below |
 |*both*| `memebox` | Check `MemeBox API` below |
+|*both*| `utils` | Check `Utils API` below |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
 |`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
 |**only Permanent Scripts**| `wss` | Create your custom websocket server - Check `WSS API` below |
@@ -53,11 +54,23 @@ logger.error('er')
 ### Obs API
 
 ```js
+obs.connectIfNot(); // tries to connect if it currently isn't
+obs.isConnected();
+
 obs.getFilter('SourceName', 'FilterName')
   .updateEnabled(true / false)
 
-obs.raw // using the Obs WebSocket JS Library https://github.com/obs-websocket-community-projects/obs-websocket-js#sending-requests
+obs.replaceBrowserSourceUrl('browserSourceName', 'newUrl')
+obs.refreshBrowserSource('browserSourceName')
+
+// in permanent scripts
+obs.onEvent$('eventName') // to subscribe to changes
 ```
+
+> `obs.raw` the commands/docs of OBS WebSocket (js) and Plugin 4.9 
+> OBS WebsocketJS https://github.com/obs-websocket-community-projects/obs-websocket-js/tree/v4
+> OBS Protocol: https://github.com/Palakis/obs-websocket/blob/4.x-current/docs/generated/protocol.md
+
 
 ### WSS API
 
@@ -146,4 +159,11 @@ await myActionVar.trigger({
 
 // simple trigger without anything
 await myActionVar.trigger();
+```
+
+
+### Utils API
+
+```js
+utils.randomElement(array)  // returns a random element
 ```
