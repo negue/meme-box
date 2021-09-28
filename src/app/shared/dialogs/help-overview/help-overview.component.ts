@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { DialogService } from "../dialog.service";
-import { MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE } from "../../../../../server/constants";
+import {Component, OnInit} from '@angular/core';
+import {DialogService} from "../dialog.service";
+import {MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE} from "../../../../../server/constants";
 
 @Component({
   selector: 'app-help-overview',
@@ -9,7 +9,7 @@ import { MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE } from "..
 })
 export class HelpOverviewComponent implements OnInit {
 
-  public helpItems = MARKDOWN_FILES
+  public helpItems = MARKDOWN_FILES.filter(mdFile => !mdFile.hideFromOverview);
 
   constructor(private dialogService: DialogService) { }
 
