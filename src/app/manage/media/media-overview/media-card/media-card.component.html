@@ -99,7 +99,9 @@
 
   <mat-card-actions class="mc__actions-container">
     <button mat-raised-button color="accent" (click)="onEdit.emit()">Edit</button>
-    <button mat-button color="primary" (click)="onPreview.emit()">Preview</button>
+    <button mat-button color="primary" *ngIf="media | actionCanPreview" (click)="onPreview.emit()">
+      {{media | actionPreviewLabel }}
+    </button>
 
 
     <app-action-shortcut-toolbar [action]="media"></app-action-shortcut-toolbar>

@@ -47,7 +47,7 @@
       <button (click)="onPreview.emit()" color="primary" mat-button
               matTooltip="Preview in the opened Screen">
         <mat-icon svgIcon="preview"></mat-icon>
-        Preview
+        {{info | actionPreviewLabel }}
       </button>
     </div>
 
