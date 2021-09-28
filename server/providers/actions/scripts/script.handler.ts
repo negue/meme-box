@@ -16,6 +16,7 @@ import {ObsConnection} from "../../obs-connection";
 import {ObsApi} from "./apis/obs.api";
 import {TwitchConnector} from "../../twitch/twitch.connector";
 import {TwitchApi} from "./apis/twitch.api";
+import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -41,7 +42,8 @@ export class ScriptHandler implements ActionStoreAdapter {
     private memeboxApiFactory: MemeboxApiFactory,
     private obsConnection : ObsConnection,
 
-    private twitchConnector: TwitchConnector
+    private twitchConnector: TwitchConnector,
+    private twitchDataProvider: TwitchDataProvider
   ) {
 
     _persistence.dataUpdated$().subscribe(() => {
@@ -97,6 +99,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     } else {
       const obsApi = await this.getObsApi();
 
+      // todo extract ScriptContextFactory?!
       scriptHoldingData = new ScriptContext(
         this._vm,
         this,
@@ -104,7 +107,7 @@ export class ScriptHandler implements ActionStoreAdapter {
         this.memeboxApiFactory.getApiFor(script.id, script.type),
         this.logger,
         obsApi,
-        new TwitchApi(this.twitchConnector, script.type)
+        new TwitchApi(this.twitchConnector, this.twitchDataProvider, script.type)
       );
 
       try {

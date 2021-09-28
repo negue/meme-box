@@ -22,7 +22,7 @@ import {NamedLogger} from "../named-logger";
 import {getLevelOfTags} from "./twitch.functions";
 import {PubSubClient} from 'twitch-pubsub-client';
 import {ApiClient, StaticAuthProvider} from "twitch";
-import {TwitchAuthInformationProvider} from "./twitch.auth";
+import {TwitchAuthInformationProvider} from "./twitch.auth-information";
 
 @Service()
 export class TwitchConnector {

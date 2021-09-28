@@ -2,6 +2,7 @@ import {TwitchConnector} from "../../../twitch/twitch.connector";
 import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
 import {MediaType} from "@memebox/contracts";
+import {TwitchDataProvider} from "../../../twitch/twitch.data-provider";
 
 export class TwitchApi extends DisposableBase {
 
@@ -12,6 +13,7 @@ export class TwitchApi extends DisposableBase {
 
   constructor(
     private twitchConnector: TwitchConnector,
+    private dataProvider: TwitchDataProvider,
     private scriptType: MediaType
   ) {
     super();
@@ -27,5 +29,15 @@ export class TwitchApi extends DisposableBase {
     const settings = this.twitchConnector.getTwitchSettings();
 
     tmiInstance.say(settings.channel, message);
+  }
+
+  public async getBroadcasterIdAsync(): Promise<string> {
+    const mainAuth =  await this.dataProvider.getMainTwitchAuthAsync();
+
+    return mainAuth?.userId;
+  }
+
+  public getHelixDataAsync(endpointAndQuery: string) {
+    return this.dataProvider.getHelixDataAsync(endpointAndQuery);
   }
 }
