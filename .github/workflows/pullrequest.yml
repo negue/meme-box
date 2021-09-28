@@ -21,6 +21,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.16.2
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run build:prepare
       - run: npm run test:ci
