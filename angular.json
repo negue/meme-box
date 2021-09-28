@@ -29,7 +29,7 @@
                 "output": "/assets/prism/"
               },
               {
-                "glob": "*.md",
+                "glob": "**/*.md",
                 "input": "./tutorials",
                 "output": "/assets/tutorials/"
               }
