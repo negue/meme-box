@@ -11,6 +11,7 @@ import {ObsApi} from "./apis/obs.api";
 import {TwitchApi} from "./apis/twitch.api";
 import {CanDispose} from "./apis/disposableBase";
 import {DummyWebSocketServer, RealWebSocketServer, WebSocketServerApi} from "./apis/wss.api";
+import {UtilsApi} from "./apis/utils.api";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -29,9 +30,10 @@ interface SharedScriptPayload {
   obs: ObsApi;
   twitch: TwitchApi;
   wss: WebSocketServerApi;
+  utils: typeof UtilsApi;
 }
 
-const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs, twitch, wss';
+const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs, twitch, wss, utils';
 
 interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
@@ -133,6 +135,7 @@ export class ScriptContext implements CanDispose {
         obs: this.obsApi,
         twitch: this.twitchApi,
         wss: this.wss,
+        utils: UtilsApi
       }
 
       this.bootstrap_variables = await bootstrapFunc(bootstrapPayload);
@@ -172,6 +175,7 @@ export class ScriptContext implements CanDispose {
       obs: this.obsApi,
       twitch: this.twitchApi,
       wss: this.wss,
+      utils: UtilsApi
     };
 
     await this.scriptToCall(scriptArguments);

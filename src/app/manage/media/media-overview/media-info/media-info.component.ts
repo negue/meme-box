@@ -29,7 +29,6 @@ export class MediaInfoComponent implements OnInit {
     map(([screenList, tagList]) => ({screenList, tagList}))
   );
 
-
   @Output()
   public onPreview = new EventEmitter();
 

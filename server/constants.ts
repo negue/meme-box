@@ -11,31 +11,49 @@ export const TUTORIALS_GITHUB_PAGE = `https://github.com/negue/meme-box/tree/${B
 export interface MarkdownDialogPayload {
   name: string;
   githubName: string;
+  hideFromOverview?: boolean;
+  showHeader: boolean;
 }
 
 export const SCRIPT_TUTORIAL: MarkdownDialogPayload =
     {
-      name: 'Media Type: Scripts',
-      githubName: 'scripts.md'
+      name: 'Action Type: Scripts',
+      githubName: 'scripts.md',
+      showHeader: false
     };
 
 export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
   {
     name: 'Getting Started',
-    githubName: 'getting_started.md'
+    githubName: 'getting_started.md',
+    showHeader: true
   },
   {
     name: 'Type Overview',
-    githubName: 'type_overview.md'
+    githubName: 'type_overview.md',
+    showHeader: false
   },
   {
-    name: 'Media Type: Meta',
-    githubName: 'meta_media.md'
+    name: 'Action Type: Meta',
+    githubName: 'meta_media.md',
+    showHeader: false
   },
   SCRIPT_TUTORIAL,
   {
     name: 'Screen / Clip Advanced Settings',
-    githubName: 'screen_clip_advanced_settings.md'
+    githubName: 'screen_clip_advanced_settings.md',
+    showHeader: false
+  },
+  {
+    name: 'Import / Export',
+    githubName: 'examples/import_export_settings.md',
+    showHeader: false
+  },
+  {
+    name: 'Installation',
+    githubName: 'installation.md',
+    hideFromOverview: true,
+    showHeader: true
   }
 ];
 
