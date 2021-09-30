@@ -469,7 +469,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     if (dialogResult) {
       applyDynamicIframeContentToClipData(dialogResult, this.actionToEdit);
 
-      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.actionToEdit);
+      this.currentHtmlConfig = dialogResult;
       this.executeHTMLRefresh();
       this.cd.detectChanges();
     }
@@ -517,7 +517,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     if (dialogResult) {
       applyScriptConfigToClipData(dialogResult, this.actionToEdit);
 
-      this.currentScript = scriptConfig;
+      this.currentScript = dialogResult;
       this.cd.detectChanges();
     }
   }

@@ -446,6 +446,12 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.VISIBLE:
       {
+        if (this.currentCombinedClip.clip.type === MediaType.Widget
+          && this.currentState !== MediaState.ANIMATE_IN) {
+          this.applyWidgetContent();
+        }
+
+
         console.warn('changing to VISIBLE');
         this.isVisible$.next(true);
         this.removeAnimation(this.currentCombinedClip.clipSetting.animationIn);

@@ -44,6 +44,9 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
   public codemirrorComponent: CodemirrorComponent;
 
 
+  @ViewChild('codemirrorBootScript', {static: true})
+  public codemirrorBootScript: CodemirrorComponent;
+
   public jsExtensions = jsCodemirror;
 
   private initDone = false;
@@ -64,17 +67,34 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.updateCodemirrorContent();
+  }
+
+  private updateCodemirrorContent() {
     // until the codemirror components works with default values again...
+
     this.codemirrorComponent.ngOnChanges({
       value: {
-        currentValue: this.workingValue.executionScript,
+        currentValue: this.workingValue?.executionScript,
         previousValue: null,
         firstChange: true,
         isFirstChange(): boolean {
           return true
         }
       }
-    })
+    });
+
+
+    this.codemirrorBootScript.ngOnChanges({
+      value: {
+        currentValue: this.workingValue?.bootstrapScript,
+        previousValue: null,
+        firstChange: true,
+        isFirstChange(): boolean {
+          return true
+        }
+      }
+    });
   }
 
   private setWorkingValues (payload: ScriptConfig) {
@@ -83,6 +103,9 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
       ...payload
     };
     this.variablesList = Object.values(this.workingValue.variablesConfig);
+    console.info(this.workingValue);
+
+    this.updateCodemirrorContent();
   }
 
   save() {
@@ -217,4 +240,7 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
     this.markForCheck();
   }
 
+  codemirrorBootstrapCreated(codemirrorBootScript: CodemirrorComponent) {
+    this.codemirrorBootScript = codemirrorBootScript;
+  }
 }

@@ -155,7 +155,6 @@ export class WidgetEditComponent implements OnInit {
     var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
 
     console.info({jsonData, dataStr});
-
-    downloadFile('widget.json',dataStr);
+    downloadFile(this.data.name+'-widget.json',dataStr);
   }
 }
