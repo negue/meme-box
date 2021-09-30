@@ -1,4 +1,4 @@
-# Meme-Box
+# Meme-Box | [Getting Started](#getting-started) | [How to contribute](#how-to-help--contribute)
 
 <p align="center">
 
@@ -10,15 +10,17 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-## [Download latest release!](https://github.com/negue/meme-box/releases)
-
-[Nightly Builds](https://github.com/negue/meme-box-nightly/releases)
-
 A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "media" to be used inside OBS. Or trigger other custom actions.
 
 |**Media Setup Example + Mobile View**|**Setup a Twitch-Trigger**|
 |--|--|
 |![memebox example setup gif](./assets/memebox_example_mobile_view.gif)|![memebox example twitch trigger gif](./assets/memebox_example_twitch.gif)|
+
+
+## Download
+
+[Download latest release!](https://github.com/negue/meme-box/releases) (currently a bit ouf of date, new release soon) - [latest nightly Builds](https://github.com/negue/meme-box-nightly/releases)
+
 
 ## Working Features
 
@@ -156,10 +158,6 @@ Misc:
 
 ___
 
-[`Getting started with Development`](README_DEV.md)
-
-___
-
 ## Roadmap
 
 ### 2021.3.0
@@ -196,8 +194,13 @@ ___
 ## How to help / contribute?
 * Improve Docs / Translations
 * Find bugs
-* Help fix bugs / improve features [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue) [Open for Contribution](https://github.com/negue/meme-box/labels/open%20for%20contribution)
+* Help fix bugs / improve features
+  * [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue) 
+  * [Open for Contribution](https://github.com/negue/meme-box/labels/open%20for%20contribution)
+  * [Developers Sanity](https://github.com/negue/meme-box/labels/developers%20sanity)
 * Star it :)
+
+[`Getting started with Development`](README_DEV.md)
 
 ## Contributors ✨
 
