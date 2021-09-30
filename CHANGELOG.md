@@ -15,11 +15,13 @@
   * [x] Widget-Variables
   * [x] Import / Export Widgets
   * [x] Persistence of the Widget State across Screens
-* [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
-* [x] "Media Type": `Scripts` for more advanced features
+* [ ] Electron: You can now hide the windows to the Tray-Icon. :tada:
+* [x] "Action Type": `Scripts` for more advanced features
   * [x] Wait once a triggered clip (inside the script) is done to trigger other stuff
   * [x] Use custom variables like in the Widget-Variables for easier configs
+* [x] "Action Type": `Permanent Scripts` to react on twitch or obs events which custom logic
 * [x] Timers / Twitch Events can now select the Target Screen
+* [x] Twitch Events can override Widget/Scripts Variables
 * [x] Add new twitch events to the trigger section
   * [x] All the sub events were added
   * [x] Ban event
@@ -41,6 +43,7 @@
 * [x] The Media Overview was redesigned by `@owehmer` (you can still switch to the old one)
 * [x] The Arrange View was redesigned by `@owehmer`
 * [x] "HTML" is now renamed to "Widgets"
+* [x] "Media" is now renamed to "Actions"
 
 ## 2021.2.1
 

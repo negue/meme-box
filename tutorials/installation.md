@@ -1,6 +1,9 @@
 # Download Meme-Box
 
-Download executable from: https://github.com/negue/meme-box/releases
+Download latest release from: https://github.com/negue/meme-box/releases  (currently a bit ouf of date, new release soon)
+
+Nightly builds: https://github.com/negue/meme-box-nightly/releases
+
 
 # Running Meme-Box
 
