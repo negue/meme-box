@@ -198,6 +198,7 @@ ___
   * [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue) 
   * [Open for Contribution](https://github.com/negue/meme-box/labels/open%20for%20contribution)
   * [Developers Sanity](https://github.com/negue/meme-box/labels/developers%20sanity)
+  * or all other Issue, in case I missed to label them: https://github.com/negue/meme-box/issues 
 * Star it :)
 
 [`Getting started with Development`](README_DEV.md)
