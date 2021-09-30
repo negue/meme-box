@@ -285,7 +285,10 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         const normalRule = rule as Rule;
 
         normalRule.selectors = normalRule.selectors.map(sel => {
-          return `#screen-${screen.id} ${sel}`;
+          const screenSelector = sel.includes('screen');
+
+
+          return `#screen-${screen.id} ${screenSelector ? '' : sel}`;
         });
       }
     })
