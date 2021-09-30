@@ -227,7 +227,10 @@ export function clipDataToDynamicIframeContent (clip: Partial<Clip>): DynamicIfr
 }
 
 
-export function applyDynamicIframeContentToClipData (iframeContent: DynamicIframeContent, targetClip: Partial<Clip>) {
+export function applyDynamicIframeContentToClipData (
+  iframeContent: DynamicIframeContent,
+  targetClip: Partial<Clip>
+) {
   console.info('PRE CHANGE', JSON.stringify(targetClip));
 
   console.info({iframeContent});
