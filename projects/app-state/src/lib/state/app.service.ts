@@ -387,7 +387,7 @@ export class AppService {
     console.error('logged error', error);
 
     // testing what is broken on the preview
-    debugger;
+    
     if (this.isOffline()) {
       return;
     }
