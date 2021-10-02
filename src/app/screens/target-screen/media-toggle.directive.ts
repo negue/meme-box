@@ -611,6 +611,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private log(...args: unknown[]) {
-    console.info(`[${this.currentCombinedClip.clip.id}]`, ...args);
+    
   }
 }

@@ -39,7 +39,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
     }
   }
 
-  isScreenActive (screenId: string) {
+  isScreenActive (screenId: string): boolean  {
     if (!this._socketsPerScreen[screenId]) {
       return false;
     }

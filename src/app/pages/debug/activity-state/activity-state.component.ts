@@ -54,10 +54,7 @@ export class ActivityStateComponent implements OnInit {
         const actionInfo = actionMap[actionId];
         const actionType = actionInfo?.type ?? MediaType.Invalid;
 
-        console.info({
-          actionInfo,
-          actionType
-        })
+        
 
         return {
           id: actionId,

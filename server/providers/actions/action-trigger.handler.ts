@@ -83,7 +83,7 @@ export class ActionTriggerHandler {
     }
   }
 
-  triggerActionOnScreen (payload: TriggerAction) {
+  triggerActionOnScreen (payload: TriggerAction): void  {
     if (!this._memeboxWebSocket.isScreenActive(payload.targetScreen)) {
       return;
     }
