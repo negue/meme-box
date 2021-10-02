@@ -37,7 +37,7 @@ Script Examples can be found [here](https://github.com/negue/meme-box/tree/devel
 If you need to wait for X seconds or ms you can use this:
 
 ```js
-await sleep.secondAsync(X)
+await sleep.secondsAsync(X)
 await sleep.msAsync(Y);
 await sleep.for(X, sleep.TYPE.MS);
 
