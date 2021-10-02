@@ -28,7 +28,7 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
   public declaredActionsEntries$ = new BehaviorSubject<ActionEntry[]>([]);
 
   public declaredActionInformation$: Observable<Clip[]> = this.declaredActionsEntries$.pipe(
-    withLatestFrom(this.appQuery.clipMap$),
+    withLatestFrom(this.appQuery.actionMap$),
     map(([declaredActions, clipMap]) => {
       return declaredActions.map(action => clipMap[action.uuid])
     })
@@ -212,7 +212,7 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const clipMap = await this.appQuery.clipMap$.pipe(
+    const clipMap = await this.appQuery.actionMap$.pipe(
       take(1)
     ).toPromise();
 

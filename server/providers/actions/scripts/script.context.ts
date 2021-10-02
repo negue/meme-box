@@ -12,6 +12,7 @@ import {TwitchApi} from "./apis/twitch.api";
 import {CanDispose} from "./apis/disposableBase";
 import {DummyWebSocketServer, RealWebSocketServer, WebSocketServerApi} from "./apis/wss.api";
 import {UtilsApi} from "./apis/utils.api";
+import {EnumsApi} from "./apis/enums.api";
 
 class ScriptCompileError extends Error {
   constructor(script: Clip,
@@ -31,9 +32,10 @@ interface SharedScriptPayload {
   twitch: TwitchApi;
   wss: WebSocketServerApi;
   utils: typeof UtilsApi;
+  enums: typeof EnumsApi;
 }
 
-const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs, twitch, wss, utils';
+const SHARED_API_ARGUMENTS = 'variables, store, sleep, memebox, logger, obs, twitch, wss, utils, enums';
 
 interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
@@ -135,7 +137,8 @@ export class ScriptContext implements CanDispose {
         obs: this.obsApi,
         twitch: this.twitchApi,
         wss: this.wss,
-        utils: UtilsApi
+        utils: UtilsApi,
+        enums: EnumsApi
       }
 
       this.bootstrap_variables = await bootstrapFunc(bootstrapPayload);
@@ -175,7 +178,8 @@ export class ScriptContext implements CanDispose {
       obs: this.obsApi,
       twitch: this.twitchApi,
       wss: this.wss,
-      utils: UtilsApi
+      utils: UtilsApi,
+      enums: EnumsApi
     };
 
     await this.scriptToCall(scriptArguments);

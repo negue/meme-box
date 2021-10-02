@@ -37,7 +37,7 @@ Script Examples can be found [here](https://github.com/negue/meme-box/tree/devel
 If you need to wait for X seconds or ms you can use this:
 
 ```js
-await sleep.secondAsync(X)
+await sleep.secondsAsync(X)
 await sleep.msAsync(Y);
 await sleep.for(X, sleep.TYPE.MS);
 
@@ -121,7 +121,7 @@ await myActionVar.triggerWhile(async (helpers) => {
 
   // move your media to these positions, this is done in a transition (animation)
   await myActionVar.updateScreenOptions({
-    position: 1,  // Absolute
+    position: enums.PositionEnum.Absolute,
     top: '10%',
     left: '15%'
   })
@@ -129,7 +129,7 @@ await myActionVar.triggerWhile(async (helpers) => {
   await sleep.secondsAsync(2);
 
   await myActionVar.updateScreenOptions({
-    position: 1,  // Absolute 
+    position: enums.PositionEnum.Absolute,
     top: '40%',
     left: '35%'
   });
@@ -155,17 +155,84 @@ await myActionVar.triggerWhile(async (helpers) => {
 // these can be used for actions and media
 // just a simple memebox action trigger (with variables example)
 await myActionVar.trigger({
-  action: {
+  // all properties optional
+  
+  action: {      // see action Overrides
     variables: {
       text_to_show: "This is the second message"
     }
+  },
+
+  screenMedia: {
+    position: enums.PositionEnum.Centered,
+    width: '300px',
+    height: '200px'
   }
 });
 
 // simple trigger without anything
 await myActionVar.trigger();
+
 ```
 
+### `action` Overrides
+
+```ts
+interface ActionOverridableProperties {
+  variables?: Dictionary<unknown>;     // the variables inside scripts / widgets
+}
+```
+
+### `updateScreenOptions` or `screenMedia` overrides
+
+```ts
+interface ScreenMediaOverridableProperties {
+  visibility: VisibilityEnum;
+  loop?: boolean;
+
+  // later some other settings like position and stuff
+  width?: string; // 60%, 720px
+  height?: string;
+
+  // todo extract position to its own object
+  position?: PositionEnum;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  top?: string;
+  transform?: string;
+  imgFit?: string;
+
+  /**
+   * If you are in a script and currently animation all stuff in "triggerWhile" then you can
+   * use this to prevent transition between those settings "updates"
+   */
+  animating?: boolean;
+
+  animationIn?: string | null;
+  animationOut?: string | null;
+
+  animationInDuration?: number,
+  animationOutDuration?: number,
+
+  zIndex?: number;
+
+  customCss?: string;
+}
+
+enum PositionEnum {
+  FullScreen,
+  Absolute,
+  Centered,
+  Random
+}
+
+enum VisibilityEnum {
+  Play = 0,
+  Static,
+  Toggle
+}
+```
 
 ### Utils API
 

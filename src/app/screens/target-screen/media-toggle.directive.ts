@@ -14,7 +14,7 @@ import {
 import {Clip, CombinedClip, Dictionary, MediaType, PositionEnum, VisibilityEnum} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
-import {takeUntil, withLatestFrom} from "rxjs/operators";
+import {delay, skip, take, takeUntil, withLatestFrom} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
 import {AppQueries, WebsocketService} from "@memebox/app-state";
 import {clipDataToDynamicIframeContent, DynamicIframeContent} from "@memebox/utils";
@@ -66,7 +66,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
               private webSocket: WebsocketService,
               private renderer: Renderer2,
               private appQueries: AppQueries) {
-    this.appQueries.clipMap$.pipe(
+    this.appQueries.actionMap$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(value => {
       this.clipMap = value;
@@ -153,32 +153,56 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       takeUntil(this._destroy$)
     ).subscribe((triggerEvent) => {
       this.currentCombinedClip = triggerEvent;
-
-      console.info('Queue Trigger - Subscribe', this.queueCounter);
+      this.log('Name: ', this.currentCombinedClip.clip.name);
+      this.log('Queue Trigger - Subscribe', this.queueCounter);
 
       if (this.clipVisibility !== VisibilityEnum.Toggle && this.queueCounter <= 0) {
-        console.info('not toggle - no queue - exiting');
+        this.log('not toggle - no queue - exiting');
         return;
       }
 
-      console.info({
+      this.log({
         visibility: this.clipVisibility,
         currentState: this.currentState
       });
 
       if (this.clipVisibility === VisibilityEnum.Toggle && this.currentState === MediaState.VISIBLE) {
-        console.info('Was toggle and currently visible -> animate Out or Hide');
+        this.log('Was toggle and currently visible -> animate Out or Hide');
         this.animateOutOrHide();
       } else {
         this.updateNeededVariables();
+        const targetMediaState = this.currentCombinedClip.clipSetting.animationIn
+          ? MediaState.ANIMATE_IN
+          : MediaState.VISIBLE;
+
+        if (targetMediaState !== MediaState.ANIMATE_IN
+          && !this.currentCombinedClip.clipSetting.animating) {
+          this.log('adding css class');
+          this.element.nativeElement.classList.add('animationDisabled');
+        }
+
         this.applyPositions();
 
+        if (this.currentCombinedClip.clip.type === MediaType.Widget
+          && targetMediaState === MediaState.VISIBLE) {
+          this.applyWidgetContent();
+        }
+
+        this.log('before trigger state', targetMediaState);
+
+        if (targetMediaState !== MediaState.ANIMATE_IN
+          && !this.currentCombinedClip.clipSetting.animating) {
+          this.isVisible$.pipe(
+            skip(1),
+            delay(300),
+            take(1)
+          ).subscribe(() => {
+            this.element.nativeElement.classList.remove('animationDisabled');
+          })
+        }
+
         // Trigger Play
-        this.triggerState(
-          this.currentCombinedClip.clipSetting.animationIn
-            ? MediaState.ANIMATE_IN
-            : MediaState.VISIBLE
-        );
+        this.triggerState(targetMediaState);
       }
     })
 
@@ -245,8 +269,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
       const randomPosition = () => Math.floor(Math.random()*100);
 
-      const randomLeft = `max(0px, calc(${randomPosition()}% - ${width}))`;
-      const randomTop = `max(0px, calc(${randomPosition()}% - ${height}))`;
+      const randomLeft = `max(0px, calc(${randomPosition()}% - ${width ?? '20%'}))`;
+      const randomTop = `max(0px, calc(${randomPosition()}% - ${height ?? '10%'}))`;
 
       this.element.nativeElement.style.setProperty('--clip-setting-left', randomLeft);
       this.element.nativeElement.style.setProperty('--clip-setting-top', randomTop);
@@ -446,12 +470,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.VISIBLE:
       {
-        if (this.currentCombinedClip.clip.type === MediaType.Widget
-          && this.currentState !== MediaState.ANIMATE_IN) {
-          this.applyWidgetContent();
-        }
-
-
         console.warn('changing to VISIBLE');
         this.isVisible$.next(true);
         this.removeAnimation(this.currentCombinedClip.clipSetting.animationIn);
@@ -590,5 +608,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       control.content = config;
       control.handleContentUpdate();
     }
+  }
+
+  private log(...args: unknown[]) {
+    console.info(`[${this.currentCombinedClip.clip.id}]`, ...args);
   }
 }

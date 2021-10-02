@@ -48,7 +48,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
   mediaClipList$: Observable<CombinedClip[]> = combineLatest([
     this.assignedClipsMap$,
-    this.appQuery.clipMap$
+    this.appQuery.actionMap$
   ]).pipe(
     map(([assignedClips, allClips]) => {
       const result: CombinedClip[] = [];

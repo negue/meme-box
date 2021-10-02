@@ -28,7 +28,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     everyXms: [undefined, Validators.max(19_999_999)]
   });
 
-  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
+  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.actionMap$;
 
   showWarningClipSelection = false;
 

@@ -8,7 +8,6 @@ import {ActionStateEntries, updateActivityInState} from "@memebox/shared-state";
 import {WebsocketHandler} from "../services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -16,8 +15,7 @@ export class ActionActivityService {
 
   constructor(private activityStore: ActivityStore,
               public http: HttpClient,  // todo extract http client and api_url base including the offline checks
-              ) {
-
+  ) {
     // Load State once
     this.http.get<ActionStateEntries>(`${API_BASE}${ENDPOINTS.ACTION_ACTIVITY.PREFIX}${ENDPOINTS.ACTION_ACTIVITY.CURRENT}`).pipe(
       take(1)
@@ -25,9 +23,8 @@ export class ActionActivityService {
       this.activityStore.update(() => value);
     });
 
-
-  var wsHandler = new WebsocketHandler(
-      AppConfig.wsBase+WEBSOCKET_PATHS.ACTION_ACTIVITY,
+    const wsHandler = new WebsocketHandler(
+      AppConfig.wsBase + WEBSOCKET_PATHS.ACTION_ACTIVITY,
       3000
     );
 
@@ -35,7 +32,7 @@ export class ActionActivityService {
 
     // Subscribe to Websocket Updates
     wsHandler.onMessage$.pipe(
-    //  takeUntil(this._destroy$)
+      //  takeUntil(this._destroy$)
     ).subscribe((activityUpdateJson) => {
 
       const activityUpdate = JSON.parse(activityUpdateJson) as ActionActiveStatePayload;
@@ -43,8 +40,6 @@ export class ActionActivityService {
       this.activityStore.update(currentState =>
         updateActivityInState(currentState, activityUpdate))
     });
-
-
   }
 }
 

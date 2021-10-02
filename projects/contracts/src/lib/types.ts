@@ -108,6 +108,12 @@ export interface ScreenMediaOverridableProperties {
   transform?: string;
   imgFit?: string;
 
+  /**
+   * If you are in a script and currently animation all stuff in "triggerWhile" then you can
+   * use this to prevent transition between those settings "updates"
+   */
+  animating?: boolean;
+
   animationIn?: string | null;
   animationOut?: string | null;
 

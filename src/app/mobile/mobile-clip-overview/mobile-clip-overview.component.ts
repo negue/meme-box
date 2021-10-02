@@ -1,14 +1,17 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppQueries} from "../../../../projects/app-state/src/lib/state/app.queries";
-import {AppService} from "../../../../projects/app-state/src/lib/state/app.service";
+import {
+  ActivityQueries,
+  AppQueries,
+  AppService,
+  ConnectionState,
+  SettingsService,
+  WebsocketService
+} from "@memebox/app-state";
 import {Observable, Subject} from "rxjs";
 import {Clip, MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
-import {ConnectionState, WebsocketService} from "../../../../projects/app-state/src/lib/services/websocket.service";
-import {SettingsService} from "../../../../projects/app-state/src/lib/services/settings.service";
 import {map, take, takeUntil, tap} from "rxjs/operators";
-import {sortClips} from "../../../../projects/utils/src/lib/sort-clips";
+import {sortClips} from "@memebox/utils";
 import orderBy from 'lodash/orderBy';
-import {ActivityQueries} from "../../../../projects/app-state/src/lib/activity-state/app.queries";
 
 // once the tsconfig paths are working for server/app
 // extract this to its own "library"
