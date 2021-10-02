@@ -30,6 +30,11 @@ const rootRoutes: Routes = [
       .then(module => module.TestpageModule)
   },
   {
+    path: 'debug',
+    loadChildren: () => import('./pages/debug/debug.module')
+      .then(module => module.DebugModule)
+  },
+  {
     path: 'mobile',
     loadChildren: () => import('./mobile/mobile.module')
       .then(module => module.MobileModule)
