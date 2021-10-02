@@ -24,7 +24,7 @@ export class ScreenArrangeComponent implements OnInit {
 
   clipList$ = combineLatest([
     this.screen$,
-    this.appQueries.clipMap$
+    this.appQueries.actionMap$
   ]).pipe(
     map(([screen, clipMap]) => {
       const result: CombinedClip[] = [];

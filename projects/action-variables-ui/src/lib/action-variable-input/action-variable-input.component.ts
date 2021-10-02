@@ -32,7 +32,7 @@ export class ActionVariableInputComponent implements OnInit, OnChanges {
 
   public visibleMedia$ = combineLatest([
     this.visibleActionIdList$,
-    this.appQueries.clipMap$
+    this.appQueries.actionMap$
   ]).pipe(
     map(([mediaIdList, mediaMap]) => {
       return mediaIdList.map(id => mediaMap[id])

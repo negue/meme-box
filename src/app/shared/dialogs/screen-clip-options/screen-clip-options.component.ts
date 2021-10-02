@@ -73,7 +73,7 @@ export class ScreenClipOptionsComponent implements OnInit {
 
   public clipInfo$: Observable<ScreenClip&{type: MediaType}> = combineLatest([
     this.currentScreen$,
-    this.appQueries.clipMap$.pipe(
+    this.appQueries.actionMap$.pipe(
       map(clipMap => clipMap[this.data.clipId])
     )
   ]).pipe(
@@ -140,7 +140,7 @@ export class ScreenClipOptionsComponent implements OnInit {
   }
 
   openMediaSetting() {
-    this.appQueries.clipMap$.pipe(
+    this.appQueries.actionMap$.pipe(
       map(clipMap => clipMap[this.data.clipId]),
       take(1)
     ).subscribe(clipInfo => {

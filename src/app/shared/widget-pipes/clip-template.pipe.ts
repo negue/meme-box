@@ -17,7 +17,7 @@ export class WidgetTemplatePipe implements PipeTransform {
   transform(mediaId: string, mediaClipToShow$: Observable<CombinedClip>): Observable<DynamicIframeContent> {
     return mediaClipToShow$.pipe(
       filter(m => !!m),
-      withLatestFrom(this.appQueries.clipMap$),
+      withLatestFrom(this.appQueries.actionMap$),
       map(([mediaToShow, clipMap]) => {
 
         const variableOverrides = mediaToShow.triggerPayload?.overrides?.action?.variables ?? {};

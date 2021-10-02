@@ -20,7 +20,7 @@ export class VariablesConfigByActionIdDirective implements OnInit, OnDestroy, On
 
   action$ = combineLatest([
     this.actionId$,
-    this.appQueries.clipMap$
+    this.appQueries.actionMap$
   ]).pipe(
     map(([actionId, clipMap]) => clipMap[actionId]),
     filter(action => !!action)

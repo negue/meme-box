@@ -130,7 +130,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   twitchEventFields = TwitchEventFieldConfig;
 
-  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
+  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.actionMap$;
   selectedMedia$ = combineLatest([
     this.clipDictionary$,
     this.selectedMediaId$
