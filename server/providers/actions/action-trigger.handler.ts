@@ -56,10 +56,10 @@ export class ActionTriggerHandler {
 
     switch (mediaConfig.type) {
       case MediaType.Meta:
-        this.triggerMeta(mediaConfig);
+        await this.triggerMeta(mediaConfig);
         break;
       case MediaType.Script:
-        this._scriptHandler.handleScript(mediaConfig, payloadObs);
+        await this._scriptHandler.handleScript(mediaConfig, payloadObs);
         break;
       default: {
         if (payloadObs.targetScreen) {
