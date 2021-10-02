@@ -81,8 +81,14 @@ mat-expansion-panel {
   }
 
   ::ng-deep .mat-expansion-panel-body {
-    padding-right: 0;
     min-width: 450px;
+  }
+
+  .animation-config-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
   }
 }
 

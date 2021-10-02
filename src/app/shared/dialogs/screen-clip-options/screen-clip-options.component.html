@@ -81,7 +81,7 @@
       </mat-panel-description>
               </mat-expansion-panel-header>
 
-
+<div class="animation-config-row">
               <mat-form-field>
                 <mat-label>Animate IN</mat-label>
                 <mat-select formControlName="animationIn"
@@ -107,9 +107,9 @@
                                [selectedAnimationConfig]="animationInSelect.value"
                                [animationDuration]="+animationInDuration.value"
         ></app-animation-preview>
-
+</div>
         <br/>
-
+            <div class="animation-config-row">
               <mat-form-field>
                 <mat-label>Animate OUT</mat-label>
                 <mat-select #animationOutSelect
@@ -136,7 +136,7 @@
                                [selectedAnimationConfig]="animationOutSelect.value"
                                [animationDuration]="+animationOutDuration.value"
         ></app-animation-preview>
-
+</div>
         <br/>
 
         <app-hint-panel>
