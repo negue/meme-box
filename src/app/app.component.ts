@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {SwUpdate} from "@angular/service-worker";
-import {ActionActivityService} from "../../projects/app-state/src/lib/activity-state/app.service";
+import {ActionActivityService} from "@memebox/app-state";
 
 @Component({
   selector: 'app-root',

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from "@angular/core";
 import {Clip, MediaType, Screen, Tag} from "@memebox/contracts";
-import {ActivityQueries} from "../../../../../../projects/app-state/src/lib/activity-state/app.queries";
+import {ActivityQueries} from "@memebox/app-state";
 
 @Component({
   selector: "app-media-card",

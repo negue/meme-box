@@ -39,6 +39,14 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
     }
   }
 
+  isScreenActive (screenId: string) {
+    if (!this._socketsPerScreen[screenId]) {
+      return false;
+    }
+
+    return this._socketsPerScreen[screenId].some(ws => ws.readyState === WebSocket.OPEN);
+  }
+
   sendDataToAllSockets(message) {
     super.sendDataToAllSockets(message);
   }

@@ -36,7 +36,7 @@ export class ActionTriggerHandler {
     private actionStateEventBus: ActionActiveStateEventBus,
   ) {
     mediaTriggerEventBus.AllTriggerEvents$.subscribe(triggerMedia => {
-      this.triggerMediaClipById(triggerMedia);
+      this.triggerActionById(triggerMedia);
     });
     mediaTriggerEventBus.AllUpdateEvents$.subscribe(triggerMedia => {
       this.updateMediaEvent(triggerMedia);
@@ -49,16 +49,10 @@ export class ActionTriggerHandler {
     this.getData();
   }
 
-  async triggerMediaClipById(payloadObs: TriggerAction) {
+  async triggerActionById(payloadObs: TriggerAction) {
     this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'} - Origin: ${payloadObs.origin}`, payloadObs);
 
     const mediaConfig = this._allMediasMap[payloadObs.id];
-
-    this.actionStateEventBus.updateActionState({
-      mediaId: payloadObs.id,
-      screenId: payloadObs.targetScreen,
-      state: ActionStateEnum.Triggered
-    });
 
     switch (mediaConfig.type) {
       case MediaType.Meta:
@@ -69,7 +63,7 @@ export class ActionTriggerHandler {
         break;
       default: {
         if (payloadObs.targetScreen) {
-          this._memeboxWebSocket.sendDataToScreen(payloadObs.targetScreen, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(payloadObs)}`);
+          this.triggerActionOnScreen(payloadObs);
           return;
         }
 
@@ -77,16 +71,30 @@ export class ActionTriggerHandler {
         // Trigger the clip on all assign screens
         for (const screen of this._allScreens) {
           if (screen.clips[payloadObs.id]) {
-            const newMessageObj = {
+            const newMessageObj: TriggerAction = {
               ...payloadObs,
               targetScreen: screen.id
             };
 
-            this._memeboxWebSocket.sendDataToScreen(screen.id, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(newMessageObj)}`);
+            this.triggerActionOnScreen(newMessageObj);
           }
         }
       }
     }
+  }
+
+  triggerActionOnScreen (payload: TriggerAction) {
+    if (!this._memeboxWebSocket.isScreenActive(payload.targetScreen)) {
+      return;
+    }
+
+    this.actionStateEventBus.updateActionState({
+      mediaId: payload.id,
+      screenId: payload.targetScreen,
+      state: ActionStateEnum.Triggered
+    });
+
+    this._memeboxWebSocket.sendDataToScreen(payload.targetScreen, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(payload)}`);
   }
 
   async updateMediaEvent(payloadObs: TriggerAction) {
@@ -139,7 +147,7 @@ export class ActionTriggerHandler {
 
         const clipToTrigger = allClips[randomIndex];
 
-        await this.triggerMediaClipById({
+        await this.triggerActionById({
           id: clipToTrigger.id,
           origin: TriggerClipOrigin.Meta,
           originId: mediaConfig.id
@@ -152,7 +160,7 @@ export class ActionTriggerHandler {
 
         allClips.forEach(clipToTrigger => {
           allPromises.push(
-            this.triggerMediaClipById({
+            this.triggerActionById({
               id: clipToTrigger.id,
               origin: TriggerClipOrigin.Meta,
               originId: mediaConfig.id
@@ -167,7 +175,7 @@ export class ActionTriggerHandler {
       case MetaTriggerTypes.AllDelay: {
 
         for (const clipToTrigger of allClips) {
-          await this.triggerMediaClipById({
+          await this.triggerActionById({
             id: clipToTrigger.id,
             origin: TriggerClipOrigin.Meta,
             originId: mediaConfig.id
