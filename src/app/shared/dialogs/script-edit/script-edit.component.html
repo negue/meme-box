@@ -34,8 +34,7 @@
 
         <gewd-custom-form-control [value]="workingValue.bootstrapScript"
         >
-          <gewd-codemirror [value]="workingValue.bootstrapScript"    #codemirrorBootScript
-                           (codemirrorCreated)="codemirrorBootstrapCreated(codemirrorBootScript)"
+          <gewd-codemirror [value]="workingValue.bootstrapScript"
                            [codemirrorExtensions]="jsExtensions"
                            (changed)="workingValue.bootstrapScript = $event; markForCheck();">
 

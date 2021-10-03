@@ -23,7 +23,7 @@ import {CodemirrorComponent} from "@gewd/components/codemirror";
   templateUrl: './script-edit.component.html',
   styleUrls: ['./script-edit.component.scss']
 })
-export class ScriptEditComponent implements OnInit, AfterViewInit {
+export class ScriptEditComponent implements OnInit {
 
   public declaredActionsEntries$ = new BehaviorSubject<ActionEntry[]>([]);
 
@@ -42,10 +42,6 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
 
   @ViewChild('codemirrorExecScript', {static: true})
   public codemirrorComponent: CodemirrorComponent;
-
-
-  @ViewChild('codemirrorBootScript', {static: true})
-  public codemirrorBootScript: CodemirrorComponent;
 
   public jsExtensions = jsCodemirror;
 
@@ -66,36 +62,6 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
     this.initDone = true;
   }
 
-  ngAfterViewInit(): void {
-    this.updateCodemirrorContent();
-  }
-
-  private updateCodemirrorContent() {
-    // until the codemirror components works with default values again...
-
-    this.codemirrorComponent.ngOnChanges({
-      value: {
-        currentValue: this.workingValue?.executionScript,
-        previousValue: null,
-        firstChange: true,
-        isFirstChange(): boolean {
-          return true
-        }
-      }
-    });
-
-
-    this.codemirrorBootScript.ngOnChanges({
-      value: {
-        currentValue: this.workingValue?.bootstrapScript,
-        previousValue: null,
-        firstChange: true,
-        isFirstChange(): boolean {
-          return true
-        }
-      }
-    });
-  }
 
   private setWorkingValues (payload: ScriptConfig) {
     this.workingValue = {
@@ -104,8 +70,6 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
     };
     this.variablesList = Object.values(this.workingValue.variablesConfig);
     console.info(this.workingValue);
-
-    this.updateCodemirrorContent();
   }
 
   save() {
@@ -162,6 +126,8 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
     this.markForCheck();
   }
 
+  // todo extract to common utils function
+
   onFileInputChanged($event: Event) {
     const target = $event.target as HTMLInputElement;
     const files = target.files;
@@ -171,12 +137,12 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
     console.info({$event, file});
 
     // setting up the reader
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.readAsText(file,'UTF-8');
 
     // here we tell the reader what to do when it's done reading...
     reader.onload = readerEvent => {
-      var content = readerEvent.target.result; // this is the content!
+      const content = readerEvent.target.result; // this is the content!
 
       if (typeof content === 'string' ) {
         const importedPayload: ScriptConfig = JSON.parse(content);
@@ -188,7 +154,7 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
 
   exportScript() {
     const jsonData = JSON.stringify(this.workingValue);
-    var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
+    const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
 
     console.info({jsonData, dataStr});
 
@@ -238,9 +204,5 @@ export class ScriptEditComponent implements OnInit, AfterViewInit {
     this.declaredActionsEntries$.next(returnDeclaredActionEntries(newExecutionScriptCode));
 
     this.markForCheck();
-  }
-
-  codemirrorBootstrapCreated(codemirrorBootScript: CodemirrorComponent) {
-    this.codemirrorBootScript = codemirrorBootScript;
   }
 }

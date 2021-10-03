@@ -75,7 +75,7 @@
     "@angular/router": "11.2.9",
     "@angular/service-worker": "11.2.9",
     "@datorama/akita-ngdevtools": "^5.0.1",
-    "@gewd/components": "0.3.2",
+    "@gewd/components": "0.3.3",
     "@tsed/common": "6.43.4",
     "@tsed/core": "6.43.4",
     "@tsed/di": "6.43.4",
