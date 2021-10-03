@@ -380,6 +380,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   updateMediaType(value: MediaType): void {
+    this.actionToEdit.type = value;
     this.form.patchValue({ type: value });
   }
 

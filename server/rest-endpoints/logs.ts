@@ -10,4 +10,8 @@ LOG_ROUTES
     const logObj: LogPayload = req.body;
 
     LOGGER.error(logObj);
+
+    res.send({
+      ok: true
+    });
   });
