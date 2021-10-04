@@ -522,8 +522,6 @@ Utils.loadImage = function(inUrl, callback, inCanvas, inFillcolor) {
   for (let url of aUrl) {
     let image = new Image();
     let cnt = imgCount;
-    let w = 144,
-      h = 144;
 
     image.onload = function() {
       imgCache[url] = this;
@@ -659,7 +657,7 @@ Utils.observeArray = function(object, callback) {
         return Reflect.get(target, property, receiver);
       }
     },
-    set(target, property, value, receiver) {
+    set(target, property, value) {
       console.log(
         "XXXUtils.observeArray:set1:",
         target,
@@ -727,14 +725,7 @@ function connectElgatoStreamDeckSocket(
 
 /* legacy support */
 
-function connectSocket(
-  inPort,
-  inUUID,
-  inMessageType,
-  inApplicationInfo,
-  inActionInfo
-) {
-  connectElgatoStreamDeckSocket(
+function connectElgatoStreamDeckSocket(
     inPort,
     inUUID,
     inMessageType,
@@ -924,7 +915,7 @@ function initializeControlCenterClient() {
  */
 
 const ELGEvents = {
-  eventEmitter: function(name, fn) {
+  eventEmitter: function(name, f) {
     const eventList = new Map();
 
     const on = (name, fn) => {
@@ -1091,7 +1082,7 @@ const SDApi = {
   /** COMMON */
 
   common: {
-    getSettings: function(context, payload) {
+    getSettings: function(context) {
       SDApi.send(context, "getSettings", {});
     },
 
@@ -1101,7 +1092,7 @@ const SDApi = {
       });
     },
 
-    getGlobalSettings: function(context, payload) {
+    getGlobalSettings: function(context) {
       SDApi.send(context, "getGlobalSettings", {});
     },
 
@@ -1141,7 +1132,7 @@ const SDApi = {
       console.log(SDApi);
     },
 
-    debugPrint: function(context, inString) {
+    debugPrint: function(context) {
       // console.log("------------ DEBUGPRINT");
       // console.log([].slice.apply(arguments).join());
       // console.log("------------ DEBUGPRINT");
@@ -1170,7 +1161,7 @@ const SDApi = {
  */
 
 const SDDebug = {
-  logger: function(name, fn) {
+  logger: function(name) {
     const logEvent = jsn => {
       console.log("____SDDebug.logger.logEvent");
       console.log(jsn);
@@ -1249,9 +1240,3 @@ function WEBSOCKETERROR(evt) {
   return reason;
 }
 
-const SOCKETERRORS = {
-  "0": "The connection has not yet been established",
-  "1": "The connection is established and communication is possible",
-  "2": "The connection is going through the closing handshake",
-  "3": "The connection has been closed or could not be opened"
-};

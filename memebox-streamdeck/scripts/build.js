@@ -29,7 +29,6 @@ const printBuildError = require("react-dev-utils/printBuildError");
 
 const measureFileSizesBeforeBuild =
 	FileSizeReporter.measureFileSizesBeforeBuild;
-const useYarn = fs.existsSync(paths.yarnLockFile);
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -49,7 +48,7 @@ measureFileSizesBeforeBuild(paths.appBuild)
 		return build(previousFileSizes);
 	})
 	.then(
-		({ stats, previousFileSizes, warnings }) => {
+		({ 	warnings }) => {
 			if (warnings.length) {
 				console.log(chalk.yellow("Compiled with warnings.\n"));
 				console.log(warnings.join("\n\n"));

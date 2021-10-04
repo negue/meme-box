@@ -67,7 +67,7 @@ let memeBoxSocket;
 // on key up , if its still on "interval" / get socket
 
 function createOrGetSocket(protocol, host, portNumber) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
 
     const newUrl = `${protocol}://${host}:${portNumber}`;
 
