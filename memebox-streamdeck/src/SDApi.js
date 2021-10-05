@@ -141,7 +141,7 @@ const SDApi = {
   /** COMMON */
 
   common: {
-    getSettings: function(context, payload) {
+    getSettings: function(context) {
       SDApi.send(context, "getSettings", {});
     },
 
@@ -151,7 +151,7 @@ const SDApi = {
       });
     },
 
-    getGlobalSettings: function(context, payload) {
+    getGlobalSettings: function(context) {
       SDApi.send(context, "getGlobalSettings", {});
     },
 
@@ -191,7 +191,7 @@ const SDApi = {
       console.log(SDApi);
     },
 
-    debugPrint: function(context, inString) {
+    debugPrint: function(context) {
       // console.log("------------ DEBUGPRINT");
       // console.log([].slice.apply(arguments).join());
       // console.log("------------ DEBUGPRINT");
