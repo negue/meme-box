@@ -63,6 +63,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "divshacker",
+      "name": "Divyanshu Singh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/55018955?v=4",
+      "profile": "https://www.linkedin.com/in/divs/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
