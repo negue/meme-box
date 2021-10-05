@@ -1,7 +1,14 @@
 /* global $SD */
 import React, {useEffect, useReducer, useState} from "react";
 
-import {createUsePluginSettings, createUseSDAction, SDCheckbox, SDSelectInput, SDTextInput} from "react-streamdeck";
+import {
+  createUseGlobalSettings,
+  createUsePluginSettings,
+  createUseSDAction,
+  SDCheckbox,
+  SDSelectInput,
+  SDTextInput
+} from "react-streamdeck";
 // Slightly modified sdpi.css file. Adds 'data-' prefixes where needed.
 import "react-streamdeck/dist/css/sdpi.css";
 
@@ -56,6 +63,17 @@ export default function ConfigView() {
   })(
     {
       clipId: "",
+      targetServer: ""
+    },
+    connectedResult
+  );
+
+  const [globalSettings, setGlobalSettings] = createUseGlobalSettings({
+    useState,
+    useEffect,
+    useReducer
+  })(
+    {
       advanced: false,
       port: 6363,
       protocol: 'ws',
@@ -65,19 +83,20 @@ export default function ConfigView() {
   );
 
   // Holds the prev settings for useEffect
-  const [prevSettings, setPrevSettings] = useState({})
+  const [prevGlobalSettings, setPrevGlobalSettings] = useState({})
 
   useEffect(() => {
-    if (settings.port !== prevSettings.port ||
-      settings.ip !== prevSettings.ip ||
-      settings.protocol !== prevSettings.protocol) {
-      setPrevSettings(settings);
+    if (globalSettings.port !== prevGlobalSettings.port ||
+      globalSettings.ip !== prevGlobalSettings.ip ||
+      globalSettings.protocol !== prevGlobalSettings.protocol) {
+      setPrevGlobalSettings(globalSettings);
 
         updateClipList([]);
 
-        console.info('Refreshing the List', settings);
+        console.info('Refreshing the List', globalSettings);
 
-        const clipEndpoint = `${settings.protocol === 'ws' ? 'http' : 'https'}://${settings.ip}:${settings.port}/api/clips`
+        const protocol = globalSettings.protocol === 'ws' ? 'http' : 'https';
+        const clipEndpoint = `${protocol}://${globalSettings.ip}:${globalSettings.port}/api/clips`
 
       console.info({
         clipEndpoint
@@ -101,13 +120,33 @@ export default function ConfigView() {
           })
 
     }
-  }, [prevSettings, setPrevSettings, settings, updateClipList])
+  }, [prevGlobalSettings, setPrevGlobalSettings, globalSettings, updateClipList])
 
 
+  useEffect(() => {
+    const newUrl = `${globalSettings.protocol}://${globalSettings.host}:${globalSettings.portNumber}`;
+
+    if (settings.targetServer !== newUrl) {
+      const newState = {
+        ...settings,
+        targetServer: newUrl
+      };
+      setSettings(newState);
+    }
+  }, [globalSettings, settings, setSettings])
+
+  function resetClipId() {
+    const newState = {
+      ...settings,
+      clipId: undefined,  // reset current clip selection
+    };
+    setSettings(newState);
+  }
 
   console.log({
     connectedResult,
-    settings
+    settings,
+    globalSettings
   });
 
   return (
@@ -128,56 +167,61 @@ export default function ConfigView() {
       <SDCheckbox
         label="Advanced"
         checkboxLabel="Enable Advanced Connection"
-        value={settings.advanced}
+        value={globalSettings.advanced}
         onChange={(event, value) => {
+          resetClipId();
+
           const newState = {
-            ...settings,
+            ...globalSettings,
             advanced: value
           };
-          setSettings(newState);
+          setGlobalSettings(newState);
         }}
       />
 
-      {settings.advanced &&
+      {globalSettings.advanced &&
         <SDSelectInput
           label="Protocol"
-          selectedOption={settings.protocol}
+          selectedOption={globalSettings.protocol}
           options={protocolList}
           onChange={event => {
+            resetClipId();
+
             const newState = {
-              ...settings,
-              clipId: undefined,  // reset current clip selection
+              ...globalSettings,
               protocol: event
             };
-            setSettings(newState);
-            console.info('new protocol', settings);
+            setGlobalSettings(newState);
+            console.info('new protocol', globalSettings);
           }}
         />}
-      {settings.advanced &&
+      {globalSettings.advanced &&
         <SDTextInput
           label="Host / IP"
-          value={settings.ip}
+          value={globalSettings.ip}
           onChange={event => {
+            resetClipId();
+
             const newState = {
-              ...settings,
-              clipId: undefined,  // reset current clip selection
+              ...globalSettings,
               ip: event.target.value
             };
             console.info('HOST CHANGED', {event});
-            setSettings(newState);
+            setGlobalSettings(newState);
           }}
         />}
-      {settings.advanced &&
+      {globalSettings.advanced &&
         <SDTextInput
           label="Port"
-          value={settings.port}
+          value={globalSettings.port}
           onChange={event => {
+            resetClipId();
+
             const newState = {
-              ...settings,
-              clipId: undefined,  // reset current clip selection
+              ...globalSettings,
               port: event.target.value
             };
-            setSettings(newState);
+            setGlobalSettings(newState);
           }}
         />
       }
