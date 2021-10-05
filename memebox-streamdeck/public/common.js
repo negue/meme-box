@@ -725,7 +725,14 @@ function connectElgatoStreamDeckSocket(
 
 /* legacy support */
 
-function connectElgatoStreamDeckSocket(
+function connectSocket(
+  inPort,
+  inUUID,
+  inMessageType,
+  inApplicationInfo,
+  inActionInfo
+) {
+  connectElgatoStreamDeckSocket(
     inPort,
     inUUID,
     inMessageType,
@@ -733,7 +740,6 @@ function connectElgatoStreamDeckSocket(
     inActionInfo
   );
 }
-
 /**
  * StreamDeck object containing all required code to establish
  * communication with SD-Software and the Property Inspector
@@ -1239,4 +1245,10 @@ function WEBSOCKETERROR(evt) {
 
   return reason;
 }
+const SOCKETERRORS = {
+  "0": "The connection has not yet been established",
+  "1": "The connection is established and communication is possible",
+  "2": "The connection is going through the closing handshake",
+  "3": "The connection has been closed or could not be opened"
+};
 
