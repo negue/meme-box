@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {DynamicIframeContent, isDynamicIframeVariableValid, NOT_ALLOWED_WIDGET_VARIABLE_NAMES} from "@memebox/utils";
 import {BehaviorSubject} from "rxjs";
@@ -8,6 +8,8 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {downloadFile} from "@gewd/utils";
 import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
+import {WIDGET_TUTORIAL} from "../../../../../server/constants";
+import {DialogService} from "../dialog.service";
 
 @Component({
   selector: 'app-widget-edit',
@@ -38,7 +40,7 @@ export class WidgetEditComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CustomHtmlDialogPayload,
     private dialogRef: MatDialogRef<any>,
-    private cd: ChangeDetectorRef
+    private dialogService: DialogService,
   ) { }
 
   ngOnInit(): void {
@@ -156,5 +158,9 @@ export class WidgetEditComponent implements OnInit {
 
     console.info({jsonData, dataStr});
     downloadFile(this.data.name+'-widget.json',dataStr);
+  }
+
+  openTutorialMarkdown() {
+    this.dialogService.showMarkdownFile(WIDGET_TUTORIAL);
   }
 }

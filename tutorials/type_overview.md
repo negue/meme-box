@@ -43,7 +43,7 @@ This will show the Iframe of `URL` in your target-screen.
 > Note: This Type needs to have fixed value of `Visible screen time`.
 
 
-### Widgets
+### [Widgets](./widgets.md)
 
 With this type you can create your own Widgets, with custom HTML, CSS and JS.
 
@@ -67,6 +67,10 @@ Example of:
 - [Trigger all items with a delay](./meta_media.md)
 
 
-### Scripts
+### [Scripts](./scripts.md)
 
-TODO
+### Permanent Scripts
+
+These are mostly the same as normal Scripts, but they cant be triggered by other sources.
+
+And they have to access to all events - so that you can create custom logic like "Bots"
