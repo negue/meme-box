@@ -160,7 +160,7 @@ export class WidgetEditComponent implements OnInit {
     downloadFile(this.data.name+'-widget.json',dataStr);
   }
 
-  openTutorialMarkdown() {
+  openTutorialMarkdown(): void  {
     this.dialogService.showMarkdownFile(WIDGET_TUTORIAL);
   }
 }
