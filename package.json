@@ -23,6 +23,7 @@
     "ng:serve:prod": "ng serve -c production",
     "test": "ng test --watch=false",
     "test:ci": "jest",
+    "test:cypress": "ng run memebox-app:cypress-run",
     "test:watch": "ng test",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
