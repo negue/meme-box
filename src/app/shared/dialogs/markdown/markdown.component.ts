@@ -1,10 +1,10 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Observable } from "rxjs";
-import { HttpClient } from "@angular/common/http";
-import { MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE } from "../../../../../server/constants";
-import { MarkdownLinkClicked } from "@gewd/markdown/module";
-import { DialogService } from "../dialog.service";
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE} from "../../../../../server/constants";
+import {MarkdownLinkClicked} from "@gewd/markdown/module";
+import {DialogService} from "../dialog.service";
 
 
 @Component({
@@ -40,10 +40,16 @@ export class MarkdownComponent implements OnInit {
 
     const linkAttributes = $event.link.attributes;
 
-    const realHref = linkAttributes.getNamedItem('href');
+    const realHrefAttribute = linkAttributes.getNamedItem('href');
+    const realHrefValue = realHrefAttribute.value;
 
-    const foundMarkdownItem = MARKDOWN_FILES.find(md => realHref.value.includes(md.githubName));
+    const foundMarkdownItem = MARKDOWN_FILES.find(md => realHrefValue.includes(md.githubName));
 
-    this.dialogService.showMarkdownFile(foundMarkdownItem);
+    if (foundMarkdownItem) {
+      this.dialogService.showMarkdownFile(foundMarkdownItem);
+      return;
+    }
+
+    window.open(realHrefValue, '_blank');
   }
 }

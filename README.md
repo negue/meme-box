@@ -150,9 +150,11 @@ Misc:
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 - [`Scripts`][URL_SCRIPTS]
+- [`Widgets`][URL_WIDGETS]
 
 [URL_META_CLIPS]: tutorials/meta_media.md
 [URL_SCRIPTS]: tutorials/scripts.md
+[URL_WIDGETS]: tutorials/widgets.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
 [STREAMDECK_PLUGIN]: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
 

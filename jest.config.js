@@ -13,7 +13,8 @@ module.exports = {
   modulePathIgnorePatterns: [
     "<rootDir>/dist/",
     "<rootDir>/out*",
-    "<rootDir>/memebox-streamdeck"
+    "<rootDir>/memebox-streamdeck",
+    "<rootDir>/cypress"
   ],
   rootDir: __dirname,
   preset: 'jest-preset-angular',
