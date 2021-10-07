@@ -17,7 +17,7 @@ import {APP_ICONS} from "./app.icons";
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from "@angular/material/checkbox";
-import {ENVIRONMENT_MODULES} from "../environments/modules/modules";
+import {ENVIRONMENT_MODULES} from "@memebox/app/env/modules";
 import {ServicesModule, WebSocketBasePathInjectionToken} from "@memebox/app-state";
 import {TranslocoRootModule} from './transloco/transloco-root.module';
 import {RegisterIconsModule} from "@gewd/mat-utils/material-icons";

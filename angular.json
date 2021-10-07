@@ -65,6 +65,23 @@
                 }
               ]
             },
+            "cypress": {
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/modules/modules.ts",
+                  "with": "src/environments/modules/modules.cypress.ts"
+                }
+              ]
+            },
             "web": {
               "optimization": false,
               "outputHashing": "all",
@@ -118,6 +135,10 @@
               "browserTarget": "memebox-app:build:dev",
               "hmr": true
             },
+            "cypress": {
+              "browserTarget": "memebox-app:build:cypress",
+              "hmr": true
+            },
             "web": {
               "browserTarget": "memebox-app:build:web",
               "hmr": true
@@ -159,29 +180,50 @@
             "tsConfig": [
               "src/tsconfig.app.json",
               "tsconfig.spec.json",
-              "tsconfig.worker.json"
+              "tsconfig.worker.json",
+              "cypress/tsconfig.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
           }
-        }
-      }
-    },
-    "memebox-app-e2e": {
-      "root": "e2e",
-      "projectType": "application",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
+        },
+        "cypress-run": {
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
-            "eslintConfig": ".eslintrc.json",
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "devServerTarget": "memebox-app:serve:cypress",
+            "headless": true
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "memebox-app:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@briebug/cypress-schematic:cypress",
+          "options": {
+            "devServerTarget": "memebox-app:serve:cypress",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "memebox-app:serve:production"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@briebug/cypress-schematic:cypress",
+          "options": {
+            "devServerTarget": "memebox-app:serve:cypress",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "memebox-app:serve:production"
+            }
           }
         }
       }

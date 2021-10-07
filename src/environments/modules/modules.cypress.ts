@@ -1,0 +1,5 @@
+
+export const ENVIRONMENT_MODULES = [
+];
+
+console.info('CYPRESS MODULES WAS LOADED INSTEAD');
