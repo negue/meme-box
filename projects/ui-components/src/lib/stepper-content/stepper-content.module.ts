@@ -6,19 +6,18 @@ import {MatStepperModule} from "@angular/material/stepper";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 
-// To use the ModuleConfig also in Storybook
-export const StepperContentModuleConfig: NgModule = {
+export const STEPPER_CONTENT_MODULES = [
+  CommonModule,
+  TranslocoModule,
+  MatStepperModule,
+  MatButtonModule,
+  MatIconModule
+];
+
+@NgModule({
   declarations: [
     StepperContentComponent
   ],
-  imports: [
-    CommonModule,
-    TranslocoModule,
-    MatStepperModule,
-    MatButtonModule,
-    MatIconModule
-  ]
-}
-
-@NgModule(StepperContentModuleConfig)
+  imports: STEPPER_CONTENT_MODULES
+})
 export class StepperContentModule { }

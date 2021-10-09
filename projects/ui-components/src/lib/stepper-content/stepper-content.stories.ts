@@ -1,13 +1,16 @@
 import {Meta, moduleMetadata, Story} from '@storybook/angular';
 
 import {StepperContentComponent} from './stepper-content.component';
-import {StepperContentModuleConfig} from "@memebox/ui-components";
+import {STEPPER_CONTENT_MODULES} from "@memebox/ui-components";
 
 export default {
   title: 'UI-Components/Stepper-Content',
   component: StepperContentComponent,
   decorators: [
-    moduleMetadata(StepperContentModuleConfig)
+    moduleMetadata({
+      declarations: [StepperContentComponent],
+      imports: STEPPER_CONTENT_MODULES
+    })
   ],
 } as Meta;
 
