@@ -16,9 +16,7 @@ export class MediaEnumToLabel implements PipeTransform {
   async transform(media: MediaType): Promise<string> {
     const informationByType = MEDIA_TYPE_INFORMATION[media];
 
-    console.info('transform called', {
-      media,informationByType
-    });
+    
 
      const translatedString = await this.transloco.selectTranslate(
        informationByType.translationKey, {}, {
@@ -27,9 +25,7 @@ export class MediaEnumToLabel implements PipeTransform {
          take(1)
      ).toPromise();
 
-     console.info({
-       translatedString
-     });
+     
 
     return translatedString ?? informationByType.labelFallback;
   }
