@@ -1,5 +1,15 @@
 :host {
   display: block;
+
+  ::ng-deep {
+    .mat-form-field {
+      display: block !important;
+    }
+
+    .step-content {
+      margin: 0.5rem;
+    }
+  }
 }
 
 form {
@@ -19,9 +29,6 @@ img {
   width: 100%;
 }
 
-::ng-deep .mat-form-field {
-  display: block !important;
-}
 
 .slider__row {
   display: flex;
@@ -41,15 +48,12 @@ img {
 
 .action-buttons {
   display: flex;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   align-content: space-around;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
 
   button {
-    width: 30%;
     margin-bottom: 0.5rem;
   }
 }

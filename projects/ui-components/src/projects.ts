@@ -4,4 +4,5 @@
 
 export * from './lib/hint-panel/hint-panel.component';
 export * from './lib/hint-panel/hint-panel.module';
+export * from './lib/stepper-content';
 export * from './lib/pipes/pipes.module';

@@ -74,6 +74,7 @@ interface MediaTypeButton {
 // TODO REFACTOR!!!!
 // TODO maybe use "TYPES WITH PATH"
 // TODO extract these informs to the media dictionary?
+// TODO REFACTOR use an interface of possible enable/disable of config controls
 // TODO hide tag selection for types that cant use it anyway
 
 const MEDIA_TYPES_WITHOUT_PATH = [
