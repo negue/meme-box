@@ -15,7 +15,10 @@ export const STEPPER_CONTENT_MODULES = [
   TranslocoModule,
   CdkStepperModule,
   MatButtonModule,
-  MatIconModule
+  MatIconModule,
+
+  MatListModule,
+  MatInputModule
 ];
 
 @NgModule({
@@ -30,8 +33,6 @@ export const STEPPER_CONTENT_MODULES = [
   ],
   imports: [
     STEPPER_CONTENT_MODULES,
-    MatListModule,
-    MatInputModule
   ]
 })
 export class StepperContentModule { }
