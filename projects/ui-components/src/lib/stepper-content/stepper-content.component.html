@@ -1,11 +1,38 @@
-<mat-vertical-stepper>
-  <ng-template matStepperIcon="edit" let-active>
-  <mat-icon svgIcon="edit"></mat-icon>
-</ng-template>
-  <mat-step label="Test">
-    <ng-template matStepLabel>Step 1</ng-template>
-      <p>This content was rendered lazily</p>
-      <button mat-button matStepperNext>Next</button>
-  </mat-step>
-</mat-vertical-stepper>
+<header>
+  <ng-content select="[stepperHeader]"></ng-content>
+</header>
 
+<section class="stepper-shell">
+  <section class="steps">
+    <mat-nav-list>
+      <mat-list-item
+        class="step-item"
+        [class.example-active]="selectedIndex === i"
+        *ngFor="let step of typedSteps; let i = index"
+        (click)="selectStepByIndex(i)"
+      >
+        <div mat-line>
+          <ng-container *ngIf="step.stepLabel; else showLabelText" [ngTemplateOutlet]="step.stepLabel.template">
+          </ng-container>
+          <ng-template #showLabelText>
+            {{ step.label }}
+          </ng-template>
+        </div>
+
+        <div mat-line>
+          <mat-hint>
+          {{step.subText}}
+          </mat-hint>
+        </div>
+      </mat-list-item>
+    </mat-nav-list>
+  </section>
+
+
+
+  <div class="step-content">
+    <ng-container [ngTemplateOutlet]="selected ? selected.content : null">
+
+    </ng-container>
+  </div>
+</section>

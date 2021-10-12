@@ -1,6 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {StepperContentComponent} from './stepper-content.component';
+import {STEPPER_CONTENT_MODULES} from "@memebox/ui-components";
 
 describe('StepperContentComponent', () => {
   let component: StepperContentComponent;
@@ -8,7 +9,8 @@ describe('StepperContentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StepperContentComponent ]
+      declarations: [ StepperContentComponent ],
+      imports: STEPPER_CONTENT_MODULES
     })
     .compileComponents();
   });
