@@ -5,9 +5,10 @@
 <section class="stepper-shell">
   <section class="steps">
     <mat-nav-list>
-      <mat-list-item
+      <mat-list-item [disabled]="!step.enabled"
         class="step-item"
-        [class.example-active]="selectedIndex === i"
+        [class.active]="selectedIndex === i"
+        [class.disabled]="!step.enabled"
         *ngFor="let step of typedSteps; let i = index"
         (click)="selectStepByIndex(i)"
       >
@@ -20,9 +21,16 @@
         </div>
 
         <div mat-line>
-          <mat-hint>
-          {{step.subText}}
-          </mat-hint>
+          <ng-container *ngIf="step.subTextTemplate; else showSubText"
+                        [ngTemplateOutlet]="step.subTextTemplate.template">
+          </ng-container>
+          <ng-template #showSubText>
+            <mat-hint>
+            {{step.subText}}
+            </mat-hint>
+          </ng-template>
+
+
         </div>
       </mat-list-item>
     </mat-nav-list>

@@ -11,8 +11,13 @@
   flex: 1;
 }
 
-.step-item.example-active {
+.step-item.active {
+  background-color: rgba(var(--palette-primary-900), 0.25) !important;
+}
 
+.step-item.disabled * {
+  user-select: none;
+  color: gray !important;
 }
 
 .example-nav-button {

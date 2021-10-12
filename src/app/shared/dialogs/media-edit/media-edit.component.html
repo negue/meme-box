@@ -9,196 +9,212 @@
 </h2>
 <mat-dialog-content class="mat-typography two-columns dialog-content">
   <form [formGroup]="form" class="column">
-    <mat-form-field>
-      <mat-label>Name</mat-label>
-      <input autocomplete="off"
-             formControlName="name"
-             matInput
-             required
-             type="text"/>
 
-      <mat-error *ngIf="form.controls['name'].hasError('required')">
-        Name is required
-      </mat-error>
-    </mat-form-field>
-
-    <ng-container *ngIf="!isEditMode">
-    <div class="action-buttons" *transloco="let t; read: 'common'">
-
-        <button *ngFor="let button of mediaTypeList"
-                mat-raised-button
-
-                (click)="updateMediaType(button.type)"
-                [color]="form.value.type === button.type ? 'primary' : 'accent'"
-
-        >
-          <mat-icon [svgIcon]="button.icon"></mat-icon>
-          {{ t(button.name) }}
-        </button>
-    </div>
-    </ng-container>
-
-    <mat-form-field *ngIf="false">
-      <input autocomplete="off"
-             formControlName="clipLength"
-             matInput
-             placeholder="Media Length"
-             type="number"
-      />
-      <span matSuffix>ms</span>
-    </mat-form-field>
-
-    <div class="form-field-row" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
+  <lib-stepper-content style="min-height: 600px"
+  [selectedIndex]="isEditMode ? 1 : 0">
+    <div stepperHeader>
       <mat-form-field>
-        <mat-label>{{form.value.type !== MediaType.IFrame ? 'File' : 'URL'}}</mat-label>
+        <mat-label>Name</mat-label>
         <input autocomplete="off"
-               formControlName="path"
-               matInput #mediaPathInput
-               [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
-               type="text" (keyup)="markForCheck()"
-        />
-        <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
-          <mat-select (valueChange)="onChange($event)"
-                      *ngIf="availableMediaFiles$ | async as mediaFiles"
-          >
-            <mat-option *ngFor="let file of mediaFiles" [value]="file">
-              {{ file.fileName }}
-            </mat-option>
-          </mat-select>
-        </div>
+               formControlName="name"
+               matInput
+               required
+               type="text"/>
 
-        <mat-error *ngIf="form.controls['path'].hasError('required')">
-          You need to enter the URL or select a file.
+        <mat-error *ngIf="form.controls['name'].hasError('required')">
+          Name is required
         </mat-error>
       </mat-form-field>
     </div>
 
-    <div class="form-field-row"
-         *ngIf="!MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
-      <mat-form-field>
-        <mat-label> {{ MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)
-          ? 'Visible screen time (ms)'
-          : 'Play time on screen (ms)'}}</mat-label>
-        <input [required]="MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)"
-               autocomplete="off"
-               formControlName="playLength"
-               matInput min="0"
+    <lib-step label="Action-Type" [enabled]="!isEditMode"
+              [subText]="form.value.type | mediaEnumToLabel | async">
+      <ng-container *ngIf="!isEditMode">
+        <div class="action-buttons" *transloco="let t; read: 'common'">
+
+          <button *ngFor="let button of mediaTypeList"
+                  mat-raised-button
+
+                  (click)="updateMediaType(button.type)"
+                  [color]="form.value.type === button.type ? 'primary' : 'accent'"
+
+          >
+            <mat-icon [svgIcon]="button.icon"></mat-icon>
+            {{ t(button.name) }}
+          </button>
+        </div>
+      </ng-container>
+    </lib-step>
+    <lib-step label="Other Settings">
+      <mat-form-field *ngIf="false">
+        <input autocomplete="off"
+               formControlName="clipLength"
+               matInput
+               placeholder="Media Length"
                type="number"
         />
         <span matSuffix>ms</span>
-
-        <mat-error *ngIf="form.controls['playLength'].hasError('required')">
-          How long should it be visible on screen?
-        </mat-error>
       </mat-form-field>
-    </div>
-    <ng-container *ngIf="[MediaType.Audio, MediaType.Video].includes(form.value.type)">
-      <mat-label>Volume</mat-label>
-      <div class="slider__row">
-        <mat-slider #volumeSlider
-                    [max]="100"
-                    [min]="0"
-                    [step]="1"
-                    formControlName="volumeSetting"
-        >
-        </mat-slider>
-        <div class="volume__label">
-          {{ volumeSlider.value }}
-        </div>
+
+      <div class="form-field-row" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
+        <mat-form-field>
+          <mat-label>{{form.value.type !== MediaType.IFrame ? 'File' : 'URL'}}</mat-label>
+          <input autocomplete="off"
+                 formControlName="path"
+                 matInput #mediaPathInput
+                 [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
+                 type="text" (keyup)="markForCheck()"
+          />
+          <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
+            <mat-select (valueChange)="onChange($event)"
+                        *ngIf="availableMediaFiles$ | async as mediaFiles"
+            >
+              <mat-option *ngFor="let file of mediaFiles" [value]="file">
+                {{ file.fileName }}
+              </mat-option>
+            </mat-select>
+          </div>
+
+          <mat-error *ngIf="form.controls['path'].hasError('required')">
+            You need to enter the URL or select a file.
+          </mat-error>
+        </mat-form-field>
       </div>
-    </ng-container>
-    <div class="form-field-row"  *ngIf="false">
-      <mat-form-field>
-        <input autocomplete="off"
-               formControlName="previewUrl"
-               matInput
-               placeholder="Preview URL"
-               type="text"
-        />
-      </mat-form-field>
-    </div>
 
-    <div class="form-field-row">
-      <mat-form-field class="example-chip-list">
-        <mat-label>Assign a new tag...</mat-label>
-        <mat-chip-list #chipList aria-label="Tag selection">
-          <mat-chip
-            *ngFor="let tag of currentTags$ | async"
-            [selectable]="false"
-            [removable]="true"
-            (removed)="removeTag(tag)">
-            {{tag.name}}
-            <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-          </mat-chip>
-          <input
-            #tagInput
-            [formControl]="tagFormCtrl"
-            [matAutocomplete]="auto"
-            [matChipInputFor]="chipList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            (matChipInputTokenEnd)="enterNewTag($event)"
-          (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
-        </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
-          <mat-option *ngFor="let tag of filteredTags$ | async"
-                      [value]="tag">
-            {{tag.name}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+      <div class="form-field-row"
+           *ngIf="!MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
+        <mat-form-field>
+          <mat-label> {{ MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)
+            ? 'Visible screen time (ms)'
+            : 'Play time on screen (ms)'}}</mat-label>
+          <input [required]="MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)"
+                 autocomplete="off"
+                 formControlName="playLength"
+                 matInput min="0"
+                 type="number"
+          />
+          <span matSuffix>ms</span>
 
-    </div>
+          <mat-error *ngIf="form.controls['playLength'].hasError('required')">
+            How long should it be visible on screen?
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <ng-container *ngIf="[MediaType.Audio, MediaType.Video].includes(form.value.type)">
+        <mat-label>Volume</mat-label>
+        <div class="slider__row">
+          <mat-slider #volumeSlider
+                      [max]="100"
+                      [min]="0"
+                      [step]="1"
+                      formControlName="volumeSetting"
+          >
+          </mat-slider>
+          <div class="volume__label">
+            {{ volumeSlider.value }}
+          </div>
+        </div>
+      </ng-container>
+      <div class="form-field-row"  *ngIf="false">
+        <mat-form-field>
+          <input autocomplete="off"
+                 formControlName="previewUrl"
+                 matInput
+                 placeholder="Preview URL"
+                 type="text"
+          />
+        </mat-form-field>
+      </div>
 
-    <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta">
-      <mat-form-field>
-        <mat-label>Meta Type</mat-label>
-        <mat-select formControlName="metaType"
-                    required
-                    value="0">
-          <mat-option [value]="0">Random</mat-option>
-          <mat-option [value]="1">All</mat-option>
-          <mat-option [value]="2">All with Delay</mat-option>
+      <div class="form-field-row">
+        <mat-form-field class="example-chip-list">
+          <mat-label>Assign a new tag...</mat-label>
+          <mat-chip-list #chipList aria-label="Tag selection">
+            <mat-chip
+              *ngFor="let tag of currentTags$ | async"
+              [selectable]="false"
+              [removable]="true"
+              (removed)="removeTag(tag)">
+              {{tag.name}}
+              <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+            </mat-chip>
+            <input
+              #tagInput
+              [formControl]="tagFormCtrl"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="enterNewTag($event)"
+              (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
+            <mat-option *ngFor="let tag of filteredTags$ | async"
+                        [value]="tag">
+              {{tag.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+      </div>
+
+      <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta">
+        <mat-form-field>
+          <mat-label>Meta Type</mat-label>
+          <mat-select formControlName="metaType"
+                      required
+                      value="0">
+            <mat-option [value]="0">Random</mat-option>
+            <mat-option [value]="1">All</mat-option>
+            <mat-option [value]="2">All with Delay</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta && form.value.metaType === 2">
+        <mat-form-field>
+          <mat-label>Delay between clip-trigger (ms)</mat-label>
+          <input required
+                 autocomplete="off"
+                 formControlName="metaDelay"
+                 matInput
+                 type="number"
+          />
+          <span matSuffix>ms</span>
+
+          <mat-error *ngIf="form.controls['playLength'].hasError('required')">
+
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
+        <mat-label>Also add to this Screen:</mat-label>
+        <mat-select [(value)]="selectedScreenId">
+          <mat-option value="">None</mat-option>
+          <ng-container *ngIf="availableScreens$ | async as screenList">
+            <mat-option *ngFor="let screen of screenList" [value]="screen.id">{{screen.name}}</mat-option>
+          </ng-container>
         </mat-select>
       </mat-form-field>
-    </div>
 
-    <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta && form.value.metaType === 2">
-      <mat-form-field>
-        <mat-label>Delay between clip-trigger (ms)</mat-label>
-        <input required
-               autocomplete="off"
-               formControlName="metaDelay"
-               matInput
-               type="number"
-        />
-        <span matSuffix>ms</span>
+      <ng-container *ngIf="form.value.type === MediaType.Widget">
+        <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+          <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
+          <app-action-variables-assignments [variablesConfig]="currentHtml?.variablesConfig"
+                                            [data]="actionToEdit.extended"
+                                            (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()">
 
-        <mat-error *ngIf="form.controls['playLength'].hasError('required')">
-
-        </mat-error>
-      </mat-form-field>
-    </div>
-
-    <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
-      <mat-label>Also add to this Screen:</mat-label>
-      <mat-select [(value)]="selectedScreenId">
-        <mat-option value="">None</mat-option>
-        <ng-container *ngIf="availableScreens$ | async as screenList">
-          <mat-option *ngFor="let screen of screenList" [value]="screen.id">{{screen.name}}</mat-option>
+          </app-action-variables-assignments>
         </ng-container>
-      </mat-select>
-    </mat-form-field>
-
-    <ng-container *ngIf="form.value.type === MediaType.Widget">
-      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
-        <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
-        <app-action-variables-assignments [variablesConfig]="currentHtml?.variablesConfig"
-                                          [data]="actionToEdit.extended"
-                                          (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()">
-
-        </app-action-variables-assignments>
       </ng-container>
-    </ng-container>
+    </lib-step>
+    <lib-step label="Form Json">
+      {{ form.value | json }}
+    </lib-step>
+  </lib-stepper-content>
+
+
+
   </form>
 
   <!-- Preview of a Media -->

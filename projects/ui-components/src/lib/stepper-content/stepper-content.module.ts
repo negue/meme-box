@@ -8,6 +8,7 @@ import {CdkStepperModule} from '@angular/cdk/stepper';
 import {MatListModule} from "@angular/material/list";
 import {StepComponent} from './step/step.component';
 import {MatInputModule} from "@angular/material/input";
+import {StepSubTextDirective} from './step-sub-text.directive';
 
 export const STEPPER_CONTENT_MODULES = [
   CommonModule,
@@ -19,6 +20,11 @@ export const STEPPER_CONTENT_MODULES = [
 
 @NgModule({
   declarations: [
+    StepperContentComponent,
+    StepComponent,
+    StepSubTextDirective
+  ],
+  exports: [
     StepperContentComponent,
     StepComponent
   ],

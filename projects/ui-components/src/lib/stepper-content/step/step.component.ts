@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ContentChild, Input, OnInit} from '@angular/core';
 import {CdkStep} from "@angular/cdk/stepper";
+import {StepSubTextDirective} from "../step-sub-text.directive";
 
 @Component({
   selector: 'lib-step',
@@ -14,6 +15,11 @@ export class StepComponent extends CdkStep implements OnInit {
 
   @Input()
   public subText: string;
+
+  @Input()
+  public enabled = true;
+
+  @ContentChild(StepSubTextDirective) subTextTemplate: StepSubTextDirective;
 
   ngOnInit(): void {
   }

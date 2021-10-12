@@ -21,7 +21,7 @@ import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {PipesModule} from "@memebox/ui-components";
+import {PipesModule, StepperContentModule} from "@memebox/ui-components";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 
 @NgModule({
@@ -51,7 +51,8 @@ import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
     ClipboardModule,
     PipesModule,
     ClipTypeModule,
-    ActionVariablesAssignmentsModule
+    ActionVariablesAssignmentsModule,
+    StepperContentModule
   ],
   providers: [],
 })
