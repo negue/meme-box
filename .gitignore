@@ -68,3 +68,4 @@ Thumbs.db
 # Storybook
 documentation.json
 !.storybook/**.*
+!/decorate-angular-cli.js
