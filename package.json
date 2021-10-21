@@ -9,8 +9,8 @@
   "main": "out-electron/index.js",
   "private": true,
   "scripts": {
-    "postinstall": "electron-builder install-app-deps",
-    "ng": "ng",
+    "postinstall": "electron-builder install-app-deps && node ./decorate-angular-cli.js",
+    "ng": "nx",
     "cpy": "cpy",
     "start": "npm-run-all -p ng:serve",
     "start:electron": "npm-run-all -p electron:serve ng:serve",
@@ -60,6 +60,7 @@
     "@angular-builders/custom-webpack": "11.0.0",
     "@angular-builders/jest": "11.1.1",
     "@angular-devkit/build-angular": "0.1102.14",
+    "@angular-devkit/core": "11.2.14",
     "@angular-eslint/builder": "1.1.0",
     "@angular-eslint/eslint-plugin": "1.1.0",
     "@angular-eslint/eslint-plugin-template": "1.1.0",
@@ -129,7 +130,10 @@
     "wait-for-localhost": "3.3.0",
     "wait-on": "5.2.1",
     "webdriver-manager": "12.1.7",
-    "zone.js": "0.10.3"
+    "zone.js": "0.10.3",
+    "@nrwl/workspace": "latest",
+    "@nrwl/cli": "latest",
+    "@nrwl/tao": "latest"
   },
   "engines": {
     "node": ">=10.13.0"
