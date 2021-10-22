@@ -72,6 +72,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "brandonroberts",
+      "name": "Brandon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/42211?v=4",
+      "profile": "https://brandonroberts.dev",
+      "contributions": [
+        "code",
+        "blog"
+      ]
     }
   ],
   "contributorsPerLine": 7,
