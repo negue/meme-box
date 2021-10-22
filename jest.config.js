@@ -1,4 +1,4 @@
-const tsConfig = require('./tsconfig.json');
+const tsConfig = require('./tsconfig.base.json');
 
 const currentPaths = Object.entries(tsConfig.compilerOptions.paths);
 

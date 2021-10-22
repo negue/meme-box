@@ -1,0 +1,48 @@
+{
+  "extends": "@nrwl/workspace/presets/npm.json",
+  "npmScope": "memebox",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "test", "lint", "package", "prepare"]
+      }
+    }
+  },
+  "targetDependencies": {
+    "prepare": [
+      {
+        "target": "prepare",
+        "projects": "dependencies"
+      }
+    ],
+    "package": [
+      {
+        "target": "package",
+        "projects": "dependencies"
+      }
+    ]
+  },
+  "affected": {
+    "defaultBase": "develop"
+  },
+  "workspaceLayout": {
+    "libsDir": "projects",
+    "appsDir": "projects"
+  },
+  "cli": {
+    "analytics": false
+  },
+  "generators": {
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "style": "scss",
+      "skipTests": true
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app",
+      "skipTests": true
+    }
+  },
+  "defaultProject": "memebox-app"
+}

@@ -1,27 +1,18 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "outDir": "out-tsc/spec",
     "module": "commonjs",
-    "types": [
-      "node",
-      "jest"
-    ],
+    "types": ["node", "jest"],
     "emitDecoratorMetadata": true,
     "allowJs": true
   },
-  "files": [
-    "src/polyfills-test.ts"
-  ],
+  "files": ["src/polyfills-test.ts"],
   "include": [
     "src/**/*.spec.ts",
     "projects/**/*.spec.ts",
     "server/**/*.spec.ts",
     "**/*.d.ts"
   ],
-  "exclude": [
-    "dist",
-    "release",
-    "node_modules"
-  ]
+  "exclude": ["dist", "release", "node_modules"]
 }
