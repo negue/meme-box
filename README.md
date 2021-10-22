@@ -223,7 +223,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://www.linkedin.com/in/divs/"><img src="https://avatars.githubusercontent.com/u/55018955?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Divyanshu Singh</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=divshacker" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://brandonroberts.dev"><img src="https://avatars.githubusercontent.com/u/42211?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Brandon</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=brandonroberts" title="Code">💻</a> <a href="#blog-brandonroberts" title="Blogposts">📝</a></td>
+    <td align="center"><a href="https://brandonroberts.dev"><img src="https://avatars.githubusercontent.com/u/42211?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Brandon</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=brandonroberts" title="Code">💻</a> </td>
   </tr>
 </table>
 
