@@ -37,8 +37,7 @@
             "exclude": ["**/node_modules/**"]
           }
         }
-      },
-      "implicitDependencies": []
+      }
     },
     "action-variables-ui": {
       "projectType": "library",
@@ -74,8 +73,7 @@
             "exclude": ["**/node_modules/**"]
           }
         }
-      },
-      "implicitDependencies": []
+      }
     },
     "app-state": {
       "projectType": "library",
@@ -111,8 +109,7 @@
             "exclude": ["**/node_modules/**"]
           }
         }
-      },
-      "implicitDependencies": []
+      }
     },
     "contracts": {
       "projectType": "library",
@@ -148,8 +145,7 @@
             "exclude": ["**/node_modules/**"]
           }
         }
-      },
-      "implicitDependencies": []
+      }
     },
     "memebox-app": {
       "root": "",
@@ -368,8 +364,7 @@
             }
           }
         }
-      },
-      "implicitDependencies": []
+      }
     },
     "state-components": {
       "projectType": "library",
@@ -405,8 +400,7 @@
             "exclude": ["**/node_modules/**"]
           }
         }
-      },
-      "implicitDependencies": []
+      }
     },
     "ui-components": {
       "projectType": "library",
@@ -442,8 +436,7 @@
             "exclude": ["**/node_modules/**"]
           }
         }
-      },
-      "implicitDependencies": []
+      }
     },
     "utils": {
       "projectType": "library",
@@ -479,8 +472,7 @@
             "exclude": ["**/node_modules/**"]
           }
         }
-      },
-      "implicitDependencies": []
+      }
     }
   },
   "schematics": {

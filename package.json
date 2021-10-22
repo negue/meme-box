@@ -52,7 +52,7 @@
     "electron:build:withoutapp": "npm run electron:build_0compile && npm run electron:build_1combineJs && electron-builder build",
     "electron:build:only": "npm run electron:build_0compile && npm run electron:build_1combineJs &&  electron-builder build -p never",
     "electron:build:serve": "npm run electron:build_0compile && npm run electron:build_1combineJs &&  npx electron out-electron/index.js --serve --built-serve",
-    "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
+    "docs:json": "compodoc -p ./tsconfig.base.json -e json -d .",
     "storybook": "npm run docs:json && start-storybook -p 6006",
     "build-storybook": "npm run docs:json && build-storybook"
   },
@@ -84,6 +84,9 @@
     "@compodoc/compodoc": "1.1.15",
     "@datorama/akita-ngdevtools": "^5.0.1",
     "@gewd/components": "0.3.3",
+    "@nrwl/workspace": "13.0.1",
+    "@nrwl/cli": "13.0.1",
+    "@nrwl/tao": "13.0.1",
     "@storybook/addon-actions": "6.3.10",
     "@storybook/addon-essentials": "6.3.10",
     "@storybook/addon-links": "6.3.10",
@@ -130,10 +133,7 @@
     "wait-for-localhost": "3.3.0",
     "wait-on": "5.2.1",
     "webdriver-manager": "12.1.7",
-    "zone.js": "0.10.3",
-    "@nrwl/workspace": "latest",
-    "@nrwl/cli": "latest",
-    "@nrwl/tao": "latest"
+    "zone.js": "0.10.3"
   },
   "engines": {
     "node": ">=10.13.0"
