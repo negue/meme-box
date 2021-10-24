@@ -34,12 +34,12 @@ export class ScreenArrangeSidebarComponent {
   constructor(private dialogs: DialogService) {
   }
 
-  assignMedia() {
+  assignMedia(): void {
     this.changeCurrSelectedClip.emit(null);
     this.showAssignmentDialog(this.screen);
   }
 
-  onSelectMedia(mouseEvent: MouseEvent, $event: CombinedClip) {
+  onSelectMedia(mouseEvent: MouseEvent, $event: CombinedClip): void {
     this.changeCurrSelectedClip.emit($event);
     this.currentSelectedClip = $event;
   }
@@ -50,7 +50,7 @@ export class ScreenArrangeSidebarComponent {
     event.preventDefault();
   }
 
-  openMediaSettingsDialog($event: MouseEvent, visibleItem: CombinedClip) {
+  openMediaSettingsDialog($event: MouseEvent, visibleItem: CombinedClip): void {
     this.preventEvent($event);
 
     this.changeCurrSelectedClip.emit(null);

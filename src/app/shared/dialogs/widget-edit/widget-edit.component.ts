@@ -57,21 +57,21 @@ export class WidgetEditComponent implements OnInit {
     this.iframeContentSubject$.next(this.workingValue);
   }
 
-  addNewExternal() {
+  addNewExternal(): void {
     this.workingValue.libraries.push({type:'css', src:''});
     this.markForCheck();
   }
 
-  saveExternalArray() {
+  saveExternalArray(): void {
 
   }
 
-  deleteExternalFile(index: number) {
+  deleteExternalFile(index: number): void {
     this.workingValue.libraries.splice(index, 1);
     this.markForCheck();
   }
 
-  save() {
+  save(): void {
     const variablesObject = {};
 
     for (const value of this.variablesList) {
@@ -96,7 +96,7 @@ export class WidgetEditComponent implements OnInit {
     this.dialogRef.close(this.workingValue);
   }
 
-  markForCheck(force = false) {
+  markForCheck(force = false): void {
     const enableSubjectRefresh = force || this.autoRefreshCheckbox?.checked;
 
     if (this.initDone && enableSubjectRefresh) {
@@ -107,7 +107,7 @@ export class WidgetEditComponent implements OnInit {
     }
   }
 
-  addNewVariable() {
+  addNewVariable(): void {
     this.variablesList.push({
       hint: '',
       name: `myVar${++this.newVarCounter}`,
@@ -118,7 +118,7 @@ export class WidgetEditComponent implements OnInit {
     this.markForCheck();
   }
 
-  deleteVariable($event: ActionVariableConfig) {
+  deleteVariable($event: ActionVariableConfig): void {
     // TODO "Are you sure?"
 
     const foundIndex = this.variablesList.findIndex(value => value.name === $event.name);
@@ -128,7 +128,7 @@ export class WidgetEditComponent implements OnInit {
     this.markForCheck();
   }
 
-  onFileInputChanged($event: Event) {
+  onFileInputChanged($event: Event): void {
     const target = $event.target as HTMLInputElement;
     const files = target.files;
 
@@ -152,7 +152,7 @@ export class WidgetEditComponent implements OnInit {
     }
   }
 
-  exportWidget() {
+  exportWidget(): void {
     const jsonData = JSON.stringify(this.workingValue);
     var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
 

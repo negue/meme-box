@@ -367,7 +367,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.dialogRef.close();
   }
 
-  onChange($event: FileInfo) {
+  onChange($event: FileInfo): void {
     this.form.patchValue({
       path: $event.apiUrl,
       name: $event.fileName
@@ -376,7 +376,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.markForCheck();
   }
 
-  markForCheck() {
+  markForCheck(): void {
     this.cd.markForCheck();
   }
 
@@ -393,7 +393,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   // region Tag specific methods
 
   // remove this clip
-  removeTag(tag: Tag) {
+  removeTag(tag: Tag): void {
     const currentTags = this.currentTags$.value;
 
     const index = currentTags.indexOf(tag);
@@ -406,7 +406,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   // Add an existing Tag to this media-clip
-  selectedNewTag($event: MatAutocompleteSelectedEvent) {
+  selectedNewTag($event: MatAutocompleteSelectedEvent): void {
     const currentTags = this.currentTags$.value;
     currentTags.push($event.option.value);
 
@@ -417,7 +417,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   // Enters a completely new tag to this media-clip
-  enterNewTag($event: MatChipInputEvent) {
+  enterNewTag($event: MatChipInputEvent): void {
     const input = $event.input;
     const value = $event.value;
 
@@ -477,11 +477,11 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     }
   }
 
-  triggerHTMLRefresh() {
+  triggerHTMLRefresh(): void {
     this.triggerHtmlRefresh$.next();
   }
 
-  executeHTMLRefresh () {
+  executeHTMLRefresh (): void {
     const currentExtendedValues = this.actionToEdit.extended;
 
     const updatedHtmlDataset: DynamicIframeContent  = {
@@ -564,7 +564,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
       videoElement.controls = true;
     }
 
-  onVideoLoaded($event: Event, videoElement: HTMLVideoElement) {
+  onVideoLoaded($event: Event, videoElement: HTMLVideoElement): void {
     console.info('onVideoLoaded', $event);
     if (!this.form.value.previewUrl) {
       setTimeout(() => {
@@ -573,7 +573,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     }
   }
 
-  onSourceChange($event: Event, videoElement: HTMLVideoElement) {
+  onSourceChange($event: Event, videoElement: HTMLVideoElement): void {
     console.info($event);
 
 

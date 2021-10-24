@@ -309,7 +309,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleRole(role: string) {
+  toggleRole(role: string): void {
     if (this.data.roles.includes(role)) {
       const indexOfRole = this.data.roles.indexOf(role);
 

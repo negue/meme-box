@@ -72,7 +72,7 @@ export class ScriptEditComponent implements OnInit {
     console.info(this.workingValue);
   }
 
-  save() {
+  save(): void {
     const variablesObject = {};
 
     for (const value of this.variablesList) {
@@ -97,7 +97,7 @@ export class ScriptEditComponent implements OnInit {
     this.dialogRef.close(this.workingValue);
   }
 
-  markForCheck(force = false) {
+  markForCheck(force = false): void {
     const enableSubjectRefresh = force || this.autoRefreshCheckbox?.checked;
 
     if (this.initDone && enableSubjectRefresh) {
@@ -105,7 +105,7 @@ export class ScriptEditComponent implements OnInit {
     }
   }
 
-  addNewVariable() {
+  addNewVariable(): void {
     this.variablesList.push({
       hint: '',
       name: `myVar${++this.newVarCounter}`,
@@ -116,7 +116,7 @@ export class ScriptEditComponent implements OnInit {
     this.markForCheck();
   }
 
-  deleteVariable($event: ActionVariableConfig) {
+  deleteVariable($event: ActionVariableConfig): void {
     // TODO "Are you sure?"
 
     const foundIndex = this.variablesList.findIndex(value => value.name === $event.name);
@@ -128,7 +128,7 @@ export class ScriptEditComponent implements OnInit {
 
   // todo extract to common utils function
 
-  onFileInputChanged($event: Event) {
+  onFileInputChanged($event: Event): void {
     const target = $event.target as HTMLInputElement;
     const files = target.files;
 
@@ -152,7 +152,7 @@ export class ScriptEditComponent implements OnInit {
     }
   }
 
-  exportScript() {
+  exportScript(): void {
     const jsonData = JSON.stringify(this.workingValue);
     const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
 
@@ -161,7 +161,7 @@ export class ScriptEditComponent implements OnInit {
     downloadFile(this.data.name+'-script.json',dataStr);
   }
 
-  openTutorialMarkdown() {
+  openTutorialMarkdown(): void {
     this.dialogService.showMarkdownFile(SCRIPT_TUTORIAL);
   }
 
@@ -198,7 +198,7 @@ export class ScriptEditComponent implements OnInit {
     );
   }
 
-  updateExecutionScript(newExecutionScriptCode: string) {
+  updateExecutionScript(newExecutionScriptCode: string): void {
     this.workingValue.executionScript = newExecutionScriptCode;
 
     this.declaredActionsEntries$.next(returnDeclaredActionEntries(newExecutionScriptCode));

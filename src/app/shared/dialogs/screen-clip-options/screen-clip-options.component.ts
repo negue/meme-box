@@ -139,7 +139,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  openMediaSetting() {
+  openMediaSetting(): void {
     this.appQueries.actionMap$.pipe(
       map(clipMap => clipMap[this.data.clipId]),
       take(1)

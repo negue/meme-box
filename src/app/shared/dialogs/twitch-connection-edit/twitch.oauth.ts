@@ -44,7 +44,7 @@ export class TwitchOAuthHandler {
 }
 
 
-export function checkToken() {
+export function checkToken(): boolean {
   const hashValues = location.hash.replace('#', '');
 
   const params = new URLSearchParams(hashValues);

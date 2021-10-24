@@ -17,7 +17,7 @@ export class ScreenPreviewSidebarComponent {
   constructor(private wsService: WebsocketService) {
   }
 
-  onPreview(visibleItem: CombinedClip) {
+  onPreview(visibleItem: CombinedClip): void {
     this.wsService.onTriggerClip$.next({
       id: visibleItem.clip.id,
       targetScreen: this.screen.id
