@@ -43,7 +43,7 @@ let alreadyAllowedToBeHidden = false;
 let tray;
 function createTray () {
   function toggle () {
-    if (win != null) {
+    if (win !== null) {
       win.close();
     } else {
       createWindow();

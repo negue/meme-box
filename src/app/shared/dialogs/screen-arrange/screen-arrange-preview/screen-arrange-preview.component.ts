@@ -155,7 +155,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   positionOptionChanged(newPosition: PositionEnum): void {
-    if (this.currentSelectedClip == null) {
+    if (this.currentSelectedClip === null) {
       return;
     }
 
@@ -240,7 +240,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   private resetTheResizeBorder() {
-    if (this.previouslyClickedComponent != null) {
+    if (this.previouslyClickedComponent !== null) {
       this.previouslyClickedComponent.showResizeBorder = false;
     }
   }

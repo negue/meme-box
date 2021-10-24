@@ -14,7 +14,7 @@ export interface ActionTypeGroup {
 export class GroupByMediaTypePipe implements PipeTransform {
 
   transform(medias: Clip[]): ActionTypeGroup[] {
-    if (medias == null || medias.length === 0) {
+    if (medias === null || medias.length === 0) {
       return [];
     }
 
