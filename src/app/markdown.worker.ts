@@ -80,7 +80,13 @@ const workerMethods: MarkdownWorker = {
           whiteList: {
             ...xss.whiteList,
             div: ['class'],  // mermaid class
-            span: ['class', 'style']  // prism colors
+            span: ['class', 'style'],  // prism colors
+            h1: ['id'],
+            h2: ['id'],
+            h3: ['id'],
+            h4: ['id'],
+            h5: ['id'],
+            h6: ['id'],
           }
         });
 
