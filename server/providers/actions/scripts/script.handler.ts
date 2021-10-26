@@ -17,6 +17,7 @@ import {ObsApi} from "./apis/obs.api";
 import {TwitchConnector} from "../../twitch/twitch.connector";
 import {TwitchApi} from "./apis/twitch.api";
 import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
+import {setGlobalVMScope} from "./global.context";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -45,6 +46,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     private twitchConnector: TwitchConnector,
     private twitchDataProvider: TwitchDataProvider
   ) {
+    setGlobalVMScope(this._vm);
 
     _persistence.dataUpdated$().subscribe(() => {
       // TODO get updated Path to know what kind of state needs to be refilled

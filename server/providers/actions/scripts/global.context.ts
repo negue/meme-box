@@ -1,0 +1,15 @@
+import type {VM} from "vm2";
+import rxjs from "rxjs";
+import {sleep} from "./apis/sleep.api";
+import {UtilsApi} from "./apis/utils.api";
+import {EnumsApi} from "./apis/enums.api";
+import fetch from "node-fetch";
+
+export function setGlobalVMScope (vm: VM) {
+  // Script Globals
+  vm.freeze(rxjs, 'rxjs');
+  vm.freeze(sleep, 'sleep');
+  vm.freeze(UtilsApi, 'utils');
+  vm.freeze(EnumsApi, 'enums');
+  vm.freeze(fetch, 'fetch')
+}

@@ -43,13 +43,24 @@ export class MarkdownComponent implements OnInit {
     const realHrefAttribute = linkAttributes.getNamedItem('href');
     const realHrefValue = realHrefAttribute.value;
 
+    // markdown header scrollto anchors
+    if (realHrefValue.startsWith('#')) {
+      const scrollToElement = this.dialogContent.nativeElement.querySelector<HTMLHeadingElement>(realHrefValue);
+
+      scrollToElement.scrollIntoView();
+
+      return;
+    }
+
     const foundMarkdownItem = MARKDOWN_FILES.find(md => realHrefValue.includes(md.githubName));
 
     if (foundMarkdownItem) {
+      // if its a found tutorial file, open a new markdown dialog
       this.dialogService.showMarkdownFile(foundMarkdownItem);
       return;
     }
 
+    // open external URLs
     window.open(realHrefValue, '_blank');
   }
 }
