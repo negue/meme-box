@@ -1,4 +1,4 @@
-import {TwitchConnector} from "../../../twitch/twitch.connector";
+import {TmiConnectionType, TwitchConnector} from "../../../twitch/twitch.connector";
 import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
 import {MediaType} from "@memebox/contracts";
@@ -24,8 +24,23 @@ export class TwitchApi extends DisposableBase {
     }
   }
 
-  public say(message: string) {
-    const tmiInstance = this.twitchConnector.tmiInstance();
+  public async say(message: string, type: TmiConnectionType|null = null) {
+    if (type === null) {
+      const availableTypes = this.twitchConnector.availableConnectionTypes();
+
+      if (availableTypes.length === 0) {
+        throw Error('No Twitch Accounts added');
+      }
+
+      // prefer bot
+      if (availableTypes.includes('BOT')) {
+        type = 'BOT';
+      } else if (availableTypes.includes('MAIN')) {
+        type = 'MAIN';
+      }
+    }
+
+    const tmiInstance = await this.twitchConnector.getTmiWriteInstance(type);
     const settings = this.twitchConnector.getTwitchSettings();
 
     tmiInstance.say(settings.channel, message);
