@@ -88,6 +88,11 @@
               Above the max value (10h)
             </mat-error>
           </mat-form-field>
+
+          <mat-checkbox  [checked]="canBroadcasterIgnoreCooldown"
+                         (change)="canBroadcasterIgnoreCooldown = $event.checked">
+            Can the Broadcaster ignore the cooldown?
+          </mat-checkbox>
         </div>
 
       <br/>

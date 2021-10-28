@@ -29,10 +29,11 @@ Script Examples can be found [here](https://github.com/negue/meme-box/tree/devel
 |*both*| `utils` | Check [`Utils API`](#utils-api) below |
 |*both*| `twitch` | Check [`Twitch API`](#twitch-api) below |
 |*both*| `eventbus` | Check [`EventBus API`](#eventbus-api) below |
+|*both*| `process` | Check [`Process API`](#process-api) below |
 |*both*| `rxjs` | `rxjs.*` and `rxjs.operators` https://rxjs.dev/guide/operators |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
 |`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
-|**only Permanent Scripts**| `wss` | Create your custom websocket server - Check `WSS API` below |
+|**only Permanent Scripts**| `wss` | Create your custom websocket server - Check [`WSS API`](#wss-api) below |
 
 ### Sleep API
 
@@ -291,4 +292,13 @@ eventBus.send('MYSCRIPT_EVENTX', {
     data: true
   }  
 })
+```
+
+
+### Process API
+
+If you need to start a bunch of apps for example or only one on an action then you can use this
+
+```js
+process.spawn(`C:\\WINDOWS\\system32\\notepad.exe`);
 ```

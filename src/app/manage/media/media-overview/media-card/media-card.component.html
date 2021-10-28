@@ -1,4 +1,6 @@
-<mat-card [class.media-active]="activityState.isActive$(media.id) | async">
+<mat-card [class.media-active]="activityState.isActive$(media.id) | async"
+          class="mat-elevation-z1"
+          hover-class="mat-elevation-z5">
   <mat-card-header>
     <mat-card-title [matTooltip]="media.name">{{media.name}}</mat-card-title>
 

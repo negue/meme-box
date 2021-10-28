@@ -116,6 +116,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     cooldown: [undefined, Validators.max(1000*60*60*10)]
   });
 
+  canBroadcasterIgnoreCooldown = false;
+
   twitchNotAuthenticated$ = this.appQuery.config$.pipe(
     map(config => !config.twitch?.token)
   );
@@ -170,6 +172,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     this.data.roles = [...this.data.roles];
     console.info({data: this.data});
     this.selectedMediaId$.next(this.data.clipId);
+    this.canBroadcasterIgnoreCooldown = this.data.canBroadcasterIgnoreCooldown;
   }
 
   async save() {
@@ -195,7 +198,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
     const newTwitchValue: TwitchTrigger = {
       ...this.data,
-      ...value
+      ...value,
+      canBroadcasterIgnoreCooldown: this.canBroadcasterIgnoreCooldown
     };
 
 
