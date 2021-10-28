@@ -73,11 +73,15 @@ export class TwitchHandler {
 
 
     const cooldownEntry = this.cooldownDictionary[trigger.command.id];
-    const allowedByCooldown = cooldownEntry && trigger.command.cooldown
+    let allowedByCooldown = cooldownEntry && trigger.command.cooldown
       ? (Date.now() - cooldownEntry) > trigger.command.cooldown
       : true;
 
-    const allowedToTrigger = isBroadcaster || (allowedByRole && allowedByCooldown);
+    if (!allowedByCooldown && isBroadcaster && trigger.command.canBroadcasterIgnoreCooldown) {
+      allowedByCooldown = true;
+    }
+
+    const allowedToTrigger = allowedByRole && allowedByCooldown;
 
     this._twitchLogger.log({
       isBroadcaster,

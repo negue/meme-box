@@ -188,6 +188,7 @@ export interface TwitchTrigger extends TriggerBase {
   maxAmount?: number;
 
   cooldown?: number;
+  canBroadcasterIgnoreCooldown?: boolean;
 
   channelPointId?: string;
 
