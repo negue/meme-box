@@ -9,6 +9,8 @@
       <mat-option [value]="50">2 Columns</mat-option>
       <mat-option [value]="33">3 Columns</mat-option>
       <mat-option [value]="25">4 Columns</mat-option>
+      <mat-option [value]="16.6">6 Columns</mat-option>
+      <mat-option [value]="12.5">8 Columns</mat-option>
     </mat-select>
   </mat-toolbar-row>
 </mat-toolbar>
@@ -46,6 +48,8 @@
 
     <mat-card (click)="onPreview(clip)"
               mat-ripple
+              hover-class="mat-elevation-z5"
+              class="mat-elevation-z1"
               [class.media-active]="activityState.isActive$(clip.id) | async">
 
       <app-clip-type [type]="clip.type"></app-clip-type>
