@@ -89,8 +89,6 @@
             </mat-error>
           </mat-form-field>
 
-          {{ canBroadcasterIgnoreCooldown }}
-
           <mat-checkbox  [checked]="canBroadcasterIgnoreCooldown"
                          (change)="canBroadcasterIgnoreCooldown = $event.checked">
             Can the Broadcaster ignore the cooldown?
