@@ -51,7 +51,7 @@ export class MediaCardComponent {
 
   get connectedTags(): Tag[] {
     const tagssEmpty = this.tags === null || this.tags.length === 0;
-    if (this.media === null || this.media.tags === null || tagssEmpty) {
+    if (this.media === null || !this.media?.tags || tagssEmpty) {
       return [];
     }
     return this.tags.filter(tag => this.media.tags.includes(tag.id));

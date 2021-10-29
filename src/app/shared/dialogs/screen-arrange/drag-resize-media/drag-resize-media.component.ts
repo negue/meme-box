@@ -338,7 +338,8 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
 
     let m = null;
 
-    while (m == cssTransformRegex.exec(nativeElement.style.transform)) {
+    // TODO REFACTOR
+    while (m = cssTransformRegex.exec(nativeElement.style.transform)) {
       names.push(m[1]);
       vals.push(m[2]);
     }
