@@ -14,6 +14,15 @@ export class AppQueries extends Query<AppState> {
   twitchEvents$ = this.select(store => Object.values(store.twitchEvents));
   timedEvents$ = this.select(store => Object.values(store.timers));
   tagList$ = this.select(store => Object.values(store.tags));
+  queueList$ = this.select(store => {
+    const allClips = Object.values(store.clips);
+
+    const allQueueNames = allClips.map(c => c.queueName).filter(q => !!q);
+
+    const onlyUnique = new Set(allQueueNames);
+
+    return Array.from(onlyUnique);
+  });
 
 
   actionMap$ = this.select(store => store.clips);

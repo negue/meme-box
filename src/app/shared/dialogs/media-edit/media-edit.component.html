@@ -170,13 +170,13 @@
               <input
                 #tagInput
                 [formControl]="tagFormCtrl"
-                [matAutocomplete]="auto"
+                [matAutocomplete]="tagAutoComplete"
                 [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (matChipInputTokenEnd)="enterNewTag($event)"
                 (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
             </mat-chip-list>
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
+            <mat-autocomplete #tagAutoComplete="matAutocomplete" (optionSelected)="selectedNewTag($event)">
               <mat-option *ngFor="let tag of filteredTags$ | async"
                           [value]="tag">
                 {{tag.name}}
@@ -364,13 +364,13 @@
             <input
               #tagInput
               [formControl]="tagFormCtrl"
-              [matAutocomplete]="auto"
+              [matAutocomplete]="tagAutoComplete"
               [matChipInputFor]="chipList"
               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
               (matChipInputTokenEnd)="enterNewTag($event)"
               (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
           </mat-chip-list>
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
+          <mat-autocomplete #tagAutoComplete="matAutocomplete" (optionSelected)="selectedNewTag($event)">
             <mat-option *ngFor="let tag of filteredTags$ | async"
                         [value]="tag">
               {{tag.name}}
@@ -379,6 +379,32 @@
         </mat-form-field>
 
       </div>
+
+      <div class="form-field-row" *ngIf="MEDIA_EDIT_CONFIG[form.value.type].canSelectQueue">
+        <mat-form-field class="example-chip-list">
+          <mat-label>Select Queue</mat-label>
+          <input
+              matInput
+              formControlName="queueName"
+              [matAutocomplete]="queueAutocomplete">
+          <mat-autocomplete #queueAutocomplete="matAutocomplete"
+                            (optionSelected)="selectedNewQueue($event)">
+            <mat-option *ngFor="let queue of allQueueNames$ | async"
+                        [value]="queue">
+              {{queue}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <app-hint-panel style="margin-top: 1rem" [addBottomPadding]="true">
+          You can select a custom queue so that your actions have to wait before a previous one is done.
+          <br/>
+          <br/>
+          If you don't select a queue, then visible Media (Images, Videos etc) will still have their own queue, <br />
+          which means only one Media can be visible at once at each assigned screen.
+        </app-hint-panel>
+      </div>
+
 
       <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
         <mat-label>Also add to this Screen:</mat-label>

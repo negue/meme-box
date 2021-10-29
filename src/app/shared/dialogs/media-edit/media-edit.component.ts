@@ -112,7 +112,8 @@ export class MediaEditComponent
     metaType: 0,
     metaDelay: 0,
 
-    fromTemplate: ""
+    fromTemplate: "",
+    queueName: ""
   });
 
   currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
@@ -191,6 +192,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
   // current "filtered" tags
   filteredTags$: Observable<Tag[]>;
+  allQueueNames$: Observable<string[]> = this.appQuery.queueList$;
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
@@ -430,6 +432,14 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     this.tagFormCtrl.setValue(null);
     this.currentTags$.next(currentTags);
+  }
+
+
+  // Add an existing Tag to this media-clip
+  selectedNewQueue($event: MatAutocompleteSelectedEvent): void {
+    this.form.patchValue({
+      queueName: $event.option.value
+    });
   }
 
   private _filter(value: string, allTags: Tag[], currentTags: Tag[]): Tag[] {
