@@ -160,14 +160,14 @@ export class TwitchConnectionEditComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>) {
+  onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>): void {
     this.additionalForm.patchValue({
       log: $event.checked
     });
   }
 
 
-  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>){
+  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>): void{
     this.additionalForm.patchValue({
       bot: $event.checked
     });
@@ -203,13 +203,13 @@ export class TwitchConnectionEditComponent implements OnInit {
     }
   }
 
-  deleteMainAuth () {
+  deleteMainAuth (): void {
     this.mainAccountForm.patchValue({
       authToken: null
     });
   }
 
-  deleteBotAuth () {
+  deleteBotAuth (): void {
     this.mainAccountForm.patchValue({
       botName: null,
       botToken: null,

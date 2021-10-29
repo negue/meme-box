@@ -131,13 +131,13 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  set10Seconds() {
+  set10Seconds(): void {
     this.form.patchValue({
       'everyXms': 10_000
     });
   }
 
-  setXMinutes(number: number) {
+  setXMinutes(number: number): void {
     this.form.patchValue({
       'everyXms': 60_000 * number
     });

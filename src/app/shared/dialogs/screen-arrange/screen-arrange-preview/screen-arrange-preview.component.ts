@@ -127,7 +127,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
 
-  triggerChangedetection() {
+  triggerChangedetection(): void {
     const component = this.combinedClipToComponent.get(this.currentSelectedClip);
 
     console.info('trigger cd', {
@@ -142,11 +142,11 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
     this._cd.detectChanges();
   }
 
-  userChangedElement() {
+  userChangedElement(): void {
     this.userChangeElement.emit(this.currentSelectedClip.clip.id);
   }
 
-  sizeOptionChanged(newValue: 'px' | '%') {
+  sizeOptionChanged(newValue: 'px' | '%'): void {
     // TODO: Set the option
     //this.currentSelectedClip.clipSetting = newValue;
     this.sizeSelection = newValue;
@@ -154,8 +154,8 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
     this.triggerChangedetection();
   }
 
-  positionOptionChanged(newPosition: PositionEnum) {
-    if (this.currentSelectedClip == null) {
+  positionOptionChanged(newPosition: PositionEnum): void {
+    if (this.currentSelectedClip === null) {
       return;
     }
 
@@ -174,11 +174,11 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
     this.triggerChangedetection();
   }
 
-  elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip) {
+  elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip): void {
     this.combinedClipToComponent.set(pair, dragResizeMediaComponent);
   }
 
-  clickedOutside() {
+  clickedOutside(): void {
     this.changeCurrSelectedClip.emit(null);
     this.resetTheResizeBorder();
 
@@ -187,7 +187,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
     this._cd.markForCheck();
   }
 
-  applySingleChanges() {
+  applySingleChanges(): void {
     this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.clipSetting);
     this.changesSaved.emit(this.currentSelectedClip.clip.id);
   }
@@ -201,7 +201,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
     this.changesSaved.emit(this.visibleItems.map(i => i.clip.id));
   }
 
-  reset() {
+  reset(): void {
     const { clipSetting, clip } = this.currentSelectedClip;
 
     clipSetting.transform = null;
@@ -225,7 +225,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   elementClicked(dragResizeMediaComponent: DragResizeMediaComponent,
-                 pair: CombinedClip) {
+                 pair: CombinedClip): void {
     this.resetTheResizeBorder();
 
     this.changeCurrSelectedClip.emit(pair);
@@ -240,7 +240,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   private resetTheResizeBorder() {
-    if (this.previouslyClickedComponent != null) {
+    if (this.previouslyClickedComponent !== null) {
       this.previouslyClickedComponent.showResizeBorder = false;
     }
   }

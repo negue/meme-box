@@ -30,7 +30,7 @@ export class AnimationPreviewComponent implements OnInit, OnChanges {
     }
   }
 
-  animationEnded () {
+  animationEnded (): void {
     this.animationToShow = '';
 
     setTimeout(() => {
