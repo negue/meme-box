@@ -196,6 +196,7 @@ ___
 ## How to help / contribute?
 * Improve Docs / Translations
 * Find bugs
+* Suggestions to make `things` (UI, Text, Docs etc) more understandable
 * Help fix bugs / improve features
   * [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue) 
   * [Open for Contribution](https://github.com/negue/meme-box/labels/open%20for%20contribution)
