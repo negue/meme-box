@@ -44,9 +44,14 @@ import {
   DynamicIframeContent,
   ScriptConfig
 } from "@memebox/utils";
-import {jsCodemirror} from "../../../core/codemirror.extensions";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
+import {
+  MEDIA_EDIT_CONFIG,
+  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH,
+  MEDIA_TYPES_WITHOUT_PATH,
+  MEDIA_TYPES_WITHOUT_PLAYTIME
+} from "./media-edit.type-config";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -76,21 +81,6 @@ interface MediaTypeButton {
 // TODO extract these informs to the media dictionary?
 // TODO REFACTOR use an interface of possible enable/disable of config controls
 // TODO hide tag selection for types that cant use it anyway
-
-const MEDIA_TYPES_WITHOUT_PATH = [
-  MediaType.Widget,
-  MediaType.WidgetTemplate,
-  MediaType.Meta,
-  MediaType.Script,
-  MediaType.PermanentScript
-];
-const MEDIA_TYPES_WITHOUT_PLAYTIME = [
-  MediaType.Meta,
-  MediaType.WidgetTemplate,
-  MediaType.Script,
-  MediaType.PermanentScript
-];
-const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
 
 export interface MediaEditDialogPayload {
   actionToEdit: Partial<Clip>,
@@ -136,11 +126,11 @@ export class MediaEditComponent
     })
   );
 
-  public jsExtensions = jsCodemirror;
   MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
   MEDIA_TYPES_WITHOUT_PLAYTIME = MEDIA_TYPES_WITHOUT_PLAYTIME;
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
   MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
+  MEDIA_EDIT_CONFIG = MEDIA_EDIT_CONFIG;
 
   mediaTypeList: MediaTypeButton[] = MEDIA_TYPE_INFORMATION_ARRAY
     .map((value) => {

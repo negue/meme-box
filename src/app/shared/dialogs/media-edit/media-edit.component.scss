@@ -9,6 +9,15 @@
     .step-content {
       margin: 0.5rem;
     }
+
+    lib-stepper-content .steps {
+      min-width: 10rem;
+      max-width: 10rem;
+    }
+
+    .mat-line {
+      white-space: normal !important;
+    }
   }
 }
 
@@ -74,8 +83,6 @@ img {
 .column {
   flex: 1;
 
-
-
   &:last-child {
     &:not(.custom-html-preview) {
       align-self: center;
@@ -106,7 +113,7 @@ img {
   max-height: 76vh;
 }
 
-.mobile-checkbox {
+.action_id{
   float: right;
 }
 
@@ -126,3 +133,4 @@ img {
 app-dynamic-iframe {
   flex: 1;
 }
+
