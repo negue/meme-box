@@ -7,7 +7,7 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "media" to be used inside OBS. Or trigger other custom actions.
@@ -224,7 +224,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://www.linkedin.com/in/divs/"><img src="https://avatars.githubusercontent.com/u/55018955?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Divyanshu Singh</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=divshacker" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://brandonroberts.dev"><img src="https://avatars.githubusercontent.com/u/42211?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Brandon</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=brandonroberts" title="Code">💻</a> </td>
+    <td align="center"><a href="https://brandonroberts.dev"><img src="https://avatars.githubusercontent.com/u/42211?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Brandon</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=brandonroberts" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.linkedin.com/in/chirag-mahawar/"><img src="https://avatars.githubusercontent.com/u/34866279?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Chirag Mahawar</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=chiragmahawar7" title="Code">💻</a></td>
   </tr>
 </table>
 
