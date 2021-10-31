@@ -10,10 +10,10 @@ export interface TwitchLoginPayload {
 export class TwitchOAuthHandler {
   private twitchAuthUrl: string;
 
-  constructor(private clientId: string,
-              private scopes: string,
-              private redirectUrl: string,
-              forceVerify: boolean) {
+  constructor (private clientId: string,
+               private scopes: string,
+               private redirectUrl: string,
+               forceVerify: boolean) {
     const queryParams = [
       'response_type=token%20id_token',
       `client_id=${this.clientId}`,
@@ -32,15 +32,13 @@ export class TwitchOAuthHandler {
     return new Promise((resolve, reject) => {
       window.open(this.twitchAuthUrl, 'Twitch Auth', 'toolbar=0,scrollbars=1,status=1,resizable=1,location=no,menuBar=0');
 
-
       (window as any).gotToken = function (userName: string, userId: string, tokenId: string, accessToken: string) {
-        console.info({ userName, userId, tokenId });
         resolve({
           userName, userId, tokenId, accessToken
         });
       };
     });
-}
+  }
 }
 
 
@@ -61,8 +59,8 @@ export function checkToken(): boolean {
   const {preferred_username: userName, sub: userId} = jwt as any;
 
   setTimeout(() => {
-   window.opener.gotToken(userName, userId, tokenId, accessToken);
-   window.close();
+    window.opener.gotToken(userName, userId, tokenId, accessToken);
+    window.close();
   }, 4000);
 
   return true;

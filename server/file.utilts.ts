@@ -84,8 +84,10 @@ export function getAppRootPath () {
   }
 
   if (!appRootPathExists && isInElectron) {
+    const nodeModulesPos = baseDir.indexOf('node_modules');
+
     // serving electron without a built/copied app yet
-    appRootPath = join(baseDir, '/../../dist');
+    appRootPath = join(baseDir.substring(0, nodeModulesPos), 'src');
   } else {
     appRootPath = defaultAppOutPutDir;
   }
