@@ -38,6 +38,8 @@ export class ActionTriggerHandler {
     mediaTriggerEventBus.AllTriggerEvents$.subscribe(triggerMedia => {
       this.triggerActionById(triggerMedia);
     });
+
+
     mediaTriggerEventBus.AllUpdateEvents$.subscribe(triggerMedia => {
       this.updateMediaEvent(triggerMedia);
     });

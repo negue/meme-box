@@ -312,6 +312,7 @@
           <div *ngIf="mediaPathInput.value">
             <video width="320" height="240" controls #videoElement
                    [src]="mediaPathInput.value | mediaPathToUrl"
+                   [volume]="form.value.volumeSetting / 100"
                    crossorigin="anonymous" (loadeddata)="onVideoLoaded($event, videoElement)">
               Your browser does not support the video tag.
               <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
@@ -321,6 +322,18 @@
                     (click)="makeScreenshot(videoElement)">
               Set current video position as screenshot
             </button>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="MediaType.Audio" >
+
+          <div *ngIf="mediaPathInput.value">
+            <audio [src]="mediaPathInput.value | mediaPathToUrl"
+                   [volume]="form.value.volumeSetting / 100"
+                   crossorigin="anonymous" controls>
+              Your browser does not support the audio tag.
+              <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+            </audio>
           </div>
         </div>
         <!-- All others => AppClipType -->
