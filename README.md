@@ -7,7 +7,7 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "media" to be used inside OBS. Or trigger other custom actions.
@@ -150,9 +150,11 @@ Misc:
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 - [`Scripts`][URL_SCRIPTS]
+- [`Widgets`][URL_WIDGETS]
 
 [URL_META_CLIPS]: tutorials/meta_media.md
 [URL_SCRIPTS]: tutorials/scripts.md
+[URL_WIDGETS]: tutorials/widgets.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
 [STREAMDECK_PLUGIN]: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
 
@@ -194,6 +196,7 @@ ___
 ## How to help / contribute?
 * Improve Docs / Translations
 * Find bugs
+* Suggestions to make `things` (UI, Text, Docs etc) more understandable
 * Help fix bugs / improve features
   * [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue) 
   * [Open for Contribution](https://github.com/negue/meme-box/labels/open%20for%20contribution)
@@ -218,6 +221,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/CrypticEngima"><img src="https://avatars0.githubusercontent.com/u/30286773?v=4?s=100" width="100px;" alt=""/><br /><sub><b>CrypticEngima</b></sub></a><br /><a href="#design-CrypticEngima" title="Design">🎨</a></td>
     <td align="center"><a href="https://github.com/owehmer"><img src="https://avatars.githubusercontent.com/u/45573843?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Oliver</b></sub></a><br /><a href="https://github.com/negue/meme-box/issues?q=author%3Aowehmer" title="Bug reports">🐛</a> <a href="https://github.com/negue/meme-box/commits?author=owehmer" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/jonathanbucci"><img src="https://avatars.githubusercontent.com/u/29556823?v=4?s=100" width="100px;" alt=""/><br /><sub><b>jonathanbucci</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=jonathanbucci" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://www.linkedin.com/in/divs/"><img src="https://avatars.githubusercontent.com/u/55018955?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Divyanshu Singh</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=divshacker" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://brandonroberts.dev"><img src="https://avatars.githubusercontent.com/u/42211?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Brandon</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=brandonroberts" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.linkedin.com/in/chirag-mahawar/"><img src="https://avatars.githubusercontent.com/u/34866279?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Chirag Mahawar</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=chiragmahawar7" title="Code">💻</a></td>
   </tr>
 </table>
 

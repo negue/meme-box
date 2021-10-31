@@ -1,0 +1,44 @@
+.stepper-shell {
+  display: flex;
+}
+
+.step-item {
+  background: transparent;
+  border: 0;
+  color: inherit;
+}
+.step-content {
+  flex: 1;
+}
+
+.step-item.active {
+  background-color: rgba(var(--palette-primary-900), 0.25) !important;
+}
+
+.step-item.disabled * {
+  user-select: none;
+  color: gray !important;
+}
+
+.example-nav-button {
+  background: transparent;
+  border: 0;
+  color: inherit;
+}
+
+mat-nav-list{
+  padding-top: 0;
+
+  ::ng-deep {
+    .mat-list-text {
+
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .mat-list-item {
+      // min-height: 48px;
+      height: auto !important;
+    }
+  }
+}

@@ -22,6 +22,14 @@ export const SCRIPT_TUTORIAL: MarkdownDialogPayload =
       showHeader: false
     };
 
+export const WIDGET_TUTORIAL: MarkdownDialogPayload =
+  {
+    name: 'Media Type: Widget',
+    githubName: 'widgets.md',
+    showHeader: false
+  };
+
+
 export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
   {
     name: 'Getting Started',
@@ -39,6 +47,13 @@ export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
     showHeader: false
   },
   SCRIPT_TUTORIAL,
+  WIDGET_TUTORIAL,
+  {
+    name: 'Store API',
+    githubName: 'store.md',
+    showHeader: false,
+    hideFromOverview: true
+  },
   {
     name: 'Screen / Clip Advanced Settings',
     githubName: 'screen_clip_advanced_settings.md',

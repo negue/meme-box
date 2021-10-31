@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 
 const selectedLangKey = 'selected_lang';
 
-export function getSelectedLang () {
+export function getSelectedLang (): string {
   return localStorage.getItem(selectedLangKey) ?? 'en';
 }
 
@@ -13,7 +13,7 @@ export class TranslocoSelectedLangService {
   constructor() {
   }
 
-  setSelectedLang (newLang: string) {
+  setSelectedLang (newLang: string): void {
     localStorage.setItem(selectedLangKey, newLang);
 
     location.reload();

@@ -9,6 +9,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
 import {ClipTypeModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
+import {DirectivesModule} from "../shared/directives/directives.module";
 
 
 const routes: Routes = [
@@ -31,6 +32,7 @@ const routes: Routes = [
     ClipTypeModule,
     MatIconModule,
     MatSelectModule,
+    DirectivesModule,
   ]
 })
 export class MobileModule {

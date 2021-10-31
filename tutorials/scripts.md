@@ -22,15 +22,18 @@ Script Examples can be found [here](https://github.com/negue/meme-box/tree/devel
 |------------|--|--|
 |*both*| `variables` | It holds all values of  your added `Custom Variables` |
 |*both*| `store` | [See the `Store`-Documentation](./store.md) |
-|*both*| `sleep` | Check `Sleep API` below |
-|*both*| `logger` | Check `Logger API` below |
-|*both*| `obs` | Check `OBS API` below |
-|*both*| `memebox` | Check `MemeBox API` below |
-|*both*| `utils` | Check `Utils API` below |
-|*both*| `twitch` | Check `Twitch API` below |
+|*both*| `sleep` | Check [`Sleep API`](#sleep-api) below |
+|*both*| `logger` | Check [`Logger API`](#logger-api) below |
+|*both*| `obs` | Check [`OBS API`](#obs-api) below |
+|*both*| `memebox` | Check [`MemeBox API`](#memebox-api) below |
+|*both*| `utils` | Check [`Utils API`](#utils-api) below |
+|*both*| `twitch` | Check [`Twitch API`](#twitch-api) below |
+|*both*| `eventbus` | Check [`EventBus API`](#eventbus-api) below |
+|*both*| `process` | Check [`Process API`](#process-api) below |
+|*both*| `rxjs` | `rxjs.*` and `rxjs.operators` https://rxjs.dev/guide/operators |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
 |`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
-|**only Permanent Scripts**| `wss` | Create your custom websocket server - Check `WSS API` below |
+|**only Permanent Scripts**| `wss` | Create your custom websocket server - Check [`WSS API`](#wss-api) below |
 
 ### Sleep API
 
@@ -100,6 +103,12 @@ myWSS.on('connection', function connection(ws) {
 
   ws.send('something');
 });
+
+
+// can also use to connect to a websocket
+const wsClient = ws.connect('address');  
+
+wsClient.on / wsClient.send
 ```
 
 ### MemeBox API
@@ -220,6 +229,8 @@ interface ScreenMediaOverridableProperties {
   customCss?: string;
 }
 
+
+// in scripts usable by enums.PositionEnum
 enum PositionEnum {
   FullScreen,
   Absolute,
@@ -249,4 +260,45 @@ twitch.getBroadcasterIdAsync()
 twitch.getHelixDataAsync('chat/emotes?broadcaster_id=123456')  // see Helix API Docs https://dev.twitch.tv/docs/api/reference#get-channel-emotes
 
 twitch.say(messageToWriteInChat);
+```
+
+
+### EventBus API
+
+This eventbus is to be used between scripts and widgets (not implemented yet). 
+So that more advanced stuff can be done.
+
+```js
+const eventsToSubscribe = ['MYSCRIPT_EVENTX'];
+
+eventBus
+
+const {debounceTime, tap} = rxjs.operators;
+
+// on$ returns an rxjs Observable, which you can use your operators on
+// https://rxjs.dev/guide/operators 
+eventBus.on$(eventsToSubscribe)
+  .pipe(   // pipe is optional only if you want to use rxjs operators
+  debounceTime(),
+  tap()
+)
+  .subscribe((e) => {
+  // e.type is your event as string
+  // e.payload the data that was sent to it
+})
+
+eventBus.send('MYSCRIPT_EVENTX', {
+  myObject: {   // everything inside this object is the `e.payload`
+    data: true
+  }  
+})
+```
+
+
+### Process API
+
+If you need to start a bunch of apps for example or only one on an action then you can use this
+
+```js
+process.spawn(`C:\\WINDOWS\\system32\\notepad.exe`);
 ```

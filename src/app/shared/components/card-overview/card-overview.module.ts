@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { CardOverviewComponent } from './card-overview.component';
-import { OverviewItemComponent } from './overview-item/overview-item.component';
-import { OverviewAddItemComponent } from './overview-add-item/overview-add-item.component';
-import { MatCardModule } from "@angular/material/card";
-import { MatIconModule } from "@angular/material/icon";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {CardOverviewComponent} from './card-overview.component';
+import {OverviewItemComponent} from './overview-item/overview-item.component';
+import {OverviewAddItemComponent} from './overview-add-item/overview-add-item.component';
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {DirectivesModule} from "../../directives/directives.module";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { MatIconModule } from "@angular/material/icon";
   imports: [
     CommonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    DirectivesModule
   ]
 })
 export class CardOverviewModule { }

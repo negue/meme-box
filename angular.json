@@ -1,8 +1,155 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "projects",
+  "newProjectRoot": "",
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
   "projects": {
+    "action-variables": {
+      "projectType": "library",
+      "root": "projects/action-variables",
+      "sourceRoot": "projects/action-variables/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/action-variables/tsconfig.lib.json",
+            "project": "projects/action-variables/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/action-variables/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/action-variables/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/action-variables/tsconfig.lib.json",
+              "projects/action-variables/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "action-variables-ui": {
+      "projectType": "library",
+      "root": "projects/action-variables-ui",
+      "sourceRoot": "projects/action-variables-ui/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/action-variables-ui/tsconfig.lib.json",
+            "project": "projects/action-variables-ui/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/action-variables-ui/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/action-variables-ui/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/action-variables-ui/tsconfig.lib.json",
+              "projects/action-variables-ui/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "app-state": {
+      "projectType": "library",
+      "root": "projects/app-state",
+      "sourceRoot": "projects/app-state/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/app-state/tsconfig.lib.json",
+            "project": "projects/app-state/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/app-state/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/app-state/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/app-state/tsconfig.lib.json",
+              "projects/app-state/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "contracts": {
+      "projectType": "library",
+      "root": "projects/contracts",
+      "sourceRoot": "projects/contracts/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/contracts/tsconfig.lib.json",
+            "project": "projects/contracts/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/contracts/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/contracts/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/contracts/tsconfig.lib.json",
+              "projects/contracts/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
     "memebox-app": {
       "root": "",
       "sourceRoot": "src",
@@ -65,6 +212,23 @@
                 }
               ]
             },
+            "cypress": {
+              "optimization": false,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/modules/modules.ts",
+                  "with": "src/environments/modules/modules.cypress.ts"
+                }
+              ]
+            },
             "web": {
               "optimization": false,
               "outputHashing": "all",
@@ -118,6 +282,10 @@
               "browserTarget": "memebox-app:build:dev",
               "hmr": true
             },
+            "cypress": {
+              "browserTarget": "memebox-app:build:cypress",
+              "hmr": true
+            },
             "web": {
               "browserTarget": "memebox-app:build:web",
               "hmr": true
@@ -140,12 +308,8 @@
             "polyfills": "src/polyfills-test.ts",
             "tsConfig": "tsconfig.spec.json",
             "scripts": [],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "assets": [
-              "src/assets"
-            ],
+            "styles": ["src/styles.scss"],
+            "assets": ["src/assets"],
             "customWebpackConfig": {
               "path": "./angular.webpack.cjs",
               "target": "electron-renderer"
@@ -159,257 +323,48 @@
             "tsConfig": [
               "src/tsconfig.app.json",
               "tsconfig.spec.json",
-              "tsconfig.worker.json"
+              "tsconfig.worker.json",
+              "cypress/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
-        }
-      }
-    },
-    "memebox-app-e2e": {
-      "root": "e2e",
-      "projectType": "application",
-      "architect": {
-        "lint": {
-          "builder": "@angular-eslint/builder:lint",
+        },
+        "cypress-run": {
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
-            "eslintConfig": ".eslintrc.json",
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "contracts": {
-      "projectType": "library",
-      "root": "projects/contracts",
-      "sourceRoot": "projects/contracts/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/contracts/tsconfig.lib.json",
-            "project": "projects/contracts/ng-package.json"
+            "devServerTarget": "memebox-app:serve:cypress",
+            "headless": true
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/contracts/tsconfig.lib.prod.json"
+              "devServerTarget": "memebox-app:serve:production"
             }
           }
         },
-        "test": {
-          "builder": "@angular-builders/jest:run",
+        "cypress-open": {
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
-            "tsConfig": "projects/contracts/tsconfig.spec.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/contracts/tsconfig.lib.json",
-              "projects/contracts/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "utils": {
-      "projectType": "library",
-      "root": "projects/utils",
-      "sourceRoot": "projects/utils/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/utils/tsconfig.lib.json",
-            "project": "projects/utils/ng-package.json"
+            "devServerTarget": "memebox-app:serve:cypress",
+            "watch": true,
+            "headless": false
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/utils/tsconfig.lib.prod.json"
+              "devServerTarget": "memebox-app:serve:production"
             }
           }
         },
-        "test": {
-          "builder": "@angular-builders/jest:run",
+        "e2e": {
+          "builder": "@briebug/cypress-schematic:cypress",
           "options": {
-            "tsConfig": "projects/utils/tsconfig.spec.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/utils/tsconfig.lib.json",
-              "projects/utils/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "ui-components": {
-      "projectType": "library",
-      "root": "projects/ui-components",
-      "sourceRoot": "projects/ui-components/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/ui-components/tsconfig.lib.json",
-            "project": "projects/ui-components/ng-package.json"
+            "devServerTarget": "memebox-app:serve:cypress",
+            "watch": true,
+            "headless": false
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/ui-components/tsconfig.lib.prod.json"
+              "devServerTarget": "memebox-app:serve:production"
             }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "tsConfig": "projects/ui-components/tsconfig.spec.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ui-components/tsconfig.lib.json",
-              "projects/ui-components/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "action-variables": {
-      "projectType": "library",
-      "root": "projects/action-variables",
-      "sourceRoot": "projects/action-variables/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/action-variables/tsconfig.lib.json",
-            "project": "projects/action-variables/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/action-variables/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "tsConfig": "projects/action-variables/tsconfig.spec.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/action-variables/tsconfig.lib.json",
-              "projects/action-variables/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "action-variables-ui": {
-      "projectType": "library",
-      "root": "projects/action-variables-ui",
-      "sourceRoot": "projects/action-variables-ui/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/action-variables-ui/tsconfig.lib.json",
-            "project": "projects/action-variables-ui/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/action-variables-ui/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "tsConfig": "projects/action-variables-ui/tsconfig.spec.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/action-variables-ui/tsconfig.lib.json",
-              "projects/action-variables-ui/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "app-state": {
-      "projectType": "library",
-      "root": "projects/app-state",
-      "sourceRoot": "projects/app-state/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
-          "options": {
-            "tsConfig": "projects/app-state/tsconfig.lib.json",
-            "project": "projects/app-state/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/app-state/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "tsConfig": "projects/app-state/tsconfig.spec.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/app-state/tsconfig.lib.json",
-              "projects/app-state/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
@@ -445,15 +400,84 @@
               "projects/state-components/tsconfig.lib.json",
               "projects/state-components/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "ui-components": {
+      "projectType": "library",
+      "root": "projects/ui-components",
+      "sourceRoot": "projects/ui-components/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ui-components/tsconfig.lib.json",
+            "project": "projects/ui-components/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ui-components/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/ui-components/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ui-components/tsconfig.lib.json",
+              "projects/ui-components/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "utils": {
+      "projectType": "library",
+      "root": "projects/utils",
+      "sourceRoot": "projects/utils/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/utils/tsconfig.lib.json",
+            "project": "projects/utils/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/utils/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/utils/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/utils/tsconfig.lib.json",
+              "projects/utils/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
     }
   },
-  "defaultProject": "memebox-app",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
@@ -464,8 +488,5 @@
       "prefix": "app",
       "skipTests": true
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }

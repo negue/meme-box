@@ -104,13 +104,13 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   }
 
 
-  onDragStart({ set }) {
+  onDragStart({ set }): void {
     console.info(this.frame);
     this.elementChanged.emit();
     this.inputApplied.next();
   }
 
-  onDrag({ target, left, top }) {
+  onDrag({ target, left, top }): void {
     const newPosition = this.translatePixelToTarget(left, top);
 
 
@@ -124,7 +124,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     this.elementChanged.emit();
   }
 
-  onDragEnd({ target, isDrag, clientX, clientY }) {
+  onDragEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onDragEnd", target, isDrag, { clientX, clientY });
     // TODO Update on DragEnd
     this.settings.top = this.frame.currentDraggingPosition.y;
@@ -134,7 +134,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     this.elementChanged.emit();
   }
 
-  onResizeStart({ target, set, setOrigin, dragStart }) {
+  onResizeStart({ target, set, setOrigin, dragStart }): void {
     // Set origin if transform-orgin use %.
     setOrigin(['%', '%']);
 
@@ -154,7 +154,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
 
     this.elementChanged.emit();
   }
-  onResize({ target, width, height, drag }) {
+  onResize({ target, width, height, drag }): void {
     const newPosition = this.translatePixelToTarget(width, height);
 
     this.updateCSSVar('width', newPosition.x);
@@ -171,7 +171,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     */
     this.elementChanged.emit();
   }
-  onResizeEnd({ target, isDrag, clientX, clientY }) {
+  onResizeEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onResizeEnd", target, isDrag);
 
     this.settings.width = this.getCSSVar('width');
@@ -179,20 +179,20 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     this.elementChanged.emit();
   }
 
-  onRotateStart({ target, set }) {
+  onRotateStart({ target, set }): void {
 
     set(this.frame.rotate);
 
     console.info('onRotateStart', this.frame.rotate);
     this.elementChanged.emit();
   }
-  onRotate({ target, beforeRotate }) {
+  onRotate({ target, beforeRotate }): void {
     this.frame.rotate = beforeRotate;
   //  target.style.transform = `rotate(${beforeRotate}deg)`;
     this.applyTransform(target);
     this.elementChanged.emit();
   }
-  onRotateEnd({ target, isDrag, clientX, clientY }) {
+  onRotateEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onRotateEnd", target, isDrag);
 
     this.applyTransformToSettings();
@@ -205,12 +205,12 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     0, 0, 1, 0,
     0, 0, 0, 1,
   ];
-  onWarpStart({ set }) {
+  onWarpStart({ set }): void {
     set(this.warpMatrix);
     this.warpExist = true;
     this.elementChanged.emit();
   }
-  onWarp({ target, matrix, transform }) {
+  onWarp({ target, matrix, transform }): void {
     this.warpMatrix = matrix;
 
     // target.style.transform = transform;
@@ -218,14 +218,14 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     this.elementChanged.emit();
     //target.style.transform = `matrix3d(${matrix.join(",")})`;
   }
-  onWarpEnd({ target, isDrag, clientX, clientY }) {
+  onWarpEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onWarpEnd", target, isDrag);
 
     this.applyTransformToSettings();
     this.elementChanged.emit();
   }
 
-  previewClicked($event: MouseEvent) {
+  previewClicked($event: MouseEvent): void {
     $event.stopPropagation();
 
     this.elementClicked.emit();
@@ -338,6 +338,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
 
     let m = null;
 
+    // TODO REFACTOR
     while (m = cssTransformRegex.exec(nativeElement.style.transform)) {
       names.push(m[1]);
       vals.push(m[2]);

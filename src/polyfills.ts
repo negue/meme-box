@@ -71,7 +71,7 @@ declare global {
 }
 
 
-if (typeof localStorage === 'undefined' || localStorage == null) {
+if (typeof localStorage === 'undefined' || localStorage === null) {
   const localStorageMock = (() => {
     let store = {};
 

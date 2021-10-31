@@ -127,11 +127,11 @@ export class ScreenArrangeComponent implements OnInit {
     });
   }
 
-  clickedOutside() {
+  clickedOutside(): void {
     this._screenArrangePreviewComponent.clickedOutside();
   }
 
-  userChangedMedia(clipId: string) {
+  userChangedMedia(clipId: string): void {
     const currentIds = this.unsavedChangesIds;
     if (!currentIds.includes(clipId)) {
       // create a new object for CD
@@ -139,7 +139,7 @@ export class ScreenArrangeComponent implements OnInit {
     }
   }
 
-  userResetChangedOfMedia(clipIds: string | string[]) {
+  userResetChangedOfMedia(clipIds: string | string[]): void {
     const ids = Array.isArray(clipIds) ? clipIds : [clipIds];
 
     for (const clipId of ids) {

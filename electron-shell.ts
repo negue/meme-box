@@ -1,5 +1,5 @@
 import * as electron from 'electron';
-import {app, BrowserWindow, dialog, ipcMain, Menu, MessageBoxSyncOptions, shell, Tray} from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, MessageBoxSyncOptions, nativeImage, shell, Tray } from 'electron';
 import * as path from 'path';
 import {join} from 'path';
 import {NEW_CONFIG_PATH} from "./server/path.utils";
@@ -8,6 +8,7 @@ import {getAppRootPath, getElectronPath, isInElectron} from "./server/file.utilt
 
 // TODO Refactor / Abstract the electron usages
 
+app.disableHardwareAcceleration();
 
 var fs = require("fs");
 
@@ -43,19 +44,30 @@ let alreadyAllowedToBeHidden = false;
 let tray;
 function createTray () {
   function toggle () {
-    if (win != null) {
+    if (win !== null) {
       win.close();
     } else {
       createWindow();
     }
   }
 
-  const trayIcon = join(getAppRootPath(), 'assets/icons/favicon.256x256.png');
-  console.info({trayIcon})
-  tray = new Tray(trayIcon);
+
+  const appRootPath = getAppRootPath();
+
+  const trayIcon = join(appRootPath, 'assets/icons/favicon.256x256.png');
+  const trayIconNativeImage = nativeImage.createFromPath(
+    trayIcon
+  );
+
+  const resized = trayIconNativeImage.resize({ width: 16, height: 16 });
+
+  tray = new Tray(resized);
+
   let template = [{
     label: 'Toggle',
     click: () => {
+      // when that option is pressed, you don't need another question if hide / quit
+      alreadyAllowedToBeHidden = true;
       toggle();
     }
   },
@@ -93,7 +105,9 @@ function createWindow(): BrowserWindow {
       // turn off remote
       enableRemoteModule: false,
       // Preload script
-      preload: path.join(electronPath, 'preload.js')
+      preload: path.join(electronPath, 'preload.js'),
+
+      nativeWindowOpen: true
     },
   });
 

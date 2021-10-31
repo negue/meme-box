@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {DynamicIframeContent, isDynamicIframeVariableValid, NOT_ALLOWED_WIDGET_VARIABLE_NAMES} from "@memebox/utils";
 import {BehaviorSubject} from "rxjs";
@@ -8,6 +8,8 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {downloadFile} from "@gewd/utils";
 import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
+import {WIDGET_TUTORIAL} from "../../../../../server/constants";
+import {DialogService} from "../dialog.service";
 
 @Component({
   selector: 'app-widget-edit',
@@ -38,7 +40,7 @@ export class WidgetEditComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CustomHtmlDialogPayload,
     private dialogRef: MatDialogRef<any>,
-    private cd: ChangeDetectorRef
+    private dialogService: DialogService,
   ) { }
 
   ngOnInit(): void {
@@ -55,21 +57,21 @@ export class WidgetEditComponent implements OnInit {
     this.iframeContentSubject$.next(this.workingValue);
   }
 
-  addNewExternal() {
+  addNewExternal(): void {
     this.workingValue.libraries.push({type:'css', src:''});
     this.markForCheck();
   }
 
-  saveExternalArray() {
+  saveExternalArray(): void {
 
   }
 
-  deleteExternalFile(index: number) {
+  deleteExternalFile(index: number): void {
     this.workingValue.libraries.splice(index, 1);
     this.markForCheck();
   }
 
-  save() {
+  save(): void {
     const variablesObject = {};
 
     for (const value of this.variablesList) {
@@ -94,7 +96,7 @@ export class WidgetEditComponent implements OnInit {
     this.dialogRef.close(this.workingValue);
   }
 
-  markForCheck(force = false) {
+  markForCheck(force = false): void {
     const enableSubjectRefresh = force || this.autoRefreshCheckbox?.checked;
 
     if (this.initDone && enableSubjectRefresh) {
@@ -105,7 +107,7 @@ export class WidgetEditComponent implements OnInit {
     }
   }
 
-  addNewVariable() {
+  addNewVariable(): void {
     this.variablesList.push({
       hint: '',
       name: `myVar${++this.newVarCounter}`,
@@ -116,7 +118,7 @@ export class WidgetEditComponent implements OnInit {
     this.markForCheck();
   }
 
-  deleteVariable($event: ActionVariableConfig) {
+  deleteVariable($event: ActionVariableConfig): void {
     // TODO "Are you sure?"
 
     const foundIndex = this.variablesList.findIndex(value => value.name === $event.name);
@@ -126,7 +128,7 @@ export class WidgetEditComponent implements OnInit {
     this.markForCheck();
   }
 
-  onFileInputChanged($event: Event) {
+  onFileInputChanged($event: Event): void {
     const target = $event.target as HTMLInputElement;
     const files = target.files;
 
@@ -150,11 +152,15 @@ export class WidgetEditComponent implements OnInit {
     }
   }
 
-  exportWidget() {
+  exportWidget(): void {
     const jsonData = JSON.stringify(this.workingValue);
     var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
 
     console.info({jsonData, dataStr});
     downloadFile(this.data.name+'-widget.json',dataStr);
+  }
+
+  openTutorialMarkdown(): void  {
+    this.dialogService.showMarkdownFile(WIDGET_TUTORIAL);
   }
 }
