@@ -1,3 +1,4 @@
+import {uuid} from "@gewd/utils";
 import {TriggerActionOverrides, TriggerClipOrigin} from "@memebox/contracts";
 import {MemeboxApi} from "./memebox.api";
 
@@ -18,8 +19,9 @@ export class ActionApi {
 
     // await this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
 
-    this.memeboxApi.actionTriggerEventBus.triggerMedia({
+    this.memeboxApi.actionTriggerEventBus.queueAction({
       id: this.actionId,
+      uniqueId: uuid(),
       origin: TriggerClipOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,

@@ -1,3 +1,4 @@
+import {uuid} from "@gewd/utils";
 import {Dictionary, TriggerClipOrigin} from "@memebox/contracts";
 import {PersistenceInstance} from "./persistence";
 import {triggerMediaClipById} from "./websocket-server";
@@ -14,6 +15,7 @@ export class TimedHandler {
         this.intervalDictionary[timer.id] = setInterval(() => {
           triggerMediaClipById({
             id: timer.clipId,
+            uniqueId: uuid(),
             targetScreen: timer.screenId,
             origin: TriggerClipOrigin.Timer,
             originId: timer.id

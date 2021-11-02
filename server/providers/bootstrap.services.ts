@@ -12,10 +12,10 @@ import {ScriptHandler} from "./actions/scripts/script.handler";
 @Service()
 export class BootstrapServices {
   constructor(
-    mediaTriggerHandler: ActionTriggerHandler,
+    _mediaTriggerHandler: ActionTriggerHandler,
     _twitchBootstrap: TwitchBootstrap,
     _websocketBootstrap: WebsocketBootstrap,
-    scriptHandler: ScriptHandler
+    _scriptHandler: ScriptHandler
   ) {
   }
 }

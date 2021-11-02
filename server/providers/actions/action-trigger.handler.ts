@@ -16,10 +16,13 @@ import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 
-import {ActionTriggerEventBus} from "./action-trigger-event.bus";
+import {ActionQueueEventBus} from "./action-queue-event.bus";
 import {ScriptHandler} from "./scripts/script.handler";
 import {timeoutAsync} from "./scripts/apis/sleep.api";
 import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
+import {uuid} from "@gewd/utils";
+import {ActionQueue} from "./action-queue";
+import {ActionActiveState} from "./action-active-state";
 
 @Service()
 export class ActionTriggerHandler {
@@ -27,20 +30,28 @@ export class ActionTriggerHandler {
   private _allMediasMap: Dictionary<Clip> = {};
   private _allMediasList: Clip[] = [];
 
+  private _actionQueue = new ActionQueue(
+    this._persistence,
+    this.actionState,
+    async (triggerAction) => {
+      await this.triggerActionById(triggerAction)
+    }
+  )
+
   constructor(
     @UseOpts({name: 'ActionTriggerHandler'}) public logger: NamedLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private mediaTriggerEventBus: ActionTriggerEventBus,
+    private actionQueueEventBus: ActionQueueEventBus,
     private _memeboxWebSocket: MemeboxWebsocket,
     private _scriptHandler: ScriptHandler,
     private actionStateEventBus: ActionActiveStateEventBus,
+    private actionState: ActionActiveState
   ) {
-    mediaTriggerEventBus.AllTriggerEvents$.subscribe(triggerMedia => {
-      this.triggerActionById(triggerMedia);
+    actionQueueEventBus.AllQueuedActions$.subscribe(triggerMedia => {
+      this._actionQueue.triggerAndWaitUntilDone(triggerMedia);
     });
 
-
-    mediaTriggerEventBus.AllUpdateEvents$.subscribe(triggerMedia => {
+    actionQueueEventBus.AllUpdateEvents$.subscribe(triggerMedia => {
       this.updateMediaEvent(triggerMedia);
     });
 
@@ -58,7 +69,7 @@ export class ActionTriggerHandler {
 
     switch (mediaConfig.type) {
       case MediaType.Meta:
-        await this.triggerMeta(mediaConfig);
+        await this.triggerMeta(mediaConfig, payloadObs);
         break;
       case MediaType.Script:
         await this._scriptHandler.handleScript(mediaConfig, payloadObs);
@@ -83,6 +94,8 @@ export class ActionTriggerHandler {
         }
       }
     }
+
+    return payloadObs;
   }
 
   triggerActionOnScreen (payload: TriggerAction): void  {
@@ -119,7 +132,7 @@ export class ActionTriggerHandler {
     }
   }
 
-  private async triggerMeta(mediaConfig: Clip): Promise<void> {
+  private async triggerMeta(mediaConfig: Clip, payloadObs: TriggerAction): Promise<void> {
     // Get all Tags
     const assignedTags = mediaConfig.tags || [];
 
@@ -149,23 +162,25 @@ export class ActionTriggerHandler {
 
         const clipToTrigger = allClips[randomIndex];
 
-        await this.triggerActionById({
+        await this._actionQueue.triggerAndWaitUntilDone({
           id: clipToTrigger.id,
+          uniqueId: uuid(),
           origin: TriggerClipOrigin.Meta,
-          originId: mediaConfig.id
+          originId: payloadObs.uniqueId
         });
 
         break;
       }
       case MetaTriggerTypes.All: {
-        const allPromises: Promise<void>[] = [];
+        const allPromises: Promise<string>[] = [];
 
         allClips.forEach(clipToTrigger => {
           allPromises.push(
-            this.triggerActionById({
+            this._actionQueue.triggerAndWaitUntilDone({
               id: clipToTrigger.id,
+              uniqueId: uuid(),
               origin: TriggerClipOrigin.Meta,
-              originId: mediaConfig.id
+              originId: payloadObs.uniqueId
             })
           );
         });
@@ -177,10 +192,11 @@ export class ActionTriggerHandler {
       case MetaTriggerTypes.AllDelay: {
 
         for (const clipToTrigger of allClips) {
-          await this.triggerActionById({
+          await this._actionQueue.triggerAndWaitUntilDone({
             id: clipToTrigger.id,
+            uniqueId: uuid(),
             origin: TriggerClipOrigin.Meta,
-            originId: mediaConfig.id
+            originId: payloadObs.uniqueId
           });
           await timeoutAsync(mediaConfig.metaDelay)
         }

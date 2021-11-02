@@ -9,8 +9,9 @@ import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {ExampleTwitchCommandsSubject} from "../../shared";
-import {ActionTriggerEventBus} from "../actions/action-trigger-event.bus";
+import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
 import {convertExtendedToTypeValues, getVariablesListOfAction} from "@memebox/action-variables";
+import {uuid} from "@gewd/utils";
 
 @Injectable({
   type: ProviderType.SERVICE,
@@ -25,7 +26,7 @@ export class TwitchHandler {
     private _twitchConnector: TwitchConnector,
     private _twitchLogger: TwitchLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private _mediaTriggerEventBus: ActionTriggerEventBus
+    private _mediaTriggerEventBus: ActionQueueEventBus
   ) {
 
     _persistence.dataUpdated$().subscribe(() => {
@@ -111,8 +112,9 @@ export class TwitchHandler {
 
     this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
 
-    this._mediaTriggerEventBus.triggerMedia({
+    this._mediaTriggerEventBus.queueAction({
       id: trigger.command.clipId,
+      uniqueId: uuid(),
       targetScreen: trigger.command.screenId,
       origin: TriggerClipOrigin.TwitchEvent,
       originId: trigger.command.id,

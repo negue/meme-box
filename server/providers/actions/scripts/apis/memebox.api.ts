@@ -1,5 +1,5 @@
 import {Service} from "@tsed/di";
-import {ActionTriggerEventBus} from "../../action-trigger-event.bus";
+import {ActionQueueEventBus} from "../../action-queue-event.bus";
 import {MediaType} from "@memebox/contracts";
 import {ActionActiveState} from "../../action-active-state";
 import {Inject} from "@tsed/common";
@@ -21,12 +21,12 @@ export type ActionSelector = string  | {
 export class MemeboxApi extends DisposableBase {
 
   // for permanent scripts
-  public onAction$ = this.actionTriggerEventBus.AllTriggerEvents$.pipe(
+  public onAction$ = this.actionTriggerEventBus.AllQueuedActions$.pipe(
     takeUntil(this._destroy$)
   );
 
   constructor(
-    public actionTriggerEventBus: ActionTriggerEventBus,
+    public actionTriggerEventBus: ActionQueueEventBus,
     public actionActiveState: ActionActiveState,
     public scriptId: string,
     public scriptType: MediaType
@@ -51,7 +51,7 @@ export class MemeboxApi extends DisposableBase {
 @Service()
 export class MemeboxApiFactory {
   constructor(
-    private actionTriggerEventBus: ActionTriggerEventBus,
+    private actionTriggerEventBus: ActionQueueEventBus,
     private actionActiveState: ActionActiveState,
 
     @Inject(PERSISTENCE_DI)
