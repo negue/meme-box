@@ -166,7 +166,8 @@ export class ActionTriggerHandler {
           id: clipToTrigger.id,
           uniqueId: uuid(),
           origin: TriggerClipOrigin.Meta,
-          originId: payloadObs.uniqueId
+          originId: mediaConfig.id,
+          originUniqueId: payloadObs.uniqueId
         });
 
         break;
@@ -180,7 +181,8 @@ export class ActionTriggerHandler {
               id: clipToTrigger.id,
               uniqueId: uuid(),
               origin: TriggerClipOrigin.Meta,
-              originId: payloadObs.uniqueId
+              originId: mediaConfig.id,
+              originUniqueId: payloadObs.uniqueId
             })
           );
         });
@@ -196,7 +198,8 @@ export class ActionTriggerHandler {
             id: clipToTrigger.id,
             uniqueId: uuid(),
             origin: TriggerClipOrigin.Meta,
-            originId: payloadObs.uniqueId
+            originId: mediaConfig.id,
+            originUniqueId: payloadObs.uniqueId
           });
           await timeoutAsync(mediaConfig.metaDelay)
         }

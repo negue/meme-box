@@ -3,7 +3,7 @@ import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
 import {TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
-import {concatMap, filter, take, tap} from "rxjs/operators";
+import {concatMap, filter, take} from "rxjs/operators";
 import {ActionActiveState} from "./action-active-state";
 
 export class ActionQueue {
@@ -39,12 +39,12 @@ export class ActionQueue {
     if (this._queueSubjectsDictionary[queueName]) {
       return this._queueSubjectsDictionary[queueName];
     } else{
-      var subject = new Subject<TriggerAction>();
+      const subject = new Subject<TriggerAction>();
 
       this._queueSubjectsDictionary[queueName] = subject;
 
       subject.pipe(
-        tap(action => console.info(queueName + ': Before concatMap to wait until its done', action.uniqueId)),
+        // tap(action => console.info(queueName + ': Before concatMap to wait until its done', action.uniqueId)),
 
         // Process each task, but do so consecutively
         concatMap(async triggerAction => {
@@ -52,7 +52,7 @@ export class ActionQueue {
           return triggerAction;
         }),
 
-        tap(action => console.info(queueName + ': After concatMap', action.uniqueId))
+        // tap(action => console.info(queueName + ': After concatMap', action.uniqueId))
       ).subscribe((actionDone) => {
         this._queueDone$.next(actionDone.uniqueId);
       })
