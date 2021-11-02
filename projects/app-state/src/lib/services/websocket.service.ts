@@ -3,6 +3,7 @@ import {ActionActiveStatePayload, ACTIONS, ActionStateEnum, TriggerAction, Trigg
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {filter, mapTo, take} from "rxjs/operators";
+import {uuid} from "@gewd/utils";
 
 export enum ConnectionState{
   NONE,
@@ -64,9 +65,10 @@ export class WebsocketService {
     this.ws.send(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);
   }
 
-  public triggerClipOnScreen(clipId: string, screenId?: string | null) {
+  public triggerClipOnScreen(clipId: string, screenId?: string | undefined) {
     const triggerObj: TriggerAction = {
       id: clipId,
+      uniqueId: uuid(),
       targetScreen: screenId,
       repeatX: 0,  // todo after streamdeck ?
       repeatSecond: 0,

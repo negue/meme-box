@@ -55,6 +55,7 @@ export interface Clip extends HasId, ActionOverridableProperies, HasExtendedData
   metaDelay?: number; // in ms
 
   showOnMobile?: boolean;
+  queueName?: string; // Name of a shared queue to be used to "wait" before the action will be triggered
 
 
   fromTemplate?: string; // GUID / Clip.Id of the Template

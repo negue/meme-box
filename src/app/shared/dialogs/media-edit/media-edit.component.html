@@ -1,17 +1,17 @@
 <h2 mat-dialog-title class="title-wrapper">
   {{ (actionToEdit?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
 
-  <mat-checkbox class="mobile-checkbox"
-                [checked]="showOnMobile"
-                (change)="showOnMobile = $event.checked">
-    Visible on Mobile View
-  </mat-checkbox>
+  <div class="action_id" *ngIf="actionToEdit.id">
+    ID: {{actionToEdit.id}} <button mat-icon-button (click)="copyIdToClipboard()">
+    <mat-icon svgIcon="content_copy" style="width: 1rem;
+    height: 1rem;line-height: 1rem"></mat-icon>
+  </button>
+  </div>
 </h2>
-<mat-dialog-content class="mat-typography two-columns dialog-content">
-  <form [formGroup]="form" class="column">
+<mat-dialog-content class="mat-typography dialog-content">
+  <form [formGroup]="form">
 
-  <lib-stepper-content style="min-height: 600px"
-  [selectedIndex]="isEditMode ? 1 : 0">
+  <lib-stepper-content style="min-height: 600px" [selectedIndex]="isEditMode ? 1 : 0">
     <div stepperHeader>
       <mat-form-field>
         <mat-label>Name</mat-label>
@@ -45,7 +45,10 @@
         </div>
       </ng-container>
     </lib-step>
-    <lib-step label="Other Settings">
+
+    <lib-step [label]="(form.value.type | mediaEnumToLabel | async) + ' Settings'">
+      <div  class="two-columns">
+      <div class="column" [class.hidden]="!MEDIA_EDIT_CONFIG[form.value.type].hasTypeSettings">
       <mat-form-field *ngIf="false">
         <input autocomplete="off"
                formControlName="clipLength"
@@ -79,6 +82,10 @@
             You need to enter the URL or select a file.
           </mat-error>
         </mat-form-field>
+
+        <app-hint-panel style="margin-top: 0.5rem" [addBottomPadding]="true">
+          You can select a file from the media folder or you an online url.
+        </app-hint-panel>
       </div>
 
       <div class="form-field-row"
@@ -94,11 +101,16 @@
                  type="number"
           />
           <span matSuffix>ms</span>
-
-          <mat-error *ngIf="form.controls['playLength'].hasError('required')">
-            How long should it be visible on screen?
-          </mat-error>
         </mat-form-field>
+
+        <app-hint-panel style="margin-top: 0.5rem" [addBottomPadding]="true">
+          How long should it be visible on screen?
+
+          <div *ngIf="!MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(form.value.type)">
+            <br />
+            Media Files: if you don't enter a value, then it'll just play out the full length.
+          </div>
+        </app-hint-panel>
       </div>
       <ng-container *ngIf="[MediaType.Audio, MediaType.Video].includes(form.value.type)">
         <mat-label>Volume</mat-label>
@@ -126,36 +138,6 @@
         </mat-form-field>
       </div>
 
-      <div class="form-field-row">
-        <mat-form-field class="example-chip-list">
-          <mat-label>Assign a new tag...</mat-label>
-          <mat-chip-list #chipList aria-label="Tag selection">
-            <mat-chip
-              *ngFor="let tag of currentTags$ | async"
-              [selectable]="false"
-              [removable]="true"
-              (removed)="removeTag(tag)">
-              {{tag.name}}
-              <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-            </mat-chip>
-            <input
-              #tagInput
-              [formControl]="tagFormCtrl"
-              [matAutocomplete]="auto"
-              [matChipInputFor]="chipList"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="enterNewTag($event)"
-              (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
-          </mat-chip-list>
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedNewTag($event)">
-            <mat-option *ngFor="let tag of filteredTags$ | async"
-                        [value]="tag">
-              {{tag.name}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-
-      </div>
 
       <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta">
         <mat-form-field>
@@ -168,7 +150,41 @@
             <mat-option [value]="2">All with Delay</mat-option>
           </mat-select>
         </mat-form-field>
+
+
       </div>
+
+
+        <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta">
+          <mat-form-field class="example-chip-list">
+            <mat-label>Assign a new tag...</mat-label>
+            <mat-chip-list #chipList aria-label="Tag selection">
+              <mat-chip
+                *ngFor="let tag of currentTags$ | async"
+                [selectable]="false"
+                [removable]="true"
+                (removed)="removeTag(tag)">
+                {{tag.name}}
+                <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+              </mat-chip>
+              <input
+                #tagInput
+                [formControl]="tagFormCtrl"
+                [matAutocomplete]="tagAutoComplete"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="enterNewTag($event)"
+                (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
+            </mat-chip-list>
+            <mat-autocomplete #tagAutoComplete="matAutocomplete" (optionSelected)="selectedNewTag($event)">
+              <mat-option *ngFor="let tag of filteredTags$ | async"
+                          [value]="tag">
+                {{tag.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+        </div>
 
       <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta && form.value.metaType === 2">
         <mat-form-field>
@@ -187,6 +203,222 @@
         </mat-form-field>
       </div>
 
+
+        <ng-container *ngIf="form.value.type === MediaType.Widget">
+          <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+            <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
+            <app-action-variables-assignments [variablesConfig]="currentHtml?.variablesConfig"
+                                              [data]="actionToEdit.extended"
+                                              (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()">
+
+            </app-action-variables-assignments>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="currentScript?.variablesConfig">
+          <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
+
+          <app-action-variables-assignments [variablesConfig]="currentScript?.variablesConfig"
+                                            [data]="actionToEdit.extended"
+                                            (dataChanged)="actionToEdit.extended = $event">
+
+          </app-action-variables-assignments>
+        </ng-container>
+      </div>
+      <!-- Preview of a Media -->
+      <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
+           [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
+           [class.script]="[MediaType.Script, MediaType.PermanentScript].includes(form.value.type)"
+      >
+        <!-- Meta => AppClipType or list all assign clips by tags -->
+        <div *ngSwitchCase="MediaType.Meta">
+          <h3>Assigned Clips by Tags</h3>
+          <app-compact-clip-card *ngFor="let assignedClip of taggedClips$ | async"
+                                 [clip]="assignedClip">
+
+          </app-compact-clip-card>
+        </div>
+
+        <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
+          <mat-select formControlName="fromTemplate" #fromTemplateSelect
+                      (valueChange)="onTemplateChanged($event)">
+            <mat-option value="">No Template</mat-option>
+            <mat-option *ngFor="let template of widgetTemplates$ | async"
+                        [value]="template.id">{{template.name}}</mat-option>
+          </mat-select>
+
+          <button mat-raised-button color="primary" (click)="editHTML()"
+                  *ngIf="fromTemplateSelect.value === ''">
+            Edit HTML
+          </button>
+          <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+
+            <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
+                                [content]="currentHtml" class="preview-box">
+
+            </app-dynamic-iframe>
+
+
+            <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Widget State
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
+            </mat-expansion-panel>
+          </ng-container>
+        </div>
+
+
+        <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
+          <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
+          <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+
+
+            <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
+                                [content]="currentHtml" class="preview-box">
+
+            </app-dynamic-iframe>
+
+            <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  Widget State
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
+            </mat-expansion-panel>
+
+          </ng-container>
+        </div>
+
+        <div *ngSwitchCase="MediaType.Script" >
+          <button mat-raised-button color="primary" (click)="editScript()">
+            Edit Script + Config
+          </button>
+        </div>
+
+        <div *ngSwitchCase="MediaType.PermanentScript" >
+          <button mat-raised-button color="primary" (click)="editScript()">
+            Edit Script + Config
+          </button>
+        </div>
+
+        <div *ngSwitchCase="MediaType.Video" >
+
+          <div *ngIf="mediaPathInput.value">
+            <video width="320" height="240" controls #videoElement
+                   [src]="mediaPathInput.value | mediaPathToUrl"
+                   [volume]="form.value.volumeSetting / 100"
+                   crossorigin="anonymous" (loadeddata)="onVideoLoaded($event, videoElement)">
+              Your browser does not support the video tag.
+              <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+            </video>
+
+            <button mat-raised-button
+                    (click)="makeScreenshot(videoElement)">
+              Set current video position as screenshot
+            </button>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="MediaType.Audio" >
+
+          <div *ngIf="mediaPathInput.value">
+            <audio [src]="mediaPathInput.value | mediaPathToUrl"
+                   [volume]="form.value.volumeSetting / 100"
+                   crossorigin="anonymous" controls>
+              Your browser does not support the audio tag.
+              <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+            </audio>
+          </div>
+        </div>
+        <!-- All others => AppClipType -->
+        <gewd-auto-scale width="100%" [height]="500"
+                         class="preview-box"
+                         *ngSwitchDefault>
+          <app-clip-preview [clip]="form.value"
+                            [useOldPathEndpoint]="true">
+
+          </app-clip-preview>
+        </gewd-auto-scale>
+
+      </div>
+      </div>
+    </lib-step>
+
+    <lib-step label="Other Settings">
+
+      <mat-checkbox class="mobile-checkbox"
+                    [checked]="showOnMobile"
+                    (change)="showOnMobile = $event.checked">
+        Visible on Mobile View
+      </mat-checkbox>
+
+      <app-hint-panel style="margin-top: 1rem" [addBottomPadding]="true">
+        If this action should be visible on the mobile view.
+      </app-hint-panel>
+
+      <div class="form-field-row" *ngIf="form.value.type !== MediaType.Meta">
+        <mat-form-field class="example-chip-list">
+          <mat-label>Assign a new tag...</mat-label>
+          <mat-chip-list #chipList aria-label="Tag selection">
+            <mat-chip
+              *ngFor="let tag of currentTags$ | async"
+              [selectable]="false"
+              [removable]="true"
+              (removed)="removeTag(tag)">
+              {{tag.name}}
+              <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+            </mat-chip>
+            <input
+              #tagInput
+              [formControl]="tagFormCtrl"
+              [matAutocomplete]="tagAutoComplete"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="enterNewTag($event)"
+              (blur)="enterNewTag({input: tagInput, value: tagInput.value})">
+          </mat-chip-list>
+          <mat-autocomplete #tagAutoComplete="matAutocomplete" (optionSelected)="selectedNewTag($event)">
+            <mat-option *ngFor="let tag of filteredTags$ | async"
+                        [value]="tag">
+              {{tag.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+      </div>
+
+      <div class="form-field-row" *ngIf="MEDIA_EDIT_CONFIG[form.value.type].canSelectQueue">
+        <mat-form-field class="example-chip-list">
+          <mat-label>Select Queue</mat-label>
+          <input
+              matInput
+              formControlName="queueName"
+              [matAutocomplete]="queueAutocomplete">
+          <mat-autocomplete #queueAutocomplete="matAutocomplete"
+                            (optionSelected)="selectedNewQueue($event)">
+            <mat-option *ngFor="let queue of allQueueNames$ | async"
+                        [value]="queue">
+              {{queue}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <app-hint-panel style="margin-top: 1rem" [addBottomPadding]="true">
+          You can select a custom queue so that your actions have to wait before a previous one is done.
+          <br/>
+          <br/>
+          If you don't select a queue, then visible Media (Images, Videos etc) will still have their own queue, <br />
+          which means only one Media can be visible at once at each assigned screen.
+        </app-hint-panel>
+      </div>
+
+
       <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
         <mat-label>Also add to this Screen:</mat-label>
         <mat-select [(value)]="selectedScreenId">
@@ -197,163 +429,14 @@
         </mat-select>
       </mat-form-field>
 
-      <ng-container *ngIf="form.value.type === MediaType.Widget">
-        <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
-          <h3 *ngIf="currentHtml?.variablesConfig.length != 0">Variables:</h3>
-          <app-action-variables-assignments [variablesConfig]="currentHtml?.variablesConfig"
-                                            [data]="actionToEdit.extended"
-                                            (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()">
-
-          </app-action-variables-assignments>
-        </ng-container>
-      </ng-container>
-    </lib-step>
-    <lib-step label="Form Json">
-      {{ form.value | json }}
     </lib-step>
   </lib-stepper-content>
-
-
-
   </form>
-
-  <!-- Preview of a Media -->
-  <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
-       [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
-       [class.script]="[MediaType.Script, MediaType.PermanentScript].includes(form.value.type)"
-  >
-    <!-- Meta => AppClipType or list all assign clips by tags -->
-    <div *ngSwitchCase="MediaType.Meta">
-      <h3>Assigned Clips by Tags</h3>
-      <app-compact-clip-card *ngFor="let assignedClip of taggedClips$ | async"
-                             [clip]="assignedClip">
-
-      </app-compact-clip-card>
-    </div>
-
-    <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
-      <mat-select formControlName="fromTemplate" #fromTemplateSelect
-                  (valueChange)="onTemplateChanged($event)">
-        <mat-option value="">No Template</mat-option>
-        <mat-option *ngFor="let template of widgetTemplates$ | async"
-            [value]="template.id">{{template.name}}</mat-option>
-      </mat-select>
-
-      <button mat-raised-button color="primary" (click)="editHTML()"
-              *ngIf="fromTemplateSelect.value === ''">
-        Edit HTML
-      </button>
-      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
-
-      <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
-                          [content]="currentHtml" class="preview-box">
-
-      </app-dynamic-iframe>
-
-
-      <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Widget State
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
-      </mat-expansion-panel>
-      </ng-container>
-    </div>
-
-
-    <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
-      <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
-      <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
-
-
-      <app-dynamic-iframe [mediaId]="actionToEdit.id" #dynamicIframeComponent
-                          [content]="currentHtml" class="preview-box">
-
-      </app-dynamic-iframe>
-
-      <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Widget State
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-
-        {{ dynamicIframeComponent.WidgetApi?.store.state$ | async | json }}
-      </mat-expansion-panel>
-
-</ng-container>
-    </div>
-
-    <div *ngSwitchCase="MediaType.Script" >
-
-     <button mat-raised-button color="primary" (click)="editScript()">
-        Edit Script + Config
-     </button>
-
-      <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
-
-      <app-action-variables-assignments [variablesConfig]="currentScript?.variablesConfig"
-                                        [data]="actionToEdit.extended"
-                                        (dataChanged)="actionToEdit.extended = $event">
-
-      </app-action-variables-assignments>
-    </div>
-
-
-
-    <div *ngSwitchCase="MediaType.PermanentScript" >
-
-      <button mat-raised-button color="primary" (click)="editScript()">
-        Edit Script + Config
-      </button>
-
-      <h3 *ngIf="currentScript?.variablesConfig.length != 0">Variables:</h3>
-
-      <app-action-variables-assignments [variablesConfig]="currentScript?.variablesConfig"
-                                        [data]="actionToEdit.extended"
-                                        (dataChanged)="actionToEdit.extended = $event">
-
-      </app-action-variables-assignments>
-    </div>
-
-    <div *ngSwitchCase="MediaType.Video" >
-
-<div *ngIf="mediaPathInput.value">
-  <video width="320" height="240" controls #videoElement
-         [src]="mediaPathInput.value | mediaPathToUrl"
-           crossorigin="anonymous" (loadeddata)="onVideoLoaded($event, videoElement)">
-       Your browser does not support the video tag.
-      <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
-    </video>
-
-      <button mat-raised-button
-              (click)="makeScreenshot(videoElement)">
-        Set current video position as screenshot
-      </button>
-</div>
-    </div>
-    <!-- All others => AppClipType -->
-    <gewd-auto-scale [width]="500" [height]="500"
-                     class="preview-box"
-                     *ngSwitchDefault>
-      <app-clip-preview [clip]="form.value"
-                        [useOldPathEndpoint]="true">
-
-      </app-clip-preview>
-    </gewd-auto-scale>
-
-  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions class="two-columns">
   <div class="column">
-    ID: {{actionToEdit.id}} <button mat-icon-button (click)="copyIdToClipboard()">
-    <mat-icon svgIcon="content_copy" style="width: 1rem;
-    height: 1rem;line-height: 1rem"></mat-icon>
-  </button>
+
   </div>
   <div class="column" align="end" >
     <button mat-button mat-dialog-close>Cancel</button>

@@ -1,5 +1,15 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
 .stepper-shell {
   display: flex;
+  flex: 1;
+}
+
+.steps {
+  background: #20282d;
 }
 
 .step-item {
