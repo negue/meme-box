@@ -1,7 +1,7 @@
-import {clipDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
+import {actionDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 import {VM, VMScript} from "vm2";
 import {ActionStoreAdapter, ActionStoreApi} from "@memebox/shared-state";
-import {Clip, Dictionary, MediaType, TriggerAction} from "@memebox/contracts";
+import {Action, ActionType, Dictionary, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {MemeboxApi} from "./apis/memebox.api";
 import {NamedLogger} from "../../named-logger";
@@ -13,7 +13,7 @@ import {DummyWebSocketServer, RealWebSocketServer, WebSocketServerApi} from "./a
 import {EventBusApi} from "./apis/eventbus.api";
 
 class ScriptCompileError extends Error {
-  constructor(script: Clip,
+  constructor(script: Action,
               public scriptType: 'bootstrap'|'execution',
               public baseError: Error) {
     super(`Failed to compile the ${scriptType} Script "${script.name}" [${script.id}]: \n${baseError.message}`);
@@ -63,15 +63,15 @@ export class ScriptContext implements CanDispose {
   constructor(
     private _vm: VM,
     storeAdapter: ActionStoreAdapter,
-    public script: Clip,
+    public script: Action,
     public memeboxApi: MemeboxApi,
     baseLogger: NamedLogger,
     public obsApi: ObsApi,
     public twitchApi: TwitchApi
   ) {
-    this.scriptConfig = clipDataToScriptConfig(script);
+    this.scriptConfig = actionDataToScriptConfig(script);
 
-    const isPermanentScript = this.script.type === MediaType.PermanentScript;
+    const isPermanentScript = this.script.type === ActionType.PermanentScript;
 
     // TODO error$ subject for logger or other stuff
     var error$ = new Subject<string>();
@@ -147,7 +147,7 @@ export class ScriptContext implements CanDispose {
     // TODO apply variable overrides from TriggerClip
 
     const variables = getScriptVariablesOrFallbackValues(
-      this.scriptConfig,
+      this.scriptConfig.variablesConfig ?? [],
       this.script.extended,
       payloadObs?.overrides?.action?.variables
     );

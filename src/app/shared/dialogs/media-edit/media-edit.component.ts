@@ -10,11 +10,11 @@ import {
 } from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
-  Clip,
+  Action,
+  ACTION_TYPE_INFORMATION,
+  ACTION_TYPE_INFORMATION_ARRAY,
+  ActionType,
   FileInfo,
-  MEDIA_TYPE_INFORMATION,
-  MEDIA_TYPE_INFORMATION_ARRAY,
-  MediaType,
   MetaTriggerTypes,
   Tag
 } from "@memebox/contracts";
@@ -37,10 +37,10 @@ import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/a
 import {MatChipInputEvent} from "@angular/material/chips";
 import {DialogService} from "../dialog.service";
 import {
+  actionDataToScriptConfig,
+  actionDataToWidgetContent,
   applyDynamicIframeContentToClipData,
   applyScriptConfigToClipData,
-  clipDataToDynamicIframeContent,
-  clipDataToScriptConfig,
   DynamicIframeContent,
   ScriptConfig
 } from "@memebox/utils";
@@ -56,9 +56,9 @@ import {
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
 
-const INITIAL_CLIP: Partial<Clip> = {
+const INITIAL_CLIP: Partial<Action> = {
   tags: [],
-  type: MediaType.Picture,
+  type: ActionType.Picture,
   name: 'Media Filename',
   volumeSetting: 10,
   playLength: DEFAULT_PLAY_LENGTH,
@@ -72,7 +72,7 @@ const INITIAL_CLIP: Partial<Clip> = {
 };
 
 interface MediaTypeButton {
-  type: MediaType;
+  type: ActionType;
   name: string;
   icon: string;
 }
@@ -83,8 +83,8 @@ interface MediaTypeButton {
 // TODO hide tag selection for types that cant use it anyway
 
 export interface MediaEditDialogPayload {
-  actionToEdit: Partial<Clip>,
-  defaults?: Partial<Clip>
+  actionToEdit: Partial<Action>,
+  defaults?: Partial<Action>
 }
 
 @Component({
@@ -97,7 +97,7 @@ export class MediaEditComponent
   implements OnInit, OnDestroy,  DialogData<MediaEditDialogPayload>
 {
   public isEditMode = false;
-  public actionToEdit: Clip;
+  public actionToEdit: Action;
 
   public form = new FormBuilder().group({
     id: "",
@@ -130,10 +130,10 @@ export class MediaEditComponent
   MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
   MEDIA_TYPES_WITHOUT_PLAYTIME = MEDIA_TYPES_WITHOUT_PLAYTIME;
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
-  MEDIA_TYPE_INFORMATION = MEDIA_TYPE_INFORMATION;
+  MEDIA_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
   MEDIA_EDIT_CONFIG = MEDIA_EDIT_CONFIG;
 
-  mediaTypeList: MediaTypeButton[] = MEDIA_TYPE_INFORMATION_ARRAY
+  mediaTypeList: MediaTypeButton[] = ACTION_TYPE_INFORMATION_ARRAY
     .map((value) => {
       return {
         icon: value.icon,
@@ -181,7 +181,7 @@ export class MediaEditComponent
 
   widgetTemplates$ = this.appQuery.clipList$.pipe(
     map(( allMedias) => {
-      return allMedias.filter(c => c.type === MediaType.WidgetTemplate);
+      return allMedias.filter(c => c.type === ActionType.WidgetTemplate);
     }),
     shareReplay(1)
   );
@@ -218,19 +218,18 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
       extended: {
         ...this.data?.actionToEdit?.extended
       }
-    }) as Clip;
+    }) as Action;
 
     this.isEditMode = !!this.data?.actionToEdit;
 
 
-    if (this.actionToEdit.type === MediaType.Widget
-      || this.actionToEdit.type === MediaType.IFrame) {
-      this.currentHtmlConfig = clipDataToDynamicIframeContent(this.actionToEdit);
+    if (this.actionToEdit.type === ActionType.Widget) {
+      this.currentHtmlConfig = actionDataToWidgetContent(this.actionToEdit);
       this.executeHTMLRefresh();
     }
 
-    if ([MediaType.Script, MediaType.PermanentScript].includes(this.actionToEdit.type)) {
-      this.currentScript = clipDataToScriptConfig(this.actionToEdit);
+    if ([ActionType.Script, ActionType.PermanentScript].includes(this.actionToEdit.type)) {
+      this.currentScript = actionDataToScriptConfig(this.actionToEdit);
     }
 
     this.showOnMobile = this.actionToEdit.showOnMobile;
@@ -239,7 +238,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   get MediaType() {
-    return MediaType;
+    return ActionType;
   }
 
   ngOnInit(): void {
@@ -248,7 +247,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     this.form.valueChanges
       .pipe(
-        map((value) => value.type as MediaType),
+        map((value) => value.type as ActionType),
         startWith(this.form.value.type),
         distinctUntilChanged(),
         pairwise(),
@@ -262,7 +261,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
           previewUrl: "",
         });
 
-        if ([MediaType.Audio, MediaType.Video].includes(next) ) {
+        if ([ActionType.Audio, ActionType.Video].includes(next) ) {
           this.form.patchValue({
             playLength: undefined
           });
@@ -331,7 +330,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     const { value } = this.form;
 
-    const valueAsClip: Clip = {
+    const valueAsClip: Action = {
       ...this.actionToEdit, // base props that are not in the form
       ...value
     };
@@ -350,7 +349,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     await this.appService.addOrUpdateClip(valueAsClip);
 
-    if (this.selectedScreenId && valueAsClip.type !== MediaType.Meta) {
+    if (this.selectedScreenId && valueAsClip.type !== ActionType.Meta) {
       this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
         id: valueAsClip.id,
       });
@@ -372,7 +371,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.cd.markForCheck();
   }
 
-  updateMediaType(value: MediaType): void {
+  updateMediaType(value: ActionType): void {
     this.actionToEdit.type = value;
     this.form.patchValue({ type: value });
   }
@@ -460,7 +459,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   // endregion
 
   async editHTML() {
-    const dynamicIframeContent = clipDataToDynamicIframeContent(this.actionToEdit);
+    const dynamicIframeContent = actionDataToWidgetContent(this.actionToEdit);
 
     const dialogResult = await this.dialogService.showWidgetEdit({
       mediaId: this.actionToEdit.id,
@@ -501,13 +500,13 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     const template = templates.find(t => t.id === mediaId);
 
-    this.currentHtmlConfig = clipDataToDynamicIframeContent(template);
+    this.currentHtmlConfig = actionDataToWidgetContent(template);
     this.executeHTMLRefresh();
     this.cd.detectChanges();
   }
 
   async editScript() {
-    const scriptConfig = clipDataToScriptConfig(this.actionToEdit);
+    const scriptConfig = actionDataToScriptConfig(this.actionToEdit);
 
     const dialogResult = await this.dialogService.showScriptEdit({
       mediaId: this.actionToEdit.id,

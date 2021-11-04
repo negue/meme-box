@@ -3,7 +3,7 @@ import {TwitchConnector} from "./twitch.connector";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
-import {Clip, Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
+import {Action, Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
 import {TwitchLogger} from "./twitch.logger";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
@@ -20,7 +20,7 @@ import {uuid} from "@gewd/utils";
 export class TwitchHandler {
   private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
 
-  private actionsMap: Dictionary<Clip> = {};
+  private actionsMap: Dictionary<Action> = {};
 
   constructor(
     private _twitchConnector: TwitchConnector,
@@ -130,7 +130,7 @@ export class TwitchHandler {
   }
 
   private fillActionMap() {
-    const newMap: Dictionary<Clip> = {};
+    const newMap: Dictionary<Action> = {};
 
     for (let listClip of this._persistence.listClips()) {
       newMap[listClip.id] = listClip;

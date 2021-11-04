@@ -1,6 +1,6 @@
-import {MediaType} from "../../../contracts/src/lib/media.types";
+import {ActionType} from "../../../contracts/src/lib/media.types";
 
-export function fileEndingToType (fileEnding: string) : MediaType {
+export function fileEndingToType (fileEnding: string) : ActionType {
   fileEnding = fileEnding.toLowerCase().replace('.', '');
 
   switch (fileEnding) {
@@ -9,14 +9,14 @@ export function fileEndingToType (fileEnding: string) : MediaType {
     case 'gif':
     case 'webp':
     case 'png':
-      return MediaType.Picture;
+      return ActionType.Picture;
     case 'mp3':
     case 'wav':
     case 'ogg':
     case 'flac':
-      return MediaType.Audio;
+      return ActionType.Audio;
     case 'mp4':
     case 'webm':
-      return MediaType.Video;
+      return ActionType.Video;
   }
 }

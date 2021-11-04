@@ -1,7 +1,7 @@
 import {TmiConnectionType, TwitchConnector} from "../../../twitch/twitch.connector";
 import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
-import {MediaType} from "@memebox/contracts";
+import {ActionType} from "@memebox/contracts";
 import {TwitchDataProvider} from "../../../twitch/twitch.data-provider";
 
 export class TwitchApi extends DisposableBase {
@@ -14,12 +14,12 @@ export class TwitchApi extends DisposableBase {
   constructor(
     private twitchConnector: TwitchConnector,
     private dataProvider: TwitchDataProvider,
-    private scriptType: MediaType
+    private scriptType: ActionType
   ) {
     super();
 
     // Only Permanent Scripts as allowed to subscribe to Events
-    if (scriptType === MediaType.Script) {
+    if (scriptType === ActionType.Script) {
       this._destroy$.next();
     }
   }

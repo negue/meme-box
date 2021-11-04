@@ -16,6 +16,7 @@ import {FontColorContrastPipe} from "./font-color-contrast.pipe";
 import {ActionPreviewLabelPipe} from "./action-preview-label.pipe";
 import {ActionCanPreviewPipe} from "./action-can-preview.pipe";
 import {MediaEnumToLabel} from "./media-enum-to-label.pipe";
+import {ActionHasTriggerableVariablesPipe} from "./action-has-triggerable-variables.pipe";
 
 const PIPES = [
   SafePipe,
@@ -26,7 +27,7 @@ const PIPES = [
   MediaToPreviewUrlPipe, MediaPathToUrlPipe,
   ShowOnlyLastCharactersPipe, FontColorContrastPipe,
   ActionPreviewLabelPipe, ActionCanPreviewPipe,
-  MediaEnumToLabel
+  MediaEnumToLabel, ActionHasTriggerableVariablesPipe
 ];
 
 @NgModule({

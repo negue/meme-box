@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
-import {Clip, Screen} from "@memebox/contracts";
+import {Action, Screen} from "@memebox/contracts";
 import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
 import {DialogService} from "../../dialogs/dialog.service";
 import {ConfigMediaPathComponent} from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
@@ -13,7 +13,7 @@ import {ConfigService} from "../../../../../projects/app-state/src/lib/services/
   styleUrls: ['./getting-started.component.scss']
 })
 export class GettingStartedComponent implements OnInit {
-  public mediaList$: Observable<Clip[]> = this.query.clipList$;
+  public mediaList$: Observable<Action[]> = this.query.clipList$;
 
   public screenList$: Observable<Screen[]> = this.query.screensList$
   public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;

@@ -1,26 +1,26 @@
 import {ActionTypeGroup, GroupByMediaTypePipe} from './group-by-media-type.pipe';
-import {Clip, MediaType} from '@memebox/contracts';
+import {Action, ActionType} from '@memebox/contracts';
 
 describe('GroupByMediaTypePipe', () => {
   it('outputs to correct groups', () => {
-    const clips: Partial<Clip>[] = [
+    const clips: Partial<Action>[] = [
       {
         id: '1',
-        type: MediaType.Audio
+        type: ActionType.Audio
       },
       {
         id: '2',
-        type: MediaType.Audio
+        type: ActionType.Audio
       },
       {
         id: '3',
-        type: MediaType.Picture
+        type: ActionType.Picture
       }
     ];
 
     const pipe = new GroupByMediaTypePipe();
 
-    expect(pipe.transform(clips as Clip[])).toEqual([
+    expect(pipe.transform(clips as Action[])).toEqual([
       {
         groupName: 'mediaType.image',
         mediaType: 0,
@@ -35,7 +35,7 @@ describe('GroupByMediaTypePipe', () => {
   });
 
   it('groups unknown types to the unknown category', () => {
-    const clips: Partial<Clip>[] = [
+    const clips: Partial<Action>[] = [
       {
         id: '1',
         type: -10
@@ -52,7 +52,7 @@ describe('GroupByMediaTypePipe', () => {
 
     const pipe = new GroupByMediaTypePipe();
 
-    expect(pipe.transform(clips as Clip[])).toEqual([
+    expect(pipe.transform(clips as Action[])).toEqual([
       {
         groupName: 'invalid',
         mediaType: -10,

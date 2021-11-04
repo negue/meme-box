@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Clip, MediaType} from "@memebox/contracts";
+import {Action, ActionType} from "@memebox/contracts";
 
 @Pipe({
   name: 'actionCanPreview'
@@ -7,10 +7,10 @@ import {Clip, MediaType} from "@memebox/contracts";
 export class ActionCanPreviewPipe implements PipeTransform {
 
 
-  transform(value: Clip): boolean {
+  transform(value: Action): boolean {
     return ![
-      MediaType.WidgetTemplate,
-      MediaType.PermanentScript
+      ActionType.WidgetTemplate,
+      ActionType.PermanentScript
     ].includes(value.type);
   }
 }

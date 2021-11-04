@@ -1,10 +1,10 @@
 import {Service, UseOpts} from "@tsed/di";
 import {
+  Action,
   ACTIONS,
   ActionStateEnum,
-  Clip,
+  ActionType,
   Dictionary,
-  MediaType,
   MetaTriggerTypes,
   Screen,
   TriggerAction,
@@ -27,8 +27,8 @@ import {ActionActiveState} from "./action-active-state";
 @Service()
 export class ActionTriggerHandler {
   private _allScreens: Screen[] = [];
-  private _allMediasMap: Dictionary<Clip> = {};
-  private _allMediasList: Clip[] = [];
+  private _allMediasMap: Dictionary<Action> = {};
+  private _allMediasList: Action[] = [];
 
   private _actionQueue = new ActionQueue(
     this._persistence,
@@ -68,10 +68,10 @@ export class ActionTriggerHandler {
     const mediaConfig = this._allMediasMap[payloadObs.id];
 
     switch (mediaConfig.type) {
-      case MediaType.Meta:
+      case ActionType.Meta:
         await this.triggerMeta(mediaConfig, payloadObs);
         break;
-      case MediaType.Script:
+      case ActionType.Script:
         await this._scriptHandler.handleScript(mediaConfig, payloadObs);
         break;
       default: {
@@ -132,7 +132,7 @@ export class ActionTriggerHandler {
     }
   }
 
-  private async triggerMeta(mediaConfig: Clip, payloadObs: TriggerAction): Promise<void> {
+  private async triggerMeta(mediaConfig: Action, payloadObs: TriggerAction): Promise<void> {
     // Get all Tags
     const assignedTags = mediaConfig.tags || [];
 

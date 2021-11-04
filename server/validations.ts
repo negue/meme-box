@@ -1,13 +1,13 @@
 import {body, validationResult} from "express-validator";
-import {MediaType} from "@memebox/contracts";
+import {ActionType} from "@memebox/contracts";
 
 // TODO refactor those MediaType Checks
 export const MediaTypesWithoutPath = [
-  MediaType.Widget,
-  MediaType.WidgetTemplate,
-  MediaType.Script,
-  MediaType.Meta,
-  MediaType.PermanentScript
+  ActionType.Widget,
+  ActionType.WidgetTemplate,
+  ActionType.Script,
+  ActionType.Meta,
+  ActionType.PermanentScript
 ]
 
 export const clipValidations = [
@@ -16,7 +16,7 @@ export const clipValidations = [
     const bodyJson = req.body;
 
 
-    const bodyType: MediaType = bodyJson.type;
+    const bodyType: ActionType = bodyJson.type;
 
     return !MediaTypesWithoutPath.includes(bodyType);
   }).isString(),
@@ -25,13 +25,13 @@ export const clipValidations = [
     const bodyJson = req.body;
 
 
-    const bodyType: MediaType = bodyJson.type;
+    const bodyType: ActionType = bodyJson.type;
 
     const playLengthExists = typeof bodyJson.playLength === 'number';
 
     // playLength is neede for types Picture / iFrame
 
-    if ([MediaType.Picture, MediaType.IFrame].includes(bodyType) && !playLengthExists) {
+    if ([ActionType.Picture, ActionType.IFrame].includes(bodyType) && !playLengthExists) {
       return false;
     }
 

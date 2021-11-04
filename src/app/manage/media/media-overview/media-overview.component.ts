@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {Clip, Screen, Tag} from '@memebox/contracts';
+import {Action, Screen, Tag} from '@memebox/contracts';
 import {AppQueries, AppService, WebsocketService} from '@memebox/app-state';
 import {DialogService} from '../../../shared/dialogs/dialog.service';
 import {IFilterItem} from '../../../shared/components/filter/filter.component';
@@ -26,7 +26,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
 
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
-  public mediaList$: Observable<Clip[]> = filterClips$(
+  public mediaList$: Observable<Action[]> = filterClips$(
     this.query.state$,
     this.filteredItems$
   ).pipe(
@@ -59,7 +59,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     })
   );
 
-  public trackById: TrackByFunction<Clip> = (index, item) => {
+  public trackById: TrackByFunction<Action> = (index, item) => {
     return item.id;
   };
 
@@ -94,7 +94,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     this.configService.fillDummyData();
   }
 
-  showDialog(clipInfo: Partial<Clip>): void {
+  showDialog(clipInfo: Partial<Action>): void {
     this._dialog.showMediaEditDialog({
       actionToEdit: clipInfo
     });
@@ -110,17 +110,17 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     }
   }
 
-  onEdit(item: Clip): void {
+  onEdit(item: Action): void {
     this.showDialog(item);
   }
 
-  onPreview(item: Clip): void {
+  onPreview(item: Action): void {
     this._wsService.triggerClipOnScreen(item.id);
   }
 
   //TODO - the name and other information should come from the state
 
-  onClipOptions(item: Clip, screen: Screen): void {
+  onClipOptions(item: Action, screen: Screen): void {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,
@@ -148,5 +148,9 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
         type: mediGroup.mediaType
       }
     });
+  }
+
+  onTriggerWithVariables(item: Action) {
+    this._dialog.showTriggerActionVariables(item);
   }
 }

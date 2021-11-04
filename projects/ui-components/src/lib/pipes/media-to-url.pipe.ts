@@ -1,13 +1,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {EXPRESS_BASE} from "@memebox/app-state";
-import {Clip, SERVER_URL} from "@memebox/contracts";
+import {Action, SERVER_URL} from "@memebox/contracts";
 
 @Pipe({
   name: 'mediaToUrl'
 })
 export class MediaToUrlPipe implements PipeTransform {
 
-  transform(media: Clip, useOldWay = false): string {
+  transform(media: Action, useOldWay = false): string {
     if (media.path?.includes(SERVER_URL) && media.id && !useOldWay) {
       return `${EXPRESS_BASE}/fileById/${media.id}`;
     } else {

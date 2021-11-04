@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, TrackByFunction} from '@angular/core';
-import {MEDIA_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
+import {ACTION_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
 import {isItemTheSame} from "./is-selected.pipe";
 
@@ -14,7 +14,7 @@ export interface IFilterItem {
 
 export const MEDIA_FILTER_TYPE = 'MEDIA_TYPE';
 
-export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(MEDIA_TYPE_INFORMATION_ARRAY
+export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(ACTION_TYPE_INFORMATION_ARRAY
   .map((informations) => {
 
     return {

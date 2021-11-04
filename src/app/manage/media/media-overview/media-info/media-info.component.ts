@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DomSanitizer} from "@angular/platform-browser";
-import {Clip, Screen, Tag} from "@memebox/contracts";
+import {Action, Screen, Tag} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
@@ -13,7 +13,7 @@ import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app
 export class MediaInfoComponent implements OnInit {
 
   @Input()
-  public info: Clip;
+  public info: Action;
 
   public screenList$: Observable<Screen[]> = this.appQueries.screensList$.pipe(
     map(screenList => screenList.filter(screen => !!screen.clips[this.info.id]))

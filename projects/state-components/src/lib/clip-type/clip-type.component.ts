@@ -1,5 +1,5 @@
 import {Component, HostBinding, Input} from '@angular/core';
-import {MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
+import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
 
 @Component({
   selector: 'app-clip-type',
@@ -8,7 +8,7 @@ import {MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
 })
 export class ClipTypeComponent {
 
-  public MediaInfoDictionary = MEDIA_TYPE_INFORMATION;
+  public MediaInfoDictionary = ACTION_TYPE_INFORMATION;
 
   @Input()
   public type: number;
