@@ -1,4 +1,4 @@
-import {Clip, Dictionary} from "@memebox/contracts";
+import {Action, Dictionary} from "@memebox/contracts";
 import {replaceVariablesInString} from "./utils";
 import {ActionVariableConfig} from "@memebox/action-variables";
 
@@ -197,7 +197,7 @@ const DYNAMIC_IFRAME_EXTERNAL_KEY = 'external';
 const DYNAMIC_IFRAME_VARIABLES_KEY = '_variables';
 const DYNAMIC_IFRAME_SETTINGS_KEY = '_settings';
 
-export function clipDataToDynamicIframeContent (clip: Partial<Clip>): DynamicIframeContent|null {
+export function actionDataToWidgetContent (clip: Partial<Action>): DynamicIframeContent|null {
   if (!clip?.extended) {
     return null;
   }
@@ -229,7 +229,7 @@ export function clipDataToDynamicIframeContent (clip: Partial<Clip>): DynamicIfr
 
 export function applyDynamicIframeContentToClipData (
   iframeContent: DynamicIframeContent,
-  targetClip: Partial<Clip>
+  targetClip: Partial<Action>
 ) {
   console.info('PRE CHANGE', JSON.stringify(targetClip));
 

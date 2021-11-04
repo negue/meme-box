@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {MEDIA_TYPE_INFORMATION, MediaType} from "@memebox/contracts";
+import {ACTION_TYPE_INFORMATION, ActionType} from "@memebox/contracts";
 import {TranslocoService} from "@ngneat/transloco";
 import {take} from "rxjs/operators";
 
@@ -13,10 +13,10 @@ export class MediaEnumToLabel implements PipeTransform {
     ) {
     }
 
-  async transform(media: MediaType): Promise<string> {
-    const informationByType = MEDIA_TYPE_INFORMATION[media];
+  async transform(media: ActionType): Promise<string> {
+    const informationByType = ACTION_TYPE_INFORMATION[media];
 
-    
+
 
      const translatedString = await this.transloco.selectTranslate(
        informationByType.translationKey, {}, {
@@ -25,7 +25,7 @@ export class MediaEnumToLabel implements PipeTransform {
          take(1)
      ).toPromise();
 
-     
+
 
     return translatedString ?? informationByType.labelFallback;
   }

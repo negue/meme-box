@@ -74,13 +74,14 @@
 
       <div class="mo__casual-overview__group__medias">
         <app-media-card *ngFor="let item of mediGroup.medias | lazyArray$:100: 3 | async; trackBy: trackById"
-                        [media]="item"
+                        [action]="item"
                         [screens]="screenList$ | async"
                         [tags]="tagList$ | async"
                         (onEdit)="onEdit(item)"
                         (onPreview)="onPreview(item)"
                         (onDelete)="onDelete(item.id)"
                         (onDuplicate)="onDuplicate(item.id)"
+                        (onOpenTriggerVariables)="onTriggerWithVariables(item)"
         >
         </app-media-card>
       </div>

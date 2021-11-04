@@ -1,6 +1,6 @@
 import {Compiler, Injectable, Injector, TemplateRef, Type} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {Screen, TimedClip, TwitchTrigger} from "@memebox/contracts";
+import {Action, Screen, TimedClip, TwitchTrigger} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
 import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
@@ -72,6 +72,16 @@ export class DialogService {
   async showScriptEdit(payload: CustomScriptDialogPayload) {
     const dialogRef = await this.loadAndOpen(
       import('./script-edit/script-edit.module'),
+      payload
+    );
+
+    return dialogRef.afterClosed().toPromise();
+  }
+
+
+  async showTriggerActionVariables(payload: Action) {
+    const dialogRef = await this.loadAndOpen(
+      import('./trigger-action-variables/trigger-action-variables-dialog.module'),
       payload
     );
 

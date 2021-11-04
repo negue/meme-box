@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivityQueries, AppQueries, AppService} from "@memebox/app-state";
 import {filter, map} from "rxjs/operators";
-import {ActionStateEnum, MEDIA_TYPE_INFORMATION, MediaType} from "@memebox/contracts";
+import {ACTION_TYPE_INFORMATION, ActionStateEnum, ActionType} from "@memebox/contracts";
 import {combineLatest} from "rxjs";
 
 function actionStateEnumToString (activity: ActionStateEnum) {
@@ -52,19 +52,19 @@ export class ActivityStateComponent implements OnInit {
           });
 
         const actionInfo = actionMap[actionId];
-        const actionType = actionInfo?.type ?? MediaType.Invalid;
+        const actionType = actionInfo?.type ?? ActionType.Invalid;
 
-        
+
 
         return {
           id: actionId,
           name: actionInfo?.name,
           actionType,
-          actionTypeString: MEDIA_TYPE_INFORMATION[actionType]?.labelFallback,
+          actionTypeString: ACTION_TYPE_INFORMATION[actionType]?.labelFallback,
           activityOfAction,
           stateInScreen
         }
-      }).filter(entry => entry.actionType !== MediaType.PermanentScript)
+      }).filter(entry => entry.actionType !== ActionType.PermanentScript)
     })
   )
 

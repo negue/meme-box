@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Clip} from "@memebox/contracts";
+import {Action} from "@memebox/contracts";
 
 @Component({
   selector: 'app-compact-clip-card',
@@ -9,7 +9,7 @@ import {Clip} from "@memebox/contracts";
 export class CompactClipCardComponent implements OnInit {
 
   @Input()
-  public clip: Clip;
+  public clip: Action;
 
   constructor() { }
 

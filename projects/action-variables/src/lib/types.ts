@@ -1,4 +1,4 @@
-import {MediaType} from "@memebox/contracts";
+import {ActionType} from "@memebox/contracts";
 
 export const enum ActionVariableTypes {
   text = 'text',
@@ -17,8 +17,8 @@ export interface ActionVariableConfig {
   fallback: any; // TODO - might need some typesafety .. maybe during runtime
 }
 
-export function getVariableTypesByAction(actionType: MediaType) {
-  if (actionType === MediaType.Widget) {
+export function getVariableTypesByAction(actionType: ActionType) {
+  if (actionType === ActionType.Widget) {
     return [
       ActionVariableTypes.number,
       ActionVariableTypes.text,
@@ -27,7 +27,7 @@ export function getVariableTypesByAction(actionType: MediaType) {
     ];
   }
 
-  if (actionType === MediaType.Script) {
+  if (actionType === ActionType.Script) {
     return [
       ActionVariableTypes.number,
       ActionVariableTypes.text,

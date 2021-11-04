@@ -1,5 +1,5 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {Clip, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
+import {Action, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map, take} from "rxjs/operators";
 import {AppQueries, AppService, SnackbarService, WebsocketService} from "@memebox/app-state";
@@ -75,7 +75,7 @@ export class ScreenOverviewComponent implements OnInit {
     this.service.deleteScreenClip(obsInfo.id, clipId);
   }
 
-  onClipOptions(item: Clip, screen: Screen) {
+  onClipOptions(item: Action, screen: Screen) {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,

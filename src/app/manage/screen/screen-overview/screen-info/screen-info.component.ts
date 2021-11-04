@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Clip, ScreenViewEntry} from "@memebox/contracts";
+import {Action, ScreenViewEntry} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {filter, map, tap} from "rxjs/operators";
 import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
@@ -43,7 +43,7 @@ export class ScreenInfoComponent implements OnInit {
     })
   );
 
-  public clipList$: Observable<Clip[]> = combineLatest([
+  public clipList$: Observable<Action[]> = combineLatest([
     this.info$,
     this.appQueries.clipList$
   ]).pipe(
@@ -68,7 +68,7 @@ export class ScreenInfoComponent implements OnInit {
   public onDelete = new EventEmitter();
 
   @Output()
-  public onEditScreenClipOptions = new EventEmitter<Clip>();
+  public onEditScreenClipOptions = new EventEmitter<Action>();
 
   @Output()
   public onReload = new EventEmitter();

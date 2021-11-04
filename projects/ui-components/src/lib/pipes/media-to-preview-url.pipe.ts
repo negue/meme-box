@@ -1,14 +1,14 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {EXPRESS_BASE} from "@memebox/app-state";
-import {Clip, MediaType, SERVER_URL} from "@memebox/contracts";
+import {Action, ActionType, SERVER_URL} from "@memebox/contracts";
 
 @Pipe({
   name: 'mediaToPreviewUrl'
 })
 export class MediaToPreviewUrlPipe implements PipeTransform {
 
-  transform(media: Clip, useOldWay = false): string {
-    const pathToPreview = media.type === MediaType.Video
+  transform(media: Action, useOldWay = false): string {
+    const pathToPreview = media.type === ActionType.Video
       ? media.previewUrl
       : (media.previewUrl || media.path);
 

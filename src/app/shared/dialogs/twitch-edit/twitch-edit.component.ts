@@ -3,10 +3,10 @@ import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
-  Clip,
+  Action,
+  ActionType,
   ClipAssigningMode,
   Dictionary,
-  MediaType,
   TwitchEventFields,
   TwitchEventTypes,
   TwitchTrigger,
@@ -132,7 +132,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   twitchEventFields = TwitchEventFieldConfig;
 
-  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.actionMap$;
+  clipDictionary$: Observable<Dictionary<Action>> = this.appQuery.actionMap$;
   selectedMedia$ = combineLatest([
     this.clipDictionary$,
     this.selectedMediaId$
@@ -142,7 +142,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   );
 
   showScreenSelection$ = this.selectedMedia$.pipe(
-    map(media => ![MediaType.Script, MediaType.Meta, MediaType.WidgetTemplate].includes(media.type) )
+    map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
   );
 
   screenList$ = combineLatest([

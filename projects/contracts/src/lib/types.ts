@@ -1,5 +1,5 @@
 import {ChatUserstate} from "tmi.js";
-import {MediaType} from "./media.types";
+import {ActionType} from "./media.types";
 import {TriggerAction} from "./actions";
 import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
 import {DefaultImage} from "./twitch-data.types";
@@ -37,16 +37,14 @@ export interface HasExtendedData {
   extended?: Dictionary<string>;
 }
 
-// TODO RENAME? (Media) Clip -- new name ACTIONS
-// - because media is visible and actions are just the scripts and stuff
-export interface Clip extends HasId, ActionOverridableProperies, HasExtendedData {
+export interface Action extends HasId, ActionOverridableProperies, HasExtendedData {
   name: string;
   previewUrl?: string;
   volumeSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip
   path: string;
-  type: MediaType;
+  type: ActionType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"
                     // the Meta Type will use that to trigger all clips of that tagId
@@ -220,7 +218,7 @@ export interface Tag extends HasId {
  */
 export interface SettingsState {
   version: number;
-  clips: Dictionary<Clip>;
+  clips: Dictionary<Action>;
   twitchEvents: Dictionary<TwitchTrigger>;
   timers: Dictionary<TimedClip>;
   screen: Dictionary<Screen>;
@@ -293,7 +291,7 @@ export interface FileInfo {
   fileName: string;
   apiUrl: string;
   ext: string;
-  fileType: MediaType;
+  fileType: ActionType;
 }
 
 export interface TwitchTriggerCommand {
@@ -312,11 +310,11 @@ export interface FileResult {
   ext: string;
   fileName: string;
   apiUrl: string;
-  fileType: MediaType
+  fileType: ActionType
 }
 
 export interface CombinedClip {
-  clip: Clip;
+  clip: Action;
   clipSetting: ScreenClip;
   originalClipSetting?: ScreenClip;
   triggerPayload?: TriggerAction;

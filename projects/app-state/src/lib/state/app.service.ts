@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {AppStore} from './app.store';
 import {HttpClient} from '@angular/common/http';
 import {
+  Action,
   ChannelPointRedemption,
-  Clip,
   ENDPOINTS,
   FileInfo,
   Response,
@@ -96,7 +96,7 @@ export class AppService {
     );
   }
 
-  public async addOrUpdateClip(clip: Clip) {
+  public async addOrUpdateClip(clip: Action) {
     let newClipId = clip?.id ?? '';
     const isItNew = !newClipId;
 
@@ -387,7 +387,7 @@ export class AppService {
     console.error('logged error', error);
 
     // testing what is broken on the preview
-    
+
     if (this.isOffline()) {
       return;
     }
@@ -408,7 +408,7 @@ export class AppService {
     const action = this.appStore.getValue().clips[actionId];
 
     // clone it && get a new ID
-    const newAction: Clip = {
+    const newAction: Action = {
       ...action,
       id: uuid(),
       name: `Cloned from: "${action.name}"`

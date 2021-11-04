@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Clip, ClipAssigningMode, Dictionary, MediaType, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
+import {Action, ActionType, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {filter, map} from "rxjs/operators";
@@ -28,7 +28,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     everyXms: [undefined, Validators.max(19_999_999)]
   });
 
-  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.actionMap$;
+  clipDictionary$: Observable<Dictionary<Action>> = this.appQuery.actionMap$;
 
   showWarningClipSelection = false;
 
@@ -43,7 +43,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   );
 
   showScreenSelection$ = this.selectedMedia$.pipe(
-    map(media => ![MediaType.Script, MediaType.Meta, MediaType.WidgetTemplate].includes(media.type) )
+    map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
   );
 
   screenList$ = combineLatest([

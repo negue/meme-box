@@ -1,7 +1,7 @@
 import {combineLatest, Observable} from "rxjs";
 import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
 import {map} from "rxjs/operators";
-import {AppState, Clip, MediaType} from "@memebox/contracts";
+import {Action, ActionType, AppState} from "@memebox/contracts";
 import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
 
 export function createCombinedFilterItems$ (
@@ -17,7 +17,7 @@ export function createCombinedFilterItems$ (
       // todo filter media types if not existing
 
       const allTags = new Set<string>();
-      const allTypes = new Set<MediaType>();
+      const allTypes = new Set<ActionType>();
 
       for (const clip of Object.values(state.clips)) {
         allTypes.add(clip.type);
@@ -68,7 +68,7 @@ export function createCombinedFilterItems$ (
 export function filterClips$(
   state$: Observable<AppState>,
   selectedFilters$: Observable<IFilterItem[]>
-): Observable<Clip[]> {
+): Observable<Action[]> {
   return combineLatest([
     state$,
     selectedFilters$
@@ -80,7 +80,7 @@ export function filterClips$(
         return allClips;
       }
 
-      const listOfTypes: MediaType[] = filteredItems
+      const listOfTypes: ActionType[] = filteredItems
         .filter(f => f.type === MEDIA_FILTER_TYPE)
         .map(f => f.value);
 

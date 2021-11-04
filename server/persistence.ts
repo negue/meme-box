@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import {
-  Clip,
+  Action,
   Config,
   ConfigV0,
   createInitialState,
@@ -159,14 +159,14 @@ export class Persistence {
    *  Clips Persistence
    */
 
-  public addClip(clip: Clip) {
+  public addClip(clip: Action) {
     operations.addClip(this.data, clip, true);
 
     this.saveData();
     return clip.id;
   }
 
-  public updateClip(id: string, clip: Clip) {
+  public updateClip(id: string, clip: Action) {
     clip.id = id;
     updateItemInDictionary(this.data.clips, clip);
 
@@ -180,7 +180,7 @@ export class Persistence {
     this.saveData();
   }
 
-  public listClips(): Clip[] {
+  public listClips(): Action[] {
     return sortClips(Object.values(this.data.clips));
   }
 
@@ -476,7 +476,7 @@ export class Persistence {
     this._hardRefresh$.next();
   }
 
-  public addAllClipsToScreen(screenId: string, clipList: Partial<Clip>[]) {
+  public addAllClipsToScreen(screenId: string, clipList: Partial<Action>[]) {
     const currentScreen = this.data.screen[screenId];
 
     const prevJson = JSON.stringify(currentScreen);

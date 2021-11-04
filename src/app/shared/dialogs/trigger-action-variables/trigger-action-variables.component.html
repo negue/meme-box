@@ -1,0 +1,22 @@
+<h2 mat-dialog-title> Trigger Action with custom variables: </h2>
+<mat-dialog-content class="mat-typography">
+  <app-action-variables-assignments [variablesConfig]="variablesConfig"
+                                    [data]="variables"
+                                    (dataChanged)="variables = $event;">
+
+  </app-action-variables-assignments>
+
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+
+  <button (click)="trigger()"
+          color="primary"
+          mat-raised-button>
+    Trigger
+  </button>
+</mat-dialog-actions>
+

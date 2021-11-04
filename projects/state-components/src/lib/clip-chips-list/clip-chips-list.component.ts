@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Clip, Screen, Tag} from "@memebox/contracts";
+import {Action, Screen, Tag} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {AppQueries} from "@memebox/app-state";
@@ -15,7 +15,7 @@ export class ClipChipsListComponent implements OnInit {
   public listTags = false;
 
   @Input()
-  public clip: Clip;
+  public clip: Action;
 
   public screenList$: Observable<Screen[]> = this.appQueries.screensList$.pipe(
     map(screenList => screenList.filter(screen => !!screen.clips[this.clip.id]))

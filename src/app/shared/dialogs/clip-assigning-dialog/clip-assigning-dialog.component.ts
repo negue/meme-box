@@ -1,6 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Clip, ClipAssigningMode, Dictionary, MediaType, Screen, UnassignedFilterEnum} from "@memebox/contracts";
+import {Action, ActionType, ClipAssigningMode, Dictionary, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {map, takeUntil, withLatestFrom} from "rxjs/operators";
 import {IFilterItem} from "../../components/filter/filter.component";
@@ -34,7 +34,7 @@ function unassignedFilterToString(  unassignedFilterType: UnassignedFilterEnum) 
   return '';
 }
 
-const ignoreMediaTypes = [MediaType.WidgetTemplate, MediaType.PermanentScript];
+const ignoreMediaTypes = [ActionType.WidgetTemplate, ActionType.PermanentScript];
 
 @Component({
   selector: 'app-clip-assigning-dialog',
@@ -42,7 +42,7 @@ const ignoreMediaTypes = [MediaType.WidgetTemplate, MediaType.PermanentScript];
   styleUrls: ['./clip-assigning-dialog.component.scss']
 })
 export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
-  MediaType = MediaType;
+  MediaType = ActionType;
 
   // Media - is assigned to - Screen
   //                        - Triggers (Twitch, Timers)
@@ -60,7 +60,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
 
 
         if (!this.data.showMetaItems) {
-          ignoreMediaTypes.push(MediaType.Meta);
+          ignoreMediaTypes.push(ActionType.Meta);
         }
 
         return !ignoreMediaTypes.includes(item.value);
@@ -85,7 +85,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
 
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
-  public clips$: Observable<Clip[]> = filterClips$(
+  public clips$: Observable<Action[]> = filterClips$(
     this.appQueries.state$,
     this.filteredItems$
   ).pipe(
@@ -93,7 +93,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
       if (this.data.showMetaItems) {
         return value;
       } else {
-        return value.filter(c => c.type !== MediaType.Meta)
+        return value.filter(c => c.type !== ActionType.Meta)
       }
     }),
     withLatestFrom(this.appQueries.state$, this.filteredItems$),
@@ -143,7 +143,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
     map(screenMap => screenMap[this.data.screenId])
   );
 
-  trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
+  trackByClip: TrackByFunction<Action> = (index, item) => item.id;
 
   private destroy$ = new Subject();
 
@@ -170,7 +170,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  clickToSelect(clip: Clip) {
+  clickToSelect(clip: Action) {
     if (this.data.mode === ClipAssigningMode.Multiple) {
 
       const isSelected = this.checkedMap[clip.id] || false;

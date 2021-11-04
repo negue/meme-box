@@ -1,6 +1,6 @@
 import {Service, UseOpts} from "@tsed/di";
 import {VM} from "vm2";
-import {ActionStateEnum, Clip, MediaType, TriggerAction} from "@memebox/contracts";
+import {Action, ActionStateEnum, ActionType, TriggerAction} from "@memebox/contracts";
 import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../contracts";
@@ -86,7 +86,7 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // endregion ActionStoreAdapter
 
-  public async handleScript(script: Clip, payloadObs: TriggerAction) {
+  public async handleScript(script: Action, payloadObs: TriggerAction) {
     this.logger.info('Handle Script!!');
 
     this.actionStateEventBus.updateActionState({
@@ -148,7 +148,7 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     // start each permanent script after another
     for (const action of this._persistence.listClips()) {
-      if (action.type === MediaType.PermanentScript) {
+      if (action.type === ActionType.PermanentScript) {
         await this.handleScript(action, null);
       }
     }

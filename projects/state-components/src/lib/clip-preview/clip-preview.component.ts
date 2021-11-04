@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Clip, MediaType, ScreenClip} from "@memebox/contracts";
+import {Action, ActionType, ScreenClip} from "@memebox/contracts";
 
 @Component({
   selector: 'app-clip-preview',
@@ -15,7 +15,7 @@ export class ClipPreviewComponent implements OnInit {
   public width: string;
 
   @Input()
-  public clip: Clip;
+  public clip: Action;
 
   @Input()
   public setting: ScreenClip;
@@ -32,6 +32,6 @@ export class ClipPreviewComponent implements OnInit {
   }
 
   get MediaType() {
-    return MediaType;
+    return ActionType;
   }
 }

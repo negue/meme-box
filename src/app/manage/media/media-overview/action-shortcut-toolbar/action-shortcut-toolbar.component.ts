@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Clip, TwitchTrigger} from "@memebox/contracts";
+import {Action, TwitchTrigger} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 import {AppQueries, AppService} from "@memebox/app-state";
@@ -13,7 +13,7 @@ import {DialogService} from "../../../../shared/dialogs/dialog.service";
 export class ActionShortcutToolbarComponent implements OnInit {
 
   @Input()
-  public action: Clip;
+  public action: Action;
 
 
   public twitchEvents$: Observable<TwitchTrigger[]> = this.appQueries.twitchEvents$.pipe(
@@ -34,7 +34,7 @@ export class ActionShortcutToolbarComponent implements OnInit {
     const newClip = {
       ...this.action,
       showOnMobile: !this.action.showOnMobile
-    } as Clip;
+    } as Action;
 
     this.service.addOrUpdateClip(newClip);
   }

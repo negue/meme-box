@@ -2,9 +2,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {combineLatest, Observable, Subject} from "rxjs";
 import {
+  ActionType,
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
-  MediaType,
   PositionEnum,
   Screen,
   ScreenClip,
@@ -56,7 +56,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     customCss: ''
   });
 
-  public MediaType = MediaType;
+  public MediaType = ActionType;
   public animateInList = ANIMATION_IN_ARRAY;
 
   public animateOutList = ANIMATION_OUT_ARRAY;
@@ -71,7 +71,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     map(screenMap => screenMap[this.data.screenId])
   );
 
-  public clipInfo$: Observable<ScreenClip&{type: MediaType}> = combineLatest([
+  public clipInfo$: Observable<ScreenClip&{type: ActionType}> = combineLatest([
     this.currentScreen$,
     this.appQueries.actionMap$.pipe(
       map(clipMap => clipMap[this.data.clipId])

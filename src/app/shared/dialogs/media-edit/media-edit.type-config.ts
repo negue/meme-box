@@ -1,4 +1,4 @@
-import {MediaType} from "@memebox/contracts";
+import {ActionType} from "@memebox/contracts";
 
 interface MediaEditConfig {
   hasTypeSettings: boolean;
@@ -6,40 +6,40 @@ interface MediaEditConfig {
 }
 
 export const MEDIA_EDIT_CONFIG: Record<string, MediaEditConfig> = {
-  [MediaType.Invalid]: undefined,
-  [MediaType.Picture]: {
+  [ActionType.Invalid]: undefined,
+  [ActionType.Picture]: {
     hasTypeSettings: true,
     canSelectQueue: true,
   },
-  [MediaType.Video]: {
+  [ActionType.Video]: {
     hasTypeSettings: true,
     canSelectQueue: true,
   },
-  [MediaType.Audio]: {
+  [ActionType.Audio]: {
     hasTypeSettings: true,
     canSelectQueue: true,
   },
-  [MediaType.IFrame]: {
+  [ActionType.IFrame]: {
     hasTypeSettings: true,
     canSelectQueue: true,
   },
-  [MediaType.Widget]: {
+  [ActionType.Widget]: {
     hasTypeSettings: true,
     canSelectQueue: true,
   },
-  [MediaType.Script]: {
+  [ActionType.Script]: {
     hasTypeSettings: false,
     canSelectQueue: true,
   },
-  [MediaType.PermanentScript]: {
+  [ActionType.PermanentScript]: {
     hasTypeSettings: false,
     canSelectQueue: false,
   },
-  [MediaType.WidgetTemplate]: {
+  [ActionType.WidgetTemplate]: {
     hasTypeSettings: true,
     canSelectQueue: false,
   },
-  [MediaType.Meta]: {
+  [ActionType.Meta]: {
     hasTypeSettings: true,
     canSelectQueue: true,
   }
@@ -48,16 +48,16 @@ export const MEDIA_EDIT_CONFIG: Record<string, MediaEditConfig> = {
 // todo change those enums to the above config object
 
 export const MEDIA_TYPES_WITHOUT_PATH = [
-  MediaType.Widget,
-  MediaType.WidgetTemplate,
-  MediaType.Meta,
-  MediaType.Script,
-  MediaType.PermanentScript
+  ActionType.Widget,
+  ActionType.WidgetTemplate,
+  ActionType.Meta,
+  ActionType.Script,
+  ActionType.PermanentScript
 ];
 export const MEDIA_TYPES_WITHOUT_PLAYTIME = [
-  MediaType.Meta,
-  MediaType.WidgetTemplate,
-  MediaType.Script,
-  MediaType.PermanentScript
+  ActionType.Meta,
+  ActionType.WidgetTemplate,
+  ActionType.Script,
+  ActionType.PermanentScript
 ];
-export const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [MediaType.Widget, MediaType.Picture, MediaType.IFrame];
+export const MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = [ActionType.Widget, ActionType.Picture, ActionType.IFrame];

@@ -1,14 +1,14 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Clip} from "@memebox/contracts";
-import {clipDataToDynamicIframeContent, DynamicIframeContent} from "../../../../utils/src/lib/dynamicIframe";
+import {Action} from "@memebox/contracts";
+import {actionDataToWidgetContent, DynamicIframeContent} from "../../../../utils/src/lib/dynamicIframe";
 
 @Pipe({
   name: 'clipToIframe'
 })
 export class ClipToIframePipe implements PipeTransform {
 
-  transform(value: Clip): DynamicIframeContent {
-    return clipDataToDynamicIframeContent(value);
+  transform(value: Action): DynamicIframeContent {
+    return actionDataToWidgetContent(value);
   }
 
 }

@@ -1,4 +1,4 @@
-import {Clip, Dictionary} from "@memebox/contracts";
+import {Action, Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig, convertExtendedToTypeValues} from "@memebox/action-variables";
 
 
@@ -16,7 +16,7 @@ const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
 export const SCRIPT_VARIABLES_KEY = '_variables';
 const SCRIPT_SETTINGS_KEY = '_settings';
 
-export function clipDataToScriptConfig (clip: Partial<Clip>) {
+export function actionDataToScriptConfig (clip: Partial<Action>) {
   if (!clip?.extended) {
     return null;
   }
@@ -39,7 +39,7 @@ export function clipDataToScriptConfig (clip: Partial<Clip>) {
 
 export function applyScriptConfigToClipData (
   scriptConfig: ScriptConfig,
-  targetClip: Partial<Clip>
+  targetClip: Partial<Action>
 ) {
   console.info('PRE CHANGE', JSON.stringify(targetClip));
 
@@ -65,15 +65,26 @@ export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [
   SCRIPT_SETTINGS_KEY,
 ];
 
+export function extractVariablesFromExtended(
+  extended:  Dictionary<any>
+){
+  const extractedVariables = {...extended};
+
+  for (const propToRemove of NOT_ALLOWED_SCRIPT_VARIABLE_NAMES) {
+    delete extractedVariables[propToRemove];
+  }
+
+  return extractedVariables;
+}
 
 export function getScriptVariablesOrFallbackValues (
-  config: ScriptConfig,
+  variablesConfig: ActionVariableConfig[],
   scriptAssignedValues: Dictionary<any>,
   payloadAssignedValues?: Dictionary<any>
 ): Dictionary<unknown> {
   const newValueBag: Dictionary<unknown> = {};
 
-  for (const variablesConfigElement of (config.variablesConfig || [])) {
+  for (const variablesConfigElement of variablesConfig) {
 
     // Payload -> Script Assigned -> Fallback
     const valueOfVariable = convertExtendedToTypeValues(

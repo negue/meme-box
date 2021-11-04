@@ -11,13 +11,13 @@ import {
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import {Clip, CombinedClip, Dictionary, MediaType, PositionEnum, VisibilityEnum} from "@memebox/contracts";
+import {Action, ActionType, CombinedClip, Dictionary, PositionEnum, VisibilityEnum} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
 import {delay, skip, take, takeUntil, withLatestFrom} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
 import {AppQueries, WebsocketService} from "@memebox/app-state";
-import {clipDataToDynamicIframeContent, DynamicIframeContent} from "@memebox/utils";
+import {actionDataToWidgetContent, DynamicIframeContent} from "@memebox/utils";
 
 export enum MediaState {
   HIDDEN,
@@ -29,7 +29,7 @@ export enum MediaState {
 // TODO POSSIBLE TO SPLIT UP?
 // TODO add more debug logs if needed foranother debugging sessions
 
-const ALL_MEDIA = [MediaType.Audio, MediaType.Video];
+const ALL_MEDIA = [ActionType.Audio, ActionType.Video];
 
 @Directive({
   selector: '[appMediaToggle]',
@@ -59,7 +59,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private currentCombinedClip: CombinedClip;
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
-  private clipMap: Dictionary<Clip>;
+  private clipMap: Dictionary<Action>;
 
   constructor(private element: ElementRef<HTMLElement>,
               private parentComp: TargetScreenComponent,
@@ -183,7 +183,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
         this.applyPositions();
 
-        if (this.currentCombinedClip.clip.type === MediaType.Widget
+        if (this.currentCombinedClip.clip.type === ActionType.Widget
           && targetMediaState === MediaState.VISIBLE) {
           this.applyWidgetContent();
         }
@@ -460,7 +460,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         console.warn('changing to ANIMATE_IN');
         this.startAnimation(this.currentCombinedClip.clipSetting.animationIn, this.currentCombinedClip.clipSetting.animationInDuration);
 
-        if (this.currentCombinedClip.clip.type === MediaType.Widget) {
+        if (this.currentCombinedClip.clip.type === ActionType.Widget) {
           this.applyWidgetContent();
         }
 
@@ -583,7 +583,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       const widgetTemplate = this.clipMap[media.fromTemplate];
 
       config = {
-        ...clipDataToDynamicIframeContent(widgetTemplate),
+        ...actionDataToWidgetContent(widgetTemplate),
         variables: {
           ...media.extended,
           ...variableOverrides
@@ -591,7 +591,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       };
     } else {
       config = {
-        ...clipDataToDynamicIframeContent(media),
+        ...actionDataToWidgetContent(media),
         variables: variableOverrides
       };
 

@@ -10,6 +10,10 @@ import {MatSelectModule} from "@angular/material/select";
 import {ClipTypeModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
 import {DirectivesModule} from "../shared/directives/directives.module";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {DialogsModule} from "../shared/dialogs/dialogs.module";
+import {MatDialogModule} from "@angular/material/dialog";
+import {PipesModule} from "@memebox/ui-components";
 
 
 const routes: Routes = [
@@ -33,6 +37,10 @@ const routes: Routes = [
     MatIconModule,
     MatSelectModule,
     DirectivesModule,
+    MatTooltipModule,
+    DialogsModule,
+    MatDialogModule,
+    PipesModule
   ]
 })
 export class MobileModule {
