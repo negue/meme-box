@@ -42,10 +42,10 @@ export class FilterComponent implements OnInit {
   public items: IFilterItem[] = [];
 
   @Output()
-  public selected = new EventEmitter<IFilterItem[]>();
+  public readonly selected = new EventEmitter<IFilterItem[]>();
 
   @Output()
-  public searchChanged = new EventEmitter<string>();
+  public readonly searchChanged = new EventEmitter<string>();
 
   @Input()
   public selectedArray: IFilterItem[] = [];
@@ -64,7 +64,7 @@ export class FilterComponent implements OnInit {
 
   toggleFilter(item: IFilterItem) {
     if (this.selectedArray.some(isItemTheSame(item))) {
-      var indexOfItem = this.selectedArray.findIndex(isItemTheSame(item));
+      const indexOfItem = this.selectedArray.findIndex(isItemTheSame(item));
 
       this.selectedArray.splice(indexOfItem, 1);
     } else {

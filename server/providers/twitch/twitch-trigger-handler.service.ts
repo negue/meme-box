@@ -103,7 +103,7 @@ export class TwitchTriggerHandler {
     const variableValues: Dictionary<unknown> = {}
 
     if (trigger.command.extended) {
-      for (let actionVariableConfig of variablesOfAction) {
+      for (const actionVariableConfig of variablesOfAction) {
         variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
           trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
         )
@@ -132,7 +132,7 @@ export class TwitchTriggerHandler {
   private fillActionMap() {
     const newMap: Dictionary<Action> = {};
 
-    for (let listClip of this._persistence.listClips()) {
+    for (const listClip of this._persistence.listClips()) {
       newMap[listClip.id] = listClip;
     }
 
