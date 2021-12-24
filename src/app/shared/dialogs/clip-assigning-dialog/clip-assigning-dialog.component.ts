@@ -3,10 +3,9 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Action, ActionType, ClipAssigningMode, Dictionary, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {map, takeUntil, withLatestFrom} from "rxjs/operators";
-import {IFilterItem} from "../../components/filter/filter.component";
+import {FilterTypes, IFilterItem} from "../../components/filter/filter.component";
 import {createCombinedFilterItems$, filterClips$} from "../../components/filter/filter.methods";
-import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.queries";
-import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
+import {AppQueries, AppService} from "@memebox/app-state";
 
 
 export interface ClipAssigningDialogOptions {
@@ -54,7 +53,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   ).pipe(
     map(filterItems => {
       return filterItems.filter(item => {
-        if (item.type === 'TAG') {
+        if (item.type === FilterTypes.Tags) {
           return true;
         }
 
@@ -70,7 +69,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
       if (this.data.showOnlyUnassignedFilter) {
 
         return [...filterItems, {
-          type: 'SPECIAL',
+          type: FilterTypes.Misc,
           value: 'onlyUnassigned',
           label: `not assigned to ${unassignedFilterToString(this.data.unassignedFilterType)}`,
           icon: ''
@@ -83,11 +82,13 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
 
   checkedMap: Dictionary<boolean>;
 
+  public searchText$ = new BehaviorSubject('');
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
   public clips$: Observable<Action[]> = filterClips$(
     this.appQueries.state$,
-    this.filteredItems$
+    this.filteredItems$,
+    this.searchText$
   ).pipe(
     map(value => {
       if (this.data.showMetaItems) {

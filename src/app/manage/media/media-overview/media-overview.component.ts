@@ -26,9 +26,12 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
 
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
+  public searchText$ = new BehaviorSubject<string>('');
+
   public mediaList$: Observable<Action[]> = filterClips$(
     this.query.state$,
-    this.filteredItems$
+    this.filteredItems$,
+    this.searchText$
   ).pipe(
     distinctUntilChanged((pre, now) => isEqual(pre, now))
   );
@@ -38,11 +41,11 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
   public tagList$: Observable<Tag[]> = this.query.tagList$;
   public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;
 
+
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.query.state$,
     true
   );
-
 
   public dontHaveActions$ = this.query.clipList$.pipe(
     map((availableClips) => {

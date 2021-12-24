@@ -17,7 +17,7 @@ import {uuid} from "@gewd/utils";
   type: ProviderType.SERVICE,
   scope: ProviderScope.SINGLETON
 })
-export class TwitchHandler {
+export class TwitchTriggerHandler {
   private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
 
   private actionsMap: Dictionary<Action> = {};

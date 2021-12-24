@@ -11,6 +11,7 @@ export const APP_ICONS = [
   'check_circle',
   'chevron_right',
   'clear_all',
+  'close',
   'code',
   'collage',
   'content_copy',
