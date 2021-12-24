@@ -55,6 +55,8 @@ Misc:
 
 [✅ `Streamdeck Plugin`][STREAMDECK_PLUGIN]
 <br/>
+[✅ `Deckboard Plugin`](https://github.com/gigili/deckboard-memebox)
+<br/>
 ✅ Timers <br/>
 ✅ Mobile View <br/>
 ✅ Twitch Events<br/>
