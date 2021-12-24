@@ -11,21 +11,11 @@ export function hasAdditionalContentToSearch (actionType: ActionType) {
 const fieldsToCheck = NOT_ALLOWED_WIDGET_VARIABLE_NAMES.concat(NOT_ALLOWED_SCRIPT_VARIABLE_NAMES);
 
 export function actionContentContainsText (action: Action, lowerCaseTextToSearch: string) {
-
   for (const fieldToCheck of fieldsToCheck) {
     if (action.extended?.[fieldToCheck]?.toLowerCase().includes(lowerCaseTextToSearch)) {
-      console.info('FOUND', fieldToCheck);
       return true;
     }
   }
-
-
-  console.info({
-    action,
-    lowerCaseTextToSearch,
-    fieldsToCheck
-  });
-
 
   return false;
 }
