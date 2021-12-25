@@ -8,3 +8,4 @@ export * from './lib/utils';
 export * from './lib/uuid';
 export * from './lib/browser-rxjs';
 export * from './lib/variable.utils';
+export * from './lib/searchInActions';

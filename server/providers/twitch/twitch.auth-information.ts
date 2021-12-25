@@ -41,7 +41,7 @@ export class TwitchAuthInformationProvider {
 
     const validation = await fetch( "https://id.twitch.tv/oauth2/validate", {
       headers: {
-        "Authorization": `OAuth ${password}`
+        "Authorization": `Bearer ${password}`
       }
     }).then( r => r.json() );
 

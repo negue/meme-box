@@ -24,6 +24,7 @@ import {MediaCardModule} from './media-overview/media-card/media-card.module';
 import {GroupByMediaTypePipe} from './media-overview/group-by-media-type.pipe';
 import {TranslocoModule} from "@ngneat/transloco";
 import {ActionShortcutToolbarModule} from "./media-overview/action-shortcut-toolbar/action-shortcut-toolbar.module";
+import {MatInputModule} from "@angular/material/input";
 
 const routes: Routes = [
   {
@@ -57,7 +58,8 @@ const routes: Routes = [
     AutoScaleModule,
     MediaCardModule,
     TranslocoModule,
-    ActionShortcutToolbarModule
+    ActionShortcutToolbarModule,
+    MatInputModule
   ]
 })
 export class MediaModule {}

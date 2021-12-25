@@ -3,16 +3,21 @@ import {ACTION_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
 import {isItemTheSame} from "./is-selected.pipe";
 
+export const enum FilterTypes {
+  ActionTypes = 'ACTION_TYPE',
+  Tags = 'TAG',
+  Screens = 'SCREEN',
+  Misc = 'MISC'
+}
+
 export interface IFilterItem {
   label: string;
   icon: string;
-  type: any; // string type to see / filter what kind of filter-item-type it is
+  type: FilterTypes
   value: any; // todo change to generic?
   translateLabel?: boolean;
   sortOrder?: number;
 }
-
-export const MEDIA_FILTER_TYPE = 'MEDIA_TYPE';
 
 export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(ACTION_TYPE_INFORMATION_ARRAY
   .map((informations) => {
@@ -21,7 +26,7 @@ export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(ACTION_TYPE_INFORMATION_
       label: informations.translationKey,
       value: +informations.mediaType,
       icon: informations.icon,
-      type:MEDIA_FILTER_TYPE,
+      type:FilterTypes.ActionTypes,
       sortOrder: informations.sortOrder,
       translateLabel: true,
     } as IFilterItem;
@@ -37,10 +42,15 @@ export class FilterComponent implements OnInit {
   public items: IFilterItem[] = [];
 
   @Output()
-  public selected = new EventEmitter<IFilterItem[]>();
+  public readonly selected = new EventEmitter<IFilterItem[]>();
+
+  @Output()
+  public readonly searchChanged = new EventEmitter<string>();
 
   @Input()
   public selectedArray: IFilterItem[] = [];
+
+  public searchText = '';
 
   trackByFilterItem: TrackByFunction<IFilterItem> = (index, item) => {
     return item.type+item.value;
@@ -54,7 +64,7 @@ export class FilterComponent implements OnInit {
 
   toggleFilter(item: IFilterItem) {
     if (this.selectedArray.some(isItemTheSame(item))) {
-      var indexOfItem = this.selectedArray.findIndex(isItemTheSame(item));
+      const indexOfItem = this.selectedArray.findIndex(isItemTheSame(item));
 
       this.selectedArray.splice(indexOfItem, 1);
     } else {
@@ -69,5 +79,10 @@ export class FilterComponent implements OnInit {
 
     this.selectedArray.splice(0, this.selectedArray.length);
     this.selected.emit(this.selectedArray);
+  }
+
+  updateSearchField(value: string) {
+    this.searchText = value;
+    this.searchChanged.next(value);
   }
 }

@@ -1,5 +1,5 @@
 import {IsSelectedPipe} from './is-selected.pipe';
-import {IFilterItem} from "./filter.component";
+import {FilterTypes, IFilterItem} from "./filter.component";
 
 describe('IsSelectedPipe', () => {
   it('create an instance', () => {
@@ -12,19 +12,19 @@ describe('IsSelectedPipe', () => {
 
     const item: IFilterItem = {
       value: '1337',
-      type: 'ANY',
+      type: FilterTypes.Tags,
       icon: '',
       label: ''
     };
 
     const items: IFilterItem[] = [{
       value: '1337',
-      type: 'ANY',
+      type: FilterTypes.Tags,
       icon: '',
       label: ''
     }, {
       value: '133B',
-      type: 'ANY_OTHER',
+      type: FilterTypes.ActionTypes,
       icon: '',
       label: ''
     }];

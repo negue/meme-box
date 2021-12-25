@@ -3,7 +3,9 @@
 <div mat-dialog-content>
   <div class="filterRow">
     <app-filter [items]="filterItems$ | async"
-                (selected)="filteredItems$.next($event)"></app-filter>
+                (selected)="filteredItems$.next($event)"
+                (searchChanged)="searchText$.next($event)"
+    ></app-filter>
   </div>
 
   <ol class="mediaList">

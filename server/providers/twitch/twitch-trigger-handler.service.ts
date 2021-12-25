@@ -17,7 +17,7 @@ import {uuid} from "@gewd/utils";
   type: ProviderType.SERVICE,
   scope: ProviderScope.SINGLETON
 })
-export class TwitchHandler {
+export class TwitchTriggerHandler {
   private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
 
   private actionsMap: Dictionary<Action> = {};
@@ -103,7 +103,7 @@ export class TwitchHandler {
     const variableValues: Dictionary<unknown> = {}
 
     if (trigger.command.extended) {
-      for (let actionVariableConfig of variablesOfAction) {
+      for (const actionVariableConfig of variablesOfAction) {
         variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
           trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
         )
@@ -132,7 +132,7 @@ export class TwitchHandler {
   private fillActionMap() {
     const newMap: Dictionary<Action> = {};
 
-    for (let listClip of this._persistence.listClips()) {
+    for (const listClip of this._persistence.listClips()) {
       newMap[listClip.id] = listClip;
     }
 
