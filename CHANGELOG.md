@@ -25,7 +25,7 @@
 * [x] Add new twitch events to the trigger section
   * [x] All the sub events were added
   * [x] Ban event
-* [ ] Actions now have a description to see for example what a script does
+* [x] Actions now have a description to see for example what a script does
 * [x] Actions can be searched by keywords (including script sources)
 * [ ] Actions can be (preview) triggered with custom variable values
 * [ ] todo preview gifs / avifs for some of those features

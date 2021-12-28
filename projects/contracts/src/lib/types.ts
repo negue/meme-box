@@ -57,6 +57,7 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
 
 
   fromTemplate?: string; // GUID / Clip.Id of the Template
+  description?: string;
 }
 
 export interface Screen extends HasId {

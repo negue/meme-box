@@ -113,7 +113,8 @@ export class MediaEditComponent
     metaDelay: 0,
 
     fromTemplate: "",
-    queueName: ""
+    queueName: "",
+    description: ""
   });
 
   currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);

@@ -99,15 +99,16 @@ export function filterClips$(
 
 
       return allActions.filter(action => {
+        // todo maybe fuzzy or other search improvements
         if (searchByText) {
           const nameContainsSearchedText = action.name.toLowerCase().includes(searchByText);
+          const descriptionContainsSearchedText = action.description?.toLowerCase().includes(searchByText) ?? false;
 
           const contentContainSearchedText = hasAdditionalContentToSearch(action.type)
             ? actionContentContainsText(action, searchByText)
             : false;
 
-          // todo maybe fuzzy or other search improvements
-          if (!nameContainsSearchedText && !contentContainSearchedText)
+          if (!nameContainsSearchedText && !descriptionContainsSearchedText && !contentContainSearchedText)
           {
             return false;
           }
