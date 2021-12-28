@@ -13,7 +13,7 @@ import {VariableConverterPipe} from "./variable-converter.pipe";
 import {MediaToPreviewUrlPipe} from "./media-to-preview-url.pipe";
 import {ShowOnlyLastCharactersPipe} from "./show-only-last-characters.pipe";
 import {FontColorContrastPipe} from "./font-color-contrast.pipe";
-import {ActionPreviewLabelPipe} from "./action-preview-label.pipe";
+import {ActionPreviewLabelPipe, ActionPreviewVariablesTooltipPipe} from "./action-preview-label.pipe";
 import {ActionCanPreviewPipe} from "./action-can-preview.pipe";
 import {MediaEnumToLabel} from "./media-enum-to-label.pipe";
 import {ActionHasTriggerableVariablesPipe} from "./action-has-triggerable-variables.pipe";
@@ -27,6 +27,7 @@ const PIPES = [
   MediaToPreviewUrlPipe, MediaPathToUrlPipe,
   ShowOnlyLastCharactersPipe, FontColorContrastPipe,
   ActionPreviewLabelPipe, ActionCanPreviewPipe,
+  ActionPreviewVariablesTooltipPipe,
   MediaEnumToLabel, ActionHasTriggerableVariablesPipe
 ];
 

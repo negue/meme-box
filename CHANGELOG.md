@@ -27,11 +27,12 @@
   * [x] Ban event
 * [x] Actions now have a description to see for example what a script does
 * [x] Actions can be searched by keywords (including script sources)
-* [ ] Actions can be (preview) triggered with custom variable values
+* [x] Actions can be (preview) triggered with custom variable values
 * [ ] todo preview gifs / avifs for some of those features
 * [ ] Status Page of the connections / states
 * [ ] latest twitch events to retrigger
 * [ ] extend actions api endpoint for extensions with more string properties
+* [ ] Triggers can be searched now
 
 ### Fixes
 

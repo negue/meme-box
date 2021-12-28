@@ -20,3 +20,21 @@ export class ActionPreviewLabelPipe implements PipeTransform {
   }
 
 }
+
+@Pipe({
+  name: 'actionPreviewVariablesTooltip'
+})
+export class ActionPreviewVariablesTooltipPipe implements PipeTransform {
+
+  transform(value: Action): string {
+    return [
+      ActionType.Script,
+      ActionType.PermanentScript,
+      ActionType.Meta,
+      ActionType.Audio,
+    ].includes(value.type)
+      ? 'Trigger with custom variables'
+      : 'Preview with custom variables';
+  }
+
+}
