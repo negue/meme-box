@@ -1,11 +1,18 @@
 <mat-card [class.media-active]="activityState.isActive$(action.id) | async"
           class="mat-elevation-z1"
           hover-class="mat-elevation-z5">
-  <mat-card-header>
+  <mat-card-header class="card__header">
     <mat-card-title [matTooltip]="action.name">{{action.name}}</mat-card-title>
 
+    <button mat-icon-button
+            class="edit_icon hide_until_hover"
+            matTooltip="Edit"
+            (click)="onEdit.emit()">
+      <mat-icon svgIcon="edit"></mat-icon>
+    </button>
     <button mat-icon-button [matMenuTriggerFor]="menu"
             aria-label="action context menu" class="hide_until_hover"
+            matTooltip="other Options"
             (menuOpened)="menuIsOpened = true"
             (menuClosed)="menuIsOpened = false"
             [class.isOpened]="menuIsOpened">
@@ -17,7 +24,7 @@
         <mat-icon svgIcon="tune"></mat-icon>
         <span>Trigger with Variables</span>
       </button>
-      <mat-divider></mat-divider>
+      <mat-divider  *ngIf="hasTriggerableVariables"></mat-divider>
       <button mat-menu-item
               (click)="onDuplicate.emit()">
         <mat-icon svgIcon="queue"></mat-icon>
@@ -69,18 +76,21 @@
         </mat-panel-title>
 
         <mat-panel-description class="mc__expander__description">
-          <div *ngIf="connectedTags.length > 0">
+          <div *ngIf="connectedTags.length > 0"
+               matTooltip="Tags assigned">
             <mat-icon svgIcon="tag" [inline]="true"></mat-icon>
             {{connectedTags.length}}
           </div>
 
-          <div *ngIf="appearsInScreens.length > 0">
+          <div *ngIf="appearsInScreens.length > 0"
+               matTooltip="at Screens assigned">
             <mat-icon svgIcon="screen" [inline]="true"></mat-icon>
             {{appearsInScreens.length}}
           </div>
 
           <mat-icon svgIcon="tune" [inline]="true"
-                    *ngIf="hasVariables">
+                    *ngIf="hasVariables"
+                    matTooltip="Has Variables">
 
           </mat-icon>
         </mat-panel-description>
@@ -119,11 +129,23 @@
   </mat-card-content>
 
   <mat-card-actions class="mc__actions-container">
-    <button mat-raised-button color="accent" (click)="onEdit.emit()">Edit</button>
-    <button mat-button color="primary" *ngIf="action | actionCanPreview" (click)="onPreview.emit()">
-      {{action | actionPreviewLabel }}
-    </button>
+    <div>
 
+      <button mat-button color="primary"
+              *ngIf="action | actionCanPreview" (click)="onPreview.emit()"
+      >
+        {{action | actionPreviewLabel }}
+      </button>
+
+      <button mat-icon-button color="primary"
+              *ngIf="hasTriggerableVariables"
+              (click)="onOpenTriggerVariables.emit()"
+              [matTooltip]="action | actionPreviewVariablesTooltip"
+      >
+        <mat-icon svgIcon="tune"> </mat-icon>
+      </button>
+
+    </div>
 
     <app-action-shortcut-toolbar [action]="action"></app-action-shortcut-toolbar>
   </mat-card-actions>

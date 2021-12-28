@@ -350,6 +350,15 @@
       </div>
     </lib-step>
 
+    <lib-step label="Description">
+        <mat-form-field class="example-chip-list">
+          <mat-label>Description</mat-label>
+
+          <textarea matInput [rows]="12"
+                    formControlName="description"></textarea>
+        </mat-form-field>
+    </lib-step>
+
     <lib-step label="Other Settings">
 
       <mat-checkbox class="mobile-checkbox"
