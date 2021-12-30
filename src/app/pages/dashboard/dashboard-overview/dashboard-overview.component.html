@@ -1,1 +1,18 @@
-<p>dashboard-overview works!</p>
+<div class="two-columns" style="margin: 2rem 3rem">
+  <div class="column">
+    Column 1
+  </div>
+  <div class="column">
+    <div class="twitch__events">
+      <div *ngIf="twitchEvents$ | async as latestEvents">
+        Amount: {{latestEvents.length}} <br/>
+
+        <pre>
+        {{ latestEvents | json}}
+        </pre>
+
+      </div>
+
+    </div>
+  </div>
+</div>
