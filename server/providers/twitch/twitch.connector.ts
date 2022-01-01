@@ -1,6 +1,5 @@
 import * as tmi from 'tmi.js';
 import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
-import {Observable, Subject} from 'rxjs';
 import {debounceTime, startWith} from 'rxjs/operators';
 import {TwitchConfig, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from '@memebox/contracts';
 import {Service, UseOpts} from "@tsed/di";
@@ -10,7 +9,6 @@ import {
   TwitchChannelPointRedemptionEvent,
   TwitchChatMessage,
   TwitchCheerMessage,
-  TwitchEvent,
   TwitchGiftEvent,
   TwitchRaidedEvent,
   TwitchSubEvent
@@ -23,6 +21,7 @@ import {getLevelOfTags} from "./twitch.functions";
 import {PubSubClient} from 'twitch-pubsub-client';
 import {ApiClient, StaticAuthProvider} from "twitch";
 import {TwitchAuthInformationProvider} from "./twitch.auth-information";
+import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 
 export type TmiConnectionType = "MAIN" | "BOT";
 
@@ -32,7 +31,6 @@ export class TwitchConnector {
   private tmiMainClient: tmi.Client;
   private tmiBotClient: tmi.Client;
   private tmiConnected: {[key: string]: boolean} = {};
-  private _receivedTwitchEvents = new Subject<TwitchEvent>();
   private _twitchBotEnabled = false;
   private _currentTwitchConfig: TwitchConfig;
 
@@ -47,7 +45,8 @@ export class TwitchConnector {
 
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
 
-    private twitchAuth: TwitchAuthInformationProvider
+    private twitchAuth: TwitchAuthInformationProvider,
+    private twitchEventBus: TwitchQueueEventBus
   ) {
 
     // TODO better way to find out the config has changed
@@ -92,10 +91,6 @@ export class TwitchConnector {
           this.connectAndListenPubSub();
         }
       });
-  }
-
-  public twitchEvents$(): Observable<TwitchEvent> {
-    return this._receivedTwitchEvents.asObservable();
   }
 
   public availableConnectionTypes (): TmiConnectionType[] {
@@ -232,7 +227,7 @@ export class TwitchConnector {
         userstate
       });
 
-      this._receivedTwitchEvents.next(twitchEvent);
+      this.twitchEventBus.queueEvent(twitchEvent);
 
       // This is the bot handler, nothing after that needs to be handled
       if (this._twitchBotEnabled && message === (this._currentTwitchConfig.bot?.command ?? '!commands')) {
@@ -249,18 +244,18 @@ export class TwitchConnector {
         userstate,
       });
 
-      this._receivedTwitchEvents.next(twitchEvent);
+      this.twitchEventBus.queueEvent(twitchEvent);
     });
 
     this.tmiReadOnlyClient.on('raided', (channel: string, username: string, viewers: number) => {
-      this._receivedTwitchEvents.next(new TwitchRaidedEvent({
+      this.twitchEventBus.queueEvent(new TwitchRaidedEvent({
         channel, username, viewers
       }));
     });
 
     //Reason is being returned as null even when one is provided when banning someone
     this.tmiReadOnlyClient.on('ban', (channel: string, username:string, reason:string) => {
-      this._receivedTwitchEvents.next(new TwitchBanEvent({
+      this.twitchEventBus.queueEvent(new TwitchBanEvent({
         username, reason
       }));
     });
@@ -279,7 +274,7 @@ export class TwitchConnector {
         subtype: "anongiftpaidupgrade"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('giftpaidupgrade', (channel: string, username: string, sender: string, userState: Userstate) => {
@@ -296,7 +291,7 @@ export class TwitchConnector {
         subtype: "giftpaidupgrade"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods : SubMethods) => {
@@ -313,7 +308,7 @@ export class TwitchConnector {
         subtype: "resub"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('subgift', (channel: string, username:string, months:number, recipient: string, methods : SubMethods, userState: Userstate) => {
@@ -331,7 +326,7 @@ export class TwitchConnector {
         totalGifts: ~~userState["msg-param-sender-count"]
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('submysterygift', (channel: string, username: string, numberOfSubs: number, methods: SubMethods, userState: Userstate) => {
@@ -349,7 +344,7 @@ export class TwitchConnector {
         totalGifts: ~~userState["msg-param-sender-count"]
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('subscription', (channel: string, username: string, methods: SubMethods, message: string, userState: Userstate) => {
@@ -366,7 +361,7 @@ export class TwitchConnector {
         subtype: "subscription"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
   }
 
@@ -403,7 +398,7 @@ export class TwitchConnector {
         userDisplayName
       } = channelPointRedemption;
 
-      this._receivedTwitchEvents.next(new TwitchChannelPointRedemptionEvent({
+      this.twitchEventBus.queueEvent(new TwitchChannelPointRedemptionEvent({
         message,
         redemptionDate,
         rewardId,

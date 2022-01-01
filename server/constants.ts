@@ -81,7 +81,6 @@ export const DANGER_ENDPOINT = `${API_PREFIX}/danger`;
 export const CLIP_ENDPOINT = `${API_PREFIX}/clips`;
 export const CLIP_ID_ENDPOINT = `${API_PREFIX}/clips/:clipId`;
 
-export const TWITCH_ENDPOINT = `${API_PREFIX}/twitch_events`;
 export const TIMED_ENDPOINT = `${API_PREFIX}/timed_events`;
 
 export const STATE_ENDPOINT = `${API_PREFIX}/state`;

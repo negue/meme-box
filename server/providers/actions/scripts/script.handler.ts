@@ -18,6 +18,7 @@ import {TwitchConnector} from "../../twitch/twitch.connector";
 import {TwitchApi} from "./apis/twitch.api";
 import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
 import {setGlobalVMScope} from "./global.context";
+import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -44,7 +45,8 @@ export class ScriptHandler implements ActionStoreAdapter {
     private obsConnection : ObsConnection,
 
     private twitchConnector: TwitchConnector,
-    private twitchDataProvider: TwitchDataProvider
+    private twitchDataProvider: TwitchDataProvider,
+    private twitchEventBus: TwitchQueueEventBus,
   ) {
     setGlobalVMScope(this._vm);
 
@@ -109,7 +111,7 @@ export class ScriptHandler implements ActionStoreAdapter {
         this.memeboxApiFactory.getApiFor(script.id, script.type),
         this.logger,
         obsApi,
-        new TwitchApi(this.twitchConnector, this.twitchDataProvider, script.type)
+        new TwitchApi(this.twitchConnector, this.twitchEventBus, this.twitchDataProvider, script.type)
       );
 
       try {

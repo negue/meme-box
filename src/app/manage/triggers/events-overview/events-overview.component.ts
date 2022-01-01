@@ -74,10 +74,8 @@ export class EventsOverviewComponent implements OnInit {
       }
     };
 
-    this.http.post(`${API_BASE}${ENDPOINTS.TWITCH_TRIGGER}`, triggerObj)
-      .subscribe(value =>{
-          // need result?
-    })
+    this.http.post(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}${ENDPOINTS.TWITCH_EVENTS.TRIGGER_CONFIG_EXAMPLE}`, triggerObj)
+      .toPromise();
   }
 
   openTwitchConfigs() {

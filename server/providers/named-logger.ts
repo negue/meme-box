@@ -26,7 +26,7 @@ export class NamedLogger {
     this.logger.info(...data);
   }
 
-  customFile(param: { date: boolean; name: string }) {
+  customFile(param: { date: boolean; name: string, maxLogSize?: number }) {
     this.logger.appenders.delete('file');
 
     const TODAY_LOG_SUFFIX = `.${ new Date().toISOString().slice(0,10) }`;
@@ -37,6 +37,7 @@ export class NamedLogger {
       type: "file",
       // pattern not working so we added DateFormat ourselves
       filename: `${LOG_PATH}/${param.name}_tsed${param.date ?  TODAY_LOG_SUFFIX : ''}.log`,
+      maxLogSize: param.maxLogSize,
       // pattern: '.yyyy-MM-dd',
       layout:{
         type: "json",

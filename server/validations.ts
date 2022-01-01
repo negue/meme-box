@@ -77,3 +77,14 @@ export function validOrLeave(req, res, next) {
 export function allowedFileUrl(pathToFile: string) {
   return !pathToFile.includes('..');  // more to add?
 }
+
+export const twitchPostValidator = [
+  body('clipId').isString(),
+  body('name').isString(),
+  body('active').isBoolean()
+];
+
+export const twitchPutValidator = [
+  ...twitchPostValidator,
+  body('id').isString(),
+];

@@ -11,8 +11,7 @@ import {
   NETWORK_IP_LIST_ENDPOINT,
   STATE_ENDPOINT,
   TAGS_ENDPOINT,
-  TIMED_ENDPOINT,
-  TWITCH_ENDPOINT
+  TIMED_ENDPOINT
 } from './constants';
 import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
@@ -24,7 +23,6 @@ import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
-import {TWITCH_ROUTES} from "./rest-endpoints/twitch";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
 import {STATE_ROUTES} from "./rest-endpoints/state";
 import {SERVER_URL} from "@memebox/contracts";
@@ -97,7 +95,6 @@ app.delete(CLIP_ID_ENDPOINT, (req, res) => {
 app.use(TAGS_ENDPOINT, TAG_ROUTES);
 app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 app.use(LOG_ENDPOINT, LOG_ROUTES);
-app.use(TWITCH_ENDPOINT, TWITCH_ROUTES);
 app.use(TIMED_ENDPOINT, TIMER_ROUTES);
 app.use(STATE_ENDPOINT, STATE_ROUTES);
 

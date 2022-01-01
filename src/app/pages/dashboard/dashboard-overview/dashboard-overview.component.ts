@@ -1,20 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
-import {WEBSOCKET_PATHS} from "@memebox/contracts";
+import {ENDPOINTS, WEBSOCKET_PATHS} from "@memebox/contracts";
 import {Observable, pipe, Subject} from "rxjs";
-import {filter, map, scan, takeUntil} from "rxjs/operators";
+import {filter, map, takeUntil} from "rxjs/operators";
+import {AllTwitchEvents, TwitchEvent} from "../../../../../server/providers/twitch/twitch.connector.types";
+import {isBan, isChannelPointRedemption, isCheer, isGiftSub, isRaid, isSub} from './dashboard-overview.guards';
+import {cacheSessionStorage, takeLatestItems} from "./dashboard-overview.rxjs-utils";
+import {API_BASE} from "@memebox/app-state";
+import {HttpClient} from "@angular/common/http";
 
 // TODO extract a componentbase to use for _destroy$ or find some alternative
-
-function takeLatestItems<T>(amount: number) {
-  return pipe(
-    scan((acc, val: T) => {
-      acc.push(val);
-      return acc.slice(-amount);
-    }, [] as T[])
-  )
-}
 
 @Component({
   selector: 'app-dashboard-overview',
@@ -28,14 +24,24 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     3000
   );
 
-  public twitchEvents$: Observable<string[]>;
+  public twitchEvents$: Observable<AllTwitchEvents[]>;
 
-  constructor() {
-    this.twitchEvents$ = this.wsHandler.onMessage$.pipe(
-      takeUntil(this._destroy$),
+  constructor(
+    private http: HttpClient
+  ) {
+    const twitchEventsAsArray = this.wsHandler.onMessage$.pipe(
       filter(str => !str.includes('"type":"message"')),
-      map(str => JSON.parse(str)),
-      takeLatestItems(2)
+      map(str => JSON.parse(str) as AllTwitchEvents),
+    );
+
+    this.twitchEvents$ = twitchEventsAsArray.pipe(
+      takeUntil(this._destroy$),
+      cacheSessionStorage<AllTwitchEvents, AllTwitchEvents[]>('latestTwitchEvents', [],
+        (loadedValues) => pipe(
+          takeLatestItems(20, loadedValues)
+        )
+      ),
+      map(items => [...items].reverse())
     );
 
   }
@@ -53,4 +59,22 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     this.wsHandler.stopReconnects();
   }
 
+  isChannelPointRedemption = isChannelPointRedemption;
+  isCheer = isCheer;
+  isRaid = isRaid;
+  isSub = isSub;
+  isGiftSub = isGiftSub;
+  isBan = isBan;
+
+  replayEvent($event: MouseEvent, twitchEvent: TwitchEvent) {
+    $event.stopImmediatePropagation();
+
+    const newEvent: TwitchEvent = {
+      ...twitchEvent,
+      timestamp: new Date()
+    }
+
+    this.http.post(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}${ENDPOINTS.TWITCH_EVENTS.TRIGGER_EVENT}`, newEvent)
+      .toPromise();
+  }
 }

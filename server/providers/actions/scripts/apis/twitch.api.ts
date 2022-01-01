@@ -3,16 +3,18 @@ import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
 import {ActionType} from "@memebox/contracts";
 import {TwitchDataProvider} from "../../../twitch/twitch.data-provider";
+import {TwitchQueueEventBus} from "../../../twitch/twitch-queue-event.bus";
 
 export class TwitchApi extends DisposableBase {
 
   // for permanent scripts
-  public onEvent$ = this.twitchConnector.twitchEvents$().pipe(
+  public onEvent$ = this.twitchEventBus.AllQueuedEvents$.pipe(
     takeUntil(this._destroy$)
   );
 
   constructor(
     private twitchConnector: TwitchConnector,
+    private twitchEventBus: TwitchQueueEventBus,
     private dataProvider: TwitchDataProvider,
     private scriptType: ActionType
   ) {

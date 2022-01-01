@@ -331,14 +331,14 @@ export class AppService {
 
     if (newId === '') {
       // add the clip to api & await
-      newId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}`, event, uuid());
+      newId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}`, event, uuid());
 
       event.id = newId;
     } else {
       // TODO see if api call worked?
 
       // add the clip to api & await
-      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}/${newId}`, event);
+      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}/${newId}`, event);
     }
 
     // add to the state
@@ -351,7 +351,7 @@ export class AppService {
 
   public async deleteTwitchEvent(clipId: string) {
     // send the api call
-    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS}/${clipId}`);
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}/${clipId}`);
 
     // remove from state
     this.appStore.update(state => {

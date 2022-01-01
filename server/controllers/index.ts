@@ -4,6 +4,7 @@ import {ConfigController} from "./config.controller";
 import {OpenController} from "./open.controller";
 import {TwitchDataController} from "./twitch-data.controller";
 import {ActionActivityController} from "./action-activity.controller";
+import {TwitchEventsController} from "./twitch-events.controller";
 
 export const CONTROLLERS = [
   ScreenController,
@@ -11,5 +12,6 @@ export const CONTROLLERS = [
   ConfigController,
   OpenController,
   TwitchDataController,
-  ActionActivityController
+  ActionActivityController,
+  TwitchEventsController
 ]
