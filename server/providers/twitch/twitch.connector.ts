@@ -235,7 +235,7 @@ export class TwitchConnector {
 
       // This is the bot handler, nothing after that needs to be handled
       if (this._twitchBotEnabled && message === (this._currentTwitchConfig.bot?.command ?? '!commands')) {
-        this.handleCommandsRequest(userstate, message);
+        this.handleCommandsRequest(userstate);
 
         return false;
       }
@@ -416,7 +416,7 @@ export class TwitchConnector {
 
   }
 
-  async handleCommandsRequest(tags: tmi.ChatUserstate, message: string): Promise<void> {
+  async handleCommandsRequest(tags: tmi.ChatUserstate): Promise<void> {
     const availableConnectionTypes = this.availableConnectionTypes();
 
     if (availableConnectionTypes.length == 0) {
