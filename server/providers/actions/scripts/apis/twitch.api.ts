@@ -26,7 +26,7 @@ export class TwitchApi extends DisposableBase {
     }
   }
 
-  public async say(message: string, type: TmiConnectionType|null = null) {
+  public async say(message: string, type: TmiConnectionType|null = null) : Promise<void> {
     const tmiInstance = await this.twitchConnector.getTmiWriteInstance(type);
     const settings = this.twitchConnector.getTwitchSettings();
 

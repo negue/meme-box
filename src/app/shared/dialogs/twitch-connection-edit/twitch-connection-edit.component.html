@@ -127,6 +127,16 @@
           <code>{{userFlagMessage}}</code>
           to reference the user that asked for commands.
         </p>
+
+        <mat-form-field>
+          <mat-label>Bot command to list all of Memebox commands</mat-label>
+          <input autocomplete="off"
+                 formControlName="command"
+                 class="twitchSetting__input"
+                 [readonly]="!config?.twitch?.bot.enabled"
+                 matInput>
+        </mat-form-field>
+        <p>This command will be used to output text from the bot response into chat. The default command is: <code>!commands</code></p>
       </form>
 
     </mat-tab>
