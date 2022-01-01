@@ -112,7 +112,22 @@ export class TwitchConnector {
     return types;
   }
 
-  public async getTmiWriteInstance(type: TmiConnectionType) : Promise<tmi.Client> {
+  public async getTmiWriteInstance(type: TmiConnectionType|null = null) : Promise<tmi.Client> {
+    if (type === null) {
+      const availableTypes = this.availableConnectionTypes();
+
+      if (availableTypes.length === 0) {
+        throw Error('No Twitch Accounts added');
+      }
+
+      // prefer bot
+      if (availableTypes.includes('BOT')) {
+        type = 'BOT';
+      } else if (availableTypes.includes('MAIN')) {
+        type = 'MAIN';
+      }
+    }
+
     const client = type === 'BOT'
       ? (this.tmiBotClient ?? (this.tmiBotClient = this.createTmiConnection('BOT')))
       : (this.tmiMainClient ?? (this.tmiMainClient = this.createTmiConnection('MAIN')));
@@ -402,7 +417,13 @@ export class TwitchConnector {
 
   }
 
-  handleCommandsRequest(tags: tmi.ChatUserstate, message: string): void {
+  async handleCommandsRequest(tags: tmi.ChatUserstate, message: string): Promise<void> {
+    const availableConnectionTypes = this.availableConnectionTypes();
+
+    if (availableConnectionTypes.length == 0) {
+      return;
+    }
+
     const foundLevels = getLevelOfTags(tags);
     const commands = this.twitchSettings.filter((event) => {
       const trigger: TwitchTriggerCommand = {command: event, tags};
@@ -421,7 +442,10 @@ export class TwitchConnector {
     const botResponse = this._currentTwitchConfig.bot.response
       .replace('{{commands}}', commands.join(' | '))
       .replace('{{user}}', `${tags.username}`);
-    this.tmiReadOnlyClient.say(this._currentTwitchConfig.channel, botResponse)
+
+    const tmiWrite = await this.getTmiWriteInstance();
+
+    tmiWrite.say(this._currentTwitchConfig.channel, botResponse)
       .catch(ex => this.error(ex));
   }
 

@@ -3,13 +3,21 @@ import {TwitchEventTypes} from "@memebox/contracts";
 
 export interface TwitchEvent {
   type: TwitchEventTypes;
+  timestamp: Date;
 }
 
 export interface TwitchEventHasMessage {
   message: string;
 }
 
-export class TwitchChatMessage implements TwitchEvent, TwitchEventHasMessage {
+abstract class TwitchEventBase implements TwitchEvent {
+  timestamp: Date = new Date();
+  abstract type: TwitchEventTypes;
+}
+
+export class TwitchChatMessage
+  extends TwitchEventBase
+  implements TwitchEvent, TwitchEventHasMessage {
 
   readonly type = TwitchEventTypes.message;
 
@@ -20,6 +28,7 @@ export class TwitchChatMessage implements TwitchEvent, TwitchEventHasMessage {
                 self?: boolean // need self?!
               }
   ) {
+    super();
   }
 
   get message() {
@@ -27,7 +36,9 @@ export class TwitchChatMessage implements TwitchEvent, TwitchEventHasMessage {
   }
 }
 
-export class TwitchCheerMessage implements TwitchEvent, TwitchEventHasMessage {
+export class TwitchCheerMessage
+  extends TwitchEventBase
+  implements TwitchEvent, TwitchEventHasMessage {
   readonly type = TwitchEventTypes.bits;
 
   public payload: {
@@ -43,6 +54,7 @@ export class TwitchCheerMessage implements TwitchEvent, TwitchEventHasMessage {
                 message: string
               }
   ) {
+    super();
     this.payload = {
       ...payload,
       bits: parseInt(payload.userstate.bits)
@@ -55,18 +67,23 @@ export class TwitchCheerMessage implements TwitchEvent, TwitchEventHasMessage {
 }
 
 
-export class TwitchRaidedEvent implements TwitchEvent {
+export class TwitchRaidedEvent
+  extends TwitchEventBase
+  implements TwitchEvent {
   readonly type = TwitchEventTypes.raid;
 
   constructor(public payload: {
                 channel: string, username: string, viewers: number
               }
   ) {
+    super();
   }
 }
 
 
-export class TwitchBanEvent implements TwitchEvent {
+export class TwitchBanEvent
+  extends TwitchEventBase
+  implements TwitchEvent {
   readonly type = TwitchEventTypes.ban;
 
   constructor(public payload: {
@@ -74,10 +91,13 @@ export class TwitchBanEvent implements TwitchEvent {
                 reason: string
               }
   ) {
+    super();
   }
 }
 
-export class TwitchSubEvent implements TwitchEvent {
+export class TwitchSubEvent
+  extends TwitchEventBase
+  implements TwitchEvent {
   readonly type = TwitchEventTypes.subscription;
 
   constructor(public payload: {
@@ -92,10 +112,13 @@ export class TwitchSubEvent implements TwitchEvent {
     methods: SubMethods,
               }
   ) {
+    super();
   }
 }
 
-export class TwitchGiftEvent implements TwitchEvent {
+export class TwitchGiftEvent
+  extends TwitchEventBase
+  implements TwitchEvent {
   readonly type = TwitchEventTypes.gift;
 
   constructor(public payload: {
@@ -112,10 +135,13 @@ export class TwitchGiftEvent implements TwitchEvent {
                 recipientDisplayName: string,
               }
   ) {
+    super();
   }
 }
 
-export class TwitchChannelPointRedemptionEvent implements TwitchEvent {
+export class TwitchChannelPointRedemptionEvent
+  extends TwitchEventBase
+  implements TwitchEvent {
   readonly type = TwitchEventTypes.channelPoints;
 
   constructor(public payload: {
@@ -128,6 +154,7 @@ export class TwitchChannelPointRedemptionEvent implements TwitchEvent {
     rewardCost: number,
     message: string
   }) {
+    super();
   }
 }
 
