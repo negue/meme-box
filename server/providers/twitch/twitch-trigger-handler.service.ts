@@ -12,6 +12,7 @@ import {ExampleTwitchCommandsSubject} from "../../shared";
 import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
 import {convertExtendedToTypeValues, getVariablesListOfAction} from "@memebox/action-variables";
 import {uuid} from "@gewd/utils";
+import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 
 @Injectable({
   type: ProviderType.SERVICE,
@@ -24,6 +25,7 @@ export class TwitchTriggerHandler {
 
   constructor(
     private _twitchConnector: TwitchConnector,
+    private _twitchEventBus: TwitchQueueEventBus,
     private _twitchLogger: TwitchLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private _mediaTriggerEventBus: ActionQueueEventBus
@@ -35,8 +37,8 @@ export class TwitchTriggerHandler {
 
     this.fillActionMap();
 
-    _twitchConnector
-      .twitchEvents$()
+    _twitchEventBus
+      .AllQueuedEvents$
       .subscribe(twitchEvent => {
         const foundCommandsIterator = getCommandsOfTwitchEvent(
           this._twitchConnector.twitchSettings,

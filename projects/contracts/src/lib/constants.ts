@@ -11,9 +11,7 @@ export const ENDPOINTS = {
   OPEN: 'open',
   STATE: 'state',
 
-  TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',
-  TWITCH_TRIGGER: 'twitch_events/trigger',
   NETWORK_LIST: 'network_ip_list',
 
   CONFIG: {
@@ -22,6 +20,13 @@ export const ENDPOINTS = {
     OBS: '/obs',
     CUSTOM_PORT: '/customPort'
   },
+
+  TWITCH_EVENTS: {
+    PREFIX: 'twitch_events',
+    TRIGGER_CONFIG_EXAMPLE: '/trigger_config_example',
+    TRIGGER_EVENT: '/trigger_event',
+  },
+
 
   TWITCH_DATA: {
     PREFIX: 'twitchData',

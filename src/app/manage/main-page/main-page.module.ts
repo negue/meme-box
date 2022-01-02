@@ -9,6 +9,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {NavigationModule} from "../navigation/navigation.module";
 import {DialogsModule} from "../../shared/dialogs/dialogs.module";
 
+// TODO cleanup / move to /pages folder
 
 const mainRoutes: Routes = [
   {
@@ -26,6 +27,11 @@ const mainRoutes: Routes = [
   {
     path: 'triggers',
     loadChildren: () => import('../triggers/triggers.module').then(module => module.TriggersModule)
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('../../pages/dashboard/dashboard.module')
+      .then(module => module.DashboardModule)
   },
   {
     path: '',

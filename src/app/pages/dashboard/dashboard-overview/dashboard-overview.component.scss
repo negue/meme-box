@@ -1,0 +1,25 @@
+.two-columns {
+  height: calc(100% - 4rem);
+  margin: 2rem 3rem;
+}
+
+.column {
+  overflow: auto;
+}
+
+:host {
+  ::ng-deep {
+    .mat-expansion-panel-header {
+      padding: 0 16px 0 0px  !important;
+    }
+
+    .mat-expansion-panel-header-title {
+      align-items: center;
+    }
+    .mat-expansion-panel-header-description {
+      min-width: 180px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+}

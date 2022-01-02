@@ -27,9 +27,10 @@ export class NavigationComponent implements OnInit {
               private appQuery: AppQueries) {
 
     this.links = [
+      {path: './dashboard', displayName: 'dashboard'},
       {path: './actions', displayName: 'actions'},
       {path: './screens', displayName: 'screens'},
-      {path: './triggers', displayName: 'triggers'}
+      {path: './triggers', displayName: 'triggers'},
     ];
   }
 

@@ -32,20 +32,18 @@
 }
 
 .card__header {
+  .mat-icon-button {
+    position: absolute;
+    top: 0.25rem;
 
-.mat-icon-button {
-  position: absolute;
-  top: 0.25rem;
+    &.hide_until_hover {
+      right: 0.5rem;
+    }
 
-  &.hide_until_hover {
-    right: 0.5rem;
+    &.edit_icon {
+      right: 2rem;
+    }
   }
-
-  &.edit_icon {
-    right: 2rem;
-  }
-}
-
 }
 
 .mediaInfo__preview__img {

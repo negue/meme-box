@@ -1,0 +1,48 @@
+<div class="two-columns" >
+  <div class="column">
+    This Column will be used to show current external Connections (or their State)
+
+    and maybe other information
+  </div>
+  <div class="column">
+    <div class="twitch__events">
+      <div *ngIf="twitchEvents$ | async as latestEvents">
+        Latest Twitch Events: <br/>
+
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let twitchEvent of latestEvents" [ngSwitch]="twitchEvent.type">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <button mat-icon-button (click)="replayEvent($event, twitchEvent)">
+                  <mat-icon svgIcon="replay"></mat-icon>
+                </button> {{twitchEvent.type}}:
+
+                <ng-container *ngSwitchCase="'channelPoints'">
+                  <ng-container *ngIf="twitchEvent | guardType: isChannelPointRedemption as channelPoint">
+                    {{channelPoint.payload.rewardName}} by {{ channelPoint.payload.userDisplayName }}
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'bits'">
+                  <ng-container *ngIf="twitchEvent | guardType: isCheer as cheer">
+
+                    {{cheer.payload.bits}} - {{cheer.payload.message}} by {{ cheer.payload.userstate["display-name"] }}
+
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  No template for this type yet
+                </ng-container>
+              </mat-panel-title>
+              <mat-panel-description>
+
+                {{twitchEvent.timestamp | date: 'short'}}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            {{ twitchEvent | json }}
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+    </div>
+  </div>
+</div>
