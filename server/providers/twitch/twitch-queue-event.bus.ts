@@ -8,8 +8,6 @@ export class TwitchQueueEventBus {
 
   public AllQueuedEvents$ = this._allTriggerEvents$.asObservable();
 
-  constructor() {}
-
   public queueEvent(triggerClip: TwitchEvent) {
     this._allTriggerEvents$.next(triggerClip);
   }

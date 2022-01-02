@@ -23,20 +23,14 @@ export function cacheSessionStorage<TInput, TResult = TInput>(
 
   if (customPipes) {
     return pipe(
-
-      tap(data => console.info('Data after StartWith', data)),
       customPipes(currentObject),
-
-
-      tap(data => console.info('Data after customPipes', data)),
-
       startWith(currentObject),
       tap(newestValue => sessionStorage.setItem(sessionStorageKey, JSON.stringify(newestValue)))
     );
   }
 
   return pipe(
-    startWith(currentObject as TResult),
+    startWith(currentObject),
     tap(newestValue => sessionStorage.setItem(sessionStorageKey, JSON.stringify(newestValue)))
   ) as any;  // some pipe internal typing which should work - but typescript says no.
 }
