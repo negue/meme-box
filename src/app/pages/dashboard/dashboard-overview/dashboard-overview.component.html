@@ -1,13 +1,21 @@
 <div class="two-columns" >
   <div class="column">
-    This Column will be used to show current external Connections (or their State)
-
-    and maybe other information
+    <table class="connections-table">
+      <tr *ngFor="let service of connectionState$ | async">
+        <td>{{service.name}}</td>
+        <td>{{service.state.label}}</td>
+      </tr>
+    </table>
   </div>
   <div class="column">
     <div class="twitch__events">
       <div *ngIf="twitchEvents$ | async as latestEvents">
         Latest Twitch Events: <br/>
+
+        <ng-container *ngIf="latestEvents">
+          <br>
+          <i>No Twitch Events in this session yet.</i>
+        </ng-container>
 
         <mat-accordion>
           <mat-expansion-panel *ngFor="let twitchEvent of latestEvents" [ngSwitch]="twitchEvent.type">

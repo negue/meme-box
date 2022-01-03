@@ -15,10 +15,6 @@ interface ConnectionEntry {
   openConfig: () => void;
 }
 
-// TODO:
-// - twitch oauth window something
-// - improve the Dialogs & settings for twitch
-
 @Component({
   selector: 'app-connections-list',
   templateUrl: './connections-list.component.html',

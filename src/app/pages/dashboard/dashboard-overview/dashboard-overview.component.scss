@@ -23,3 +23,13 @@
     }
   }
 }
+
+.connections-table {
+   td {
+    padding: 0.5rem;
+  }
+
+  tr:first-of-type td {
+    padding-top: 0;
+  }
+}

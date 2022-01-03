@@ -22,6 +22,7 @@ import {PubSubClient} from 'twitch-pubsub-client';
 import {ApiClient, StaticAuthProvider} from "twitch";
 import {TwitchAuthInformationProvider} from "./twitch.auth-information";
 import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
+import { ConnectionsStateHub, UpdateStateFunc } from "../connections-state.hub";
 
 export type TmiConnectionType = "MAIN" | "BOT";
 
@@ -35,6 +36,9 @@ export class TwitchConnector {
   private _currentTwitchConfig: TwitchConfig;
 
 
+  private tmiReadOnlyState: UpdateStateFunc;
+  private tmiPubSubState: UpdateStateFunc;
+
   public twitchSettings: TwitchTrigger[] = [];
 
   constructor(
@@ -46,8 +50,16 @@ export class TwitchConnector {
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
 
     private twitchAuth: TwitchAuthInformationProvider,
-    private twitchEventBus: TwitchQueueEventBus
+    private twitchEventBus: TwitchQueueEventBus,
+    private connectionStateHub: ConnectionsStateHub,
   ) {
+    this.tmiReadOnlyState = this.connectionStateHub.registerService({
+      name: 'TMI Readonly Connection'
+    });
+    this.tmiPubSubState = this.connectionStateHub.registerService({
+      name: 'TMI PubSub Connection'
+    });
+
 
     // TODO better way to find out the config has changed
     let currentConfigJsonString = "";
@@ -198,9 +210,16 @@ export class TwitchConnector {
   private async connectAndListenTMI() {
     for (let tryOut = 0; tryOut < 3; tryOut++) {
       try {
+        this.tmiReadOnlyState({
+          label: 'Connecting'
+        });
         await this.tmiReadOnlyClient.connect();
         this.log({
           message: 'Connected to Twitch!'
+        });
+
+        this.tmiReadOnlyState({
+          label: 'Connected'
         });
         break;
       } catch (ex) {
@@ -209,7 +228,10 @@ export class TwitchConnector {
           message: `Error trying to connect to twitch - ${ex.message}`
         });
 
-        // TODO sent state to Dashboard
+        this.tmiReadOnlyState({
+          label: "Can't connect to Twitch",
+          description: ex.message
+        });
       }
     }
 
@@ -368,8 +390,23 @@ export class TwitchConnector {
     const twitchAuth = await this.twitchAuth.getTwitchAuthAsync();
 
     if (!twitchAuth) {
+      this.tmiPubSubState({
+        label: 'No Auth'
+      });
+
       return;
     }
+
+    if (!twitchAuth.valid) {
+      this.tmiPubSubState({
+        label: 'Invalid Auth Token'
+      });
+      return;
+    }
+
+    this.tmiPubSubState({
+      label: 'Connecting'
+    });
 
     const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
     const apiClient = new ApiClient({ authProvider });
@@ -377,6 +414,11 @@ export class TwitchConnector {
 
     const pubSubClient = new PubSubClient();
     const userId = await pubSubClient.registerUserListener(apiClient);
+
+    this.tmiPubSubState({
+      label: 'Connected'
+    });
+
 
     pubSubClient.onRedemption(userId, channelPointRedemption => {
 
