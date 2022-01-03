@@ -18,5 +18,7 @@ export class TwitchEventsWebsocket extends AbstractWebsocketHandler {
         this.sendDataToAllSockets(JSON.stringify(twitchEvent));
       })
   }
+
+  WebSocketServerLabel = 'WS: Twitch-Events';
 }
 

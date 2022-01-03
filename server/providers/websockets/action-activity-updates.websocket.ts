@@ -23,5 +23,7 @@ export class ActionActivityUpdatesWebsocket extends AbstractWebsocketHandler {
   protected onConnectedSocket(ws: WebSocket): void {
     console.info('new ActionActivityUpdates WS Connection');
   }
+
+  WebSocketServerLabel = '';
 }
 
