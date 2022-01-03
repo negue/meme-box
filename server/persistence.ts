@@ -23,7 +23,6 @@ import {
   simpleDateString,
   sortClips,
   updateItemInDictionary,
-  uuidv4
 } from "@memebox/utils";
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
 import {operations} from '@memebox/shared-state';
@@ -33,6 +32,7 @@ import {registerProvider} from "@tsed/di";
 import {PERSISTENCE_DI} from "./providers/contracts";
 import {CLI_OPTIONS} from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
+import { uuid } from '@gewd/utils';
 
 // TODO Extract more state operations to shared library and from app
 
@@ -190,7 +190,7 @@ export class Persistence {
    */
 
   public addTag(tag: Tag) {
-    tag.id = uuidv4();
+    tag.id = uuid();
     this.data.tags[tag.id] = tag;
 
     this.saveData();
@@ -279,7 +279,7 @@ export class Persistence {
    */
 
   public addTwitchEvent(twitchEvent: TwitchTrigger) {
-    twitchEvent.id = uuidv4();
+    twitchEvent.id = uuid();
     this.data.twitchEvents[twitchEvent.id] = twitchEvent;
 
     this.saveData();
@@ -311,7 +311,7 @@ export class Persistence {
    */
 
   public addTimedEvent(timedEvent: TimedClip) {
-    timedEvent.id = uuidv4();
+    timedEvent.id = uuid();
     this.data.timers[timedEvent.id] = timedEvent;
 
     this.saveData();
