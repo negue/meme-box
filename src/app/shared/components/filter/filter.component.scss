@@ -73,7 +73,7 @@
 
 .filterTable__row {
   &:hover {
-    background: #23262f;
+    background-color: var(--card-background-color);
   }
 
   td {

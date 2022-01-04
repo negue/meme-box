@@ -25,6 +25,7 @@ export const ENDPOINTS = {
     PREFIX: 'twitch_events',
     TRIGGER_CONFIG_EXAMPLE: '/trigger_config_example',
     TRIGGER_EVENT: '/trigger_event',
+    LAST_20_EVENTS: '/last_events'
   },
 
 

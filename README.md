@@ -164,7 +164,7 @@ ___
 
 ## Roadmap
 
-### 2021.3.0
+### 2022.1.0
 * [x] Widgets (previously `HTML`)
   * [x] API for Twitch or Events that its shown and so on
   * [x] Templates
@@ -179,9 +179,10 @@ ___
 * [x] "Action Type": `Permanent Scripts` for even more advanced features
   * [x] Create your own custom WebSocket Server
   * [x] Create your own logic to react on "stuff"
+* [x] Dashboard for the latest Twitch Events and other Informations
 * [ ] Overhaul of the Media Creation Dialog(s)
 
-### 2021.4.0
+### 2022.2.0
 * [ ] Labels on or around the Media, each with their own Position / Animation
   * [ ] Changeable by Trigger Variables
   * [ ] Can be placed like in the Arrange View

@@ -5,17 +5,24 @@ import {ENDPOINTS, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts
 import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
 import {twitchPostValidator, twitchPutValidator, validOrLeave} from "../validations";
 import {ExampleTwitchCommandsSubject} from "../shared";
-import {TwitchEvent} from "../providers/twitch/twitch.connector.types";
+import { TwitchEvent } from "../providers/twitch/twitch.connector.types";
 import {TwitchQueueEventBus} from "../providers/twitch/twitch-queue-event.bus";
+import { takeLatestItems } from "../../projects/utils/src/lib/rxjs";
 
 @Controller(`/${ENDPOINTS.TWITCH_EVENTS.PREFIX}`)
 export class TwitchEventsController {
+  private latest20Events: TwitchEvent[] = [];
 
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private _dataProvider: TwitchDataProvider,
-    private _twitchEventBus: TwitchQueueEventBus
+    private _twitchEventBus: TwitchQueueEventBus,
   ) {
+    _twitchEventBus.AllQueuedEvents$.pipe(
+      takeLatestItems(20)
+    ).subscribe(value => {
+      this.latest20Events = value;
+    });
   }
 
   @Get('/')
@@ -64,5 +71,10 @@ export class TwitchEventsController {
     @BodyParams() twitchEvent: TwitchEvent
   ): void {
     this._twitchEventBus.queueEvent(twitchEvent);
+  }
+
+  @Get(ENDPOINTS.TWITCH_EVENTS.LAST_20_EVENTS)
+  getLast20Events(): TwitchEvent[] {
+    return this.latest20Events;
   }
 }

@@ -6,6 +6,7 @@ import {GuardTypePipe} from "./dashboard-overview/dashboard-overview.guards";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import { MatCardModule } from "@angular/material/card";
 
 const routes: Routes = [
   {
@@ -24,7 +25,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MatExpansionModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatCardModule
   ]
 })
 export class DashboardModule { }

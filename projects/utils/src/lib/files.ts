@@ -1,4 +1,4 @@
-import {ActionType} from "../../../contracts/src/lib/media.types";
+import {ActionType} from "@memebox/contracts";
 
 export function fileEndingToType (fileEnding: string) : ActionType {
   fileEnding = fileEnding.toLowerCase().replace('.', '');
