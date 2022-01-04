@@ -1,11 +1,11 @@
-import {deleteItemInDictionary} from "../../../../utils/src/lib/utils";
-import {Action, SettingsState} from "../../../../contracts/src/lib/types";
-import {uuidv4} from "../../../../utils/src/lib/uuid";
+import {deleteItemInDictionary} from "@memebox/utils";
+import {Action, SettingsState} from "@memebox/contracts";
+import { uuid } from "@gewd/utils";
 
 
 export function addClip(state: SettingsState, clip: Partial<Action>, fillId = false) {
   if (fillId) {
-    clip.id = uuidv4();
+    clip.id = uuid();
   }
 
   state.clips[clip.id] = clip as Action;

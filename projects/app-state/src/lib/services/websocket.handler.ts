@@ -43,7 +43,7 @@ export class WebsocketHandler {
       return;
     }
 
-    console.info('Creating a new WS connection, fingers crossed');
+    console.info('Creating a new WS connection, fingers crossed', this.wsUrl);
 
     if (this.ws) {
       // free up memory?
@@ -71,12 +71,10 @@ export class WebsocketHandler {
     };
 
     this.ws.onerror = ev => {
-      console.warn('On Error', ev);
       this.isConnected = false;
     };
 
     this.ws.onclose = ev => {
-      console.warn('On Close', ev);
       this.isConnected = false;
       this.firstConnectionWorked = false;
 
@@ -87,7 +85,6 @@ export class WebsocketHandler {
           this.intervalId = window.setInterval(() => {
             this.connect();
           }, this.reconnectTimeout);
-          console.warn('new ws connect interval', this.intervalId);
         } else {
           this.connectionState$.next(ConnectionState.Offline);
         }

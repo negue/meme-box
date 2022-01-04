@@ -5,6 +5,8 @@
 
 .column {
   overflow: auto;
+
+  margin: 0 0.5rem;
 }
 
 :host {
@@ -21,5 +23,15 @@
       justify-content: flex-end;
       align-items: center;
     }
+  }
+}
+
+.connections-table {
+   td {
+    padding: 0.5rem;
+  }
+
+  tr:first-of-type td {
+    padding-top: 0;
   }
 }

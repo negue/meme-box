@@ -56,6 +56,10 @@ $custom-typography: mat-typography-config(
     background-color: var(--card-background-color) !important;
   }
 
+  .mat-expansion-panel {
+    background-color: var(--card-background-color);
+  }
+
   .mat-table {
     background: transparent !important;
   }

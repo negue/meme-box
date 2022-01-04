@@ -6,17 +6,23 @@ import OBSWebSocket from "obs-websocket-js";
 import {NamedLogger} from "./named-logger";
 import {timeoutAsync} from "./actions/scripts/apis/sleep.api";
 import {ObsConfig} from "@memebox/contracts";
+import { ConnectionsStateHub, UpdateStateFunc } from "./connections-state.hub";
 
 @Service()
 export class ObsConnection {
   private obsConfig: ObsConfig;
   private obsConfigExists: boolean;
   private obsConnection: OBSWebSocket;
+  private obsConnectionState: UpdateStateFunc;
 
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     @UseOpts({name: 'ObsConnection'}) public logger: NamedLogger,
+    connectionStateHub: ConnectionsStateHub,
   ) {
+    this.obsConnectionState = connectionStateHub.registerService({
+      name: 'OBS Connection'
+    });
     this.obsConfig = _persistence.getConfig(false).obs;
 
     this.obsConfigExists = !!this.obsConfig?.hostname;
@@ -72,12 +78,29 @@ export class ObsConnection {
     }
   }
 
-  private createConnectionPromise() {
-    return this.obsConfigExists
-      ? this.obsConnection.connect({
+  private async createConnectionPromise() {
+    if (this.obsConfigExists) {
+      this.obsConnectionState({
+        label: 'Connecting'
+      });
+
+      await this.obsConnection.connect({
         address: this.obsConfig?.hostname,
         password: this.obsConfig?.password
-      }, error => this.logger.error(error))
-      : Promise.resolve();
+      }, error => {
+        if (error) {
+          this.logger.error(error)
+          this.obsConnectionState({
+            label: 'Error',
+            description: error.message
+          });
+          return;
+        }
+
+        this.obsConnectionState({
+          label: 'Connected'
+        });
+      });
+    }
   }
 }

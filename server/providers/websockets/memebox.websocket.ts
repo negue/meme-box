@@ -109,4 +109,6 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
       }
     }
   }
+
+  WebSocketServerLabel = 'WS: Memebox Connections';
 }

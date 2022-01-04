@@ -25,6 +25,7 @@ export const ENDPOINTS = {
     PREFIX: 'twitch_events',
     TRIGGER_CONFIG_EXAMPLE: '/trigger_config_example',
     TRIGGER_EVENT: '/trigger_event',
+    LAST_20_EVENTS: '/last_events'
   },
 
 
@@ -59,5 +60,6 @@ export const TwitchTypesArray = [
 
 export const WEBSOCKET_PATHS = {
   TWITCH_EVENTS: '/ws/twitch_events',
-  ACTION_ACTIVITY: '/ws/action_activity'
+  ACTION_ACTIVITY: '/ws/action_activity',
+  CONNECTIONS_STATE: '/ws/connections_state',
 }
