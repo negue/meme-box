@@ -47,14 +47,14 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     true
   );
 
-  public dontHaveActions$ = this.query.clipList$.pipe(
+  public dontHaveActions$ = this.query.actionList$.pipe(
     map((availableClips) => {
       return availableClips.length === 0;
     })
   );
 
   public showGettingStarted$ = combineLatest([
-    this.query.clipList$,
+    this.query.actionList$,
     this.screenList$
   ]).pipe(
     map(([availableClips, availableScreens]) => {

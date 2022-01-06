@@ -40,7 +40,7 @@ const SettingMobileColumnSize = 'MOBILE_COLUMN_SIZE';
 export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   public currentColumnSize = 50;
-  public groupedActionList$: Observable<IGroupedList[]> = this.appQueries.clipList$.pipe(
+  public groupedActionList$: Observable<IGroupedList[]> = this.appQueries.actionList$.pipe(
     tap(allClips => console.info('PRE',{allClips})),
     map(allClips => sortClips(allClips.filter(c => c.showOnMobile))),
     tap(allClips => console.info('POST', {allClips})),

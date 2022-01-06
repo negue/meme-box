@@ -1,0 +1,6 @@
+<mat-form-field>
+  <mat-label>Notes</mat-label>
+  <textarea matInput [formControl]="notesControl"
+            (keyup)="notesChanged$.next(notesTextarea.value)"
+            #notesTextarea></textarea>
+</mat-form-field>

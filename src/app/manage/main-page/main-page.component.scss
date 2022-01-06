@@ -14,3 +14,32 @@
 app-navigation {
   height: var(--toolbar-height);
 }
+
+.notes-button {
+  position: absolute;
+  bottom: 0;
+  // color: green;
+  z-index: 2000;
+  opacity: 0.4;
+
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.mat-icon-button.large {
+
+  width: 64px;
+  height: 64px;
+  line-height: 48px;
+
+  .mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+  }
+}

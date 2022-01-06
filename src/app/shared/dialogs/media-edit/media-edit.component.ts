@@ -166,7 +166,7 @@ export class MediaEditComponent
   // Get all clips that have the assigned tags
   taggedClips$ = combineLatest([
     this.currentTags$,
-    this.appQuery.clipList$
+    this.appQuery.actionList$
   ]).pipe(
     map(([currentTags, allClips]) => {
       if (currentTags.length === 0) {
@@ -180,7 +180,7 @@ export class MediaEditComponent
   )
 
 
-  widgetTemplates$ = this.appQuery.clipList$.pipe(
+  widgetTemplates$ = this.appQuery.actionList$.pipe(
     map(( allMedias) => {
       return allMedias.filter(c => c.type === ActionType.WidgetTemplate);
     }),

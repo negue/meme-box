@@ -6,7 +6,27 @@
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </h2>
+
+
+<mat-form-field appearance="standard"
+                class="filterRow__searchInput"
+                (click)="$event.stopPropagation()">
+  <input type="search" matInput
+         (click)="$event.stopPropagation()"
+         (keyup)="updateSearchField(searchInput.value)"
+         autocomplete="off"
+         placeholder="Search Triggers"
+         #searchInput>
+
+  <button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+          class="filterRow__searchInput__reset"
+          (click)="updateSearchField(''); searchInput.value = ''">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
+</mat-form-field>
+
 <app-card-overview>
+
 
 <ng-container *ngIf="twitchChannelExist$ | async; else noChannel">
   <ng-container *ngIf="twitchEventsList$ | async as twitchEventList">

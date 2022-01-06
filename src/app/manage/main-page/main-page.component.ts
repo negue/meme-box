@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService} from "../../../../projects/app-state/src/lib/state/app.service";
+import {AppService} from "@memebox/app-state";
 import {HotkeysService} from "@ngneat/hotkeys";
 import {DialogService} from "../../shared/dialogs/dialog.service";
+import {MatBottomSheet} from "@angular/material/bottom-sheet";
+import {NotesComponent} from "./notes/notes.component";
 
 @Component({
   selector: 'app-main-page',
@@ -10,9 +12,12 @@ import {DialogService} from "../../shared/dialogs/dialog.service";
 })
 export class MainPageComponent implements OnInit {
 
+  public buttonVisible = true;
+
   constructor(private appService: AppService,
               private hotkeys: HotkeysService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private _bottomSheet: MatBottomSheet) {
   }
 
   ngOnInit(): void {
@@ -23,4 +28,13 @@ export class MainPageComponent implements OnInit {
       });
   }
 
+  async openNotes() {
+    const res = this._bottomSheet.open(NotesComponent, {
+      panelClass: 'above-everything'
+    });
+
+    this.buttonVisible = false;
+    await res.afterDismissed().toPromise();
+    this.buttonVisible = true;
+  }
 }
