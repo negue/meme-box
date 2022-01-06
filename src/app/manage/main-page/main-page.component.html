@@ -1,2 +1,9 @@
 <app-navigation></app-navigation>
 <router-outlet></router-outlet>
+
+<button mat-icon-button class="notes-button large"
+        color="accent" (click)="openNotes()"
+        matTooltip="Notes"
+        *ngIf="buttonVisible">
+  <mat-icon svgIcon="sticky_note_2" ></mat-icon>
+</button>
