@@ -12,6 +12,10 @@ import {MatIconModule} from "@angular/material/icon";
 import {NotesComponent} from './notes/notes.component';
 import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {ReactiveFormsModule} from "@angular/forms";
+import {WidgetStoreRemoteAdapter} from "../../shared/components/dynamic-iframe/widget-store-remote-adapter.service";
 
 // TODO cleanup / move to /pages folder
 
@@ -67,7 +71,13 @@ const routes: Routes = [
     DialogsModule,
     MatIconModule,
     MatBottomSheetModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    WidgetStoreRemoteAdapter
   ]
 })
 export class MainPageModule {
