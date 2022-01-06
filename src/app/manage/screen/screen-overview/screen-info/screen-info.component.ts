@@ -45,7 +45,7 @@ export class ScreenInfoComponent implements OnInit {
 
   public clipList$: Observable<Action[]> = combineLatest([
     this.info$,
-    this.appQueries.clipList$
+    this.appQueries.actionList$
   ]).pipe(
     map(([screen, clipList]) => sortClips(
       clipList.filter(clip => !!screen.clips[clip.id])

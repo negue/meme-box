@@ -13,7 +13,7 @@ import {ConfigService} from "../../../../../projects/app-state/src/lib/services/
   styleUrls: ['./getting-started.component.scss']
 })
 export class GettingStartedComponent implements OnInit {
-  public mediaList$: Observable<Action[]> = this.query.clipList$;
+  public mediaList$: Observable<Action[]> = this.query.actionList$;
 
   public screenList$: Observable<Screen[]> = this.query.screensList$
   public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;

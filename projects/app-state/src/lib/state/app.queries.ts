@@ -9,7 +9,7 @@ export class AppQueries extends Query<AppState> {
 
   );
 
-  clipList$ = this.select(store => Object.values(store.clips));
+  actionList$ = this.select(store => Object.values(store.clips));
   screensList$ = this.select(store => Object.values(store.screen));
   twitchEvents$ = this.select(store => Object.values(store.twitchEvents));
   timedEvents$ = this.select(store => Object.values(store.timers));
