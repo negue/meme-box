@@ -278,6 +278,24 @@ export class AppService {
     this.snackbar.normal(`Media ${wasAlreadyAdded ? 'Settings updated' : 'added to screen'}!`);
   }
 
+  // TODO rename clip and screenclip settings
+  public async addOrUpdateScreenActionInBulk(screenId: string, changedActions: Partial<ScreenClip>[]) {
+    changedActions = changedActions.map(screenAction => fillDefaultsScreenClip(screenAction));
+
+    // add the clip to api & await
+    await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/bulk`, changedActions);
+
+    // add to the state
+    this.appStore.update(state => {
+      for (const changedAction of changedActions) {
+        addOrUpdateScreenClip(state, screenId, changedAction);
+      }
+    });
+
+    // todo rename those snackbars
+    this.snackbar.normal(`Screen Media Settings updated!`);
+  }
+
   public async deleteScreenClip(screenId: string, id: string) {
     // send the api call
     await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${id}`);

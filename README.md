@@ -182,6 +182,8 @@ ___
 * [x] Dashboard for the latest Twitch Events and other Informations
 * [ ] Overhaul of the Media Creation Dialog(s)
 
+TODO replace this with the changelog and the milestone / ISSUE
+
 ### 2022.2.0
 * [ ] Labels on or around the Media, each with their own Position / Animation
   * [ ] Changeable by Trigger Variables
@@ -194,6 +196,7 @@ ___
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
 * [ ] Stats per commands / media / or something last cheerer and so on
+* [ ] Visual Scripting, if anyone has a good webcomponents for that - open an issue
 * [ ] more to be added :)
 
 ## How to help / contribute?

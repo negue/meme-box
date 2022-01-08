@@ -50,11 +50,17 @@ export class ScriptHandler implements ActionStoreAdapter {
   ) {
     setGlobalVMScope(this._vm);
 
-    _persistence.dataUpdated$().subscribe(() => {
-      // TODO get updated Path to know what kind of state needs to be refilled
-      // for example the compiled scripts
+    _persistence.dataUpdated$().subscribe((changedInfo) => {
+      if (
+        changedInfo.dataType == 'action'
+        && [ActionType.Script, ActionType.PermanentScript].includes(changedInfo.actionType)
+      ) {
+        this.refreshCompiledScriptsAndStartPermanents(changedInfo.id);
+      }
 
-      this.refreshCompiledScriptsAndStartPermanents();
+      if (changedInfo.dataType === 'everything') {
+        this.refreshCompiledScriptsAndStartPermanents();
+      }
     })
 
     this.refreshCompiledScriptsAndStartPermanents();
@@ -138,7 +144,9 @@ export class ScriptHandler implements ActionStoreAdapter {
     });
   }
 
-  private async refreshCompiledScriptsAndStartPermanents() {
+  private async refreshCompiledScriptsAndStartPermanents(changedScriptId?: string) {
+    // todo only reset the script by id
+
     // go through all scripts and dispose the APIs/subscriptions
     if (this._compiledScripts) {
       for (const scriptContext of this._compiledScripts.values()) {

@@ -193,10 +193,14 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   async applyAllchanges() {
-    for (const item of this.visibleItems) {
-      // TODO replace with a bulk update
-      await this.appService.addOrUpdateScreenClip(this.screen.id, item.clipSetting);
-    }
+    // only change the ones that have been changed
+    const onlyChanged = this.visibleItems
+      .filter(item => this.unsavedChangesIds.includes(item.clip.id))
+      .map(combined => combined.clipSetting);
+
+    // update in bulk
+
+    await this.appService.addOrUpdateScreenActionInBulk(this.screen.id, onlyChanged);
 
     this.changesSaved.emit(this.visibleItems.map(i => i.clip.id));
   }
