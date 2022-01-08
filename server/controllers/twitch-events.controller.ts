@@ -1,13 +1,14 @@
 import {BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
 import {Persistence, PersistenceInstance} from "../persistence";
-import {ENDPOINTS, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
+import {ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
 import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
 import {twitchPostValidator, twitchPutValidator, validOrLeave} from "../validations";
 import {ExampleTwitchCommandsSubject} from "../shared";
-import { TwitchEvent } from "../providers/twitch/twitch.connector.types";
+import {TwitchEvent} from "../providers/twitch/twitch.connector.types";
 import {TwitchQueueEventBus} from "../providers/twitch/twitch-queue-event.bus";
-import { takeLatestItems } from "../../projects/utils/src/lib/rxjs";
+import {takeLatestItems} from "@memebox/utils";
+import {filter} from "rxjs/operators";
 
 @Controller(`/${ENDPOINTS.TWITCH_EVENTS.PREFIX}`)
 export class TwitchEventsController {
@@ -19,6 +20,7 @@ export class TwitchEventsController {
     private _twitchEventBus: TwitchQueueEventBus,
   ) {
     _twitchEventBus.AllQueuedEvents$.pipe(
+      filter(str => str.type !== TwitchEventTypes.message),
       takeLatestItems(20)
     ).subscribe(value => {
       this.latest20Events = value;
