@@ -62,9 +62,9 @@ PersistenceInstance.dataUpdated$()
     debounceTime(600),
     startWith(true)
   )
-  .subscribe(() => {
+  .subscribe((dataChanged) => {
     // TODO move to a different place?
-    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA+'='+JSON.stringify(dataChanged));
 
     const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
 

@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import {
   Action,
+  ActionType,
   Config,
   ConfigV0,
   createInitialState,
@@ -22,7 +23,7 @@ import {
   deleteItemInDictionary,
   simpleDateString,
   sortClips,
-  updateItemInDictionary,
+  updateItemInDictionary
 } from "@memebox/utils";
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
 import {operations} from '@memebox/shared-state';
@@ -32,13 +33,21 @@ import {registerProvider} from "@tsed/di";
 import {PERSISTENCE_DI} from "./providers/contracts";
 import {CLI_OPTIONS} from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
-import { uuid } from '@gewd/utils';
+import {uuid} from '@gewd/utils';
 
 // TODO Extract more state operations to shared library and from app
 
 let fileBackupToday = false;
 
 export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
+
+export interface ChangedInfo {
+  id?: string;
+  dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
+    |'settings'|'twitch-events'|'timers'|'twitch-setting';
+  actionType?: ActionType;
+  changeType: 'added'|'changed'|'removed'
+}
 
 export class Persistence {
 
@@ -47,7 +56,7 @@ export class Persistence {
   // This is the CONFIG-Version, not the App Version
   private version = 1;
 
-  private updated$ = new Subject<void>();
+  private updated$ = new Subject<ChangedInfo>();
   private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
 
@@ -77,7 +86,11 @@ export class Persistence {
       // execute upgrade , changing names or other stuff
 
       this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
-      this.updated$.next();
+      this.updated$.next({
+        dataType: 'everything',
+        changeType: 'changed'
+      });
+
       this.configLoaded$.next();
 
       this.logger.info('Settings loaded');
@@ -136,7 +149,7 @@ export class Persistence {
     return configFromFile;
   }
 
-  public dataUpdated$ () : Observable<void> {
+  public dataUpdated$ () : Observable<ChangedInfo> {
     return this.updated$.asObservable();
   }
 
@@ -159,25 +172,44 @@ export class Persistence {
    *  Clips Persistence
    */
 
-  public addClip(clip: Action) {
-    operations.addClip(this.data, clip, true);
+  public addClip(action: Action) {
+    operations.addClip(this.data, action, true);
 
-    this.saveData();
-    return clip.id;
+    this.saveData({
+      dataType: 'action',
+      actionType: action.type,
+      changeType: 'added',
+      id: action.id
+    });
+
+    return action.id;
   }
 
-  public updateClip(id: string, clip: Action) {
-    clip.id = id;
-    updateItemInDictionary(this.data.clips, clip);
+  public updateClip(id: string, action: Action) {
+    action.id = id;
+    updateItemInDictionary(this.data.clips, action);
 
-    this.saveData();
-    return clip;
+    this.saveData({
+      dataType: 'action',
+      actionType: action.type,
+      changeType: 'changed',
+      id: action.id
+    });
+
+    return action;
   }
 
   public deleteClip(id: string) {
+    const actionType = this.data.clips[id].type;
+
     operations.deleteClip(this.data, id);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'action',
+      actionType: actionType,
+      changeType: 'removed',
+      id
+    });
   }
 
   public listClips(): Action[] {
@@ -186,14 +218,19 @@ export class Persistence {
 
 
   /*
-   *  Clips Persistence
+   *  Tags Persistence
    */
 
   public addTag(tag: Tag) {
     tag.id = uuid();
     this.data.tags[tag.id] = tag;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'tags',
+      changeType: 'added',
+      id: tag.id
+    });
+
     return tag.id;
   }
 
@@ -201,7 +238,12 @@ export class Persistence {
     tag.id = id;
     updateItemInDictionary(this.data.tags, tag);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'tags',
+      changeType: 'changed',
+      id: tag.id
+    });
+
     return tag;
   }
 
@@ -215,7 +257,11 @@ export class Persistence {
       }
     }
 
-    this.saveData();
+    this.saveData({
+      dataType: 'tags',
+      changeType: 'removed',
+      id
+    });
   }
 
   public listTags(): Tag[] {
@@ -230,7 +276,11 @@ export class Persistence {
   public addScreen(screen: Partial<Screen>) {
     operations.addScreen(this.data, screen);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screens',
+      changeType: 'added',
+      id: screen.id
+    });
     return screen.id;
   }
 
@@ -239,14 +289,23 @@ export class Persistence {
 
     updateItemInDictionary(this.data.screen, screen);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screens',
+      changeType: 'changed',
+      id: screen.id
+    });
+
     return screen;
   }
 
   public deleteScreen(id: string) {
     deleteItemInDictionary(this.data.screen, id);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screens',
+      changeType: 'removed',
+      id
+    });
   }
 
   public listScreens(): Screen[] {
@@ -262,14 +321,24 @@ export class Persistence {
 
     operations.addOrUpdateScreenClip(this.data, targetUrlId, screenClip);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screen-action-config',
+      changeType: 'changed',
+      id
+    });
+
     return screenClip;
   }
 
   public deleteScreenClip(targetUrlId: string, id: string) {
     deleteItemInDictionary(this.data.screen[targetUrlId].clips, id);
 
-    this.saveData();
+
+    this.saveData({
+      dataType: 'screen-action-config',
+      changeType: 'removed',
+      id
+    });
   }
 
 
@@ -282,7 +351,12 @@ export class Persistence {
     twitchEvent.id = uuid();
     this.data.twitchEvents[twitchEvent.id] = twitchEvent;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'twitch-events',
+      changeType: 'added',
+      id: twitchEvent.id
+    });
+
     return twitchEvent.id;
   }
 
@@ -291,14 +365,24 @@ export class Persistence {
 
     updateItemInDictionary(this.data.twitchEvents, twitchEvent);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'twitch-events',
+      changeType: 'changed',
+      id: twitchEvent.id
+    });
+
     return twitchEvent;
   }
 
   public deleteTwitchEvent(id: string) {
     deleteItemInDictionary(this.data.twitchEvents, id);
 
-    this.saveData();
+
+    this.saveData({
+      dataType: 'twitch-events',
+      changeType: 'removed',
+      id
+    });
   }
 
   public listTwitchEvents(): TwitchTrigger[] {
@@ -314,7 +398,11 @@ export class Persistence {
     timedEvent.id = uuid();
     this.data.timers[timedEvent.id] = timedEvent;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'timers',
+      changeType: 'added',
+      id: timedEvent.id
+    });
     return timedEvent.id;
   }
 
@@ -323,14 +411,24 @@ export class Persistence {
 
     updateItemInDictionary(this.data.timers, timedEvent);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'timers',
+      changeType: 'changed',
+      id: timedEvent.id
+    });
+
     return timedEvent;
   }
 
   public deleteTimedEvent(id: string) {
     deleteItemInDictionary(this.data.timers, id);
 
-    this.saveData();
+
+    this.saveData({
+      dataType: 'timers',
+      changeType: 'removed',
+      id
+    });
   }
 
   public listTimedEvents(): TimedClip[] {
@@ -345,20 +443,29 @@ export class Persistence {
   public updateConfig(config: Config) {
     this.data.config = config;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
   public updatePartialConfig(config: Partial<Config>) {
     this.data.config = Object.assign({}, this.data.config, config);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
   public updateMediaFolder (newFolder: string) {
     this.data.config = this.data.config || {};
     this.data.config.mediaFolder = newFolder;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
   public updateObsConfig(newObsConfig: ObsConfig) {
@@ -378,8 +485,10 @@ export class Persistence {
       obsConfig.password = newObsConfig.password;
     }
 
-    // TODO add "what changed" to saveData
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
 
@@ -427,8 +536,10 @@ export class Persistence {
       console.info('updating bot auth token?');
     }
 
-    // TODO add "what changed" to saveData
-    this.saveData();
+    this.saveData({
+      dataType: 'twitch-setting',
+      changeType: 'changed'
+    });
   }
 
   public updateCustomPort (newPort: number) {
@@ -436,7 +547,10 @@ export class Persistence {
 
     this.data.config.customPort = newPort;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
   public getConfig(replaceTokens = true): Config {
@@ -472,14 +586,16 @@ export class Persistence {
     this.data.screen = {};
     this.data.twitchEvents = {};
 
-    this.saveData();
+    this.saveData({
+      dataType: 'everything',
+      changeType: 'removed'
+    });
+
     this._hardRefresh$.next();
   }
 
   public addAllClipsToScreen(screenId: string, clipList: Partial<Action>[]) {
     const currentScreen = this.data.screen[screenId];
-
-    const prevJson = JSON.stringify(currentScreen);
 
     // add all clips to state
     // assign all clips to screen
@@ -499,15 +615,19 @@ export class Persistence {
       this.logger.info('Add Clip to screen', clip.id, screenId);
     });
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screen-action-config',
+      changeType: 'changed',
+      id: screenId
+    });
   }
 
   /*
   *  Helpers
   */
 
-  private saveData() {
-    this.updated$.next();
+  private saveData(changed: ChangedInfo) {
+    this.updated$.next(changed);
   }
 }
 
