@@ -161,6 +161,11 @@
           <mat-option [value]="2">{{2 | positionToString}}</mat-option>
           <mat-option [value]="3">{{3 | positionToString}}</mat-option>
         </mat-select>
+        <mat-hint [ngSwitch]="positionSelection.value">
+          <span *ngSwitchCase="3" class="mat-error" style="display: inline">
+            Random Position will only work if your OBS Version is at least 27.2.
+          </span>
+        </mat-hint>
       </mat-form-field>
 
       <br/>
