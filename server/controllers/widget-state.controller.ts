@@ -6,7 +6,7 @@ import {ActionStore} from "@memebox/shared-state";
 import {ActionPersistentStateHandler} from "../providers/actions/action-persistent-state.handler";
 
 // TODO extract the endpoint path as constant
-@Controller("/widget-state")
+@Controller("widget-state")
 export class WidgetStateController {
 
   constructor(

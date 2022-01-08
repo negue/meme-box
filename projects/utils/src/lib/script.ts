@@ -1,5 +1,6 @@
 import {Action, Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig, convertExtendedToTypeValues} from "@memebox/action-variables";
+import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
 
 export interface ScriptConfig {
@@ -13,24 +14,22 @@ export interface ScriptConfig {
 
 const SCRIPT_EXECUTION_KEY = '_executionScript';
 const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
-export const SCRIPT_VARIABLES_KEY = '_variables';
 const SCRIPT_SETTINGS_KEY = '_settings';
 
-export function actionDataToScriptConfig (clip: Partial<Action>) {
-  if (!clip?.extended) {
+export function actionDataToScriptConfig (action: Partial<Action>) {
+  if (!action?.extended) {
     return null;
   }
 
   const dynamicContent: ScriptConfig = {
-    executionScript: clip.extended[SCRIPT_EXECUTION_KEY] ?? '',
-    bootstrapScript: clip.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
+    executionScript: action.extended[SCRIPT_EXECUTION_KEY] ?? '',
+    bootstrapScript: action.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
   };
 
-  const customVariables: ActionVariableConfig[] = JSON.parse(clip.extended[SCRIPT_VARIABLES_KEY] ?? '[]');
-  dynamicContent.variablesConfig = customVariables;
+  dynamicContent.variablesConfig = getVariablesListOfAction(action);
 
   // todo add a settings type
-  const settings: any = JSON.parse(clip.extended[SCRIPT_SETTINGS_KEY] ?? '{}');
+  const settings: any = JSON.parse(action.extended[SCRIPT_SETTINGS_KEY] ?? '{}');
   dynamicContent.settings = settings;
 
   return dynamicContent;

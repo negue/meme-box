@@ -3,7 +3,7 @@ import {ENDPOINTS} from "@memebox/contracts";
 import {ActionActiveState} from "../providers/actions/action-active-state";
 import {ActionStateEntries} from "@memebox/shared-state";
 
-@Controller(`/${ENDPOINTS.ACTION_ACTIVITY.PREFIX}`)
+@Controller(ENDPOINTS.ACTION_ACTIVITY.PREFIX)
 export class ActionActivityController {
 
   constructor(

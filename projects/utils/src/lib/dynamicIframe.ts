@@ -1,6 +1,7 @@
 import {Action, Dictionary} from "@memebox/contracts";
 import {replaceVariablesInString} from "./utils";
 import {ActionVariableConfig} from "@memebox/action-variables";
+import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
@@ -194,33 +195,31 @@ const DYNAMIC_IFRAME_CSS_KEY = 'css';
 const DYNAMIC_IFRAME_JS_KEY = 'js';
 const DYNAMIC_IFRAME_EXTERNAL_KEY = 'external';
 
-const DYNAMIC_IFRAME_VARIABLES_KEY = '_variables';
 const DYNAMIC_IFRAME_SETTINGS_KEY = '_settings';
 
-export function actionDataToWidgetContent (clip: Partial<Action>): DynamicIframeContent|null {
-  if (!clip?.extended) {
+export function actionDataToWidgetContent (action: Partial<Action>): DynamicIframeContent|null {
+  if (!action?.extended) {
     return null;
   }
 
   const dynamicContent: DynamicIframeContent = {
-    html: clip.extended[DYNAMIC_IFRAME_HTML_KEY] ?? '',
-    css: clip.extended[DYNAMIC_IFRAME_CSS_KEY] ?? '',
-    js: clip.extended[DYNAMIC_IFRAME_JS_KEY] ?? ''
+    html: action.extended[DYNAMIC_IFRAME_HTML_KEY] ?? '',
+    css: action.extended[DYNAMIC_IFRAME_CSS_KEY] ?? '',
+    js: action.extended[DYNAMIC_IFRAME_JS_KEY] ?? ''
   };
 
-  console.info({extended: clip.extended});
+  console.info({extended: action.extended});
 
   // External Files are saved as JSON
-  const externalFiles: HtmlExternalFile[] = JSON.parse(clip.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
+  const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
   dynamicContent.libraries = externalFiles;
 
-  const customVariables: ActionVariableConfig[] = JSON.parse(clip.extended[DYNAMIC_IFRAME_VARIABLES_KEY] ?? '[]');
-  dynamicContent.variablesConfig = customVariables;
+  dynamicContent.variablesConfig = getVariablesListOfAction(action);
 
   console.info('json', JSON.stringify(dynamicContent));
 
   // todo add a settings type
-  const settings: any = JSON.parse(clip.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');
+  const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');
   dynamicContent.settings = settings;
 
   return dynamicContent;
@@ -244,14 +243,14 @@ export function applyDynamicIframeContentToClipData (
   targetClip.extended[DYNAMIC_IFRAME_JS_KEY] = iframeContent.js ?? '';
 
   targetClip.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] = JSON.stringify(iframeContent.libraries);
-  targetClip.extended[DYNAMIC_IFRAME_VARIABLES_KEY] = JSON.stringify(iframeContent.variablesConfig);
+  targetClip.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(iframeContent.variablesConfig);
   targetClip.extended[DYNAMIC_IFRAME_SETTINGS_KEY] = JSON.stringify(iframeContent.settings);
 
   console.info('POST CHANGE', JSON.stringify(targetClip));
 }
 
 export const NOT_ALLOWED_WIDGET_VARIABLE_NAMES = [
-  DYNAMIC_IFRAME_VARIABLES_KEY,
+  SCRIPT_VARIABLES_KEY,
   DYNAMIC_IFRAME_JS_KEY,
   DYNAMIC_IFRAME_CSS_KEY,
   DYNAMIC_IFRAME_EXTERNAL_KEY,

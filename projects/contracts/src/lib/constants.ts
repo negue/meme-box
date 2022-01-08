@@ -40,6 +40,11 @@ export const ENDPOINTS = {
   ACTION_ACTIVITY: {
     PREFIX: 'actionActivity',
     CURRENT: '/current'
+  },
+
+  ACTION: {
+    PREFIX: 'action',
+    SIMPLE_LIST: '/simpleList'
   }
 }
 

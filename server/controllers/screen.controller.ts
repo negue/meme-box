@@ -4,7 +4,9 @@ import {Persistence} from "../persistence";
 import {Screen, ScreenClip} from "@memebox/contracts";
 import {screenValidations, validOrLeave} from "../validations";
 
-@Controller("/screen")
+// TODO to ENDPOINTS object
+
+@Controller("screen")
 export class ScreenController {
 
   constructor(

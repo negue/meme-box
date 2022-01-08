@@ -10,7 +10,7 @@ import {Persistence} from "../persistence";
 // TODO allow config generic put endpoint
 // todo validations
 
-@Controller(`/${ENDPOINTS.CONFIG.PREFIX}`)
+@Controller(ENDPOINTS.CONFIG.PREFIX)
 export class ConfigController {
 
   constructor(

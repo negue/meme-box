@@ -10,7 +10,7 @@ import {TwitchQueueEventBus} from "../providers/twitch/twitch-queue-event.bus";
 import {takeLatestItems} from "@memebox/utils";
 import {filter} from "rxjs/operators";
 
-@Controller(`/${ENDPOINTS.TWITCH_EVENTS.PREFIX}`)
+@Controller(ENDPOINTS.TWITCH_EVENTS.PREFIX)
 export class TwitchEventsController {
   private latest20Events: TwitchEvent[] = [];
 
