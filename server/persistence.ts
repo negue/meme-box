@@ -595,8 +595,6 @@ export class Persistence {
   }
 
   public addAllClipsToScreen(screenId: string, clipList: Partial<Action>[]) {
-    const currentScreen = this.data.screen[screenId];
-
     // add all clips to state
     // assign all clips to screen
     clipList.forEach(clip => {

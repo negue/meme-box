@@ -31,13 +31,11 @@ export class ActionController {
 
     return allActions.map(
       a => {
-        let hasVariables = actionCanBeTriggeredWithVariables(a);
-        let variableList: ActionVariableConfig[] = [];
-
-        if (hasVariables) {
-          variableList = getVariablesListOfAction(a);
-        }
-
+        const hasVariables = actionCanBeTriggeredWithVariables(a);
+        const variableList: ActionVariableConfig[] =
+          hasVariables
+            ? getVariablesListOfAction(a)
+            : [];
 
         return {
           id: a.id,
