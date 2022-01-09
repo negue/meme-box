@@ -1,6 +1,9 @@
 // TODO how to translate with variables?
 import {Action, ActionType} from "@memebox/contracts";
-import {SCRIPT_VARIABLES_KEY} from "./script";
+import {ActionVariableConfig} from "@memebox/action-variables";
+
+
+export const SCRIPT_VARIABLES_KEY = '_variables';
 
 export function isDynamicIframeVariableValid(name: string, notAllowedNames: string[]): {ok: boolean, message: string} {
   if (notAllowedNames.includes(name)) {
@@ -37,5 +40,8 @@ export const ACTION_TYPES_WITH_TRIGGERABLE_VARIABLES: ActionType[] = [
 
 export function actionCanBeTriggeredWithVariables (action: Action) {
   return ACTION_TYPES_WITH_TRIGGERABLE_VARIABLES.includes(action.type) && actionHasVariables(action);
+}
 
+export function getVariablesListOfAction (action: Partial<Action>): ActionVariableConfig[] {
+ return JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] ?? '[]');
 }

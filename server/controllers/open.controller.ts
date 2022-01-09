@@ -5,7 +5,7 @@ import {Controller, Get, Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
 import {Persistence} from "../persistence";
 
-@Controller(`/${ENDPOINTS.OPEN}`)
+@Controller(ENDPOINTS.OPEN)
 export class OpenController {
 
   constructor(

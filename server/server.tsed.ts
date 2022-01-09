@@ -20,7 +20,7 @@ const rootDir = __dirname;
   rootDir,
   acceptMimes: ["application/json"],
   mount: {
-    [API_PREFIX]: CONTROLLERS
+    [API_PREFIX+'/']: CONTROLLERS
   },
   logger: {
     debug: false,

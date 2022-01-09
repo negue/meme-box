@@ -1,4 +1,4 @@
-## to be released
+## 2022.1 to be released
 
 ### Breaking Changes
 
@@ -15,7 +15,7 @@
   * [x] Widget-Variables
   * [x] Import / Export Widgets
   * [x] Persistence of the Widget State across Screens
-* [ ] Electron: You can now hide the windows to the Tray-Icon. :tada:
+* [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
 * [x] "Action Type": `Scripts` for more advanced features
   * [x] Wait once a triggered clip (inside the script) is done to trigger other stuff
   * [x] Use custom variables like in the Widget-Variables for easier configs
@@ -28,11 +28,12 @@
 * [x] Actions now have a description to see for example what a script does
 * [x] Actions can be searched by keywords (including script sources)
 * [x] Actions can be (preview) triggered with custom variable values
-* [ ] todo preview gifs / avifs for some of those features
-* [ ] Status Page of the connections / states
-* [ ] latest twitch events to retrigger
+* [x] Status Dashboard
+  * [x] of connections / states
+  * [x] latest twitch events to retrigger
+* [x] Triggers can be searched now
+* [ ] todo preview / explain with gifs / avifs for some of those Features
 * [ ] extend actions api endpoint for extensions with more string properties
-* [ ] Triggers can be searched now
 
 ### Fixes
 
@@ -52,6 +53,8 @@
 * [x] The Arrange View was redesigned by `@owehmer`
 * [x] "HTML" is now renamed to "Widgets"
 * [x] "Media" is now renamed to "Actions"
+* [ ] Overhaul of the Media Creation Dialog(s)
+
 
 ## 2021.2.1
 

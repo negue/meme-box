@@ -1,4 +1,4 @@
-import {Dictionary, HasId} from "../../../contracts/src/lib/types";
+import {Dictionary, HasId} from "@memebox/contracts";
 
 export function updateItemInDictionary<T extends HasId>(dict: Dictionary<T>, item: T) {
   dict[item.id] = item;

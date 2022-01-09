@@ -4,11 +4,11 @@ import {ScreenArrangePreviewComponent} from './screen-arrange-preview.component'
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {AutoScaleModule} from '@gewd/components/auto-scale';
-import {ClipPreviewModule} from '../../../../../../projects/state-components/src/lib/clip-preview/clip-preview.module';
+import {ClipPreviewModule} from '@memebox/state-components';
 import {DragResizeMediaModule} from '../drag-resize-media/drag-resize-media.module';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
-import {PipesModule} from '../../../../../../projects/ui-components/src/lib/pipes/pipes.module';
+import {PipesModule} from '@memebox/ui-components';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDividerModule} from '@angular/material/divider';

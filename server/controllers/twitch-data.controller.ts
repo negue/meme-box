@@ -4,7 +4,7 @@ import {Persistence} from "../persistence";
 import {ChannelPointRedemption, ENDPOINTS, TwitchAuthInformation} from "@memebox/contracts";
 import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
 
-@Controller(`/${ENDPOINTS.TWITCH_DATA.PREFIX}`)
+@Controller(ENDPOINTS.TWITCH_DATA.PREFIX)
 export class TwitchDataController {
 
   constructor(

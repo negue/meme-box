@@ -1,5 +1,5 @@
 import * as electron from 'electron';
-import { app, BrowserWindow, dialog, ipcMain, Menu, MessageBoxSyncOptions, nativeImage, shell, Tray } from 'electron';
+import {app, BrowserWindow, dialog, ipcMain, Menu, MessageBoxSyncOptions, nativeImage, shell, Tray} from 'electron';
 import * as path from 'path';
 import {join} from 'path';
 import {NEW_CONFIG_PATH} from "./server/path.utils";
@@ -74,6 +74,8 @@ function createTray () {
     {
       label: 'Quit',
       click: () => {
+        // when that option is pressed, you don't need another question if hide / quit
+        alreadyAllowedToBeHidden = true;
         app.quit();
       }
     }];
@@ -131,6 +133,7 @@ function createWindow(): BrowserWindow {
     };
     fs.writeFileSync(initPath, JSON.stringify(data));
 
+    // ask it hide or close if its triggered from the Electron Window
   if (!alreadyAllowedToBeHidden) {
     const result = dialog.showMessageBoxSync(win, {
       message: 'Hide to tray or quit?',

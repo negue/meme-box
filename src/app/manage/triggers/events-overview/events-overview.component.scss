@@ -21,9 +21,9 @@
 }
 
 .filterRow__searchInput {
-  position: absolute;
+  position: fixed;
   z-index: 2;
-  top: 0;
+  top: 2.5rem;
   right: 2rem;
   width: 170px;
 }

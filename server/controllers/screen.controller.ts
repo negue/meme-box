@@ -4,7 +4,9 @@ import {Persistence} from "../persistence";
 import {Screen, ScreenClip} from "@memebox/contracts";
 import {screenValidations, validOrLeave} from "../validations";
 
-@Controller("/screen")
+// TODO to ENDPOINTS object
+
+@Controller("screen")
 export class ScreenController {
 
   constructor(
@@ -47,6 +49,19 @@ export class ScreenController {
 
 
   // TODO to nested Controller ?
+
+
+  @Put('/:screenId/clips/bulk')
+  updateScreenMediaBulk(
+    @PathParams("screenId") screenId: string,
+
+    @BodyParams() updateScreenMedia: ScreenClip[]  // todo rename type
+  ): void {
+    for (const media of updateScreenMedia) {
+      this._persistence.updateScreenClip(screenId, media.id, media);
+    }
+  }
+
 
   @Put('/:screenId/clips/:mediaId')
   updateScreenMedia(
