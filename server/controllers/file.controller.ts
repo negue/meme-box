@@ -1,0 +1,132 @@
+import {GetPreviewFilePath, Persistence} from "../persistence";
+import {getFiles, mapFileInformations} from "../file.utilts";
+import {ENDPOINTS, FileInfo, SERVER_URL} from "@memebox/contracts";
+import fs from "fs";
+import {allowedFileUrl} from "../validations";
+import {normalize} from "path";
+import {Controller, Get, Inject, PathParams, Req} from "@tsed/common";
+import {PERSISTENCE_DI} from "../providers/contracts";
+import {NotFound, PreconditionFailed} from "@tsed/exceptions";
+import type {Request} from 'express';
+
+
+@Controller(ENDPOINTS.FILE.PREFIX)
+export class FileController {
+  constructor(
+    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+  ) {
+  }
+
+  @Get('')
+  async getList(): Promise<FileInfo[]> {
+    const mediaFolder = this._persistence.getConfig().mediaFolder;
+
+    // fullpath as array
+    const files = await getFiles(mediaFolder);
+
+
+    // files with information
+    const fileInfoList = mapFileInformations(mediaFolder, files);
+
+    return fileInfoList;
+  }
+
+  @Get(`${ENDPOINTS.FILE.BY_ID}:mediaId`)
+  async getById(
+    @PathParams("mediaId") mediaId: string,
+  ): Promise<Buffer> {
+    if (!mediaId){
+      throw new PreconditionFailed('need a media ID');
+    }
+
+    // simple solution
+    // check one path and then other
+    const mediaFolder = this._persistence.getConfig().mediaFolder;
+    const clipMap = this._persistence.fullState().clips;
+
+    const clip = clipMap[mediaId];
+
+    if (!clip) {
+      throw new PreconditionFailed('invalid mediaId');
+    }
+
+    const filename = clip.path.replace(`${SERVER_URL}/file`, mediaFolder);
+
+    console.info({
+      filename,
+      actionPath: clip.path
+    });
+
+    if (fs.existsSync(filename)) {
+      const loadedFile = fs.readFileSync(filename);
+
+      return loadedFile;
+    }
+
+    throw new NotFound('no media file found');
+  }
+
+
+  @Get(`${ENDPOINTS.FILE.PREVIEW}:mediaId`)
+  async getPreviewById(
+    @PathParams("mediaId") mediaId: string,
+  ): Promise<Buffer> {
+    if (!mediaId){
+      throw new PreconditionFailed('need a media ID');
+    }
+
+    // simple solution
+    // check one path and then other
+    const mediaFolder = this._persistence.getConfig().mediaFolder;
+    const clipMap = this._persistence.fullState().clips;
+
+    const clip = clipMap[mediaId];
+
+    if (!clip) {
+      throw new PreconditionFailed('invalid mediaId');
+    }
+
+    const filename = GetPreviewFilePath(clip.id);
+
+    if (fs.existsSync(filename)) {
+      const loadedFile = fs.readFileSync(filename);
+
+      return loadedFile;
+    }
+
+    throw new NotFound('no media file found');
+  }
+
+  // dev mode : "/src/assets"
+  // prod mode:  "/assets"
+  @Get(ENDPOINTS.FILE.ANY_FILE)
+  async getByPath(
+    @Req() request: Request,
+  ): Promise<Buffer> {
+    const firstParam = request.params[0];
+
+    if (!firstParam){
+      throw new PreconditionFailed('need a param');
+    }
+
+    // possible "hack" to access some files
+    // TODO check for hijacks and stuff
+    if (!allowedFileUrl(firstParam)) {
+      throw new PreconditionFailed('need a param');
+    }
+
+    // simple solution
+    // check one path and then other
+    const mediaFolder = this._persistence.getConfig().mediaFolder;
+
+    const filename = normalize(`${mediaFolder}/${firstParam}`);
+
+    if (fs.existsSync(filename)) {
+      const loadedFile = fs.readFileSync(filename);
+
+      return loadedFile;
+    }
+
+    throw new NotFound('no media file found');
+  }
+}

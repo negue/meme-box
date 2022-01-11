@@ -15,7 +15,7 @@ import {
   UpdateState,
   VisibilityEnum
 } from '@memebox/contracts';
-import {API_PREFIX, FILES_ENDPOINT} from '../../../../../server/constants'; // TODO extract to shared library
+import {API_PREFIX} from '../../../../../server/constants'; // TODO extract to shared library
 import {AppConfig} from '@memebox/app/env';
 import {addOrUpdateScreenClip, deleteClip, fillDefaultsScreenClip} from '@memebox/shared-state';
 import {take} from 'rxjs/operators';
@@ -77,7 +77,7 @@ export class AppService {
   }
 
   public listFiles() {
-    this.http.get<FileInfo[]>(`${EXPRESS_BASE}${FILES_ENDPOINT}`).pipe(
+    this.http.get<FileInfo[]>(`${API_BASE}${ENDPOINTS.FILE.PREFIX}`).pipe(
       // delay(5000)
     ).subscribe(
       value => {
@@ -487,7 +487,7 @@ export class AppService {
 
   public tryHttpGet<TResult>(url: string): Promise<TResult|undefined> {
     if (this.isOffline()) {
-      return Promise.resolve<TResult>(undefined);
+      return Promise.resolve<TResult|undefined>(undefined);
     }
 
 

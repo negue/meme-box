@@ -4,28 +4,23 @@ import {
   CLIP_ENDPOINT,
   CLIP_ID_ENDPOINT,
   DANGER_ENDPOINT,
-  FILE_BY_ID_ENDPOINT,
-  FILE_ENDPOINT,
-  FILES_ENDPOINT,
   LOG_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
   STATE_ENDPOINT,
   TAGS_ENDPOINT,
   TIMED_ENDPOINT
 } from './constants';
-import * as fs from 'fs';
 import {listNetworkInterfaces} from "./network-interfaces";
 import {PersistenceInstance} from "./persistence";
 
 import {TAG_ROUTES} from "./rest-endpoints/tags";
-import {getAppRootPath, getFiles, isInElectron, mapFileInformations} from "./file.utilts";
-import {allowedFileUrl, clipValidations, validOrLeave} from "./validations";
+import {getAppRootPath, isInElectron} from "./file.utilts";
+import {clipValidations, validOrLeave} from "./validations";
 
 import {DANGER_ROUTES} from "./rest-endpoints/danger";
 import {LOG_ROUTES} from "./rest-endpoints/logs";
 import {TIMER_ROUTES} from "./rest-endpoints/timers";
 import {STATE_ROUTES} from "./rest-endpoints/state";
-import {SERVER_URL} from "@memebox/contracts";
 
 const {  normalize, join } = require('path');
 
@@ -97,105 +92,6 @@ app.use(DANGER_ENDPOINT, DANGER_ROUTES);
 app.use(LOG_ENDPOINT, LOG_ROUTES);
 app.use(TIMED_ENDPOINT, TIMER_ROUTES);
 app.use(STATE_ENDPOINT, STATE_ROUTES);
-
-/**
- * OBS-Specific API
- */
-
-app.get(FILES_ENDPOINT, async (req, res) => {
-
-  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
-
-  // fullpath as array
-  const files = await getFiles(mediaFolder);
-
-  try {
-    // files with information
-    const fileInfoList = mapFileInformations(mediaFolder, files);
-
-    res.send(fileInfoList);
-  }
-  catch(error)
-  {
-    res.status(500)
-      .send({error: error.message});
-  }
-});
-
-app.get(FILE_BY_ID_ENDPOINT, function(req, res){
-  const mediaId = req.params['mediaId'];
-
-  console.info(req.params);
-
-  if (!mediaId){
-    res.send('need a param');
-    return;
-  }
-
-  // simple solution
-  // check one path and then other
-  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
-  const clipMap = PersistenceInstance.fullState().clips;
-
-  const clip = clipMap[mediaId];
-
-  if (!clip) {
-    res.send('invalid mediaId');
-    return;
-  }
-
-  const filename = clip.path.replace(`${SERVER_URL}/file`, mediaFolder);
-
-  if (fs.existsSync(filename)) {
-    res.sendFile(filename);
-    return;
-  }
-
-  console.error(`file not found: ${mediaId}`);
-
-  res.status(404);
-  res.send({
-    ok: false
-  });
-});
-
-
-// TODO - Remove on the next version
-// dev mode : "/src/assets"
-// prod mode:  "/assets"
-app.get(FILE_ENDPOINT, function(req, res){
-  const firstParam = req.params[0];
-
-  if (!firstParam){
-    res.send('need a param');
-    return;
-  }
-
-  // possible "hack" to access some files
-  // TODO check for hijacks and stuff
-  if (!allowedFileUrl(firstParam)) {
-    res.send('nope');
-    return;
-  }
-
-  // simple solution
-  // check one path and then other
-  const mediaFolder = PersistenceInstance.getConfig().mediaFolder;
-
-  const filename = normalize(`${mediaFolder}/${firstParam}`);
-
-  if (fs.existsSync(filename)) {
-    res.sendFile(filename);
-    return;
-  }
-
-  console.error(`file not found: ${firstParam}`);
-
-  res.status(404);
-  res.send({
-    ok: false
-  });
-});
 
 
 // List Network IP Entries

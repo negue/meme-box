@@ -45,7 +45,14 @@ export const ENDPOINTS = {
   ACTION: {
     PREFIX: 'action',
     SIMPLE_LIST: '/simpleList'
-  }
+  },
+
+  FILE: {
+    PREFIX: 'file',
+    ANY_FILE: '/*',
+    BY_ID: '/fileById/',
+    PREVIEW: '/preview/'
+  },
 }
 
 export const OPEN_CONFIG_PATH = `/config`;
