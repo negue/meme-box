@@ -32,8 +32,6 @@
   * [x] of connections / states
   * [x] latest twitch events to retrigger
 * [x] Triggers can be searched now
-* [ ] todo preview / explain with gifs / avifs for some of those Features
-* [ ] extend actions api endpoint for extensions with more string properties
 
 ### Fixes
 
