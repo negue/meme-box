@@ -28,7 +28,7 @@ import {
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
 import {operations} from '@memebox/shared-state';
 import {debounceTime} from "rxjs/operators";
-import {LOGGER} from "./logger.utils";
+import {LOGGER, newLogger} from "./logger.utils";
 import {registerProvider} from "@tsed/di";
 import {PERSISTENCE_DI} from "./providers/contracts";
 import {CLI_OPTIONS} from "./utils/cli-options";
@@ -60,7 +60,7 @@ export class Persistence {
   private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
 
-  private logger  = LOGGER.child({ label: 'Persistence' });
+  private logger  = newLogger('Persistence');
 
   constructor(private filePath: string) {
     const dir = path.dirname(filePath);

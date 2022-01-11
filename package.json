@@ -188,8 +188,6 @@
     "tslib": "2.3.1",
     "ttypescript": "1.5.12",
     "vm2": "3.9.3",
-    "winston": "3.3.3",
-    "winston-daily-rotate-file": "4.5.0",
     "ws": "6.2.1",
     "xss": "1.0.8"
   },
