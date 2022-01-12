@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import {writeFileSync} from 'fs';
 import {
   Action,
   ActionType,
@@ -17,7 +16,7 @@ import {
   TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
-import {Observable, Subject} from "rxjs";
+import { Observable, Subject } from "rxjs";
 import * as path from "path";
 import {
   deleteInArray,
@@ -26,15 +25,16 @@ import {
   sortClips,
   updateItemInDictionary
 } from "@memebox/utils";
-import {createDirIfNotExists, LOG_PATH, MEDIA_SCREENSHOT_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {operations} from '@memebox/shared-state';
-import {debounceTime} from "rxjs/operators";
-import {LOGGER, newLogger} from "./logger.utils";
-import {registerProvider} from "@tsed/di";
-import {PERSISTENCE_DI} from "./providers/contracts";
-import {CLI_OPTIONS} from "./utils/cli-options";
+import { createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH } from "./path.utils";
+import { operations } from '@memebox/shared-state';
+import { debounceTime } from "rxjs/operators";
+import { LOGGER, newLogger } from "./logger.utils";
+import { registerProvider } from "@tsed/di";
+import { PERSISTENCE_DI } from "./providers/contracts";
+import { CLI_OPTIONS } from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
-import {uuid} from '@gewd/utils';
+import { uuid } from '@gewd/utils';
+import { SavePreviewFile } from "./persistence.functions";
 
 // TODO Extract more state operations to shared library and from app
 
@@ -509,14 +509,14 @@ export class Persistence {
     const twitchConfig = this.data.config.twitch;
 
     twitchConfig.enableLog = newTwitchConfig.enableLog;
-    twitchConfig.channel  = newTwitchConfig.channel;
+    twitchConfig.channel = newTwitchConfig.channel;
     if (typeof newTwitchConfig.token !== 'undefined'
       && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.token = newTwitchConfig.token;
     }
 
     // fill empty bot object
-    if(!twitchConfig.bot) {
+    if (!twitchConfig.bot) {
       twitchConfig.bot = {
         enabled: false,
         response: '',
@@ -528,8 +528,8 @@ export class Persistence {
       }
     }
 
-      // fill empty bot object
-    if(!twitchConfig.bot.auth) {
+    // fill empty bot object
+    if (!twitchConfig.bot.auth) {
       twitchConfig.bot.auth = {
         name: '',
         token: ''
@@ -680,16 +680,3 @@ registerProvider({
   provide: PERSISTENCE_DI,
   useValue: PersistenceInstance
 });
-
-export const GetPreviewFilePath = (actionId: string) => path.join(MEDIA_SCREENSHOT_PATH, actionId+'.jpg');
-
-export function SavePreviewFile(action: Action) {
-  if (action.type === ActionType.Video && action.previewUrl?.includes('data:image/jpeg;base64')) {
-    const previewImgBase64 = action.previewUrl.replace('data:image/jpeg;base64,', '');
-
-    writeFileSync(GetPreviewFilePath(action.id), previewImgBase64, 'base64');
-
-    action.previewUrl = null;
-    action.hasPreview = true;
-  }
-}

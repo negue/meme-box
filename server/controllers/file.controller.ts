@@ -1,13 +1,14 @@
-import {GetPreviewFilePath, Persistence} from "../persistence";
-import {getFiles, mapFileInformations} from "../file.utilts";
-import {ENDPOINTS, FileInfo, SERVER_URL} from "@memebox/contracts";
+import { Persistence } from "../persistence";
+import { getFiles, mapFileInformations } from "../file.utilts";
+import { ENDPOINTS, FileInfo, SERVER_URL } from "@memebox/contracts";
 import fs from "fs";
-import {allowedFileUrl} from "../validations";
-import {normalize} from "path";
-import {Controller, Get, Inject, PathParams, Req} from "@tsed/common";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {NotFound, PreconditionFailed} from "@tsed/exceptions";
-import type {Request} from 'express';
+import { allowedFileUrl } from "../validations";
+import { normalize } from "path";
+import { Controller, Get, Inject, PathParams, Req } from "@tsed/common";
+import { PERSISTENCE_DI } from "../providers/contracts";
+import { NotFound, PreconditionFailed } from "@tsed/exceptions";
+import type { Request } from 'express';
+import { GetPreviewFilePath } from "../persistence.functions";
 
 
 @Controller(ENDPOINTS.FILE.PREFIX)
@@ -32,9 +33,9 @@ export class FileController {
   }
 
   @Get(`${ENDPOINTS.FILE.BY_ID}:mediaId`)
-  async getById(
+  getById(
     @PathParams("mediaId") mediaId: string,
-  ): Promise<Buffer> {
+  ): Buffer {
     if (!mediaId){
       throw new PreconditionFailed('need a media ID');
     }
@@ -52,11 +53,6 @@ export class FileController {
 
     const filename = clip.path.replace(`${SERVER_URL}/file`, mediaFolder);
 
-    console.info({
-      filename,
-      actionPath: clip.path
-    });
-
     if (fs.existsSync(filename)) {
       const loadedFile = fs.readFileSync(filename);
 
@@ -68,16 +64,15 @@ export class FileController {
 
 
   @Get(`${ENDPOINTS.FILE.PREVIEW}:mediaId`)
-  async getPreviewById(
+  getPreviewById(
     @PathParams("mediaId") mediaId: string,
-  ): Promise<Buffer> {
+  ): Buffer {
     if (!mediaId){
       throw new PreconditionFailed('need a media ID');
     }
 
     // simple solution
     // check one path and then other
-    const mediaFolder = this._persistence.getConfig().mediaFolder;
     const clipMap = this._persistence.fullState().clips;
 
     const clip = clipMap[mediaId];
@@ -100,9 +95,9 @@ export class FileController {
   // dev mode : "/src/assets"
   // prod mode:  "/assets"
   @Get(ENDPOINTS.FILE.ANY_FILE)
-  async getByPath(
+  getByPath(
     @Req() request: Request,
-  ): Promise<Buffer> {
+  ): Buffer {
     const firstParam = request.params[0];
 
     if (!firstParam){
