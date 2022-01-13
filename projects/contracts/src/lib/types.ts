@@ -40,6 +40,7 @@ export interface HasExtendedData {
 export interface Action extends HasId, ActionOverridableProperies, HasExtendedData {
   name: string;
   previewUrl?: string;
+  hasPreview?: boolean;
   volumeSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip
@@ -272,12 +273,6 @@ export interface TwitchBotConfig {
     name: string;
     token: string;
   }
-}
-
-export interface ConfigV0 {
-  mediaFolder: string;
-  twitchChannel: string;
-  twitchLog?: boolean;
 }
 
 export interface NetworkInfo {

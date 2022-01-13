@@ -16,7 +16,7 @@ import {
   TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
-import {Observable, Subject} from "rxjs";
+import { Observable, Subject } from "rxjs";
 import * as path from "path";
 import {
   deleteInArray,
@@ -25,15 +25,16 @@ import {
   sortClips,
   updateItemInDictionary
 } from "@memebox/utils";
-import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {operations} from '@memebox/shared-state';
-import {debounceTime} from "rxjs/operators";
-import {LOGGER} from "./logger.utils";
-import {registerProvider} from "@tsed/di";
-import {PERSISTENCE_DI} from "./providers/contracts";
-import {CLI_OPTIONS} from "./utils/cli-options";
+import { createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH } from "./path.utils";
+import { operations } from '@memebox/shared-state';
+import { debounceTime } from "rxjs/operators";
+import { LOGGER, newLogger } from "./logger.utils";
+import { registerProvider } from "@tsed/di";
+import { PERSISTENCE_DI } from "./providers/contracts";
+import { CLI_OPTIONS } from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
-import {uuid} from '@gewd/utils';
+import { uuid } from '@gewd/utils';
+import { SavePreviewFile } from "./persistence.functions";
 
 // TODO Extract more state operations to shared library and from app
 
@@ -54,13 +55,13 @@ export class Persistence {
   public configLoaded$ = new Subject();
 
   // This is the CONFIG-Version, not the App Version
-  private version = 1;
+  private version = 2;
 
   private updated$ = new Subject<ChangedInfo>();
   private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
 
-  private logger  = LOGGER.child({ label: 'Persistence' });
+  private logger  = newLogger('Persistence');
 
   constructor(private filePath: string) {
     const dir = path.dirname(filePath);
@@ -144,6 +145,13 @@ export class Persistence {
       }
     }
 
+    if (configFromFile.version < 2) {
+      // extract the preview base64 images out to their own files
+      for (const action of Object.values(configFromFile.clips)) {
+        SavePreviewFile(action);
+      }
+    }
+
     configFromFile.version = this.version;
 
     return configFromFile;
@@ -173,6 +181,8 @@ export class Persistence {
    */
 
   public addClip(action: Action) {
+    action.id = uuid();
+    SavePreviewFile(action);
     operations.addClip(this.data, action, true);
 
     this.saveData({
@@ -186,6 +196,7 @@ export class Persistence {
   }
 
   public updateClip(id: string, action: Action) {
+    SavePreviewFile(action);
     action.id = id;
     updateItemInDictionary(this.data.clips, action);
 
@@ -498,14 +509,14 @@ export class Persistence {
     const twitchConfig = this.data.config.twitch;
 
     twitchConfig.enableLog = newTwitchConfig.enableLog;
-    twitchConfig.channel  = newTwitchConfig.channel;
+    twitchConfig.channel = newTwitchConfig.channel;
     if (typeof newTwitchConfig.token !== 'undefined'
       && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.token = newTwitchConfig.token;
     }
 
     // fill empty bot object
-    if(!twitchConfig.bot) {
+    if (!twitchConfig.bot) {
       twitchConfig.bot = {
         enabled: false,
         response: '',
@@ -517,8 +528,8 @@ export class Persistence {
       }
     }
 
-      // fill empty bot object
-    if(!twitchConfig.bot.auth) {
+    // fill empty bot object
+    if (!twitchConfig.bot.auth) {
       twitchConfig.bot.auth = {
         name: '',
         token: ''

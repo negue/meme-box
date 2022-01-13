@@ -22,6 +22,15 @@
        [src]="clip | mediaToPreviewUrl: useOldPathEndpoint"
        draggable="false"/>
 
+  <!-- Image => Preview -->
+  <img *ngSwitchCase="MediaType.Video"
+       [style.height]="height"
+       [style.width]="width"
+
+       [style.--clip-setting-img-fit]="setting?.imgFit"
+       [src]="clip | mediaToPreviewUrl: useOldPathEndpoint"
+       draggable="false"/>
+
   <!-- Iframe => Iframe -->
   <ng-container *ngSwitchCase="MediaType.IFrame">
     <ng-container *ngIf="(height || width) || !showIframe; else canShowIframe">

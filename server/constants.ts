@@ -88,8 +88,5 @@ export const STATE_ENDPOINT = `${API_PREFIX}/state`;
 
 export const DANGER_CLEAN_CONFIG_ENDPOINT = `${API_PREFIX}/danger/clean_config`;
 export const DANGER_IMPORT_ALL_ENDPOINT = `${API_PREFIX}/danger/add_all`;
-export const FILES_ENDPOINT = `/files`;
-export const FILE_ENDPOINT = `/file/*`;
-export const FILE_BY_ID_ENDPOINT = `/fileById/:mediaId`;
 export const NETWORK_IP_LIST_ENDPOINT = `/network_ip_list`;
 
