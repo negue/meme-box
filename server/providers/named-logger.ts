@@ -2,11 +2,20 @@ import {Opts} from "@tsed/common";
 import {Logger} from "@tsed/logger";
 import {Injectable} from "@tsed/di";
 import {LOG_PATH} from "../path.utils";
+import {BehaviorSubject} from "rxjs";
 
 // TODO add all other methods
 
+export interface ErrorWithContext {
+  error: Error | unknown;
+  context: string;
+}
+
 @Injectable()
 export class NamedLogger {
+  public static NewestError$ = new BehaviorSubject<ErrorWithContext>(null);
+
+
   private logger: Logger;
 
   constructor(@Opts options: {name: string} = {name: 'Logger'},
@@ -45,8 +54,13 @@ export class NamedLogger {
     })
   }
 
-  error(...data: unknown[]) {
-    this.logger.error(...data);
+  error(error: Error|unknown, context?: string) {
+    NamedLogger.NewestError$.next({
+      error,
+      context
+    });
+
+    this.logger.error(error, context);
   }
 
 }

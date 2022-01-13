@@ -6,7 +6,7 @@ import OBSWebSocket from "obs-websocket-js";
 import {NamedLogger} from "./named-logger";
 import {timeoutAsync} from "./actions/scripts/apis/sleep.api";
 import {ObsConfig} from "@memebox/contracts";
-import { ConnectionsStateHub, UpdateStateFunc } from "./connections-state.hub";
+import {ConnectionsStateHub, UpdateStateFunc} from "./connections-state.hub";
 
 @Service()
 export class ObsConnection {
@@ -59,7 +59,7 @@ export class ObsConnection {
       }
     }
 
-    this.logger.error('Could not connect to OBS', lastError);
+    this.logger.error(lastError, 'Could not connect to OBS');
   }
 
   async newConnection(hostname: string, password?: string) : Promise<OBSWebSocket> {
@@ -89,7 +89,7 @@ export class ObsConnection {
         password: this.obsConfig?.password
       }, error => {
         if (error) {
-          this.logger.error(error)
+          this.logger.error(error, 'OBS WS')
           this.obsConnectionState({
             label: 'Error',
             description: error.message

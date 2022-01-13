@@ -19,11 +19,11 @@ LOGGER.info('##########  Started  ##########');
 function logAndExit (type: string) {
   process.on(type as any, (err: Error) => {
     if (typeof err === 'string') {
-      LOGGER.error({type, err});
+      LOGGER.error(err, 'Process Event Type: '+type);
     } else {
       const message = err.message;
       const stack = err.stack;
-      LOGGER.error({type, ...err, message, stack});
+      LOGGER.error({...err, message, stack}, 'Process Event Type: '+type);
     }
 
     // Exiting the process on error, doesnt work,

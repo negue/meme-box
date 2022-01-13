@@ -1,13 +1,14 @@
-import { Observable } from "rxjs";
+import {Observable} from "rxjs";
 import * as WebSocket from "ws";
-import { take } from "rxjs/operators";
-import { AbstractWebsocketHandler } from "./abstract-websocket-handler";
+import {take} from "rxjs/operators";
+import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
 
 export abstract class AbstractSimpleObservableWebSocketService
   extends AbstractWebsocketHandler {
   protected constructor (
     websocketPath: string,
-    private observable$: Observable<unknown>) {
+    private observable$: Observable<unknown>
+  ) {
     super(websocketPath);
 
     observable$.subscribe(value => {
@@ -21,7 +22,15 @@ export abstract class AbstractSimpleObservableWebSocketService
       take(1)
     ).toPromise();
 
+    if (!this.shouldSentDefaultValue(observableData)) {
+      return;
+    }
+
     const jsonToSend = JSON.stringify(observableData);
     ws.send(jsonToSend);
+  }
+
+  protected shouldSentDefaultValue(data: unknown): boolean {
+    return true;
   }
 }

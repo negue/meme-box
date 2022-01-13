@@ -4,8 +4,9 @@ import url from "url";
 import {MemeboxWebsocket} from "./memebox.websocket";
 import {TwitchEventsWebsocket} from "./twitch-events.websocket";
 import {ActionActivityUpdatesWebsocket} from "./action-activity-updates.websocket";
-import { ConnectionsStateWebsocket } from "./connections-state.websocket";
-import { ConnectionsStateHub } from "../connections-state.hub";
+import {ConnectionsStateWebsocket} from "./connections-state.websocket";
+import {ConnectionsStateHub} from "../connections-state.hub";
+import {ErrorStateWebsocket} from "./error-state.websocket";
 
 // This is just to have all Services created on startup
 
@@ -17,12 +18,14 @@ export class WebsocketBootstrap {
     twitchEventWebsocket: TwitchEventsWebsocket,
     actionActivityWebsocket: ActionActivityUpdatesWebsocket,
     connectionsStateWebsocket: ConnectionsStateWebsocket,
+    errorStateWebsocket: ErrorStateWebsocket,
     private connectionStateHub: ConnectionsStateHub,
   ) {
     const ALL_OTHER_WEBSOCKET_SERVERS = [
       twitchEventWebsocket,
       actionActivityWebsocket,
-      connectionsStateWebsocket
+      connectionsStateWebsocket,
+      errorStateWebsocket
     ];
 
     httpServer.on('upgrade', function upgrade (request, socket, head) {

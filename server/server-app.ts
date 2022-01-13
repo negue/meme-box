@@ -180,7 +180,7 @@ function loadJsonAsync (url: string): Promise<string> {
       resolve(body);
     });
   }).on('error', function(e){
-    LOGGER.error("Error loading version json: ", e);
+    LOGGER.error(e, "Error loading version json");
   });
 
   });
