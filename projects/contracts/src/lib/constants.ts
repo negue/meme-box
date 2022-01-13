@@ -74,4 +74,5 @@ export const WEBSOCKET_PATHS = {
   TWITCH_EVENTS: '/ws/twitch_events',
   ACTION_ACTIVITY: '/ws/action_activity',
   CONNECTIONS_STATE: '/ws/connections_state',
+  ERRORS: '/ws/errors',
 }

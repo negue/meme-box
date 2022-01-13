@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import path from "path";
-import { CLI_OPTIONS } from "./utils/cli-options";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 export function createDirIfNotExists(dir: string) {
   if (!fs.existsSync(dir)){
@@ -10,7 +10,7 @@ export function createDirIfNotExists(dir: string) {
 
 export function safeResolve(basePath: string, targetFolder: string) {
   const targetPath = '.' + path.normalize('/' + targetFolder)
-  return path.posix.resolve(basePath, targetPath)
+  return path.resolve(basePath, targetPath)
 }
 
 // Get the config path (for the settings.json)

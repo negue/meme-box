@@ -123,7 +123,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       try {
         scriptHoldingData.compile();
      } catch (err) {
-      this.logger.error(err.message);
+      this.logger.error(err.message, 'Script: '+script.name);
       return;
     }
       this._compiledScripts.set(script.id, scriptHoldingData);
@@ -133,7 +133,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       await scriptHoldingData.execute(payloadObs);
     }
     catch(err) {
-      this.logger.error(`Failed to run script for "${script.name}" [${script.id}]`, err);
+      this.logger.error(err, `Failed to run script for "${script.name}" [${script.id}]`);
     }
 
     this.logger.info(`Script "${script.name}" is done.`);
