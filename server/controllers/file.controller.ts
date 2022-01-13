@@ -3,12 +3,12 @@ import { getFiles, mapFileInformations } from "../file.utilts";
 import { ENDPOINTS, FileInfo, SERVER_URL } from "@memebox/contracts";
 import fs from "fs";
 import { allowedFileUrl } from "../validations";
-import { normalize } from "path";
 import { Controller, Get, Inject, PathParams, Req } from "@tsed/common";
 import { PERSISTENCE_DI } from "../providers/contracts";
 import { NotFound, PreconditionFailed } from "@tsed/exceptions";
 import type { Request } from 'express';
 import { GetPreviewFilePath } from "../persistence.functions";
+import { safeResolve } from "../path.utils";
 
 
 @Controller(ENDPOINTS.FILE.PREFIX)
@@ -104,8 +104,6 @@ export class FileController {
       throw new PreconditionFailed('need a param');
     }
 
-    // possible "hack" to access some files
-    // TODO check for hijacks and stuff
     if (!allowedFileUrl(firstParam)) {
       throw new PreconditionFailed('need a param');
     }
@@ -114,7 +112,7 @@ export class FileController {
     // check one path and then other
     const mediaFolder = this._persistence.getConfig().mediaFolder;
 
-    const filename = normalize(`${mediaFolder}/${firstParam}`);
+    const filename = safeResolve(mediaFolder, firstParam);
 
     if (fs.existsSync(filename)) {
       const loadedFile = fs.readFileSync(filename);
