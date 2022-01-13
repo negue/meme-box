@@ -116,6 +116,12 @@ $custom-typography: mat-typography-config(
   }
 }
 
+.mat-snack-bar-container {
+  top: 2rem;
+  position: absolute;
+  right: 0;
+}
+
 .mat-snack-bar-container.danger {
   background: darkred;
   color: white;

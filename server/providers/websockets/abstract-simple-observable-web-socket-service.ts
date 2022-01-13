@@ -22,7 +22,7 @@ export abstract class AbstractSimpleObservableWebSocketService
       take(1)
     ).toPromise();
 
-    if (!this.shouldSentDefaultValue(observableData)) {
+    if (!this.shouldSentDefaultValue(observableData) || ws.readyState !== ws.OPEN) {
       return;
     }
 

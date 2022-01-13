@@ -16,4 +16,8 @@ export class ErrorStateWebsocket
   }
 
   WebSocketServerLabel = '';
+
+  protected shouldSentDefaultValue(data: unknown): boolean {
+    return false;
+  }
 }
