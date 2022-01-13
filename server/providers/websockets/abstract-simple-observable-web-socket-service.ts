@@ -30,7 +30,7 @@ export abstract class AbstractSimpleObservableWebSocketService
     ws.send(jsonToSend);
   }
 
-  protected shouldSentDefaultValue(data: unknown): boolean {
+  protected shouldSentDefaultValue(_data: unknown): boolean {
     return true;
   }
 }
