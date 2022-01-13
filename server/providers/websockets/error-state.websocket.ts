@@ -17,6 +17,7 @@ export class ErrorStateWebsocket
 
   WebSocketServerLabel = '';
 
+  // skipcq: JS-0356
   protected shouldSentDefaultValue(_data: unknown): boolean {
     return false;
   }
