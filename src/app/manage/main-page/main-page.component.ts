@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppService, SnackbarService} from "@memebox/app-state";
+import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {HotkeysService} from "@ngneat/hotkeys";
 import {DialogService} from "../../shared/dialogs/dialog.service";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
@@ -8,7 +8,7 @@ import {WebsocketHandler} from "../../../../projects/app-state/src/lib/services/
 import {AppConfig} from "@memebox/app/env";
 import {WEBSOCKET_PATHS} from "@memebox/contracts";
 import {Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {filter, take, takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-main-page',
@@ -26,6 +26,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   public buttonVisible = true;
 
   constructor(private appService: AppService,
+              private appQuery: AppQueries,
               private hotkeys: HotkeysService,
               private dialogService: DialogService,
               private _bottomSheet: MatBottomSheet,
@@ -47,7 +48,23 @@ export class MainPageComponent implements OnInit, OnDestroy {
           duration: 10000
         }
       });
-    })
+    });
+
+    this.appQuery.state$
+      .pipe(
+        filter(state => state.version > 0),
+        take(1)
+      )
+      .subscribe(state => {
+        const isItANewInstance = Object.keys(state.clips).length === 0
+          && Object.keys(state.screen).length === 0
+          && !state.config.twitch.channel;
+
+
+        if (isItANewInstance) {
+          this.dialogService.showGettingStarted(null);
+        }
+      } );
 
     this.errorWS.connect();
   }
