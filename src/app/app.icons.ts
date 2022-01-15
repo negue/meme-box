@@ -41,6 +41,7 @@ export const APP_ICONS = [
   'replay',
   'screen',
   'settings',
+  'smartphone',
   'sticky_note_2',
   'speaker',
   'tag',
