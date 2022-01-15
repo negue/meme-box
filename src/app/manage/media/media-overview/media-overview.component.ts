@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Action, Screen, Tag} from '@memebox/contracts';
 import {AppQueries, AppService, WebsocketService} from '@memebox/app-state';
 import {DialogService} from '../../../shared/dialogs/dialog.service';
@@ -50,15 +50,6 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
   public dontHaveActions$ = this.query.actionList$.pipe(
     map((availableClips) => {
       return availableClips.length === 0;
-    })
-  );
-
-  public showGettingStarted$ = combineLatest([
-    this.query.actionList$,
-    this.screenList$
-  ]).pipe(
-    map(([availableClips, availableScreens]) => {
-      return availableClips.length === 0 || availableScreens.length === 0;
     })
   );
 

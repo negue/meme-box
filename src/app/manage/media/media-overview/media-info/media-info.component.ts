@@ -3,7 +3,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {Action, Screen, Tag} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
+import {AppQueries} from "@memebox/app-state";
 
 @Component({
   selector: 'app-media-info',

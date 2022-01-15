@@ -59,6 +59,13 @@ export class DialogService {
     );
   }
 
+  showGettingStarted(info: any) {
+    this.loadAndOpen(
+      import('./getting-started/getting-started-dialog.module'),
+      info
+    );
+  }
+
   async showWidgetEdit(payload: CustomHtmlDialogPayload) {
     const dialogRef = await this.loadAndOpen(
       import('./widget-edit/widget-edit.module'),
