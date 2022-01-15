@@ -1,7 +1,104 @@
 <h2 mat-dialog-title> Getting Started </h2>
 <mat-dialog-content class="mat-typography" [scrollTop]="0" #dialogContent>
 
-  This will be the getting started content
+  This will be the getting started content <br/>
+
+
+  <table>
+    <tr>
+      <td>
+        Mediafolder:
+      </td>
+      <td>
+        Setup Yes / No
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Twitch Connection:
+      </td>
+      <td>
+        Setup Yes / No
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Actions:
+      </td>
+      <td>
+        Setup Yes / No   - maybe even a button to add examples
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Screens:
+      </td>
+      <td>
+        Setup Yes / No   - also link the how to tutorial
+        https://github.com/negue/meme-box/blob/develop/tutorials/getting_started.md#5-use-this-screen-in-obs--browser
+
+
+      </td>
+    </tr>
+  </table>
+
+  <ng-container *ngIf="(mediaList$ |async).length === 0 || (screenList$ | async).length  === 0">
+
+      <div *ngIf="inOfflineMode$ | async" class="entry">
+        <button (click)="fillData()" class="full-width"
+                color="primary"
+                mat-raised-button>
+          Offline Mode: Fill with dummy data
+        </button>
+      </div>
+
+      <ng-container *ngIf="!(hasMediaFolder$ | async); else mediaClipAdded">
+        <div class="item-with-padding entry">
+          <button (click)="openMediaFolderDialog()" color="primary"
+                  mat-raised-button class="full-width">
+            <mat-icon svgIcon="edit"></mat-icon>
+            1. Choose Media Folder
+          </button>
+
+          <div class="explanation">You need this "Media Folder" if you want to select local media files from it.</div>
+        </div>
+      </ng-container>
+      <ng-template #mediaClipAdded>
+        <div class="strikethrough entry">
+          1. Choose Media Folder
+        </div>
+      </ng-template>
+
+      <div  class="entry">
+        <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
+          <button (click)="newMediaClip()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
+            2. Add media
+          </button>
+        </ng-container>
+        <ng-template #mediaClipAdded>
+          <span class="strikethrough">
+            2. Add media
+          </span>
+        </ng-template>
+      </div>
+      <div  class="entry">
+        <ng-container *ngIf="(screenList$ | async).length  === 0; else screenAdded">
+          <button (click)="newScreen()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
+            3. Add a screen
+          </button>
+        </ng-container>
+        <ng-template #screenAdded>
+          <span class="strikethrough">
+             3. Add a screen
+          </span>
+        </ng-template>
+
+      </div>
+  </ng-container>
 
 </mat-dialog-content>
 

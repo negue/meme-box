@@ -1,15 +1,9 @@
 <div *ngIf="screenList$ | async as screenList">
   <app-card-overview>
-    <app-overview-item *ngIf="screenList.length === 0 ; else hasData ">
-      <app-getting-started></app-getting-started>
-    </app-overview-item>
-
-    <ng-template #hasData>
       <app-overview-add-item label="Add new screen"
                              (click)="addNewItem()">
 
       </app-overview-add-item>
-    </ng-template>
 
     <app-overview-item *ngFor="let screen of screenList; trackBy: trackById">
       <app-screen-info (onDelete)="delete(screen)"
