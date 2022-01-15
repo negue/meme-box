@@ -14,6 +14,17 @@
 mat-dialog-actions {
   display: flex;
 }
+
+td {
+  padding: 0.5rem;
+  vertical-align: top;
+
+
+  ol {
+    margin-left: 2rem;
+  }
+}
+
 .space {
   flex: 1;
 }
@@ -33,12 +44,8 @@ mat-dialog-actions {
 
 .full-width {
   width: 100%;
+  max-width: 15rem;
 }
-
-.entry {
-  padding-bottom: 1rem;
-}
-
 
 div.explanation {
   padding-top: 1rem;

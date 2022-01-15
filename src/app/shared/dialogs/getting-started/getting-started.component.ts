@@ -7,9 +7,11 @@ import {DOCUMENT} from "@angular/common";
 import {Observable} from "rxjs";
 import {Action, Screen} from "@memebox/contracts";
 import {map} from "rxjs/operators";
-import {AppQueries} from "@memebox/app-state";
+import {AppQueries, NetworkInterfacesService} from "@memebox/app-state";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {ConfigMediaPathComponent} from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
+import {openStreamdeckPluginUrl} from "../../utils";
+import {QrcodeDialogComponent} from "../../../manage/qrcode-dialog/qrcode-dialog.component";
 
 
 @Component({
@@ -28,11 +30,24 @@ export class GettingStartedComponent
   public mediaList$: Observable<Action[]> = this.query.actionList$;
 
   public screenList$: Observable<Screen[]> = this.query.screensList$
-  public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;
+  public firstScreen$: Observable<Screen> = this.query.screensList$.pipe(
+    map(screens => screens.slice(0,1).pop())
+  );
+
   public hasMediaFolder$ =  this.query.config$.pipe(
     map(config => !!config.mediaFolder)
   );
 
+  twitchChannelExist$ = this.query.config$.pipe(
+    map(cfg => !!cfg.twitch.channel)
+  );
+
+  public networkUrl$ = this.networkInterfacesService.networkInterface$.pipe(
+    map(networkInterfaces => networkInterfaces
+      .filter(netInterface => netInterface.address.includes('localhost'))
+      .pop()
+    ),
+  );
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               private renderer: Renderer2,
@@ -41,7 +56,8 @@ export class GettingStartedComponent
               private http: HttpClient,
               private dialogService: DialogService,
               private query: AppQueries,
-              private configService: ConfigService,) {
+              private configService: ConfigService,
+              private networkInterfacesService : NetworkInterfacesService) {
 
   }
 
@@ -69,8 +85,27 @@ export class GettingStartedComponent
   }
 
   openMediaFolderDialog(): void {
+    // todo change those Dialogs to be lazy loaded
     this.dialogService.open(ConfigMediaPathComponent, {
       data: {}
     });
+  }
+
+  openTwitchConfigs() {
+    this.dialogService.openTwitchConnectionConfig();
+  }
+
+  showMobileUrlDialog() {
+    this.dialogService.open(QrcodeDialogComponent, {
+
+    });
+  }
+
+  openStreamDeckPluginUrl() {
+    openStreamdeckPluginUrl();
+  }
+
+  newTwitchTrigger() {
+    this.dialogService.showTwitchEditDialog(null);
   }
 }

@@ -1,32 +1,30 @@
 <h2 mat-dialog-title> Getting Started </h2>
 <mat-dialog-content class="mat-typography" [scrollTop]="0" #dialogContent>
 
-  This will be the getting started content <br/>
-
+  To get started on using MemeBox here are a few quick steps to follow to get you setup and ready <br/>
 
   <table>
     <tr>
       <td>
-        Mediafolder:
+        Media Folder:
       </td>
       <td>
-        Setup Yes / No
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Twitch Connection:
-      </td>
-      <td>
-        Setup Yes / No
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Actions:
-      </td>
-      <td>
-        Setup Yes / No   - maybe even a button to add examples
+        <ng-container *ngIf="!(hasMediaFolder$ | async); else mediaFolderSelected">
+          <div class="item-with-padding entry">
+            <button (click)="openMediaFolderDialog()" color="primary"
+                    mat-raised-button class="full-width">
+              <mat-icon svgIcon="edit"></mat-icon>
+              Choose Media Folder
+            </button>
+
+            <div class="explanation">You need this "Media Folder" if you want to select local media files to be triggered.</div>
+          </div>
+        </ng-container>
+        <ng-template #mediaFolderSelected>
+          <div class="strikethrough entry">
+            Choose Media Folder
+          </div>
+        </ng-template>
       </td>
     </tr>
     <tr>
@@ -34,71 +32,131 @@
         Screens:
       </td>
       <td>
-        Setup Yes / No   - also link the how to tutorial
-        https://github.com/negue/meme-box/blob/develop/tutorials/getting_started.md#5-use-this-screen-in-obs--browser
+        <ng-container *ngIf="(screenList$ | async).length  === 0; else screenAdded">
+          <button (click)="newScreen()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
+            Add a screen
+          </button>
+        </ng-container>
+        <ng-template #screenAdded>
+          <div class="strikethrough">
+            Added a screen
+          </div>
+
+          <br>
+
+          Now you need to create add this Screen to OBS:
+
+          <ol *ngIf="firstScreen$ | async as firstScreen">
+            <li>
+              In OBS, in your Sources-List press on the Plus Button
+            </li>
+            <li>
+              Select Browser
+            </li>
+            <li>
+              Copy the following URL into the URL Field:
+              <br >
+              <br >
+
+              <code>{{(networkUrl$|async)?.address}}/#/screen/{{firstScreen.id}}</code>
+
+              <br />
+              &nbsp;
+            </li>
+            <li>
+              Change Width to <code>{{firstScreen.width}}</code> and Height to <code>{{firstScreen.height}}</code>
+            </li>
+            <li>
+              Press the OK Button
+            </li>
+          </ol>
+        </ng-template>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Actions:
+      </td>
+      <td>
+        <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
+          <button (click)="newMediaClip()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
+            Add actions
+          </button>
+
+          <br >
+          <div class="explanation">
+            Actions are a generic name for (in) visible tasks to trigger.
+
+            <br>
+
+            Visible ones can be added to a Screen.
+          </div>
+
+        </ng-container>
+        <ng-template #mediaClipAdded>
+          <span class="strikethrough">
+            Add actions
+          </span>
+        </ng-template>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Triggers:
+      </td>
+      <td>
+        You can trigger these Actions by using one of the following:
+        <table>
+          <tr>
+            <td>
+              <ng-container *ngIf="(twitchChannelExist$ | async) === false; else twitchSetup">
+                <button (click)="openTwitchConfigs()" class="full-width"
+                        color="primary"
+                        mat-raised-button>
+                  Setup Twitch Connection
+                </button>
+              </ng-container>
+              <ng-template #twitchSetup>
+                <button (click)="newTwitchTrigger()" class="full-width"
+                        color="accent"
+                        mat-raised-button>
+
+                  <mat-icon svgIcon="add"></mat-icon>
+                  Add new twitch trigger
+                </button>
+              </ng-template>
+            </td>
+            <td>
+              <button (click)="showMobileUrlDialog()" class="full-width"
+                      color="primary"
+                      mat-raised-button>
+
+                <mat-icon svgIcon="smartphone"></mat-icon>
+                Show Mobile View URL
+              </button>
+            </td>
+            <td>
+              <button (click)="openStreamDeckPluginUrl()" class="full-width"
+                      color="primary"
+                      mat-raised-button>
+
+                <mat-icon svgIcon="launch"></mat-icon>
+                Download Streamdeck Plugin
+              </button>
+            </td>
+          </tr>
+        </table>
+
 
 
       </td>
     </tr>
   </table>
-
-  <ng-container *ngIf="(mediaList$ |async).length === 0 || (screenList$ | async).length  === 0">
-
-      <div *ngIf="inOfflineMode$ | async" class="entry">
-        <button (click)="fillData()" class="full-width"
-                color="primary"
-                mat-raised-button>
-          Offline Mode: Fill with dummy data
-        </button>
-      </div>
-
-      <ng-container *ngIf="!(hasMediaFolder$ | async); else mediaClipAdded">
-        <div class="item-with-padding entry">
-          <button (click)="openMediaFolderDialog()" color="primary"
-                  mat-raised-button class="full-width">
-            <mat-icon svgIcon="edit"></mat-icon>
-            1. Choose Media Folder
-          </button>
-
-          <div class="explanation">You need this "Media Folder" if you want to select local media files from it.</div>
-        </div>
-      </ng-container>
-      <ng-template #mediaClipAdded>
-        <div class="strikethrough entry">
-          1. Choose Media Folder
-        </div>
-      </ng-template>
-
-      <div  class="entry">
-        <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
-          <button (click)="newMediaClip()" class="full-width"
-                  color="primary"
-                  mat-raised-button>
-            2. Add media
-          </button>
-        </ng-container>
-        <ng-template #mediaClipAdded>
-          <span class="strikethrough">
-            2. Add media
-          </span>
-        </ng-template>
-      </div>
-      <div  class="entry">
-        <ng-container *ngIf="(screenList$ | async).length  === 0; else screenAdded">
-          <button (click)="newScreen()" class="full-width"
-                  color="primary"
-                  mat-raised-button>
-            3. Add a screen
-          </button>
-        </ng-container>
-        <ng-template #screenAdded>
-          <span class="strikethrough">
-             3. Add a screen
-          </span>
-        </ng-template>
-
-      </div>
-  </ng-container>
 
 </mat-dialog-content>
 

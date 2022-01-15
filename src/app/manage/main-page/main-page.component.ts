@@ -58,7 +58,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       .subscribe(state => {
         const isItANewInstance = Object.keys(state.clips).length === 0
           && Object.keys(state.screen).length === 0
-          && !state.config.twitch.channel;
+          && !state.config.twitch.channel.trim();
 
 
         if (isItANewInstance) {

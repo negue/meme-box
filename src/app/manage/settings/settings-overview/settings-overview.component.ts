@@ -8,6 +8,7 @@ import {AppQueries} from "../../../../../projects/app-state/src/lib/state/app.qu
 import {TranslocoService} from "@ngneat/transloco";
 import {TranslocoSelectedLangService} from "../../../transloco/transloco-selected-lang.service";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
+import {openStreamdeckPluginUrl} from "../../../shared/utils";
 
 const dummyItemsCreatorLazy = () => import('./dummyItemsCreator');
 
@@ -73,7 +74,7 @@ export class SettingsOverviewComponent implements OnInit {
   }
 
   downloadStreamdeckPlugin() {
-    window.open('https://github.com/negue/meme-box/raw/release/memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin');
+    openStreamdeckPluginUrl();
   }
 
   addMoreDummyItems () {
