@@ -32,22 +32,22 @@ export class TimedEditComponent implements OnInit, OnDestroy {
 
   showWarningClipSelection = false;
 
-  selectedMediaId$ = new BehaviorSubject('');
+  selectedActionId$ = new BehaviorSubject('');
 
-  selectedMedia$ = combineLatest([
+  selectedAction$ = combineLatest([
     this.clipDictionary$,
-    this.selectedMediaId$
+    this.selectedActionId$
   ]).pipe(
     filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
     map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
   );
 
-  showScreenSelection$ = this.selectedMedia$.pipe(
+  showScreenSelection$ = this.selectedAction$.pipe(
     map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
   );
 
   screenList$ = combineLatest([
-    this.selectedMedia$,
+    this.selectedAction$,
     this.appQuery.screensList$
   ]).pipe(
     map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
@@ -70,7 +70,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       ...this.data
     });
     console.info({data: this.data});
-    this.selectedMediaId$.next(this.data.clipId);
+    this.selectedActionId$.next(this.data.clipId);
   }
 
   async save() {
@@ -127,7 +127,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         clipId
       });
-      this.selectedMediaId$.next(clipId);
+      this.selectedActionId$.next(clipId);
     }
   }
 

@@ -108,12 +108,3 @@ mat-expansion-panel {
   flex-direction: row;
   justify-content: space-evenly;
 }
-
-.open-media-button {
-  margin-left: 1rem;
-
-  app-clip-type {
-    margin-bottom: -0.5rem;
-    display: inline-block;
-  }
-}

@@ -113,7 +113,14 @@
     </div>
     <div class="column" *ngIf="clipDictionary$ | async as clipDictionary">
       <div class="example-container">
-        <h2>Select action</h2>
+        <h2>Select action
+
+
+          <app-open-action-settings-button *ngIf="selectedAction$ | async as action"
+                                           [action]="action">
+
+          </app-open-action-settings-button>
+        </h2>
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
@@ -139,16 +146,17 @@
 
       <br />
 
-      <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name">
-        Variables:
+      <ng-container *ngIf="selectedAction$ | async as action">
+        <ng-container *ngIf="action.extended && action.extended['_variables']">
+          Variables:
 
-        <app-action-variables-assignments [appVariablesConfigByActionId]="form.value.clipId"
-                                          [data]="data.extended"
-                                          [fallbackData]="clipDictionary[form.value.clipId].extended"
-        (dataChanged)="data.extended = $event">
+          <app-action-variables-assignments [appVariablesConfigByActionId]="action.id"
+                                            [data]="data.extended"
+                                            [fallbackData]="action.extended"
+                                            (dataChanged)="data.extended = $event">
 
-        </app-action-variables-assignments>
-
+          </app-action-variables-assignments>
+        </ng-container>
       </ng-container>
       <br/>
 

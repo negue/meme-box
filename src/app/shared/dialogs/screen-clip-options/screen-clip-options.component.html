@@ -2,15 +2,12 @@
   <mat-icon svgIcon="tune" class="title__icon"></mat-icon>
   Settings for Media: {{data.name}} / Screen: {{(currentScreen$|async).name}}
 
-  <button *ngIf="clipInfo$ | async as clipInfo"
-          (click)="openMediaSetting()" color="accent"
-          class="open-media-button"
-          mat-raised-button>
-    <app-clip-type [type]="clipInfo.type"></app-clip-type>
-    Open Media Settings
-  </button>
+  <app-open-action-settings-button *ngIf="actionInfo$ | async as action"
+                                   [action]="action">
+
+  </app-open-action-settings-button>
 </h2>
-<mat-dialog-content *ngIf="clipInfo$ | async as clipInfo" class="mat-typography">
+<mat-dialog-content *ngIf="mediaInScreenInfo$ | async as clipInfo" class="mat-typography">
 
   <form [formGroup]="form" class="two-columns">
     <div class="column">

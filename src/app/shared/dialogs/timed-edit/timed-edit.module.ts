@@ -9,9 +9,10 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {ClipPreviewModule} from "../../../../../projects/state-components/src/lib/clip-preview/clip-preview.module";
-import {PipesModule} from "../../../../../projects/ui-components/src/lib/pipes/pipes.module";
+import {ClipPreviewModule} from "@memebox/state-components";
+import {PipesModule} from "@memebox/ui-components";
 import {MatSelectModule} from "@angular/material/select";
+import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {MatSelectModule} from "@angular/material/select";
     ClipPreviewModule,
     PipesModule,
     MatSelectModule,
+    OpenActionSettingsButtonModule,
   ],
   providers: [],
 })

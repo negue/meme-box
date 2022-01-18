@@ -14,6 +14,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {PipesModule} from "@memebox/ui-components";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
+import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
     MatCheckboxModule,
     PipesModule,
     ActionVariablesAssignmentsModule,
+    OpenActionSettingsButtonModule,
   ],
   providers: [],
 })

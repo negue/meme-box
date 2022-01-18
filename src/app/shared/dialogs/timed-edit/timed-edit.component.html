@@ -28,7 +28,14 @@
     </div>
     <div class="column">
       <div class="example-container">
-        <h2>Select media</h2>
+        <h2>Select action
+
+
+          <app-open-action-settings-button *ngIf="selectedAction$ | async as action"
+                                           [action]="action">
+
+          </app-open-action-settings-button>
+        </h2>
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"

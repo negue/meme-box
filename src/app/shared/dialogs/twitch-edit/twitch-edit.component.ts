@@ -133,7 +133,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   twitchEventFields = TwitchEventFieldConfig;
 
   clipDictionary$: Observable<Dictionary<Action>> = this.appQuery.actionMap$;
-  selectedMedia$ = combineLatest([
+
+  selectedAction$: Observable<Action> = combineLatest([
     this.clipDictionary$,
     this.selectedMediaId$
   ]).pipe(
@@ -141,12 +142,12 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
   );
 
-  showScreenSelection$ = this.selectedMedia$.pipe(
+  showScreenSelection$ = this.selectedAction$.pipe(
     map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
   );
 
   screenList$ = combineLatest([
-    this.selectedMedia$,
+    this.selectedAction$,
     this.appQuery.screensList$
   ]).pipe(
     map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
