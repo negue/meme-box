@@ -12,9 +12,14 @@ import {
 import {Action, PositionEnum, Screen, ScreenClip} from '@memebox/contracts';
 import {NgxMoveableComponent} from 'ngx-moveable';
 
-export interface TranslatedSize {
+export interface TranslatedPosition {
   x: string;
   y: string;
+}
+
+export interface TranslatedSize {
+  width: number;
+  height: number;
 }
 
 @Component({
@@ -72,12 +77,17 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
 
   frame: {
     translate: [number, number],
-    currentDraggingPosition: TranslatedSize | null,
+    currentDraggingPosition: TranslatedPosition | null,
+    currentResizingValues: TranslatedSize | null,
     rotate: number
   } = {
     currentDraggingPosition: {
       x: null,
       y: null
+    },
+    currentResizingValues: {
+      width: null,
+      height: null
     },
     translate: [0,0],
     rotate: 0,
@@ -155,10 +165,14 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     this.elementChanged.emit();
   }
   onResize({ target, width, height, drag }): void {
-    const newPosition = this.translatePixelToTarget(width, height);
+    // let it stay on pixel since resizing in % mode doesn't work well
+    const newPosition = this.translatePixelToTarget(width, height, true);
 
     this.updateCSSVar('width', newPosition.x);
     this.updateCSSVar('height', newPosition.y);
+
+    this.frame.currentResizingValues.width = width;
+    this.frame.currentResizingValues.height = height;
 
    /* const beforeTranslate = drag.beforeTranslate;
 
@@ -174,8 +188,13 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   onResizeEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onResizeEnd", target, isDrag);
 
-    this.settings.width = this.getCSSVar('width');
-    this.settings.height = this.getCSSVar('height');
+    const newPosition = this.translatePixelToTarget(
+      this.frame.currentResizingValues.width,
+      this.frame.currentResizingValues.height
+    );
+
+    this.settings.width = newPosition.x;
+    this.settings.height = newPosition.y;
     this.elementChanged.emit();
   }
 
@@ -277,11 +296,11 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   private getCSSVar(name: string) {
     return this.element.nativeElement.style.getPropertyValue(`--resize-${name}`);
   }
-  private translatePixelToTarget(x: number, y: number): TranslatedSize {
+  private translatePixelToTarget(x: number, y: number, forcePixel = false): TranslatedPosition {
     x = Math.floor(x);
     y = Math.floor(y);
 
-    if (this.sizeType === 'px') {
+    if (this.sizeType === 'px' || forcePixel) {
       return {
         x: `${x}px`,
         y: `${y}px`
