@@ -29,6 +29,35 @@ export class ObsConnection {
 
     this.obsConnection = new OBSWebSocket();
 
+    this._persistence.dataUpdated$().subscribe(
+      value => {
+        if (value.dataType === "settings") {
+          if (this.isObsConnected()) {
+            this.logger.error(`Can't change the OBS while is already connected. You need to restart.`);
+
+            return;
+          }
+
+          const previousConfig = this.obsConfig;
+          const newConfig = _persistence.getConfig(false).obs;
+
+          if (
+            previousConfig.hostname == newConfig.hostname
+          && previousConfig.password == newConfig.password
+          ) {
+            return;
+          }
+
+          this.obsConfig = newConfig;
+
+          this.obsConnectionState({
+            label: 'New Configuration Received',
+          });
+
+          this.connectIfNot();
+        }
+      }
+    )
   }
 
   async getCurrentConnection() : Promise<OBSWebSocket> {
@@ -73,34 +102,41 @@ export class ObsConnection {
   }
 
   async connectIfNot () {
-    if (!this.obsConnection["_connected"]) {
-      await this.createConnectionPromise();
+    const isConnected = this.isObsConnected();
+
+    if (!isConnected) {
+     await this.createConnectionPromise();
+
+      this.obsConnectionState({
+        label: 'Connected'
+      });
     }
   }
 
+  private isObsConnected () {
+    return this.obsConnection["_connected"];
+  }
+
   private async createConnectionPromise() {
-    if (this.obsConfigExists) {
-      this.obsConnectionState({
-        label: 'Connecting'
-      });
-
-      await this.obsConnection.connect({
-        address: this.obsConfig?.hostname,
-        password: this.obsConfig?.password
-      }, error => {
-        if (error) {
-          this.logger.error(error, 'OBS WS')
-          this.obsConnectionState({
-            label: 'Error',
-            description: error.message
-          });
-          return;
-        }
-
-        this.obsConnectionState({
-          label: 'Connected'
-        });
-      });
+    if (!this.obsConfigExists) {
+      return;
     }
+
+    this.obsConnectionState({
+      label: 'Connecting'
+    });
+
+    await this.obsConnection.connect({
+      address: this.obsConfig?.hostname,
+      password: this.obsConfig?.password
+    }, error => {
+      if (error) {
+        this.logger.error(error, 'OBS WS')
+        this.obsConnectionState({
+          label: 'Error',
+          description: error.message
+        });
+      }
+    });
   }
 }
