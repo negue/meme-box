@@ -233,10 +233,10 @@
         <!-- Meta => AppClipType or list all assign actions by tags -->
         <div *ngSwitchCase="MediaType.Meta">
           <h3>Assigned Actions by Tags</h3>
-          <app-compact-clip-card *ngFor="let assignedClip of taggedActions$ | async"
-                                 [clip]="assignedClip">
+          <app-compact-action-card *ngFor="let assignedClip of taggedActions$ | async"
+                                   [action]="assignedClip">
 
-          </app-compact-clip-card>
+          </app-compact-action-card>
         </div>
 
         <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
@@ -372,6 +372,7 @@
       </app-hint-panel>
 
       <div class="form-field-row" *ngIf="form.value.type !== MediaType.Meta">
+        <!-- extract both Tag Assignment Components -->
         <mat-form-field class="example-chip-list">
           <mat-label>Assign a new tag...</mat-label>
           <mat-chip-list #chipList aria-label="Tag selection">
@@ -400,6 +401,12 @@
           </mat-autocomplete>
         </mat-form-field>
 
+        <app-hint-panel style="margin-top: 1rem" [addBottomPadding]="true">
+          These tags are currently used for the Meta Action.
+          <br/>
+          <br/>
+          So that you can select which Actions should be "linked" to the Meta Action.
+        </app-hint-panel>
       </div>
 
       <div class="form-field-row" *ngIf="MEDIA_EDIT_CONFIG[form.value.type].canSelectQueue">
@@ -423,7 +430,7 @@
           <br/>
           <br/>
           If you don't select a queue, then visible Media (Images, Videos etc) will still have their own queue, <br />
-          which means only one Media can be visible at once at each assigned screen.
+          which means each Media can be visible only at once at each assigned screen.
         </app-hint-panel>
       </div>
 
