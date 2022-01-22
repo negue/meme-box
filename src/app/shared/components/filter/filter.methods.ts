@@ -37,8 +37,6 @@ export function createCombinedFilterItems$ (
         const tag = tagDictionary[value];
 
         if (tag) {
-          console.info({ value, tag, tagDictionary });
-
           filterItems.push({
             value,
             icon: 'tag',

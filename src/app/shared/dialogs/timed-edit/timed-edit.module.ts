@@ -13,6 +13,7 @@ import {ClipPreviewModule} from "@memebox/state-components";
 import {PipesModule} from "@memebox/ui-components";
 import {MatSelectModule} from "@angular/material/select";
 import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
+import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {OpenActionSettingsButtonModule} from "../../components/open-action-setti
     PipesModule,
     MatSelectModule,
     OpenActionSettingsButtonModule,
+    ActionVariablesAssignmentsModule
   ],
   providers: [],
 })

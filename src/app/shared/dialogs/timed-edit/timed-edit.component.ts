@@ -34,7 +34,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
 
   selectedActionId$ = new BehaviorSubject('');
 
-  selectedAction$ = combineLatest([
+  selectedAction$: Observable<Action> = combineLatest([
     this.clipDictionary$,
     this.selectedActionId$
   ]).pipe(

@@ -10,7 +10,6 @@ import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {ExampleTwitchCommandsSubject} from "../../shared";
 import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
-import {convertExtendedToTypeValues, getVariablesListOfAction} from "@memebox/action-variables";
 import {uuid} from "@gewd/utils";
 import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 
@@ -98,20 +97,6 @@ export class TwitchTriggerHandler {
 
     this.cooldownDictionary[trigger.command.id] = Date.now();
 
-    const action = this.actionsMap[trigger.command.clipId];
-
-    const variablesOfAction = getVariablesListOfAction(action);
-
-    const variableValues: Dictionary<unknown> = {}
-
-    if (trigger.command.extended) {
-      for (const actionVariableConfig of variablesOfAction) {
-        variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
-          trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
-        )
-      }
-    }
-
     this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
 
     this._mediaTriggerEventBus.queueAction({
@@ -125,7 +110,7 @@ export class TwitchTriggerHandler {
 
       overrides: {
         action: {
-          variables: variableValues
+          variables: trigger.command.extended
         }
       }
     });

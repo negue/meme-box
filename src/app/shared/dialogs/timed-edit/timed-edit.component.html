@@ -49,7 +49,7 @@
             </ng-container>
 
             <ng-template #notSelected>
-              Choose your media-clip to trigger
+              Choose action to trigger
             </ng-template>
           </span>
 
@@ -61,6 +61,18 @@
 
       <br />
 
+      <ng-container *ngIf="selectedAction$ | async as action">
+        <ng-container *ngIf="action.extended && action.extended['_variables']">
+          Variables:
+
+          <app-action-variables-assignments [appVariablesConfigByActionId]="action.id"
+                                            [data]="data.extended || {}"
+                                            [fallbackData]="action.extended"
+                                            (dataChanged)="data.extended = $event">
+
+          </app-action-variables-assignments>
+        </ng-container>
+      </ng-container>
 
       <div class="example-container" *ngIf="showScreenSelection$ | async">
         <mat-form-field appearance="fill">
