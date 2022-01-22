@@ -2,13 +2,13 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Action, ActionType, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
+import {Action, ActionType, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {filter, map} from "rxjs/operators";
 
 // TODO better class/interface name?
-const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
+const INITIAL_TIMED_ACTION: Partial<TimedAction> = {
   clipId:  '',
   screenId: '',
   active: true,
@@ -57,7 +57,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: TimedClip,
+    @Inject(MAT_DIALOG_DATA) public data: TimedAction,
     private dialogRef: MatDialogRef<any>,
     private matDialog: MatDialog,
     private appService: AppService,
@@ -66,10 +66,10 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     private dialogService: DialogService
   ) {
     // Todo find a better to get defaults & stuff
-    this.data = Object.assign({}, {...INITIAL_TIMED_CLIP}, {
+    this.data = Object.assign({}, {...INITIAL_TIMED_ACTION}, {
       ...this.data
     });
-    console.info({data: this.data});
+
     this.selectedActionId$.next(this.data.clipId);
   }
 
@@ -87,7 +87,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newTimedValue: TimedClip = {
+    const newTimedValue: TimedAction = {
       ...this.data,
       ...value
     };

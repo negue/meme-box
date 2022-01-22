@@ -11,12 +11,12 @@ import {
   ScreenClip,
   SettingsState,
   Tag,
-  TimedClip,
+  TimedAction,
   TwitchConfig,
   TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
-import { Observable, Subject } from "rxjs";
+import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {
   deleteInArray,
@@ -25,16 +25,16 @@ import {
   sortClips,
   updateItemInDictionary
 } from "@memebox/utils";
-import { createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH } from "./path.utils";
-import { operations } from '@memebox/shared-state';
-import { debounceTime } from "rxjs/operators";
-import { LOGGER, newLogger } from "./logger.utils";
-import { registerProvider } from "@tsed/di";
-import { PERSISTENCE_DI } from "./providers/contracts";
-import { CLI_OPTIONS } from "./utils/cli-options";
+import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
+import {operations} from '@memebox/shared-state';
+import {debounceTime} from "rxjs/operators";
+import {LOGGER, newLogger} from "./logger.utils";
+import {registerProvider} from "@tsed/di";
+import {PERSISTENCE_DI} from "./providers/contracts";
+import {CLI_OPTIONS} from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
-import { uuid } from '@gewd/utils';
-import { SavePreviewFile } from "./persistence.functions";
+import {uuid} from '@gewd/utils';
+import {SavePreviewFile} from "./persistence.functions";
 
 // TODO Extract more state operations to shared library and from app
 
@@ -177,13 +177,13 @@ export class Persistence {
   // return sub data off it
 
   /*
-   *  Clips Persistence
+   *  Actions Persistence
    */
 
-  public addClip(action: Action) {
+  public addAction(action: Action) {
     action.id = uuid();
     SavePreviewFile(action);
-    operations.addClip(this.data, action, true);
+    operations.addAction(this.data, action, true);
 
     this.saveData({
       dataType: 'action',
@@ -195,7 +195,7 @@ export class Persistence {
     return action.id;
   }
 
-  public updateClip(id: string, action: Action) {
+  public updateAction(id: string, action: Action) {
     SavePreviewFile(action);
     action.id = id;
     updateItemInDictionary(this.data.clips, action);
@@ -210,10 +210,10 @@ export class Persistence {
     return action;
   }
 
-  public deleteClip(id: string) {
+  public deleteAction(id: string) {
     const actionType = this.data.clips[id].type;
 
-    operations.deleteClip(this.data, id);
+    operations.deleteAction(this.data, id);
 
     this.saveData({
       dataType: 'action',
@@ -223,7 +223,7 @@ export class Persistence {
     });
   }
 
-  public listClips(): Action[] {
+  public listActions(): Action[] {
     return sortClips(Object.values(this.data.clips));
   }
 
@@ -262,9 +262,9 @@ export class Persistence {
   public deleteTag(id: string) {
     deleteItemInDictionary(this.data.tags, id);
 
-    for(const clip of Object.values(this.data.clips)) {
-      if (clip.tags && clip.tags.includes(id)) {
-        deleteInArray(clip.tags, id);
+    for(const action of Object.values(this.data.clips)) {
+      if (action.tags && action.tags.includes(id)) {
+        deleteInArray(action.tags, id);
       }
     }
 
@@ -402,10 +402,10 @@ export class Persistence {
 
 
   /*
-   *  Timed Clips Settings
+   *  Timed Actions Settings
    */
 
-  public addTimedEvent(timedEvent: TimedClip) {
+  public addTimedEvent(timedEvent: TimedAction) {
     timedEvent.id = uuid();
     this.data.timers[timedEvent.id] = timedEvent;
 
@@ -417,7 +417,7 @@ export class Persistence {
     return timedEvent.id;
   }
 
-  public updateTimedEvent(id: string, timedEvent: TimedClip) {
+  public updateTimedEvent(id: string, timedEvent: TimedAction) {
     timedEvent.id = id;
 
     updateItemInDictionary(this.data.timers, timedEvent);
@@ -442,7 +442,7 @@ export class Persistence {
     });
   }
 
-  public listTimedEvents(): TimedClip[] {
+  public listTimedEvents(): TimedAction[] {
     return Object.values(this.data.timers);
   }
 
@@ -609,7 +609,7 @@ export class Persistence {
     // add all clips to state
     // assign all clips to screen
     clipList.forEach(clip => {
-      operations.addClip(this.data, clip, true);
+      operations.addAction(this.data, clip, true);
 
       this.logger.info('Added clip', clip.id, clip.name);
 
@@ -621,7 +621,7 @@ export class Persistence {
         animationOut: 'random'
       });
 
-      this.logger.info('Add Clip to screen', clip.id, screenId);
+      this.logger.info('Add Action to screen', clip.id, screenId);
     });
 
     this.saveData({

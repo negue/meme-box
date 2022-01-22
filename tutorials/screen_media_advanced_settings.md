@@ -1,4 +1,4 @@
-# Screen / Clip Advanced Settings
+# Screen / visible Media Advanced Settings
 
 The Advanced Settings can be opened by the `Cog-Icon` on a Screen Card Entry OR inside the `Assign / arrange media`-View.
 
@@ -30,6 +30,7 @@ The Visibility will be applied like that:
   - But with `Width/Height` it will be centered
 - **Fixed**: Here you can use your own values for `left`/`right`/`top`/`bottom`
 - **Random**: On each trigger, It creates new `left`/`top` values but also tries to calculate sizes so that its "always" visible
-
+  >  Random Position will only work if your OBS Version is at least 27.2.
+  
 For **Fixed** Position the `Assign / arrange media`-View can be used to for an easier way to position 
-the media clips on your **Screen** instead of entering your position values manually.
+the media on your **Screen** instead of entering your position values manually.

@@ -157,7 +157,7 @@ Misc:
 [URL_META_CLIPS]: tutorials/meta_media.md
 [URL_SCRIPTS]: tutorials/scripts.md
 [URL_WIDGETS]: tutorials/widgets.md
-[URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
+[URL_ADVANCED_SETTINGS]: ./tutorials/screen_media_advanced_settings.md
 [STREAMDECK_PLUGIN]: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
 
 ___

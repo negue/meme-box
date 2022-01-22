@@ -169,9 +169,9 @@ export interface TriggerBase
 
 }
 
-// TODO RENAME TimedClip / Twitch so that those are recognized to be a trigger
+// TODO RENAME TimedAction/ Twitch so that those are recognized to be a trigger
 
-export interface TimedClip extends TriggerBase {
+export interface TimedAction extends TriggerBase {
   // id => has nothing to do with clipID
   everyXms: number;
   active: boolean;
@@ -222,7 +222,7 @@ export interface SettingsState {
   version: number;
   clips: Dictionary<Action>;
   twitchEvents: Dictionary<TwitchTrigger>;
-  timers: Dictionary<TimedClip>;
+  timers: Dictionary<TimedAction>;
   screen: Dictionary<Screen>;
   tags: Dictionary<Tag>;
 

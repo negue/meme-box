@@ -17,7 +17,7 @@
   * [x] Persistence of the Widget State across Screens
 * [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
 * [x] "Action Type": `Scripts` for more advanced features
-  * [x] Wait once a triggered clip (inside the script) is done to trigger other stuff
+  * [x] Wait once a triggered action (inside the script) is done to trigger other stuff
   * [x] Use custom variables like in the Widget-Variables for easier configs
 * [x] "Action Type": `Permanent Scripts` to react on twitch or obs events which custom logic
 * [x] Timers / Twitch Events can now select the Target Screen

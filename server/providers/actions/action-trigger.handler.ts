@@ -81,7 +81,7 @@ export class ActionTriggerHandler {
         }
 
         // No Meta Type
-        // Trigger the clip on all assign screens
+        // Trigger the action on all assign screens
         for (const screen of this._allScreens) {
           if (screen.clips[payloadObs.id]) {
             const newMessageObj: TriggerAction = {

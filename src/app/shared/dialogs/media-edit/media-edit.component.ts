@@ -348,7 +348,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     valueAsClip.showOnMobile = this.showOnMobile;
 
-    await this.appService.addOrUpdateClip(valueAsClip);
+    await this.appService.addOrUpdateAction(valueAsClip);
 
     if (this.selectedScreenId && valueAsClip.type !== ActionType.Meta) {
       this.appService.addOrUpdateScreenClip(this.selectedScreenId, {

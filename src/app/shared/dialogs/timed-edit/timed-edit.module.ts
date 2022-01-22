@@ -4,7 +4,7 @@ import {DialogContract} from "../dialog.contract";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {TimedEditComponent} from "./timed-edit.component";
-import {TimedClip} from "@memebox/contracts";
+import {TimedAction} from "@memebox/contracts";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -32,11 +32,11 @@ import {OpenActionSettingsButtonModule} from "../../components/open-action-setti
   ],
   providers: [],
 })
-export class TimedEditModule implements DialogContract<TimedClip> {
+export class TimedEditModule implements DialogContract<TimedAction> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: TimedClip): MatDialogRef<any> {
+  public openDialog (payload: TimedAction): MatDialogRef<any> {
     const dialogRef = this.dialog.open(TimedEditComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',

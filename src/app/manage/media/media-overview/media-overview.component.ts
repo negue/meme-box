@@ -100,7 +100,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     });
 
     if (result) {
-      await this.service.deleteClip(clipId);
+      await this.service.deleteAction(clipId);
     }
   }
 

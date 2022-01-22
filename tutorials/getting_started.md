@@ -64,7 +64,7 @@ Inside this dialog you can assign the clips by clicking on them.
   or enable in your browser to play media files without user events :)                                                    
   > not needed for OBS itself :tada:
 
-If you add to OBS - better use your usual stream/screen size, and then move the clips around using the [`advanced options`](./screen_clip_advanced_settings.md).
+If you add to OBS - better use your usual stream/screen size, and then move the visible media around using the [`advanced options`](./screen_media_advanced_settings.md).
 
 - Go to `Media` page, press `Preview` this will trigger the selected URL targets
   

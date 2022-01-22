@@ -10,14 +10,14 @@ import {
   Screen,
   ScreenClip,
   Tag,
-  TimedClip,
+  TimedAction,
   TwitchTrigger,
   UpdateState,
   VisibilityEnum
 } from '@memebox/contracts';
 import {API_PREFIX} from '../../../../../server/constants'; // TODO extract to shared library
 import {AppConfig} from '@memebox/app/env';
-import {addOrUpdateScreenClip, deleteClip, fillDefaultsScreenClip} from '@memebox/shared-state';
+import {addOrUpdateScreenClip, deleteAction, fillDefaultsScreenClip} from '@memebox/shared-state';
 import {take} from 'rxjs/operators';
 import {uuid} from "@gewd/utils";
 import {BehaviorSubject, Observable} from "rxjs";
@@ -96,17 +96,14 @@ export class AppService {
     );
   }
 
-  public async addOrUpdateClip(clip: Action) {
-    let newClipId = clip?.id ?? '';
-    const isItNew = !newClipId;
+  public async addOrUpdateAction(action: Action) {
+    let newActionId = action?.id ?? '';
+    const isItNew = !newActionId;
 
-
-    console.info({ clip });
-
-    if (newClipId === '') {
-      // add the clip to api & await
+    if (newActionId === '') {
+      // add the action to api & await
       // todo response type
-      const response = await this.tryHttpPost<Response>(`${API_BASE}${ENDPOINTS.CLIPS}`, clip, {
+      const response = await this.tryHttpPost<Response>(`${API_BASE}${ENDPOINTS.CLIPS}`, action, {
         ok: true,
         id: uuid()
       });
@@ -115,32 +112,32 @@ export class AppService {
         return;
       }
 
-      clip.id = newClipId = response.id;
+      action.id = newActionId = response.id;
     } else {
-      // add the clip to api & await
-      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CLIPS}/${newClipId}`, clip);
+      // add the action to api & await
+      await this.tryHttpPut(`${API_BASE}${ENDPOINTS.CLIPS}/${newActionId}`, action);
     }
 
     // add to the state
     this.appStore.update(state => {
-      state.clips[newClipId] = clip;
+      state.clips[newActionId] = action;
     });
 
     this.snackbar.normal(
-      `Clip "${clip.name}"  ${isItNew ? 'added' : 'updated'}`
+      `Action "${action.name}"  ${isItNew ? 'added' : 'updated'}`
     );
   }
 
-  public async deleteClip(clipId: string) {
+  public async deleteAction(actionId: string) {
     // send the api call
-    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.CLIPS}/${clipId}`);
+    await this.tryHttpDelete(`${API_BASE}${ENDPOINTS.CLIPS}/${actionId}`);
 
     // remove from state
     this.appStore.update(state => {
-      deleteClip(state, clipId);
+      deleteAction(state, actionId);
     });
 
-    this.snackbar.normal('Media deleted!');
+    this.snackbar.normal('Action deleted!');
   }
 
 
@@ -150,12 +147,12 @@ export class AppService {
     console.info({ tag });
 
     if (newTagId === '') {
-      // add the clip to api & await
+      // add the action to api & await
       newTagId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TAGS}`, tag, uuid());
 
       tag.id = newTagId;
     } else {
-      // add the clip to api & await
+      // add the action to api & await
       await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TAGS}/${newTagId}`, tag);
     }
 
@@ -175,9 +172,9 @@ export class AppService {
     this.appStore.update(state => {
       delete state.tags[tagId];
 
-      for (const clip of Object.values(state.clips)) {
-        if (clip.tags && clip.tags.includes(tagId)) {
-          this.deleteInArray(clip.tags, tagId);
+      for (const action of Object.values(state.clips)) {
+        if (action.tags && action.tags.includes(tagId)) {
+          this.deleteInArray(action.tags, tagId);
         }
       }
     });
@@ -196,7 +193,7 @@ export class AppService {
     let newId = screen?.id ?? '';
 
     if (newId === '') {
-      // add the clip to api & await
+      // add the action to api & await
       const response = await this.tryHttpPost<Response>(`${API_BASE}${ENDPOINTS.SCREEN}`, screen, {
         ok: true,
         id: uuid()
@@ -209,7 +206,7 @@ export class AppService {
       newId = screen.id = response.id;
       screen.clips = {};
     } else {
-      // add the clip to api & await
+      // add the action to api & await
       await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${newId}`, screen);
     }
 
@@ -249,7 +246,7 @@ export class AppService {
       visibility: VisibilityEnum.Play
     };
 
-    // add the clip to api & await
+    // add the action to api & await
     await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${clipId}`, screenClip);
 
 
@@ -265,7 +262,7 @@ export class AppService {
   public async addOrUpdateScreenClip(screenId: string, screenClip: Partial<ScreenClip>) {
     screenClip = fillDefaultsScreenClip(screenClip);
 
-    // add the clip to api & await
+    // add the action to api & await
     await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${screenClip.id}`, screenClip);
 
     const wasAlreadyAdded = !!this.appStore.getValue().screen[screenId].clips[screenClip.id];
@@ -278,11 +275,11 @@ export class AppService {
     this.snackbar.normal(`Media ${wasAlreadyAdded ? 'Settings updated' : 'added to screen'}!`);
   }
 
-  // TODO rename clip and screenclip settings
+  // TODO rename action and screenclip settings
   public async addOrUpdateScreenActionInBulk(screenId: string, changedActions: Partial<ScreenClip>[]) {
     changedActions = changedActions.map(screenAction => fillDefaultsScreenClip(screenAction));
 
-    // add the clip to api & await
+    // add the action to api & await
     await this.tryHttpPut(`${API_BASE}${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/bulk`, changedActions);
 
     // add to the state
@@ -309,17 +306,17 @@ export class AppService {
     this.snackbar.normal('Media removed from screen!');
   }
 
-  public async addOrUpdateTimedEvent(event: TimedClip) {
+  public async addOrUpdateTimedEvent(event: TimedAction) {
     let newId = event?.id ?? '';
     const newEntry = !newId;
 
     if (newId === '') {
-      // add the clip to api & await
+      // add the action to api & await
       newId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}`, event, uuid());
 
       event.id = newId;
     } else {
-      // add the clip to api & await
+      // add the action to api & await
       await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TIMED_EVENTS}/${newId}`, event);
     }
 
@@ -348,14 +345,14 @@ export class AppService {
     let newId = event?.id ?? '';
 
     if (newId === '') {
-      // add the clip to api & await
+      // add the action to api & await
       newId = await this.tryHttpPostReturnString(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}`, event, uuid());
 
       event.id = newId;
     } else {
       // TODO see if api call worked?
 
-      // add the clip to api & await
+      // add the action to api & await
       await this.tryHttpPut(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}/${newId}`, event);
     }
 
@@ -434,7 +431,7 @@ export class AppService {
 
 
     // save it
-    this.addOrUpdateClip(newAction);
+    this.addOrUpdateAction(newAction);
   }
 
 

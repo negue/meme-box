@@ -134,7 +134,7 @@ export class TwitchTriggerHandler {
   private fillActionMap() {
     const newMap: Dictionary<Action> = {};
 
-    for (const listClip of this._persistence.listClips()) {
+    for (const listClip of this._persistence.listActions()) {
       newMap[listClip.id] = listClip;
     }
 

@@ -157,7 +157,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     this._compiledScripts = new Map<string, ScriptContext>();
 
     // start each permanent script after another
-    for (const action of this._persistence.listClips()) {
+    for (const action of this._persistence.listActions()) {
       if (action.type === ActionType.PermanentScript) {
         await this.handleScript(action, null);
       }
