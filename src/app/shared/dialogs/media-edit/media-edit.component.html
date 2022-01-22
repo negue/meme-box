@@ -230,10 +230,10 @@
            [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
            [class.script]="[MediaType.Script, MediaType.PermanentScript].includes(form.value.type)"
       >
-        <!-- Meta => AppClipType or list all assign clips by tags -->
+        <!-- Meta => AppClipType or list all assign actions by tags -->
         <div *ngSwitchCase="MediaType.Meta">
-          <h3>Assigned Clips by Tags</h3>
-          <app-compact-clip-card *ngFor="let assignedClip of taggedClips$ | async"
+          <h3>Assigned Actions by Tags</h3>
+          <app-compact-clip-card *ngFor="let assignedClip of taggedActions$ | async"
                                  [clip]="assignedClip">
 
           </app-compact-clip-card>

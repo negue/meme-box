@@ -163,8 +163,8 @@ export class MediaEditComponent
 
   currentScript: ScriptConfig = null;
 
-  // Get all clips that have the assigned tags
-  taggedClips$ = combineLatest([
+  // Get all actions that have the assigned tags
+  taggedActions$ = combineLatest([
     this.currentTags$,
     this.appQuery.actionList$
   ]).pipe(

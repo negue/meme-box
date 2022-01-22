@@ -48,7 +48,7 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
   type: ActionType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"
-                    // the Meta Type will use that to trigger all clips of that tagId
+                    // the Meta Type will use that to trigger all actions of that tagId
 
   metaType?: MetaTriggerTypes;
   metaDelay?: number; // in ms

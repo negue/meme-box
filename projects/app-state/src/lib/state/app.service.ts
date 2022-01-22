@@ -216,7 +216,7 @@ export class AppService {
     });
 
     if (!screensAvailable) {
-      // add all current clips to this newly created screen
+      // add all current actions to this newly created screen
 
       const allClips = Object.keys(this.appStore.getValue().clips);
       for (const clipKey of allClips) {

@@ -1,6 +1,6 @@
 # 1. Choose your Media Folder
 
-This folder is used to read all the media clips from it, 
+This folder is used to read all the media from it, 
 so that you can easily import them or just add new ones.
 
 The folder will be scanned recursively, so "media/gifs", "media/webm", 

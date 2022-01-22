@@ -16,7 +16,7 @@
 	"Author": "negue",
 	"CodePath": "code.html",
 	"PropertyInspectorPath": "propertyinspector/index.html",
-	"Description": "Trigger clips of MemeBox",
+	"Description": "Trigger actions of MemeBox",
 	"Name": "MemeBox",
 	"Icon": "action/images/action",
 	"URL": "",
