@@ -16,6 +16,7 @@ import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-ifram
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ActionVariablesConfigModule} from "@memebox/action-variables/ui";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {ActionVariablesConfigModule} from "@memebox/action-variables/ui";
     DynamicIframeModule,
     MatCheckboxModule,
     CodemirrorModule,
-    ActionVariablesConfigModule
+    ActionVariablesConfigModule,
+    OpenFeedbackButtonModule
   ],
   providers: [],
 })

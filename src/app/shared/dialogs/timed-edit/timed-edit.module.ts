@@ -14,6 +14,7 @@ import {PipesModule} from "@memebox/ui-components";
 import {MatSelectModule} from "@angular/material/select";
 import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
     PipesModule,
     MatSelectModule,
     OpenActionSettingsButtonModule,
-    ActionVariablesAssignmentsModule
+    ActionVariablesAssignmentsModule,
+    OpenFeedbackButtonModule
   ],
   providers: [],
 })

@@ -11,6 +11,7 @@ import {MatInputModule} from "@angular/material/input";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";
 import {MatButtonModule} from "@angular/material/button";
 import {CodemirrorModule} from "@gewd/components/codemirror";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {CodemirrorModule} from "@gewd/components/codemirror";
     CustomFormControlModule,
     MatButtonModule,
     CodemirrorModule,
+    OpenFeedbackButtonModule,
   ],
   providers: [],
 })
