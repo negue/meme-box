@@ -9,8 +9,9 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Action, PositionEnum, Screen, ScreenClip} from '@memebox/contracts';
-import {NgxMoveableComponent} from 'ngx-moveable';
+import { Action, PositionEnum, Screen, ScreenClip } from '@memebox/contracts';
+import { NgxMoveableComponent } from 'ngx-moveable';
+import { parseTransformValues } from "@memebox/utils";
 
 export interface TranslatedPosition {
   x: string;
@@ -350,25 +351,12 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     nativeElement.style.transform = this.appendTranslatePosition(this.settings.transform);
     nativeElement.style.transformOrigin = this.transformOrigin;
 
-
-    const cssTransformRegex  = /(\w+)\(([^)]*)\)/g;
-    const names = [];
-    const vals = [];
-
-    let m = null;
-
-    // TODO REFACTOR
-    while (m = cssTransformRegex.exec(nativeElement.style.transform)) {
-      names.push(m[1]);
-      vals.push(m[2]);
-    }
-
-    console.log({names, vals});
+    const {names, values} = parseTransformValues(nativeElement.style.transform);
 
     const indexOfRotation = names.findIndex(name => name === 'rotate');
 
     if (indexOfRotation !== -1) {
-      const rotationValue = +vals[indexOfRotation].replace('deg', '');
+      const rotationValue = +values[indexOfRotation].replace('deg', '');
 
       this.frame.rotate = rotationValue;
     }
@@ -376,7 +364,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     const indexOfMatrix3d = names.findIndex(name => name === 'matrix3d');
 
     if (indexOfMatrix3d !== -1) {
-      const matrixValue = vals[indexOfMatrix3d].split(',').map(num => +num);
+      const matrixValue = values[indexOfMatrix3d].split(',').map(num => +num);
 
       this.warpMatrix = matrixValue;
       this.warpExist = true;

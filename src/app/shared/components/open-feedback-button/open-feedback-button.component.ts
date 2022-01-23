@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-open-feedback-button',
@@ -9,8 +9,6 @@ export class OpenFeedbackButtonComponent {
 
   @Input()
   public feedbackTarget = '';
-
-  constructor() { }
 
   openFeedback() {
     const title = `Feedback for: ${this.feedbackTarget}`;
