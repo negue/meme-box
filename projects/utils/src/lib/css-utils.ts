@@ -1,6 +1,9 @@
-const cssTransformRegex  = /\s?([a-zA-Z3]{1,12})\s?\(([0-9a-z\-\.\,\s]+)\)\s?/gm;
+const cssTransformRegex  = /\s?([a-zA-Z3]{1,12})\s?\(([0-9a-z\-.,\s]+)\)\s?/gm;
 
-export function parseTransformValues (transformString: string) {
+export function parseTransformValues (transformString: string): {
+  names: string[];
+  values: string[];
+} {
   const names = [];
   const values = [];
 
