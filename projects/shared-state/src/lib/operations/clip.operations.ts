@@ -1,9 +1,9 @@
 import {deleteItemInDictionary} from "@memebox/utils";
 import {Action, SettingsState} from "@memebox/contracts";
-import { uuid } from "@gewd/utils";
+import {uuid} from "@gewd/utils";
 
 
-export function addClip(state: SettingsState, clip: Partial<Action>, fillId = false) {
+export function addAction(state: SettingsState, clip: Partial<Action>, fillId = false) {
   if (fillId) {
     clip.id = uuid();
   }
@@ -11,7 +11,7 @@ export function addClip(state: SettingsState, clip: Partial<Action>, fillId = fa
   state.clips[clip.id] = clip as Action;
 }
 
-export function deleteClip(data: SettingsState, id: string) {
+export function deleteAction(data: SettingsState, id: string) {
   deleteItemInDictionary(data.clips, id);
 
   const screenKeys = Object.keys(data.screen);

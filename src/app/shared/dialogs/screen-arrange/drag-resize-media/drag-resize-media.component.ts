@@ -9,12 +9,18 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Action, PositionEnum, Screen, ScreenClip} from '@memebox/contracts';
-import {NgxMoveableComponent} from 'ngx-moveable';
+import { Action, PositionEnum, Screen, ScreenClip } from '@memebox/contracts';
+import { NgxMoveableComponent } from 'ngx-moveable';
+import { parseTransformValues } from "@memebox/utils";
 
-export interface TranslatedSize {
+export interface TranslatedPosition {
   x: string;
   y: string;
+}
+
+export interface TranslatedSize {
+  width: number;
+  height: number;
 }
 
 @Component({
@@ -72,12 +78,17 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
 
   frame: {
     translate: [number, number],
-    currentDraggingPosition: TranslatedSize | null,
+    currentDraggingPosition: TranslatedPosition | null,
+    currentResizingValues: TranslatedSize | null,
     rotate: number
   } = {
     currentDraggingPosition: {
       x: null,
       y: null
+    },
+    currentResizingValues: {
+      width: null,
+      height: null
     },
     translate: [0,0],
     rotate: 0,
@@ -155,10 +166,14 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     this.elementChanged.emit();
   }
   onResize({ target, width, height, drag }): void {
-    const newPosition = this.translatePixelToTarget(width, height);
+    // let it stay on pixel since resizing in % mode doesn't work well
+    const newPosition = this.translatePixelToTarget(width, height, true);
 
     this.updateCSSVar('width', newPosition.x);
     this.updateCSSVar('height', newPosition.y);
+
+    this.frame.currentResizingValues.width = width;
+    this.frame.currentResizingValues.height = height;
 
    /* const beforeTranslate = drag.beforeTranslate;
 
@@ -174,8 +189,13 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   onResizeEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onResizeEnd", target, isDrag);
 
-    this.settings.width = this.getCSSVar('width');
-    this.settings.height = this.getCSSVar('height');
+    const newPosition = this.translatePixelToTarget(
+      this.frame.currentResizingValues.width,
+      this.frame.currentResizingValues.height
+    );
+
+    this.settings.width = newPosition.x;
+    this.settings.height = newPosition.y;
     this.elementChanged.emit();
   }
 
@@ -277,11 +297,11 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   private getCSSVar(name: string) {
     return this.element.nativeElement.style.getPropertyValue(`--resize-${name}`);
   }
-  private translatePixelToTarget(x: number, y: number): TranslatedSize {
+  private translatePixelToTarget(x: number, y: number, forcePixel = false): TranslatedPosition {
     x = Math.floor(x);
     y = Math.floor(y);
 
-    if (this.sizeType === 'px') {
+    if (this.sizeType === 'px' || forcePixel) {
       return {
         x: `${x}px`,
         y: `${y}px`
@@ -331,25 +351,12 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     nativeElement.style.transform = this.appendTranslatePosition(this.settings.transform);
     nativeElement.style.transformOrigin = this.transformOrigin;
 
-
-    const cssTransformRegex  = /(\w+)\(([^)]*)\)/g;
-    const names = [];
-    const vals = [];
-
-    let m = null;
-
-    // TODO REFACTOR
-    while (m = cssTransformRegex.exec(nativeElement.style.transform)) {
-      names.push(m[1]);
-      vals.push(m[2]);
-    }
-
-    console.log({names, vals});
+    const {names, values} = parseTransformValues(nativeElement.style.transform);
 
     const indexOfRotation = names.findIndex(name => name === 'rotate');
 
     if (indexOfRotation !== -1) {
-      const rotationValue = +vals[indexOfRotation].replace('deg', '');
+      const rotationValue = +values[indexOfRotation].replace('deg', '');
 
       this.frame.rotate = rotationValue;
     }
@@ -357,7 +364,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
     const indexOfMatrix3d = names.findIndex(name => name === 'matrix3d');
 
     if (indexOfMatrix3d !== -1) {
-      const matrixValue = vals[indexOfMatrix3d].split(',').map(num => +num);
+      const matrixValue = values[indexOfMatrix3d].split(',').map(num => +num);
 
       this.warpMatrix = matrixValue;
       this.warpExist = true;

@@ -1,6 +1,6 @@
 import {PositionEnum, Screen, ScreenClip, SettingsState, VisibilityEnum} from "@memebox/contracts";
 import {updateItemInDictionary} from "@memebox/utils";
-import { uuid } from "@gewd/utils";
+import {uuid} from "@gewd/utils";
 
 // It needs to be a new object
 // otherwise it would take the clips refernce
@@ -33,7 +33,7 @@ export function addScreen(state: SettingsState, screen: Partial<Screen>) {
 
 // endregion
 
-// region Screen Clip Operations
+// region Assigned Visible Media / Actions on Screen Operations
 
 export function fillDefaultsScreenClip (screenClip: Partial<ScreenClip>) {
   return Object.assign(createInitialScreenClipObj(), screenClip);

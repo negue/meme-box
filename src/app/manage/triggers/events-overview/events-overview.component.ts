@@ -1,5 +1,5 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {ENDPOINTS, HasId, TimedClip, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
+import {ENDPOINTS, HasId, TimedAction, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest, Observable} from "rxjs";
 import {API_BASE, AppQueries, AppService} from "@memebox/app-state";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
@@ -56,7 +56,7 @@ export class EventsOverviewComponent implements OnInit {
     );
 
 
-  timedEventsList$: Observable<TimedClip[]> = this.queries.timedEvents$.pipe(
+  timedEventsList$: Observable<TimedAction[]> = this.queries.timedEvents$.pipe(
     map(allTimers => orderBy(allTimers, 'everyXms'))
 );
   twitchChannelExist$ = this.queries.config$.pipe(
@@ -95,7 +95,7 @@ export class EventsOverviewComponent implements OnInit {
     this.appService.deleteTimedEvent(id);
   }
 
-  editTimedEvent(twitchEventItem: TimedClip) {
+  editTimedEvent(twitchEventItem: TimedAction) {
     this.dialogService.showTimedEditDialog( twitchEventItem);
   }
 

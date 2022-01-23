@@ -55,8 +55,8 @@ export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
     hideFromOverview: true
   },
   {
-    name: 'Screen / Clip Advanced Settings',
-    githubName: 'screen_clip_advanced_settings.md',
+    name: 'Screen / visible Media Advanced Settings',
+    githubName: 'screen_media_advanced_settings.md',
     showHeader: false
   },
   {

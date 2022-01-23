@@ -47,17 +47,13 @@ export class ActionVariableInputComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     if (this.variableType === ActionVariableTypes.action
       && typeof this.value === 'string' ) {
-      console.info('nginit', this.value);
 
       this.visibleActionIdList$.next([this.value]);
     }
   }
 
   ngOnChanges({ value }: SimpleChanges): void {
-    console.info({value});
     if (this.variableType === ActionVariableTypes.action && value && value.currentValue) {
-      console.info('ngOnChanges', value.currentValue);
-
       this.visibleActionIdList$.next([value.currentValue]);
     }
   }
@@ -73,8 +69,6 @@ export class ActionVariableInputComponent implements OnInit, OnChanges {
     });
 
     if (actionId) {
-      console.info({clipId: actionId});
-
       this.visibleActionIdList$.next([actionId]);
       this.value = actionId;
       this.valueChanged.next(actionId);

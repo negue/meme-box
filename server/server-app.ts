@@ -2,7 +2,7 @@ import {createExpress} from "./express-server";
 import {sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith, take} from "rxjs/operators";
-import {PersistenceInstance} from "./persistence";
+import {ChangedInfo, PersistenceInstance} from "./persistence";
 import {ACTIONS} from "@memebox/contracts";
 import {LOGGER} from "./logger.utils";
 import {TimedHandler} from "./timed.handler";
@@ -42,8 +42,6 @@ export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value 
 }));
 
 
-let currentTimers = '';
-
 PersistenceInstance.hardRefresh$()
   .pipe(
     debounceTime(600),
@@ -60,17 +58,16 @@ timedHandler.startTimers();
 PersistenceInstance.dataUpdated$()
   .pipe(
     debounceTime(600),
-    startWith(true)
+    startWith({
+      dataType: 'everything'
+    } as ChangedInfo)
   )
   .subscribe((dataChanged) => {
     // TODO move to a different place?
     sendDataToAllSockets(ACTIONS.UPDATE_DATA+'='+JSON.stringify(dataChanged));
 
-    const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
-
-    if (currentTimers != jsonOfTimers) {
-      timedHandler.refreshTimers();
-      currentTimers = jsonOfTimers;
+    if (['everything', 'timers'].includes(dataChanged.dataType)) {
+      timedHandler.refreshTimers(dataChanged.id);
 
       LOGGER.info(`Refreshing TimedHandler`);
     }

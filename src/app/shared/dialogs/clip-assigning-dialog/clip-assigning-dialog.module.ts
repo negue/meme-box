@@ -10,6 +10,7 @@ import {ClipTypeModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
 import {PipesModule} from "@memebox/ui-components";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {PipesModule} from "@memebox/ui-components";
     ClipTypeModule,
     MatIconModule,
     MatListModule,
-    PipesModule
+    PipesModule,
+    OpenFeedbackButtonModule
 
   ],
   providers: [],

@@ -33,18 +33,18 @@
     <ng-container *ngIf="!inConfigMode">
       <button (click)="selectSingleMedia()" >select media</button>
 
-      <app-compact-clip-card *ngFor="let visibleMedia of visibleMedia$ | async"
-                             [clip]="visibleMedia">
+      <app-compact-action-card *ngFor="let visibleMedia of visibleMedia$ | async"
+                               [action]="visibleMedia">
 
-      </app-compact-clip-card>
+      </app-compact-action-card>
     </ng-container>
   </ng-container>
   <ng-container *ngSwitchCase="'mediaList'">
     <button (click)="selectMultipleMedia()" >select media</button>
 
-    <app-compact-clip-card *ngFor="let visibleMedia of visibleMedia$ | async"
-                           [clip]="visibleMedia">
+    <app-compact-action-card *ngFor="let visibleMedia of visibleMedia$ | async"
+                             [action]="visibleMedia">
 
-    </app-compact-clip-card>
+    </app-compact-action-card>
   </ng-container>
 </ng-container>

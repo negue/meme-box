@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, {Express} from 'express';
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
@@ -10,17 +10,17 @@ import {
   TAGS_ENDPOINT,
   TIMED_ENDPOINT
 } from './constants';
-import { listNetworkInterfaces } from "./network-interfaces";
-import { PersistenceInstance } from "./persistence";
+import {listNetworkInterfaces} from "./network-interfaces";
+import {PersistenceInstance} from "./persistence";
 
-import { TAG_ROUTES } from "./rest-endpoints/tags";
-import { getAppRootPath, isInElectron } from "./file.utilts";
-import { clipValidations, validOrLeave } from "./validations";
+import {TAG_ROUTES} from "./rest-endpoints/tags";
+import {getAppRootPath, isInElectron} from "./file.utilts";
+import {clipValidations, validOrLeave} from "./validations";
 
-import { DANGER_ROUTES } from "./rest-endpoints/danger";
-import { LOG_ROUTES } from "./rest-endpoints/logs";
-import { TIMER_ROUTES } from "./rest-endpoints/timers";
-import { STATE_ROUTES } from "./rest-endpoints/state";
+import {DANGER_ROUTES} from "./rest-endpoints/danger";
+import {LOG_ROUTES} from "./rest-endpoints/logs";
+import {TIMER_ROUTES} from "./rest-endpoints/timers";
+import {STATE_ROUTES} from "./rest-endpoints/state";
 
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -57,7 +57,7 @@ app.get(API_PREFIX, (req,res) => {
  */
 
 app.get(CLIP_ENDPOINT, (req,res) => {
-  res.send(PersistenceInstance.listClips());
+  res.send(PersistenceInstance.listActions());
 });
 
 // Post = New
@@ -68,20 +68,20 @@ app.post(CLIP_ENDPOINT, clipValidations, validOrLeave, (req, res) => {
   // return ID
   res.send({
     ok: true,
-    id: PersistenceInstance.addClip(newClip)
+    id: PersistenceInstance.addAction(newClip)
   });
 });
 
 // Put = Update
 app.put(CLIP_ID_ENDPOINT, (req, res) => {
   // update clip
-  res.send(PersistenceInstance.updateClip(req.params['clipId'], req.body));
+  res.send(PersistenceInstance.updateAction(req.params['clipId'], req.body));
 });
 // Delete
 app.delete(CLIP_ID_ENDPOINT, (req, res) => {
   // delete clip
   // return ID
-  res.send(PersistenceInstance.deleteClip(req.params['clipId']));
+  res.send(PersistenceInstance.deleteAction(req.params['clipId']));
 });
 
 app.use(TAGS_ENDPOINT, TAG_ROUTES);

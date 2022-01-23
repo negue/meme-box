@@ -34,7 +34,7 @@ export async function addMoreItems (service: AppService): Promise<void> {
         tags: [newTag.id]
       };
 
-      await service.addOrUpdateClip(newClip);
+      await service.addOrUpdateAction(newClip);
 
       allMedias.push(newClip);
     }

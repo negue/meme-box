@@ -1,23 +1,27 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {CompactClipCardComponent} from './compact-clip-card.component';
+import {CompactActionCardComponent} from './compact-action-card.component';
 import {MatCardModule} from "@angular/material/card";
 import {ClipTypeModule} from "../clip-type/clip-type.module";
 import {ClipPreviewModule} from "../clip-preview/clip-preview.module";
 import {ClipChipsListModule} from "../clip-chips-list/clip-chips-list.module";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
 
 
 @NgModule({
-  declarations: [CompactClipCardComponent],
+  declarations: [CompactActionCardComponent],
   exports: [
-    CompactClipCardComponent
+    CompactActionCardComponent
   ],
   imports: [
     CommonModule,
     MatCardModule,
     ClipTypeModule,
     ClipPreviewModule,
-    ClipChipsListModule
+    ClipChipsListModule,
+    MatIconModule,
+    MatButtonModule
   ]
 })
 export class CompactClipCardModule { }

@@ -26,7 +26,7 @@ export class ActionController {
 
   @Get(ENDPOINTS.ACTION.SIMPLE_LIST)
   getList(): SimpleActionInformation[] {
-    const allActions = this._persistence.listClips()
+    const allActions = this._persistence.listActions()
       .filter(a => ![ActionType.WidgetTemplate, ActionType.PermanentScript].includes(a.type));
 
     return allActions.map(

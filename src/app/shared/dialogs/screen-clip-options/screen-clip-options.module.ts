@@ -16,9 +16,9 @@ import {AnimationPreviewComponent} from './animation-preview/animation-preview.c
 import {PreventAnimationOnFirstViewDirective} from './prevent-animation-on-first-view.directive';
 import {HintPanelModule, PipesModule} from "@memebox/ui-components";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {ClipTypeModule} from "@memebox/state-components";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {AnimationLabelPipe} from './animation-label.pipe';
+import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
 
 @NgModule({
   declarations: [
@@ -40,9 +40,9 @@ import {AnimationLabelPipe} from './animation-label.pipe';
     MatExpansionModule,
     PipesModule,
     MatButtonToggleModule,
-    ClipTypeModule,
     CodemirrorModule,
-    HintPanelModule
+    HintPanelModule,
+    OpenActionSettingsButtonModule
   ],
   providers: [],
 })

@@ -2,13 +2,13 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Action, ActionType, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
+import {Action, ActionType, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {filter, map} from "rxjs/operators";
 
 // TODO better class/interface name?
-const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
+const INITIAL_TIMED_ACTION: Partial<TimedAction> = {
   clipId:  '',
   screenId: '',
   active: true,
@@ -32,22 +32,22 @@ export class TimedEditComponent implements OnInit, OnDestroy {
 
   showWarningClipSelection = false;
 
-  selectedMediaId$ = new BehaviorSubject('');
+  selectedActionId$ = new BehaviorSubject('');
 
-  selectedMedia$ = combineLatest([
+  selectedAction$: Observable<Action> = combineLatest([
     this.clipDictionary$,
-    this.selectedMediaId$
+    this.selectedActionId$
   ]).pipe(
     filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
     map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
   );
 
-  showScreenSelection$ = this.selectedMedia$.pipe(
+  showScreenSelection$ = this.selectedAction$.pipe(
     map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
   );
 
   screenList$ = combineLatest([
-    this.selectedMedia$,
+    this.selectedAction$,
     this.appQuery.screensList$
   ]).pipe(
     map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
@@ -57,7 +57,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: TimedClip,
+    @Inject(MAT_DIALOG_DATA) public data: TimedAction,
     private dialogRef: MatDialogRef<any>,
     private matDialog: MatDialog,
     private appService: AppService,
@@ -66,11 +66,11 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     private dialogService: DialogService
   ) {
     // Todo find a better to get defaults & stuff
-    this.data = Object.assign({}, {...INITIAL_TIMED_CLIP}, {
+    this.data = Object.assign({}, {...INITIAL_TIMED_ACTION}, {
       ...this.data
     });
-    console.info({data: this.data});
-    this.selectedMediaId$.next(this.data.clipId);
+
+    this.selectedActionId$.next(this.data.clipId);
   }
 
   async save() {
@@ -87,7 +87,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newTimedValue: TimedClip = {
+    const newTimedValue: TimedAction = {
       ...this.data,
       ...value
     };
@@ -127,7 +127,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         clipId
       });
-      this.selectedMediaId$.next(clipId);
+      this.selectedActionId$.next(clipId);
     }
   }
 

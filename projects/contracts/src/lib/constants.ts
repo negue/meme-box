@@ -3,7 +3,7 @@ import {TwitchEventTypes} from './types';
 // TODO merge App / Server Endpoint CONSTANTS
 
 export const ENDPOINTS = {
-  CLIPS: 'clips',
+  CLIPS: 'clips',   // TODO CHECK if a rename is possible without breaking anything
   TAGS: 'tags',
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',

@@ -163,8 +163,8 @@ export class MediaEditComponent
 
   currentScript: ScriptConfig = null;
 
-  // Get all clips that have the assigned tags
-  taggedClips$ = combineLatest([
+  // Get all actions that have the assigned tags
+  taggedActions$ = combineLatest([
     this.currentTags$,
     this.appQuery.actionList$
   ]).pipe(
@@ -348,7 +348,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
     valueAsClip.showOnMobile = this.showOnMobile;
 
-    await this.appService.addOrUpdateClip(valueAsClip);
+    await this.appService.addOrUpdateAction(valueAsClip);
 
     if (this.selectedScreenId && valueAsClip.type !== ActionType.Meta) {
       this.appService.addOrUpdateScreenClip(this.selectedScreenId, {

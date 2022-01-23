@@ -36,7 +36,7 @@ export class ActionShortcutToolbarComponent implements OnInit {
       showOnMobile: !this.action.showOnMobile
     } as Action;
 
-    this.service.addOrUpdateClip(newClip);
+    this.service.addOrUpdateAction(newClip);
   }
 
   onToggleTwitchEvent(twitchId: string) {

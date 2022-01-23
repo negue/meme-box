@@ -18,6 +18,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {HintPanelModule} from "@memebox/ui-components";
 import {CompactClipCardModule} from "@memebox/state-components";
 import {ActionVariablesConfigModule} from "@memebox/action-variables/ui";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {ActionVariablesConfigModule} from "@memebox/action-variables/ui";
     MatTabsModule,
     HintPanelModule,
     CompactClipCardModule,
-    ActionVariablesConfigModule
+    ActionVariablesConfigModule,
+    OpenFeedbackButtonModule
   ],
   providers: [],
   exports: [

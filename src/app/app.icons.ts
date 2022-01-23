@@ -38,6 +38,7 @@ export const APP_ICONS = [
   'public',
   'qr_code_scanner',
   'queue',
+  'rate_review',
   'replay',
   'screen',
   'settings',
