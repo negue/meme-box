@@ -30,12 +30,34 @@
         </div>
 
         <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
             <mat-label>Message text to trigger event</mat-label>
             <input autocomplete="off"
                    formControlName="contains"
                    placeholder="!wow"
                    matInput>
+          </mat-form-field>
+
+          {{ currentAliases$| async | json }}
+          <mat-form-field>
+            <mat-label>Aliases</mat-label>
+            <mat-chip-list #chipList aria-label="Tag selection">
+              <mat-chip
+                *ngFor="let alias of currentAliases$ | async"
+                [selectable]="false"
+                [removable]="true"
+                (removed)="removeAlias(alias)">
+                {{alias}}
+                <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+              </mat-chip>
+              <input
+                #tagInput
+                [formControl]="aliasesFrmControl"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="enterNewAlias($event)"
+                (blur)="enterNewAlias({input: tagInput, value: tagInput.value})">
+            </mat-chip-list>
           </mat-form-field>
         </div>
 

@@ -182,6 +182,8 @@ export interface TwitchTrigger extends TriggerBase {
   // screenId:      string; // TODO
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
+  aliases?: string[];
+
   active: boolean;
 
   roles: string[]; // maybe enum

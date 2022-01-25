@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
@@ -16,6 +16,8 @@ import {
 import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {distinctUntilChanged, filter, map, pairwise, startWith, take, takeUntil} from "rxjs/operators";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatChipInputEvent} from "@angular/material/chips";
 
 // TODO better class/interface name?
 const INITIAL_TWITCH: Partial<TwitchTrigger> = {
@@ -154,6 +156,10 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   );
 
   showWarningClipSelection = false;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  aliasesFrmControl = new FormControl();
+  // Current Tags assigned to this clip
+  currentAliases$ = new BehaviorSubject<string[]>([]);
 
   private _destroy$ = new Subject();
 
@@ -174,6 +180,8 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     console.info({data: this.data});
     this.selectedMediaId$.next(this.data.clipId);
     this.canBroadcasterIgnoreCooldown = this.data.canBroadcasterIgnoreCooldown;
+
+    this.currentAliases$.next(this.data.aliases ?? [])
   }
 
   async save() {
@@ -224,6 +232,10 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
           return;
         }
       }
+
+      const aliaseseseses = this.currentAliases$.value;
+
+      newTwitchValue.aliases = aliaseseseses;
     }
 
     if (newTwitchValue.event === TwitchEventTypes.channelPoints) {
@@ -322,5 +334,37 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     } else {
       this.data.roles.push(role);
     }
+  }
+
+  enterNewAlias($event: MatChipInputEvent) {
+    const input = $event.input;
+    const value = $event.value;
+
+    const currentAliases = this.currentAliases$.value;
+
+    // Add our tag
+    if ((value || '').trim()) {
+      currentAliases.push(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.aliasesFrmControl.setValue(null);
+    this.currentAliases$.next(currentAliases);
+  }
+
+  removeAlias(alias: string) {
+    const currentAliases = this.currentAliases$.value;
+
+    const index = currentAliases.indexOf(alias);
+
+    if (index >= 0) {
+      currentAliases.splice(index, 1);
+    }
+
+    this.currentAliases$.next(currentAliases);
   }
 }
