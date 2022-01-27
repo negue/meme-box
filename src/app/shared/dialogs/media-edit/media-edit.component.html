@@ -126,6 +126,24 @@
             {{ volumeSlider.value }}
           </div>
         </div>
+
+        <mat-label>Volume Gain</mat-label>
+        <div class="slider__row">
+          <mat-slider #gainSlider
+                      [max]="300"
+                      [min]="100"
+                      [step]="1"
+                      formControlName="gainSetting"
+          >
+          </mat-slider>
+          <div class="volume__label">
+            {{ gainSlider.value }}
+          </div>
+        </div>
+
+        <app-hint-panel style="margin-top: 0.5rem" [addBottomPadding]="true">
+          The Gain is only applied in the Preview Screen / in OBS.
+        </app-hint-panel>
       </ng-container>
       <div class="form-field-row"  *ngIf="false">
         <mat-form-field>

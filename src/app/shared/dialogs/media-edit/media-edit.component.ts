@@ -61,6 +61,7 @@ const INITIAL_CLIP: Partial<Action> = {
   type: ActionType.Picture,
   name: 'Media Filename',
   volumeSetting: 10,
+  gainSetting: 100,
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
   metaDelay: META_DELAY_DEFAULT,
@@ -104,6 +105,7 @@ export class MediaEditComponent
     name: "",
     type: 0,
     volumeSetting: 0,
+    gainSetting: 0,
     clipLength: 0,
     playLength: [0, Validators.min(0)],
     path: "",

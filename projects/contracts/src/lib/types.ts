@@ -42,6 +42,7 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
   previewUrl?: string;
   hasPreview?: boolean;
   volumeSetting?: number; //  XX / 100 in percent
+  gainSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength: number; // ms, time to play of this clip
   path: string;
