@@ -141,10 +141,12 @@ function* returnAllCommandsByMessage (
 
     // TODO improve multiple twitch commands with the same start name
     // TODO maybe with an order and "stop handling after this" ???
-    const aliasesToCheck = [twitchSetting.contains, ...twitchSetting.aliases]
+    const aliasesToCheck = [twitchSetting.contains, ...(twitchSetting.aliases ?? [])]
       .map(a => a.toLowerCase());
 
-    if (aliasesToCheck.some(alias => toLoweredMessage.includes(alias))) {
+    const foundAnyCommandsInMessage = aliasesToCheck.some(alias => toLoweredMessage.includes(alias));
+
+    if (foundAnyCommandsInMessage) {
       if (!foundCommand) {
         foundCommand = twitchSetting;
       } else {

@@ -181,7 +181,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     this.selectedMediaId$.next(this.data.clipId);
     this.canBroadcasterIgnoreCooldown = this.data.canBroadcasterIgnoreCooldown;
 
-    this.currentAliases$.next(this.data.aliases ?? [])
+    this.currentAliases$.next([...(this.data.aliases ?? [])]);
   }
 
   async save() {
