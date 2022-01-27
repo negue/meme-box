@@ -16,6 +16,8 @@ import {PipesModule} from "@memebox/ui-components";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
 import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -35,6 +37,8 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
     ActionVariablesAssignmentsModule,
     OpenActionSettingsButtonModule,
     OpenFeedbackButtonModule,
+    MatChipsModule,
+    MatIconModule
   ],
   providers: [],
 })

@@ -61,7 +61,7 @@ const INITIAL_CLIP: Partial<Action> = {
   type: ActionType.Picture,
   name: 'Media Filename',
   volumeSetting: 10,
-  gainSetting: 100,
+  gainSetting: 0,
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
   metaDelay: META_DELAY_DEFAULT,

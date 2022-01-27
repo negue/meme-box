@@ -22,6 +22,17 @@
       </ng-container>
     </code>
   </h2>
+
+  <div class="mat-caption">
+    <ng-container *ngIf="item.aliases?.length > 0; else noAliases">
+      Aliases assigned: {{item.aliases.length}}
+    </ng-container>
+
+    <ng-template #noAliases>
+      &nbsp;
+    </ng-template>
+  </div>
+
 </div>
 
 <div class="eventInfo__checkbox">
@@ -65,7 +76,7 @@
 <div class="eventInfo__meta">
   <ng-container *ngIf="allInformations$ | async as information">
 
-    <p>Clip: {{ information.clip?.name }}</p>
+    <p class="mat-caption">Action: {{ information.clip?.name }}</p>
     <!-- Screen: <strong>{{ information.screen.name }}</strong> -->
 
     <app-clip-preview [clip]="information.clip"
