@@ -17,13 +17,13 @@
         </div>
 
         <div class="example-container">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" *transloco="let t; read: 'twitch' ">
             <mat-label>Twitch Event Type</mat-label>
             <mat-select [required]="true"
                         formControlName="event">
               <mat-option *ngFor="let item of twitchEvents"
                           [value]="item">
-                {{ item }}
+                {{ t(item) }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -54,7 +54,7 @@
                 [formControl]="aliasesFrmControl"
                 [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                (matChipInputTokenEnd)="enterNewAlias($event)"
+                (matChipInputTokenEnd)="enterNewAlias($event)" autocomplete="off"
                 (blur)="enterNewAlias({input: tagInput, value: tagInput.value})">
             </mat-chip-list>
           </mat-form-field>
