@@ -1,4 +1,5 @@
-<app-config-card [title]="'config.connections' | transloco" [titlePadding]="false">
+<app-config-card [title]="'config.connections' | transloco" [titlePadding]="false"
+                 icon="settings_ethernet">
   <mat-list>
     <ng-container *ngFor="let entries of groupedConnections$ | async | mykeyvalue: originalOrder">
 
