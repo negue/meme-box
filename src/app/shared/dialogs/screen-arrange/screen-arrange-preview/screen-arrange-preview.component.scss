@@ -90,6 +90,13 @@
   overflow: hidden;
   gap: 1rem;
   margin-bottom: 2rem;
+  position: relative;
+}
+
+app-open-feedback-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 
 .arrange-actions {

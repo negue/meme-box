@@ -15,6 +15,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatInputModule} from '@angular/material/input';
+import {OpenFeedbackButtonModule} from "../../../components/open-feedback-button/open-feedback-button.module";
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import {MatInputModule} from '@angular/material/input';
     MatDividerModule,
     MatIconModule,
     MatTooltipModule,
-    MatInputModule
+    MatInputModule,
+    OpenFeedbackButtonModule
   ]
 })
 export class ScreenArrangePreviewModule {
