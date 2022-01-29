@@ -42,6 +42,8 @@ let fileBackupToday = false;
 
 export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
 
+// TODO use const string enums instead of uniontype
+
 export interface ChangedInfo {
   id?: string;
   dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
