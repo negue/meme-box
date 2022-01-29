@@ -6,7 +6,9 @@ import {GuardTypePipe} from "./dashboard-overview/dashboard-overview.guards";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import { MatCardModule } from "@angular/material/card";
+import {MatCardModule} from "@angular/material/card";
+import {TranslocoModule} from "@ngneat/transloco";
+import {OpenFeedbackButtonModule} from "../../shared/components/open-feedback-button/open-feedback-button.module";
 
 const routes: Routes = [
   {
@@ -26,7 +28,9 @@ const routes: Routes = [
     MatExpansionModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
+    TranslocoModule,
+    OpenFeedbackButtonModule
   ]
 })
 export class DashboardModule { }
