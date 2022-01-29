@@ -57,3 +57,23 @@
 .twitchSetting__token-button {
   margin-bottom: 1rem;
 }
+
+table {
+  border-width: 1px;
+  padding-top: 1rem;
+
+  td {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: 0;
+    vertical-align: top;
+  }
+}
+
+h4 {
+  margin: 0;
+}
+
+.auth-buttons {
+  margin-top: 1rem;
+}

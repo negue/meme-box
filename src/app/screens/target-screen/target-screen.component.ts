@@ -251,8 +251,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     return `rgba(${o(r() * s)},${o(r() * s)},${o(r() * s)},0.34)`;
   }
 
-  parseAndApplyClipCssRules(screenClip: ScreenClip) {
-
+  parseAndApplyClipCssRules(screenClip: ScreenClip): css.Stylesheet {
     const obj = css.parse(screenClip.customCss, {
       silent: true
     });
@@ -343,8 +342,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  toScreenClipCssAgain(screenClip: ScreenClip) {
+  toScreenClipCssAgain(screenClip: ScreenClip): string {
     const obj = this.parseAndApplyClipCssRules(screenClip);
+
+    if (obj.stylesheet.parsingErrors) {
+      return screenClip.customCss;
+    }
 
     return css.stringify(obj);
   }

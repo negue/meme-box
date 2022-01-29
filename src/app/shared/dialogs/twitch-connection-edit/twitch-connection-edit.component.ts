@@ -1,10 +1,10 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from '@ngneat/reactive-forms';
 import {Subject} from "rxjs";
 import {AppQueries, AppService} from "@memebox/app-state";
 import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {Config, TwitchAuthInformation} from "@memebox/contracts";
+import {Config, TWITCH_BOT_RESPONSE_CONSTS, TwitchAuthInformation} from "@memebox/contracts";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {TwitchOAuthHandler} from "./twitch.oauth";
 import {MatDialogRef} from "@angular/material/dialog";
@@ -42,9 +42,6 @@ interface AdditionalForm {
   styleUrls: ['./twitch-connection-edit.component.scss']
 })
 export class TwitchConnectionEditComponent implements OnInit {
-  @Input()
-  public showAdvancedOptions = true;
-
   public mainAccountForm = new FormBuilder().group<MainAccountForm>({
     channelName: '',
     authToken: '',
@@ -56,7 +53,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     bot: false,
     log: false,
     botResponse: '',
-    command: '!command'
+    command: ''
   });
 
   public config$ = this.appQuery.config$;
@@ -65,8 +62,9 @@ export class TwitchConnectionEditComponent implements OnInit {
 
   private _destroy$ = new Subject();
 
-  public commandsFlagMessage = '{{commands}}';
-  public userFlagMessage = '{{user}}';
+  public commandsFlagMessage = TWITCH_BOT_RESPONSE_CONSTS.COMMANDS;
+  public userFlagMessage = TWITCH_BOT_RESPONSE_CONSTS.USER;
+  public defaultCommandsResponse = TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_COMMANDS_TEXT;
 
   constructor(private appQuery: AppQueries,
               private appService: AppService,
@@ -99,9 +97,9 @@ export class TwitchConnectionEditComponent implements OnInit {
       });
 
       this.additionalForm.reset({
-        botResponse: value.twitch?.bot?.response ?? '',
+        botResponse: value.twitch?.bot?.response || TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_COMMANDS_TEXT,
         bot: value.twitch.bot.enabled,
-        command: value.twitch.bot.command,
+        command: value.twitch.bot.command || TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_TRIGGER,
         log: value.twitch.enableLog
       });
 
@@ -207,6 +205,8 @@ export class TwitchConnectionEditComponent implements OnInit {
     this.mainAccountForm.patchValue({
       authToken: null
     });
+
+    this.mainAuthInformation = null;
   }
 
   deleteBotAuth (): void {
@@ -214,5 +214,7 @@ export class TwitchConnectionEditComponent implements OnInit {
       botName: null,
       botToken: null,
     });
+
+    this.botAuthInformation = null;
   }
 }

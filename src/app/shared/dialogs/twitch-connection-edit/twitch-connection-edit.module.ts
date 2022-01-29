@@ -12,6 +12,8 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {PipesModule} from "@memebox/ui-components";
+import {TranslocoModule} from "@ngneat/transloco";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 
 @NgModule({
@@ -28,7 +30,9 @@ import {PipesModule} from "@memebox/ui-components";
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    PipesModule
+    PipesModule,
+    TranslocoModule,
+    OpenFeedbackButtonModule
   ]
 })
 export class TwitchConnectionEditModule implements DialogContract<void> {

@@ -75,4 +75,13 @@ export const WEBSOCKET_PATHS = {
   ACTION_ACTIVITY: '/ws/action_activity',
   CONNECTIONS_STATE: '/ws/connections_state',
   ERRORS: '/ws/errors',
+};
+
+export const TWITCH_BOT_RESPONSE_CONSTS = {
+  COMMANDS: '{{commands}}',
+  USER: '{{user}}',
+  DEFAULT_COMMANDS_TEXT: `
+    @{{user}}, you are able to trigger the following commands: {{commands}}
+  `.trim(),
+  DEFAULT_TRIGGER: '!commands'
 }

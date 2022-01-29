@@ -145,6 +145,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   );
 
   showScreenSelection$ = this.selectedAction$.pipe(
+    filter(action => !!action),
     map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
   );
 

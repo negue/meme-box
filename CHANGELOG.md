@@ -32,6 +32,8 @@
   * [x] of connections / states
   * [x] latest twitch events to retrigger
 * [x] Triggers can be searched now
+* [x] Twitch Message Event can now have aliases
+* [x] Media Actions can now have a volume gain (if its too quiet)
 
 ### Fixes
 

@@ -1,25 +1,39 @@
-<app-config-card [title]="'config.connections' | transloco" [titlePadding]="false">
+<app-config-card [title]="'config.connections' | transloco" [titlePadding]="false"
+                 icon="settings_ethernet">
   <mat-list>
-    <ng-container *ngFor="let entries of groupedConnections$ | async | mykeyvalue: originalOrder">
+    <ng-container *ngFor="let entries of groupedConnections$ | async | mykeyvalue: originalOrder; let last = last">
+      <div mat-subheader>{{entries.key}}</div>
+      <mat-list-item *ngFor="let connectionEntry of entries.value">
+        <div mat-line>{{connectionEntry.connectedAccount}}</div>
+        <div mat-line>
+          <ng-container *ngIf="connectionEntry.isConfigured; else notConfigured">
+            <ng-container *ngIf="connectionEntry.hasAuthToken; else notAuthenticated">
+              <ng-container *ngIf="connectionEntry.validUntil">
+                Valid until: {{connectionEntry.validUntil}}
+              </ng-container>
+            </ng-container>
 
-    <div mat-subheader>{{entries.key}}</div>
-    <mat-list-item *ngFor="let twitchConnection of entries.value">
-      <div mat-line>{{twitchConnection.connectedAccount}}</div>
-      <div mat-line>
-        <ng-container *ngIf="twitchConnection.validUntil">
-          Valid for: {{twitchConnection.validUntil}}
-        </ng-container>
 
-        <br/>
-        <br/>
-      </div>
+          </ng-container>
 
-      <button mat-icon-button (click)="twitchConnection.openConfig()">
-        <mat-icon svgIcon="edit"></mat-icon>
-      </button>
+          <ng-template #notConfigured>
+            Not configured
+          </ng-template>
 
-    </mat-list-item>
-    <mat-divider></mat-divider>
+          <ng-template #notAuthenticated>
+            Not authenticated
+          </ng-template>
+
+          <br/>
+          <br/>
+        </div>
+
+        <button mat-icon-button (click)="connectionEntry.openConfig()">
+          <mat-icon svgIcon="edit"></mat-icon>
+        </button>
+
+      </mat-list-item>
+      <mat-divider *ngIf="!last"></mat-divider>
     </ng-container>
   </mat-list>
 </app-config-card>

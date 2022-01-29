@@ -3,12 +3,12 @@ import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/servic
 import {AppConfig} from "@memebox/app/env";
 import {ENDPOINTS, WEBSOCKET_PATHS} from "@memebox/contracts";
 import {Observable, Subject} from "rxjs";
-import { filter, map, startWith, switchMap, takeUntil, tap } from "rxjs/operators";
+import {filter, map, startWith, switchMap} from "rxjs/operators";
 import {AllTwitchEvents, TwitchEvent} from "../../../../../server/providers/twitch/twitch.connector.types";
 import {isBan, isChannelPointRedemption, isCheer, isGiftSub, isRaid, isSub} from './dashboard-overview.guards';
 import {API_BASE} from "@memebox/app-state";
 import {HttpClient} from "@angular/common/http";
-import { takeLatestItems } from "../../../../../projects/utils/src/lib/rxjs";
+import {takeLatestItems} from "@memebox/utils";
 
 // TODO extract a componentbase to use for _destroy$ or find some alternative
 
@@ -59,10 +59,12 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.connectionStateWS.connect();
+    this.twitchEventWS.connect();
   }
 
   ngOnDestroy(): void {
     this.connectionStateWS.stopReconnects();
+    this.twitchEventWS.stopReconnects();
   }
 
   isChannelPointRedemption = isChannelPointRedemption;

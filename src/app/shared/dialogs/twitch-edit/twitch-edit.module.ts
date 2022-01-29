@@ -18,6 +18,8 @@ import {OpenActionSettingsButtonModule} from "../../components/open-action-setti
 import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatIconModule} from "@angular/material/icon";
+import {TranslocoModule} from "@ngneat/transloco";
+import {TRANSLOCO_TWITCH_SCOPE} from "../../../transloco/transloco.scopes";
 
 @NgModule({
   declarations: [
@@ -38,9 +40,12 @@ import {MatIconModule} from "@angular/material/icon";
     OpenActionSettingsButtonModule,
     OpenFeedbackButtonModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    TranslocoModule
   ],
-  providers: [],
+  providers: [
+    TRANSLOCO_TWITCH_SCOPE
+  ],
 })
 export class TwitchEditModule implements DialogContract<TwitchTrigger> {
   constructor(private dialog: MatDialog) {

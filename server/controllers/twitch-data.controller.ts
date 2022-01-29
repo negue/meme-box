@@ -1,6 +1,6 @@
 import {Controller, Get, Inject, PathParams, QueryParams} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence} from "../persistence";
+import {Persistence, TOKEN_EXISTS_MARKER} from "../persistence";
 import {ChannelPointRedemption, ENDPOINTS, TwitchAuthInformation} from "@memebox/contracts";
 import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
 
@@ -43,14 +43,20 @@ export class TwitchDataController {
     if (twitchAuth) {
       result.push({
         type: 'main',
-        authResult: twitchAuth
+        authResult: {
+          ...twitchAuth,
+          token: twitchAuth.token ? TOKEN_EXISTS_MARKER : ''
+        }
       });
     }
 
     if (botAuth) {
       result.push({
         type: 'bot',
-        authResult: botAuth
+        authResult: {
+          ...botAuth,
+          token: botAuth.token ? TOKEN_EXISTS_MARKER : ''
+        },
       });
     }
 

@@ -1,7 +1,13 @@
 import * as tmi from 'tmi.js';
 import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
 import {debounceTime, startWith} from 'rxjs/operators';
-import {TwitchConfig, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from '@memebox/contracts';
+import {
+  TWITCH_BOT_RESPONSE_CONSTS,
+  TwitchConfig,
+  TwitchEventTypes,
+  TwitchTrigger,
+  TwitchTriggerCommand
+} from '@memebox/contracts';
 import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
 import {
@@ -22,7 +28,7 @@ import {PubSubClient} from 'twitch-pubsub-client';
 import {ApiClient, StaticAuthProvider} from "twitch";
 import {TwitchAuthInformationProvider} from "./twitch.auth-information";
 import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
-import { ConnectionsStateHub, UpdateStateFunc } from "../connections-state.hub";
+import {ConnectionsStateHub, UpdateStateFunc} from "../connections-state.hub";
 
 export type TmiConnectionType = "MAIN" | "BOT";
 
@@ -251,7 +257,7 @@ export class TwitchConnector {
       this.twitchEventBus.queueEvent(twitchEvent);
 
       // This is the bot handler, nothing after that needs to be handled
-      if (this._twitchBotEnabled && message === (this._currentTwitchConfig.bot?.command ?? '!commands')) {
+      if (this._twitchBotEnabled && message === (this._currentTwitchConfig.bot?.command ?? TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_COMMANDS_TEXT)) {
         this.handleCommandsRequest(userstate);
 
         return false;
@@ -474,9 +480,9 @@ export class TwitchConnector {
         )
       );
     }).map(e => e.contains);
-    const botResponse = this._currentTwitchConfig.bot.response
-      .replace('{{commands}}', commands.join(' | '))
-      .replace('{{user}}', `${tags.username}`);
+    const botResponse = (this._currentTwitchConfig.bot.response || TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_COMMANDS_TEXT)
+      .replace(TWITCH_BOT_RESPONSE_CONSTS.COMMANDS, commands.join(' | '))
+      .replace(TWITCH_BOT_RESPONSE_CONSTS.USER, `${tags.username}`);
 
     const tmiWrite = await this.getTmiWriteInstance();
     await tmiWrite.ping().catch(() => tmiWrite.connect());

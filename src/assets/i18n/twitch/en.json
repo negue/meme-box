@@ -1,3 +1,9 @@
 {
-
+  "message": "Chat Messages",
+  "bits": "Bits / Cheers",
+  "raid": "Raid",
+  "channelPoints": "Channel Point Redemption",
+  "ban": "Banning a User",
+  "subscription": "Subscription",
+  "gift": "Gift Sub"
 }

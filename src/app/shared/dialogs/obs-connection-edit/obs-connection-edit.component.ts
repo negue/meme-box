@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from '@ngneat/reactive-forms';
 import {Subject} from "rxjs";
 import {AppQueries, AppService} from "@memebox/app-state";
@@ -17,9 +17,6 @@ interface ObsConnectionForm {
   styleUrls: ['./obs-connection-edit.component.scss']
 })
 export class ObsConnectionEditComponent implements OnInit {
-  @Input()
-  public showAdvancedOptions = true;
-
   public obsForm = new FormBuilder().group<ObsConnectionForm>({
     hostname: '',
     password: '',

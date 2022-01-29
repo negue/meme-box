@@ -2,6 +2,9 @@ import {Service} from "@tsed/di";
 import fetch from "node-fetch";
 import {TwitchAuthResult} from "@memebox/contracts";
 import {TwitchAuthInformationProvider} from "./twitch.auth-information";
+import {Persistence} from "../../persistence";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "../contracts";
 
 export interface TwitchHelixResult<TResult> {
   data?: TResult;
@@ -16,9 +19,17 @@ export class TwitchDataProvider {
   private _savedBotTwitchAuth: TwitchAuthResult|null = null;
 
   constructor(
-    private twitchAuth: TwitchAuthInformationProvider
+    private twitchAuth: TwitchAuthInformationProvider,
+    @Inject(PERSISTENCE_DI) persistence: Persistence
   ) {
-
+    persistence.dataUpdated$().subscribe(
+      changed => {
+        if (["everything", "twitch-setting"].includes(changed.dataType)) {
+          this._savedMainTwitchAuth = null;
+          this._savedBotTwitchAuth = null;
+        }
+      }
+    )
   }
 
   async getHelixDataAsync<TResult>(

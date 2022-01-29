@@ -50,6 +50,12 @@ export class EventsOverviewComponent implements OnInit {
             return true;
           }
 
+          if (t.aliases) {
+            if (t.aliases.some(a => a.includes(currentSearch))) {
+              return true;
+            }
+          }
+
           return false;
         });
       })
