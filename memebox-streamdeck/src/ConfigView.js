@@ -99,7 +99,7 @@ export default function ConfigView() {
   }, [prevGlobalSettings, setPrevGlobalSettings, globalSettings, updateClipList])
 
   useEffect(() => {
-    const newUrl = `${globalSettings.protocol}://${globalSettings.host}:${globalSettings.port}`;
+    const newUrl = `${globalSettings.protocol}://${globalSettings.host}:${globalSettings.port}/`;
 
     if (settings.targetServer !== newUrl) {
       const newState = {

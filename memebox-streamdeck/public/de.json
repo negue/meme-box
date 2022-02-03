@@ -1,9 +1,9 @@
 {
-  "Description": "Nimm diese Vorlage für dein erstes Plugin", 
-  "Name": "Stream Deck Template", 
-  "Category": "Templates", 
+  "Description": "Memebox Actions",
+  "Name": "Memebox Actions",
+  "Category": "Templates",
   "com.elgato.template.action": {
-    "Name": "Action", 
+    "Name": "Action",
     "Tooltip": "Dies ist die einzige 'Action' in diesem Template"
   },
   "Localization": {
