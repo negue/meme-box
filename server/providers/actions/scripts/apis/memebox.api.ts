@@ -1,6 +1,6 @@
 import {Service} from "@tsed/di";
-import {ActionTriggerEventBus} from "../../action-trigger-event.bus";
-import {MediaType} from "@memebox/contracts";
+import {ActionQueueEventBus} from "../../action-queue-event.bus";
+import {ActionType} from "@memebox/contracts";
 import {ActionActiveState} from "../../action-active-state";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../../contracts";
@@ -21,20 +21,20 @@ export type ActionSelector = string  | {
 export class MemeboxApi extends DisposableBase {
 
   // for permanent scripts
-  public onAction$ = this.actionTriggerEventBus.AllTriggerEvents$.pipe(
+  public onAction$ = this.actionTriggerEventBus.AllQueuedActions$.pipe(
     takeUntil(this._destroy$)
   );
 
   constructor(
-    public actionTriggerEventBus: ActionTriggerEventBus,
+    public actionTriggerEventBus: ActionQueueEventBus,
     public actionActiveState: ActionActiveState,
     public scriptId: string,
-    public scriptType: MediaType
+    public scriptType: ActionType
   ) {
     super();
 
     // Only Permanent Scripts as allowed to subscribe to Events
-    if (scriptType === MediaType.Script) {
+    if (scriptType === ActionType.Script) {
       this._destroy$.next();
     }
   }
@@ -51,7 +51,7 @@ export class MemeboxApi extends DisposableBase {
 @Service()
 export class MemeboxApiFactory {
   constructor(
-    private actionTriggerEventBus: ActionTriggerEventBus,
+    private actionTriggerEventBus: ActionQueueEventBus,
     private actionActiveState: ActionActiveState,
 
     @Inject(PERSISTENCE_DI)
@@ -59,7 +59,7 @@ export class MemeboxApiFactory {
   ) {
   }
 
-  getApiFor(scriptId: string, scriptType: MediaType): MemeboxApi {
+  getApiFor(scriptId: string, scriptType: ActionType): MemeboxApi {
     return new MemeboxApi(
       this.actionTriggerEventBus,
       this.actionActiveState,

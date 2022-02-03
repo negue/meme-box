@@ -3,6 +3,7 @@
  */
 
 export * from './lib/types';
+export * from './lib/types.outdated';
 export * from './lib/media.types';
 export * from './lib/createInitialState';
 export * from './lib/constants';

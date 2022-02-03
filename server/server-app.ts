@@ -2,7 +2,7 @@ import {createExpress} from "./express-server";
 import {sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith, take} from "rxjs/operators";
-import {PersistenceInstance} from "./persistence";
+import {ChangedInfo, PersistenceInstance} from "./persistence";
 import {ACTIONS} from "@memebox/contracts";
 import {LOGGER} from "./logger.utils";
 import {TimedHandler} from "./timed.handler";
@@ -42,8 +42,6 @@ export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value 
 }));
 
 
-let currentTimers = '';
-
 PersistenceInstance.hardRefresh$()
   .pipe(
     debounceTime(600),
@@ -60,17 +58,16 @@ timedHandler.startTimers();
 PersistenceInstance.dataUpdated$()
   .pipe(
     debounceTime(600),
-    startWith(true)
+    startWith({
+      dataType: 'everything'
+    } as ChangedInfo)
   )
-  .subscribe(() => {
+  .subscribe((dataChanged) => {
     // TODO move to a different place?
-    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA+'='+JSON.stringify(dataChanged));
 
-    const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
-
-    if (currentTimers != jsonOfTimers) {
-      timedHandler.refreshTimers();
-      currentTimers = jsonOfTimers;
+    if (['everything', 'timers'].includes(dataChanged.dataType)) {
+      timedHandler.refreshTimers(dataChanged.id);
 
       LOGGER.info(`Refreshing TimedHandler`);
     }
@@ -78,20 +75,54 @@ PersistenceInstance.dataUpdated$()
 
 // Check Version & Log it
 
-function cmpVersions (a, b) {
-  var i, diff;
-  var regExStrip0 = /(\.0+)+$/;
-  var segmentsA = a.replace(regExStrip0, '').split('.');
-  var segmentsB = b.replace(regExStrip0, '').split('.');
-  var l = Math.min(segmentsA.length, segmentsB.length);
+// from https://stackoverflow.com/a/6832721
+function versionCompare(v1, v2, options = null) {
+  const lexicographical = options && options.lexicographical,
+    zeroExtend = options && options.zeroExtend;
 
-  for (i = 0; i < l; i++) {
-    diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
-    if (diff) {
-      return diff;
+  let v1parts = v1.split('.'),
+    v2parts = v2.split('.');
+
+  function isValidPart(x) {
+    return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
+  }
+
+  if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+    return NaN;
+  }
+
+  if (zeroExtend) {
+    while (v1parts.length < v2parts.length) v1parts.push("0");
+    while (v2parts.length < v1parts.length) v2parts.push("0");
+  }
+
+  if (!lexicographical) {
+    v1parts = v1parts.map(Number);
+    v2parts = v2parts.map(Number);
+  }
+
+  for (let i = 0; i < v1parts.length; ++i) {
+    if (v2parts.length == i) {
+      return 1;
+    }
+
+    if (v1parts[i] == v2parts[i]) {
+      continue;
+    }
+
+    if (v1parts[i] > v2parts[i]) {
+      return 1;
+    }
+    else {
+      return -1;
     }
   }
-  return segmentsA.length - segmentsB.length;
+
+  if (v1parts.length != v2parts.length) {
+    return -1;
+  }
+
+  return 0;
 }
 
 
@@ -120,7 +151,7 @@ PersistenceInstance.configLoaded$.pipe(
 
       const local = currentVersionJson.VERSION_TAG;
 
-      const isRemoteNewer = cmpVersions(version, local) > 0;
+      const isRemoteNewer = versionCompare(version, local) > 0;
 
       LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, {remote: version, local});
 
@@ -146,7 +177,7 @@ function loadJsonAsync (url: string): Promise<string> {
       resolve(body);
     });
   }).on('error', function(e){
-    LOGGER.error("Error loading version json: ", e);
+    LOGGER.error(e, "Error loading version json");
   });
 
   });

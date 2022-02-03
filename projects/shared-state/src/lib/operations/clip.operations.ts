@@ -1,17 +1,17 @@
-import {deleteItemInDictionary} from "../../../../utils/src/lib/utils";
-import {Clip, SettingsState} from "../../../../contracts/src/lib/types";
-import {uuidv4} from "../../../../utils/src/lib/uuid";
+import {deleteItemInDictionary} from "@memebox/utils";
+import {Action, SettingsState} from "@memebox/contracts";
+import {uuid} from "@gewd/utils";
 
 
-export function addClip(state: SettingsState, clip: Partial<Clip>, fillId = false) {
+export function addAction(state: SettingsState, clip: Partial<Action>, fillId = false) {
   if (fillId) {
-    clip.id = uuidv4();
+    clip.id = uuid();
   }
 
-  state.clips[clip.id] = clip as Clip;
+  state.clips[clip.id] = clip as Action;
 }
 
-export function deleteClip(data: SettingsState, id: string) {
+export function deleteAction(data: SettingsState, id: string) {
   deleteItemInDictionary(data.clips, id);
 
   const screenKeys = Object.keys(data.screen);

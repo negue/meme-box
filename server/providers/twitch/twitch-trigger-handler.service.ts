@@ -3,29 +3,31 @@ import {TwitchConnector} from "./twitch.connector";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
-import {Clip, Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
+import {Action, Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
 import {TwitchLogger} from "./twitch.logger";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {ExampleTwitchCommandsSubject} from "../../shared";
-import {ActionTriggerEventBus} from "../actions/action-trigger-event.bus";
-import {convertExtendedToTypeValues, getVariablesListOfAction} from "@memebox/action-variables";
+import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
+import {uuid} from "@gewd/utils";
+import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 
 @Injectable({
   type: ProviderType.SERVICE,
   scope: ProviderScope.SINGLETON
 })
-export class TwitchHandler {
+export class TwitchTriggerHandler {
   private cooldownDictionary: Dictionary<number> = {}; // last timestamp of twitch command
 
-  private actionsMap: Dictionary<Clip> = {};
+  private actionsMap: Dictionary<Action> = {};
 
   constructor(
     private _twitchConnector: TwitchConnector,
+    private _twitchEventBus: TwitchQueueEventBus,
     private _twitchLogger: TwitchLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private _mediaTriggerEventBus: ActionTriggerEventBus
+    private _mediaTriggerEventBus: ActionQueueEventBus
   ) {
 
     _persistence.dataUpdated$().subscribe(() => {
@@ -34,8 +36,8 @@ export class TwitchHandler {
 
     this.fillActionMap();
 
-    _twitchConnector
-      .twitchEvents$()
+    _twitchEventBus
+      .AllQueuedEvents$
       .subscribe(twitchEvent => {
         const foundCommandsIterator = getCommandsOfTwitchEvent(
           this._twitchConnector.twitchSettings,
@@ -95,24 +97,11 @@ export class TwitchHandler {
 
     this.cooldownDictionary[trigger.command.id] = Date.now();
 
-    const action = this.actionsMap[trigger.command.clipId];
-
-    const variablesOfAction = getVariablesListOfAction(action);
-
-    const variableValues: Dictionary<unknown> = {}
-
-    if (trigger.command.extended) {
-      for (let actionVariableConfig of variablesOfAction) {
-        variableValues[actionVariableConfig.name] = convertExtendedToTypeValues(
-          trigger.command.extended[actionVariableConfig.name], actionVariableConfig.type
-        )
-      }
-    }
-
     this._twitchLogger.log('BEFORE TRIGGER MEDIA BY EVENT BUS');
 
-    this._mediaTriggerEventBus.triggerMedia({
+    this._mediaTriggerEventBus.queueAction({
       id: trigger.command.clipId,
+      uniqueId: uuid(),
       targetScreen: trigger.command.screenId,
       origin: TriggerClipOrigin.TwitchEvent,
       originId: trigger.command.id,
@@ -121,16 +110,16 @@ export class TwitchHandler {
 
       overrides: {
         action: {
-          variables: variableValues
+          variables: trigger.command.extended
         }
       }
     });
   }
 
   private fillActionMap() {
-    const newMap: Dictionary<Clip> = {};
+    const newMap: Dictionary<Action> = {};
 
-    for (let listClip of this._persistence.listClips()) {
+    for (const listClip of this._persistence.listActions()) {
       newMap[listClip.id] = listClip;
     }
 

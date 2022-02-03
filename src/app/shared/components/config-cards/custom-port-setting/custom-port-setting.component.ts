@@ -1,9 +1,8 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
-import {AppQueries} from '../../../../../../projects/app-state/src/lib/state/app.queries';
-import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
+import {AppQueries, AppService} from '@memebox/app-state';
 import {DEFAULT_PORT} from "../../../../../../server/constants";
 import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
@@ -13,9 +12,6 @@ import {ConfigService} from "../../../../../../projects/app-state/src/lib/servic
   styleUrls: ['./custom-port-setting.component.scss']
 })
 export class CustomPortSettingComponent implements OnInit, OnDestroy {
-  @Input()
-  public showAdvancedOptions = true;
-
   public form = new FormBuilder().group({
     port: ''
   });

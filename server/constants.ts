@@ -55,8 +55,8 @@ export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
     hideFromOverview: true
   },
   {
-    name: 'Screen / Clip Advanced Settings',
-    githubName: 'screen_clip_advanced_settings.md',
+    name: 'Screen / visible Media Advanced Settings',
+    githubName: 'screen_media_advanced_settings.md',
     showHeader: false
   },
   {
@@ -81,7 +81,6 @@ export const DANGER_ENDPOINT = `${API_PREFIX}/danger`;
 export const CLIP_ENDPOINT = `${API_PREFIX}/clips`;
 export const CLIP_ID_ENDPOINT = `${API_PREFIX}/clips/:clipId`;
 
-export const TWITCH_ENDPOINT = `${API_PREFIX}/twitch_events`;
 export const TIMED_ENDPOINT = `${API_PREFIX}/timed_events`;
 
 export const STATE_ENDPOINT = `${API_PREFIX}/state`;
@@ -89,8 +88,5 @@ export const STATE_ENDPOINT = `${API_PREFIX}/state`;
 
 export const DANGER_CLEAN_CONFIG_ENDPOINT = `${API_PREFIX}/danger/clean_config`;
 export const DANGER_IMPORT_ALL_ENDPOINT = `${API_PREFIX}/danger/add_all`;
-export const FILES_ENDPOINT = `/files`;
-export const FILE_ENDPOINT = `/file/*`;
-export const FILE_BY_ID_ENDPOINT = `/fileById/:mediaId`;
 export const NETWORK_IP_LIST_ENDPOINT = `/network_ip_list`;
 

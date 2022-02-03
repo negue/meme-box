@@ -3,27 +3,27 @@ import {Subject} from "rxjs";
 import {TriggerAction, TriggerActionUpdate} from "@memebox/contracts";
 
 // UNTIL everything in the backend is refactored to TSED, we need some global instance
-export let CURRENT_MEMEBOX_MEDIATRIGGER_EVENT_BUS: ActionTriggerEventBus;
+export let CURRENT_MEMEBOX_ACTION_QUEUE_EVENT_BUS: ActionQueueEventBus;
 
 
 @Service()
-export class ActionTriggerEventBus {
+export class ActionQueueEventBus {
   private _allTriggerEvents$ = new Subject<TriggerAction>();
   private _allUpdateEvents$ = new Subject<TriggerActionUpdate>();
 
-  public AllTriggerEvents$ = this._allTriggerEvents$.asObservable();
+  public AllQueuedActions$ = this._allTriggerEvents$.asObservable();
   public AllUpdateEvents$ = this._allUpdateEvents$.asObservable();
 
   constructor() {
-    CURRENT_MEMEBOX_MEDIATRIGGER_EVENT_BUS = this;
+    CURRENT_MEMEBOX_ACTION_QUEUE_EVENT_BUS = this;
   }
 
 
-  public triggerMedia(triggerClip: TriggerAction) {
+  public queueAction(triggerClip: TriggerAction) {
     this._allTriggerEvents$.next(triggerClip);
   }
 
-  public updateMedia(triggerClip: TriggerAction) {
+  public updateActionProps(triggerClip: TriggerAction) {
     this._allUpdateEvents$.next(triggerClip);
   }
 }

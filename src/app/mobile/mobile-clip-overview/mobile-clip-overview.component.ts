@@ -8,10 +8,11 @@ import {
   WebsocketService
 } from "@memebox/app-state";
 import {Observable, Subject} from "rxjs";
-import {Clip, MEDIA_TYPE_INFORMATION} from "@memebox/contracts";
+import {Action, ACTION_TYPE_INFORMATION} from "@memebox/contracts";
 import {map, take, takeUntil, tap} from "rxjs/operators";
 import {sortClips} from "@memebox/utils";
 import orderBy from 'lodash/orderBy';
+import {DialogService} from "../../shared/dialogs/dialog.service";
 
 // once the tsconfig paths are working for server/app
 // extract this to its own "library"
@@ -25,7 +26,7 @@ function groupBy<T>(xs: T[], key: keyof T): {[key: string]: T[]} {
 interface IGroupedList {
   title: string;
   icon: string;
-  clips: Clip[];
+  clips: Action[];
   order: number;
 }
 
@@ -39,7 +40,7 @@ const SettingMobileColumnSize = 'MOBILE_COLUMN_SIZE';
 export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   public currentColumnSize = 50;
-  public groupedClipList$: Observable<IGroupedList[]> = this.appQueries.clipList$.pipe(
+  public groupedActionList$: Observable<IGroupedList[]> = this.appQueries.actionList$.pipe(
     tap(allClips => console.info('PRE',{allClips})),
     map(allClips => sortClips(allClips.filter(c => c.showOnMobile))),
     tap(allClips => console.info('POST', {allClips})),
@@ -52,7 +53,7 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
         .map(([key, clips]) => {
         const mediaType = +key;
 
-        const typeInfo = MEDIA_TYPE_INFORMATION[mediaType];
+        const typeInfo = ACTION_TYPE_INFORMATION[mediaType];
 
         return {
           clips: clips,
@@ -70,12 +71,15 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   ConnectionState = ConnectionState;
 
+  disabledRipple = false;
+
   private _destroy$ = new Subject();
   constructor(private appQueries: AppQueries,
               private appService: AppService,
               private _wsService: WebsocketService,
               private _settingsService: SettingsService,
-              public activityState: ActivityQueries) {
+              public activityState: ActivityQueries,
+              private _dialogService: DialogService) {
     const savedColumnSizeStringValue = this._settingsService.loadSetting(SettingMobileColumnSize, '50');
 
     // refactor later...
@@ -99,7 +103,7 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
   }
 
 
-  onPreview(item: Clip) {
+  onPreview(item: Action) {
     this._wsService.triggerClipOnScreen(item.id);
   }
 
@@ -115,5 +119,9 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   reloadPage() {
     location.reload();
+  }
+
+  showVariableDialog(action: Action) {
+    this._dialogService.showTriggerActionVariables(action);
   }
 }

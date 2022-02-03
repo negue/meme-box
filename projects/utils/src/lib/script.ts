@@ -1,5 +1,6 @@
-import {Clip, Dictionary} from "@memebox/contracts";
+import {Action, Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig, convertExtendedToTypeValues} from "@memebox/action-variables";
+import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
 
 export interface ScriptConfig {
@@ -13,24 +14,22 @@ export interface ScriptConfig {
 
 const SCRIPT_EXECUTION_KEY = '_executionScript';
 const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
-export const SCRIPT_VARIABLES_KEY = '_variables';
 const SCRIPT_SETTINGS_KEY = '_settings';
 
-export function clipDataToScriptConfig (clip: Partial<Clip>) {
-  if (!clip?.extended) {
+export function actionDataToScriptConfig (action: Partial<Action>) {
+  if (!action?.extended) {
     return null;
   }
 
   const dynamicContent: ScriptConfig = {
-    executionScript: clip.extended[SCRIPT_EXECUTION_KEY] ?? '',
-    bootstrapScript: clip.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
+    executionScript: action.extended[SCRIPT_EXECUTION_KEY] ?? '',
+    bootstrapScript: action.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
   };
 
-  const customVariables: ActionVariableConfig[] = JSON.parse(clip.extended[SCRIPT_VARIABLES_KEY] ?? '[]');
-  dynamicContent.variablesConfig = customVariables;
+  dynamicContent.variablesConfig = getVariablesListOfAction(action);
 
   // todo add a settings type
-  const settings: any = JSON.parse(clip.extended[SCRIPT_SETTINGS_KEY] ?? '{}');
+  const settings: any = JSON.parse(action.extended[SCRIPT_SETTINGS_KEY] ?? '{}');
   dynamicContent.settings = settings;
 
   return dynamicContent;
@@ -39,7 +38,7 @@ export function clipDataToScriptConfig (clip: Partial<Clip>) {
 
 export function applyScriptConfigToClipData (
   scriptConfig: ScriptConfig,
-  targetClip: Partial<Clip>
+  targetClip: Partial<Action>
 ) {
   console.info('PRE CHANGE', JSON.stringify(targetClip));
 
@@ -65,15 +64,26 @@ export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [
   SCRIPT_SETTINGS_KEY,
 ];
 
+export function extractVariablesFromExtended(
+  extended:  Dictionary<any>
+){
+  const extractedVariables = {...extended};
+
+  for (const propToRemove of NOT_ALLOWED_SCRIPT_VARIABLE_NAMES) {
+    delete extractedVariables[propToRemove];
+  }
+
+  return extractedVariables;
+}
 
 export function getScriptVariablesOrFallbackValues (
-  config: ScriptConfig,
+  variablesConfig: ActionVariableConfig[],
   scriptAssignedValues: Dictionary<any>,
   payloadAssignedValues?: Dictionary<any>
 ): Dictionary<unknown> {
   const newValueBag: Dictionary<unknown> = {};
 
-  for (const variablesConfigElement of (config.variablesConfig || [])) {
+  for (const variablesConfigElement of variablesConfig) {
 
     // Payload -> Script Assigned -> Fallback
     const valueOfVariable = convertExtendedToTypeValues(

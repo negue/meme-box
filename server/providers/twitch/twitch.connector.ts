@@ -1,8 +1,13 @@
 import * as tmi from 'tmi.js';
 import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
-import {Observable, Subject} from 'rxjs';
 import {debounceTime, startWith} from 'rxjs/operators';
-import {TwitchConfig, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from '@memebox/contracts';
+import {
+  TWITCH_BOT_RESPONSE_CONSTS,
+  TwitchConfig,
+  TwitchEventTypes,
+  TwitchTrigger,
+  TwitchTriggerCommand
+} from '@memebox/contracts';
 import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
 import {
@@ -10,7 +15,6 @@ import {
   TwitchChannelPointRedemptionEvent,
   TwitchChatMessage,
   TwitchCheerMessage,
-  TwitchEvent,
   TwitchGiftEvent,
   TwitchRaidedEvent,
   TwitchSubEvent
@@ -23,6 +27,8 @@ import {getLevelOfTags} from "./twitch.functions";
 import {PubSubClient} from 'twitch-pubsub-client';
 import {ApiClient, StaticAuthProvider} from "twitch";
 import {TwitchAuthInformationProvider} from "./twitch.auth-information";
+import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
+import {ConnectionsStateHub, UpdateStateFunc} from "../connections-state.hub";
 
 export type TmiConnectionType = "MAIN" | "BOT";
 
@@ -32,10 +38,12 @@ export class TwitchConnector {
   private tmiMainClient: tmi.Client;
   private tmiBotClient: tmi.Client;
   private tmiConnected: {[key: string]: boolean} = {};
-  private _receivedTwitchEvents = new Subject<TwitchEvent>();
   private _twitchBotEnabled = false;
   private _currentTwitchConfig: TwitchConfig;
 
+
+  private tmiReadOnlyState: UpdateStateFunc;
+  private tmiPubSubState: UpdateStateFunc;
 
   public twitchSettings: TwitchTrigger[] = [];
 
@@ -47,8 +55,17 @@ export class TwitchConnector {
 
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
 
-    private twitchAuth: TwitchAuthInformationProvider
+    private twitchAuth: TwitchAuthInformationProvider,
+    private twitchEventBus: TwitchQueueEventBus,
+    private connectionStateHub: ConnectionsStateHub,
   ) {
+    this.tmiReadOnlyState = this.connectionStateHub.registerService({
+      name: 'TMI Readonly Connection'
+    });
+    this.tmiPubSubState = this.connectionStateHub.registerService({
+      name: 'TMI PubSub Connection'
+    });
+
 
     // TODO better way to find out the config has changed
     let currentConfigJsonString = "";
@@ -94,10 +111,6 @@ export class TwitchConnector {
       });
   }
 
-  public twitchEvents$(): Observable<TwitchEvent> {
-    return this._receivedTwitchEvents.asObservable();
-  }
-
   public availableConnectionTypes (): TmiConnectionType[] {
     const types: TmiConnectionType[] = [];
 
@@ -112,14 +125,28 @@ export class TwitchConnector {
     return types;
   }
 
-  public async getTmiWriteInstance(type: TmiConnectionType) : Promise<tmi.Client> {
+  public async getTmiWriteInstance(type: TmiConnectionType|null = null) : Promise<tmi.Client> {
+    if (type === null) {
+      const availableTypes = this.availableConnectionTypes();
+
+      if (availableTypes.length === 0) {
+        throw Error('No Twitch Accounts added');
+      }
+
+      // prefer bot
+      if (availableTypes.includes('BOT')) {
+        type = 'BOT';
+      } else if (availableTypes.includes('MAIN')) {
+        type = 'MAIN';
+      }
+    }
+
     const client = type === 'BOT'
       ? (this.tmiBotClient ?? (this.tmiBotClient = this.createTmiConnection('BOT')))
       : (this.tmiMainClient ?? (this.tmiMainClient = this.createTmiConnection('MAIN')));
 
     if (!this.tmiConnected[type]) {
       await client.connect();
-
       this.tmiConnected[type] = true;
     }
 
@@ -189,9 +216,16 @@ export class TwitchConnector {
   private async connectAndListenTMI() {
     for (let tryOut = 0; tryOut < 3; tryOut++) {
       try {
+        this.tmiReadOnlyState({
+          label: 'Connecting'
+        });
         await this.tmiReadOnlyClient.connect();
         this.log({
           message: 'Connected to Twitch!'
+        });
+
+        this.tmiReadOnlyState({
+          label: 'Connected'
         });
         break;
       } catch (ex) {
@@ -200,7 +234,10 @@ export class TwitchConnector {
           message: `Error trying to connect to twitch - ${ex.message}`
         });
 
-        // TODO sent state to Dashboard
+        this.tmiReadOnlyState({
+          label: "Can't connect to Twitch",
+          description: ex.message
+        });
       }
     }
 
@@ -217,11 +254,11 @@ export class TwitchConnector {
         userstate
       });
 
-      this._receivedTwitchEvents.next(twitchEvent);
+      this.twitchEventBus.queueEvent(twitchEvent);
 
       // This is the bot handler, nothing after that needs to be handled
-      if (this._twitchBotEnabled && message === (this._currentTwitchConfig.bot?.command ?? '!commands')) {
-        this.handleCommandsRequest(userstate, message);
+      if (this._twitchBotEnabled && message === (this._currentTwitchConfig.bot?.command ?? TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_COMMANDS_TEXT)) {
+        this.handleCommandsRequest(userstate);
 
         return false;
       }
@@ -234,18 +271,18 @@ export class TwitchConnector {
         userstate,
       });
 
-      this._receivedTwitchEvents.next(twitchEvent);
+      this.twitchEventBus.queueEvent(twitchEvent);
     });
 
     this.tmiReadOnlyClient.on('raided', (channel: string, username: string, viewers: number) => {
-      this._receivedTwitchEvents.next(new TwitchRaidedEvent({
+      this.twitchEventBus.queueEvent(new TwitchRaidedEvent({
         channel, username, viewers
       }));
     });
 
     //Reason is being returned as null even when one is provided when banning someone
     this.tmiReadOnlyClient.on('ban', (channel: string, username:string, reason:string) => {
-      this._receivedTwitchEvents.next(new TwitchBanEvent({
+      this.twitchEventBus.queueEvent(new TwitchBanEvent({
         username, reason
       }));
     });
@@ -264,7 +301,7 @@ export class TwitchConnector {
         subtype: "anongiftpaidupgrade"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('giftpaidupgrade', (channel: string, username: string, sender: string, userState: Userstate) => {
@@ -281,7 +318,7 @@ export class TwitchConnector {
         subtype: "giftpaidupgrade"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods : SubMethods) => {
@@ -298,7 +335,7 @@ export class TwitchConnector {
         subtype: "resub"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('subgift', (channel: string, username:string, months:number, recipient: string, methods : SubMethods, userState: Userstate) => {
@@ -316,7 +353,7 @@ export class TwitchConnector {
         totalGifts: ~~userState["msg-param-sender-count"]
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('submysterygift', (channel: string, username: string, numberOfSubs: number, methods: SubMethods, userState: Userstate) => {
@@ -334,7 +371,7 @@ export class TwitchConnector {
         totalGifts: ~~userState["msg-param-sender-count"]
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
     this.tmiReadOnlyClient.on('subscription', (channel: string, username: string, methods: SubMethods, message: string, userState: Userstate) => {
@@ -351,7 +388,7 @@ export class TwitchConnector {
         subtype: "subscription"
       });
 
-      this._receivedTwitchEvents.next(twitchSubEvent);
+      this.twitchEventBus.queueEvent(twitchSubEvent);
     });
   }
 
@@ -359,8 +396,23 @@ export class TwitchConnector {
     const twitchAuth = await this.twitchAuth.getTwitchAuthAsync();
 
     if (!twitchAuth) {
+      this.tmiPubSubState({
+        label: 'No Auth'
+      });
+
       return;
     }
+
+    if (!twitchAuth.valid) {
+      this.tmiPubSubState({
+        label: 'Invalid Auth Token'
+      });
+      return;
+    }
+
+    this.tmiPubSubState({
+      label: 'Connecting'
+    });
 
     const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
     const apiClient = new ApiClient({ authProvider });
@@ -368,6 +420,11 @@ export class TwitchConnector {
 
     const pubSubClient = new PubSubClient();
     const userId = await pubSubClient.registerUserListener(apiClient);
+
+    this.tmiPubSubState({
+      label: 'Connected'
+    });
+
 
     pubSubClient.onRedemption(userId, channelPointRedemption => {
 
@@ -388,7 +445,7 @@ export class TwitchConnector {
         userDisplayName
       } = channelPointRedemption;
 
-      this._receivedTwitchEvents.next(new TwitchChannelPointRedemptionEvent({
+      this.twitchEventBus.queueEvent(new TwitchChannelPointRedemptionEvent({
         message,
         redemptionDate,
         rewardId,
@@ -402,7 +459,13 @@ export class TwitchConnector {
 
   }
 
-  handleCommandsRequest(tags: tmi.ChatUserstate, message: string): void {
+  async handleCommandsRequest(tags: tmi.ChatUserstate): Promise<void> {
+    const availableConnectionTypes = this.availableConnectionTypes();
+
+    if (availableConnectionTypes.length == 0) {
+      return;
+    }
+
     const foundLevels = getLevelOfTags(tags);
     const commands = this.twitchSettings.filter((event) => {
       const trigger: TwitchTriggerCommand = {command: event, tags};
@@ -417,11 +480,13 @@ export class TwitchConnector {
         )
       );
     }).map(e => e.contains);
+    const botResponse = (this._currentTwitchConfig.bot.response || TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_COMMANDS_TEXT)
+      .replace(TWITCH_BOT_RESPONSE_CONSTS.COMMANDS, commands.join(' | '))
+      .replace(TWITCH_BOT_RESPONSE_CONSTS.USER, `${tags.username}`);
 
-    const botResponse = this._currentTwitchConfig.bot.response
-      .replace('{{commands}}', commands.join(' | '))
-      .replace('{{user}}', `${tags.username}`);
-    this.tmiReadOnlyClient.say(this._currentTwitchConfig.channel, botResponse)
+    const tmiWrite = await this.getTmiWriteInstance();
+    await tmiWrite.ping().catch(() => tmiWrite.connect());
+    tmiWrite.say(this._currentTwitchConfig.channel, botResponse)
       .catch(ex => this.error(ex));
   }
 

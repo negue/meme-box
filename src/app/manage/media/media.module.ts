@@ -8,15 +8,13 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDividerModule} from '@angular/material/divider';
-import {ClipTypeModule} from '../../../../projects/state-components/src/lib/clip-type/clip-type.module';
+import {ClipChipsListModule, ClipTypeModule} from '@memebox/state-components';
 import {MatListModule} from '@angular/material/list';
-import {GettingStartedModule} from '../../shared/components/getting-started/getting-started.module';
 import {ConfigMediaPathModule} from './media-overview/config-media-path/config-media-path.module';
 import {MatChipsModule} from '@angular/material/chips';
 import {PipesModule} from '@memebox/ui-components';
 import {CardOverviewModule} from '../../shared/components/card-overview/card-overview.module';
 import {FilterModule} from '../../shared/components/filter/filter.module';
-import {ClipChipsListModule} from '@memebox/state-components';
 import {DynamicIframeModule} from '../../shared/components/dynamic-iframe/dynamic-iframe.module';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {AutoScaleModule} from '@gewd/components/auto-scale';
@@ -24,6 +22,7 @@ import {MediaCardModule} from './media-overview/media-card/media-card.module';
 import {GroupByMediaTypePipe} from './media-overview/group-by-media-type.pipe';
 import {TranslocoModule} from "@ngneat/transloco";
 import {ActionShortcutToolbarModule} from "./media-overview/action-shortcut-toolbar/action-shortcut-toolbar.module";
+import {MatInputModule} from "@angular/material/input";
 
 const routes: Routes = [
   {
@@ -46,7 +45,6 @@ const routes: Routes = [
     MatDividerModule,
     ClipTypeModule,
     MatListModule,
-    GettingStartedModule,
     ConfigMediaPathModule,
     MatChipsModule,
     CardOverviewModule,
@@ -57,7 +55,8 @@ const routes: Routes = [
     AutoScaleModule,
     MediaCardModule,
     TranslocoModule,
-    ActionShortcutToolbarModule
+    ActionShortcutToolbarModule,
+    MatInputModule
   ]
 })
 export class MediaModule {}

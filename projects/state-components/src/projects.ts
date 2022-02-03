@@ -9,7 +9,7 @@ export * from './lib/clip-type/clip-type.module';
 export * from './lib/clip-type/clip-type.component';
 
 export * from './lib/compact-clip-card/compact-clip-card.module';
-export * from './lib/compact-clip-card/compact-clip-card.component';
+export * from './lib/compact-clip-card/compact-action-card.component';
 
 
 export * from './lib/clip-chips-list/clip-chips-list.module';

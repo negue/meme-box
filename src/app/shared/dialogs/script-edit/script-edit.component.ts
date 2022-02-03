@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {isDynamicIframeVariableValid, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES, ScriptConfig} from "@memebox/utils";
 import {CustomScriptDialogPayload} from "../dialog.contract";
@@ -7,7 +7,7 @@ import {downloadFile} from "@gewd/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
 import {DialogService} from "../dialog.service";
 import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
-import {Clip, ClipAssigningMode, MediaType} from "@memebox/contracts";
+import {Action, ActionType, ClipAssigningMode} from "@memebox/contracts";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
 import {BehaviorSubject, Observable} from "rxjs";
 import {
@@ -27,7 +27,7 @@ export class ScriptEditComponent implements OnInit {
 
   public declaredActionsEntries$ = new BehaviorSubject<ActionEntry[]>([]);
 
-  public declaredActionInformation$: Observable<Clip[]> = this.declaredActionsEntries$.pipe(
+  public declaredActionInformation$: Observable<Action[]> = this.declaredActionsEntries$.pipe(
     withLatestFrom(this.appQuery.actionMap$),
     map(([declaredActions, clipMap]) => {
       return declaredActions.map(action => clipMap[action.uuid])
@@ -186,7 +186,7 @@ export class ScriptEditComponent implements OnInit {
 
       // todo get a variable name from the action name
 
-      const isAction = [MediaType.Script, MediaType.Meta].includes(selectedAction.type);
+      const isAction = [ActionType.Script, ActionType.Meta].includes(selectedAction.type);
 
     const codeToAdd = `const myActionVar = memebox.get${isAction ? 'Action' : 'Media'}('${actionId}');\n`;
 

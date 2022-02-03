@@ -8,6 +8,7 @@ import {
 import {timeoutAsync} from "./sleep.api";
 import merge from "lodash/merge";
 import {MemeboxApi} from "./memebox.api";
+import {uuid} from "@gewd/utils";
 
 export class MediaApi extends ActionApi {
   constructor(
@@ -19,8 +20,9 @@ export class MediaApi extends ActionApi {
   }
 
   updateScreenOptions(overrides: ScreenMediaOverridableProperties): Promise<void> {
-    this.memeboxApi.actionTriggerEventBus.updateMedia({
+    this.memeboxApi.actionTriggerEventBus.updateActionProps({
       id: this.actionId,
+      uniqueId: uuid(),
       origin: TriggerClipOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,
@@ -50,8 +52,9 @@ export class MediaApi extends ActionApi {
 
     console.info({newOverrides});
 
-    this.memeboxApi.actionTriggerEventBus.triggerMedia({
+    this.memeboxApi.actionTriggerEventBus.queueAction({
       id: this.actionId,
+      uniqueId: uuid(),
       origin: TriggerClipOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,

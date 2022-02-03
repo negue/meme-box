@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {Clip, Screen, Tag} from '@memebox/contracts';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {Action, Screen, Tag} from '@memebox/contracts';
 import {AppQueries, AppService, WebsocketService} from '@memebox/app-state';
 import {DialogService} from '../../../shared/dialogs/dialog.service';
 import {IFilterItem} from '../../../shared/components/filter/filter.component';
@@ -26,9 +26,12 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
 
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
-  public mediaList$: Observable<Clip[]> = filterClips$(
+  public searchText$ = new BehaviorSubject<string>('');
+
+  public mediaList$: Observable<Action[]> = filterClips$(
     this.query.state$,
-    this.filteredItems$
+    this.filteredItems$,
+    this.searchText$
   ).pipe(
     distinctUntilChanged((pre, now) => isEqual(pre, now))
   );
@@ -38,28 +41,19 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
   public tagList$: Observable<Tag[]> = this.query.tagList$;
   public inOfflineMode$: Observable<boolean> = this.query.inOfflineMode$;
 
+
   public filterItems$: Observable<IFilterItem[]> = createCombinedFilterItems$(
     this.query.state$,
     true
   );
 
-
-  public dontHaveActions$ = this.query.clipList$.pipe(
+  public dontHaveActions$ = this.query.actionList$.pipe(
     map((availableClips) => {
       return availableClips.length === 0;
     })
   );
 
-  public showGettingStarted$ = combineLatest([
-    this.query.clipList$,
-    this.screenList$
-  ]).pipe(
-    map(([availableClips, availableScreens]) => {
-      return availableClips.length === 0 || availableScreens.length === 0;
-    })
-  );
-
-  public trackById: TrackByFunction<Clip> = (index, item) => {
+  public trackById: TrackByFunction<Action> = (index, item) => {
     return item.id;
   };
 
@@ -94,7 +88,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     this.configService.fillDummyData();
   }
 
-  showDialog(clipInfo: Partial<Clip>): void {
+  showDialog(clipInfo: Partial<Action>): void {
     this._dialog.showMediaEditDialog({
       actionToEdit: clipInfo
     });
@@ -106,21 +100,21 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
     });
 
     if (result) {
-      await this.service.deleteClip(clipId);
+      await this.service.deleteAction(clipId);
     }
   }
 
-  onEdit(item: Clip): void {
+  onEdit(item: Action): void {
     this.showDialog(item);
   }
 
-  onPreview(item: Clip): void {
+  onPreview(item: Action): void {
     this._wsService.triggerClipOnScreen(item.id);
   }
 
   //TODO - the name and other information should come from the state
 
-  onClipOptions(item: Clip, screen: Screen): void {
+  onClipOptions(item: Action, screen: Screen): void {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,
@@ -148,5 +142,9 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
         type: mediGroup.mediaType
       }
     });
+  }
+
+  onTriggerWithVariables(item: Action) {
+    this._dialog.showTriggerActionVariables(item);
   }
 }

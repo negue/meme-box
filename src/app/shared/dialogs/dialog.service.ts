@@ -1,6 +1,6 @@
 import {Compiler, Injectable, Injector, TemplateRef, Type} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {Screen, TimedClip, TwitchTrigger} from "@memebox/contracts";
+import {Action, Screen, TimedAction, TwitchTrigger} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
 import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
@@ -59,6 +59,13 @@ export class DialogService {
     );
   }
 
+  showGettingStarted(info: any) {
+    this.loadAndOpen(
+      import('./getting-started/getting-started-dialog.module'),
+      info
+    );
+  }
+
   async showWidgetEdit(payload: CustomHtmlDialogPayload) {
     const dialogRef = await this.loadAndOpen(
       import('./widget-edit/widget-edit.module'),
@@ -78,7 +85,17 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  showTimedEditDialog(info: Partial<TimedClip>) {
+
+  async showTriggerActionVariables(payload: Action) {
+    const dialogRef = await this.loadAndOpen(
+      import('./trigger-action-variables/trigger-action-variables-dialog.module'),
+      payload
+    );
+
+    return dialogRef.afterClosed().toPromise();
+  }
+
+  showTimedEditDialog(info: Partial<TimedAction>) {
     this.loadAndOpen(
       import('./timed-edit/timed-edit.module'),
       info

@@ -1,8 +1,8 @@
 import {combineLatest, Observable} from "rxjs";
-import {IFilterItem, MEDIA_FILTER_TYPE, TYPE_FILTER_ITEMS} from "./filter.component";
-import {map} from "rxjs/operators";
-import {AppState, Clip, MediaType} from "@memebox/contracts";
-import {sortClips} from "../../../../../projects/utils/src/lib/sort-clips";
+import {FilterTypes, IFilterItem, TYPE_FILTER_ITEMS} from "./filter.component";
+import {debounceTime, map} from "rxjs/operators";
+import {Action, ActionType, AppState} from "@memebox/contracts";
+import {actionContentContainsText, hasAdditionalContentToSearch, sortClips} from "@memebox/utils";
 
 export function createCombinedFilterItems$ (
   state$: Observable<AppState>,
@@ -17,7 +17,7 @@ export function createCombinedFilterItems$ (
       // todo filter media types if not existing
 
       const allTags = new Set<string>();
-      const allTypes = new Set<MediaType>();
+      const allTypes = new Set<ActionType>();
 
       for (const clip of Object.values(state.clips)) {
         allTypes.add(clip.type);
@@ -37,8 +37,6 @@ export function createCombinedFilterItems$ (
         const tag = tagDictionary[value];
 
         if (tag) {
-          console.info({ value, tag, tagDictionary });
-
           filterItems.push({
             value,
             icon: 'tag',
@@ -67,35 +65,56 @@ export function createCombinedFilterItems$ (
 
 export function filterClips$(
   state$: Observable<AppState>,
-  selectedFilters$: Observable<IFilterItem[]>
-): Observable<Clip[]> {
+  selectedFilters$: Observable<IFilterItem[]>,
+  searchByText$: Observable<string>
+): Observable<Action[]> {
   return combineLatest([
     state$,
-    selectedFilters$
+    selectedFilters$,
+    searchByText$.pipe(
+      debounceTime(300),
+      map(searchText => searchText.toLowerCase())
+    )
   ]).pipe(
-    map(([state, filteredItems]) => {
-      const allClips = Object.values(state.clips);
+    map(([state, filteredItems, searchByText]) => {
+      const allActions = Object.values(state.clips);
 
-      if (filteredItems.length === 0) {
-        return allClips;
+      if (!searchByText && filteredItems.length === 0) {
+        return allActions;
       }
 
-      const listOfTypes: MediaType[] = filteredItems
-        .filter(f => f.type === MEDIA_FILTER_TYPE)
+      const listOfTypes: ActionType[] = filteredItems
+        .filter(f => f.type === FilterTypes.ActionTypes)
         .map(f => f.value);
 
       const listOfTagIds: string[] = filteredItems
-        .filter(f => f.type === 'TAG')
+        .filter(f => f.type === FilterTypes.Tags)
         .map(f => f.value);
 
       const listOfScreenIds: string[] = filteredItems
-        .filter(f => f.type === 'SCREEN')  // TODO extract filterTag consts
+        .filter(f => f.type === FilterTypes.Screens)
         .map(f => f.value);
 
 
-      return allClips.filter(clip => {
+      return allActions.filter(action => {
+        // todo maybe fuzzy or other search improvements
+        if (searchByText) {
+          const nameContainsSearchedText = action.name.toLowerCase().includes(searchByText);
+          const descriptionContainsSearchedText = action.description?.toLowerCase().includes(searchByText) ?? false;
+
+          const contentContainSearchedText = hasAdditionalContentToSearch(action.type)
+            ? actionContentContainsText(action, searchByText)
+            : false;
+
+          if (!nameContainsSearchedText && !descriptionContainsSearchedText && !contentContainSearchedText)
+          {
+            return false;
+          }
+        }
+
+
         if (listOfTypes.length !== 0) {
-          const allowedByType = listOfTypes.includes(clip.type);
+          const allowedByType = listOfTypes.includes(action.type);
 
           if (!allowedByType) {
             return false;
@@ -104,7 +123,7 @@ export function filterClips$(
 
 
         if (listOfScreenIds.length !== 0) {
-          const allowedByScreen = listOfScreenIds.some(screenId => !!state.screen[screenId].clips[clip.id]);
+          const allowedByScreen = listOfScreenIds.some(screenId => !!state.screen[screenId].clips[action.id]);
 
           if (!allowedByScreen) {
             return false;
@@ -113,7 +132,7 @@ export function filterClips$(
 
 
         if (listOfTagIds.length !== 0) {
-          const allowedByTag = listOfTagIds.every(filterTagId => clip.tags?.includes(filterTagId) );
+          const allowedByTag = listOfTagIds.every(filterTagId => action.tags?.includes(filterTagId) );
 
           if (!allowedByTag) {
             return false;

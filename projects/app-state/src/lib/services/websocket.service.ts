@@ -1,8 +1,16 @@
 import {Inject, Injectable, InjectionToken} from '@angular/core';
-import {ActionActiveStatePayload, ACTIONS, ActionStateEnum, TriggerAction, TriggerClipOrigin} from "@memebox/contracts";
+import {
+  ActionActiveStatePayload,
+  ACTIONS,
+  ActionStateEnum,
+  TriggerAction,
+  TriggerActionOverrides,
+  TriggerClipOrigin
+} from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
 import {filter, mapTo, take} from "rxjs/operators";
+import {uuid} from "@gewd/utils";
 
 export enum ConnectionState{
   NONE,
@@ -64,14 +72,18 @@ export class WebsocketService {
     this.ws.send(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);
   }
 
-  public triggerClipOnScreen(clipId: string, screenId?: string | null) {
+  public triggerClipOnScreen(clipId: string,
+                             screenId?: string | undefined,
+                             overrides?: TriggerActionOverrides) {
     const triggerObj: TriggerAction = {
       id: clipId,
+      uniqueId: uuid(),
       targetScreen: screenId,
       repeatX: 0,  // todo after streamdeck ?
       repeatSecond: 0,
 
-      origin: TriggerClipOrigin.AppPreview
+      origin: TriggerClipOrigin.AppPreview,
+      overrides
     }
 
     this.ws.send(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);

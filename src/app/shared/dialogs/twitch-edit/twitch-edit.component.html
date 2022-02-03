@@ -17,25 +17,46 @@
         </div>
 
         <div class="example-container">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="fill" *transloco="let t; read: 'twitch' ">
             <mat-label>Twitch Event Type</mat-label>
             <mat-select [required]="true"
                         formControlName="event">
               <mat-option *ngFor="let item of twitchEvents"
                           [value]="item">
-                {{ item }}
+                {{ t(item) }}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
 
         <div class="example-container" *ngIf="form.value.event === twitchEventTypes.message">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
             <mat-label>Message text to trigger event</mat-label>
             <input autocomplete="off"
                    formControlName="contains"
                    placeholder="!wow"
                    matInput>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Aliases</mat-label>
+            <mat-chip-list #chipList aria-label="Tag selection">
+              <mat-chip
+                *ngFor="let alias of currentAliases$ | async"
+                [selectable]="false"
+                [removable]="true"
+                (removed)="removeAlias(alias)">
+                {{alias}}
+                <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
+              </mat-chip>
+              <input
+                #tagInput
+                [formControl]="aliasesFrmControl"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="enterNewAlias($event)" autocomplete="off"
+                (blur)="enterNewAlias({input: tagInput, value: tagInput.value})">
+            </mat-chip-list>
           </mat-form-field>
         </div>
 
@@ -113,7 +134,14 @@
     </div>
     <div class="column" *ngIf="clipDictionary$ | async as clipDictionary">
       <div class="example-container">
-        <h2>Select action</h2>
+        <h2>Select action
+
+
+          <app-open-action-settings-button *ngIf="selectedAction$ | async as action"
+                                           [action]="action">
+
+          </app-open-action-settings-button>
+        </h2>
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
@@ -139,16 +167,17 @@
 
       <br />
 
-      <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name">
-        Variables:
+      <ng-container *ngIf="selectedAction$ | async as action">
+        <ng-container *ngIf="action.extended && action.extended['_variables']">
+          Variables:
 
-        <app-action-variables-assignments [appVariablesConfigByActionId]="form.value.clipId"
-                                          [data]="data.extended"
-                                          [fallbackData]="clipDictionary[form.value.clipId].extended"
-        (dataChanged)="data.extended = $event">
+          <app-action-variables-assignments [appVariablesConfigByActionId]="action.id"
+                                            [data]="data.extended"
+                                            [fallbackData]="action.extended"
+                                            (dataChanged)="data.extended = $event">
 
-        </app-action-variables-assignments>
-
+          </app-action-variables-assignments>
+        </ng-container>
       </ng-container>
       <br/>
 
@@ -170,10 +199,14 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="save()"
-          color="primary"
-          mat-raised-button>{{ data.id ? 'Update Event' : 'Add Event' }}</button>
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <app-open-feedback-button feedbackTarget="Twitch Trigger Dialog"></app-open-feedback-button>
+  </div>
+  <div class="column" align="end" >
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()"
+            color="primary"
+            mat-raised-button>{{ data.id ? 'Update Trigger' : 'Add Trigger' }}</button>
+  </div>
 </mat-dialog-actions>
-

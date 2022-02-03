@@ -33,13 +33,16 @@ export enum TriggerClipOrigin {
  * TODO RENAME because of the other TriggerBase
  */
 export interface InternalActionTriggerBase {
-
   id: string;   // actionId
+  uniqueId: string;
+  // a unique ID only for this current trigger
+  // OR actionUpdate call (which only updates specific properties or a running action)
   targetScreen?: string;
 
   fromWebsocket?: boolean;
   origin?: TriggerClipOrigin;
   originId?: string;
+  originUniqueId?: string;
 }
 
 export interface ActionOverridableProperties {

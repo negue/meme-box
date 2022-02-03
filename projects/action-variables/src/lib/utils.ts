@@ -1,9 +1,9 @@
 import {SCRIPT_VARIABLES_KEY} from "@memebox/utils";
 import {ActionVariableConfig, ActionVariableTypes} from "./types";
-import {Clip, MediaType} from "@memebox/contracts";
+import {Action, ActionType} from "@memebox/contracts";
 
-export function getVariablesListOfAction(action: Clip): ActionVariableConfig[] {
-  if (![MediaType.Widget, MediaType.Script].includes(action.type)) {
+export function getVariablesListOfAction(action: Action): ActionVariableConfig[] {
+  if (![ActionType.Widget, ActionType.Script].includes(action.type)) {
     return [];
   }
 

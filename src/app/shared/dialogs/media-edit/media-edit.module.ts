@@ -21,8 +21,9 @@ import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {PipesModule, StepperContentModule} from "@memebox/ui-components";
+import {HintPanelModule, PipesModule, StepperContentModule} from "@memebox/ui-components";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,9 @@ import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
     PipesModule,
     ClipTypeModule,
     ActionVariablesAssignmentsModule,
-    StepperContentModule
+    StepperContentModule,
+    HintPanelModule,
+    OpenFeedbackButtonModule
   ],
   providers: [],
 })

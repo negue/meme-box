@@ -3,7 +3,7 @@ import {NamedLogger} from "../named-logger";
 import * as WebSocket from "ws";
 import {ActionActiveStatePayload, ACTIONS, Dictionary, TriggerAction} from "@memebox/contracts";
 import {Subject} from "rxjs";
-import {ActionTriggerEventBus} from "../actions/action-trigger-event.bus";
+import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
 import {ActionActiveStateEventBus} from "../actions/action-active-state-event.bus";
 import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
 
@@ -20,7 +20,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
 
   constructor(
     @UseOpts({name: 'WS.MemeBox'}) public logger: NamedLogger,
-    private mediaTriggerEventBus: ActionTriggerEventBus,
+    private mediaTriggerEventBus: ActionQueueEventBus,
     private mediaStateEventBus: ActionActiveStateEventBus
   ) {
     super('');
@@ -87,7 +87,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
         // TODO refactor this dependency pingpong
 
         if (!payloadObs.targetScreen) {
-          this.mediaTriggerEventBus.triggerMedia(payloadObs);
+          this.mediaTriggerEventBus.queueAction(payloadObs);
         } else {
           this.sendDataToScreen(payloadObs.targetScreen, message);
         }
@@ -109,4 +109,6 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
       }
     }
   }
+
+  WebSocketServerLabel = 'WS: Memebox Connections';
 }

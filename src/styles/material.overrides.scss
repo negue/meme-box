@@ -56,6 +56,10 @@ $custom-typography: mat-typography-config(
     background-color: var(--card-background-color) !important;
   }
 
+  .mat-expansion-panel {
+    background-color: var(--card-background-color);
+  }
+
   .mat-table {
     background: transparent !important;
   }
@@ -110,6 +114,12 @@ $custom-typography: mat-typography-config(
     // wonder why the current style is pushing the icon down?!
     height: initial;
   }
+}
+
+.mat-snack-bar-container {
+  top: 2rem;
+  position: absolute;
+  right: 0;
 }
 
 .mat-snack-bar-container.danger {

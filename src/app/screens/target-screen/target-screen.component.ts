@@ -3,11 +3,11 @@ import * as css from 'css';
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
 import {
+  Action,
+  ActionType,
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
-  Clip,
   CombinedClip,
-  MediaType,
   Screen,
   ScreenClip,
   TriggerAction
@@ -177,7 +177,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
           return;
         }
 
-        if (screenClipSettings.clip.type === MediaType.IFrame) {
+        if (screenClipSettings.clip.type === ActionType.IFrame) {
           const item = this.clipToControlMap.get(screenClipSettings.clip.id) as HTMLIFrameElement;
 
           if (item && item.contentDocument) {
@@ -214,10 +214,10 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     console.info({log: this.log});
   }
 
-  addToMap(value: Clip, element: any) {
+  addToMap(value: Action, element: any) {
     this.clipToControlMap.set(value.id, element);
 
-    if (value.type === MediaType.IFrame){
+    if (value.type === ActionType.IFrame){
 
       console.warn('Is Iframe');
       this.mediaClipList$.pipe(
@@ -233,7 +233,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       } )
     }
 
-    if (value.type === MediaType.Widget){
+    if (value.type === ActionType.Widget){
 
       console.warn('Is HTML (iframe)');
       this.mediaClipList$.pipe(
@@ -251,8 +251,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     return `rgba(${o(r() * s)},${o(r() * s)},${o(r() * s)},0.34)`;
   }
 
-  parseAndApplyClipCssRules(screenClip: ScreenClip) {
-
+  parseAndApplyClipCssRules(screenClip: ScreenClip): css.Stylesheet {
     const obj = css.parse(screenClip.customCss, {
       silent: true
     });
@@ -343,8 +342,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  toScreenClipCssAgain(screenClip: ScreenClip) {
+  toScreenClipCssAgain(screenClip: ScreenClip): string {
     const obj = this.parseAndApplyClipCssRules(screenClip);
+
+    if (obj.stylesheet.parsingErrors) {
+      return screenClip.customCss;
+    }
 
     return css.stringify(obj);
   }

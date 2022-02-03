@@ -3,7 +3,7 @@ import {TwitchEventTypes} from './types';
 // TODO merge App / Server Endpoint CONSTANTS
 
 export const ENDPOINTS = {
-  CLIPS: 'clips',
+  CLIPS: 'clips',   // TODO CHECK if a rename is possible without breaking anything
   TAGS: 'tags',
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
@@ -11,9 +11,7 @@ export const ENDPOINTS = {
   OPEN: 'open',
   STATE: 'state',
 
-  TWITCH_EVENTS: 'twitch_events',
   TIMED_EVENTS: 'timed_events',
-  TWITCH_TRIGGER: 'twitch_events/trigger',
   NETWORK_LIST: 'network_ip_list',
 
   CONFIG: {
@@ -22,6 +20,14 @@ export const ENDPOINTS = {
     OBS: '/obs',
     CUSTOM_PORT: '/customPort'
   },
+
+  TWITCH_EVENTS: {
+    PREFIX: 'twitch_events',
+    TRIGGER_CONFIG_EXAMPLE: '/trigger_config_example',
+    TRIGGER_EVENT: '/trigger_event',
+    LAST_20_EVENTS: '/last_events'
+  },
+
 
   TWITCH_DATA: {
     PREFIX: 'twitchData',
@@ -34,7 +40,19 @@ export const ENDPOINTS = {
   ACTION_ACTIVITY: {
     PREFIX: 'actionActivity',
     CURRENT: '/current'
-  }
+  },
+
+  ACTION: {
+    PREFIX: 'action',
+    SIMPLE_LIST: '/simpleList'
+  },
+
+  FILE: {
+    PREFIX: 'file',
+    ANY_FILE: '/*',
+    BY_ID: '/fileById/',
+    PREVIEW: '/preview/'
+  },
 }
 
 export const OPEN_CONFIG_PATH = `/config`;
@@ -54,5 +72,16 @@ export const TwitchTypesArray = [
 
 export const WEBSOCKET_PATHS = {
   TWITCH_EVENTS: '/ws/twitch_events',
-  ACTION_ACTIVITY: '/ws/action_activity'
+  ACTION_ACTIVITY: '/ws/action_activity',
+  CONNECTIONS_STATE: '/ws/connections_state',
+  ERRORS: '/ws/errors',
+};
+
+export const TWITCH_BOT_RESPONSE_CONSTS = {
+  COMMANDS: '{{commands}}',
+  USER: '{{user}}',
+  DEFAULT_COMMANDS_TEXT: `
+    @{{user}}, you are able to trigger the following commands: {{commands}}
+  `.trim(),
+  DEFAULT_TRIGGER: '!commands'
 }

@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+}
+
+mat-dialog-content {
+  flex: 1;
+}
+
+mat-dialog-actions {
+  display: flex;
+}
+.space {
+  flex: 1;
+}

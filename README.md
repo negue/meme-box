@@ -55,6 +55,8 @@ Misc:
 
 [✅ `Streamdeck Plugin`][STREAMDECK_PLUGIN]
 <br/>
+[✅ `Deckboard Plugin`](https://github.com/gigili/deckboard-memebox)
+<br/>
 ✅ Timers <br/>
 ✅ Mobile View <br/>
 ✅ Twitch Events<br/>
@@ -155,31 +157,19 @@ Misc:
 [URL_META_CLIPS]: tutorials/meta_media.md
 [URL_SCRIPTS]: tutorials/scripts.md
 [URL_WIDGETS]: tutorials/widgets.md
-[URL_ADVANCED_SETTINGS]: ./tutorials/screen_clip_advanced_settings.md
+[URL_ADVANCED_SETTINGS]: ./tutorials/screen_media_advanced_settings.md
 [STREAMDECK_PLUGIN]: ./memebox-streamdeck/Release/com.memebox.memebox-streamdeck.streamDeckPlugin
 
 ___
 
 ## Roadmap
 
-### 2021.3.0
-* [x] Widgets (previously `HTML`)
-  * [x] API for Twitch or Events that its shown and so on
-  * [x] Templates
-  * [x] Widget-Variables
-  * [x] Import / Export Widgets
-  * [x] Persistence of the Widget State across Screens
-* [x] Custom Port Settings, default Port now on 6363
-* [x] Electron can be hidden into the Tray
-* [x] "Action Type": `Scripts` for more advanced features
-  * [x] Wait once a triggered clip (inside the script) is done to trigger other stuff
-  * [x] Use custom variables like in the Widget-Variables for easier configs
-* [x] "Action Type": `Permanent Scripts` for even more advanced features
-  * [x] Create your own custom WebSocket Server
-  * [x] Create your own logic to react on "stuff"
-* [ ] Overhaul of the Media Creation Dialog(s)
+### 2022.1
+See finished and upcoming changes in:
+- [CHANGELOG.md](CHANGELOG.md)
+- [`Milestone 2022.1`](https://github.com/negue/meme-box/milestone/5)
 
-### 2021.4.0
+### 2022.2
 * [ ] Labels on or around the Media, each with their own Position / Animation
   * [ ] Changeable by Trigger Variables
   * [ ] Can be placed like in the Arrange View
@@ -191,6 +181,7 @@ ___
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
 * [ ] Stats per commands / media / or something last cheerer and so on
+* [ ] Visual Scripting, if anyone has a good webcomponents for that - open an issue
 * [ ] more to be added :)
 
 ## How to help / contribute?

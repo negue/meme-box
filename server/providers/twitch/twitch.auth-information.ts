@@ -41,7 +41,7 @@ export class TwitchAuthInformationProvider {
 
     const validation = await fetch( "https://id.twitch.tv/oauth2/validate", {
       headers: {
-        "Authorization": `OAuth ${password}`
+        "Authorization": `Bearer ${password}`
       }
     }).then( r => r.json() );
 
@@ -52,6 +52,7 @@ export class TwitchAuthInformationProvider {
       userId: validation.user_id,
       token: password,
       expires_in: validation.expires_in,
+      expires_in_date: Date.now() + (validation.expires_in * 1000),
       login: validation.login,
       scopes: validation.scopes
     }

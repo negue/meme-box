@@ -44,6 +44,7 @@ export interface TwitchAuthResult {
   token: string;
   login: string;
   expires_in: number;
+  expires_in_date: number; // this is the timestamp when its fully expired
   scopes: string[];
   valid: boolean;
   reason?: string;

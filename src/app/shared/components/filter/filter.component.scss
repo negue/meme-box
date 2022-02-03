@@ -1,11 +1,17 @@
 @import '~angular-material-css-vars/public-util';
 
 :host {
-  ::ng-deep .mat-chip {
-    &.mat-chip.mat-standard-chip {
-      &.filterChip--selected {
-        background-color: mat-css-color-accent();
+  ::ng-deep {
+    .mat-chip {
+      &.mat-chip.mat-standard-chip {
+        &.filterChip--selected {
+          background-color: mat-css-color-accent();
+        }
       }
+    }
+
+    .mat-expansion-panel-body {
+      padding: 0;
     }
   }
 }
@@ -50,6 +56,31 @@
   }
 }
 
+.filterRow__searchInput {
+  margin-top: -1.5rem;
+  margin-bottom: -1rem;
+  margin-right: 1rem;
+  width: 170px;
+}
+
+.filterRow__searchInput__reset {
+  color: rgba(var(--palette-warn-500), 1);
+  height: 1rem;
+  width: 1rem;
+
+  top: 0.5rem;
+}
+
+.filterTable__row {
+  &:hover {
+    background-color: var(--card-background-color);
+  }
+
+  td {
+    padding: 0.5rem;
+  }
+}
+
 .filterChip {
   cursor: pointer;
 }
@@ -69,4 +100,8 @@
 
 mat-chip-list {
   flex: 1;
+}
+
+table {
+  width: 100%;
 }

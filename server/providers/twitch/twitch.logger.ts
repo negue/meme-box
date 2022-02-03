@@ -1,9 +1,9 @@
 import {Injectable, ProviderScope, ProviderType, UseOpts} from "@tsed/di";
-import {TwitchConnector} from "./twitch.connector";
 import {NamedLogger} from "../named-logger";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
+import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 
 @Injectable({
   type: ProviderType.SERVICE,
@@ -14,7 +14,7 @@ export class TwitchLogger {
 
   constructor(
     @UseOpts({name: 'TwitchLogger'}) private logger: NamedLogger,
-    private _twitchConnector: TwitchConnector,
+    private twitchEventBus: TwitchQueueEventBus,
 
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
   ) {
@@ -23,14 +23,15 @@ export class TwitchLogger {
       // will be removed once refactor is done
       logger.customFile({
         name: 'twitch',
-        date: true,
+        date: false,
+        maxLogSize: 50
       });
       this._logEnabled = true;
     }
 
 
-    _twitchConnector
-      .twitchEvents$()
+    twitchEventBus
+      .AllQueuedEvents$
       .subscribe(value => {
         if (this._logEnabled) {
           logger.info(value);

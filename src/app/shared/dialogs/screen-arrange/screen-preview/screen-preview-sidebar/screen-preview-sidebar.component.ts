@@ -1,6 +1,7 @@
 import {Component, Input} from '@angular/core';
+import {uuid} from '@gewd/utils';
 import {CombinedClip, Screen} from '@memebox/contracts';
-import {WebsocketService} from '../../../../../../../projects/app-state/src/lib/services/websocket.service';
+import {WebsocketService} from '@memebox/app-state';
 
 @Component({
   selector: 'app-screen-preview-sidebar',
@@ -20,6 +21,7 @@ export class ScreenPreviewSidebarComponent {
   onPreview(visibleItem: CombinedClip): void {
     this.wsService.onTriggerClip$.next({
       id: visibleItem.clip.id,
+      uniqueId: uuid(),
       targetScreen: this.screen.id
     });
   }

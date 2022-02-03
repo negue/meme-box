@@ -8,6 +8,10 @@
       margin-left: 0 !important;
     }
 
+    .mat-card-header-text {
+      margin-right: 2.5rem;
+    }
+
     .mat-card-image {
       margin: 0 -16px 0px -16px;
     }
@@ -19,20 +23,27 @@
   }
 
   .hide_until_hover:not(:active):not(:hover):not(.isOpened) {
-    opacity: 0;
+    opacity: 0.3;
   }
 
-  &:hover {
-    .hide_until_hover {
+    .hide_until_hover:hover {
       opacity: 1 !important;
     }
-  }
 }
 
-.mat-icon-button {
-  position: absolute;
-  top: 0.25rem;
-  right: 0.5rem;
+.card__header {
+  .mat-icon-button {
+    position: absolute;
+    top: 0.25rem;
+
+    &.hide_until_hover {
+      right: 0.5rem;
+    }
+
+    &.edit_icon {
+      right: 2rem;
+    }
+  }
 }
 
 .mediaInfo__preview__img {
@@ -43,6 +54,8 @@
 
 .mc__actions-container {
   position: relative;
+  display: flex;
+  justify-content: space-between;
 
   &__supplemental {
     top: 6px;

@@ -12,12 +12,13 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
-import {ClipPreviewModule} from "../../../../projects/state-components/src/lib/clip-preview/clip-preview.module";
+import {ClipPreviewModule} from "@memebox/state-components";
 import {TimedEventInfoComponent} from "./events-overview/twitch-event-info/timed-event-info.component";
 import {TwitchEventInfoComponent} from "./events-overview/timed-event-info/twitch-event-info.component";
-import {PipesModule} from "../../../../projects/ui-components/src/lib/pipes/pipes.module";
+import {PipesModule} from "@memebox/ui-components";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatMenuModule} from "@angular/material/menu";
+import {TRANSLOCO_TWITCH_SCOPE} from "../../transloco/transloco.scopes";
 
 const routes: Routes = [
   {
@@ -45,6 +46,9 @@ const routes: Routes = [
     PipesModule,
     MatTooltipModule,
     MatMenuModule
+  ],
+  providers: [
+    TRANSLOCO_TWITCH_SCOPE
   ]
 })
 export class TriggersModule {

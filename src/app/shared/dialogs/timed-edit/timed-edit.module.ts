@@ -4,14 +4,17 @@ import {DialogContract} from "../dialog.contract";
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {TimedEditComponent} from "./timed-edit.component";
-import {TimedClip} from "@memebox/contracts";
+import {TimedAction} from "@memebox/contracts";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {ClipPreviewModule} from "../../../../../projects/state-components/src/lib/clip-preview/clip-preview.module";
-import {PipesModule} from "../../../../../projects/ui-components/src/lib/pipes/pipes.module";
+import {ClipPreviewModule} from "@memebox/state-components";
+import {PipesModule} from "@memebox/ui-components";
 import {MatSelectModule} from "@angular/material/select";
+import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
+import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
+import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
 @NgModule({
   declarations: [
@@ -27,14 +30,17 @@ import {MatSelectModule} from "@angular/material/select";
     ClipPreviewModule,
     PipesModule,
     MatSelectModule,
+    OpenActionSettingsButtonModule,
+    ActionVariablesAssignmentsModule,
+    OpenFeedbackButtonModule
   ],
   providers: [],
 })
-export class TimedEditModule implements DialogContract<TimedClip> {
+export class TimedEditModule implements DialogContract<TimedAction> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: TimedClip): MatDialogRef<any> {
+  public openDialog (payload: TimedAction): MatDialogRef<any> {
     const dialogRef = this.dialog.open(TimedEditComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',

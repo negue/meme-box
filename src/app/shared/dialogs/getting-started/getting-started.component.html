@@ -1,0 +1,169 @@
+<h2 mat-dialog-title> Getting Started </h2>
+<mat-dialog-content class="mat-typography" [scrollTop]="0" #dialogContent>
+
+  To get started on using MemeBox here are a few quick steps to follow to get you setup and ready <br/>
+
+  <table>
+    <tr>
+      <td>
+        Media Folder:
+      </td>
+      <td>
+        <ng-container *ngIf="!(hasMediaFolder$ | async); else mediaFolderSelected">
+          <div class="item-with-padding entry">
+            <button (click)="openMediaFolderDialog()" color="primary"
+                    mat-raised-button class="full-width">
+              <mat-icon svgIcon="edit"></mat-icon>
+              Choose Media Folder
+            </button>
+
+            <div class="explanation">You need this "Media Folder" if you want to select local media files to be triggered.</div>
+          </div>
+        </ng-container>
+        <ng-template #mediaFolderSelected>
+          <div class="strikethrough entry">
+            Choose Media Folder
+          </div>
+        </ng-template>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Screens:
+      </td>
+      <td>
+        <ng-container *ngIf="(screenList$ | async).length  === 0; else screenAdded">
+          <button (click)="newScreen()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
+            Add a screen
+          </button>
+        </ng-container>
+        <ng-template #screenAdded>
+          <div class="strikethrough">
+            Added a screen
+          </div>
+
+          <br>
+
+          Now you need to create add this Screen to OBS:
+
+          <ol *ngIf="firstScreen$ | async as firstScreen">
+            <li>
+              In OBS, in your Sources-List press on the Plus Button
+            </li>
+            <li>
+              Select Browser
+            </li>
+            <li>
+              Copy the following URL into the URL Field:
+              <br >
+              <br >
+
+              <code>{{(networkUrl$|async)?.address}}/#/screen/{{firstScreen.id}}</code>
+
+              <br />
+              &nbsp;
+            </li>
+            <li>
+              Change Width to <code>{{firstScreen.width}}</code> and Height to <code>{{firstScreen.height}}</code>
+            </li>
+            <li>
+              Press the OK Button
+            </li>
+          </ol>
+        </ng-template>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        Actions:
+      </td>
+      <td>
+        <ng-container *ngIf="(mediaList$ |async).length === 0; else mediaClipAdded">
+          <button (click)="newMediaClip()" class="full-width"
+                  color="primary"
+                  mat-raised-button>
+            Add actions
+          </button>
+
+          <br >
+          <div class="explanation">
+            Actions are a generic name for (in) visible tasks to trigger.
+
+            <br>
+
+            Visible ones can be added to a Screen.
+          </div>
+
+        </ng-container>
+        <ng-template #mediaClipAdded>
+          <span class="strikethrough">
+            Add actions
+          </span>
+        </ng-template>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Triggers:
+      </td>
+      <td>
+        You can trigger these Actions by using one of the following:
+        <table>
+          <tr>
+            <td>
+              <ng-container *ngIf="(twitchChannelExist$ | async) === false; else twitchSetup">
+                <button (click)="openTwitchConfigs()" class="full-width"
+                        color="primary"
+                        mat-raised-button>
+                  Setup Twitch Connection
+                </button>
+              </ng-container>
+              <ng-template #twitchSetup>
+                <button (click)="newTwitchTrigger()" class="full-width"
+                        color="accent"
+                        mat-raised-button>
+
+                  <mat-icon svgIcon="add"></mat-icon>
+                  Add new twitch trigger
+                </button>
+              </ng-template>
+            </td>
+            <td>
+              <button (click)="showMobileUrlDialog()" class="full-width"
+                      color="primary"
+                      mat-raised-button>
+
+                <mat-icon svgIcon="smartphone"></mat-icon>
+                Show Mobile View URL
+              </button>
+            </td>
+            <td>
+              <button (click)="openStreamDeckPluginUrl()" class="full-width"
+                      color="primary"
+                      mat-raised-button>
+
+                <mat-icon svgIcon="launch"></mat-icon>
+                Download Streamdeck Plugin
+              </button>
+            </td>
+          </tr>
+        </table>
+
+
+
+      </td>
+    </tr>
+  </table>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+
+  <span class="space"></span>
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>
+

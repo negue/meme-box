@@ -1,19 +1,19 @@
 import {AppService} from "../../../../../projects/app-state/src/lib/state/app.service";
-import {Clip, MediaType, Screen, Tag} from "@memebox/contracts";
+import {Action, ActionType, Screen, Tag} from "@memebox/contracts";
 import {sleep, uuid} from "@gewd/utils";
 
 const allTypes = [
-  MediaType.Audio,
-  MediaType.Picture,
-  MediaType.Video,
-  MediaType.Widget,
-  MediaType.IFrame,
-  MediaType.Meta,
+  ActionType.Audio,
+  ActionType.Picture,
+  ActionType.Video,
+  ActionType.Widget,
+  ActionType.IFrame,
+  ActionType.Meta,
 ]
 
 export async function addMoreItems (service: AppService): Promise<void> {
   const amountOfItems = [1,2,3,4,5,6];
-  const allMedias: Clip [] = [];
+  const allMedias: Action [] = [];
 
   for (const i of amountOfItems) {
     const newTag: Tag = {
@@ -25,7 +25,7 @@ export async function addMoreItems (service: AppService): Promise<void> {
     await service.addOrUpdateTag(newTag);
 
     for (const type of allTypes) {
-      const newClip: Clip = {
+      const newClip: Action = {
         id: uuid(),
         name: `clip-${i}`,
         type: type,
@@ -34,7 +34,7 @@ export async function addMoreItems (service: AppService): Promise<void> {
         tags: [newTag.id]
       };
 
-      await service.addOrUpdateClip(newClip);
+      await service.addOrUpdateAction(newClip);
 
       allMedias.push(newClip);
     }

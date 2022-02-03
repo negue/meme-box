@@ -12,6 +12,6 @@ export class LoggerApi {
     this.baseLogger.info(this.scriptName, ...data);
   }
   public error(...data: unknown[]): void {
-    this.baseLogger.error(this.scriptName, ...data);
+    this.baseLogger.error(data, this.scriptName);
   }
 }

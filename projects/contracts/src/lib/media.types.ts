@@ -1,6 +1,4 @@
-// TODO RENAME MediaType to ActionType
-
-export enum MediaType {
+export enum ActionType {
   Invalid = -1,
   Picture = 0,
   Audio = 1,
@@ -14,100 +12,100 @@ export enum MediaType {
   Meta = 100
 }
 
-export interface MediaTypeInformations {
+export interface ActionTypeInformations {
   translationKey: string;
   labelFallback: string;
   className: string;
   icon: string;
   sortOrder: number;
-  mediaType: MediaType;
+  mediaType: ActionType;
 }
 
-export const MEDIA_TYPE_INFORMATION: Record<MediaType, MediaTypeInformations> = {
-  [MediaType.Invalid]: /*{
+export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations> = {
+  [ActionType.Invalid]: /*{
     translationKey: "",
     labelFallback: "Invalid",
     className: "",
     icon: "",
     sortOrder: -1
   }*/ undefined,
-  [MediaType.Picture]: {
+  [ActionType.Picture]: {
     translationKey: "mediaType.image",
     labelFallback: "Image",
     className: "image",
     icon: "insert_photo",
     sortOrder: 2,
-    mediaType: MediaType.Picture
+    mediaType: ActionType.Picture
   },
-  [MediaType.Video]: {
+  [ActionType.Video]: {
     translationKey: "mediaType.video",
     labelFallback: "Video",
     className: "video",
     icon: "videocam",
     sortOrder: 3,
-    mediaType: MediaType.Video
+    mediaType: ActionType.Video
   },
-  [MediaType.Audio]: {
+  [ActionType.Audio]: {
     translationKey: "mediaType.audio",
     labelFallback: "Audio",
     className: "audio",
     icon: "audiotrack",
     sortOrder: 1,
-    mediaType: MediaType.Audio
+    mediaType: ActionType.Audio
   },
-  [MediaType.IFrame]: {
+  [ActionType.IFrame]: {
     translationKey: "mediaType.iframe",
     labelFallback: "iFrame", // IFrame , iframe
     className: "iframe",
     icon: "public",
     sortOrder: 4,
-    mediaType: MediaType.IFrame
+    mediaType: ActionType.IFrame
   },
-  [MediaType.Widget]: {
+  [ActionType.Widget]: {
     translationKey: "mediaType.widget",
     labelFallback: "Widget", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code",
     sortOrder: 5,
-    mediaType: MediaType.Widget
+    mediaType: ActionType.Widget
   },
-  [MediaType.Script]: {
+  [ActionType.Script]: {
     translationKey: "mediaType.script",
     labelFallback: "Script", // todo rename the property, add a "translationKey" to it
     className: "",
     icon: "code",
     sortOrder: 7,
-    mediaType: MediaType.Script
+    mediaType: ActionType.Script
   },
-  [MediaType.PermanentScript]: {
+  [ActionType.PermanentScript]: {
     translationKey: "mediaType.permanent_script",
     labelFallback: "Permanent Script", // todo rename the property, add a "translationKey" to it
     className: "",
     icon: "code",
     sortOrder: 8,
-    mediaType: MediaType.PermanentScript
+    mediaType: ActionType.PermanentScript
   },
-  [MediaType.WidgetTemplate]: {
+  [ActionType.WidgetTemplate]: {
     translationKey: "mediaType.widgetTemplate",
     labelFallback: "Widget Template", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code", // new icon?
     sortOrder: 6,
-    mediaType: MediaType.WidgetTemplate
+    mediaType: ActionType.WidgetTemplate
   },
-  [MediaType.Meta]: {
+  [ActionType.Meta]: {
     translationKey: "mediaType.meta",
     icon: "art_track",
     labelFallback: "Meta",
     className: "", // not visible in target-screen-component
     sortOrder: 100,
-    mediaType: MediaType.Meta
+    mediaType: ActionType.Meta
   }
 } as const;
 
-export const MEDIA_TYPE_INFORMATION_ARRAY = Object.values(MEDIA_TYPE_INFORMATION)
+export const ACTION_TYPE_INFORMATION_ARRAY = Object.values(ACTION_TYPE_INFORMATION)
   .filter(value => !!value);
 
-export function getSortOrderByType(mediaType: MediaType) {
-  return MEDIA_TYPE_INFORMATION[mediaType]?.sortOrder;
+export function getSortOrderByType(mediaType: ActionType) {
+  return ACTION_TYPE_INFORMATION[mediaType]?.sortOrder;
 }

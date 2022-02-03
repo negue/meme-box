@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {AppQueries} from '../../../../../projects/app-state/src/lib/state/app.queries';
 import {map, publishReplay, refCount, startWith} from 'rxjs/operators';
-import {CombinedClip, MediaType, Screen} from '@memebox/contracts';
+import {ActionType, CombinedClip, Screen} from '@memebox/contracts';
 import {AppService} from '../../../../../projects/app-state/src/lib/state/app.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormControl} from '@angular/forms';
@@ -32,7 +32,7 @@ export class ScreenArrangeComponent implements OnInit {
       for (const [key, entry] of Object.entries(screen.clips)) {
         const clip = clipMap[key];
 
-        if (clip.type === MediaType.Audio) {
+        if (clip.type === ActionType.Audio) {
           continue;
         }
 

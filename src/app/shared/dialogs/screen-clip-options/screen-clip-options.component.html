@@ -2,15 +2,12 @@
   <mat-icon svgIcon="tune" class="title__icon"></mat-icon>
   Settings for Media: {{data.name}} / Screen: {{(currentScreen$|async).name}}
 
-  <button *ngIf="clipInfo$ | async as clipInfo"
-          (click)="openMediaSetting()" color="accent"
-          class="open-media-button"
-          mat-raised-button>
-    <app-clip-type [type]="clipInfo.type"></app-clip-type>
-    Open Media Settings
-  </button>
+  <app-open-action-settings-button *ngIf="actionInfo$ | async as action"
+                                   [action]="action">
+
+  </app-open-action-settings-button>
 </h2>
-<mat-dialog-content *ngIf="clipInfo$ | async as clipInfo" class="mat-typography">
+<mat-dialog-content *ngIf="mediaInScreenInfo$ | async as clipInfo" class="mat-typography">
 
   <form [formGroup]="form" class="two-columns">
     <div class="column">
@@ -145,6 +142,16 @@
           https://animate.style
             <mat-icon svgIcon="launch"></mat-icon>
         </a>
+
+          <br><br>
+
+          If you don't see any animations here or in OBS, it could be your Operating-System Preferences to disable animations:
+          <br> <br>
+          Mac: <a href="https://www.twitch.tv/videos/1190610270"
+        target="_blank" mat-flat-button>
+            https://www.twitch.tv/videos/1190610270
+          </a> thanks to Matty_TwoShoes <br/>
+          Windows: Settings > Ease of Access > Show animations in Windows
         </app-hint-panel>
 
       </mat-expansion-panel>
@@ -161,6 +168,11 @@
           <mat-option [value]="2">{{2 | positionToString}}</mat-option>
           <mat-option [value]="3">{{3 | positionToString}}</mat-option>
         </mat-select>
+        <mat-hint [ngSwitch]="positionSelection.value">
+          <span *ngSwitchCase="3" class="mat-error" style="display: inline">
+            Random Position will only work if your OBS Version is at least 27.2.
+          </span>
+        </mat-hint>
       </mat-form-field>
 
       <br/>

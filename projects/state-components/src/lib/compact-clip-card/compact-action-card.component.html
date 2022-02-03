@@ -1,0 +1,21 @@
+<mat-card>
+  <mat-card-header>
+    <app-clip-preview mat-card-avatar [clip]="action"
+    height="40px"
+    width="40px"></app-clip-preview>
+
+    <mat-card-title>
+      {{action.name}}
+
+      <button (click)="openActionSetting()" color="primary"
+              class="open-action-button"
+              mat-icon-button>
+        <mat-icon svgIcon="edit"> </mat-icon>
+      </button>
+    </mat-card-title>
+    <mat-card-subtitle> <!-- Todo other information ? --></mat-card-subtitle>
+  </mat-card-header>
+    <mat-card-content>
+      <app-clip-chips-list [clip]="action"></app-clip-chips-list>
+    </mat-card-content>
+</mat-card>

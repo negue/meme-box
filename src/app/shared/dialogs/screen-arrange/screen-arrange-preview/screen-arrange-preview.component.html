@@ -39,7 +39,16 @@
   </div>
 
   <div class="arrange-selection-actions-container" [class.clip-is-selected]="currentSelectedClip">
-    <div class="arrange-label">Selection options</div>
+    <div class="arrange-label">
+      Selection options
+
+      <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === 3">
+        <strong class="mat-error" style="display: inline"
+                matTooltip="Random Position will only work if your OBS Version is at least 27.2.">
+          Might not work
+        </strong>
+      </ng-container>
+    </div>
 
     <div class="arrange-selection-actions">
       <mat-form-field appearance="fill" class="arrange-size-control">
@@ -168,6 +177,8 @@
       </button>
     </div>
   </div>
+
+  <app-open-feedback-button feedbackTarget="Screen Arrange View"></app-open-feedback-button>
 </div>
 
 <div class="drag-drop-area-holder" #holdingElement>
@@ -261,8 +272,8 @@
         </app-drag-resize-media>
       </ng-container>
     </div>
-
   </gewd-auto-scale>
+
 
 </div>
 

@@ -4,7 +4,6 @@ import {combineLatest, Observable} from "rxjs";
 import {AppQueries, AppService} from "@memebox/app-state";
 import {switchMap} from "rxjs/operators";
 import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
-import {readableSeconds} from "../../../../../../projects/ui-components/src/lib/pipes/utils";
 
 interface ConnectionEntry {
   isConfigured: boolean;
@@ -14,10 +13,6 @@ interface ConnectionEntry {
   validUntil?: string;
   openConfig: () => void;
 }
-
-// TODO:
-// - twitch oauth window something
-// - improve the Dialogs & settings for twitch
 
 @Component({
   selector: 'app-connections-list',
@@ -48,24 +43,28 @@ export class ConnectionsListComponent implements OnInit {
       const mainTwitchAuthInfo = authInformation?.find(a => a.type === 'main');
       const botTwitchAuthInfo = authInformation?.find(a => a.type === 'bot');
 
+      const isTwitchConfigured = config.twitch?.channel
+        ? config.twitch.channel.trim() !== ''
+        : false;
+
       return {
         'Twitch':  [
           {
-            isConfigured: !!config.twitch.channel,
-            connectedAccount: 'Main: ' + (mainTwitchAuthInfo?.authResult?.reason ??
+            isConfigured: isTwitchConfigured,
+            connectedAccount: 'Main Account: ' + (mainTwitchAuthInfo?.authResult?.reason ??
                config.twitch.channel),
             hasAuthToken: !!config.twitch.token,
             isValid: mainTwitchAuthInfo?.authResult?.valid,
-            validUntil: readableSeconds(mainTwitchAuthInfo?.authResult?.expires_in).string,
+            validUntil: new Date(mainTwitchAuthInfo?.authResult?.expires_in_date).toLocaleString(),
             openConfig: () => this.dialogService.openTwitchConnectionConfig()
           },
           {
             isConfigured: !!config.twitch.bot?.auth?.name,
-            connectedAccount:  'Bot: '+ (botTwitchAuthInfo?.authResult?.reason ??
+            connectedAccount:  'Bot Account: '+ (botTwitchAuthInfo?.authResult?.reason ??
              config.twitch.bot?.auth?.name),
             hasAuthToken: !!config.twitch.bot?.auth?.name,
             isValid: botTwitchAuthInfo?.authResult?.valid,
-            validUntil: readableSeconds(botTwitchAuthInfo?.authResult?.expires_in).string,
+            validUntil: new Date(botTwitchAuthInfo?.authResult?.expires_in_date).toLocaleString(),
             openConfig: () => this.dialogService.openTwitchConnectionConfig()
           }
         ],

@@ -9,10 +9,13 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {MatBadgeModule} from "@angular/material/badge";
 import {MatButtonModule} from "@angular/material/button";
 import {IsSelectedPipe} from './is-selected.pipe';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {GroupByTypePipe} from './group-by-type.pipe';
 
 
 @NgModule({
-  declarations: [FilterComponent, IsSelectedPipe],
+  declarations: [FilterComponent, IsSelectedPipe, GroupByTypePipe],
   exports: [
     FilterComponent
   ],
@@ -24,7 +27,9 @@ import {IsSelectedPipe} from './is-selected.pipe';
     TranslocoModule,
     MatExpansionModule,
     MatBadgeModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class FilterModule { }
