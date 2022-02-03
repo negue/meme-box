@@ -66,19 +66,17 @@ let memeBoxSocket;
 // if disconnect, try again after X seconds
 // on key up , if its still on "interval" / get socket
 
-function createOrGetSocket(protocol, host, portNumber) {
+function createOrGetSocket(webSocketTarget) {
   return new Promise((resolve) => {
-
-    const newUrl = `${protocol}://${host}:${portNumber}`;
 
     if (!memeBoxSocket
       || memeBoxSocket.readyState !== WebSocket.OPEN
-      || memeBoxSocket.url !== newUrl) {
-      memeBoxSocket = new WebSocket(newUrl);
+      || memeBoxSocket.url !== webSocketTarget) {
+      memeBoxSocket = new WebSocket(webSocketTarget);
 
       memeBoxSocket.onopen = function () {
         console.info('Socket connected!!', {
-          protocol, host, portNumber
+          webSocketTarget
         });
         resolve(memeBoxSocket);
       };
@@ -154,7 +152,7 @@ const action = {
     }
 
 
-    var currentConnection = await createOrGetSocket(settings.protocol, settings.ip, settings.port);
+    var currentConnection = await createOrGetSocket(settings.targetServer);
 
     const message = `TRIGGER_CLIP=${JSON.stringify(triggerObj)}`;
 

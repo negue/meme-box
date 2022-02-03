@@ -1,16 +1,10 @@
 /* global $SD */
 import React, {useEffect, useReducer, useState} from "react";
 
-import {
-  createUseGlobalSettings,
-  createUsePluginSettings,
-  createUseSDAction,
-  SDCheckbox,
-  SDSelectInput,
-  SDTextInput
-} from "react-streamdeck";
+import {SDCheckbox, SDSelectInput, SDTextInput} from "react-streamdeck";
 // Slightly modified sdpi.css file. Adds 'data-' prefixes where needed.
 import "react-streamdeck/dist/css/sdpi.css";
+import {createUseSDAction, myButtonSettings, myGlobalSettings} from "./myGlobalSettings";
 
 const createGetSettings = _sd => () => {
   if (_sd.api.getSettings) {
@@ -24,18 +18,6 @@ const useSDAction = createUseSDAction({
   useState,
   useEffect
 });
-
-function typeNumToString(typeNum){
-  switch(typeNum) {
-    case 0: return 'Picture';
-    case 1: return 'Audio';
-    case 2: return 'Video';
-    case 3: return 'IFrame';
-    case 100: return 'Meta';
-
-    default: return `Unknown: ${typeNum}`;
-  }
-}
 
 export default function ConfigView() {
   const getSettings = createGetSettings($SD);
@@ -56,7 +38,7 @@ export default function ConfigView() {
 
   const [clipList, updateClipList] = useState([]);
 
-  const [settings, setSettings] = createUsePluginSettings({
+  const [settings, setSettings] = myButtonSettings({
     useState,
     useEffect,
     useReducer
@@ -68,7 +50,7 @@ export default function ConfigView() {
     connectedResult
   );
 
-  const [globalSettings, setGlobalSettings] = createUseGlobalSettings({
+  const [globalSettings, setGlobalSettings] = myGlobalSettings({
     useState,
     useEffect,
     useReducer
@@ -77,7 +59,7 @@ export default function ConfigView() {
       advanced: false,
       port: 6363,
       protocol: 'ws',
-      ip: 'localhost'
+      host: 'localhost'
     },
     connectedResult
   );
@@ -87,20 +69,14 @@ export default function ConfigView() {
 
   useEffect(() => {
     if (globalSettings.port !== prevGlobalSettings.port ||
-      globalSettings.ip !== prevGlobalSettings.ip ||
+      globalSettings.host !== prevGlobalSettings.host ||
       globalSettings.protocol !== prevGlobalSettings.protocol) {
       setPrevGlobalSettings(globalSettings);
 
         updateClipList([]);
 
-        console.info('Refreshing the List', globalSettings);
-
         const protocol = globalSettings.protocol === 'ws' ? 'http' : 'https';
-        const clipEndpoint = `${protocol}://${globalSettings.ip}:${globalSettings.port}/api/clips`
-
-      console.info({
-        clipEndpoint
-      });
+        const clipEndpoint = `${protocol}://${globalSettings.host}:${globalSettings.port}/api/action/simpleList`
 
         fetch(clipEndpoint)
           .then(response => response.json())
@@ -108,7 +84,7 @@ export default function ConfigView() {
             console.info('ALL CLIPS', value);
             const selectionOptions = value.map(v => {
               return {
-                label: `${typeNumToString(v.type)}: ${v.name}`,
+                label: `${v.typeString}: ${v.name}`,
                 value: v.id
               }
             });
@@ -122,9 +98,8 @@ export default function ConfigView() {
     }
   }, [prevGlobalSettings, setPrevGlobalSettings, globalSettings, updateClipList])
 
-
   useEffect(() => {
-    const newUrl = `${globalSettings.protocol}://${globalSettings.host}:${globalSettings.portNumber}`;
+    const newUrl = `${globalSettings.protocol}://${globalSettings.host}:${globalSettings.port}`;
 
     if (settings.targetServer !== newUrl) {
       const newState = {
@@ -143,16 +118,10 @@ export default function ConfigView() {
     setSettings(newState);
   }
 
-  console.log({
-    connectedResult,
-    settings,
-    globalSettings
-  });
-
   return (
     <div>
       <SDSelectInput
-        label="Clip"
+        label="Action"
         selectedOption={settings.clipId}
         options={clipList}
         onChange={event => {
@@ -198,13 +167,13 @@ export default function ConfigView() {
       {globalSettings.advanced &&
         <SDTextInput
           label="Host / IP"
-          value={globalSettings.ip}
+          value={globalSettings.host}
           onChange={event => {
             resetClipId();
 
             const newState = {
               ...globalSettings,
-              ip: event.target.value
+              host: event.target.value
             };
             console.info('HOST CHANGED', {event});
             setGlobalSettings(newState);

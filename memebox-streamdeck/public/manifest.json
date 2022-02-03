@@ -2,13 +2,13 @@
 	"Actions": [
 		{
 			"Icon": "action/images/actionimage",
-			"Name": "Trigger a clip",
+			"Name": "Trigger an action",
 			"States": [
 				{
 					"Image": "action/images/action"
 				}
 			],
-			"Tooltip": "Trigger a clip",
+			"Tooltip": "Trigger an action",
 			"UUID": "com.memebox.memebox-streamdeck.action"
 		}
 	],
