@@ -34,6 +34,7 @@
 * [x] Triggers can be searched now
 * [x] Twitch Message Event can now have aliases
 * [x] Media Actions can now have a volume gain (if its too quiet)
+* [x] Streamdeck Plugin: Ability to change the global connection settings (different PC than localhost/port)
 
 ### Fixes
 
