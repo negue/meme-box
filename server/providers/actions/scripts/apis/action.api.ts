@@ -5,8 +5,8 @@ import {MemeboxApi} from "./memebox.api";
 export class ActionApi {
   constructor(
     protected memeboxApi: MemeboxApi,
-    protected actionId: string,
-    protected screenId?: string | undefined
+    public actionId: string,
+    public screenId?: string | undefined
   ) {
 
   }

@@ -1,9 +1,10 @@
 /* global $SD */
 import React, {useEffect, useReducer, useState} from "react";
 
-import {createUsePluginSettings, createUseSDAction, SDCheckbox, SDSelectInput, SDTextInput} from "react-streamdeck";
+import {SDCheckbox, SDSelectInput, SDTextInput} from "react-streamdeck";
 // Slightly modified sdpi.css file. Adds 'data-' prefixes where needed.
 import "react-streamdeck/dist/css/sdpi.css";
+import {createUseSDAction, myButtonSettings, myGlobalSettings} from "./myGlobalSettings";
 
 const createGetSettings = _sd => () => {
   if (_sd.api.getSettings) {
@@ -17,18 +18,6 @@ const useSDAction = createUseSDAction({
   useState,
   useEffect
 });
-
-function typeNumToString(typeNum){
-  switch(typeNum) {
-    case 0: return 'Picture';
-    case 1: return 'Audio';
-    case 2: return 'Video';
-    case 3: return 'IFrame';
-    case 100: return 'Meta';
-
-    default: return `Unknown: ${typeNum}`;
-  }
-}
 
 export default function ConfigView() {
   const getSettings = createGetSettings($SD);
@@ -49,39 +38,45 @@ export default function ConfigView() {
 
   const [clipList, updateClipList] = useState([]);
 
-  const [settings, setSettings] = createUsePluginSettings({
+  const [settings, setSettings] = myButtonSettings({
     useState,
     useEffect,
     useReducer
   })(
     {
       clipId: "",
+      targetServer: ""
+    },
+    connectedResult
+  );
+
+  const [globalSettings, setGlobalSettings] = myGlobalSettings({
+    useState,
+    useEffect,
+    useReducer
+  })(
+    {
       advanced: false,
       port: 6363,
       protocol: 'ws',
-      ip: 'localhost'
+      host: 'localhost'
     },
     connectedResult
   );
 
   // Holds the prev settings for useEffect
-  const [prevSettings, setPrevSettings] = useState({})
+  const [prevGlobalSettings, setPrevGlobalSettings] = useState({})
 
   useEffect(() => {
-    if (settings.port !== prevSettings.port ||
-      settings.ip !== prevSettings.ip ||
-      settings.protocol !== prevSettings.protocol) {
-      setPrevSettings(settings);
+    if (globalSettings.port !== prevGlobalSettings.port ||
+      globalSettings.host !== prevGlobalSettings.host ||
+      globalSettings.protocol !== prevGlobalSettings.protocol) {
+      setPrevGlobalSettings(globalSettings);
 
         updateClipList([]);
 
-        console.info('Refreshing the List', settings);
-
-        const clipEndpoint = `${settings.protocol === 'ws' ? 'http' : 'https'}://${settings.ip}:${settings.port}/api/clips`
-
-      console.info({
-        clipEndpoint
-      });
+        const protocol = globalSettings.protocol === 'ws' ? 'http' : 'https';
+        const clipEndpoint = `${protocol}://${globalSettings.host}:${globalSettings.port}/api/action/simpleList`
 
         fetch(clipEndpoint)
           .then(response => response.json())
@@ -89,7 +84,7 @@ export default function ConfigView() {
             console.info('ALL CLIPS', value);
             const selectionOptions = value.map(v => {
               return {
-                label: `${typeNumToString(v.type)}: ${v.name}`,
+                label: `${v.typeString}: ${v.name}`,
                 value: v.id
               }
             });
@@ -101,19 +96,32 @@ export default function ConfigView() {
           })
 
     }
-  }, [prevSettings, setPrevSettings, settings, updateClipList])
+  }, [prevGlobalSettings, setPrevGlobalSettings, globalSettings, updateClipList])
 
+  useEffect(() => {
+    const newUrl = `${globalSettings.protocol}://${globalSettings.host}:${globalSettings.port}/`;
 
+    if (settings.targetServer !== newUrl) {
+      const newState = {
+        ...settings,
+        targetServer: newUrl
+      };
+      setSettings(newState);
+    }
+  }, [globalSettings, settings, setSettings])
 
-  console.log({
-    connectedResult,
-    settings
-  });
+  function resetClipId() {
+    const newState = {
+      ...settings,
+      clipId: undefined,  // reset current clip selection
+    };
+    setSettings(newState);
+  }
 
   return (
     <div>
       <SDSelectInput
-        label="Clip"
+        label="Action"
         selectedOption={settings.clipId}
         options={clipList}
         onChange={event => {
@@ -128,56 +136,61 @@ export default function ConfigView() {
       <SDCheckbox
         label="Advanced"
         checkboxLabel="Enable Advanced Connection"
-        value={settings.advanced}
+        value={globalSettings.advanced}
         onChange={(event, value) => {
+          resetClipId();
+
           const newState = {
-            ...settings,
+            ...globalSettings,
             advanced: value
           };
-          setSettings(newState);
+          setGlobalSettings(newState);
         }}
       />
 
-      {settings.advanced &&
+      {globalSettings.advanced &&
         <SDSelectInput
           label="Protocol"
-          selectedOption={settings.protocol}
+          selectedOption={globalSettings.protocol}
           options={protocolList}
           onChange={event => {
+            resetClipId();
+
             const newState = {
-              ...settings,
-              clipId: undefined,  // reset current clip selection
+              ...globalSettings,
               protocol: event
             };
-            setSettings(newState);
-            console.info('new protocol', settings);
+            setGlobalSettings(newState);
+            console.info('new protocol', globalSettings);
           }}
         />}
-      {settings.advanced &&
+      {globalSettings.advanced &&
         <SDTextInput
           label="Host / IP"
-          value={settings.ip}
+          value={globalSettings.host}
           onChange={event => {
+            resetClipId();
+
             const newState = {
-              ...settings,
-              clipId: undefined,  // reset current clip selection
-              ip: event.target.value
+              ...globalSettings,
+              host: event.target.value
             };
             console.info('HOST CHANGED', {event});
-            setSettings(newState);
+            setGlobalSettings(newState);
           }}
         />}
-      {settings.advanced &&
+      {globalSettings.advanced &&
         <SDTextInput
           label="Port"
-          value={settings.port}
+          value={globalSettings.port}
           onChange={event => {
+            resetClipId();
+
             const newState = {
-              ...settings,
-              clipId: undefined,  // reset current clip selection
+              ...globalSettings,
               port: event.target.value
             };
-            setSettings(newState);
+            setGlobalSettings(newState);
           }}
         />
       }

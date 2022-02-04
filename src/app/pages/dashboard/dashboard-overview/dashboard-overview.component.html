@@ -55,7 +55,7 @@
                 <ng-container *ngSwitchCase="'subscription'">
                   <ng-container *ngIf="twitchEvent | guardType: isSub as sub">
 
-                    <b>{{sub.payload.username}}</b>  - {{sub.payload.message}}
+                    <b>{{sub.payload.username}}</b>  - "{{sub.payload.message}}"
 
                     <br/>
                     <ng-container *ngIf="sub.payload.gifter">
@@ -67,7 +67,7 @@
                 <ng-container *ngSwitchCase="'gift'">
                   <ng-container *ngIf="twitchEvent | guardType: isGiftSub as sub">
 
-                    <b>{{ sub.payload.gifter }} gifted {{sub.payload.gifts}}</b> - Total: {{sub.payload.totalGifts}}
+                    <b>{{ sub.payload.gifter }} gifted to {{sub.payload.recipientDisplayName}}</b> - Total: {{sub.payload.totalGifts}}
 
                     <br/>
                     Sub-Method: <b>{{sub.payload.subtype}}</b>

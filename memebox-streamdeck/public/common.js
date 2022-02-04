@@ -708,19 +708,20 @@ function connectElgatoStreamDeckSocket(
   inApplicationInfo,
   inActionInfo
 ) {
-  console.log("connectElgatoStreamDeckSocket", {
-    inPort,
-    inUUID,
-    inMessageType,
-    inApplicationInfo,
-    inActionInfo
-  });
   StreamDeck.getInstance().connect(arguments);
   window.$SD.api = Object.assign(
     { send: SDApi.send },
     SDApi.common,
     SDApi[inMessageType]
   );
+  console.log("connectElgatoStreamDeckSocket", {
+    inPort,
+    inUUID,
+    inMessageType,
+    inApplicationInfo,
+    inActionInfo,
+    $SD: window.$SD
+  });
 }
 
 /* legacy support */
