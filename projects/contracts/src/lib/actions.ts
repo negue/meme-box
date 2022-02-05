@@ -92,6 +92,10 @@ export interface TriggerAction extends InternalActionTriggerBase {
   byTwitch?: AllTwitchEvents;
 }
 
+export interface TriggerActionDashboardEntry extends TriggerAction {
+  timestamp: Date;
+}
+
 export interface TriggerActionUpdate extends InternalActionTriggerBase {
   screenMedia?: ScreenMediaOverridableProperties
 }
