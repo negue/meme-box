@@ -35,11 +35,9 @@ export class LatestActionsComponent {
     );
 
     const filledActionMap$ = this.appQuery.actionMap$.pipe(
-      tap(actionMap => console.info({
-        actionMap
-      })),
+      tap(actionMap => ),
       filter(data => !!data && Object.keys(data).length > 0),
-      tap(actionMap => console.info('after filter', actionMap)),
+      tap(actionMap => ),
     );
 
     this.latestActions$ = combineLatest([

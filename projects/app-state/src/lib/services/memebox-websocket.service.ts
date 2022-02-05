@@ -96,7 +96,7 @@ export class MemeboxWebsocketService {
 
 
   private onMessage(event: MessageEvent) {
-    console.debug("WebSocket message received:", event);
+    
 
     const dataAsString = event.data as string;
 
@@ -132,16 +132,16 @@ export class MemeboxWebsocketService {
 
   private connect() {
     if (this.isConnected) {
-      console.warn('already isConnected!');
+      
       return;
     }
 
     if (this.ws && this.ws.readyState === this.ws.CONNECTING) {
-      console.info('Still connecting, WAIT');
+      
       return;
     }
 
-    console.info('Creating a new WS connection, fingers crossed');
+    
 
     if (this.ws) {
       // free up memory?
@@ -169,12 +169,12 @@ export class MemeboxWebsocketService {
     };
 
     this.ws.onerror = ev => {
-      console.warn('On Error', ev);
+      
       this.isConnected = false;
     };
 
     this.ws.onclose = ev => {
-      console.warn('On Close', ev);
+      
       this.isConnected = false;
       this.firstConnectionWorked = false;
 
@@ -185,7 +185,7 @@ export class MemeboxWebsocketService {
           this.intervalId = window.setInterval(() => {
             this.connect();
           }, 2000);
-          console.warn('new ws connect interval', this.intervalId);
+          
         } else {
           this.connectionState$.next(ConnectionState.Offline);
         }
