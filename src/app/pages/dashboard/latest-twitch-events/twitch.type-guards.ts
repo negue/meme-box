@@ -1,8 +1,3 @@
-
-// https://github.com/angular/angular/issues/34522#issuecomment-762973301
-// todo try to recreate ngSwitchCase but with type guards
-
-import {Pipe, PipeTransform} from "@angular/core";
 import {
   AllTwitchEvents,
   TwitchBanEvent,
@@ -12,19 +7,8 @@ import {
   TwitchRaidedEvent,
   TwitchSubEvent
 } from "../../../../../server/providers/twitch/twitch.connector.types";
+import {TypeGuard} from "../type-guard.pipe";
 
-export type TypeGuard<A, B extends A> = (a: A) => a is B;
-
-@Pipe({
-  name: 'guardType'
-})
-export class GuardTypePipe implements PipeTransform {
-
-  transform<A, B extends A>(value: A, typeGuard: TypeGuard<A, B>): B | undefined {
-    return typeGuard(value) ? value : undefined;
-  }
-
-}
 
 export const isChannelPointRedemption: TypeGuard<AllTwitchEvents, TwitchChannelPointRedemptionEvent> = (
   baseEvent: AllTwitchEvents
