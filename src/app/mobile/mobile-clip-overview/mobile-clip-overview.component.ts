@@ -4,8 +4,8 @@ import {
   AppQueries,
   AppService,
   ConnectionState,
-  SettingsService,
-  WebsocketService
+  MemeboxWebsocketService,
+  SettingsService
 } from "@memebox/app-state";
 import {Observable, Subject} from "rxjs";
 import {Action, ACTION_TYPE_INFORMATION} from "@memebox/contracts";
@@ -76,7 +76,7 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
   constructor(private appQueries: AppQueries,
               private appService: AppService,
-              private _wsService: WebsocketService,
+              private _wsService: MemeboxWebsocketService,
               private _settingsService: SettingsService,
               public activityState: ActivityQueries,
               private _dialogService: DialogService) {

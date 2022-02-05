@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {WebsocketService} from "@memebox/app-state";
+import {MemeboxWebsocketService} from "@memebox/app-state";
 import {uuid} from "@gewd/utils";
 import {WidgetStoreRemoteAdapter} from "../../../shared/components/dynamic-iframe/widget-store-remote-adapter.service";
 import {Subject} from "rxjs";
@@ -19,7 +19,7 @@ export class NotesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private websocket: WebsocketService,
+    private websocket: MemeboxWebsocketService,
     private remoteStoreApiAdapter: WidgetStoreRemoteAdapter
   ) { }
 

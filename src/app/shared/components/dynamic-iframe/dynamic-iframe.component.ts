@@ -17,7 +17,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
 import {WidgetApi} from "./widget-api";
 import {TriggerAction, WEBSOCKET_PATHS} from "@memebox/contracts";
-import {AppService, WebsocketService} from "@memebox/app-state";
+import {AppService, MemeboxWebsocketService} from "@memebox/app-state";
 import {guid} from "@datorama/akita";
 import {WidgetStoreRemoteAdapter} from "./widget-store-remote-adapter.service";
 
@@ -46,7 +46,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
 
   errorSubject$ = new BehaviorSubject<string>('');
 
-  constructor(private websocket: WebsocketService,
+  constructor(private websocket: MemeboxWebsocketService,
               private appService: AppService,
               private remoteStoreApiAdapter: WidgetStoreRemoteAdapter) {
     this.wsHandler = new WebsocketHandler(AppConfig.wsBase+WEBSOCKET_PATHS.TWITCH_EVENTS, 3000);

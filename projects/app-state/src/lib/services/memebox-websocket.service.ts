@@ -28,12 +28,12 @@ export const WebSocketBasePathInjectionToken
   = new InjectionToken<string>('WebSocketBasePathInjectionToken');
 
 @Injectable()
-export class WebsocketService {
+export class MemeboxWebsocketService {
   public onOpenConnection$ = new Subject();
   public onReconnection$ = new Subject();
   public onUpdateData$ = new Subject();
   public onReloadScreen$ = new Subject();
-  public onTriggerClip$ = new Subject<TriggerAction>();
+  public onTriggerAction$ = new Subject<TriggerAction>();
   public onUpdateMedia$ = new Subject<TriggerAction>();
   public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.NONE)
 
@@ -108,7 +108,7 @@ export class WebsocketService {
       case ACTIONS.TRIGGER_CLIP: {
         const payloadObj: TriggerAction = JSON.parse(payload);
 
-        this.onTriggerClip$.next(payloadObj);
+        this.onTriggerAction$.next(payloadObj);
 
         break;
       }

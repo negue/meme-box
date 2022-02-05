@@ -2,7 +2,7 @@ import {NgModule, Optional, SkipSelf} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {NetworkInterfacesService} from "./services/network-interfaces.service";
 import {SettingsService} from "./services/settings.service";
-import {WebsocketService} from "./services/websocket.service";
+import {MemeboxWebsocketService} from "./services/memebox-websocket.service";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {SnackbarService} from "./services/snackbar.service";
 import {AppQueries} from "./state";
@@ -18,7 +18,7 @@ import {ConfigService} from "./services/config.service";
     NetworkInterfacesService,
     SettingsService,
     SnackbarService,
-    WebsocketService,
+    MemeboxWebsocketService,
 
     AppQueries,
     AppService,
