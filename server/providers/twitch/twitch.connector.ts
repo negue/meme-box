@@ -417,7 +417,6 @@ export class TwitchConnector {
     const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
     const apiClient = new ApiClient({ authProvider });
 
-
     const pubSubClient = new PubSubClient();
     const userId = await pubSubClient.registerUserListener(apiClient);
 
@@ -456,7 +455,6 @@ export class TwitchConnector {
         userDisplayName
       }));
     });
-
   }
 
   async handleCommandsRequest(tags: tmi.ChatUserstate): Promise<void> {

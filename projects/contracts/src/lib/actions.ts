@@ -93,6 +93,8 @@ export interface TriggerAction extends InternalActionTriggerBase {
 }
 
 export interface TriggerActionDashboardEntry extends TriggerAction {
+  actionName?: string;
+  originTypeName?: string;
   timestamp: Date;
 }
 

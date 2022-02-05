@@ -26,12 +26,9 @@ export class HighlightDirective implements OnDestroy {
       distinctUntilChanged(),
       takeUntil(this.destroy$)
     ).subscribe(async currentTextToHighlight => {
-      console.info('RAW', currentTextToHighlight);
-
       const highlightedHtml = await this.highlightService.highlightCode(
         currentTextToHighlight, this.lang
       );
-      console.info('HTML', highlightedHtml);
 
       this.element.nativeElement.innerHTML = highlightedHtml;
     })

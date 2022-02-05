@@ -61,7 +61,7 @@
                   </span>
         </mat-panel-title>
         <mat-panel-description>
-          {{twitchEvent.timestamp | date: 'short'}}
+          {{twitchEvent.timestamp | date: 'mediumTime'}}
         </mat-panel-description>
       </mat-expansion-panel-header>
       <pre [highlight]="twitchEvent | json" lang="json" class="pre-wrap-break"></pre>
