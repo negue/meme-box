@@ -205,6 +205,12 @@ export class TwitchConnectionEditComponent implements OnInit {
     const result = await oauthHandler.login();
 
     if (type === 'main') {
+      if (!this.mainAccountForm.value.channelName) {
+        this.mainAccountForm.patchValue({
+          channelName: result.userName,
+        });
+      }
+
       this.mainAccountForm.patchValue({
         authToken: result.accessToken,
       });
