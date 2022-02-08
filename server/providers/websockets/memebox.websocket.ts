@@ -13,6 +13,7 @@ export let CURRENT_MEMEBOX_WEBSOCKET: MemeboxWebsocket;
 @Service()
 export class MemeboxWebsocket extends AbstractWebsocketHandler {
   private _socketsPerScreen: Dictionary<WebSocket[]> = {};
+  private _manageViewSockets: WebSocket[] = [];
 
   private _receivedActions$ = new Subject<{type: string, payload: string, ws: WebSocket}>();
 
@@ -29,14 +30,11 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
   }
 
   sendDataToScreen(targetId: string|null, message: string) {
-    if (this._socketsPerScreen[targetId]) {
-      for (const targetScreenSocket of this._socketsPerScreen[targetId]) {
-        if (targetScreenSocket.readyState === WebSocket.OPEN) {
-          targetScreenSocket.send(message);
-          this.logger.info('SENT DATA TO: ', {targetId, message});
-        }
-      }
+    if (!this._socketsPerScreen[targetId]) {
+      return;
     }
+
+    this.sendDataToSockets(message, this._socketsPerScreen[targetId]);
   }
 
   isScreenActive (screenId: string): boolean  {
@@ -78,13 +76,15 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
         this._connectedSocketList.push(ws);
         break;
       }
+      case ACTIONS.I_AM_MANAGE: {
+        this._manageViewSockets.push(ws);
+        break;
+      }
       case ACTIONS.TRIGGER_CLIP: {
         const payloadObs: TriggerAction = JSON.parse(payload);
         payloadObs.fromWebsocket = true;
 
-        this.logger.info(`TRIGGER DATA TO - Target: ${payloadObs.targetScreen ?? 'Any'}`, payloadObs);
-
-        // TODO refactor this dependency pingpong
+        this.sendDataToSockets(message, this._manageViewSockets);
 
         if (!payloadObs.targetScreen) {
           this.mediaTriggerEventBus.queueAction(payloadObs);
@@ -108,6 +108,10 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
         break;
       }
     }
+  }
+
+  protected onSocketClosed(ws: WebSocket) {
+
   }
 
   WebSocketServerLabel = 'WS: Memebox Connections';

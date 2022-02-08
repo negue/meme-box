@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
+import {AppQueries, AppService, MemeboxWebsocketService, SnackbarService} from "@memebox/app-state";
 import {HotkeysService} from "@ngneat/hotkeys";
 import {DialogService} from "../../shared/dialogs/dialog.service";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
@@ -30,10 +30,12 @@ export class MainPageComponent implements OnInit, OnDestroy {
               private hotkeys: HotkeysService,
               private dialogService: DialogService,
               private _bottomSheet: MatBottomSheet,
-              private _snackbarService: SnackbarService) {
+              private _snackbarService: SnackbarService,
+              private _memeboxWebsocket: MemeboxWebsocketService) {
+
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.appService.loadState();
     this.hotkeys.addShortcut({ keys: 'f1' })
       .subscribe(e => {
@@ -67,6 +69,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
       } );
 
     this.errorWS.connect();
+
+    await this._memeboxWebsocket.isReady();
+    this._memeboxWebsocket.sendI_Am_MANAGE();
   }
 
   async openNotes() {

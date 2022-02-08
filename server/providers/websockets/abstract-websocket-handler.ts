@@ -1,5 +1,5 @@
 import * as WebSocket from "ws";
-import { BehaviorSubject } from "rxjs";
+import {BehaviorSubject} from "rxjs";
 
 export abstract class AbstractWebsocketHandler {
   protected _connectedSocketList: WebSocket[] = [];
@@ -34,6 +34,8 @@ export abstract class AbstractWebsocketHandler {
       });
 
       ws.on("close", err => {
+        this.onSocketClosed(ws);
+
         const indexOf = this._connectedSocketList.indexOf(ws);
 
         if (indexOf < 0) {
@@ -58,15 +60,21 @@ export abstract class AbstractWebsocketHandler {
       return;
     }
 
-    this._connectedSocketList.forEach(ws => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(message);
+    this.sendDataToSockets(message, this._connectedSocketList);
+  }
+
+  protected sendDataToSockets(message: string, targetSockets: WebSocket[]) {
+    for (const targetSocket of targetSockets) {
+      if (targetSocket.readyState === WebSocket.OPEN) {
+        targetSocket.send(message);
       }
-    });
+    }
   }
 
   protected onConnectedSocket(ws: WebSocket): void {
   }
+
+  protected onSocketClosed (ws: WebSocket): void {}
 
   protected handleWebSocketMessage(ws: WebSocket, message: string): void {}
 
