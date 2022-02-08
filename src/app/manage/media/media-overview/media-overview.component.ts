@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Action, Screen, Tag} from '@memebox/contracts';
-import {AppQueries, AppService, WebsocketService} from '@memebox/app-state';
+import {AppQueries, AppService, MemeboxWebsocketService} from '@memebox/app-state';
 import {DialogService} from '../../../shared/dialogs/dialog.service';
 import {IFilterItem} from '../../../shared/components/filter/filter.component';
 import {createCombinedFilterItems$, filterClips$} from '../../../shared/components/filter/filter.methods';
@@ -66,7 +66,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
   constructor(public service: AppService,
               public query: AppQueries,
               private _dialog: DialogService,
-              private _wsService: WebsocketService,
+              private _wsService: MemeboxWebsocketService,
               private _uiService: OverviewUiService,
               private configService: ConfigService,) {
     savedBehaviorSubject('mediaOverviewFilter', this.filteredItems$, this.destroy$);

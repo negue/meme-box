@@ -3,22 +3,20 @@ import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
 import {debounceTime, startWith} from 'rxjs/operators';
 import {
   TWITCH_BOT_RESPONSE_CONSTS,
+  TwitchBanEvent,
+  TwitchChannelPointRedemptionEvent,
+  TwitchChatMessage,
+  TwitchCheerMessage,
   TwitchConfig,
   TwitchEventTypes,
+  TwitchGiftEvent,
+  TwitchRaidedEvent,
+  TwitchSubEvent,
   TwitchTrigger,
   TwitchTriggerCommand
 } from '@memebox/contracts';
 import {Service, UseOpts} from "@tsed/di";
 import {Inject} from "@tsed/common";
-import {
-  TwitchBanEvent,
-  TwitchChannelPointRedemptionEvent,
-  TwitchChatMessage,
-  TwitchCheerMessage,
-  TwitchGiftEvent,
-  TwitchRaidedEvent,
-  TwitchSubEvent
-} from "./twitch.connector.types";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {Persistence} from "../../persistence";
 import {PERSISTENCE_DI} from "../contracts";
@@ -417,7 +415,6 @@ export class TwitchConnector {
     const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
     const apiClient = new ApiClient({ authProvider });
 
-
     const pubSubClient = new PubSubClient();
     const userId = await pubSubClient.registerUserListener(apiClient);
 
@@ -456,7 +453,6 @@ export class TwitchConnector {
         userDisplayName
       }));
     });
-
   }
 
   async handleCommandsRequest(tags: tmi.ChatUserstate): Promise<void> {

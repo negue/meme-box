@@ -44,7 +44,9 @@ export const ENDPOINTS = {
 
   ACTION: {
     PREFIX: 'action',
-    SIMPLE_LIST: '/simpleList'
+    SIMPLE_LIST: '/simpleList',
+    LAST_20_ACTIONS: '/last_actions',
+    TRIGGER_ACTION: '/trigger/'
   },
 
   FILE: {

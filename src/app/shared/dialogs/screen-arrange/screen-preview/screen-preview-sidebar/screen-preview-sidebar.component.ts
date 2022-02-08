@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {uuid} from '@gewd/utils';
 import {CombinedClip, Screen} from '@memebox/contracts';
-import {WebsocketService} from '@memebox/app-state';
+import {MemeboxWebsocketService} from '@memebox/app-state';
 
 @Component({
   selector: 'app-screen-preview-sidebar',
@@ -15,11 +15,11 @@ export class ScreenPreviewSidebarComponent {
   @Input()
   allItems: CombinedClip[];
 
-  constructor(private wsService: WebsocketService) {
+  constructor(private wsService: MemeboxWebsocketService) {
   }
 
   onPreview(visibleItem: CombinedClip): void {
-    this.wsService.onTriggerClip$.next({
+    this.wsService.onTriggerAction$.next({
       id: visibleItem.clip.id,
       uniqueId: uuid(),
       targetScreen: this.screen.id

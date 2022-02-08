@@ -1,5 +1,5 @@
 import {Dictionary, ScreenMediaOverridableProperties} from "./types";
-import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
+import {AllTwitchEvents} from "./twitch.connector.types";
 
 export const ACTIONS = {
   I_AM_OBS: 'I_AM_OBS',
@@ -90,6 +90,12 @@ export interface TriggerAction extends InternalActionTriggerBase {
   // soon there will be more "overrides" to everything
 
   byTwitch?: AllTwitchEvents;
+}
+
+export interface TriggerActionDashboardEntry extends TriggerAction {
+  actionName?: string;
+  originTypeName?: string;
+  timestamp: Date;
 }
 
 export interface TriggerActionUpdate extends InternalActionTriggerBase {

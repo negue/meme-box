@@ -12,7 +12,7 @@ import {
 } from '@memebox/contracts';
 import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../../../server/constants';
 import {setDummyData} from '../state/app.dummy.data';
-import {WebsocketService} from "./websocket.service";
+import {MemeboxWebsocketService} from "./memebox-websocket.service";
 import {API_BASE, AppService, EXPRESS_BASE} from "../state/app.service";
 import {SnackbarService} from "./snackbar.service";
 
@@ -25,7 +25,7 @@ export class ConfigService {
   constructor(private appStore: AppStore,
               public http: HttpClient,  // todo extract http client and api_url base including the offline checks
               private snackbar: SnackbarService,
-              private websocketService: WebsocketService,
+              private websocketService: MemeboxWebsocketService,
               private appService: AppService) {
   }
 

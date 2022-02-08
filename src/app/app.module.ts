@@ -21,6 +21,7 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions} from "@angul
 import {MarkdownModule} from "./markdown.module";
 import {DarkmodeModule} from "./darkmode.module";
 import {IconsModule} from "./icons.module";
+import {HighlightEditorModule} from "@gewd/components/highlight-editor";
 
 console.warn('APP.MODULE.TS - AppConfig', AppConfig);
 
@@ -46,7 +47,8 @@ console.warn('APP.MODULE.TS - AppConfig', AppConfig);
 
     IconsModule,
     TranslocoRootModule,
-    MarkdownModule
+    MarkdownModule,
+    HighlightEditorModule
   ],
   providers: [
     {

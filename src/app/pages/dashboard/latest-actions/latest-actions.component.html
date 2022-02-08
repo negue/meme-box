@@ -1,0 +1,22 @@
+<div *ngIf="latestActions$ | async as latestActions">
+  <ng-container *ngIf="latestActions.length === 0">
+    <i>No Actions in this session yet.</i>
+  </ng-container>
+
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let action of latestActions">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span class="event_label">
+            {{ action.actionName }}
+            <br/> triggered from {{action.originTypeName}}
+          </span>
+        </mat-panel-title>
+        <mat-panel-description>
+          {{action.timestamp | date: 'mediumTime'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <pre [highlight]="action | json" lang="json" class="pre-wrap-break"></pre>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

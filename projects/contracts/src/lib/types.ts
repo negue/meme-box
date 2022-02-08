@@ -1,7 +1,7 @@
 import {ChatUserstate} from "tmi.js";
 import {ActionType} from "./media.types";
 import {TriggerAction} from "./actions";
-import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
+import {AllTwitchEvents} from "./twitch.connector.types";
 import {DefaultImage} from "./twitch-data.types";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {WebsocketService} from "../../../../../projects/app-state/src/lib/services/websocket.service";
+import {MemeboxWebsocketService} from "@memebox/app-state";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {ImportMediaFilesDialogComponent} from "./import-media-files-dialog/import-media-files-dialog.component";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
@@ -11,7 +11,7 @@ import {ConfigService} from "../../../../../projects/app-state/src/lib/services/
 })
 export class PersistenceActionsComponent implements OnInit {
 
-  constructor(private wsService: WebsocketService,
+  constructor(private wsService: MemeboxWebsocketService,
               private configService: ConfigService,
               private dialog: DialogService) { }
 

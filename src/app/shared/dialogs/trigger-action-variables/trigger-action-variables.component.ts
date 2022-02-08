@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {Action, ActionType, Dictionary} from "@memebox/contracts";
 import {actionDataToScriptConfig, actionDataToWidgetContent, extractVariablesFromExtended} from "@memebox/utils";
 import {ActionVariableConfig} from "@memebox/action-variables";
-import {WebsocketService} from "@memebox/app-state";
+import {MemeboxWebsocketService} from "@memebox/app-state";
 
 @Component({
   selector: 'app-trigger-action-variables',
@@ -17,7 +17,7 @@ export class TriggerActionVariablesComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Action,
 
-    private _wsService: WebsocketService,
+    private _wsService: MemeboxWebsocketService,
   ) {
     if (this.data.type === ActionType.Widget) {
       const widgetConfig = actionDataToWidgetContent(this.data);

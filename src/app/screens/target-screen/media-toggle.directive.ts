@@ -16,7 +16,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
 import {delay, skip, take, takeUntil, withLatestFrom} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
-import {AppQueries, WebsocketService} from "@memebox/app-state";
+import {AppQueries, MemeboxWebsocketService} from "@memebox/app-state";
 import {actionDataToWidgetContent, DynamicIframeContent} from "@memebox/utils";
 
 export enum MediaState {
@@ -63,7 +63,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   constructor(private element: ElementRef<HTMLElement>,
               private parentComp: TargetScreenComponent,
-              private webSocket: WebsocketService,
+              private webSocket: MemeboxWebsocketService,
               private renderer: Renderer2,
               private appQueries: AppQueries) {
     this.appQueries.actionMap$.pipe(

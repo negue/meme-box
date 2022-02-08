@@ -1,6 +1,6 @@
 import {Service} from "@tsed/di";
 import {Subject} from "rxjs";
-import {TwitchEvent} from "./twitch.connector.types";
+import {TwitchEvent} from "@memebox/contracts";
 
 @Service()
 export class TwitchQueueEventBus {
