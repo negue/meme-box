@@ -4,7 +4,7 @@ import {Subject} from "rxjs";
 import {AppQueries, AppService} from "@memebox/app-state";
 import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {Config, TWITCH_BOT_RESPONSE_CONSTS, TwitchAuthInformation} from "@memebox/contracts";
+import {clientId, Config, TWITCH_BOT_RESPONSE_CONSTS, TwitchAuthInformation} from "@memebox/contracts";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {TwitchOAuthHandler} from "./twitch.oauth";
 import {MatDialogRef} from "@angular/material/dialog";
@@ -20,7 +20,6 @@ const scopes = [
   'channel:read:redemptions',      // PubSub Channelpoints Event
   'channel:manage:redemptions'     // Twitch API Change Channelpoint Redemptions
 ].join('+');
-const clientId = 'zmqh0d2kwa9r24eecywm5uhhryggm4';
 
 interface MainAccountForm {
   channelName: string;
@@ -201,7 +200,9 @@ export class TwitchConnectionEditComponent implements OnInit {
     }
   }
 
-  deleteMainAuth (): void {
+  async deleteMainAuth (): Promise<void> {
+    await this.configService.revokeToken('MAIN');
+
     this.mainAccountForm.patchValue({
       authToken: null
     });
@@ -209,7 +210,9 @@ export class TwitchConnectionEditComponent implements OnInit {
     this.mainAuthInformation = null;
   }
 
-  deleteBotAuth (): void {
+  async deleteBotAuth (): Promise<void> {
+    await this.configService.revokeToken('BOT');
+
     this.mainAccountForm.patchValue({
       botName: null,
       botToken: null,

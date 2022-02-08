@@ -259,7 +259,7 @@ export interface TwitchConfig {
   channel: string;
   enableLog?: boolean;
   bot?: TwitchBotConfig;
-  token: string;
+  token: string|null;
 }
 
 export interface ObsConfig {
@@ -274,7 +274,7 @@ export interface TwitchBotConfig {
   command: string;
   auth?: {
     name: string;
-    token: string;
+    token: string | null;
   }
 }
 
@@ -324,3 +324,5 @@ export interface Response {
   ok: boolean;
   id?: string;
 }
+
+export type TwitchConnectionType = "MAIN" | "BOT";

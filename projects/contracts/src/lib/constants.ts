@@ -17,6 +17,7 @@ export const ENDPOINTS = {
   CONFIG: {
     PREFIX: 'config',
     TWITCH: '/twitch',
+    TWITCH_REVOKE: '/twitchRevoke/',
     OBS: '/obs',
     CUSTOM_PORT: '/customPort'
   },
@@ -87,3 +88,5 @@ export const TWITCH_BOT_RESPONSE_CONSTS = {
   `.trim(),
   DEFAULT_TRIGGER: '!commands'
 }
+
+export const clientId = 'zmqh0d2kwa9r24eecywm5uhhryggm4';

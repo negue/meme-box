@@ -8,6 +8,7 @@ import {
   TwitchChatMessage,
   TwitchCheerMessage,
   TwitchConfig,
+  TwitchConnectionType,
   TwitchEventTypes,
   TwitchGiftEvent,
   TwitchRaidedEvent,
@@ -28,7 +29,6 @@ import {TwitchAuthInformationProvider} from "./twitch.auth-information";
 import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 import {ConnectionsStateHub, UpdateStateFunc} from "../connections-state.hub";
 
-export type TmiConnectionType = "MAIN" | "BOT";
 
 @Service()
 export class TwitchConnector {
@@ -109,8 +109,8 @@ export class TwitchConnector {
       });
   }
 
-  public availableConnectionTypes (): TmiConnectionType[] {
-    const types: TmiConnectionType[] = [];
+  public availableConnectionTypes (): TwitchConnectionType[] {
+    const types: TwitchConnectionType[] = [];
 
     if (this._currentTwitchConfig.token) {
       types.push('MAIN');
@@ -123,7 +123,7 @@ export class TwitchConnector {
     return types;
   }
 
-  public async getTmiWriteInstance(type: TmiConnectionType|null = null) : Promise<tmi.Client> {
+  public async getTmiWriteInstance(type: TwitchConnectionType|null = null) : Promise<tmi.Client> {
     if (type === null) {
       const availableTypes = this.availableConnectionTypes();
 
@@ -177,7 +177,7 @@ export class TwitchConnector {
     return tmiConfig;
   }
 
-  private createTmiConnection (type: TmiConnectionType): tmi.Client {
+  private createTmiConnection (type: TwitchConnectionType): tmi.Client {
     const tmiConfig = this.createBaseTmiConfig();
 
     if (type === 'MAIN') {

@@ -1,10 +1,14 @@
-import {Config, ENDPOINTS, ObsConfig, Response, TwitchConfig} from "@memebox/contracts";
+import {clientId, Config, ENDPOINTS, ObsConfig, Response, TwitchConfig, TwitchConnectionType} from "@memebox/contracts";
 import {allowedFileUrl} from "../validations";
 import {existsSync} from "fs";
 import {sep} from 'path';
-import {BodyParams, Controller, Get, Inject, Put} from "@tsed/common";
+import {BodyParams, Controller, Delete, Get, Inject, PathParams, Put} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
 import {Persistence} from "../persistence";
+import fetch from "node-fetch";
+import {URLSearchParams} from 'url';
+import {UseOpts} from "@tsed/di";
+import {NamedLogger} from "../providers/named-logger";
 
 
 // TODO allow config generic put endpoint
@@ -14,7 +18,9 @@ import {Persistence} from "../persistence";
 export class ConfigController {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+
+    @UseOpts({name: 'ConfigController'}) public logger: NamedLogger,
   ) {
   }
 
@@ -85,5 +91,43 @@ export class ConfigController {
     };
   }
 
+
+  @Delete(`${ENDPOINTS.CONFIG.TWITCH_REVOKE}:authType`)
+  async revokeToken(
+    @PathParams("authType") authType: TwitchConnectionType
+  ): Promise<Response> {
+    const config = this._persistence.getConfig(false);
+    const targetToken = authType === 'MAIN'
+      ? config.twitch.token
+      : config.twitch.bot.auth.token;
+
+    const params = new URLSearchParams();
+    params.append('client_id', clientId);
+    params.append('token', targetToken);
+
+    // call the revoke functions
+    const result = await fetch( "https://id.twitch.tv/oauth2/revoke", {
+      method: 'POST',
+      body: params
+    });
+
+    if (result.status !== 200) {
+      this.logger.error(`Unable to revoke the Twitch-Token: ${result.status}`);
+    }
+
+    // reset the token value
+    if (authType === 'MAIN') {
+      config.twitch.token = null;
+    } else {
+      config.twitch.bot.auth.token = null;
+    }
+
+    // save
+    this._persistence.updateConfig(config);
+
+    return {
+      ok: true
+    };
+  }
 }
 
