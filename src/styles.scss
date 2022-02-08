@@ -107,3 +107,7 @@ gewd-codemirror {
   white-space: pre-wrap !important;
   word-break: break-word !important;
 }
+
+div[align=end] {
+  text-align: right;
+}

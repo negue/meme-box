@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AllTwitchEvents, TwitchEvent} from "../../../../../server/providers/twitch/twitch.connector.types";
+import {AllTwitchEvents, ENDPOINTS, TwitchEvent, WEBSOCKET_PATHS} from "@memebox/contracts";
 import {API_BASE} from "@memebox/app-state";
-import {ENDPOINTS, WEBSOCKET_PATHS} from "@memebox/contracts";
 import {isBan, isChannelPointRedemption, isCheer, isGiftSub, isRaid, isSub} from './twitch.type-guards';
 import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";

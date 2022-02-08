@@ -1,6 +1,5 @@
 import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/services/websocket.handler";
-import {TriggerAction, TwitchEventTypes} from "@memebox/contracts";
-import {AllTwitchEvents} from "../../../../../server/providers/twitch/twitch.connector.types";
+import {AllTwitchEvents, TriggerAction, TwitchEventTypes} from "@memebox/contracts";
 import {Subject, Subscription} from "rxjs";
 import {ActionStoreAdapter, ActionStoreApi} from "@memebox/shared-state";
 

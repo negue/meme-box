@@ -1,11 +1,12 @@
 import {Component, OnInit, TrackByFunction} from '@angular/core';
-import {ENDPOINTS, HasId, TimedAction, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
+import {ENDPOINTS, HasId, TimedAction, TwitchTrigger} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest, Observable} from "rxjs";
 import {API_BASE, AppQueries, AppService} from "@memebox/app-state";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import {HttpClient} from "@angular/common/http";
 import {debounceTime, map, startWith} from "rxjs/operators";
 import orderBy from 'lodash/orderBy';
+import {convertTwitchEventConfigToTwitchEvent} from "./events-overview.functions";
 
 @Component({
   selector: 'app-events-overview',
@@ -112,14 +113,9 @@ export class EventsOverviewComponent implements OnInit {
       badges[role] = 1;
     }
 
-    const triggerObj: TwitchTriggerCommand = {
-      command: item,
-      tags: {
-        badges
-      }
-    };
+    const twitchEventToTrigger = convertTwitchEventConfigToTwitchEvent(item, badges);
 
-    this.http.post(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}${ENDPOINTS.TWITCH_EVENTS.TRIGGER_CONFIG_EXAMPLE}`, triggerObj)
+    this.http.post(`${API_BASE}${ENDPOINTS.TWITCH_EVENTS.PREFIX}${ENDPOINTS.TWITCH_EVENTS.TRIGGER_EVENT}`, twitchEventToTrigger)
       .toPromise();
   }
 

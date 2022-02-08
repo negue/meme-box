@@ -27,7 +27,9 @@ export enum ConnectionState{
 export const WebSocketBasePathInjectionToken
   = new InjectionToken<string>('WebSocketBasePathInjectionToken');
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class MemeboxWebsocketService {
   public onOpenConnection$ = new Subject();
   public onReconnection$ = new Subject();
@@ -37,7 +39,7 @@ export class MemeboxWebsocketService {
   public onUpdateMedia$ = new Subject<TriggerAction>();
   public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.NONE)
 
-  private ws: WebSocket;
+  private ws?: WebSocket | null = null;
   private firstConnectionWorked = true;
   private isConnected = false;
   private intervalId = 0;
@@ -50,7 +52,7 @@ export class MemeboxWebsocketService {
   }
 
   public sendI_Am_OBS(guid: string) {
-    this.ws.send(`${ACTIONS.I_AM_OBS}=${guid}`);
+    this.sendToTheSocket(`${ACTIONS.I_AM_OBS}=${guid}`);
   }
 
   public sendWidgetRegistration(mediaId: string, widgetInstance: string, register: boolean) {
@@ -59,7 +61,7 @@ export class MemeboxWebsocketService {
 
     const payload = `${mediaId}|${widgetInstance}`;
 
-    this.ws.send(`${action}=${payload}`);
+    this.sendToTheSocket(`${action}=${payload}`);
   }
 
   public updateMediaState(mediaId: string, screenId: string, showing: boolean) {
@@ -69,7 +71,7 @@ export class MemeboxWebsocketService {
       state: showing ? ActionStateEnum.Active : ActionStateEnum.Done,
     };
 
-    this.ws.send(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);
+    this.sendToTheSocket(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);
   }
 
   public triggerClipOnScreen(clipId: string,
@@ -86,17 +88,17 @@ export class MemeboxWebsocketService {
       overrides
     }
 
-    this.ws.send(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);
+    this.sendToTheSocket(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);
     this.snackbar.normal(`Triggered clip.`);
   }
 
   public triggerReloadScreen(screenId: string | null) {
-    this.ws.send(`${ACTIONS.RELOAD_SCREEN}=${screenId}`);
+    this.sendToTheSocket(`${ACTIONS.RELOAD_SCREEN}=${screenId}`);
   }
 
 
   private onMessage(event: MessageEvent) {
-    
+
 
     const dataAsString = event.data as string;
 
@@ -132,16 +134,16 @@ export class MemeboxWebsocketService {
 
   private connect() {
     if (this.isConnected) {
-      
+
       return;
     }
 
     if (this.ws && this.ws.readyState === this.ws.CONNECTING) {
-      
+
       return;
     }
 
-    
+
 
     if (this.ws) {
       // free up memory?
@@ -158,7 +160,7 @@ export class MemeboxWebsocketService {
 
     this.ws = new WebSocket(this.wsBasePath);
 
-    this.ws.onopen = ev => {
+    this.ws.onopen = () => {
       this.isConnected = true;
       this.onOpenConnection$.next();
       this.connectionState$.next(ConnectionState.Connected);
@@ -168,13 +170,11 @@ export class MemeboxWebsocketService {
       }
     };
 
-    this.ws.onerror = ev => {
-      
+    this.ws.onerror = () => {
       this.isConnected = false;
     };
 
-    this.ws.onclose = ev => {
-      
+    this.ws.onclose = () => {
       this.isConnected = false;
       this.firstConnectionWorked = false;
 
@@ -185,7 +185,7 @@ export class MemeboxWebsocketService {
           this.intervalId = window.setInterval(() => {
             this.connect();
           }, 2000);
-          
+
         } else {
           this.connectionState$.next(ConnectionState.Offline);
         }
@@ -207,5 +207,9 @@ export class MemeboxWebsocketService {
       take(1),
       mapTo(true)
     ).toPromise();
+  }
+
+  sendToTheSocket(data: string) {
+    this.ws?.send(data);
   }
 }

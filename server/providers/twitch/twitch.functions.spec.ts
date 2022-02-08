@@ -1,6 +1,5 @@
-import {TwitchEventTypes, TwitchTrigger} from "@memebox/contracts";
+import {TwitchCheerMessage, TwitchEventTypes, TwitchTrigger} from "@memebox/contracts";
 import {getCommandsOfTwitchEvent} from "./twitch.functions";
-import {TwitchCheerMessage} from "./twitch.connector.types";
 import {ChatUserstate} from "tmi.js";
 
 describe('twitch functions', () => {

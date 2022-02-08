@@ -1,7 +1,6 @@
-import {TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
+import {AllTwitchEvents, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
 import * as tmi from "tmi.js";
 import {CommonUserstate} from "tmi.js";
-import {AllTwitchEvents} from "./twitch.connector.types";
 
 declare module 'tmi.js' {
   export interface Badges {

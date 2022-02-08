@@ -7,6 +7,7 @@ import {GettingStartedComponent} from "./getting-started.component";
 // TODO move and why from server constants? :D
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {ConfigMediaPathModule} from "../../../manage/media/media-overview/config-media-path/config-media-path.module";
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {MatIconModule} from "@angular/material/icon";
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    ConfigMediaPathModule
   ],
   providers: [],
 })

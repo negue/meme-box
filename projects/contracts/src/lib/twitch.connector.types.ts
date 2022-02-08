@@ -1,5 +1,5 @@
 import {ChatUserstate, SubMethods, Userstate} from "tmi.js";
-import {TwitchEventTypes} from "@memebox/contracts";
+import {TwitchEventTypes} from "./types";
 
 export interface TwitchEvent {
   type: TwitchEventTypes;
@@ -101,15 +101,15 @@ export class TwitchSubEvent
   readonly type = TwitchEventTypes.subscription;
 
   constructor(public payload: {
-    subtype: 'anongiftpaidupgrade'|'giftpaidupgrade'|'resub'|'subscription',
-    username: string,
-    userState: Userstate,  // todo remove to own types?
-    gifter: string,
-    months: number,
-    message: string,
-    cumulativeMonths: number,
-    shouldShareStreak: boolean,
-    methods: SubMethods,
+                subtype: 'anongiftpaidupgrade' | 'giftpaidupgrade' | 'resub' | 'subscription',
+                username: string,
+                userState: Userstate,  // todo remove to own types?
+                gifter?: string,
+                months: number,
+                message: string,
+                cumulativeMonths: number,
+                shouldShareStreak: boolean,
+                methods?: SubMethods,
               }
   ) {
     super();
@@ -127,7 +127,7 @@ export class TwitchGiftEvent
                 streakMonths: number,
                 userState: Userstate,  // todo remove to own types?
 
-                methods: SubMethods,
+                methods?: SubMethods,
                 gifts: number,
                 totalGifts: number,
                 recipientId: number,

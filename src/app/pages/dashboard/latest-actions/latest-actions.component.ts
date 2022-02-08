@@ -3,7 +3,7 @@ import {API_BASE, AppQueries, MemeboxWebsocketService} from "@memebox/app-state"
 import {HttpClient} from "@angular/common/http";
 import {combineLatest, Observable} from "rxjs";
 import {ENDPOINTS, TriggerActionDashboardEntry, TriggerClipOrigin} from "@memebox/contracts";
-import {filter, map, startWith, switchMap, tap} from "rxjs/operators";
+import {filter, map, startWith, switchMap} from "rxjs/operators";
 import {takeLatestItems} from "@memebox/utils";
 
 @Component({
@@ -35,9 +35,7 @@ export class LatestActionsComponent {
     );
 
     const filledActionMap$ = this.appQuery.actionMap$.pipe(
-      tap(actionMap => ),
-      filter(data => !!data && Object.keys(data).length > 0),
-      tap(actionMap => ),
+      filter(data => !!data && Object.keys(data).length > 0)
     );
 
     this.latestActions$ = combineLatest([

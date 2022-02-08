@@ -6,7 +6,7 @@ import {
   TwitchGiftEvent,
   TwitchRaidedEvent,
   TwitchSubEvent
-} from "../../../../../server/providers/twitch/twitch.connector.types";
+} from "@memebox/contracts";
 import {TypeGuard} from "../type-guard.pipe";
 
 

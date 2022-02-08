@@ -1,8 +1,10 @@
 <div *ngIf="twitchEvents$ | async as latestEvents">
   <ng-container *ngIf="latestEvents.length === 0">
-    <i>No Twitch Events in this session yet.</i>
+    <i>No Twitch Events in this session yet.</i> <br/>
   </ng-container>
-
+  <ng-container *ngIf="latestEvents.length !== 0">
+    <i>Note: Messages / Chat Commands are filtered out.</i> <br/>
+  </ng-container>
   <mat-accordion>
     <mat-expansion-panel *ngFor="let twitchEvent of latestEvents" [ngSwitch]="twitchEvent.type">
       <mat-expansion-panel-header>

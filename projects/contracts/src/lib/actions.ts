@@ -1,5 +1,5 @@
 import {Dictionary, ScreenMediaOverridableProperties} from "./types";
-import {AllTwitchEvents} from "../../../../server/providers/twitch/twitch.connector.types";
+import {AllTwitchEvents} from "./twitch.connector.types";
 
 export const ACTIONS = {
   I_AM_OBS: 'I_AM_OBS',
