@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 export interface ConfirmationsPayload {
   title: string;
@@ -18,6 +18,8 @@ export interface ConfirmationsPayload {
 export class SimpleConfirmationDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationsPayload) {
+    data.content = data.content.trim();
+
     if (!data.overrideButtons) {
       data.yesButton = 'Yes';
       data.noButton = 'No';

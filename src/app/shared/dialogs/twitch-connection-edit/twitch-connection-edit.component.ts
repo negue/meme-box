@@ -182,6 +182,22 @@ export class TwitchConnectionEditComponent implements OnInit {
       return;
     }
 
+    const continueToAuth = await this.dialogService.showConfirmationDialog({
+      content: `This Auth-Process opens a Window which could leak your newly created Token.
+
+      Here is how you can pixelate your OBS screen:
+
+      https://www.lucecarter.co.uk/blog/how-to-achieve-a-pixellated-secrets-scene-in-obs-for-windows`,
+      title: 'If you are streaming RIGHT NOW, hide your screen.',
+      overrideButtons: true,
+      noButton: 'Abort',
+      yesButton: "Ok, I've hidden the screen."
+    });
+
+    if (!continueToAuth) {
+      return;
+    }
+
     const oauthHandler = new TwitchOAuthHandler(
       clientId, scopes, currentUrl, true
     );
