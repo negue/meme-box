@@ -13,14 +13,6 @@ import {DialogService} from "../dialog.service";
 const currentUrl = `${location.origin}`;
 const isValidTwitchAuthUrl = ['localhost:4200', 'localhost:6363'].some(url => currentUrl.includes(url));
 
-const scopes = [
-  // 'user:read:email',            // ???
-  'chat:read',                     // TMI - Chat
-  'chat:edit',                     // TMI - Write to chat?
-  'channel:read:redemptions',      // PubSub Channelpoints Event
-  'channel:manage:redemptions'     // Twitch API Change Channelpoint Redemptions
-].join('+');
-
 interface MainAccountForm {
   channelName: string;
   authToken: string;
@@ -171,6 +163,17 @@ export class TwitchConnectionEditComponent implements OnInit {
   }
 
   async tryAuthentication(type: string) {
+
+    const newScopes = await this.dialogService.openTwitchScopeSelection({
+      scopes: []
+    });
+
+    console.info({
+      newScopes
+    });
+
+    return;
+
     if (!isValidTwitchAuthUrl) {
       this.dialogService.showConfirmationDialog({
         content: 'Twitch Auth can be only done on the normal memebox Port (6363)',
@@ -199,7 +202,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     }
 
     const oauthHandler = new TwitchOAuthHandler(
-      clientId, scopes, currentUrl, true
+      clientId, newScopes.join('+'), currentUrl, true
     );
 
     const result = await oauthHandler.login();

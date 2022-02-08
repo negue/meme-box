@@ -22,3 +22,7 @@ export interface CustomScriptDialogPayload {
   scriptConfig: ScriptConfig;
   actionType: ActionType; // TODO Rename once the "Actions" are the right choice of words
 }
+
+export interface TwitchScopeSelectionPayload {
+  scopes: string[];
+}
