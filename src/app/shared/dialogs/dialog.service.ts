@@ -8,7 +8,13 @@ import type {ConfirmationsPayload} from "./simple-confirmation-dialog/simple-con
 import type {ScreenClipOptionsPayload} from "./screen-clip-options/screen-clip-options.component";
 import type {ClipAssigningDialogOptions} from "./clip-assigning-dialog/clip-assigning-dialog.component";
 import {MarkdownDialogPayload} from "../../../../server/constants";
-import {CustomHtmlDialogPayload, CustomScriptDialogPayload, DialogContract} from "./dialog.contract";
+import {
+  CustomHtmlDialogPayload,
+  CustomScriptDialogPayload,
+  DialogContract,
+  TwitchScopeSelectionPayload,
+  TwitchScopeSelectionResult
+} from "./dialog.contract";
 import {MediaEditDialogPayload} from "./media-edit/media-edit.component";
 
 @Injectable()
@@ -130,6 +136,15 @@ export class DialogService {
       import('./screen-arrange/screen-arrange.module'),
       info
     );
+  }
+
+  async openTwitchScopeSelection(scopePayload: TwitchScopeSelectionPayload): Promise<TwitchScopeSelectionResult> {
+    const dialogRef = await this.loadAndOpen(
+      import('./twitch-scope-selection/twitch-scope-selection-dialog.module'),
+      scopePayload
+    );
+
+    return await dialogRef.afterClosed().toPromise();
   }
 
   openTwitchConnectionConfig() {

@@ -17,6 +17,7 @@ export const ENDPOINTS = {
   CONFIG: {
     PREFIX: 'config',
     TWITCH: '/twitch',
+    TWITCH_REVOKE: '/twitchRevoke/',
     OBS: '/obs',
     CUSTOM_PORT: '/customPort'
   },
@@ -87,3 +88,12 @@ export const TWITCH_BOT_RESPONSE_CONSTS = {
   `.trim(),
   DEFAULT_TRIGGER: '!commands'
 }
+
+export const TWITCH_CLIENT_ID = 'zmqh0d2kwa9r24eecywm5uhhryggm4';
+
+export const DEFAULT_TWITCH_SCOPES = [
+  // 'user:read:email',            // ???
+  'chat:read',                     // TMI - Chat
+  'chat:edit',                     // TMI - Write to chat?
+  'channel:read:redemptions',      // PubSub Channelpoints Event
+];

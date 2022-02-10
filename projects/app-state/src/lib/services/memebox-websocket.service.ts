@@ -55,6 +55,10 @@ export class MemeboxWebsocketService {
     this.sendToTheSocket(`${ACTIONS.I_AM_OBS}=${guid}`);
   }
 
+  public sendI_Am_MANAGE() {
+    this.sendToTheSocket(ACTIONS.I_AM_MANAGE);
+  }
+
   public sendWidgetRegistration(mediaId: string, widgetInstance: string, register: boolean) {
 
     const action = register ? ACTIONS.REGISTER_WIDGET_INSTANCE : ACTIONS.UNREGISTER_WIDGET_INSTANCE;

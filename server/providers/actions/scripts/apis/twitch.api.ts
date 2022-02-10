@@ -1,7 +1,7 @@
-import {TmiConnectionType, TwitchConnector} from "../../../twitch/twitch.connector";
+import {TwitchConnector} from "../../../twitch/twitch.connector";
 import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
-import {ActionType} from "@memebox/contracts";
+import {ActionType, TwitchConnectionType} from "@memebox/contracts";
 import {TwitchDataProvider} from "../../../twitch/twitch.data-provider";
 import {TwitchQueueEventBus} from "../../../twitch/twitch-queue-event.bus";
 
@@ -26,7 +26,7 @@ export class TwitchApi extends DisposableBase {
     }
   }
 
-  public async say(message: string, type: TmiConnectionType|null = null) : Promise<void> {
+  public async say(message: string, type: TwitchConnectionType|null = null) : Promise<void> {
     const tmiInstance = await this.twitchConnector.getTmiWriteInstance(type);
     const settings = this.twitchConnector.getTwitchSettings();
 

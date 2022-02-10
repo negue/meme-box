@@ -2,8 +2,9 @@ import {Dictionary, ScreenMediaOverridableProperties} from "./types";
 import {AllTwitchEvents} from "./twitch.connector.types";
 
 export const ACTIONS = {
-  I_AM_OBS: 'I_AM_OBS',
-  TRIGGER_CLIP: 'TRIGGER_CLIP',  // the only "public" websocket action
+  I_AM_OBS: 'I_AM_OBS',           // register socket as browser source screen
+  I_AM_MANAGE: 'I_AM_MANAGE',     // register socket as manage view
+  TRIGGER_CLIP: 'TRIGGER_CLIP',   // the only "public" websocket action
   UPDATE_MEDIA: 'UPDATE_MEDIA',
   UPDATE_DATA: 'UPDATE_DATA',
   RELOAD_SCREEN: 'RELOAD_SCREEN',

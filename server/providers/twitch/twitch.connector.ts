@@ -8,6 +8,7 @@ import {
   TwitchChatMessage,
   TwitchCheerMessage,
   TwitchConfig,
+  TwitchConnectionType,
   TwitchEventTypes,
   TwitchGiftEvent,
   TwitchRaidedEvent,
@@ -22,13 +23,14 @@ import {Persistence} from "../../persistence";
 import {PERSISTENCE_DI} from "../contracts";
 import {NamedLogger} from "../named-logger";
 import {getLevelOfTags} from "./twitch.functions";
-import {PubSubClient} from 'twitch-pubsub-client';
-import {ApiClient, StaticAuthProvider} from "twitch";
+
+import {PubSubClient} from '@twurple/pubsub';
+import {StaticAuthProvider} from "@twurple/auth";
+
 import {TwitchAuthInformationProvider} from "./twitch.auth-information";
 import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 import {ConnectionsStateHub, UpdateStateFunc} from "../connections-state.hub";
 
-export type TmiConnectionType = "MAIN" | "BOT";
 
 @Service()
 export class TwitchConnector {
@@ -109,8 +111,8 @@ export class TwitchConnector {
       });
   }
 
-  public availableConnectionTypes (): TmiConnectionType[] {
-    const types: TmiConnectionType[] = [];
+  public availableConnectionTypes (): TwitchConnectionType[] {
+    const types: TwitchConnectionType[] = [];
 
     if (this._currentTwitchConfig.token) {
       types.push('MAIN');
@@ -123,7 +125,7 @@ export class TwitchConnector {
     return types;
   }
 
-  public async getTmiWriteInstance(type: TmiConnectionType|null = null) : Promise<tmi.Client> {
+  public async getTmiWriteInstance(type: TwitchConnectionType|null = null) : Promise<tmi.Client> {
     if (type === null) {
       const availableTypes = this.availableConnectionTypes();
 
@@ -166,6 +168,9 @@ export class TwitchConnector {
 
   private createBaseTmiConfig (): Options {
     const tmiConfig: Options = {
+      options: {
+        skipUpdatingEmotesets: true,
+      },
       //options: {debug: true},
       connection: {
         secure: true,
@@ -177,7 +182,7 @@ export class TwitchConnector {
     return tmiConfig;
   }
 
-  private createTmiConnection (type: TmiConnectionType): tmi.Client {
+  private createTmiConnection (type: TwitchConnectionType): tmi.Client {
     const tmiConfig = this.createBaseTmiConfig();
 
     if (type === 'MAIN') {
@@ -413,10 +418,9 @@ export class TwitchConnector {
     });
 
     const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
-    const apiClient = new ApiClient({ authProvider });
 
     const pubSubClient = new PubSubClient();
-    const userId = await pubSubClient.registerUserListener(apiClient);
+    const userId = await pubSubClient.registerUserListener(authProvider);
 
     this.tmiPubSubState({
       label: 'Connected'
@@ -433,7 +437,7 @@ export class TwitchConnector {
         message,
         redemptionDate,
         rewardId,
-        rewardName,
+        rewardTitle,
         rewardPrompt,
         rewardCost,
 
@@ -446,7 +450,7 @@ export class TwitchConnector {
         message,
         redemptionDate,
         rewardId,
-        rewardName,
+        rewardName: rewardTitle,
         rewardCost,
         userId,
         userName,

@@ -8,7 +8,8 @@ import {
   OPEN_CONFIG_PATH,
   OPEN_FILES_PATH,
   TwitchAuthInformation,
-  TwitchConfig
+  TwitchConfig,
+  TwitchConnectionType
 } from '@memebox/contracts';
 import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../../../server/constants';
 import {setDummyData} from '../state/app.dummy.data';
@@ -80,6 +81,35 @@ export class ConfigService {
 
     this.snackbar.normal('Twitch Config updated!');
   }
+
+
+  public async revokeToken(tokenType: TwitchConnectionType) {
+    // update path & await
+    await this.appService.tryHttpDelete(this.configEndpoint(ENDPOINTS.CONFIG.TWITCH_REVOKE) + tokenType);
+
+    // add to the state
+    this.appStore.update(state => {
+      const config = state.config;
+
+      if (!config?.twitch) {
+        return;
+      }
+
+      if (tokenType === 'MAIN') {
+        config.twitch.token = null;
+      }
+
+      if (tokenType === 'BOT' && config.twitch.bot?.auth) {
+        config.twitch.bot.auth.token = null;
+      }
+
+      state.config = config;
+    });
+
+    this.snackbar.normal('Twitch Login revoked');
+  }
+
+
 
   public async openMediaFolder() {
     if (this.appService.isOffline()) {
