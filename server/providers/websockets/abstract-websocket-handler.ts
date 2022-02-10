@@ -18,8 +18,10 @@ export abstract class AbstractWebsocketHandler {
       this.updateConnectionCount();
 
       //connection is up, let's add a simple simple event
-      ws.on("message", (message: string) => {
-        this.handleWebSocketMessage(ws, message);
+      ws.on("message", (message) => {
+        const stringMessage = message.toString();
+
+        this.handleWebSocketMessage(ws, stringMessage);
       });
 
       ws.on("error", err => {

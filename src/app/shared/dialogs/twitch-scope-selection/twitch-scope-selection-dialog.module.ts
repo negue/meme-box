@@ -36,8 +36,7 @@ export class TwitchScopeSelectionDialogModule implements DialogContract<TwitchSc
       data: payload,
       autoFocus: false,
       width: 'calc(min(700px, 96%))',
-      maxWidth: '96vw',
-      minHeight: '50vh'
+      maxWidth: '96vw'
     });
 
     return dialogRef;

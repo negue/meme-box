@@ -516,6 +516,7 @@ export class Persistence {
       && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.token = newTwitchConfig.token;
     }
+    twitchConfig.customScopes = newTwitchConfig.customScopes ?? [];
 
     // fill empty bot object
     if (!twitchConfig.bot) {

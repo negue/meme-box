@@ -260,6 +260,7 @@ export interface TwitchConfig {
   enableLog?: boolean;
   bot?: TwitchBotConfig;
   token: string|null;
+  customScopes?: string[]|null;
 }
 
 export interface ObsConfig {

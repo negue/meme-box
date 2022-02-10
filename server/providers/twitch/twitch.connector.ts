@@ -23,8 +23,10 @@ import {Persistence} from "../../persistence";
 import {PERSISTENCE_DI} from "../contracts";
 import {NamedLogger} from "../named-logger";
 import {getLevelOfTags} from "./twitch.functions";
-import {PubSubClient} from 'twitch-pubsub-client';
-import {ApiClient, StaticAuthProvider} from "twitch";
+
+import {PubSubClient} from '@twurple/pubsub';
+import {StaticAuthProvider} from "@twurple/auth";
+
 import {TwitchAuthInformationProvider} from "./twitch.auth-information";
 import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
 import {ConnectionsStateHub, UpdateStateFunc} from "../connections-state.hub";
@@ -416,10 +418,9 @@ export class TwitchConnector {
     });
 
     const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
-    const apiClient = new ApiClient({ authProvider });
 
     const pubSubClient = new PubSubClient();
-    const userId = await pubSubClient.registerUserListener(apiClient);
+    const userId = await pubSubClient.registerUserListener(authProvider);
 
     this.tmiPubSubState({
       label: 'Connected'
@@ -436,7 +437,7 @@ export class TwitchConnector {
         message,
         redemptionDate,
         rewardId,
-        rewardName,
+        rewardTitle,
         rewardPrompt,
         rewardCost,
 
@@ -449,7 +450,7 @@ export class TwitchConnector {
         message,
         redemptionDate,
         rewardId,
-        rewardName,
+        rewardName: rewardTitle,
         rewardCost,
         userId,
         userName,

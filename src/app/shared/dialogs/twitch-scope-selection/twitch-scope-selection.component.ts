@@ -9,16 +9,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {TwitchScopeSelectionPayload} from "../dialog.contract";
-
-const defaultScopes = [
-  // 'user:read:email',            // ???
-  'chat:read',                     // TMI - Chat
-  'chat:edit',                     // TMI - Write to chat?
-  'channel:read:redemptions',      // PubSub Channelpoints Event
-  'channel:manage:redemptions'     // Twitch API Change Channelpoint Redemptions
-];
-
+import {TwitchScopeSelectionPayload, TwitchScopeSelectionResult} from "../dialog.contract";
+import {DEFAULT_TWITCH_SCOPES} from "@memebox/contracts";
 
 @Component({
   selector: 'app-twitch-scope-selection',
@@ -28,7 +20,7 @@ const defaultScopes = [
 })
 export class TwitchScopeSelectionComponent implements OnInit {
 
-  defaultScopes = defaultScopes;
+  defaultScopes = DEFAULT_TWITCH_SCOPES;
 
   @ViewChild('dialogContent', {static: true})
   public dialogContent: ElementRef<HTMLElement>;
@@ -54,7 +46,10 @@ export class TwitchScopeSelectionComponent implements OnInit {
   }
 
   chooseScopes() {
-    this.dialogRef.close(this.data.scopes);
+    this.dialogRef.close({
+      defaultScopes: DEFAULT_TWITCH_SCOPES,
+       custom: this.data.scopes
+    } as TwitchScopeSelectionResult);
   }
 
   trackByIndex: TrackByFunction<any> = index => index;

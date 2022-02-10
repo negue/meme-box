@@ -1,4 +1,12 @@
-import {clientId, Config, ENDPOINTS, ObsConfig, Response, TwitchConfig, TwitchConnectionType} from "@memebox/contracts";
+import {
+  Config,
+  ENDPOINTS,
+  ObsConfig,
+  Response,
+  TWITCH_CLIENT_ID,
+  TwitchConfig,
+  TwitchConnectionType
+} from "@memebox/contracts";
 import {allowedFileUrl} from "../validations";
 import {existsSync} from "fs";
 import {sep} from 'path';
@@ -102,7 +110,7 @@ export class ConfigController {
       : config.twitch.bot.auth.token;
 
     const params = new URLSearchParams();
-    params.append('client_id', clientId);
+    params.append('client_id', TWITCH_CLIENT_ID);
     params.append('token', targetToken);
 
     // call the revoke functions

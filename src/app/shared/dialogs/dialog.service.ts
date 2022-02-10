@@ -12,7 +12,8 @@ import {
   CustomHtmlDialogPayload,
   CustomScriptDialogPayload,
   DialogContract,
-  TwitchScopeSelectionPayload
+  TwitchScopeSelectionPayload,
+  TwitchScopeSelectionResult
 } from "./dialog.contract";
 import {MediaEditDialogPayload} from "./media-edit/media-edit.component";
 
@@ -137,7 +138,7 @@ export class DialogService {
     );
   }
 
-  async openTwitchScopeSelection(scopePayload: TwitchScopeSelectionPayload): Promise<string[]> {
+  async openTwitchScopeSelection(scopePayload: TwitchScopeSelectionPayload): Promise<TwitchScopeSelectionResult> {
     const dialogRef = await this.loadAndOpen(
       import('./twitch-scope-selection/twitch-scope-selection-dialog.module'),
       scopePayload

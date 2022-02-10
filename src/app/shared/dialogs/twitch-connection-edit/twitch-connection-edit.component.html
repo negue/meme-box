@@ -72,12 +72,23 @@
           Login: {{mainAuthInformation?.authResult?.login}} - Expires in: {{ (mainAuthInformation?.authResult?.expires_in * 1000) | readableMs }}
         </div>
 
-        <button *ngIf="!mainAccountForm.value.authToken"
-                mat-raised-button color="accent"
-                class="auth-buttons"
-                (click)="tryAuthentication('main')" >
-          Auth with Twitch
-        </button>
+        <div *ngIf="!mainAccountForm.value.authToken">
+          <button
+            mat-raised-button color="accent"
+            class="auth-buttons"
+            (click)="tryAuthentication('main')" >
+            Auth with Twitch
+          </button>
+
+          <button
+            mat-stroked-button color="primary"
+            class="auth-buttons"
+            (click)="tryAuthentication('main', true)" >
+            Auth with Twitch (custom scopes)
+          </button>
+        </div>
+
+
         <button *ngIf="mainAccountForm.value.authToken"
                 mat-raised-button color="warn"
                 class="auth-buttons"

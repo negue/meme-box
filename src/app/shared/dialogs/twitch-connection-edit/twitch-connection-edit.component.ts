@@ -4,7 +4,13 @@ import {Subject} from "rxjs";
 import {AppQueries, AppService} from "@memebox/app-state";
 import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {clientId, Config, TWITCH_BOT_RESPONSE_CONSTS, TwitchAuthInformation} from "@memebox/contracts";
+import {
+  Config,
+  DEFAULT_TWITCH_SCOPES,
+  TWITCH_BOT_RESPONSE_CONSTS,
+  TWITCH_CLIENT_ID,
+  TwitchAuthInformation
+} from "@memebox/contracts";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {TwitchOAuthHandler} from "./twitch.oauth";
 import {MatDialogRef} from "@angular/material/dialog";
@@ -33,6 +39,10 @@ interface AdditionalForm {
   styleUrls: ['./twitch-connection-edit.component.scss']
 })
 export class TwitchConnectionEditComponent implements OnInit {
+  private _destroy$ = new Subject();
+
+  private _customScopes: string[] = [];
+
   public mainAccountForm = new FormBuilder().group<MainAccountForm>({
     channelName: '',
     authToken: '',
@@ -51,11 +61,10 @@ export class TwitchConnectionEditComponent implements OnInit {
   public mainAuthInformation: TwitchAuthInformation | undefined;
   public botAuthInformation: TwitchAuthInformation | undefined;
 
-  private _destroy$ = new Subject();
-
   public commandsFlagMessage = TWITCH_BOT_RESPONSE_CONSTS.COMMANDS;
   public userFlagMessage = TWITCH_BOT_RESPONSE_CONSTS.USER;
   public defaultCommandsResponse = TWITCH_BOT_RESPONSE_CONSTS.DEFAULT_COMMANDS_TEXT;
+
 
   constructor(private appQuery: AppQueries,
               private appService: AppService,
@@ -94,6 +103,7 @@ export class TwitchConnectionEditComponent implements OnInit {
         log: value.twitch.enableLog
       });
 
+      this._customScopes = value.twitch.customScopes ?? [];
     });
 
     const authInformations = await this.configService.loadTwitchAuthInformations();
@@ -134,6 +144,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     await this.configService.updateTwitchConfig({
       channel: mainAccountValues.channelName,
       token: mainAccountValues.authToken,
+      customScopes: this._customScopes,
       enableLog: botValues.log,
       bot: {
         enabled: botValues.bot,
@@ -162,17 +173,18 @@ export class TwitchConnectionEditComponent implements OnInit {
     });
   }
 
-  async tryAuthentication(type: string) {
+  async tryAuthentication(type: string, withCustomScope = false) {
+    if (withCustomScope) {
+      const newScopes = await this.dialogService.openTwitchScopeSelection({
+        scopes: this._customScopes
+      });
 
-    const newScopes = await this.dialogService.openTwitchScopeSelection({
-      scopes: []
-    });
+      if (!newScopes) {
+        return;
+      }
 
-    console.info({
-      newScopes
-    });
-
-    return;
+      this._customScopes = newScopes.custom;
+    }
 
     if (!isValidTwitchAuthUrl) {
       this.dialogService.showConfirmationDialog({
@@ -201,8 +213,13 @@ export class TwitchConnectionEditComponent implements OnInit {
       return;
     }
 
+    const scopesForThisToken = [...DEFAULT_TWITCH_SCOPES];
+    if (withCustomScope) {
+      scopesForThisToken.push(...this._customScopes);
+    }
+
     const oauthHandler = new TwitchOAuthHandler(
-      clientId, newScopes.join('+'), currentUrl, true
+      TWITCH_CLIENT_ID, scopesForThisToken.join('+'), currentUrl, true
     );
 
     const result = await oauthHandler.login();
