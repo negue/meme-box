@@ -166,6 +166,9 @@ export class TwitchConnector {
 
   private createBaseTmiConfig (): Options {
     const tmiConfig: Options = {
+      options: {
+        skipUpdatingEmotesets: true,
+      },
       //options: {debug: true},
       connection: {
         secure: true,
