@@ -1,14 +1,14 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ClipPreviewComponent} from './clip-preview.component';
+import {ActionPreviewComponent} from './action-preview.component';
 import {PipesModule} from "@memebox/ui-components";
 import {ClipTypeModule} from "../clip-type/clip-type.module";
 
 
 @NgModule({
-  declarations: [ClipPreviewComponent],
+  declarations: [ActionPreviewComponent],
   exports: [
-    ClipPreviewComponent
+    ActionPreviewComponent
   ],
   imports: [
     CommonModule,
@@ -16,4 +16,4 @@ import {ClipTypeModule} from "../clip-type/clip-type.module";
     ClipTypeModule
   ]
 })
-export class ClipPreviewModule { }
+export class ActionPreviewModule { }

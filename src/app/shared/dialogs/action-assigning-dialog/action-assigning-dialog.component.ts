@@ -184,9 +184,6 @@ export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
       } else {
         this.appService.deleteScreenClip(this.data.screenId, clip.id);
       }
-
-      console.info(this.checkedMap, clip, isSelected);
-      // this.checkedMap[clip.id] = !isSelected;
     }
     else {
       this.dialogRef.close(clip.id);
