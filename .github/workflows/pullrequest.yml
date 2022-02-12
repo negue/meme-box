@@ -60,3 +60,5 @@ jobs:
           path: |
             release/out/
             release-electron/
+            !*-unpacked/**
+            !release-electron/mac/**
