@@ -65,13 +65,12 @@ export class NamedLogger {
 export function addDefaultLoggerAppenders (logger: Logger) {
   const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
 
-
   logger.appenders
-    .set("std-log", {
+    .set("stdout", {
       type: "stdout",
       levels: ["debug", "info", "trace"]
     })
-    .set("error-log", {
+    .set("stderr", {
       type: "stderr",
       levels: ["fatal", "error", "warn"],
       layout: {
