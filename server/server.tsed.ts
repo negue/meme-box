@@ -1,11 +1,17 @@
 import {BeforeInit, BeforeRoutesInit, Configuration, HttpServer, Inject, PlatformApplication} from "@tsed/common";
 import {API_PREFIX} from "./constants";
 import {Env} from "@tsed/core";
-import {LOG_PATH} from "./path.utils";
 import {Logger} from "@tsed/logger";
 import {BootstrapServices} from "./providers/bootstrap.services";
 import * as fs from "fs";
 import {CONTROLLERS} from "./controllers";
+import {addDefaultLoggerAppenders} from "./providers/named-logger";
+import {OnReady} from "@tsed/common/lib/platform/interfaces/OnReady";
+import {CLI_OPTIONS} from "./utils/cli-options";
+import {ScriptHandler} from "./providers/actions/scripts/script.handler";
+import {Action, ActionType} from "@memebox/contracts";
+import {uuid} from "@gewd/utils";
+import {applyScriptConfigToClipData} from "@memebox/utils";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -29,7 +35,7 @@ const rootDir = __dirname;
     logRequest: false
   }
 })
-export class ServerTsED implements BeforeRoutesInit, BeforeInit {
+export class ServerTsED implements BeforeRoutesInit, BeforeInit, OnReady {
   @Inject()
   app: PlatformApplication;
 
@@ -41,48 +47,10 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
 
   constructor(
     private _mainLogger: Logger,
-    _services: BootstrapServices
+    _services: BootstrapServices,
+    private _scriptHandler: ScriptHandler
   ) {
-    const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
-
-    _mainLogger.appenders
-      .set("stdout", {
-        type: "stdout",
-        levels: ["info", "debug", "trace"],
-        //layout: {
-        // type: "json"  // todo json on production
-        //}
-      })
-
-      .set("file", {
-        type: "file",
-        // pattern not working so we added DateFormat ourselves
-        filename: `${LOG_PATH}/memebox_tsed.${TODAY_LOG_SUFFIX}.log`,
-        // pattern: '.yyyy-MM-dd',
-        layout: {
-          type: "json",
-          separator: ","
-        }
-      })
-
-      .set("stderr", {
-        levels: ["fatal", "error", "warn"],
-        type: "stderr",
-        layout: {
-          type: "json"
-        }
-      })
-
-      .set("ERROR_FILE", {
-        type: "file",
-        levels: ["fatal", "error"],
-        filename: `${LOG_PATH}/errors.log`,
-        layout: {
-          type: "json",
-          separator: ","
-        }
-      })
-    ;
+    addDefaultLoggerAppenders(_mainLogger);
   }
 
   /**
@@ -102,5 +70,32 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
   }
 
   $beforeInit(): void | Promise<any> {
+  }
+
+  async $onReady(): Promise<void> {
+    if (CLI_OPTIONS.CI_TEST_MODE) {
+      const customScriptActionToStrigger: Action = {
+        name: 'My CI Script',
+        id: uuid(),
+        type: ActionType.Script
+      };
+
+      applyScriptConfigToClipData({
+        settings: {
+
+        },
+        bootstrapScript: '',
+        executionScript: `
+          logger.log('Scripts seem to be working');
+        `
+      }, customScriptActionToStrigger);
+
+      await this._scriptHandler.handleScript(customScriptActionToStrigger, {
+        id: customScriptActionToStrigger.id,
+        uniqueId: uuid()
+      });
+
+      process.exit();
+    }
   }
 }

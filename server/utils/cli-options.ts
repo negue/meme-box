@@ -1,7 +1,8 @@
-const PORT_OPTION_PREFIX = '--port';
-const CONFIG_OPTION_PREFIX = '--config';
-const MEDIA_OPTION_PREFIX = '--media';
-const OPEN_PAGE_IN_BROWSER_PREFIX = '--open';
+const PORT_OPTION_ARGUMENT = '--port';
+const CONFIG_OPTION_ARGUMENT = '--config';
+const MEDIA_OPTION_ARGUMENT = '--media';
+const OPEN_PAGE_IN_BROWSER_ARGUMENT = '--open';
+const CI_TEST_MODE_ARGUMENT = '--cli-test-mode';
 
 function extractValue<T>(
   optionPrefix: string,
@@ -19,14 +20,16 @@ function extractValue<T>(
  return null;
 }
 
-const PORT = extractValue<number>(PORT_OPTION_PREFIX, val => +val);
-const CONFIG_PATH = extractValue<string>(CONFIG_OPTION_PREFIX);
-const MEDIA_PATH = extractValue<string>(MEDIA_OPTION_PREFIX);
-const OPEN_BROWSER = extractValue<boolean>(OPEN_PAGE_IN_BROWSER_PREFIX, val => val == 'true');
+const PORT = extractValue<number>(PORT_OPTION_ARGUMENT, val => +val);
+const CONFIG_PATH = extractValue<string>(CONFIG_OPTION_ARGUMENT);
+const MEDIA_PATH = extractValue<string>(MEDIA_OPTION_ARGUMENT);
+const OPEN_BROWSER = extractValue<boolean>(OPEN_PAGE_IN_BROWSER_ARGUMENT, val => val == 'true');
+const CI_TEST_MODE = extractValue<boolean>(CI_TEST_MODE_ARGUMENT, val => val == 'true');
 
 export const CLI_OPTIONS = {
   PORT,
   CONFIG_PATH,
   MEDIA_PATH,
   OPEN_BROWSER,
+  CI_TEST_MODE,
 };

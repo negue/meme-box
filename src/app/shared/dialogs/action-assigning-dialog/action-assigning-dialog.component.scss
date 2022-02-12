@@ -34,7 +34,7 @@
   @include gridLayout;
   width: 100%;
   list-style: none;
-  padding-top: 0;
+  padding: 0 0.5rem 0.5rem;
 }
 
 .mediaList__option {
@@ -71,50 +71,18 @@
   margin-right: 0.5em;
 }
 
-.mediaList__audioContainer, .mediaList__videoContainer {
-  height: 100%;
-  display: block;
-  position: relative;
-}
-
-//TODO this is weird
-.audio-image,
-.video-image {
-  display: flex;
-  height: 75%;
-  align-items: center;
-  justify-content: center;
-
-  .mat-icon {
-    height: 6rem;
-    width: 6rem;
-  }
-}
-
 .filterChip {
   cursor: pointer;
 }
 
-.iframe-container {
-  .media-iframe-container {
-    width: 100%;
-    pointer-events: none;
-
-    iframe {
-      width: 100%;
-    }
-  }
-}
-
-.svgContainer {
-  height: 1.5rem;
-  width: 1.5rem;
-  border-radius: 50%;
-  margin-left: 0.25rem;
-  display: flex;
-  align-items: center;
-}
-
 app-filter {
   width: 100%;
+}
+
+
+.action__description {
+  font-style: italic;
+  margin-left: 1rem;
+  font-size: 14px;
+  color: lightgray;
 }

@@ -8,7 +8,7 @@ import {createCombinedFilterItems$, filterClips$} from "../../components/filter/
 import {AppQueries, AppService} from "@memebox/app-state";
 
 
-export interface ClipAssigningDialogOptions {
+export interface ActionAssigningDialogOptions {
   mode: ClipAssigningMode;
   // Multiple, current screen
   screenId?: string;
@@ -36,12 +36,12 @@ function unassignedFilterToString(  unassignedFilterType: UnassignedFilterEnum) 
 const ignoreMediaTypes = [ActionType.WidgetTemplate, ActionType.PermanentScript];
 
 @Component({
-  selector: 'app-clip-assigning-dialog',
-  templateUrl: './clip-assigning-dialog.component.html',
-  styleUrls: ['./clip-assigning-dialog.component.scss']
+  selector: 'app-action-assigning-dialog',
+  templateUrl: './action-assigning-dialog.component.html',
+  styleUrls: ['./action-assigning-dialog.component.scss']
 })
-export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
-  MediaType = ActionType;
+export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
+  ActionType = ActionType;
 
   // Media - is assigned to - Screen
   //                        - Triggers (Twitch, Timers)
@@ -85,7 +85,7 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
   public searchText$ = new BehaviorSubject('');
   public filteredItems$ = new BehaviorSubject<IFilterItem[]>([]);
 
-  public clips$: Observable<Action[]> = filterClips$(
+  public actions$: Observable<Action[]> = filterClips$(
     this.appQueries.state$,
     this.filteredItems$,
     this.searchText$
@@ -144,12 +144,12 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
     map(screenMap => screenMap[this.data.screenId])
   );
 
-  trackByClip: TrackByFunction<Action> = (index, item) => item.id;
+  trackByAction: TrackByFunction<Action> = (index, item) => item.id;
 
   private destroy$ = new Subject();
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: ClipAssigningDialogOptions,
-              public dialogRef: MatDialogRef<ClipAssigningDialogComponent>,
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ActionAssigningDialogOptions,
+              public dialogRef: MatDialogRef<ActionAssigningDialogComponent>,
               private appQueries: AppQueries,
               private appService: AppService) {
   }
@@ -184,9 +184,6 @@ export class ClipAssigningDialogComponent implements OnInit, OnDestroy {
       } else {
         this.appService.deleteScreenClip(this.data.screenId, clip.id);
       }
-
-      console.info(this.checkedMap, clip, isSelected);
-      // this.checkedMap[clip.id] = !isSelected;
     }
     else {
       this.dialogRef.close(clip.id);

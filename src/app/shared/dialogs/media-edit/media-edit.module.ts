@@ -14,7 +14,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSliderModule} from "@angular/material/slider";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {ClipPreviewModule, ClipTypeModule, CompactClipCardModule} from "@memebox/state-components";
+import {ActionPreviewModule, ClipTypeModule, CompactClipCardModule} from "@memebox/state-components";
 import {DynamicIframeModule} from "../../components/dynamic-iframe/dynamic-iframe.module";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {TranslocoModule} from "@ngneat/transloco";
@@ -45,7 +45,7 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
     CompactClipCardModule,
     DynamicIframeModule,
     AutoScaleModule,
-    ClipPreviewModule,
+    ActionPreviewModule,
     TranslocoModule,
     MatExpansionModule,
     CodemirrorModule,

@@ -13,13 +13,12 @@ import {MatSelectModule} from '@angular/material/select';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatRippleModule} from '@angular/material/core';
-import {ClipTypeModule} from '../../../../../projects/state-components/src/lib/clip-type/clip-type.module';
+import {ActionPreviewModule, ClipTypeModule} from '@memebox/state-components';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {AutoScaleModule} from '@gewd/components/auto-scale';
-import {ClipPreviewModule} from '../../../../../projects/state-components/src/lib/clip-preview/clip-preview.module';
 import {DragResizeMediaModule} from './drag-resize-media/drag-resize-media.module';
 import {TargetScreenModule} from '../../../screens/target-screen/target-screen.module';
-import {PipesModule} from '../../../../../projects/ui-components/src/lib/pipes/pipes.module';
+import {PipesModule} from '@memebox/ui-components';
 import {ScreenArrangeSidebarModule} from './screen-arrange-sidebar/screen-arrange-sidebar.module';
 import {ScreenArrangePreviewModule} from './screen-arrange-preview/screen-arrange-preview.module';
 import {ScreenPreviewModule} from './screen-preview/screen-preview.module';
@@ -46,7 +45,7 @@ import {A11yModule} from '@angular/cdk/a11y';
     ClipTypeModule,
     MatCheckboxModule,
     AutoScaleModule,
-    ClipPreviewModule,
+    ActionPreviewModule,
     DragResizeMediaModule,
     TargetScreenModule,
     PipesModule,

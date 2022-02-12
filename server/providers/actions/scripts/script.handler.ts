@@ -107,7 +107,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     if (this._compiledScripts.has(script.id)) {
       scriptHoldingData = this._compiledScripts.get(script.id);
     } else {
-      const obsApi = await this.getObsApi();
+      const obsApi = await this.getObsApi();   // TODO trigger obs connection without waiting for it
 
       // todo extract ScriptContextFactory?!
       scriptHoldingData = new ScriptContext(

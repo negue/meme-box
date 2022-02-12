@@ -195,8 +195,8 @@
         <!-- todo create a directive that handles all of those properties -->
 
         <!-- improve the duplicate settings -->
-        <app-clip-preview *ngIf="pair.clipSetting.position === PositionEnum.FullScreen"
-                          [clip]="pair.clip"
+        <app-action-preview *ngIf="pair.clipSetting.position === PositionEnum.FullScreen"
+                            [action]="pair.clip"
                           [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
                           [style.position]="'absolute'"
                           [style.width.%]="100"
@@ -204,7 +204,7 @@
                           [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
                           [style.--clip-setting-img-fit]="pair.clipSetting.imgFit"
                           draggable="false"
-                          class="preview-box"></app-clip-preview>
+                          class="preview-box"></app-action-preview>
 
         <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Centered"
                                [clip]="pair.clip"

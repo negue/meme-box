@@ -18,12 +18,9 @@ export class NamedLogger {
 
   private logger: Logger;
 
-  constructor(@Opts options: {name: string} = {name: 'Logger'},
-              loggerBase: Logger) {
+  constructor(@Opts options: {name: string} = {name: 'Logger'}) {
     this.logger = new Logger(options.name);
-    loggerBase.appenders.forEach((value, key) => {
-      this.logger.appenders.set(key, value.config);
-    });
+    addDefaultLoggerAppenders(this.logger);
   }
 
   warn(...data: unknown[]) {
@@ -63,4 +60,41 @@ export class NamedLogger {
     this.logger.error(error, context);
   }
 
+}
+
+export function addDefaultLoggerAppenders (logger: Logger) {
+  const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
+
+  logger.appenders
+    .set("stdout", {
+      type: "stdout",
+      levels: ["debug", "info", "trace"]
+    })
+    .set("stderr", {
+      type: "stderr",
+      levels: ["fatal", "error", "warn"],
+      layout: {
+        type: "pattern",
+        pattern: "%d %p %c %X{user} %m%n"
+      }
+    })
+    .set("file", {
+      type: "file",
+      // pattern not working so we added DateFormat ourselves
+      filename: `${LOG_PATH}/memebox_tsed.${TODAY_LOG_SUFFIX}.log`,
+      // pattern: '.yyyy-MM-dd',
+      layout: {
+        type: "json",
+        separator: ","
+      }
+    })
+    .set("ERROR_FILE", {
+      type: "file",
+      levels: ["fatal", "error"],
+      filename: `${LOG_PATH}/errors.log`,
+      layout: {
+        type: "json",
+        separator: ","
+      }
+    });
 }

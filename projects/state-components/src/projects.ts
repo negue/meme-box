@@ -2,8 +2,8 @@
  * Public API Surface of state-components
  */
 
-export * from './lib/clip-preview/clip-preview.module';
-export * from './lib/clip-preview/clip-preview.component';
+export * from './lib/action-preview/action-preview.module';
+export * from './lib/action-preview/action-preview.component';
 
 export * from './lib/clip-type/clip-type.module';
 export * from './lib/clip-type/clip-type.component';

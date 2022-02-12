@@ -2,11 +2,11 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Action, ActionType, ScreenClip} from "@memebox/contracts";
 
 @Component({
-  selector: 'app-clip-preview',
-  templateUrl: './clip-preview.component.html',
-  styleUrls: ['./clip-preview.component.scss']
+  selector: 'app-action-preview',
+  templateUrl: './action-preview.component.html',
+  styleUrls: ['./action-preview.component.scss']
 })
-export class ClipPreviewComponent implements OnInit {
+export class ActionPreviewComponent implements OnInit {
 
   @Input()
   public height: string;
@@ -15,7 +15,7 @@ export class ClipPreviewComponent implements OnInit {
   public width: string;
 
   @Input()
-  public clip: Action;
+  public action: Action;
 
   @Input()
   public setting: ScreenClip;

@@ -5,7 +5,7 @@ on:
     branches: [ release, develop ]
 
 jobs:
-  build:
+  build_test:
 
     runs-on: ubuntu-latest
 
@@ -28,3 +28,41 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           command: npm run test:cypress
+
+  build_executables:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
+      - name: Use Node.js 12.16.2
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.16.2
+
+      - run: npm install
+      - run: npm run build:prepare
+      - run: npm run build:nexe -- -o release/out/memebox
+
+      - run: release/out/memebox --cli-test-mode=true  --config=./release/config
+
+      - run: npm run electron:build:only
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}_output
+          path: |
+            release/out/
+            release-electron/
+            !release/config/**
+            !release-electron/*-unpacked/**
+            !release-electron/mac/**

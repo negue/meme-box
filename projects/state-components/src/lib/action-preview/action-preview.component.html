@@ -1,10 +1,10 @@
-<ng-container *ngIf="clip?.previewUrl; else noPreviewAvailable">
+<ng-container *ngIf="action?.previewUrl; else noPreviewAvailable">
   <!-- Image => Preview -->
   <img [style.height]="height"
        [style.width]="width"
 
        [style.--clip-setting-img-fit]="setting?.imgFit"
-       [src]="clip | mediaToPreviewUrl: useOldPathEndpoint"
+       [src]="action | mediaToPreviewUrl: useOldPathEndpoint"
        draggable="false"/>
 
 </ng-container>
@@ -12,14 +12,14 @@
 <ng-template #noPreviewAvailable>
 
 
-<ng-container [ngSwitch]="clip?.type">
+<ng-container [ngSwitch]="action?.type">
   <!-- Image => Preview -->
   <img *ngSwitchCase="MediaType.Picture"
        [style.height]="height"
        [style.width]="width"
 
        [style.--clip-setting-img-fit]="setting?.imgFit"
-       [src]="clip | mediaToPreviewUrl: useOldPathEndpoint"
+       [src]="action | mediaToPreviewUrl: useOldPathEndpoint"
        draggable="false"/>
 
   <!-- Image => Preview -->
@@ -28,27 +28,27 @@
        [style.width]="width"
 
        [style.--clip-setting-img-fit]="setting?.imgFit"
-       [src]="clip | mediaToPreviewUrl: useOldPathEndpoint"
+       [src]="action | mediaToPreviewUrl: useOldPathEndpoint"
        draggable="false"/>
 
   <!-- Iframe => Iframe -->
   <ng-container *ngSwitchCase="MediaType.IFrame">
     <ng-container *ngIf="(height || width) || !showIframe; else canShowIframe">
-      <app-clip-type [type]="clip.type"
+      <app-clip-type [type]="action.type"
                      [iconSize]="height || width"></app-clip-type>
     </ng-container>
     <ng-template #canShowIframe>
 
-      <iframe *ngIf="clip.path"
+      <iframe *ngIf="action.path"
         [style.pointer-events]="'none'"
-        [src]="clip.path | safeurl"
+        [src]="action.path | safeurl"
       ></iframe>
     </ng-template>
   </ng-container>
 
   <!-- All others => AppClipType -->
   <app-clip-type *ngSwitchDefault
-                 [type]="clip?.type"
+                 [type]="action?.type"
                  [iconSize]="height || width"></app-clip-type>
 
 </ng-container>
