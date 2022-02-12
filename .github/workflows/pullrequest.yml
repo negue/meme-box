@@ -51,5 +51,12 @@ jobs:
 
       - run: npm install
       - run: npm run build:prepare
-      - run: npm run build:nexe
+      - run: npm run build:nexe -- -o release/out/memebox
       - run: npm run electron:build:only
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.os }}_output
+          path: |
+            release/out/
+            release-electron/
