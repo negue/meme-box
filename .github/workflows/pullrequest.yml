@@ -53,7 +53,7 @@ jobs:
       - run: npm run build:prepare
       - run: npm run build:nexe -- -o release/out/memebox
 
-      - run: release/out/memebox --cli-test-mode=true
+      - run: release/out/memebox --cli-test-mode=true  --config=./release/config
 
       - run: npm run electron:build:only
 
@@ -63,5 +63,6 @@ jobs:
           path: |
             release/out/
             release-electron/
+            !release/config/**
             !*-unpacked/**
             !release-electron/mac/**
