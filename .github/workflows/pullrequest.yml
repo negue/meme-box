@@ -64,5 +64,5 @@ jobs:
             release/out/
             release-electron/
             !release/config/**
-            !*-unpacked/**
+            !release-electron/*-unpacked/**
             !release-electron/mac/**
