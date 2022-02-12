@@ -149,8 +149,8 @@
           <span>
             <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
 
-              <app-clip-preview [clip]="clipDictionary[form.value.clipId]"
-                                height="100px" width="200px"></app-clip-preview>
+              <app-action-preview [action]="clipDictionary[form.value.clipId]"
+                                  height="100px" width="200px"></app-action-preview>
               {{ clipDictionary[form.value.clipId]?.name }}
             </ng-container>
 

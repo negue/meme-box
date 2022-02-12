@@ -6,7 +6,7 @@ import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import type {ConfirmationsPayload} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
 import type {ScreenClipOptionsPayload} from "./screen-clip-options/screen-clip-options.component";
-import type {ClipAssigningDialogOptions} from "./clip-assigning-dialog/clip-assigning-dialog.component";
+import type {ActionAssigningDialogOptions} from "./action-assigning-dialog/action-assigning-dialog.component";
 import {MarkdownDialogPayload} from "../../../../server/constants";
 import {
   CustomHtmlDialogPayload,
@@ -108,9 +108,9 @@ export class DialogService {
     );
   }
 
-  async showClipSelectionDialog(payload: ClipAssigningDialogOptions) {
+  async showClipSelectionDialog(payload: ActionAssigningDialogOptions) {
     const dialogRef = await this.loadAndOpen(
-      import('./clip-assigning-dialog/clip-assigning-dialog.module'),
+      import('./action-assigning-dialog/action-assigning-dialog.module'),
       payload
     );
 

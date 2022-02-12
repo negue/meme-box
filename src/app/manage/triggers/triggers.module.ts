@@ -12,7 +12,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
-import {ClipPreviewModule} from "@memebox/state-components";
+import {ActionPreviewModule} from "@memebox/state-components";
 import {TimedEventInfoComponent} from "./events-overview/twitch-event-info/timed-event-info.component";
 import {TwitchEventInfoComponent} from "./events-overview/timed-event-info/twitch-event-info.component";
 import {PipesModule} from "@memebox/ui-components";
@@ -42,7 +42,7 @@ const routes: Routes = [
     MatCardModule,
     MatChipsModule,
     CardOverviewModule,
-    ClipPreviewModule,
+    ActionPreviewModule,
     PipesModule,
     MatTooltipModule,
     MatMenuModule

@@ -5,7 +5,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
 import {PipesModule} from "@memebox/ui-components";
-import {ClipPreviewModule, ClipTypeModule} from "@memebox/state-components";
+import {ActionPreviewModule, ClipTypeModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatExpansionModule} from "@angular/material/expansion";
@@ -35,7 +35,7 @@ import {DirectivesModule} from "../../../../shared/directives/directives.module"
     MatMenuModule,
     MatDividerModule,
     ActionShortcutToolbarModule,
-    ClipPreviewModule,
+    ActionPreviewModule,
     DirectivesModule
   ]
 })

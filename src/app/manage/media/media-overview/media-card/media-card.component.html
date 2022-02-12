@@ -56,9 +56,9 @@
     </ng-container>
 
     <ng-container *ngSwitchCase="MEDIA_TYPE.Video">
-     <app-clip-preview [clip]="action" height="188px"
-                       [style.--clip-setting-img-fit]="'contains'"
-                       class="mediaInfo__preview__img"></app-clip-preview>
+     <app-action-preview [action]="action" height="188px"
+                         [style.--clip-setting-img-fit]="'contains'"
+                         class="mediaInfo__preview__img"></app-action-preview>
     </ng-container>
 
     <ng-container *ngSwitchDefault>

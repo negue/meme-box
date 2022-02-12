@@ -4,7 +4,7 @@ import {ScreenArrangePreviewComponent} from './screen-arrange-preview.component'
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {AutoScaleModule} from '@gewd/components/auto-scale';
-import {ClipPreviewModule} from '@memebox/state-components';
+import {ActionPreviewModule} from '@memebox/state-components';
 import {DragResizeMediaModule} from '../drag-resize-media/drag-resize-media.module';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
@@ -28,7 +28,7 @@ import {OpenFeedbackButtonModule} from "../../../components/open-feedback-button
     MatFormFieldModule,
     MatSelectModule,
     AutoScaleModule,
-    ClipPreviewModule,
+    ActionPreviewModule,
     DragResizeMediaModule,
     MatCheckboxModule,
     MatButtonModule,
