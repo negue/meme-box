@@ -1,5 +1,4 @@
 import {NamedLogger} from "./providers/named-logger";
-import {$log} from "@tsed/common";
 
 
 // TODO move from winston to @tsed/logger for DI injection magic
@@ -7,7 +6,7 @@ import {$log} from "@tsed/common";
 export function newLogger(label: string) {
   const newLogger = new NamedLogger({
     name: label
-  }, $log);
+  });
 
   return newLogger;
 }

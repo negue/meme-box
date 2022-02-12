@@ -18,8 +18,7 @@ export class NamedLogger {
 
   private logger: Logger;
 
-  constructor(@Opts options: {name: string} = {name: 'Logger'},
-              loggerBase: Logger) {
+  constructor(@Opts options: {name: string} = {name: 'Logger'}) {
     this.logger = new Logger(options.name);
     addDefaultLoggerAppenders(this.logger);
   }
