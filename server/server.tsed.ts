@@ -1,11 +1,11 @@
 import {BeforeInit, BeforeRoutesInit, Configuration, HttpServer, Inject, PlatformApplication} from "@tsed/common";
 import {API_PREFIX} from "./constants";
 import {Env} from "@tsed/core";
-import {LOG_PATH} from "./path.utils";
 import {Logger} from "@tsed/logger";
 import {BootstrapServices} from "./providers/bootstrap.services";
 import * as fs from "fs";
 import {CONTROLLERS} from "./controllers";
+import {addDefaultLoggerAppenders} from "./providers/named-logger";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -43,46 +43,7 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
     private _mainLogger: Logger,
     _services: BootstrapServices
   ) {
-    const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
-
-    _mainLogger.appenders
-      .set("stdout", {
-        type: "stdout",
-        levels: ["info", "debug", "trace"],
-        //layout: {
-        // type: "json"  // todo json on production
-        //}
-      })
-
-      .set("file", {
-        type: "file",
-        // pattern not working so we added DateFormat ourselves
-        filename: `${LOG_PATH}/memebox_tsed.${TODAY_LOG_SUFFIX}.log`,
-        // pattern: '.yyyy-MM-dd',
-        layout: {
-          type: "json",
-          separator: ","
-        }
-      })
-
-      .set("stderr", {
-        levels: ["fatal", "error", "warn"],
-        type: "stderr",
-        layout: {
-          type: "json"
-        }
-      })
-
-      .set("ERROR_FILE", {
-        type: "file",
-        levels: ["fatal", "error"],
-        filename: `${LOG_PATH}/errors.log`,
-        layout: {
-          type: "json",
-          separator: ","
-        }
-      })
-    ;
+    addDefaultLoggerAppenders(_mainLogger);
   }
 
   /**
