@@ -40,10 +40,6 @@ export function applyScriptConfigToClipData (
   scriptConfig: ScriptConfig,
   targetClip: Partial<Action>
 ) {
-  console.info('PRE CHANGE', JSON.stringify(targetClip));
-
-  console.info({iframeContent: scriptConfig});
-
   if (!targetClip.extended) {
     targetClip.extended = {};
   }
@@ -53,8 +49,6 @@ export function applyScriptConfigToClipData (
 
   targetClip.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(scriptConfig.variablesConfig);
   targetClip.extended[SCRIPT_SETTINGS_KEY] = JSON.stringify(scriptConfig.settings);
-
-  console.info('POST CHANGE', JSON.stringify(targetClip));
 }
 
 export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [

@@ -6,6 +6,12 @@ import {BootstrapServices} from "./providers/bootstrap.services";
 import * as fs from "fs";
 import {CONTROLLERS} from "./controllers";
 import {addDefaultLoggerAppenders} from "./providers/named-logger";
+import {OnReady} from "@tsed/common/lib/platform/interfaces/OnReady";
+import {CLI_OPTIONS} from "./utils/cli-options";
+import {ScriptHandler} from "./providers/actions/scripts/script.handler";
+import {Action, ActionType} from "@memebox/contracts";
+import {uuid} from "@gewd/utils";
+import {applyScriptConfigToClipData} from "@memebox/utils";
 // import * as bodyParser from "body-parser";
 // import * as compress from "compression";
 // import * as cookieParser from "cookie-parser";
@@ -29,7 +35,7 @@ const rootDir = __dirname;
     logRequest: false
   }
 })
-export class ServerTsED implements BeforeRoutesInit, BeforeInit {
+export class ServerTsED implements BeforeRoutesInit, BeforeInit, OnReady {
   @Inject()
   app: PlatformApplication;
 
@@ -41,7 +47,8 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
 
   constructor(
     private _mainLogger: Logger,
-    _services: BootstrapServices
+    _services: BootstrapServices,
+    private _scriptHandler: ScriptHandler
   ) {
     addDefaultLoggerAppenders(_mainLogger);
   }
@@ -63,5 +70,32 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit {
   }
 
   $beforeInit(): void | Promise<any> {
+  }
+
+  async $onReady(): Promise<void> {
+    if (CLI_OPTIONS.CI_TEST_MODE) {
+      const customScriptActionToStrigger: Action = {
+        name: 'My CI Script',
+        id: uuid(),
+        type: ActionType.Script
+      };
+
+      applyScriptConfigToClipData({
+        settings: {
+
+        },
+        bootstrapScript: '',
+        executionScript: `
+          logger.log('Scripts seem to be working');
+        `
+      }, customScriptActionToStrigger);
+
+      await this._scriptHandler.handleScript(customScriptActionToStrigger, {
+        id: customScriptActionToStrigger.id,
+        uniqueId: uuid()
+      });
+
+      process.exit();
+    }
   }
 }
