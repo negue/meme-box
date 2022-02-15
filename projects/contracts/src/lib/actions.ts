@@ -1,6 +1,8 @@
 import {Dictionary, ScreenMediaOverridableProperties} from "./types";
 import {AllTwitchEvents} from "./twitch.connector.types";
 
+// TODO refactor / rename to more understandable names
+
 export const ACTIONS = {
   I_AM_OBS: 'I_AM_OBS',           // register socket as browser source screen
   I_AM_MANAGE: 'I_AM_MANAGE',     // register socket as manage view

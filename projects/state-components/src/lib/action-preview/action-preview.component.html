@@ -33,9 +33,9 @@
 
   <!-- Iframe => Iframe -->
   <ng-container *ngSwitchCase="MediaType.IFrame">
-    <ng-container *ngIf="(height || width) || !showIframe; else canShowIframe">
+    <ng-container *ngIf="(iconSize || height || width) || !showIframe; else canShowIframe">
       <app-clip-type [type]="action.type"
-                     [iconSize]="height || width"></app-clip-type>
+                     [iconSize]="iconSize || height || width"></app-clip-type>
     </ng-container>
     <ng-template #canShowIframe>
 
@@ -49,7 +49,7 @@
   <!-- All others => AppClipType -->
   <app-clip-type *ngSwitchDefault
                  [type]="action?.type"
-                 [iconSize]="height || width"></app-clip-type>
+                 [iconSize]="iconSize || height || width"></app-clip-type>
 
 </ng-container>
 

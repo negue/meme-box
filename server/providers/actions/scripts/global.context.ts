@@ -5,6 +5,7 @@ import {UtilsApi} from "./apis/utils.api";
 import {EnumsApi} from "./apis/enums.api";
 import fetch from "node-fetch";
 import {ProcessApi} from "./apis/process.api";
+import lodash from "lodash";
 
 export function setGlobalVMScope (vm: VM) {
   // Script Globals
@@ -14,4 +15,5 @@ export function setGlobalVMScope (vm: VM) {
   vm.freeze(EnumsApi, 'enums');
   vm.freeze(fetch, 'fetch');
   vm.freeze(ProcessApi, 'process');
+  vm.freeze(lodash, 'lodash')
 }

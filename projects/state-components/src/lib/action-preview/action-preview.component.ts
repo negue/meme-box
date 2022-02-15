@@ -9,6 +9,10 @@ import {Action, ActionType, ScreenClip} from "@memebox/contracts";
 export class ActionPreviewComponent implements OnInit {
 
   @Input()
+  public iconSize: string;
+
+
+  @Input()
   public height: string;
 
   @Input()

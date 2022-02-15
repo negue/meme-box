@@ -3,6 +3,7 @@ import {Logger} from "@tsed/logger";
 import {Injectable} from "@tsed/di";
 import {LOG_PATH} from "../path.utils";
 import {BehaviorSubject} from "rxjs";
+import {CLI_OPTIONS} from "../utils/cli-options";
 
 // TODO add all other methods
 
@@ -65,18 +66,21 @@ export class NamedLogger {
 export function addDefaultLoggerAppenders (logger: Logger) {
   const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
 
+  const jsonLayout = {
+    type: "json",
+    separator: ","
+  };
+
   logger.appenders
     .set("stdout", {
       type: "stdout",
-      levels: ["debug", "info", "trace"]
+      levels: ["debug", "info", "trace"],
+      layout: CLI_OPTIONS.STDOUT_AS_JSON ? jsonLayout : undefined
     })
     .set("stderr", {
       type: "stderr",
       levels: ["fatal", "error", "warn"],
-      layout: {
-        type: "pattern",
-        pattern: "%d %p %c %X{user} %m%n"
-      }
+      layout: CLI_OPTIONS.STDOUT_AS_JSON ? jsonLayout : undefined
     })
     .set("file", {
       type: "file",

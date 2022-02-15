@@ -24,6 +24,7 @@ export function convertTwitchEventConfigToTwitchEvent (
         self: false,
         userstate: {
           badges,
+          "display-name": 'Meme-Box',
           username: 'memebox'
         }
       })
@@ -35,6 +36,7 @@ export function convertTwitchEventConfigToTwitchEvent (
         userstate: {
           badges,
           username: 'memebox',
+          "display-name": 'Meme-Box',
           bits: ''+ (trigger.minAmount || trigger.maxAmount || 133),
         }
       })
@@ -63,6 +65,7 @@ export function convertTwitchEventConfigToTwitchEvent (
         userState: {
           badges,
           username: 'memebox',
+          "display-name": 'Meme-Box',
         }
       })
     }
@@ -72,6 +75,7 @@ export function convertTwitchEventConfigToTwitchEvent (
         userState: {
           badges,
           username: 'memebox',
+          "display-name": 'Meme-Box',
         },
         gifter: 'memebox',
         gifts: 3,

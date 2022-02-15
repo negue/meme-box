@@ -3,6 +3,7 @@ const CONFIG_OPTION_ARGUMENT = '--config';
 const MEDIA_OPTION_ARGUMENT = '--media';
 const OPEN_PAGE_IN_BROWSER_ARGUMENT = '--open';
 const CI_TEST_MODE_ARGUMENT = '--cli-test-mode';
+const STDOUT_AS_JSON_ARGUMENT = '--stdout-json';
 
 function extractValue<T>(
   optionPrefix: string,
@@ -25,6 +26,7 @@ const CONFIG_PATH = extractValue<string>(CONFIG_OPTION_ARGUMENT);
 const MEDIA_PATH = extractValue<string>(MEDIA_OPTION_ARGUMENT);
 const OPEN_BROWSER = extractValue<boolean>(OPEN_PAGE_IN_BROWSER_ARGUMENT, val => val == 'true');
 const CI_TEST_MODE = extractValue<boolean>(CI_TEST_MODE_ARGUMENT, val => val == 'true');
+const STDOUT_AS_JSON = extractValue<boolean>(STDOUT_AS_JSON_ARGUMENT, val => val == 'true');
 
 export const CLI_OPTIONS = {
   PORT,
@@ -32,4 +34,5 @@ export const CLI_OPTIONS = {
   MEDIA_PATH,
   OPEN_BROWSER,
   CI_TEST_MODE,
+  STDOUT_AS_JSON,
 };

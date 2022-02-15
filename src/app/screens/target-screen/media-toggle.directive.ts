@@ -146,6 +146,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.currentCombinedClip = mergeCombinedClipWithOverrides(this.currentCombinedClip, triggerPayload);
 
         this.applyPositions();
+        this.applyWidgetContent();
       }
     })
 

@@ -19,7 +19,7 @@ export class MediaApi extends ActionApi {
     super(memeboxApi, actionId, screenId);
   }
 
-  updateScreenOptions(overrides: ScreenMediaOverridableProperties): Promise<void> {
+  updateScreenOptions(overrides: ScreenMediaOverridableProperties, timeoutInMs = 50): Promise<void> {
     this.memeboxApi.actionTriggerEventBus.updateActionProps({
       id: this.actionId,
       uniqueId: uuid(),
@@ -31,7 +31,7 @@ export class MediaApi extends ActionApi {
       }
     })
 
-    return timeoutAsync(50);
+    return timeoutAsync(timeoutInMs);
   }
 
   async triggerWhile(executionFunction: (
