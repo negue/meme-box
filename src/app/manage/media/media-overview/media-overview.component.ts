@@ -147,4 +147,11 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
   onTriggerWithVariables(item: Action) {
     this._dialog.showTriggerActionVariables(item);
   }
+
+  onToggleActive(action: Action) {
+    this.service.addOrUpdateAction({
+      ...action,
+      isActive: !action.isActive
+    });
+  }
 }

@@ -5,14 +5,11 @@
 </div>
 
 <div class="eventInfo__checkbox">
-  <mat-chip-list>
-    <mat-chip class="eventInfo__chip"
-              [class.eventInfo__chip--selected]="item.active">
-      <mat-checkbox [checked]="item.active" (change)="onActiveChanged($event)">
-        {{item.active ? 'Event active' : 'Event inactive'}}
-      </mat-checkbox>
-    </mat-chip>
-  </mat-chip-list>
+  <app-checkbox-chip [checked]="item.active"
+                     (checkedChange)="onActiveChanged()">
+    <div chipIsChecked>Event active</div>
+    <div chipIsNotChecked>Event inactive</div>
+  </app-checkbox-chip>
 </div>
 
 <div class="eventInfo__actionButtons">

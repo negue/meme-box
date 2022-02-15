@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TimedAction, TwitchTypesArray} from '@memebox/contracts';
 import {AppQueries, AppService} from '@memebox/app-state';
 import {map} from 'rxjs/operators';
-import {MatCheckboxChange} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-timed-info',
@@ -40,7 +39,7 @@ export class TimedEventInfoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onActiveChanged($event: MatCheckboxChange) {
+  onActiveChanged() {
     this.appService.toggleTimedClipActiveState(this.item.id);
   }
 }

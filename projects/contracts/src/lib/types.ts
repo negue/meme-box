@@ -46,6 +46,8 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
   clipLength?: number; // optional,ms , simple images / gif dont have any length
   playLength?: number; // ms, time to play of this clip
   path?: string;
+  isActive?: boolean;
+
   type: ActionType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"

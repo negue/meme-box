@@ -40,14 +40,14 @@
   </mat-card-header>
 
   <div mat-card-image [ngSwitch]="action.type">
-    <ng-container *ngSwitchCase="MEDIA_TYPE.Picture">
+    <ng-container *ngSwitchCase="ACTION_TYPE.Picture">
       <img *ngIf="action.previewUrl || action.path; else noPictureTemplate"
            class="mediaInfo__preview__img"
            [src]="action | mediaToPreviewUrl | safeurl"
            [alt]="action.name" />
 
       <ng-template #noPictureTemplate>
-        <app-clip-type [type]="MEDIA_TYPE.Picture"
+        <app-clip-type [type]="ACTION_TYPE.Picture"
                        iconSize="12rem"
                        class="mediaInfo__preview__img">
 
@@ -55,7 +55,7 @@
       </ng-template>
     </ng-container>
 
-    <ng-container *ngSwitchCase="MEDIA_TYPE.Video">
+    <ng-container *ngSwitchCase="ACTION_TYPE.Video">
      <app-action-preview [action]="action" height="188px"
                          [style.--clip-setting-img-fit]="'contains'"
                          class="mediaInfo__preview__img"></app-action-preview>
@@ -145,6 +145,12 @@
         <mat-icon svgIcon="tune"> </mat-icon>
       </button>
 
+      <app-checkbox-chip *ngIf="action.type === ACTION_TYPE.PermanentScript"
+                         [checked]="action.isActive"
+                         (checkedChange)="onToggleActive.next()">
+        <div chipIsChecked>Active</div>
+        <div chipIsNotChecked>Inactive</div>
+      </app-checkbox-chip>
     </div>
 
     <app-action-shortcut-toolbar [action]="action"></app-action-shortcut-toolbar>
