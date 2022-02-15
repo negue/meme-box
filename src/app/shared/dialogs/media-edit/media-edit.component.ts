@@ -192,6 +192,8 @@ export class MediaEditComponent
 
 separatorKeysCodes: number[] = [ENTER, COMMA];
   tagFormCtrl = new FormControl();  // needed in form?!
+  localMediaFormCtrl = new FormControl();  // needed in form?!
+  mediaPathTypeFormCtrl = new FormControl();  // needed in form?!
 
   // current "filtered" tags
   filteredTags$: Observable<Tag[]>;
@@ -361,10 +363,12 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.dialogRef.close();
   }
 
-  onChange($event: FileInfo): void {
+  onLocalMediaSelected($event: string, mediaFiles: FileInfo[]): void {
+    const foundMedia = mediaFiles.find(m => m.apiUrl === $event);
+
     this.form.patchValue({
-      path: $event.apiUrl,
-      name: $event.fileName
+      path: foundMedia.apiUrl,
+      name: foundMedia.fileName
     });
 
     this.markForCheck();
