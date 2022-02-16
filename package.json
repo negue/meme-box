@@ -175,7 +175,7 @@
     "immer": "8.0.4",
     "jwt-decode": "3.1.2",
     "lodash": "4.17.20",
-    "marked": "1.2.6",
+    "marked": "4.0.10",
     "morphdom": "2.6.1",
     "neo-observable-input": "1.0.0",
     "ngx-moveable": "0.24.3",
