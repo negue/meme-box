@@ -68,19 +68,17 @@
         <span matSuffix>ms</span>
       </mat-form-field>
 
-      <div class="flex_row" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
-        <mat-form-field style="width: 10rem; margin-right: 1rem"
-                        [class.hidden]="form.value.type === MediaType.IFrame">
-          <mat-label>From</mat-label>
-          <mat-select [value]="form.value.path?.includes('{$SERVER_URL}') ? 'media' : 'custom'"
-                      #mediaPathType>
-            <mat-option value="media">Mediafolder</mat-option>
-            <mat-option value="custom">Custom URL</mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
+        <mat-button-toggle-group #mediaPathType="matButtonToggleGroup"
+          style="margin-right: 1rem"
+          [value]="(!form.value.path || form.value.path?.includes('{$SERVER_URL}')) && form.value.type !== MediaType.IFrame  ? 'media' : 'custom'"
+          [class.hidden]="form.value.type === MediaType.IFrame">
+          <mat-button-toggle
+value="media">Media</mat-button-toggle>
+          <mat-button-toggle value="custom">Url</mat-button-toggle>
+        </mat-button-toggle-group>
 
-        <mat-form-field style="width: 10rem; margin-right: 1rem"
-                        *ngIf="mediaPathType.value === 'media'">
+        <mat-form-field *ngIf="mediaPathType.value === 'media'">
           <mat-label>Local Media</mat-label>
           <mat-select *ngIf="availableMediaFiles$ | async as mediaFiles"
                       (valueChange)="onLocalMediaSelected($event, mediaFiles)"
@@ -88,7 +86,7 @@
                       [formControl]="localMediaFormCtrl"
           >
             <mat-option *ngFor="let file of mediaFiles" [value]="file.apiUrl">
-              {{ file.fileName }}
+                <div [matTooltip]="file.fullPath"> {{ file.fileName }}</div>
             </mat-option>
           </mat-select>
           <mat-error *ngIf="form.controls['path'].hasError('required')">
