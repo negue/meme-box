@@ -33,6 +33,10 @@ export class MediaCardComponent implements OnInit, OnChanges {
   onDuplicate = new EventEmitter();
 
   @Output()
+  onToggleActive = new EventEmitter();
+
+
+  @Output()
   onOpenTriggerVariables = new EventEmitter();
 
   menuIsOpened = false;
@@ -44,7 +48,7 @@ export class MediaCardComponent implements OnInit, OnChanges {
   hasTriggerableVariables = false;
   showDetailsBar = false;
 
-  readonly MEDIA_TYPE = ActionType;
+  readonly ACTION_TYPE = ActionType;
 
   constructor(
     public activityState: ActivityQueries

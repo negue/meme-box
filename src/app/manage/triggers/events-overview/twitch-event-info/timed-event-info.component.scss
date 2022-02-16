@@ -3,24 +3,6 @@
 :host {
   width: 100%;
 
-  ::ng-deep .mat-checkbox-background {
-    background-color: transparent !important;
-  }
-
-  ::ng-deep .mat-chip {
-    &.mat-chip.mat-standard-chip {
-      background-color: var(--palette-background-background);
-
-      &.eventInfo__chip--selected {
-        background-color: #0be881; //TODO - make a var
-        color: var(--palette-background-background);
-
-        .mat-checkbox-frame {
-          border-color: var(--palette-background-background);
-        }
-      }
-    }
-  }
 }
 
 .eventInfo__checkbox {
@@ -39,10 +21,6 @@
 
 .eventInfo__titleRow__name {
   margin-bottom: 0;
-}
-
-.eventInfo__chip {
-  cursor: pointer;
 }
 
 .eventInfo__titleRow__event {

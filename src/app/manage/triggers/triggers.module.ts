@@ -15,7 +15,7 @@ import {CardOverviewModule} from "../../shared/components/card-overview/card-ove
 import {ActionPreviewModule} from "@memebox/state-components";
 import {TimedEventInfoComponent} from "./events-overview/twitch-event-info/timed-event-info.component";
 import {TwitchEventInfoComponent} from "./events-overview/timed-event-info/twitch-event-info.component";
-import {PipesModule} from "@memebox/ui-components";
+import {CheckboxChipModule, PipesModule} from "@memebox/ui-components";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatMenuModule} from "@angular/material/menu";
 import {TRANSLOCO_TWITCH_SCOPE} from "../../transloco/transloco.scopes";
@@ -45,7 +45,8 @@ const routes: Routes = [
     ActionPreviewModule,
     PipesModule,
     MatTooltipModule,
-    MatMenuModule
+    MatMenuModule,
+    CheckboxChipModule
   ],
   providers: [
     TRANSLOCO_TWITCH_SCOPE

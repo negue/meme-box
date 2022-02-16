@@ -28,7 +28,12 @@ export class TwitchScopeSelectionComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public data: TwitchScopeSelectionPayload,
               private dialogRef: MatDialogRef<any>,
               private cd: ChangeDetectorRef) {
-
+    this.data = {
+      ...this.data,
+      scopes: [ // readonly from state, TODO some better way
+        ...this.data.scopes
+      ]
+    };
   }
 
   ngOnInit(): void {

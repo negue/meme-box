@@ -30,7 +30,9 @@ export class ScriptEditComponent implements OnInit {
   public declaredActionInformation$: Observable<Action[]> = this.declaredActionsEntries$.pipe(
     withLatestFrom(this.appQuery.actionMap$),
     map(([declaredActions, clipMap]) => {
-      return declaredActions.map(action => clipMap[action.uuid])
+      return declaredActions
+        .map(action => clipMap[action.uuid])
+        .filter(a => !!a)
     })
   );
 

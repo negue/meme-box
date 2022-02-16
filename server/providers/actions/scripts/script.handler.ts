@@ -158,7 +158,7 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     // start each permanent script after another
     for (const action of this._persistence.listActions()) {
-      if (action.type === ActionType.PermanentScript) {
+      if (action.type === ActionType.PermanentScript && action.isActive) {
         await this.handleScript(action, null);
       }
     }

@@ -1,6 +1,7 @@
 import {uuid} from "@gewd/utils";
-import {TriggerActionOverrides, TriggerClipOrigin} from "@memebox/contracts";
+import {ActionOverridableProperties, TriggerActionOverrides, TriggerClipOrigin} from "@memebox/contracts";
 import {MemeboxApi} from "./memebox.api";
+import {timeoutAsync} from "./sleep.api";
 
 export class ActionApi {
   constructor(
@@ -29,5 +30,21 @@ export class ActionApi {
     });
 
     await this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
+  }
+
+
+  updateVariables(overrides: ActionOverridableProperties, timeoutInMs = 50): Promise<void> {
+    this.memeboxApi.actionTriggerEventBus.updateActionProps({
+      id: this.actionId,
+      uniqueId: uuid(),
+      origin: TriggerClipOrigin.Scripts,
+      originId: this.memeboxApi.scriptId,
+      targetScreen: this.screenId,
+      overrides: {
+        action: overrides,
+      }
+    })
+
+    return timeoutAsync(timeoutInMs);
   }
 }

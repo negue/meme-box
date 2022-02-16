@@ -12,8 +12,8 @@
   <form [formGroup]="form">
 
   <lib-stepper-content style="min-height: 600px" [selectedIndex]="isEditMode ? 1 : 0">
-    <div stepperHeader>
-      <mat-form-field>
+    <div stepperHeader class="action_name_header flex_row">
+      <mat-form-field style="flex: 1">
         <mat-label>Name</mat-label>
         <input autocomplete="off"
                formControlName="name"
@@ -25,6 +25,17 @@
           Name is required
         </mat-error>
       </mat-form-field>
+
+      <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)"
+                      style="width: 30%">
+        <mat-label>to this Screen:</mat-label>
+        <mat-select [(value)]="selectedScreenId">
+          <mat-option value="">None</mat-option>
+          <ng-container *ngIf="availableScreens$ | async as screenList">
+            <mat-option *ngFor="let screen of screenList" [value]="screen.id">{{screen.name}}</mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <lib-step label="Action-Type" [enabled]="!isEditMode"
@@ -34,10 +45,8 @@
 
           <button *ngFor="let button of mediaTypeList"
                   mat-raised-button
-
                   (click)="updateMediaType(button.type)"
                   [color]="form.value.type === button.type ? 'primary' : 'accent'"
-
           >
             <mat-icon [svgIcon]="button.icon"></mat-icon>
             {{ t(button.name) }}
@@ -59,33 +68,48 @@
         <span matSuffix>ms</span>
       </mat-form-field>
 
-      <div class="form-field-row" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
-        <mat-form-field>
-          <mat-label>{{form.value.type !== MediaType.IFrame ? 'File' : 'URL'}}</mat-label>
-          <input autocomplete="off"
-                 formControlName="path"
-                 matInput #mediaPathInput
-                 [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
-                 type="text" (keyup)="markForCheck()"
-          />
-          <div matSuffix *ngIf="form.value.type !== MediaType.IFrame">
-            <mat-select (valueChange)="onChange($event)"
-                        *ngIf="availableMediaFiles$ | async as mediaFiles"
-            >
-              <mat-option *ngFor="let file of mediaFiles" [value]="file">
-                {{ file.fileName }}
-              </mat-option>
-            </mat-select>
-          </div>
+      <div class="" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
+        <mat-button-toggle-group #mediaPathType="matButtonToggleGroup"
+          style="margin-right: 1rem"
+          [value]="(!form.value.path || form.value.path?.includes('{$SERVER_URL}')) && form.value.type !== MediaType.IFrame  ? 'media' : 'custom'"
+          [class.hidden]="form.value.type === MediaType.IFrame">
+          <mat-button-toggle
+value="media">Media</mat-button-toggle>
+          <mat-button-toggle value="custom">Url</mat-button-toggle>
+        </mat-button-toggle-group>
 
+        <mat-form-field *ngIf="mediaPathType.value === 'media'">
+          <mat-label>Local Media</mat-label>
+          <mat-select *ngIf="availableMediaFiles$ | async as mediaFiles"
+                      (valueChange)="onLocalMediaSelected($event, mediaFiles)"
+                      [value]="form.value.path"
+                      [formControl]="localMediaFormCtrl"
+          >
+            <mat-option *ngFor="let file of mediaFiles" [value]="file.apiUrl">
+                <div [matTooltip]="file.fullPath"> {{ file.fileName }}</div>
+            </mat-option>
+          </mat-select>
           <mat-error *ngIf="form.controls['path'].hasError('required')">
-            You need to enter the URL or select a file.
+            You need to select a file.
           </mat-error>
         </mat-form-field>
 
-        <app-hint-panel style="margin-top: 0.5rem" [addBottomPadding]="true">
-          You can select a file from the media folder or an online url.
-        </app-hint-panel>
+        <div class="form-field-row"
+             [class.hidden]="mediaPathType.value !== 'custom'">
+          <mat-form-field>
+            <mat-label>URL</mat-label>
+            <input autocomplete="off"
+                   formControlName="path"
+                   matInput #mediaPathInput
+                   [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
+                   type="text"
+            />
+
+            <mat-error *ngIf="form.controls['path'].hasError('required')">
+              You need to enter the URL.
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="form-field-row"
@@ -451,17 +475,6 @@
           which means each Media can be visible only at once at each assigned screen.
         </app-hint-panel>
       </div>
-
-
-      <mat-form-field *ngIf="actionToEdit?.id == null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)">
-        <mat-label>Also add to this Screen:</mat-label>
-        <mat-select [(value)]="selectedScreenId">
-          <mat-option value="">None</mat-option>
-          <ng-container *ngIf="availableScreens$ | async as screenList">
-            <mat-option *ngFor="let screen of screenList" [value]="screen.id">{{screen.name}}</mat-option>
-          </ng-container>
-        </mat-select>
-      </mat-form-field>
 
     </lib-step>
   </lib-stepper-content>

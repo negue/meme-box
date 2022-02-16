@@ -134,3 +134,32 @@ app-dynamic-iframe {
   flex: 1;
 }
 
+.action_name_header {
+  gap: 1rem;
+}
+
+.flex_row {
+
+  display: flex;
+  flex-direction: row;
+}
+
+mat-button-toggle-group {
+  border: 1px solid #FFFFFF;
+  border-radius: 4px;
+  flex-shrink: 0;
+align-self: center;
+  margin-bottom: 2rem;
+  width: 100%;
+
+  ::ng-deep {
+    mat-button-toggle {
+      flex: 1
+    }
+
+    .mat-button-toggle-checked:not(.mat-button-toggle-disabled) {
+      background-color: rgba(var(--palette-accent-500), 1);
+    }
+  }
+}
+

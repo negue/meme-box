@@ -42,4 +42,12 @@ export class TwitchApi extends DisposableBase {
   public getHelixDataAsync(endpointAndQuery: string) {
     return this.dataProvider.getHelixDataAsync(endpointAndQuery);
   }
+
+  public postHelixDataAsync(endpointAndQuery: string, bodyData: unknown) {
+    return this.dataProvider.postHelixDataAsync(endpointAndQuery, bodyData);
+  }
+
+  public patchHelixDataAsync(endpointAndQuery: string, bodyData: unknown) {
+    return this.dataProvider.patchHelixDataAsync(endpointAndQuery, bodyData);
+  }
 }

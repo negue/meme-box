@@ -25,9 +25,17 @@ export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value 
   const SAVED_PORT = PersistenceInstance.getConfig()?.customPort;
 
   if (CLI_OPTIONS.PORT) {
-    LOGGER.info(`Using the --port Argument: ${CLI_OPTIONS.PORT}`);
+    LOGGER.info(`Using the --port Argument: ${CLI_OPTIONS.PORT}`,  {
+      port: CLI_OPTIONS.PORT
+    });
   } else if (!SAVED_PORT) {
-    LOGGER.info(`Using the default Port: ${DEFAULT_PORT}`);
+    LOGGER.info(`Using the default Port: ${DEFAULT_PORT}`, {
+      port: DEFAULT_PORT
+    });
+  } else {
+    LOGGER.info(`Using port: ${SAVED_PORT}`, {
+      port: SAVED_PORT
+    });
   }
 
   const NEW_PORT = CLI_OPTIONS.PORT ?? SAVED_PORT ?? DEFAULT_PORT;

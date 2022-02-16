@@ -55,6 +55,66 @@ export class TwitchDataProvider {
     return result;
   }
 
+  async postHelixDataAsync<TResult>(
+    endpoint: string,
+    body: unknown
+  ): Promise<TwitchHelixResult<TResult>> {
+    const twitchAuth = await this.getMainTwitchAuthAsync();
+
+    if (twitchAuth === null) {
+      return {
+        ok: false,
+        message: 'Not authorized.'
+      };
+    }
+    const apiURL = `https://api.twitch.tv/helix/${endpoint}`;
+
+    const result = await fetch(apiURL, {
+      headers: {
+        "Client-ID": twitchAuth.clientId,
+        "Authorization": `Bearer ${twitchAuth.token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify(body)
+    }).then( r => r.body.readable ? r.json() : {} );
+
+    return result;
+  }
+
+  async patchHelixDataAsync<TResult>(
+    endpoint: string,
+    body: unknown
+  ): Promise<TwitchHelixResult<TResult>> {
+    const twitchAuth = await this.getMainTwitchAuthAsync();
+
+    if (twitchAuth === null) {
+      return {
+        ok: false,
+        message: 'Not authorized.'
+      };
+    }
+    const apiURL = `https://api.twitch.tv/helix/${endpoint}`;
+
+    const result = await fetch(apiURL, {
+      headers: {
+        "Client-ID": twitchAuth.clientId,
+        "Authorization": `Bearer ${twitchAuth.token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'PATCH',
+      body: JSON.stringify(body)
+    }).then(response => {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        return response.json()
+      } else {
+        return response.text()
+      }
+    });
+
+    return result;
+  }
 
   public async getMainTwitchAuthAsync(): Promise<TwitchAuthResult|null> {
     if (this._savedMainTwitchAuth === null) {
