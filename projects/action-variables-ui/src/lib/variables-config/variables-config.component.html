@@ -35,33 +35,30 @@
           </mat-select>
         </mat-form-field>
       </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td colspan="2">
-        <mat-form-field>
-          <mat-label>Hint (for this variable)</mat-label>
-          <input matInput [(ngModel)]="customVariable.hint"
-                 (ngModelChange)="onEditVariable.emit(customVariable)" type="text">
-        </mat-form-field>
+      <td rowspan="2">
+        <app-action-variable-input [variableType]="customVariable.type"
+                                   label="Fallback Value"
+                                   [value]="customVariable.fallback"
+                                   (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
+
+        </app-action-variable-input>
+
+
+        <mat-checkbox *ngIf="customVariable.type === 'textarea' && isWidgetVariableList"
+                      [(ngModel)]="customVariable.htmlNewLineBreak"
+                      (change)="onEditVariable.emit(customVariable)">
+          HTML: Replace new lines with &lt;br&gt;
+        </mat-checkbox>
       </td>
     </tr>
     <tr>
       <td></td>
       <td colspan="2">
-        <app-action-variable-input [variableType]="customVariable.type"
-                                    label="Fallback Value"
-                                    [value]="customVariable.fallback"
-                                    (valueChanged)="customVariable.fallback = $event; onEditVariable.emit(customVariable)">
-
-        </app-action-variable-input>
-
-
-        <mat-checkbox *ngIf="customVariable.type === 'textarea'"
-                      [(ngModel)]="customVariable.htmlNewLineBreak"
-                      (change)="onEditVariable.emit(customVariable)">
-          HTML: Replace new lines with &lt;br&gt;
-        </mat-checkbox>
+        <mat-form-field style="width: 100%">
+          <mat-label>Hint (for this variable)</mat-label>
+          <input matInput [(ngModel)]="customVariable.hint"
+                 (ngModelChange)="onEditVariable.emit(customVariable)" type="text">
+        </mat-form-field>
       </td>
     </tr>
   </ng-container>

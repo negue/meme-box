@@ -11,6 +11,9 @@ export class VariablesConfigComponent implements OnInit {
   @Input()
   public variablesList: ActionVariableConfig[] = [];
 
+  @Input()
+  public isWidgetVariableList = false;
+
   @Output()
   public onAddNewVariable = new EventEmitter();
 

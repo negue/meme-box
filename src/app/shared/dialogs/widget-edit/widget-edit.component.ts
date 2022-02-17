@@ -35,7 +35,6 @@ export class WidgetEditComponent implements OnInit {
   public htmlExtensions = htmlCodemirror;
 
   private initDone = false;
-  private newVarCounter = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CustomHtmlDialogPayload,
@@ -110,7 +109,7 @@ export class WidgetEditComponent implements OnInit {
   addNewVariable(): void {
     this.variablesList.push({
       hint: '',
-      name: `myVar${++this.newVarCounter}`,
+      name: `myVar${this.variablesList.length+1}`,
       fallback: '',
       type: ActionVariableTypes.text
     });

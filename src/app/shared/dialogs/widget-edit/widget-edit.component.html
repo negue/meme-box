@@ -26,6 +26,7 @@
         These are the variables to be used inside CSS / JS / HTML - for an easier way to change the Widget "config" or values or something.
 
         <app-variables-config [variablesList]="variablesList"
+                              [isWidgetVariableList]="true"
                               (onEditVariable)="markForCheck()"
                               (onDeleteVariable)="deleteVariable($event)"
                               (onAddNewVariable)="addNewVariable()">
