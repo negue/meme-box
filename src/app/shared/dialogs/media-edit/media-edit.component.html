@@ -78,10 +78,9 @@ value="media">Media</mat-button-toggle>
           <mat-button-toggle value="custom">Url</mat-button-toggle>
         </mat-button-toggle-group>
 
-        <mat-form-field *ngIf="mediaPathType.value === 'media'">
+        <mat-form-field *ngIf="mediaPathType.value === 'media' && availableMediaFiles$ | async as mediaFiles">
           <mat-label>Local Media</mat-label>
-          <mat-select *ngIf="availableMediaFiles$ | async as mediaFiles"
-                      (valueChange)="onLocalMediaSelected($event, mediaFiles)"
+          <mat-select (valueChange)="onLocalMediaSelected($event, mediaFiles)"
                       [value]="form.value.path"
                       [formControl]="localMediaFormCtrl"
           >
