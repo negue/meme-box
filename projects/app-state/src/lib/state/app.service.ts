@@ -60,10 +60,10 @@ export class AppService {
       ).toPromise();
 
       this.offlineMode$.next(false);
-      console.info('LOADED STATE', httpResult);
+      
       this.appStore.update(state => httpResult);
 
-      console.info('UPDATED STATE', httpResult);
+      
       this.appStore.setLoading(false);
     } catch (error: any) {
       if (error.name === 'HttpErrorResponse') {
