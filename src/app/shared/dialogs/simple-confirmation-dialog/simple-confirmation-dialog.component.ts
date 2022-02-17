@@ -8,6 +8,8 @@ export interface ConfirmationsPayload {
   overrideButtons?: boolean;
   yesButton?: string;
   noButton?: string;
+
+  escapeToAbortNotAllowed?: boolean;
 }
 
 @Component({
