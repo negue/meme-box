@@ -12,9 +12,9 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {Action, ActionType, CombinedClip, Dictionary, PositionEnum, VisibilityEnum} from "@memebox/contracts";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, combineLatest, Subject} from "rxjs";
 import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
-import {delay, skip, take, takeUntil, withLatestFrom} from "rxjs/operators";
+import {delay, skip, take, takeUntil} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
 import {AppQueries, MemeboxWebsocketService} from "@memebox/app-state";
 import {actionDataToWidgetContent, DynamicIframeContent} from "@memebox/utils";
@@ -122,8 +122,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   ngOnInit(): void {
     this.clipId$.next(this.clipId);
 
-    this.clipId$.pipe(
-      withLatestFrom(this.parentComp.mediaClipList$),
+    combineLatest([
+      this.clipId$,
+      this.parentComp.mediaList$
+    ]).pipe(
       takeUntil(this._destroy$)
     ).subscribe(async ([newClipId, mediaClipList]) => {
       const combinedClip = mediaClipList.find(combined => combined.clip.id
@@ -136,6 +138,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       this.applyWidgetContent();
     });
 
+    // temporary update of a visible media (probably from scripts)
     this.webSocket.onUpdateMedia$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(triggerPayload => {

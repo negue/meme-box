@@ -329,3 +329,12 @@ export interface Response {
 }
 
 export type TwitchConnectionType = "MAIN" | "BOT";
+
+export interface ChangedInfo {
+  id?: string;
+  targetScreenId?: string;
+  dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
+    |'settings'|'twitch-events'|'timers'|'twitch-setting';
+  actionType?: ActionType;
+  changeType: 'added'|'changed'|'removed';
+}

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import {
   Action,
-  ActionType,
+  ChangedInfo,
   Config,
   ConfigV0,
   createInitialState,
@@ -43,14 +43,6 @@ let fileBackupToday = false;
 export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
 
 // TODO use const string enums instead of uniontype
-
-export interface ChangedInfo {
-  id?: string;
-  dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
-    |'settings'|'twitch-events'|'timers'|'twitch-setting';
-  actionType?: ActionType;
-  changeType: 'added'|'changed'|'removed'
-}
 
 export class Persistence {
 
@@ -337,7 +329,8 @@ export class Persistence {
     this.saveData({
       dataType: 'screen-action-config',
       changeType: 'changed',
-      id
+      id,
+      targetScreenId: targetUrlId
     });
 
     return screenClip;
@@ -350,7 +343,8 @@ export class Persistence {
     this.saveData({
       dataType: 'screen-action-config',
       changeType: 'removed',
-      id
+      id,
+      targetScreenId: targetUrlId
     });
   }
 

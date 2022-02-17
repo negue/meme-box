@@ -3,6 +3,7 @@ import {
   ActionActiveStatePayload,
   ACTIONS,
   ActionStateEnum,
+  ChangedInfo,
   TriggerAction,
   TriggerActionOverrides,
   TriggerClipOrigin
@@ -33,7 +34,7 @@ export const WebSocketBasePathInjectionToken
 export class MemeboxWebsocketService {
   public onOpenConnection$ = new Subject();
   public onReconnection$ = new Subject();
-  public onUpdateData$ = new Subject();
+  public onUpdateData$ = new Subject<ChangedInfo>();
   public onReloadScreen$ = new Subject();
   public onTriggerAction$ = new Subject<TriggerAction>();
   public onUpdateMedia$ = new Subject<TriggerAction>();
@@ -126,7 +127,9 @@ export class MemeboxWebsocketService {
         break;
       }
       case ACTIONS.UPDATE_DATA: {
-        this.onUpdateData$.next();
+        const payloadObj: ChangedInfo = JSON.parse(payload);
+
+        this.onUpdateData$.next(payloadObj);
         break;
       }
       case ACTIONS.RELOAD_SCREEN: {

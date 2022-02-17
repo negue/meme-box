@@ -46,19 +46,19 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     map(([screenId, screenMap]) => screenMap[screenId].clips)
   );
 
-  mediaClipList$: Observable<CombinedClip[]> = combineLatest([
+  mediaList$: Observable<CombinedClip[]> = combineLatest([
     this.assignedClipsMap$,
     this.appQuery.actionMap$
   ]).pipe(
-    map(([assignedClips, allClips]) => {
+    map(([assignedMedia, allActions]) => {
       const result: CombinedClip[] = [];
 
-      for (const [key, clipSetting] of Object.entries(assignedClips)) {
+      for (const [key, clipSetting] of Object.entries(assignedMedia)) {
         result.push({
           clipSetting,
           originalClipSetting: clipSetting,
           clip: {
-            ...allClips[key]
+            ...allActions[key]
           },
           backgroundColor: this.random_rgba()
         });
@@ -163,7 +163,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     this.screenId$.next(this.screenId);
 
-    this.mediaClipList$.pipe(
+    this.mediaList$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(mediaClipMap => {
       for(const screenClipSettings of Object.values(mediaClipMap)){
@@ -196,22 +196,20 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         ? this.toScreenCssAgain(screen)
         : '';
 
-      console.info('ADDING SCreen Custom CSS', customCss);
+      // console.info('ADDING SCreen Custom CSS', customCss);
 
       this.addOrUpdateStyleTag(document, screen.id, customCss);
     });
   }
 
   addLog(load: string, $event: Event) {
-    console.info({load, $event});
+    // console.info({load, $event});
 
     this.log.push({
       load,
       $event,
       time: new Date()
     });
-
-    console.info({log: this.log});
   }
 
   addToMap(value: Action, element: any) {
@@ -219,8 +217,8 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     if (value.type === ActionType.IFrame){
 
-      console.warn('Is Iframe');
-      this.mediaClipList$.pipe(
+      // console.warn('Is Iframe');
+      this.mediaList$.pipe(
         take(1)
       ).subscribe(map => {
         const iframeElement = element as HTMLIFrameElement;
@@ -234,9 +232,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     }
 
     if (value.type === ActionType.Widget){
-
-      console.warn('Is HTML (iframe)');
-      this.mediaClipList$.pipe(
+      this.mediaList$.pipe(
         take(1)
       ).subscribe(map => {
         // custom css for custom html?!
@@ -325,11 +321,11 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     }
 
     if (style?.childNodes.length > 0) {
-      console.info('Rules in the Style', styleId);
-      console.info('Childnodes', style.childNodes);
+      // console.info('Rules in the Style', styleId);
+      // console.info('Childnodes', style.childNodes);
 
       style.childNodes.forEach(child => {
-        console.info('Removing', child);
+        // console.info('Removing', child);
         style?.removeChild(child);
       })
     }
@@ -361,7 +357,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   async getCombinedClipWithOverridingOptionsAsync(
     triggerPayload: TriggerAction
   ): Promise<CombinedClip> {
-    const currentMediaList = await this.mediaClipList$.pipe(
+    const currentMediaList = await this.mediaList$.pipe(
       take(1)
     ).toPromise();
 
