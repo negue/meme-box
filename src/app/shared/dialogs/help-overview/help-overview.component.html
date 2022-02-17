@@ -3,6 +3,7 @@
 
   <mat-action-list>
     <button mat-list-item *ngFor="let item of helpItems"
+            [attr.dataCy]="item.githubName"
             (click)="openDialog(item)">
     {{item.name}}
     </button>

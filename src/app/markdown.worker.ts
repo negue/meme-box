@@ -1,5 +1,5 @@
 import {expose} from 'comlink';
-import * as marked from 'marked';
+import {marked} from 'marked';
 import * as xss from 'xss';
 import {Lazy} from '@gewd/markdown/utils';
 import {checkAndReplaceToUnicodeChar, emojiRegex, highlightCode, mermaidRegex} from '@gewd/markdown/worker-functions';
