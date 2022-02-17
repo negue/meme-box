@@ -8,7 +8,9 @@
   <mat-form-field *ngSwitchCase="'textarea'">
     <mat-label>{{label}}</mat-label>
     <textarea matInput [(ngModel)]="value"
-           (ngModelChange)="valueChanged.emit(value)">
+              matTextareaAutosize
+              [matAutosizeMinRows]="4"
+              (ngModelChange)="valueChanged.emit(value)">
 
           </textarea>
 

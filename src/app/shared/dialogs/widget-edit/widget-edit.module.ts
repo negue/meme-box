@@ -52,7 +52,8 @@ export class WidgetEditModule implements DialogContract<CustomHtmlDialogPayload>
       maxWidth: '100vw',
       minHeight: '100vh',
       maxHeight: '100vh',
-      panelClass: 'fullscreen-dialog'
+      panelClass: 'fullscreen-dialog',
+      disableClose: true
     });
 
     return dialogRef;

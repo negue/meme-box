@@ -2,8 +2,8 @@ import {createExpress} from "./express-server";
 import {sendDataToAllSockets} from "./websocket-server";
 import {DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith, take} from "rxjs/operators";
-import {ChangedInfo, PersistenceInstance} from "./persistence";
-import {ACTIONS} from "@memebox/contracts";
+import {PersistenceInstance} from "./persistence";
+import {ACTIONS, ChangedInfo} from "@memebox/contracts";
 import {LOGGER} from "./logger.utils";
 import {TimedHandler} from "./timed.handler";
 

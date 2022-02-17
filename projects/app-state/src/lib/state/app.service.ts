@@ -50,30 +50,30 @@ export class AppService {
     return this.offlineMode$.asObservable();
   }
 
-  public loadState() {
+  public async loadState(): Promise<void> {
     this.appStore.setLoading(true);
 
-    this.http.get(API_BASE).pipe(
-      take(1)
-      // delay(5000)
-    ).subscribe(
-      value => {
-        this.offlineMode$.next(false);
-        console.info('LOADED STATE', value);
-        this.appStore.update(state => value);
+    try {
+      const httpResult = await  this.http.get(API_BASE).pipe(
+        take(1)
+        // delay(5000)
+      ).toPromise();
 
-        console.info('UPDATED STATE', value);
-        this.appStore.setLoading(false);
-      }, (error: Error) => {
-        if (error.name === 'HttpErrorResponse') {
-          this.appStore.update(state => {
-            state.offlineMode = true;
-          });
-          this.offlineMode$.next(true);
-          console.error('Changing into offline mode', error);
-        }
+      this.offlineMode$.next(false);
+      
+      this.appStore.update(state => httpResult);
+
+      
+      this.appStore.setLoading(false);
+    } catch (error: any) {
+      if (error.name === 'HttpErrorResponse') {
+        this.appStore.update(state => {
+          state.offlineMode = true;
+        });
+        this.offlineMode$.next(true);
+        console.error('Changing into offline mode', error);
       }
-    );
+    }
   }
 
   public listFiles() {

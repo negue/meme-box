@@ -9,7 +9,7 @@ The Loaded Media need to stay cached?
 
 </mat-icon>
 
-<div *ngFor="let entry of mediaClipList$ | async; trackBy: trackByKeyValue"
+<div *ngFor="let entry of mediaList$ | async; trackBy: trackByKeyValue"
      [ngSwitch]="entry.clip.type"
 
 
@@ -74,5 +74,5 @@ The Loaded Media need to stay cached?
 
 <pre style="display: none;">
   {{ log | json }}
-  {{ mediaClipList$ | async | json }}
+  {{ mediaList$ | async | json }}
 </pre>

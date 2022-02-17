@@ -48,7 +48,6 @@ export class ScriptEditComponent implements OnInit {
   public jsExtensions = jsCodemirror;
 
   private initDone = false;
-  private newVarCounter = 0;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CustomScriptDialogPayload,
@@ -110,7 +109,7 @@ export class ScriptEditComponent implements OnInit {
   addNewVariable(): void {
     this.variablesList.push({
       hint: '',
-      name: `myVar${++this.newVarCounter}`,
+      name: `myVar${this.variablesList.length+1}`,
       fallback: '',
       type: ActionVariableTypes.text
     });
