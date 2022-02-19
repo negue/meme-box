@@ -1,8 +1,5 @@
 name: 'Merge PR from Release to Develop'
 on:
-  push:
-    branches: # List all "from" branches - all branches that should be forward merged
-      - release
   # Allow manual triggering: This requires you to choose a `ref`. This should be the branch with changes
   workflow_dispatch:
   # run 0:00 UTC every day
