@@ -1,7 +1,7 @@
 :host {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 }
 
 audio {
@@ -20,6 +20,10 @@ video, img, iframe, app-dynamic-iframe {
   width: var(--clip-setting-width, 100%);
   height: var(--clip-setting-height, 100%);
   transform: var(--clip-setting-transform) !important;
+
+  &:not(.isAnimating):not(.animationDisabled) {
+    transition: all 1s;  // TODO override transition time
+  }
 
   .media-clip-holder {
     position: relative;

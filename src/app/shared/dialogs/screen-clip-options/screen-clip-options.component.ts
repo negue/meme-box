@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {AppQueries} from "../../../state/app.queries";
+import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {combineLatest, Observable, Subject} from "rxjs";
 import {
+  ActionType,
   ANIMATION_IN_ARRAY,
   ANIMATION_OUT_ARRAY,
-  MediaType,
   PositionEnum,
   Screen,
   ScreenClip,
@@ -13,9 +13,7 @@ import {
 import {map, take} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder} from "@angular/forms";
-import {AppService} from "../../../state/app.service";
-import {SnackbarService} from "../../../core/services/snackbar.service";
-import {DialogService} from "../dialog.service";
+import {cssCodemirror} from "../../../core/codemirror.extensions";
 
 export interface ScreenClipOptionsPayload {
   screenId: string;
@@ -57,7 +55,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     customCss: ''
   });
 
-  public MediaType = MediaType;
+  public MediaType = ActionType;
   public animateInList = ANIMATION_IN_ARRAY;
 
   public animateOutList = ANIMATION_OUT_ARRAY;
@@ -72,23 +70,27 @@ export class ScreenClipOptionsComponent implements OnInit {
     map(screenMap => screenMap[this.data.screenId])
   );
 
-  public clipInfo$: Observable<ScreenClip&{type: MediaType}> = combineLatest([
+  public actionInfo$ = this.appQueries.actionMap$.pipe(
+    map(clipMap => clipMap[this.data.clipId])
+  );
+
+  public mediaInScreenInfo$: Observable<ScreenClip&{type: ActionType}> = combineLatest([
     this.currentScreen$,
-    this.appQueries.clipMap$.pipe(
-      map(clipMap => clipMap[this.data.clipId])
-    )
+ this.actionInfo$
   ]).pipe(
-    map(([screen, clip]) => ({
+    map(([screen, action]) => ({
       visibility: VisibilityEnum.Play,
       loop: false,
       position: PositionEnum.FullScreen,
       animationIn: '',
       animationOut: '',
       ...screen.clips[this.data.clipId],
-      type: clip.type
+      type: action.type
     }))
   );
 
+
+  public cssExtensions = cssCodemirror;
 
 
   private _clipInfo: ScreenClip = null;
@@ -98,12 +100,11 @@ export class ScreenClipOptionsComponent implements OnInit {
               private dialogRef: MatDialogRef<any>,
               private appQueries: AppQueries,
               private appService: AppService,
-              private snackBar: SnackbarService,
-              private dialogService: DialogService) {
+              private snackBar: SnackbarService) {
   }
 
   ngOnInit(): void {
-    this.clipInfo$.pipe(
+    this.mediaInScreenInfo$.pipe(
       take(1)
     ).subscribe(value => {
       this._clipInfo = value;
@@ -133,17 +134,8 @@ export class ScreenClipOptionsComponent implements OnInit {
     await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
 
     // todo refactor "better way?" to trigger those snackbars
-    this.snackBar.normal(`Screen / Clip Assignment updated`);
+    this.snackBar.normal(`Screen / Media Assignment updated`);
 
     this.dialogRef.close();
-  }
-
-  openMediaSetting() {
-    this.appQueries.clipMap$.pipe(
-      map(clipMap => clipMap[this.data.clipId]),
-      take(1)
-    ).subscribe(clipInfo => {
-      this.dialogService.showMediaEditDialog(clipInfo);
-    });
   }
 }

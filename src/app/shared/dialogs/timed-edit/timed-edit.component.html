@@ -2,9 +2,8 @@
   <code *ngIf="form.value.everyXms">{{form.value.everyXms | readableMs}}</code>
 </h2>
 <mat-dialog-content class="mat-typography min-height-dialog">
-  <div class="two-columns">
+  <div class="two-columns" [formGroup]="form">
     <div class="column">
-      <form [formGroup]="form">
         <div class="example-container">
           <mat-form-field appearance="outline">
             <mat-label>Trigger</mat-label>
@@ -25,11 +24,18 @@
         <button mat-raised-button class="example-button" (click)="setXMinutes(1)">Every 1 minute</button>
         <button mat-raised-button class="example-button" (click)="setXMinutes(10)">Every 10 minutes</button>
         <button mat-raised-button class="example-button" (click)="setXMinutes(30)">Every 30 minutes</button>
-      </form>
+
     </div>
     <div class="column">
       <div class="example-container">
-        <h2>Select media</h2>
+        <h2>Select action
+
+
+          <app-open-action-settings-button *ngIf="selectedAction$ | async as action"
+                                           [action]="action">
+
+          </app-open-action-settings-button>
+        </h2>
 
         <button mat-raised-button (click)="selectEventClip()"
                 [class.selectClipButton]="!!form.value.clipId"
@@ -37,13 +43,13 @@
           <span *ngIf="clipDictionary$ | async as clipDictionary">
             <ng-container *ngIf="form.value.clipId && clipDictionary[form.value.clipId]?.name; else notSelected">
 
-              <app-clip-preview [clip]="clipDictionary[form.value.clipId]"
-                                height="100px" width="200px"></app-clip-preview>
+              <app-action-preview [action]="clipDictionary[form.value.clipId]"
+                                  height="100px" width="200px"></app-action-preview>
               {{ clipDictionary[form.value.clipId]?.name }}
             </ng-container>
 
             <ng-template #notSelected>
-              Choose your media-clip to trigger
+              Choose action to trigger
             </ng-template>
           </span>
 
@@ -54,15 +60,45 @@
       </div>
 
       <br />
+
+      <ng-container *ngIf="selectedAction$ | async as action">
+        <ng-container *ngIf="action.extended && action.extended['_variables']">
+          Variables:
+
+          <app-action-variables-assignments [appVariablesConfigByActionId]="action.id"
+                                            [data]="data.extended || {}"
+                                            [fallbackData]="action.extended"
+                                            (dataChanged)="data.extended = $event">
+
+          </app-action-variables-assignments>
+        </ng-container>
+      </ng-container>
+
+      <div class="example-container" *ngIf="showScreenSelection$ | async">
+        <mat-form-field appearance="fill">
+          <mat-label>Target Screen</mat-label>
+          <mat-select formControlName="screenId">
+            <mat-option [value]="''">All</mat-option>
+            <mat-option *ngFor="let screen of screenList$ | async"
+                        [value]="screen.id">
+              {{ screen.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
     </div>
   </div>
 </mat-dialog-content>
 
-
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cancel</button>
-  <button (click)="save()"
-          color="primary"
-          mat-raised-button>{{ data.id ? 'Update Event' : 'Add Event' }}</button>
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <app-open-feedback-button feedbackTarget="Timed Trigger Dialog"></app-open-feedback-button>
+  </div>
+  <div class="column" align="end" >
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="save()"
+            color="primary"
+            mat-raised-button>{{ data.id ? 'Update Timer' : 'Add Timer' }}</button>
+  </div>
 </mat-dialog-actions>
-

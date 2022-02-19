@@ -5,12 +5,15 @@
 /tmp
 /out-tsc
 /out-electron
+/out-electron-tsc
 !/out-electron/electron/package.json
 /app-builds
 /release
 /release-electron
 main.js
 **/*.js
+!jest.config.js
+!cypress/plugins/index.js
 !memebox-streamdeck/**/*.js
 !src/karma.conf.js
 *.js.map
@@ -42,7 +45,7 @@ init.json
 npm-debug.log
 testem.log
 /typings
-package-lock.json
+/memebox-streamdeck/package-lock.json
 
 # e2e
 /e2e/*.js
@@ -61,3 +64,8 @@ Thumbs.db
 **/settings.json
 **/settings.json*.backup
 *.log
+
+# Storybook
+documentation.json
+!.storybook/**.*
+!/decorate-angular-cli.js

@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -10,12 +9,18 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Clip, PositionEnum, ScreenClip} from "@memebox/contracts";
-import {NgxMoveableComponent} from "ngx-moveable";
+import { Action, PositionEnum, Screen, ScreenClip } from '@memebox/contracts';
+import { NgxMoveableComponent } from 'ngx-moveable';
+import { parseTransformValues } from "@memebox/utils";
 
-export interface TranslatedSize {
+export interface TranslatedPosition {
   x: string;
   y: string;
+}
+
+export interface TranslatedSize {
+  width: number;
+  height: number;
 }
 
 @Component({
@@ -23,7 +28,7 @@ export interface TranslatedSize {
   templateUrl: './drag-resize-media.component.html',
   styleUrls: ['./drag-resize-media.component.scss']
 })
-export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChanges {
+export class DragResizeMediaComponent implements OnInit, OnChanges {
 
   @Input()
   public showResizeBorder = false;
@@ -32,13 +37,13 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   public screen: Screen;
 
   @Input()
-  public clip: Clip;
+  public clip: Action;
 
   @Input()
   public settings: ScreenClip;
 
   @Input()
-  public sizeType: 'px';
+  public sizeType: 'px'|'%';
 
   @Input()
   public transformOrigin = '';
@@ -65,17 +70,25 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   @Output()
   public inputApplied = new EventEmitter();
 
+  @Output()
+  public elementChanged = new EventEmitter();
+
   @ViewChild('moveableInstance')
   public moveableInstance: NgxMoveableComponent;
 
   frame: {
     translate: [number, number],
-    currentDraggingPosition: TranslatedSize | null,
+    currentDraggingPosition: TranslatedPosition | null,
+    currentResizingValues: TranslatedSize | null,
     rotate: number
   } = {
     currentDraggingPosition: {
       x: null,
       y: null
+    },
+    currentResizingValues: {
+      width: null,
+      height: null
     },
     translate: [0,0],
     rotate: 0,
@@ -84,10 +97,6 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   private warpExist = false;
 
   constructor(public element: ElementRef<HTMLElement>) {
-  }
-
-  ngAfterViewInit(): void {
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -103,14 +112,16 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
    this.applyPositionBySetting();
 
    this.inputApplied.next();
-
   }
 
 
-  onDragStart({ set }) {
-    console.info( this.frame);
+  onDragStart({ set }): void {
+    console.info(this.frame);
+    this.elementChanged.emit();
+    this.inputApplied.next();
   }
-  onDrag({ target, left, top }) {
+
+  onDrag({ target, left, top }): void {
     const newPosition = this.translatePixelToTarget(left, top);
 
 
@@ -121,20 +132,22 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     this.updateCSSVar('bottom',  null);
 
     this.frame.currentDraggingPosition = newPosition;
+    this.elementChanged.emit();
   }
 
-  onDragEnd({ target, isDrag, clientX, clientY }) {
+  onDragEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onDragEnd", target, isDrag, { clientX, clientY });
     // TODO Update on DragEnd
     this.settings.top = this.frame.currentDraggingPosition.y;
     this.settings.left = this.frame.currentDraggingPosition.x;
     this.settings.right = null;
     this.settings.bottom = null;
+    this.elementChanged.emit();
   }
 
-  onResizeStart({ target, set, setOrigin, dragStart }) {
+  onResizeStart({ target, set, setOrigin, dragStart }): void {
     // Set origin if transform-orgin use %.
-    setOrigin(["%", "%"]);
+    setOrigin(['%', '%']);
 
     // If cssSize and offsetSize are different, set cssSize. (no box-sizing)
     const style = window.getComputedStyle(target);
@@ -144,42 +157,66 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
 
     // If a drag event has already occurred, there is no dragStart.
     dragStart && dragStart.set(this.frame.translate);
+
+    const preResizeTransforms = this.generateTransformString();
+
+    // smooth resizing from left / top
+    target.style.transform = `${preResizeTransforms} translate(${this.frame.translate[0]}px, ${this.frame.translate[1]}px)`;
+
+    this.elementChanged.emit();
   }
-  onResize({ target, width, height, drag }) {
-    const newPosition = this.translatePixelToTarget(width, height);
+  onResize({ target, width, height, drag }): void {
+    // let it stay on pixel since resizing in % mode doesn't work well
+    const newPosition = this.translatePixelToTarget(width, height, true);
 
     this.updateCSSVar('width', newPosition.x);
     this.updateCSSVar('height', newPosition.y);
 
-    const beforeTranslate = drag.beforeTranslate;
+    this.frame.currentResizingValues.width = width;
+    this.frame.currentResizingValues.height = height;
+
+   /* const beforeTranslate = drag.beforeTranslate;
 
     this.frame.translate = beforeTranslate;
 
     // smooth resizing from left / top
     target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+
+
+    */
+    this.elementChanged.emit();
   }
-  onResizeEnd({ target, isDrag, clientX, clientY }) {
+  onResizeEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onResizeEnd", target, isDrag);
 
-    this.settings.width = this.getCSSVar('width');
-    this.settings.height = this.getCSSVar('height');
+    const newPosition = this.translatePixelToTarget(
+      this.frame.currentResizingValues.width,
+      this.frame.currentResizingValues.height
+    );
+
+    this.settings.width = newPosition.x;
+    this.settings.height = newPosition.y;
+    this.elementChanged.emit();
   }
 
-  onRotateStart({ target, set }) {
+  onRotateStart({ target, set }): void {
 
     set(this.frame.rotate);
 
     console.info('onRotateStart', this.frame.rotate);
+    this.elementChanged.emit();
   }
-  onRotate({ target, beforeRotate }) {
+  onRotate({ target, beforeRotate }): void {
     this.frame.rotate = beforeRotate;
   //  target.style.transform = `rotate(${beforeRotate}deg)`;
     this.applyTransform(target);
+    this.elementChanged.emit();
   }
-  onRotateEnd({ target, isDrag, clientX, clientY }) {
+  onRotateEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onRotateEnd", target, isDrag);
 
     this.applyTransformToSettings();
+    this.elementChanged.emit();
   }
 
   warpMatrix = [
@@ -188,24 +225,27 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     0, 0, 1, 0,
     0, 0, 0, 1,
   ];
-  onWarpStart({ set }) {
+  onWarpStart({ set }): void {
     set(this.warpMatrix);
     this.warpExist = true;
+    this.elementChanged.emit();
   }
-  onWarp({ target, matrix, transform }) {
+  onWarp({ target, matrix, transform }): void {
     this.warpMatrix = matrix;
 
     // target.style.transform = transform;
     this.applyTransform(target);
+    this.elementChanged.emit();
     //target.style.transform = `matrix3d(${matrix.join(",")})`;
   }
-  onWarpEnd({ target, isDrag, clientX, clientY }) {
+  onWarpEnd({ target, isDrag, clientX, clientY }): void {
     console.log("onWarpEnd", target, isDrag);
 
     this.applyTransformToSettings();
+    this.elementChanged.emit();
   }
 
-  previewClicked($event: MouseEvent) {
+  previewClicked($event: MouseEvent): void {
     $event.stopPropagation();
 
     this.elementClicked.emit();
@@ -257,11 +297,11 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
   private getCSSVar(name: string) {
     return this.element.nativeElement.style.getPropertyValue(`--resize-${name}`);
   }
-  private translatePixelToTarget(x: number, y: number): TranslatedSize {
+  private translatePixelToTarget(x: number, y: number, forcePixel = false): TranslatedPosition {
     x = Math.floor(x);
     y = Math.floor(y);
 
-    if (this.sizeType === 'px') {
+    if (this.sizeType === 'px' || forcePixel) {
       return {
         x: `${x}px`,
         y: `${y}px`
@@ -285,6 +325,11 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
       nativeElement.style.height = this.settings.height;
     }
 
+    if (this.settings.position === PositionEnum.FullScreen){
+      nativeElement.style.width = '100%';
+      nativeElement.style.height = '100%';
+    }
+
     if (this.settings.position === PositionEnum.Absolute) {
       nativeElement.style.top = this.settings.top;
       nativeElement.style.left = this.settings.left;
@@ -306,24 +351,12 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     nativeElement.style.transform = this.appendTranslatePosition(this.settings.transform);
     nativeElement.style.transformOrigin = this.transformOrigin;
 
-
-    const cssTransformRegex  = /(\w+)\(([^)]*)\)/g;
-    const names = [];
-    const vals = [];
-
-    let m = null;
-
-    while (m = cssTransformRegex.exec(nativeElement.style.transform)) {
-      names.push(m[1]);
-      vals.push(m[2]);
-    }
-
-    console.log({names, vals});
+    const {names, values} = parseTransformValues(nativeElement.style.transform);
 
     const indexOfRotation = names.findIndex(name => name === 'rotate');
 
     if (indexOfRotation !== -1) {
-      const rotationValue = +vals[indexOfRotation].replace('deg', '');
+      const rotationValue = +values[indexOfRotation].replace('deg', '');
 
       this.frame.rotate = rotationValue;
     }
@@ -331,7 +364,7 @@ export class DragResizeMediaComponent implements OnInit, AfterViewInit ,OnChange
     const indexOfMatrix3d = names.findIndex(name => name === 'matrix3d');
 
     if (indexOfMatrix3d !== -1) {
-      const matrixValue = vals[indexOfMatrix3d].split(',').map(num => +num);
+      const matrixValue = values[indexOfMatrix3d].split(',').map(num => +num);
 
       this.warpMatrix = matrixValue;
       this.warpExist = true;

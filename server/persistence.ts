@@ -1,48 +1,61 @@
 import * as fs from 'fs';
 import {
-  Clip,
+  Action,
+  ChangedInfo,
   Config,
   ConfigV0,
+  createInitialState,
+  ObsConfig,
   PositionEnum,
   Screen,
   ScreenClip,
   SettingsState,
   Tag,
-  TimedClip,
-  Twitch,
-  TwitchBotConfig,
+  TimedAction,
   TwitchConfig,
+  TwitchTrigger,
   VisibilityEnum
-} from '../projects/contracts/src/lib/types';
-import {createInitialState} from "../projects/contracts/src/lib/createInitialState";
+} from '@memebox/contracts';
 import {Observable, Subject} from "rxjs";
 import * as path from "path";
-import {simpleDateString} from "../projects/utils/src/lib/simple-date-string";
+import {
+  deleteInArray,
+  deleteItemInDictionary,
+  simpleDateString,
+  sortClips,
+  updateItemInDictionary
+} from "@memebox/utils";
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {uuidv4} from "../projects/utils/src/lib/uuid";
-import {deleteInArray, deleteItemInDictionary, updateItemInDictionary} from "../projects/utils/src/lib/utils";
-import {operations} from '../projects/state/src/public-api';
+import {operations} from '@memebox/shared-state';
 import {debounceTime} from "rxjs/operators";
-import {LOGGER} from "./logger.utils";
-import {sortClips} from "../projects/utils/src/lib/sort-clips";
-// Todo ts-config paths!!!
+import {LOGGER, newLogger} from "./logger.utils";
+import {registerProvider} from "@tsed/di";
+import {PERSISTENCE_DI} from "./providers/contracts";
+import {CLI_OPTIONS} from "./utils/cli-options";
+import cloneDeep from 'lodash/cloneDeep';
+import {uuid} from '@gewd/utils';
+import {SavePreviewFile} from "./persistence.functions";
 
 // TODO Extract more state operations to shared library and from app
 
 let fileBackupToday = false;
+
+export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
+
+// TODO use const string enums instead of uniontype
 
 export class Persistence {
 
   public configLoaded$ = new Subject();
 
   // This is the CONFIG-Version, not the App Version
-  private version = 1;
+  private version = 2;
 
-  private updated$ = new Subject();
+  private updated$ = new Subject<ChangedInfo>();
   private _hardRefresh$ = new Subject();
   private data: SettingsState = Object.assign({}, createInitialState());
 
-  private logger  = LOGGER.child({ label: 'Persistence' });
+  private logger  = newLogger('Persistence');
 
   constructor(private filePath: string) {
     const dir = path.dirname(filePath);
@@ -60,6 +73,23 @@ export class Persistence {
         return console.log(err);
       }
 
+      let dataFromFile = {};
+
+      if (data && data.includes('{')) {
+        dataFromFile = JSON.parse(data);
+      }
+      // execute upgrade , changing names or other stuff
+
+      this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
+      this.updated$.next({
+        dataType: 'everything',
+        changeType: 'changed'
+      });
+
+      this.configLoaded$.next();
+
+      this.logger.info('Settings loaded');
+
       if (!fileBackupToday) {
         const targetDir = path.dirname(this.filePath);
         const targetFileName = path.basename(this.filePath);
@@ -70,17 +100,6 @@ export class Persistence {
 
         fileBackupToday = true;
       }
-
-      let dataFromFile = {};
-
-      if (data && data.includes('{')) {
-        dataFromFile = JSON.parse(data);
-      }
-      // execute upgrade , changing names or other stuff
-
-      this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
-      this.updated$.next();
-      this.configLoaded$.next();
     });
 
     this.updated$.pipe(
@@ -106,10 +125,12 @@ export class Persistence {
       if (configV0) {
         configFromFile.config.twitch = {
           channel: configV0.twitchChannel,
+          token: '',
           enableLog: configV0.twitchLog,
           bot: {
             enabled: false,
-            response: ''
+            response: '',
+            command: '!command'
           }
         };
 
@@ -118,12 +139,19 @@ export class Persistence {
       }
     }
 
+    if (configFromFile.version < 2) {
+      // extract the preview base64 images out to their own files
+      for (const action of Object.values(configFromFile.clips)) {
+        SavePreviewFile(action);
+      }
+    }
+
     configFromFile.version = this.version;
 
     return configFromFile;
   }
 
-  public dataUpdated$ () : Observable<any> {
+  public dataUpdated$ () : Observable<ChangedInfo> {
     return this.updated$.asObservable();
   }
 
@@ -133,51 +161,81 @@ export class Persistence {
 
 
   public fullState() {
-    return  this.data;
+    return {
+      ...this.data,
+      config: this.getConfig()
+    };
   }
 
   // save it on changes
   // return sub data off it
 
   /*
-   *  Clips Persistence
+   *  Actions Persistence
    */
 
-  public addClip(clip: Clip) {
-    operations.addClip(this.data, clip, true);
+  public addAction(action: Action) {
+    action.id = uuid();
+    SavePreviewFile(action);
+    operations.addAction(this.data, action, true);
 
-    this.saveData();
-    return clip.id;
+    this.saveData({
+      dataType: 'action',
+      actionType: action.type,
+      changeType: 'added',
+      id: action.id
+    });
+
+    return action.id;
   }
 
-  public updateClip(id: string, clip: Clip) {
-    clip.id = id;
-    updateItemInDictionary(this.data.clips, clip);
+  public updateAction(id: string, action: Action) {
+    SavePreviewFile(action);
+    action.id = id;
+    updateItemInDictionary(this.data.clips, action);
 
-    this.saveData();
-    return clip;
+    this.saveData({
+      dataType: 'action',
+      actionType: action.type,
+      changeType: 'changed',
+      id: action.id
+    });
+
+    return action;
   }
 
-  public deleteClip(id: string) {
-    operations.deleteClip(this.data, id);
+  public deleteAction(id: string) {
+    const actionType = this.data.clips[id].type;
 
-    this.saveData();
+    operations.deleteAction(this.data, id);
+
+    this.saveData({
+      dataType: 'action',
+      actionType: actionType,
+      changeType: 'removed',
+      id
+    });
   }
 
-  public listClips(): Clip[] {
+  public listActions(): Action[] {
     return sortClips(Object.values(this.data.clips));
   }
 
 
   /*
-   *  Clips Persistence
+   *  Tags Persistence
    */
 
   public addTag(tag: Tag) {
-    tag.id = uuidv4();
+    tag.id = uuid();
     this.data.tags[tag.id] = tag;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'tags',
+      changeType: 'added',
+      id: tag.id
+    });
+
     return tag.id;
   }
 
@@ -185,7 +243,12 @@ export class Persistence {
     tag.id = id;
     updateItemInDictionary(this.data.tags, tag);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'tags',
+      changeType: 'changed',
+      id: tag.id
+    });
+
     return tag;
   }
 
@@ -193,13 +256,17 @@ export class Persistence {
   public deleteTag(id: string) {
     deleteItemInDictionary(this.data.tags, id);
 
-    for(const clip of Object.values(this.data.clips)) {
-      if (clip.tags && clip.tags.includes(id)) {
-        deleteInArray(clip.tags, id);
+    for(const action of Object.values(this.data.clips)) {
+      if (action.tags && action.tags.includes(id)) {
+        deleteInArray(action.tags, id);
       }
     }
 
-    this.saveData();
+    this.saveData({
+      dataType: 'tags',
+      changeType: 'removed',
+      id
+    });
   }
 
   public listTags(): Tag[] {
@@ -214,7 +281,11 @@ export class Persistence {
   public addScreen(screen: Partial<Screen>) {
     operations.addScreen(this.data, screen);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screens',
+      changeType: 'added',
+      id: screen.id
+    });
     return screen.id;
   }
 
@@ -223,14 +294,23 @@ export class Persistence {
 
     updateItemInDictionary(this.data.screen, screen);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screens',
+      changeType: 'changed',
+      id: screen.id
+    });
+
     return screen;
   }
 
   public deleteScreen(id: string) {
     deleteItemInDictionary(this.data.screen, id);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screens',
+      changeType: 'removed',
+      id
+    });
   }
 
   public listScreens(): Screen[] {
@@ -246,14 +326,26 @@ export class Persistence {
 
     operations.addOrUpdateScreenClip(this.data, targetUrlId, screenClip);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screen-action-config',
+      changeType: 'changed',
+      id,
+      targetScreenId: targetUrlId
+    });
+
     return screenClip;
   }
 
   public deleteScreenClip(targetUrlId: string, id: string) {
     deleteItemInDictionary(this.data.screen[targetUrlId].clips, id);
 
-    this.saveData();
+
+    this.saveData({
+      dataType: 'screen-action-config',
+      changeType: 'removed',
+      id,
+      targetScreenId: targetUrlId
+    });
   }
 
 
@@ -262,62 +354,91 @@ export class Persistence {
    *  Twitch Event Settings
    */
 
-  public addTwitchEvent(twitchEvent: Twitch) {
-    twitchEvent.id = uuidv4();
+  public addTwitchEvent(twitchEvent: TwitchTrigger) {
+    twitchEvent.id = uuid();
     this.data.twitchEvents[twitchEvent.id] = twitchEvent;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'twitch-events',
+      changeType: 'added',
+      id: twitchEvent.id
+    });
+
     return twitchEvent.id;
   }
 
-  public updateTwitchEvent(id: string, twitchEvent: Twitch) {
+  public updateTwitchEvent(id: string, twitchEvent: TwitchTrigger) {
     twitchEvent.id = id;
 
     updateItemInDictionary(this.data.twitchEvents, twitchEvent);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'twitch-events',
+      changeType: 'changed',
+      id: twitchEvent.id
+    });
+
     return twitchEvent;
   }
 
   public deleteTwitchEvent(id: string) {
     deleteItemInDictionary(this.data.twitchEvents, id);
 
-    this.saveData();
+
+    this.saveData({
+      dataType: 'twitch-events',
+      changeType: 'removed',
+      id
+    });
   }
 
-  public listTwitchEvents(): Twitch[] {
+  public listTwitchEvents(): TwitchTrigger[] {
     return Object.values(this.data.twitchEvents);
   }
 
 
   /*
-   *  Timed Clips Settings
+   *  Timed Actions Settings
    */
 
-  public addTimedEvent(timedEvent: TimedClip) {
-    timedEvent.id = uuidv4();
+  public addTimedEvent(timedEvent: TimedAction) {
+    timedEvent.id = uuid();
     this.data.timers[timedEvent.id] = timedEvent;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'timers',
+      changeType: 'added',
+      id: timedEvent.id
+    });
     return timedEvent.id;
   }
 
-  public updateTimedEvent(id: string, timedEvent: TimedClip) {
+  public updateTimedEvent(id: string, timedEvent: TimedAction) {
     timedEvent.id = id;
 
     updateItemInDictionary(this.data.timers, timedEvent);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'timers',
+      changeType: 'changed',
+      id: timedEvent.id
+    });
+
     return timedEvent;
   }
 
   public deleteTimedEvent(id: string) {
     deleteItemInDictionary(this.data.timers, id);
 
-    this.saveData();
+
+    this.saveData({
+      dataType: 'timers',
+      changeType: 'removed',
+      id
+    });
   }
 
-  public listTimedEvents(): TimedClip[] {
+  public listTimedEvents(): TimedAction[] {
     return Object.values(this.data.timers);
   }
 
@@ -329,63 +450,142 @@ export class Persistence {
   public updateConfig(config: Config) {
     this.data.config = config;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
   public updatePartialConfig(config: Partial<Config>) {
     this.data.config = Object.assign({}, this.data.config, config);
 
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
   public updateMediaFolder (newFolder: string) {
     this.data.config = this.data.config || {};
     this.data.config.mediaFolder = newFolder;
 
-    this.saveData();
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
-
-  public updateTwitchChannel (channel: string) {
-    this.data.config = this.data.config || {};
-    this.data.config.twitch.channel  = channel;
-
-    this.saveData();
-  }
-
-  public updateTwitchLog (enabled: boolean) {
-    this.data.config = this.data.config || {};
-    this.data.config.twitch.enableLog = enabled;
-
-    this.saveData();
-  }
-
-  public updateTwitchBotIntegration (twitchBotConfig: TwitchBotConfig) {
+  public updateObsConfig(newObsConfig: ObsConfig) {
     this.data.config = this.data.config || {};
 
-    if(!this.data.config.twitch.bot) {
-      this.data.config.twitch.bot = {
-        enabled: twitchBotConfig.enabled,
-        response: twitchBotConfig.response,
+    let obsConfig = this.data.config.obs;
+
+    if (!obsConfig) {
+      obsConfig = this.data.config.obs = {
+        hostname: '',
+        password: null
       };
     }
 
-    this.data.config.twitch.bot.enabled = twitchBotConfig.enabled;
-    this.saveData();
+    obsConfig.hostname = newObsConfig.hostname;
+    if (newObsConfig.password && newObsConfig.password !== TOKEN_EXISTS_MARKER) {
+      obsConfig.password = newObsConfig.password;
+    }
+
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
   }
 
-  public updateTwitchBot (twitchConfig: TwitchConfig) {
-    console.log(twitchConfig);
+
+  public updateTwitchConfig(newTwitchConfig: TwitchConfig) {
     this.data.config = this.data.config || {};
-    twitchConfig.channel = this.data.config.twitch.channel || "";
-    twitchConfig.bot.enabled = this.data.config.twitch.bot.enabled || false;
-    //twitchConfig.bot.response = this.data.config.twitch.bot.response || "";
-    this.data.config.twitch = twitchConfig;
-    this.saveData();
+
+    const twitchConfig = this.data.config.twitch;
+
+    twitchConfig.enableLog = newTwitchConfig.enableLog;
+    twitchConfig.channel = newTwitchConfig.channel;
+    if (typeof newTwitchConfig.token !== 'undefined'
+      && newTwitchConfig.token !== TOKEN_EXISTS_MARKER) {
+      twitchConfig.token = newTwitchConfig.token;
+    }
+    twitchConfig.customScopes = newTwitchConfig.customScopes ?? [];
+
+    // fill empty bot object
+    if (!twitchConfig.bot) {
+      twitchConfig.bot = {
+        enabled: false,
+        response: '',
+        command: '!commands',
+        auth: {
+          name: '',
+          token: ''
+        }
+      }
+    }
+
+    // fill empty bot object
+    if (!twitchConfig.bot.auth) {
+      twitchConfig.bot.auth = {
+        name: '',
+        token: ''
+      }
+    }
+
+    twitchConfig.bot.enabled = newTwitchConfig.bot.enabled;
+    twitchConfig.bot.response = newTwitchConfig.bot.response;
+    twitchConfig.bot.command = newTwitchConfig.bot.command;
+    twitchConfig.bot.auth.name = newTwitchConfig.bot.auth.name;
+
+    if (typeof newTwitchConfig.bot.auth.token !== 'undefined'
+      && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
+      twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
+      console.info('updating bot auth token?');
+    }
+
+    this.saveData({
+      dataType: 'twitch-setting',
+      changeType: 'changed'
+    });
   }
 
-  public getConfig() {
-    return this.data.config;
+  public updateCustomPort (newPort: number) {
+    this.data.config = this.data.config || {};
+
+    this.data.config.customPort = newPort;
+
+    this.saveData({
+      dataType: 'settings',
+      changeType: 'changed'
+    });
+  }
+
+  public getConfig(replaceTokens = true): Config {
+    const mediaFolder = CLI_OPTIONS.MEDIA_PATH ?? this.data.config.mediaFolder;
+
+    const twitchConfig = cloneDeep(this.data.config.twitch);
+    if (replaceTokens && twitchConfig.token) {
+      twitchConfig.token = TOKEN_EXISTS_MARKER;
+    }
+
+    if (replaceTokens && twitchConfig.bot?.auth?.token) {
+      twitchConfig.bot.auth.token = TOKEN_EXISTS_MARKER;
+    }
+
+    const obsConfig = (cloneDeep(this.data.config.obs) || {}) as ObsConfig;
+
+    if (replaceTokens && obsConfig.password) {
+      obsConfig.password = TOKEN_EXISTS_MARKER;
+    }
+
+
+    return {
+      ...this.data.config,
+      twitch: twitchConfig,
+      mediaFolder,
+      obs: obsConfig
+    };
   }
 
   public cleanUpConfigs() {
@@ -394,19 +594,19 @@ export class Persistence {
     this.data.screen = {};
     this.data.twitchEvents = {};
 
-    this.saveData();
+    this.saveData({
+      dataType: 'everything',
+      changeType: 'removed'
+    });
+
     this._hardRefresh$.next();
   }
 
-  public addAllClipsToScreen(screenId: string, clipList: Partial<Clip>[]) {
-    const currentScreen = this.data.screen[screenId];
-
-    const prevJson = JSON.stringify(currentScreen);
-
+  public addAllClipsToScreen(screenId: string, clipList: Partial<Action>[]) {
     // add all clips to state
     // assign all clips to screen
     clipList.forEach(clip => {
-      operations.addClip(this.data, clip, true);
+      operations.addAction(this.data, clip, true);
 
       this.logger.info('Added clip', clip.id, clip.name);
 
@@ -418,18 +618,22 @@ export class Persistence {
         animationOut: 'random'
       });
 
-      this.logger.info('Add Clip to screen', clip.id, screenId);
+      this.logger.info('Add Action to screen', clip.id, screenId);
     });
 
-    this.saveData();
+    this.saveData({
+      dataType: 'screen-action-config',
+      changeType: 'changed',
+      id: screenId
+    });
   }
 
   /*
   *  Helpers
   */
 
-  private saveData() {
-    this.updated$.next();
+  private saveData(changed: ChangedInfo) {
+    this.updated$.next(changed);
   }
 }
 
@@ -456,8 +660,20 @@ export const PERSISTENCE: {
   instance: null
 }
 
-LOGGER.info({NEW_CONFIG_PATH, LOG_PATH});
 
-export const PersistenceInstance = new Persistence(path.join(NEW_CONFIG_PATH, 'settings', 'settings.json'));
+export const PersistenceInstance = new Persistence(
+  path.join(NEW_CONFIG_PATH, 'settings', 'settings.json')
+);
+
+// todo refactor it to a new place when the new logger is being used
+LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
 
 PERSISTENCE.instance = PersistenceInstance;
+
+
+// TODO Check if possible to use the default @Service()
+// Registry for TsED
+registerProvider({
+  provide: PERSISTENCE_DI,
+  useValue: PersistenceInstance
+});

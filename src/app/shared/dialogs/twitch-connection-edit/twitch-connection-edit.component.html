@@ -1,0 +1,210 @@
+<h2 mat-dialog-title> Twitch Connection Details: </h2>
+<mat-dialog-content class="mat-typography">
+
+<div [formGroup]="mainAccountForm">
+  <mat-tab-group>
+    <mat-tab label="Authentication">
+  <div class="config-grid">
+    <div>
+
+      <mat-form-field>
+        <mat-label>Channel-Name</mat-label>
+        <input autocomplete="off"
+               formControlName="channelName" (keyup.enter)="save()"
+               class="twitchSetting__input"
+               matInput required>
+
+        <mat-error *ngIf="mainAccountForm.controls['channelName'].hasError('required')">
+          Please enter your Twitch channel name
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+
+      <div>
+      Twitch Channel Name is needed for anonymous connection to the TwitchAPI: <br>
+      With this you can use the events for:
+        <table  *transloco="let t; read: 'twitch', scope: 'twitch' ">
+          <tr>
+            <td>
+              <ul>
+                <li>{{ t('message') }}</li>
+                <li>{{ t('bits') }}</li>
+                <li>{{ t('raid') }}</li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+              <li>{{ t('ban') }}</li>
+              <li>{{ t('subscription') }}</li>
+              <li>{{ t('gift') }}</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <ul>
+                <li>{{ t('channelPoints') }} (only with entered Text) </li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <h4>Twitch Main:
+          <span *ngIf="!(mainAuthInformation?.authResult?.valid)">
+            <span *ngIf="mainAuthInformation?.authResult?.reason; let reason; else noReason">
+              {{ reason }}
+            </span>
+
+            <ng-template #noReason>
+              <span *ngIf="!mainAccountForm.value.authToken">
+                Not authenticated
+              </span>
+            </ng-template>
+          </span>
+        </h4>
+        <div class="mat-caption" *ngIf="mainAuthInformation?.authResult?.valid">
+          Login: {{mainAuthInformation?.authResult?.login}} - Expires in: {{ (mainAuthInformation?.authResult?.expires_in * 1000) | readableMs }}
+        </div>
+
+        <div *ngIf="!mainAccountForm.value.authToken">
+          <button
+            mat-raised-button color="accent"
+            class="auth-buttons"
+            (click)="tryAuthentication('main')" >
+            Auth with Twitch
+          </button>
+
+          <button
+            mat-stroked-button color="primary"
+            class="auth-buttons"
+            (click)="tryAuthentication('main', true)" >
+            Auth with Twitch (custom scopes)
+          </button>
+        </div>
+
+
+        <button *ngIf="mainAccountForm.value.authToken"
+                mat-raised-button color="warn"
+                class="auth-buttons"
+                (click)="deleteMainAuth()">
+          Delete Auth-Token
+        </button>
+      </div>
+
+    </div>
+    <div>
+
+      <div class="markdown-styling">
+        With an authenticated connection to the TwitchAPI: <br>
+        you can use the following features:
+        <ul *transloco="let t; read: 'twitch', scope: 'twitch' ">
+          <li>Trigger actions by {{ t('channelPoints') }} (even without entered Text) </li>
+          <li>Use this Account for the Bot to write in Chat</li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="config$ | async as config">
+      <div>
+        <h4>Twitch Bot:
+          <span *ngIf="!(botAuthInformation?.authResult?.valid)">
+            <span *ngIf="botAuthInformation?.authResult?.reason; let reason; else noReason">
+              {{ reason }}
+            </span>
+
+            <ng-template #noReason>
+              <span *ngIf="!mainAccountForm.value.botToken">
+                Not authenticated
+              </span>
+            </ng-template>
+          </span>
+        </h4>
+        <div  class="mat-caption" *ngIf="botAuthInformation?.authResult?.valid">
+          Login: {{botAuthInformation?.authResult?.login}} - Expires in: {{ (botAuthInformation?.authResult?.expires_in * 1000) | readableMs }}
+        </div>
+
+        <button *ngIf="!mainAccountForm.value.botToken"
+                mat-raised-button color="accent"
+                class="auth-buttons"
+                (click)="tryAuthentication('bot')" >
+          Auth with Twitch
+        </button>
+        <button *ngIf="mainAccountForm.value.botToken"
+                mat-raised-button color="warn"
+                class="auth-buttons"
+                (click)="deleteBotAuth()">
+          Delete Auth-Token
+        </button>
+      </div>
+    </div>
+    <div>
+      If this Account is connected, it will be used primary for the <code>{{additionalForm?.value?.command}}</code> and upcoming Twitch-Chat actions.
+    </div>
+
+  </div>
+    </mat-tab>
+    <mat-tab label="Additional settings">
+      <form *ngIf="config$ | async as config" [formGroup]="additionalForm">
+        <mat-checkbox [checked]="config?.twitch?.bot?.enabled" #isBotEnabledCheckbox
+                      (change)="onBotIntegrationChanged($event, config)">
+          Enable Bot Command Response
+        </mat-checkbox>
+
+        <mat-form-field>
+          <mat-label>Bot response</mat-label>
+          <textarea autocomplete="off" [readonly]="!isBotEnabledCheckbox.checked"
+                    formControlName="botResponse"
+                    class="twitchSetting__textarea"
+                    matInput>
+
+          </textarea>
+
+          <mat-error *ngIf="additionalForm.controls['botResponse'].hasError('required')">
+            Please enter bot response message.
+          </mat-error>
+        </mat-form-field>
+
+        <p>
+          The message that will be outputted the the chat when someone writes !commands. Use
+          <code>{{commandsFlagMessage}}</code>
+          to print out the whole list of twitch commands available in memebox and
+          <code>{{userFlagMessage}}</code>
+          to reference the user that asked for commands.
+        </p>
+
+        <mat-form-field>
+          <mat-label>Bot command to list all of Memebox commands</mat-label>
+          <input autocomplete="off"
+                 formControlName="command"
+                 class="twitchSetting__input"
+                 [readonly]="!isBotEnabledCheckbox.checked"
+                 matInput>
+        </mat-form-field>
+        <p>This command will be used to output text from the bot response into chat. The default command is: <code>!commands</code></p>
+      </form>
+
+    </mat-tab>
+  </mat-tab-group>
+
+</div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <app-open-feedback-button feedbackTarget="Twitch Settings Dialog"></app-open-feedback-button>
+  </div>
+  <div class="column" align="end" >
+
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="save()"
+          color="primary"
+          mat-raised-button>Update Twitch Config</button>
+  </div>
+</mat-dialog-actions>
+

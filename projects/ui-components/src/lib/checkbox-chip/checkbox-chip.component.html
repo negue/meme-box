@@ -1,0 +1,9 @@
+<mat-chip-list>
+  <mat-chip [class.selected]="checked">
+    <mat-checkbox [checked]="checked"
+                  (change)="checked = $event.checked; checkedChange.emit(checked)">
+      <ng-content select="[chipIsChecked]" *ngIf="checked"></ng-content>
+      <ng-content select="[chipIsNotChecked]"  *ngIf="!checked"></ng-content>
+    </mat-checkbox>
+  </mat-chip>
+</mat-chip-list>

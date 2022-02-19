@@ -1,10 +1,10 @@
 <h2 mat-dialog-title>{{data.title}}</h2>
 <mat-dialog-content *ngIf="data.content" class="mat-typography">
-  {{data.content}}
+  <span style="white-space: pre-line">{{data.content}}</span>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close *ngIf="data.noButton">{{data.noButton}}</button>
-  <button [mat-dialog-close]="true" mat-button *ngIf="data.yesButton">
+  <button mat-button [mat-dialog-close]="false" *ngIf="data.noButton">{{data.noButton}}</button>
+  <button [mat-dialog-close]="true" color="primary" mat-button *ngIf="data.yesButton">
     {{data.yesButton}}
   </button>
 </mat-dialog-actions>

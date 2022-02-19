@@ -9,11 +9,16 @@
     .mat-card-header-text {
       flex: 1;
     }
-  }
-}
 
-.hidden {
-  display: none !important;
+    // Uncomment if you put the tabs in the mat-tabs instead of *ngIf
+    // There is a resize bug in the preview-content if you do...
+    //.mat-card-header-text, mat-tab-group, .mat-tab-body-wrapper {
+    //  flex: 1;
+    //}
+    //.mat-tab-body-content {
+    //  display: flex;
+    //}
+  }
 }
 
 mat-dialog-content {
@@ -27,94 +32,12 @@ mat-dialog-content {
 
 .mat-dialog-title {
   display: flex;
+  justify-content: space-between;
 
   span {
     flex: 1;
   }
 }
-
-.inline {
-  display: flex;
-  flex-direction: row;
-  min-height: 4rem;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  background: #444;
-  padding-right: 1rem;
-  padding-left: 1rem;
-
-  mat-checkbox {
-    margin-left: 1rem;
-  }
-}
-
-.hover-background:hover {
-  background: #555;
-}
-
-.overflow-y {
-  overflow-y: auto;
-}
-
-.drag-drop-area-holder {
-  flex: 1;
-  min-height: 0;
-}
-
-.drag-drop-area {
-  position: relative;
-  overflow: hidden;
-
-  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
-}
-
-
-mat-expansion-panel, .settings-content, .settings-stuff {
-  margin: 1rem 1rem;
-}
-
-.settings-content {
-  height: 10rem;
-
-  mat-form-field {
-    width: 100%;
-  }
-}
-
-.selected-item {
-  grid-area: selected-item;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.media-config {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
-
-.dragging-config {
-  display: flex;
-  flex-direction: row;
-
-  .spacer {
-    min-height: 4rem;
-  }
-}
-
-h3 {
-  margin-bottom: 0 !important;
-}
-
-mat-card-title {
-  overflow-y: hidden;
-  height: 20px;
-  word-break: break-all;
-}
-
 
 .tab_content {
   display: flex;
@@ -127,82 +50,4 @@ mat-card-title {
    * in order to achieve a MAX HEIGHT  you need a MIN HEIGHT ... obviously
    */
   min-height: 0;
-}
-
-.preview-area {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar {
-  width: 300px;
-  min-width: 300px; // since sometimes width alone is ignored.
-  position: relative;
-  display: flex;
-  flex-direction: column;
-
-  &__title {
-    height: 5rem;
-
-    display: flex;
-    flex-direction: column;
-  }
-}
-
-.preview-label {
-  justify-self: center;
-  font-weight: bold;
-}
-
-.sidebar__items {
-  display: flex;
-  gap: 5px;
-  margin-top: 5px;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  height: 100%;
-  align-content: flex-start;
-
-  ::ng-deep {
-    .mat-card {
-      padding: 10px;
-      &:not(.selectable) {
-        border: 3px solid transparent;
-      }
-      &:not(.small) {
-        height: 126px;
-      }
-
-      width: 100%;
-      margin-right: 5px;
-
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    .mat-card-subtitle {
-      margin-bottom: 0;
-    }
-  }
-
-  .selected {
-    border: 3px mat-css-color-accent() solid;
-  }
-}
-
-// cornered example of https://css-tricks.com/more-control-over-css-borders-with-background-image/
-.dragable-preview {
-  --clr-border: #d3d3d3b0;
-  background-position:  0 0, 0 0, 100% 0, 0 100%;
-  background-size: 1vw 100%, 100% 1vw, 1vw 100% , 100% 1vw;
-  background-repeat: no-repeat;
-
-  background-image:
-    linear-gradient(0deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // left
-    linear-gradient(90deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // top
-    linear-gradient(180deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // right
-    linear-gradient(270deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%) // bottom
-;
 }

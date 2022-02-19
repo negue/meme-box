@@ -1,15 +1,11 @@
-import { Component, OnInit, TrackByFunction } from '@angular/core';
-import { Clip, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum } from "@memebox/contracts";
-import { Observable } from "rxjs";
-import { map, take } from "rxjs/operators";
-import { AppService } from "../../../state/app.service";
-import { AppQueries } from "../../../state/app.queries";
-import { DialogService } from "../../../shared/dialogs/dialog.service";
-import { WebsocketService } from "../../../core/services/websocket.service";
-import { SnackbarService } from "../../../core/services/snackbar.service";
-
+import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {Action, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
+import {Observable} from "rxjs";
+import {map, take} from "rxjs/operators";
+import {AppQueries, AppService, MemeboxWebsocketService, SnackbarService} from "@memebox/app-state";
+import {DialogService} from "../../../shared/dialogs/dialog.service";
 import orderBy from 'lodash/orderBy';
-import { ScreenUrlDialogComponent } from "./screen-url-dialog/screen-url-dialog.component";
+import {ScreenUrlDialogComponent} from "./screen-url-dialog/screen-url-dialog.component";
 
 // todo use @gewd npm package
 function timeout(ms) {
@@ -23,7 +19,7 @@ function timeout(ms) {
 })
 export class ScreenOverviewComponent implements OnInit {
 
-  public screenList: Observable<Screen[]> = this._queries.screensList$.pipe(
+  public screenList$: Observable<Screen[]> = this._queries.screensList$.pipe(
     map(stateUrlArray => orderBy(stateUrlArray, 'name'))
   )
 
@@ -35,7 +31,7 @@ export class ScreenOverviewComponent implements OnInit {
     private _dialog: DialogService,
     private _queries: AppQueries,
     public service: AppService,
-    private webSocket: WebsocketService,
+    private webSocket: MemeboxWebsocketService,
     private snackbar: SnackbarService
   ) {
   }
@@ -79,7 +75,7 @@ export class ScreenOverviewComponent implements OnInit {
     this.service.deleteScreenClip(obsInfo.id, clipId);
   }
 
-  onClipOptions(item: Clip, screen: Screen) {
+  onClipOptions(item: Action, screen: Screen) {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,

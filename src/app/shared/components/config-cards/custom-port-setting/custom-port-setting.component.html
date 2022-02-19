@@ -1,0 +1,28 @@
+<app-config-card title="Custom Port" icon="settings_ethernet">
+
+<div>
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Server-Port</mat-label>
+      <input autocomplete="off" [readonly]="!editMode"
+             formControlName="port" (keyup.enter)="save()"
+             class="twitchSetting__input"
+             matInput required>
+
+      <mat-error *ngIf="form.controls['port'].hasError('required')">
+        Please enter your new custom Port
+      </mat-error>
+
+      <button (click)="toggleOrSave()" matSuffix
+              color="primary"
+              class="twitchSetting__button"
+              mat-raised-button>{{editMode ? 'Update' : 'Edit'}}</button>
+
+    </mat-form-field>
+
+    <div class="explanation">
+      If you change this default Port you need to restart Meme-Box and don't forget to enter the new Port inside each StreamDeck-Plugin Config.
+    </div>
+  </form>
+</div>
+</app-config-card>

@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  width: 300px;
+
+  ::ng-deep {
+    .mat-card-header-text, .mat-card-title {
+      overflow: hidden;
+      margin-left: 0 !important;
+    }
+
+    .mat-card-header-text {
+      margin-right: 2.5rem;
+    }
+
+    .mat-card-image {
+      margin: 0 -16px 0px -16px;
+    }
+
+    .mat-card-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .hide_until_hover:not(:active):not(:hover):not(.isOpened) {
+    opacity: 0.3;
+  }
+
+    .hide_until_hover:hover {
+      opacity: 1 !important;
+    }
+}
+
+.card__header {
+  .mat-icon-button {
+    position: absolute;
+    top: 0.25rem;
+
+    &.hide_until_hover {
+      right: 0.5rem;
+    }
+
+    &.edit_icon {
+      right: 2rem;
+    }
+  }
+}
+
+.mediaInfo__preview__img {
+  height: 188px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.mc__actions-container {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+
+  &__supplemental {
+    top: 6px;
+    right: 0;
+    position: absolute;
+  }
+}
+
+.mc-content {
+  margin: 0 -16px 4px -16px;
+}
+
+.mat-icon.mat-icon-inline {
+  margin-right: 4px;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.mc__expander {
+  background-color: var(--card-background-color);
+
+  &__description {
+    flex-direction: row-reverse;
+
+    & > div {
+      display: flex;
+
+      &:not(:first-child) {
+        margin-right: 12px;
+      }
+    }
+  }
+
+
+  ::ng-deep {
+    .mat-expansion-indicator {
+      // otherwise it looks weird when its opening/closing while rotating
+      height: 26px;
+    }
+  }
+}
+
+div.mat-small {
+  margin-bottom: 0.25rem;
+}
+
+.mat-chip-list + div.mat-small {
+  margin-top: 1rem;
+}
+
+
+mat-card.media-active:after {
+  background-color: #00bf92;
+  border: 2px solid;
+  border-radius: 11px;
+  content: attr(data-count);
+  color: #fff;
+  display: block;
+  font-size: 10px;
+  font-family: helvetica;
+  height: 9px;
+  line-height: 8px;
+  min-width: 9px;
+  padding: 4px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+}

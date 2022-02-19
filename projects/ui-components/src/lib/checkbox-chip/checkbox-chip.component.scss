@@ -1,0 +1,28 @@
+@import '~angular-material-css-vars/public-util';
+
+
+:host {
+
+  cursor: pointer;
+
+  ::ng-deep {
+    .mat-checkbox-background {
+      background-color: transparent !important;
+    }
+
+    .mat-chip {
+      &.mat-chip.mat-standard-chip {
+        background-color: mat-css-color-warn();
+
+        &.selected {
+          background-color: #0be881; //TODO - make a var
+          color: var(--palette-background-background);
+
+          .mat-checkbox-frame {
+            border-color: var(--palette-background-background);
+          }
+        }
+      }
+    }
+  }
+}

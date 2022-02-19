@@ -76,9 +76,30 @@ mat-expansion-panel {
 
 
 .animation-expansion-panel {
+  .duration-form-field {
+    width: 8rem;
+  }
+
   ::ng-deep .mat-expansion-panel-body {
-    padding-right: 0;
-    min-width: 455px;
+    min-width: 450px;
+  }
+
+  .animation-config-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.position-inputs {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 1rem;
+
+  .mat-form-field {
+    width: calc(50% - 0.5rem);
   }
 }
 
@@ -86,13 +107,4 @@ mat-expansion-panel {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
-}
-
-.open-media-button {
-  margin-left: 1rem;
-
-  app-clip-type {
-    margin-bottom: -0.5rem;
-    display: inline-block;
-  }
 }

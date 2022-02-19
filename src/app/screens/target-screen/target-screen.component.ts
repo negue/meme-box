@@ -2,13 +2,20 @@ import type {Rule} from 'css';
 import * as css from 'css';
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {Clip, CombinedClip, Dictionary, MediaType, Screen, ScreenClip} from "@memebox/contracts";
+import {
+  Action,
+  ActionType,
+  ANIMATION_IN_ARRAY,
+  ANIMATION_OUT_ARRAY,
+  CombinedClip,
+  Screen,
+  ScreenClip,
+  TriggerAction
+} from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
-import {AppQueries} from "../../state/app.queries";
-import {AppService} from "../../state/app.service";
+import {AppQueries, AppService, ConnectionState, MemeboxWebsocketService} from "@memebox/app-state";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
-import {ConnectionState, WebsocketService} from "../../core/services/websocket.service";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -19,7 +26,7 @@ import {ConnectionState, WebsocketService} from "../../core/services/websocket.s
 })
 export class TargetScreenComponent implements OnInit, OnDestroy {
 
-  log = [];
+  log: unknown[] = [];
 
   debug$ = this.route.queryParams.pipe(
     map(queryParams => queryParams['debug'] === 'true')
@@ -39,30 +46,34 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     map(([screenId, screenMap]) => screenMap[screenId].clips)
   );
 
-  mediaClipMap$: Observable<Dictionary<CombinedClip>> = combineLatest([
+  mediaList$: Observable<CombinedClip[]> = combineLatest([
     this.assignedClipsMap$,
-    this.appQuery.clipMap$
+    this.appQuery.actionMap$
   ]).pipe(
-    map(([assignedClips, allClips]) => {
-      const result: Dictionary<CombinedClip> = {};
+    map(([assignedMedia, allActions]) => {
+      const result: CombinedClip[] = [];
 
-      for (const [key, entry] of Object.entries(assignedClips)) {
-        result[key] = {
-          clipSetting: entry,
+      for (const [key, clipSetting] of Object.entries(assignedMedia)) {
+        result.push({
+          clipSetting,
+          originalClipSetting: clipSetting,
           clip: {
-            ...allClips[key]
+            ...allActions[key]
           },
           backgroundColor: this.random_rgba()
-        }
+        });
       }
 
       return result;
     })
   );
-  mediaClipToShow$ = new BehaviorSubject<string>(null);
+  mediaClipToShow$ = new BehaviorSubject<CombinedClip>(null);
+  mediaClipControlAdded$ = new BehaviorSubject<string>(null);
   clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement | HTMLIFrameElement>();
 
-  connectionState$ = this.wsService.connectionState$;
+  showOfflineIcon$ = this.wsService.connectionState$.pipe(
+    map(value => ![ConnectionState.Connected, ConnectionState.Offline].includes(value))
+  );
 
   ConnectionState = ConnectionState;
 
@@ -80,7 +91,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   @Input()
-  public screenId : string;
+  public screenId: string = '';
 
   @HostBinding('id')
   public get cssId() {
@@ -93,7 +104,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   constructor(private appQuery: AppQueries,
               private appService: AppService,
               private route: ActivatedRoute,
-              private wsService: WebsocketService,
+              private wsService: MemeboxWebsocketService,
               private element: ElementRef<HTMLElement>) {
   }
 
@@ -125,11 +136,16 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       this.appService.loadState();
     });
 
-    this.wsService.onTriggerClip$.pipe(
+    this.wsService.onTriggerAction$.pipe(
       takeUntil(this._destroy$)
-    ).subscribe(clip => {
-      if (clip.targetScreen === this.screenId) {
-        this.mediaClipToShow$.next(clip.id);
+    ).subscribe(async triggerPayload => {
+      if (triggerPayload.targetScreen === this.screenId) {
+        const combinedClip = await this.getCombinedClipWithOverridingOptionsAsync(triggerPayload);
+
+        combinedClip.clipSetting.animationIn = this.getAnimationName(combinedClip, true);
+        combinedClip.clipSetting.animationOut = this.getAnimationName(combinedClip, false);
+
+        this.mediaClipToShow$.next(combinedClip);
       }
     });
 
@@ -147,7 +163,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     this.screenId$.next(this.screenId);
 
-    this.mediaClipMap$.pipe(
+    this.mediaList$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(mediaClipMap => {
       for(const screenClipSettings of Object.values(mediaClipMap)){
@@ -161,12 +177,11 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
           return;
         }
 
-        if (screenClipSettings.clip.type === MediaType.IFrame) {
+        if (screenClipSettings.clip.type === ActionType.IFrame) {
           const item = this.clipToControlMap.get(screenClipSettings.clip.id) as HTMLIFrameElement;
 
-          if (item) {
-            console.info({document: item.contentDocument});
-            this.addOrUpdateStyleTag(item.contentDocument, 'iframe', screenClipSettings.clipSetting.customCss);
+          if (item && item.contentDocument) {
+            this.addOrUpdateStyleTag(item.contentDocument, 'iframe', screenClipSettings.clipSetting.customCss ?? '');
           }
         }
       }
@@ -181,56 +196,50 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         ? this.toScreenCssAgain(screen)
         : '';
 
-      console.info('ADDING SCreen Custom CSS', customCss);
+      // console.info('ADDING SCreen Custom CSS', customCss);
 
       this.addOrUpdateStyleTag(document, screen.id, customCss);
     });
   }
 
   addLog(load: string, $event: Event) {
-    console.info({load, $event});
+    // console.info({load, $event});
 
     this.log.push({
       load,
       $event,
       time: new Date()
     });
-
-    console.info({log: this.log});
   }
 
-  addToMap(value: Clip, element: any) {
+  addToMap(value: Action, element: any) {
     this.clipToControlMap.set(value.id, element);
 
-    if (value.type === MediaType.IFrame){
+    if (value.type === ActionType.IFrame){
 
-      console.warn('Is Iframe');
-      this.mediaClipMap$.pipe(
+      // console.warn('Is Iframe');
+      this.mediaList$.pipe(
         take(1)
       ).subscribe(map => {
         const iframeElement = element as HTMLIFrameElement;
 
-        const iframeCss = map[value.id].clipSetting.customCss;
+        const foundMedia = map.find(e => e.clip.id === value.id);
 
-        console.warn({
-          document: iframeElement.contentDocument,
-          iframeCss
-        });
+        const iframeCss =  foundMedia.clipSetting.customCss;
 
         this.addOrUpdateStyleTag(iframeElement.contentDocument, 'iframe', iframeCss);
-
       } )
     }
 
-    if (value.type === MediaType.HTML){
-
-      console.warn('Is HTML (iframe)');
-      this.mediaClipMap$.pipe(
+    if (value.type === ActionType.Widget){
+      this.mediaList$.pipe(
         take(1)
       ).subscribe(map => {
         // custom css for custom html?!
       } )
     }
+
+    this.mediaClipControlAdded$.next(value.id);
   }
 
   random_rgba() {
@@ -238,8 +247,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     return `rgba(${o(r() * s)},${o(r() * s)},${o(r() * s)},0.34)`;
   }
 
-  parseAndApplyClipCssRules(screenClip: ScreenClip) {
-
+  parseAndApplyClipCssRules(screenClip: ScreenClip): css.Stylesheet {
     const obj = css.parse(screenClip.customCss, {
       silent: true
     });
@@ -262,7 +270,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
 
   parseAndApplyScreenCssRules(screen: Screen) {
-    const obj = css.parse(screen.customCss, {
+    const obj = css.parse(screen.customCss ?? '', {
       silent: true
     });
     // css.stringify(obj, options);
@@ -272,7 +280,10 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         const normalRule = rule as Rule;
 
         normalRule.selectors = normalRule.selectors.map(sel => {
-          return `#screen-${screen.id} ${sel}`;
+          const screenSelector = sel.includes('screen');
+
+
+          return `#screen-${screen.id} ${screenSelector ? '' : sel}`;
         });
       }
     })
@@ -291,31 +302,31 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     // todo use the @gewd package to add the style
     const head = document.getElementsByTagName('head')[0];
     const allStyles = head.getElementsByTagName('style');
-    let style: HTMLStyleElement = null;
+    let style: HTMLStyleElement|null = null;
 
     for (let styleIndex = 0; styleIndex < allStyles.length; styleIndex++) {
       const styleInHeader = allStyles.item(styleIndex);
 
-      if (styleInHeader.id === styleId) {
+      if (styleInHeader?.id === styleId) {
         style = styleInHeader;
         break;
       }
     }
 
-    if (style == null) {
+    if (style === null) {
       style = document.createElement('style');
       style.id = styleId;
       style.type = 'text/css';
       head.appendChild(style);
     }
 
-    if (style.childNodes.length > 0) {
-      console.info('Rules in the Style', styleId);
-      console.info('Childnodes', style.childNodes);
+    if (style?.childNodes.length > 0) {
+      // console.info('Rules in the Style', styleId);
+      // console.info('Childnodes', style.childNodes);
 
       style.childNodes.forEach(child => {
-        console.info('Removing', child);
-        style.removeChild(child);
+        // console.info('Removing', child);
+        style?.removeChild(child);
       })
     }
 
@@ -327,8 +338,12 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  toScreenClipCssAgain(screenClip: ScreenClip) {
+  toScreenClipCssAgain(screenClip: ScreenClip): string {
     const obj = this.parseAndApplyClipCssRules(screenClip);
+
+    if (obj.stylesheet.parsingErrors) {
+      return screenClip.customCss;
+    }
 
     return css.stringify(obj);
   }
@@ -338,4 +353,61 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 
     return css.stringify(obj);
   }
+
+  async getCombinedClipWithOverridingOptionsAsync(
+    triggerPayload: TriggerAction
+  ): Promise<CombinedClip> {
+    const currentMediaList = await this.mediaList$.pipe(
+      take(1)
+    ).toPromise();
+
+    const foundById = currentMediaList.find(m => m.clip.id === triggerPayload.id);
+
+    return mergeCombinedClipWithOverrides(foundById, triggerPayload);
+  }
+
+  private getAnimationName (combinedClip: CombinedClip, animateIn: boolean) {
+    let selectedAnimation = animateIn
+      ? combinedClip.clipSetting.animationIn
+      : combinedClip.clipSetting.animationOut;
+
+    if (selectedAnimation === 'random') {
+      selectedAnimation = this.randomAnimation(animateIn
+        ? ANIMATION_IN_ARRAY
+        : ANIMATION_OUT_ARRAY
+      );
+    }
+
+    return selectedAnimation;
+  }
+
+  private randomAnimation(animations: string[]) {
+    var randomIndex = Math.floor(Math.random() * animations.length);     // returns a random integer from 0 to 9
+
+    return animations[randomIndex];
+  }
+
+}
+
+export function mergeCombinedClipWithOverrides (
+  sourceCombinedClip: CombinedClip,
+  triggerPayload: TriggerAction
+) {
+  let clipSetting = Object.assign({}, sourceCombinedClip.originalClipSetting);
+
+  if (triggerPayload.useOverridesAsBase) {
+    sourceCombinedClip.originalClipSetting = Object.assign({},
+      sourceCombinedClip.originalClipSetting,
+      triggerPayload.overrides.screenMedia);
+  }
+
+  if (triggerPayload.overrides?.screenMedia) {
+    clipSetting = Object.assign({}, sourceCombinedClip.originalClipSetting, triggerPayload.overrides.screenMedia);
+  }
+
+  return {
+    ...sourceCombinedClip,
+    clipSetting,
+    triggerPayload
+  };
 }

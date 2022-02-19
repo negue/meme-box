@@ -1,11 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
-import {AppService} from "../../../../state/app.service";
-import {AppQueries} from "../../../../state/app.queries";
+import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
-import {SnackbarService} from "../../../../core/services/snackbar.service";
+import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
 @Component({
   selector: 'app-config-media-path',
@@ -26,6 +25,7 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
   constructor(private appQuery: AppQueries,
               private dialogRef: MatDialogRef<any>,
               private appService: AppService,
+              private configService: ConfigService,
               private snackBar: SnackbarService) {
 
   }
@@ -49,7 +49,7 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
 
     const {value} = this.form;
 
-    await this.appService.updateConfig({
+    await this.configService.updateConfig({
       mediaFolder: value.path
     });
 
@@ -66,12 +66,11 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
   openNativeFolderPicker() {
     if (this.isElectron) {
 
-      const windowAny = window as any;
-      const ipcRenderer = windowAny.require('electron').ipcRenderer;
+      const electronApi = window.electron;
 
-      ipcRenderer.send('select-dirs')
+      electronApi.electronIpcSend('select-dirs')
 
-      ipcRenderer.on('dir-selected', (event, args) => {
+      electronApi.electronIpcOn('dir-selected', (event, args) => {
         if (args) {
           this.form.patchValue({
             path: args
@@ -83,8 +82,6 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
 
   // todo extract that to a service
   get isElectron(): boolean {
-    const windowAny = window as any;
-
-    return !!(windowAny && windowAny.process && windowAny.process.type);
+    return !!window.electron;
   }
 }

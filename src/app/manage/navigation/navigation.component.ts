@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { DialogService } from "../../shared/dialogs/dialog.service";
-import { QrcodeDialogComponent } from "../qrcode-dialog/qrcode-dialog.component";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { take } from "rxjs/operators";
-import { AppService } from "../../state/app.service";
-import { RELEASE_PAGE } from "../../../../server/constants";
-import { AppQueries } from "../../state/app.queries";
+import {Component, OnInit} from '@angular/core';
+import {DialogService} from "../../shared/dialogs/dialog.service";
+import {QrcodeDialogComponent} from "../qrcode-dialog/qrcode-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {take} from "rxjs/operators";
+import {AppQueries, AppService} from "@memebox/app-state";
+import {RELEASE_PAGE} from "../../../../server/constants";
+
+interface LinkEntry {
+  path: string;
+  displayName: string;
+}
 
 @Component({
   selector: 'app-navigation',
@@ -13,11 +17,7 @@ import { AppQueries } from "../../state/app.queries";
   styleUrls: ['./navigation.component.scss']
 })
 export class NavigationComponent implements OnInit {
-  links = [
-    {path: './media', displayName: 'Media'},
-    {path: './screens', displayName: 'Screens'},
-    {path: './triggers', displayName: 'Triggers'}
-  ]
+  links: LinkEntry[];
 
   public update$ = this.appQuery.update$;
 
@@ -26,9 +26,12 @@ export class NavigationComponent implements OnInit {
               private appService: AppService,
               private appQuery: AppQueries) {
 
-
-
-
+    this.links = [
+      {path: './dashboard', displayName: 'dashboard'},
+      {path: './actions', displayName: 'actions'},
+      {path: './screens', displayName: 'screens'},
+      {path: './triggers', displayName: 'triggers'},
+    ];
   }
 
   ngOnInit(): void {

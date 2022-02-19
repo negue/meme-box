@@ -1,0 +1,13 @@
+version = 1
+
+exclude_patterns = [
+    "cypress/**",
+    "memebox-streamdeck/**"
+]
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  plugins = ["angular"]

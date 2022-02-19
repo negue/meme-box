@@ -2,14 +2,12 @@
   position: relative;
   display: inline-flex;
   background: lightslategray;
-  height: 30px;
-  width: 30px;
-  padding: 5px;
+  padding: 14px;
   margin-left: 2px;
 }
 
 .example {
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: 30px;
   background: rgba(var(--palette-primary-500), 1);
 }

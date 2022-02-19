@@ -7,13 +7,13 @@ import {
   OnInit,
   SimpleChanges
 } from '@angular/core';
-import { map, tap } from "rxjs/operators";
-import { Clipboard } from "@angular/cdk/clipboard";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { NetworkInterfacesService } from "../../../core/services/network-interfaces.service";
-import { NetworkInfo } from "@memebox/contracts";
-import { BehaviorSubject, combineLatest } from "rxjs";
-import { MatSelectChange } from "@angular/material/select";
+import {map, tap} from "rxjs/operators";
+import {Clipboard} from "@angular/cdk/clipboard";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {NetworkInterfacesService} from "../../../../../projects/app-state/src/lib/services/network-interfaces.service";
+import {NetworkInfo} from "@memebox/contracts";
+import {BehaviorSubject, combineLatest} from "rxjs";
+import {MatSelectChange} from "@angular/material/select";
 
 @Component({
   selector: 'app-network-url-view',
@@ -43,7 +43,7 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
       if (this.selectedItem) {
         this.selectedItem = items.find(i => i.ifname === this.selectedItem.ifname);
       } else {
-        this.selectedItem = items[0];
+        this.selectedItem = items.find(i => !i.address.includes('localhost'));
       }
 
       this.cd.markForCheck();

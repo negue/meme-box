@@ -9,6 +9,8 @@
       <mat-option [value]="50">2 Columns</mat-option>
       <mat-option [value]="33">3 Columns</mat-option>
       <mat-option [value]="25">4 Columns</mat-option>
+      <mat-option [value]="16.6">6 Columns</mat-option>
+      <mat-option [value]="12.5">8 Columns</mat-option>
     </mat-select>
   </mat-toolbar-row>
 </mat-toolbar>
@@ -37,18 +39,33 @@
   </ng-container>
 
 
-  <ng-container *ngFor="let groupedClip of groupedClipList$|async" class="item">
+  <ng-container *ngFor="let groupedClip of groupedActionList$|async" class="item">
        <span class="item item-wide">
           {{ groupedClip.title }}
        </span>
 
-    <span *ngFor="let clip of groupedClip.clips" class="item">
+    <span *ngFor="let action of groupedClip.clips" class="item">
 
-    <mat-card (click)="onPreview(clip)"
-              mat-ripple>
+    <mat-card (click)="onPreview(action)"
+              mat-ripple [matRippleDisabled]="disabledRipple"
+              hover-class="mat-elevation-z5"
+              class="mat-elevation-z1 mobile-action"
+              [class.media-active]="activityState.isActive$(action.id) | async">
 
-      <app-clip-type [type]="clip.type"></app-clip-type>
-      <span>{{clip.name}}</span>
+      <div>
+      <app-clip-type [type]="action.type"></app-clip-type>
+        <ng-container *ngIf="action | actionHasTriggerableVariables">
+        <br/>
+       <button mat-icon-button class="variable-trigger-button"
+               (click)="showVariableDialog(action); $event.stopPropagation()"
+               (mouseenter)="disabledRipple=true" (mouseleave)="disabledRipple=false"
+               color="primary"
+               matTooltip="Trigger this with custom variables">
+         <mat-icon svgIcon="tune"></mat-icon>
+       </button>
+          </ng-container>
+      </div>
+      <span style="flex: 1; text-align: center;">{{action.name}}</span>
     </mat-card>
   </span>
 

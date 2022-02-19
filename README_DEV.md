@@ -26,7 +26,22 @@ npm run build:prepare
 npm run build:all // or build:windows 
 ```
 
+### Building helpers
+
+`npm run build:server:wo:vm2` build the headless w/o vm2
+so that you can get the real stats.json (otherwise this file is overridden by the 3 other files of vm2 that somehow are added to the output)
+
 ### Electron
+
+Developing with Electron:
+
+- `npm run start:app`
+- `npm run electron:serve` (compiles only ts to js and runs the js)
+
+if you want to test the "build" version you can use `npm run electron:build:serve`
+this compiles it from ts to js, combines it all into one file (excluding electron which is handled by electron itself) and serves this one file
+
+Build the Angular App and electron for the current OS
 
 ```
 npm run electron:build
@@ -35,7 +50,7 @@ npm run electron:build
 ### Folders
 Client is in `src/app`
 
-Server is in `main.ts` and `server/*`
+Server is in `electron-shell.ts` and `server/*`
 
 Streamdeck-Plugin is in `memebox-streamdeck`
 
@@ -43,5 +58,5 @@ Streamdeck-Plugin is in `memebox-streamdeck`
 
 - [ ] cleanup shared constants
 - [ ] strict tsconfig / eslint rules
-- [ ] Use [`ts.ed`](https://tsed.io/) to improve the backend code by dependency injection and code 
 - [ ] Probably more to come once more features are added :)
+- [ ] Fill STACK.md

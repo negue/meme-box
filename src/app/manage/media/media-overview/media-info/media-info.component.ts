@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DomSanitizer } from "@angular/platform-browser";
-import { Clip, Screen, Tag, Twitch } from "@memebox/contracts";
-import { combineLatest, Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { AppQueries } from "../../../../state/app.queries";
-import { DialogService } from "../../../../shared/dialogs/dialog.service";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {DomSanitizer} from "@angular/platform-browser";
+import {Action, Screen, Tag} from "@memebox/contracts";
+import {combineLatest, Observable} from "rxjs";
+import {map} from "rxjs/operators";
+import {AppQueries} from "@memebox/app-state";
 
 @Component({
   selector: 'app-media-info',
@@ -14,7 +13,7 @@ import { DialogService } from "../../../../shared/dialogs/dialog.service";
 export class MediaInfoComponent implements OnInit {
 
   @Input()
-  public info: Clip;
+  public info: Action;
 
   public screenList$: Observable<Screen[]> = this.appQueries.screensList$.pipe(
     map(screenList => screenList.filter(screen => !!screen.clips[this.info.id]))
@@ -23,17 +22,12 @@ export class MediaInfoComponent implements OnInit {
     map(tagList => tagList.filter(tag => this.info.tags && this.info.tags.includes(tag.id)))
   );
 
-  public twitchEvents$: Observable<Twitch[]> = this.appQueries.twitchEvents$.pipe(
-    map(twitchEvents => twitchEvents.filter(twitchEvent => twitchEvent.clipId == this.info.id))
-  );
-
   public combinedTags$ = combineLatest([
     this.screenList$,
     this.tagList$
   ]).pipe(
     map(([screenList, tagList]) => ({screenList, tagList}))
   );
-
 
   @Output()
   public onPreview = new EventEmitter();
@@ -47,25 +41,11 @@ export class MediaInfoComponent implements OnInit {
   @Output()
   public onEditScreenClipOptions = new EventEmitter<Screen>();
 
-  @Output()
-  public onToggleMobileShow = new EventEmitter();
-
-  @Output()
-  public onToggleTwitchEvent = new EventEmitter<string>();
-
   constructor(public domSanitizer: DomSanitizer,
-              private appQueries: AppQueries,
-              private dialogService: DialogService) {
+              private appQueries: AppQueries) {
   }
 
   ngOnInit(): void {
   }
 
-  onlyWithOneEventPossible() {
-    this.dialogService.showConfirmationDialog({
-      title: 'Only Clips with one Twitch Event can be toggled',
-      overrideButtons: true,
-      noButton: 'OK'
-    });
-  }
 }

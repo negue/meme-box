@@ -2,13 +2,13 @@
 	"Actions": [
 		{
 			"Icon": "action/images/actionimage",
-			"Name": "Trigger a clip",
+			"Name": "Trigger an action",
 			"States": [
 				{
 					"Image": "action/images/action"
 				}
 			],
-			"Tooltip": "Trigger a clip",
+			"Tooltip": "Trigger an action",
 			"UUID": "com.memebox.memebox-streamdeck.action"
 		}
 	],
@@ -16,11 +16,11 @@
 	"Author": "negue",
 	"CodePath": "code.html",
 	"PropertyInspectorPath": "propertyinspector/index.html",
-	"Description": "Trigger clips of MemeBox",
+	"Description": "Trigger actions of MemeBox",
 	"Name": "MemeBox",
 	"Icon": "action/images/action",
 	"URL": "",
-	"Version": "1.0.0",
+	"Version": "1.1.0",
 	"OS": [
 		{
 			"Platform": "mac",

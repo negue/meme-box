@@ -1,16 +1,79 @@
-<div class="filterRow">
-  <mat-icon class="filterRow__icon" matListIcon svgIcon="filter"></mat-icon>
-  <mat-chip-list aria-label="Filter media type">
-    <ng-container *ngFor="let item of items">
-      <mat-chip (click)="toggleFilter(item)"
-                [class.filterChip--selected]="selectedArray.includes(item)"
-                class="filterChip">
-        <mat-icon *ngIf="item.icon" [svgIcon]="item.icon" class="filterEntry__icon"></mat-icon>
-        {{item.label}}
-        <span class="svgContainer">
+<mat-expansion-panel [expanded]="false">
+  <mat-expansion-panel-header>
+    <div class="filterRow">
+      <div class="filterRow__icon">
+        <mat-icon matListIcon svgIcon="filter"></mat-icon>
+
+          <span [matBadge]="selectedArray.length ? selectedArray.length : null"
+           matBadgeSize="large"></span>
+
+      </div>
+
+        <div *ngIf="selectedArray.length === 0">
+          No Filters selected yet.
+        </div>
+
+        <mat-chip-list aria-label="Filter media type" *transloco="let t; read: 'common' " >
+          <ng-container *ngFor="let item of selectedArray; trackBy: trackByFilterItem">
+            <mat-chip (click)="toggleFilter(item)"
+                      [class.filterChip--selected]="selectedArray.includes(item)"
+                      class="filterChip">
+              <mat-icon *ngIf="item.icon" [svgIcon]="item.icon" class="filterEntry__icon"></mat-icon>
+              {{ item.translateLabel ? t(item.label) : item.label}}
+              <span class="svgContainer">
         <mat-icon [svgIcon]="selectedArray.includes(item) ? 'check_circle' : 'circle'"></mat-icon>
       </span>
-      </mat-chip>
-    </ng-container>
-  </mat-chip-list>
-</div>
+            </mat-chip>
+          </ng-container>
+        </mat-chip-list>
+
+      <button *ngIf="selectedArray.length !== 0" mat-icon-button
+              (click)="clearFilter($event)" >
+        <mat-icon svgIcon="clear_all" color="warn"
+                  style="height: 2rem; width: 2rem; margin-right: 1rem"></mat-icon>
+      </button>
+
+      <mat-form-field appearance="standard"
+                      class="filterRow__searchInput"
+                      (click)="$event.stopPropagation()">
+        <input type="search" matInput
+               (click)="$event.stopPropagation()"
+               (keyup)="updateSearchField(searchInput.value)"
+               autocomplete="off"
+               placeholder="Search Actions"
+               #searchInput>
+
+        <button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+                class="filterRow__searchInput__reset"
+                (click)="updateSearchField(''); searchInput.value = ''">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </mat-expansion-panel-header>
+
+  <table *transloco="let t; read: 'common' ">
+    <tr *ngFor="let groupFilter of items | groupByType" class="filterTable__row">
+      <td>
+        {{groupFilter.groupName}}
+      </td>
+      <td>
+        <mat-chip-list aria-label="Filter media type"  >
+        <ng-container *ngFor="let item of groupFilter.filterChips; trackBy: trackByFilterItem">
+          <mat-chip (click)="toggleFilter(item)"
+                    [class.filterChip--selected]="item | isSelected:selectedArray"
+                    class="filterChip">
+            <mat-icon *ngIf="item.icon" [svgIcon]="item.icon" class="filterEntry__icon"></mat-icon>
+            {{ item.translateLabel ? t(item.label) : item.label}}
+            <span class="svgContainer">
+      <mat-icon [svgIcon]="(item | isSelected:selectedArray) ? 'check_circle' : 'circle'"></mat-icon>
+    </span>
+          </mat-chip>
+        </ng-container>
+
+        </mat-chip-list>
+      </td>
+    </tr>
+  </table>
+</mat-expansion-panel>
+

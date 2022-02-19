@@ -1,0 +1,37 @@
+.two-columns {
+  height: calc(100% - 4rem);
+  margin: 2rem 3rem;
+}
+
+.column {
+  overflow: auto;
+
+  margin: 0 0.5rem;
+}
+
+:host {
+  ::ng-deep {
+    .mat-expansion-panel-header {
+      padding: 0 16px 0 0px  !important;
+    }
+
+    .mat-expansion-panel-header-title {
+      align-items: center;
+    }
+    .mat-expansion-panel-header-description {
+      min-width: 180px;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+}
+
+.connections-table {
+   td {
+    padding: 0.5rem;
+  }
+
+  tr:first-of-type td {
+    padding-top: 0;
+  }
+}

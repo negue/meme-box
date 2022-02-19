@@ -1,5 +1,10 @@
 import {ChatUserstate} from "tmi.js";
-import {MediaType} from "./media.types";
+import {ActionType} from "./media.types";
+import {TriggerAction} from "./actions";
+import {AllTwitchEvents} from "./twitch.connector.types";
+import {DefaultImage} from "./twitch-data.types";
+
+// TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
 export interface HasId {
   id: string;
@@ -9,9 +14,13 @@ export interface HasClipId {
   clipId: string;
 }
 
-export interface Dictionary<T> {
-  [key: string]: T
+
+export interface HasTargetScreenId {
+  screenId?: string;
 }
+
+// TODO replace by Record<TKey, TValue>
+export interface Dictionary<T> extends Record<string, T> { }
 
 export enum MetaTriggerTypes {
   Random,
@@ -19,31 +28,40 @@ export enum MetaTriggerTypes {
   AllDelay
 }
 
-// TODO RENAME? (Media) Clip
-export interface Clip extends HasId {
+export interface ActionOverridableProperies {
+  // Empty for now
+}
+
+export interface HasExtendedData {
+  // used for Widgets and/or variables / -config
+  extended?: Dictionary<string>;
+}
+
+export interface Action extends HasId, ActionOverridableProperies, HasExtendedData {
   name: string;
-  previewUrl?: string;   // TODO generate dataurl as preview
+  previewUrl?: string;
+  hasPreview?: boolean;
   volumeSetting?: number; //  XX / 100 in percent
+  gainSetting?: number; //  XX / 100 in percent
   clipLength?: number; // optional,ms , simple images / gif dont have any length
-  playLength: number; // ms, time to play of this clip
-  path: string;
-  type: MediaType;
+  playLength?: number; // ms, time to play of this clip
+  path?: string;
+  isActive?: boolean;
+
+  type: ActionType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"
-                    // the Meta Type will use that to trigger all clips of that tagId
+                    // the Meta Type will use that to trigger all actions of that tagId
 
   metaType?: MetaTriggerTypes;
   metaDelay?: number; // in ms
 
   showOnMobile?: boolean;
+  queueName?: string; // Name of a shared queue to be used to "wait" before the action will be triggered
 
-  extended?: Dictionary<string>; // only used for HTML - Type
-}
 
-export const enum EXTENDED_KEYS {
-  HTML = 'HTML',
-  CSS = 'CSS',
-  JS = 'JS'
+  fromTemplate?: string; // GUID / Clip.Id of the Template
+  description?: string;
 }
 
 export interface Screen extends HasId {
@@ -77,7 +95,7 @@ export enum HideAfterType {
   Repeats // maybe?
 }
 
-export interface ScreenClip extends HasId {
+export interface ScreenMediaOverridableProperties {
   visibility: VisibilityEnum;
   loop?: boolean;
 
@@ -94,8 +112,11 @@ export interface ScreenClip extends HasId {
   transform?: string;
   imgFit?: string;
 
-  hideAfter?: HideAfterType;
-  hideAfterValue?: any;
+  /**
+   * If you are in a script and currently animation all stuff in "triggerWhile" then you can
+   * use this to prevent transition between those settings "updates"
+   */
+  animating?: boolean;
 
   animationIn?: string | null;
   animationOut?: string | null;
@@ -106,7 +127,13 @@ export interface ScreenClip extends HasId {
   zIndex?: number;
 
   customCss?: string;
+}
 
+export interface ScreenClip extends HasId, ScreenMediaOverridableProperties {
+  hideAfter?: HideAfterType;
+  hideAfterValue?: any;
+
+  // settings view only
   arrangeLock?: {
     size: boolean;
     position: boolean;
@@ -118,30 +145,48 @@ export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
-// TODO refactor, maybe all messages
-// and then like "yes, but this one only with bits.."
 export enum TwitchEventTypes {
   message = 'message',
   follow = 'follow',
-  sub = 'sub',
   bits = 'bits',
   raid = 'raid',
   host = 'host',
-  channelPoints = 'channelPoints'
+  channelPoints = 'channelPoints',
+  ban = 'ban',
+  subscription = "subscription",
+  gift = "gift"
 }
 
-export interface TimedClip extends HasId, HasClipId {
+export interface TwitchEventFields {
+  [event:string]: {
+    fields: {
+      minValue?: { enable: boolean, placeholder?: string},
+      maxValue?: { enable: boolean, placeholder?: string},
+      channelPointId?: { enable: boolean }
+    }
+  }
+}
+
+export interface TriggerBase
+  extends HasId, HasClipId, HasTargetScreenId, HasExtendedData {
+
+}
+
+// TODO RENAME TimedAction/ Twitch so that those are recognized to be a trigger
+
+export interface TimedAction extends TriggerBase {
   // id => has nothing to do with clipID
-  screenId?: string;
   everyXms: number;
   active: boolean;
 }
 
-export interface Twitch extends HasId, HasClipId {
+export interface TwitchTrigger extends TriggerBase {
   name: string;
   // screenId:      string; // TODO
   event: TwitchEventTypes;
   contains?: string; // additional settings TODO
+  aliases?: string[];
+
   active: boolean;
 
   roles: string[]; // maybe enum
@@ -149,9 +194,23 @@ export interface Twitch extends HasId, HasClipId {
   maxAmount?: number;
 
   cooldown?: number;
+  canBroadcasterIgnoreCooldown?: boolean;
+
+  channelPointId?: string;
+
+  channelPointData?:TwitchTriggerChannelPointData;
 
   // !magic
   // TODO other options per type
+}
+
+export interface TwitchTriggerChannelPointData {
+  id: string;
+  image?: null;
+  background_color: string;
+  cost: number;
+  title: string;
+  default_image: DefaultImage;
 }
 
 export interface Tag extends HasId {
@@ -166,9 +225,9 @@ export interface Tag extends HasId {
  */
 export interface SettingsState {
   version: number;
-  clips: Dictionary<Clip>;
-  twitchEvents: Dictionary<Twitch>;
-  timers: Dictionary<TimedClip>;
+  clips: Dictionary<Action>;
+  twitchEvents: Dictionary<TwitchTrigger>;
+  timers: Dictionary<TimedAction>;
   screen: Dictionary<Screen>;
   tags: Dictionary<Tag>;
 
@@ -191,30 +250,35 @@ export interface AppState extends SettingsState {
 }
 
 export interface Config {
+  customPort?: number | null;
   mediaFolder: string;
   twitch: TwitchConfig;
   enableVersionCheck?: boolean;
+  obs: ObsConfig;
 }
 
 export interface TwitchConfig {
   channel: string;
   enableLog?: boolean;
-  bot?: TwitchBotConfig
+  bot?: TwitchBotConfig;
+  token: string|null;
+  customScopes?: string[]|null;
 }
+
+export interface ObsConfig {
+  hostname: string;
+  password?: string;
+}
+
 
 export interface TwitchBotConfig {
   enabled: boolean;
-  response: string,
+  response: string;
+  command: string;
   auth?: {
     name: string;
-    token: string;
+    token: string | null;
   }
-}
-
-export interface ConfigV0 {
-  mediaFolder: string;
-  twitchChannel: string;
-  twitchLog?: boolean;
 }
 
 export interface NetworkInfo {
@@ -229,13 +293,13 @@ export interface FileInfo {
   fileName: string;
   apiUrl: string;
   ext: string;
-  fileType: MediaType;
+  fileType: ActionType;
 }
 
 export interface TwitchTriggerCommand {
-  message: string;
-  command?: Twitch; // Config-Object
+  command?: TwitchTrigger; // Config-Object
   tags?: ChatUserstate;
+  twitchEvent?: AllTwitchEvents
 }
 
 export enum TargetScreenType {
@@ -248,19 +312,29 @@ export interface FileResult {
   ext: string;
   fileName: string;
   apiUrl: string;
-  fileType: MediaType
-}
-
-export interface FileResult {
-  fullPath: string;
-  ext: string;
-  fileName: string;
-  apiUrl: string;
-  fileType: MediaType
+  fileType: ActionType
 }
 
 export interface CombinedClip {
-  clip: Clip;
+  clip: Action;
   clipSetting: ScreenClip;
+  originalClipSetting?: ScreenClip;
+  triggerPayload?: TriggerAction;
   backgroundColor?: string;
+}
+
+export interface Response {
+  ok: boolean;
+  id?: string;
+}
+
+export type TwitchConnectionType = "MAIN" | "BOT";
+
+export interface ChangedInfo {
+  id?: string;
+  targetScreenId?: string;
+  dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
+    |'settings'|'twitch-events'|'timers'|'twitch-setting';
+  actionType?: ActionType;
+  changeType: 'added'|'changed'|'removed';
 }

@@ -1,0 +1,158 @@
+<mat-card [class.media-active]="activityState.isActive$(action.id) | async"
+          class="mat-elevation-z1"
+          hover-class="mat-elevation-z5">
+  <mat-card-header class="card__header">
+    <mat-card-title [matTooltip]="action.name">{{action.name}}</mat-card-title>
+
+    <button mat-icon-button
+            class="edit_icon hide_until_hover"
+            matTooltip="Edit"
+            (click)="onEdit.emit()">
+      <mat-icon svgIcon="edit"></mat-icon>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu"
+            aria-label="action context menu" class="hide_until_hover"
+            matTooltip="other Options"
+            (menuOpened)="menuIsOpened = true"
+            (menuClosed)="menuIsOpened = false"
+            [class.isOpened]="menuIsOpened">
+      <mat-icon svgIcon="more_vert"></mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngIf="hasTriggerableVariables"
+              (click)="onOpenTriggerVariables.emit()">
+        <mat-icon svgIcon="tune"></mat-icon>
+        <span>Trigger with Variables</span>
+      </button>
+      <mat-divider  *ngIf="hasTriggerableVariables"></mat-divider>
+      <button mat-menu-item
+              (click)="onDuplicate.emit()">
+        <mat-icon svgIcon="queue"></mat-icon>
+        <span>Duplicate</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item
+              (click)="onDelete.emit()">
+        <mat-icon svgIcon="delete" color="warn"></mat-icon>
+        <span>Delete media</span>
+      </button>
+    </mat-menu>
+  </mat-card-header>
+
+  <div mat-card-image [ngSwitch]="action.type">
+    <ng-container *ngSwitchCase="ACTION_TYPE.Picture">
+      <img *ngIf="action.previewUrl || action.path; else noPictureTemplate"
+           class="mediaInfo__preview__img"
+           [src]="action | mediaToPreviewUrl | safeurl"
+           [alt]="action.name" />
+
+      <ng-template #noPictureTemplate>
+        <app-clip-type [type]="ACTION_TYPE.Picture"
+                       iconSize="12rem"
+                       class="mediaInfo__preview__img">
+
+        </app-clip-type>
+      </ng-template>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ACTION_TYPE.Video">
+     <app-action-preview [action]="action" height="188px"
+                         [style.--clip-setting-img-fit]="'contains'"
+                         class="mediaInfo__preview__img"></app-action-preview>
+    </ng-container>
+
+    <ng-container *ngSwitchDefault>
+      <app-clip-type [type]="action.type"
+                     iconSize="12rem"
+                     class="mediaInfo__preview__img"></app-clip-type>
+    </ng-container>
+  </div>
+
+  <mat-card-content class="mc-content" *ngIf="showDetailsBar">
+    <mat-expansion-panel class="mc__expander mat-elevation-z0">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Details
+        </mat-panel-title>
+
+        <mat-panel-description class="mc__expander__description">
+          <div *ngIf="connectedTags.length > 0"
+               matTooltip="Tags assigned">
+            <mat-icon svgIcon="tag" [inline]="true"></mat-icon>
+            {{connectedTags.length}}
+          </div>
+
+          <div *ngIf="appearsInScreens.length > 0"
+               matTooltip="at Screens assigned">
+            <mat-icon svgIcon="screen" [inline]="true"></mat-icon>
+            {{appearsInScreens.length}}
+          </div>
+
+          <mat-icon svgIcon="tune" [inline]="true"
+                    *ngIf="hasVariables"
+                    matTooltip="Has Variables">
+
+          </mat-icon>
+        </mat-panel-description>
+
+      </mat-expansion-panel-header>
+
+      <ng-container *ngIf="connectedTags.length > 0">
+        <div class="mat-small">Tags</div>
+        <mat-chip-list aria-label="List of connected tags">
+          <mat-chip *ngFor="let tag of connectedTags" class="mat-chip-border">
+            <mat-icon svgIcon="tag" [inline]="true"></mat-icon>
+            {{tag.name}}
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+
+      <ng-container *ngIf="appearsInScreens.length > 0">
+        <div class="mat-small">Screens</div>
+        <mat-chip-list aria-label="List of screens the media appears in">
+          <mat-chip *ngFor="let screen of appearsInScreens" class="mat-chip-border">
+            <mat-icon svgIcon="screen" [inline]="true"></mat-icon>
+            {{screen.name}}
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+
+      <ng-container *ngIf="hasVariables">
+        <mat-chip-list aria-label="A chip that shows that this Action has variables">
+          <mat-chip class="mat-chip-border">
+            <mat-icon svgIcon="tune" [inline]="true"></mat-icon>
+            Has Variables
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+    </mat-expansion-panel>
+  </mat-card-content>
+
+  <mat-card-actions class="mc__actions-container">
+    <div>
+
+      <button mat-button color="primary"
+              *ngIf="action | actionCanPreview" (click)="onPreview.emit()"
+      >
+        {{action | actionPreviewLabel }}
+      </button>
+
+      <button mat-icon-button color="primary"
+              *ngIf="hasTriggerableVariables"
+              (click)="onOpenTriggerVariables.emit()"
+              [matTooltip]="action | actionPreviewVariablesTooltip"
+      >
+        <mat-icon svgIcon="tune"> </mat-icon>
+      </button>
+
+      <app-checkbox-chip *ngIf="action.type === ACTION_TYPE.PermanentScript"
+                         [checked]="action.isActive"
+                         (checkedChange)="onToggleActive.next()">
+        <div chipIsChecked>Active</div>
+        <div chipIsNotChecked>Inactive</div>
+      </app-checkbox-chip>
+    </div>
+
+    <app-action-shortcut-toolbar [action]="action"></app-action-shortcut-toolbar>
+  </mat-card-actions>
+</mat-card>

@@ -1,9 +1,12 @@
 import * as express from 'express';
 import {PersistenceInstance} from "../persistence";
-import {Clip, FileResult, MediaType, TargetScreenType} from "../../projects/contracts/src/public-api";
-import {mediaToString} from "../../projects/contracts/src/lib/media.types";
+import {Action, ACTION_TYPE_INFORMATION, ActionType, FileResult, TargetScreenType} from "@memebox/contracts";
 import {getFiles, mapFileInformations} from "../file.utilts";
 
+// Only used in the Server
+export function mediaToString(mediaType: ActionType) {
+  return ACTION_TYPE_INFORMATION[mediaType]?.labelFallback ?? "";
+}
 
 export const DANGER_ROUTES = express.Router();
 
@@ -73,15 +76,15 @@ DANGER_ROUTES
 ;
 
 
-function fileInfoToClip (fileInfo: FileResult): Partial<Clip> {
-  const clip: Partial<Clip> = {
+function fileInfoToClip (fileInfo: FileResult): Partial<Action> {
+  const clip: Partial<Action> = {
     name: fileInfo.fileName,
     type: fileInfo.fileType,
     path: fileInfo.apiUrl,
     volumeSetting: 20, // XX / 100
   };
 
-  if (clip.type === MediaType.Picture) {
+  if (clip.type === ActionType.Picture) {
     clip.playLength = 1500;
   }
 

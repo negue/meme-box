@@ -1,25 +1,15 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, TrackByFunction} from '@angular/core';
-import {AppQueries} from "../../../state/app.queries";
-import {map, publishReplay, refCount, startWith, take} from "rxjs/operators";
-import {
-  Clip,
-  ClipAssigningMode,
-  CombinedClip,
-  MediaType,
-  PositionEnum,
-  Screen,
-  UnassignedFilterEnum
-} from "@memebox/contracts";
-import {AppService} from "../../../state/app.service";
-import {MatCheckbox, MatCheckboxChange} from "@angular/material/checkbox";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {DragResizeMediaComponent} from "./drag-resize-media/drag-resize-media.component";
-import {FormControl} from "@angular/forms";
-import {combineLatest} from "rxjs";
-import {AutoScaleComponent} from "@gewd/components/auto-scale";
-import {WebsocketService} from "../../../core/services/websocket.service";
-import {DialogService} from "../dialog.service";
-import {MatRipple} from "@angular/material/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {AppQueries} from '../../../../../projects/app-state/src/lib/state/app.queries';
+import {map, publishReplay, refCount, startWith} from 'rxjs/operators';
+import {ActionType, CombinedClip, Screen} from '@memebox/contracts';
+import {AppService} from '../../../../../projects/app-state/src/lib/state/app.service';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
+import {FormControl} from '@angular/forms';
+import {combineLatest} from 'rxjs';
+import {ScreenArrangePreviewComponent} from './screen-arrange-preview/screen-arrange-preview.component';
+import {MatTabGroup} from '@angular/material/tabs';
+import {MatTabChangeEvent} from '@angular/material/tabs/tab-group';
+import {DialogService} from '../dialog.service';
 
 @Component({
   selector: 'app-screen-clip-config',
@@ -28,17 +18,13 @@ import {MatRipple} from "@angular/material/core";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreenArrangeComponent implements OnInit {
-
-  MediaType = MediaType;
-  PositionEnum = PositionEnum;
-
   screen$ = this.appQueries.screenMap$.pipe(
     map(screenMap => screenMap[this.screen.id])
   );
 
   clipList$ = combineLatest([
     this.screen$,
-    this.appQueries.clipMap$
+    this.appQueries.actionMap$
   ]).pipe(
     map(([screen, clipMap]) => {
       const result: CombinedClip[] = [];
@@ -46,7 +32,7 @@ export class ScreenArrangeComponent implements OnInit {
       for (const [key, entry] of Object.entries(screen.clips)) {
         const clip = clipMap[key];
 
-        if (clip.type === MediaType.Audio ) {
+        if (clip.type === ActionType.Audio) {
           continue;
         }
 
@@ -64,11 +50,10 @@ export class ScreenArrangeComponent implements OnInit {
     refCount()
   );
 
-  public trackByClip: TrackByFunction<Clip> = (index, item) => item.id;
-
   selectedItems = new FormControl([]);
+  selectedIndex = 0;
 
-  items: string[] = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+  unsavedChangesIds: string[] = [];
 
   public visibleItems$ = combineLatest([
     this.clipList$,
@@ -83,172 +68,101 @@ export class ScreenArrangeComponent implements OnInit {
 
       return clipList.filter(clip => selectedItems.includes(clip.clip.id));
     })
-  )
+  );
 
-  public currentSelectedClip: CombinedClip| null = null;
-  private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();
+  public currentSelectedClip: CombinedClip | null = null;
 
-  private previouslyClickedComponent: DragResizeMediaComponent|null = null;
+  @ViewChild(ScreenArrangePreviewComponent)
+  private _screenArrangePreviewComponent: ScreenArrangePreviewComponent;
 
+  @ViewChild(MatTabGroup)
+  private _tabGroup: MatTabGroup;
 
   constructor(private appQueries: AppQueries,
               private appService: AppService,
-              private cd: ChangeDetectorRef,
-              private wsService: WebsocketService,
-              private dialogs: DialogService,
-              @Inject(MAT_DIALOG_DATA) public screen: Screen) { }
+              private _dialog: MatDialog,
+              private _dlgService: DialogService,
+              private _cd: ChangeDetectorRef,
+              public dialogRef: MatDialogRef<ScreenArrangeComponent>,
+              @Inject(MAT_DIALOG_DATA) public screen: Screen) {
+  }
 
   ngOnInit(): void {
     this.appService.loadState();
   }
 
-  changed($event: Event, pair: CombinedClip) {
-    console.info($event, pair);
-
-    const newLeft = ($event.target as HTMLElement).style.getPropertyValue('--left');
-
-    console.info('NEW LEFT', newLeft);
-  }
-
-  elementClicked(dragResizeMediaComponent: DragResizeMediaComponent,
-                 pair: CombinedClip) {
-    this.resetTheResizeBorder();
-
-    this.currentSelectedClip = pair;
-
-    // todo select the item in the left list
-    this.previouslyClickedComponent = dragResizeMediaComponent;
-    dragResizeMediaComponent.showResizeBorder = true;
-
-    console.warn('show resize border true');
-
-    this.cd.markForCheck();
-  }
-
-  clickedOutside() {
-    this.currentSelectedClip = null;
-    this.resetTheResizeBorder();
-
-    console.info('clicked outside');
-
-    this.cd.markForCheck();
-  }
-
-  private resetTheResizeBorder () {
-    if (this.previouslyClickedComponent != null) {
-      this.previouslyClickedComponent.showResizeBorder = false;
+  closeDlg(): void {
+    if (this.unsavedChangesIds.length === 0) {
+      this.dialogRef.close();
+      return;
     }
-  }
+    this.clickedOutside();
 
-  onSelectMedia(mouseEvent: MouseEvent, matRippleInstance: MatRipple, $event: CombinedClip) {
-    this.currentSelectedClip = $event;
+    const dlgCloseMode = this._showDiscardDlg();
 
-    matRippleInstance.launch(mouseEvent.x, mouseEvent.y);
-  }
-
-  triggerChangedetection() {
-    const component = this.combinedClipToComponent.get(this.currentSelectedClip);
-
-    console.info('trigger cd', {
-      component, clip: this.currentSelectedClip
-    });
-
-    if (component) {
-      component.settings = this.currentSelectedClip.clipSetting;
-      component.ngOnChanges({});
-    }
-
-    this.cd.detectChanges();
-
-  }
-
-  elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip) {
-    this.combinedClipToComponent.set(pair, dragResizeMediaComponent);
-  }
-
-  onCheckedToggle($event: MatCheckboxChange, warpingCheckbox: MatCheckbox) {
-    if ($event.checked) {
-      warpingCheckbox.checked = false;
-    }
-  }
-
-  saveScreenClip() {
-    this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.clipSetting);
-  }
-
-  resizeScaling(scaleContent: AutoScaleComponent, parentElement: HTMLDivElement) {
-    scaleContent.width = parentElement.clientWidth;
-    scaleContent.height = parentElement.clientHeight;
-
-    console.info('resize called');
-  }
-
-  onPreview(visibleItem: CombinedClip) {
-    this.wsService.onTriggerClip$.next({
-      id: visibleItem.clip.id,
-      targetScreen: this.screen.id
+    dlgCloseMode.then(discardChanges => {
+      if (discardChanges) {
+        this.dialogRef.close();
+      }
     });
   }
 
-  assignMedia() {
-    this.showAssignmentDialog(this.screen);
-  }
+  tabSelectionChanged(tabChangeEvent: MatTabChangeEvent): void {
+    this.clickedOutside();
+    if (this.unsavedChangesIds.length === 0 || tabChangeEvent.index === 0) {
+      return;
+    }
 
-  showAssignmentDialog(screen: Partial<Screen>) {
-    this.dialogs.showClipSelectionDialog({
-      mode: ClipAssigningMode.Multiple,
-      screenId: screen.id,
+    this._tabGroup.selectedIndex = 0;
+    this._cd.detectChanges();
 
-      dialogTitle: screen.name,
-      showMetaItems: false,
-      showOnlyUnassignedFilter: true,
-      unassignedFilterType: UnassignedFilterEnum.Screens
+    const dlgCloseMode = this._showDiscardDlg();
+
+    dlgCloseMode.then(discardChanges => {
+      if (discardChanges) {
+        this._tabGroup.selectedIndex = 1;
+        this.unsavedChangesIds = [];
+        this.appService.loadState(); // Reset the clips
+      }
     });
   }
 
-  openMediaSettingsDialog($event: MouseEvent, visibleItem: CombinedClip) {
-    $event.stopImmediatePropagation();
-    $event.stopPropagation();
+  clickedOutside(): void {
+    this._screenArrangePreviewComponent.clickedOutside();
+  }
 
-    this.currentSelectedClip = null;
+  userChangedMedia(clipId: string): void {
+    const currentIds = this.unsavedChangesIds;
+    if (!currentIds.includes(clipId)) {
+      // create a new object for CD
+      this.unsavedChangesIds = Array.from([...currentIds, clipId]);
+    }
+  }
 
-    this.dialogs.showScreenClipOptionsDialog({
-      clipId: visibleItem.clip.id,
-      screenId: this.screen.id,
-      name: visibleItem.clip.name
+  userResetChangedOfMedia(clipIds: string | string[]): void {
+    const ids = Array.isArray(clipIds) ? clipIds : [clipIds];
+
+    for (const clipId of ids) {
+      const index = this.unsavedChangesIds.findIndex(id => id === clipId);
+      const arrayCopy = Array.from(this.unsavedChangesIds);
+      arrayCopy.splice(index, 1);
+      this.unsavedChangesIds = arrayCopy;
+    }
+
+    // This is a workaround. Because the references seem to change, the sidebar selects another (the first) clip
+    // if you want to keep the users selection, comment out the following line.
+    this.clickedOutside();
+  }
+
+  private _showDiscardDlg(): Promise<boolean> {
+    const dlgCloseMode = this._dlgService.showConfirmationDialog({
+      title: 'Unsaved changes',
+      content: 'You still have unsaved changes. If you leave this tab they will be reset to their prior state.',
+      noButton: 'Keep',
+      yesButton: 'Discard',
+      overrideButtons: true
     });
+    return dlgCloseMode;
   }
 
-  reset() {
-    const {clipSetting} = this.currentSelectedClip;
-
-    clipSetting.transform = null;
-    clipSetting.width = '50%';
-    clipSetting.height = '50%';
-
-    if (clipSetting.position === PositionEnum.Absolute) {
-      clipSetting.top = '10%';
-      clipSetting.left = '10%';
-      clipSetting.right = null;
-      clipSetting.bottom = null;
-    }
-
-    if (clipSetting.position === PositionEnum.Centered) {
-      clipSetting.top = null;
-      clipSetting.left = null;
-    }
-
-    this.appService.addOrUpdateScreenClip(this.screen.id, clipSetting);
-  }
-
-  async saveAllSettings() {
-    const allVisibleItems = await this.visibleItems$.pipe(
-      take(1)
-    ).toPromise();
-
-    for (const item of allVisibleItems) {
-      // TODO replace with a bulk update
-      await this.appService.addOrUpdateScreenClip(this.screen.id, item.clipSetting);
-    }
-  }
 }

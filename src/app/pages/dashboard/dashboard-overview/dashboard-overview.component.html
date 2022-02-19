@@ -1,0 +1,28 @@
+<div class="two-columns" >
+  <div class="column">
+    Connections Overview: <br/>
+
+    <br>
+
+    <mat-card>
+      <table class="connections-table">
+        <tr *ngFor="let service of connectionState$ | async">
+          <td>{{service.name}}</td>
+          <td>{{service.state.label}}</td>
+        </tr>
+      </table>
+    </mat-card>
+
+    <app-open-feedback-button feedbackTarget="Dashboard"></app-open-feedback-button>
+  </div>
+  <div class="column">
+    <mat-tab-group>
+      <mat-tab label="Latest Twitch Events">
+        <app-latest-twitch-events></app-latest-twitch-events>
+      </mat-tab>
+      <mat-tab label="Latest Actions">
+        <app-latest-actions></app-latest-actions>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

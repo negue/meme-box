@@ -44,6 +44,52 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "owehmer",
+      "name": "Oliver",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45573843?v=4",
+      "profile": "https://github.com/owehmer",
+      "contributions": [
+        "bug",
+        "code"
+      ]
+    },
+    {
+      "login": "jonathanbucci",
+      "name": "jonathanbucci",
+      "avatar_url": "https://avatars.githubusercontent.com/u/29556823?v=4",
+      "profile": "https://github.com/jonathanbucci",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "divshacker",
+      "name": "Divyanshu Singh",
+      "avatar_url": "https://avatars.githubusercontent.com/u/55018955?v=4",
+      "profile": "https://www.linkedin.com/in/divs/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "brandonroberts",
+      "name": "Brandon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/42211?v=4",
+      "profile": "https://brandonroberts.dev",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "chiragmahawar7",
+      "name": "Chirag Mahawar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/34866279?v=4",
+      "profile": "https://www.linkedin.com/in/chirag-mahawar/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

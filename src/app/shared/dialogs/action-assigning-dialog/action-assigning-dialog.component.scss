@@ -1,0 +1,88 @@
+@import '~angular-material-css-vars/public-util';
+@import '../../../../utils/mixins';
+
+:host {
+  width: 100%;
+
+  ::ng-deep .mat-chip {
+    &.mat-chip.mat-standard-chip {
+      &.filterChip--selected {
+        background-color: mat-css-color-accent();
+      }
+    }
+  }
+}
+
+.filterRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+
+  position: sticky;
+  top: 0;
+  background: var(--palette-background-background);
+  z-index: 10;
+}
+
+.filterRow__icon {
+  margin-right: 1rem;
+}
+
+.mediaList {
+  @include gridLayout;
+  width: 100%;
+  list-style: none;
+  padding: 0 0.5rem 0.5rem;
+}
+
+.mediaList__option {
+  margin-bottom: 1rem;
+  cursor: pointer;
+  padding: 0;
+  transition: padding 0.1s ease-in-out;
+  border-radius: 1rem;
+}
+
+.mediaList__option--selected {
+  background-color: #3F4855;
+  padding: 0.75rem;
+  border: 0.25rem solid #00d8d6;
+}
+
+.mediaList__img {
+  width: 100%;
+}
+
+.mediaList__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  &__name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.mediaList__icon {
+  margin-right: 0.5em;
+}
+
+.filterChip {
+  cursor: pointer;
+}
+
+app-filter {
+  width: 100%;
+}
+
+
+.action__description {
+  font-style: italic;
+  margin-left: 1rem;
+  font-size: 14px;
+  color: lightgray;
+}

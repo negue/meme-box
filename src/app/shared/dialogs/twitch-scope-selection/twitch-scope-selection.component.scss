@@ -1,0 +1,16 @@
+mat-dialog-content {
+  display: block;
+  height: 60vh;
+}
+
+mat-dialog-actions {
+  display: flex;
+}
+.space {
+  flex: 1;
+}
+
+gewd-markdown {
+  display: block;
+  min-height: 360px;
+}

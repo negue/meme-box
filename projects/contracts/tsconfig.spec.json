@@ -1,17 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node"
-    ]
+    "types": ["node", "jest"],
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "allowJs": true
   },
-  "files": [
-    "src/test.ts"
-  ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
+  "files": [],
+  "include": ["**/*.spec.ts", "**/*.d.ts"]
 }

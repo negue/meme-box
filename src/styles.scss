@@ -1,52 +1,8 @@
-@import '~@angular/material/theming';
-@import '~angular-material-css-vars/main';
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
 @import '~animate.css/animate.css';
-@import './css-var-colors';
+@import './styles/material.overrides';
+@import './styles/moveable.overrides';
+@import './styles/two-column';
 
-
-// optional
-$mat-css-dark-theme-selector: '.isDarkTheme';
-$mat-css-light-theme-selector: '.isLightTheme';
-
-@mixin app-theme($theme) {
-  // Extract the palettes you need from the theme definition.
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-
-  // Define any styles affected by the theme.
-  .app-header {
-    // Use mat-color to extract individual colors from a palette.
-    background-color: mat-color($primary);
-    border: medium solid mat-color($accent, A400);
-  }
-}
-
-
-// Define a custom typography config that overrides the font-family as well as the
-// `headlines` and `body-1` levels.
-$custom-typography: mat-typography-config(
-  $font-family: 'Barlow, sans-serif',
-  $headline: mat-typography-level(32px, 48px, 700),
-  $body-1: mat-typography-level(16px, 24px, 500)
-);
-
-// init theme
-// examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
-
-@include init-material-css-vars($typography-config: $custom-typography) {
-  .mat-app-background {
-    background-color: var(--palette-background-background) !important;
-  }
-
-  .navigation {
-    background-color: var(--palette-background-background) !important;
-  }
-};
-
-.cdk-global-scrollblock {
-  overflow-y: hidden;
-}
 
 .max-height-dialog {
   .mat-dialog-content {
@@ -67,13 +23,14 @@ $custom-typography: mat-typography-config(
   }
 }
 
-:root {
-  @include list-colors();
-}
 
 body {
   font-size: 16px;
   font-family: Barlow, sans-serif;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: -moz-available;
+  min-height: fill-available;
 }
 
 * {
@@ -86,52 +43,10 @@ h3 {
   font-weight: bold;
 }
 
-.isDarkTheme {
-  .mat-card {
-    background-color: var(--card-background-color) !important;
-  }
-
-  .mat-table {
-    background: transparent !important;
-  }
-
-  .mat-dialog-container {
-    background-color: #2f3640 !important;
-  }
-
-  .mat-chip.mat-standard-chip {
-    background-color: var(--card-background-color);
-    color: white;
-    font-family: Barlow, sans-serif;
-  }
-
-  .mat-flat-button.mat-accent:hover {
-    background-color: rgba(var(--palette-accent-700), 1) !important;
-  }
-
-  .mat-flat-button.mat-primary:hover {
-    background-color: rgba(var(--palette-primary-900), 1) !important;
-  }
-
-  .mat-flat-button.mat-warn:hover {
-    background-color: rgba(var(--palette-warn-900), 1) !important;
-  }
+.hidden {
+  display: none !important;
 }
 
-.floating-action-button {
-  position: fixed;
-  right: 3rem;
-  bottom: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-
-  .mat-icon {
-    // wonder why the current style is pushing the icon down?!
-    height: initial;
-  }
-}
 
 code {
   background: #222222;
@@ -153,7 +68,7 @@ iframe {
   }
 }
 
-gewd-markdown {
+gewd-markdown, .markdown-styling {
   @import "~@gewd/markdown/markdown.mixin";
 
   @include markdownCss();
@@ -165,80 +80,34 @@ gewd-markdown {
   }
 }
 
-.mat-snack-bar-container.danger {
-  background: darkred;
-  color: white;
+// cornered example of https://css-tricks.com/more-control-over-css-borders-with-background-image/
+.preview-box {
+  --clr-border: #d3d3d3b0;
+  background-position: 0 0, 0 0, 100% 0, 0 100%;
+  background-size: 1vw 100%, 100% 1vw, 1vw 100%, 100% 1vw;
+  background-repeat: no-repeat;
+
+  background-image: linear-gradient(0deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // left
+  linear-gradient(90deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // top
+  linear-gradient(180deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%), // right
+  linear-gradient(270deg, var(--clr-border), var(--clr-border) 25%, transparent 25%, transparent 75%, var(--clr-border) 75%); // bottom
 }
 
 
-/** Moveable CSS */
-.moveable-line {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  background: #4af;
-  transform-origin: 0px 0.5px;
+gewd-codemirror {
+  min-height: 200px;
+  display: flex;
+
+  .cm-editor {
+    width: 100%;
+  }
 }
 
-.moveable-line.moveable-rotation-line {
-  height: 40px;
-  width: 1px;
-  transform-origin: 0.5px 39.5px;
+.pre-wrap-break {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
 }
 
-.moveable-control {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-sizing: border-box;
-  background: #4af;
-  margin-top: -7px;
-  margin-left: -7px;
-  z-index: 10;
-}
-
-/* moveable-rotation */
-.moveable-line.moveable-rotation-line .moveable-control {
-  border-color: #4af;
-  background:#fff;
-  cursor: alias;
-}
-
-.moveable-control.moveable-origin {
-  display: none;
-  border-color: #f55;
-  background: #fff;
-  width: 12px;
-  height: 12px;
-  margin-top: -6px;
-  margin-left: -6px;
-  pointer-events: none;
-}
-
-.moveable-direction.moveable-e, .moveable-direction.moveable-w {
-  cursor: ew-resize;
-}
-.moveable-direction.moveable-s, .moveable-direction.moveable-n {
-  cursor: ns-resize;
-}
-.moveable-direction.moveable-nw, .moveable-direction.moveable-se, .moveable-reverse .moveable-direction.moveable-ne, .moveable-reverse .moveable-direction.moveable-sw {
-  cursor: nwse-resize;
-}
-.moveable-direction.moveable-ne, .moveable-direction.moveable-sw, .rCSckyn7i.moveable-reverse .moveable-direction.moveable-nw, moveable-reverse .moveable-direction.moveable-se {
-  cursor: nesw-resize;
-}
-
-
-.moveable {
-  font-family: "Roboto", sans-serif;
-  position: relative;
-  width: 250px;
-  height: 200px;
-  text-align: center;
-  font-size: 40px;
-  margin: 0px auto;
-  font-weight: 100;
-  letter-spacing: 1px;
+div[align=end] {
+  text-align: right;
 }

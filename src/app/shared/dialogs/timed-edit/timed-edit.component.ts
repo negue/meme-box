@@ -1,16 +1,16 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Clip, ClipAssigningMode, Dictionary, TimedClip, UnassignedFilterEnum} from '@memebox/contracts';
-import {AppService} from '../../../state/app.service';
-import {AppQueries} from '../../../state/app.queries';
-import {SnackbarService} from '../../../core/services/snackbar.service';
+import {Action, ActionType, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
+import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
+import {filter, map} from "rxjs/operators";
 
 // TODO better class/interface name?
-const INITIAL_TIMED_CLIP: Partial<TimedClip> = {
+const INITIAL_TIMED_ACTION: Partial<TimedAction> = {
   clipId:  '',
+  screenId: '',
   active: true,
   everyXms: 1000 * 60  // 1min
 };
@@ -24,17 +24,40 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   public form = new FormBuilder().group({
     id: "",
     clipId: "",
+    screenId: "",
     everyXms: [undefined, Validators.max(19_999_999)]
   });
 
-  clipDictionary$: Observable<Dictionary<Clip>> = this.appQuery.clipMap$;
+  clipDictionary$: Observable<Dictionary<Action>> = this.appQuery.actionMap$;
 
   showWarningClipSelection = false;
+
+  selectedActionId$ = new BehaviorSubject('');
+
+  selectedAction$: Observable<Action> = combineLatest([
+    this.clipDictionary$,
+    this.selectedActionId$
+  ]).pipe(
+    filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
+    map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
+  );
+
+  showScreenSelection$ = this.selectedAction$.pipe(
+    map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
+  );
+
+  screenList$ = combineLatest([
+    this.selectedAction$,
+    this.appQuery.screensList$
+  ]).pipe(
+    map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
+  );
+
 
   private _destroy$ = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: TimedClip,
+    @Inject(MAT_DIALOG_DATA) public data: TimedAction,
     private dialogRef: MatDialogRef<any>,
     private matDialog: MatDialog,
     private appService: AppService,
@@ -43,10 +66,11 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     private dialogService: DialogService
   ) {
     // Todo find a better to get defaults & stuff
-    this.data = Object.assign({}, {...INITIAL_TIMED_CLIP}, {
+    this.data = Object.assign({}, {...INITIAL_TIMED_ACTION}, {
       ...this.data
     });
-    console.info({data: this.data});
+
+    this.selectedActionId$.next(this.data.clipId);
   }
 
   async save() {
@@ -63,7 +87,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const newTimedValue: TimedClip = {
+    const newTimedValue: TimedAction = {
       ...this.data,
       ...value
     };
@@ -103,16 +127,17 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       this.form.patchValue({
         clipId
       });
+      this.selectedActionId$.next(clipId);
     }
   }
 
-  set10Seconds() {
+  set10Seconds(): void {
     this.form.patchValue({
       'everyXms': 10_000
     });
   }
 
-  setXMinutes(number: number) {
+  setXMinutes(number: number): void {
     this.form.patchValue({
       'everyXms': 60_000 * number
     });

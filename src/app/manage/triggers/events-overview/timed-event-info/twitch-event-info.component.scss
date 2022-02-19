@@ -2,6 +2,8 @@
 
 :host {
   width: 100%;
+  position: relative;
+  display: block;
 
   ::ng-deep .mat-checkbox-background {
     background-color: transparent !important;
@@ -9,21 +11,25 @@
 
   ::ng-deep .mat-chip {
     &.mat-chip.mat-standard-chip {
-      background-color: #2f3640;
-      &.eventInfo__chip--selected {
-        background-color: #0be881; //TODO - make a var
-        color: #2f3640; //TODO - make a var
+      background-color: var(--palette-background-background);
+    }
+  }
 
-        .mat-checkbox-frame {
-          border-color: #2f3640;
-        }
-      }
+  .hide_until_hover:not(:active):not(:hover):not(.isOpened) {
+    opacity: 0;
+  }
+
+  &:hover {
+    .hide_until_hover {
+      opacity: 1 !important;
     }
   }
 }
 
 .eventInfo__checkbox {
-  margin-top: 1rem;
+  position: absolute;
+  right: 0;
+  top: 0;
   margin-bottom: 1rem;
 
   div {
@@ -34,15 +40,16 @@
 
 .eventInfo__titleRow {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   align-content: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
 }
 
 .eventInfo__titleRow__name {
   margin-bottom: 0;
+  width: 100%;
 }
 
 .eventInfo__chip {
@@ -62,11 +69,11 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
   margin-bottom: 2rem;
 
-  button {
-    width: 45%;
+  button:not(.mat-icon-button) {
+    width: 42%;
   }
 }
 

@@ -1,10 +1,10 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Observable } from "rxjs";
-import { HttpClient } from "@angular/common/http";
-import { MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE } from "../../../../../server/constants";
-import { MarkdownLinkClicked } from "@gewd/markdown/module";
-import { DialogService } from "../dialog.service";
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE} from "../../../../../server/constants";
+import {MarkdownLinkClicked} from "@gewd/markdown/module";
+import {DialogService} from "../dialog.service";
 
 
 @Component({
@@ -40,10 +40,27 @@ export class MarkdownComponent implements OnInit {
 
     const linkAttributes = $event.link.attributes;
 
-    const realHref = linkAttributes.getNamedItem('href');
+    const realHrefAttribute = linkAttributes.getNamedItem('href');
+    const realHrefValue = realHrefAttribute.value;
 
-    const foundMarkdownItem = MARKDOWN_FILES.find(md => realHref.value.includes(md.githubName));
+    // markdown header scrollto anchors
+    if (realHrefValue.startsWith('#')) {
+      const scrollToElement = this.dialogContent.nativeElement.querySelector<HTMLHeadingElement>(realHrefValue);
 
-    this.dialogService.showMarkdownFile(foundMarkdownItem);
+      scrollToElement.scrollIntoView();
+
+      return;
+    }
+
+    const foundMarkdownItem = MARKDOWN_FILES.find(md => realHrefValue.includes(md.githubName));
+
+    if (foundMarkdownItem) {
+      // if its a found tutorial file, open a new markdown dialog
+      this.dialogService.showMarkdownFile(foundMarkdownItem);
+      return;
+    }
+
+    // open external URLs
+    window.open(realHrefValue, '_blank');
   }
 }

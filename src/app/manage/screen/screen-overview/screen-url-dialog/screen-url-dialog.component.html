@@ -14,19 +14,18 @@
                           (change)="selectionState[screenEntry.id].checked = $event.checked">
               {{ screenEntry.name }}
             </mat-checkbox>
+            <br />
+
+            Clips: {{ screenEntry | clipsInScreenAmount }}
           </td>
           <td>
             <mat-form-field>
+              <mat-label>View-Order (zIndex)</mat-label>
               <input matInput [(ngModel)]="selectionState[screenEntry.id].zIndex"
                      placeholder="View-Order (zIndex)"
                      type="number"
                      autocomplete="off"/>
             </mat-form-field>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            Clips: {{ screenEntry | clipsInScreenAmount }}
           </td>
         </tr>
       </ng-container>

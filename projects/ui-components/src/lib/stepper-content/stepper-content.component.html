@@ -1,0 +1,46 @@
+<header>
+  <ng-content select="[stepperHeader]"></ng-content>
+</header>
+
+<section class="stepper-shell">
+  <section class="steps">
+    <mat-nav-list>
+      <mat-list-item [disabled]="!step.enabled"
+        class="step-item"
+        [class.active]="selectedIndex === i"
+        [class.disabled]="!step.enabled"
+        *ngFor="let step of typedSteps; let i = index"
+        (click)="selectStepByIndex(i)"
+      >
+        <div mat-line>
+          <ng-container *ngIf="step.stepLabel; else showLabelText" [ngTemplateOutlet]="step.stepLabel.template">
+          </ng-container>
+          <ng-template #showLabelText>
+            {{ step.label }}
+          </ng-template>
+        </div>
+
+        <div mat-line>
+          <ng-container *ngIf="step.subTextTemplate; else showSubText"
+                        [ngTemplateOutlet]="step.subTextTemplate.template">
+          </ng-container>
+          <ng-template #showSubText>
+            <mat-hint>
+            {{step.subText}}
+            </mat-hint>
+          </ng-template>
+
+
+        </div>
+      </mat-list-item>
+    </mat-nav-list>
+  </section>
+
+
+
+  <div class="step-content">
+    <ng-container [ngTemplateOutlet]="selected ? selected.content : null">
+
+    </ng-container>
+  </div>
+</section>

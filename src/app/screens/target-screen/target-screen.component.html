@@ -1,79 +1,70 @@
 <!-- Notes
 The Browser Elements need to exist all the time
-The Loaded Clips need to stay cached?
+The Loaded Media need to stay cached?
 
 -->
 
 <mat-icon svgIcon="wifi_off" class="connectionIcon"
-          *ngIf="(connectionState$ | async) !== ConnectionState.Connected">
+          *ngIf="showOfflineIcon$ | async">
 
 </mat-icon>
 
-<ng-container *ngIf="mediaClipMap$ | async as mediaClipMap">
-<div *ngFor="let entry of mediaClipMap | keyvalue; trackBy: trackByKeyValue"
-     [class.absolute]="entry.value.clipSetting.position === 1"
-     [class.centered]="entry.value.clipSetting.position === 2"
-     [class.random]="entry.value.clipSetting.position === 3"
-     [class.fullscreen]="!entry.value.clipSetting.position"
-     [ngSwitch]="entry.value.clip.type"
-     [style.--clip-background]="entry.value.backgroundColor"
-     [style.--clip-setting-height]="entry.value.clipSetting.height"
-     [style.--clip-setting-img-fit]="entry.value.clipSetting.imgFit"
-     [style.z-index]="entry.value.clipSetting.zIndex"
+<div *ngFor="let entry of mediaList$ | async; trackBy: trackByKeyValue"
+     [ngSwitch]="entry.clip.type"
 
-     [style.--clip-setting-width]="entry.value.clipSetting.width"
 
      appMediaToggle [mediaHoldingElement]="mediaHolder"
-     [combinedClip]="entry.value"
+     [clipId]="entry.clip.id"
+     [screenId]="screenId"
      #mediaToggleVar="appMediaToggle"
 
      [class.clip-is-visible]="mediaToggleVar.isVisible$ | async"
-     class="clip-holder {{ entry.value.clip.type | mediaTypeClass }} clip-{{ entry.value.clipSetting.id }} "
+     class="clip-holder {{ entry.clip.type | mediaTypeClass }} clip-{{ entry.clipSetting.id }} "
 >
-  <span class="debug-name">{{ entry.value.clip.name }}</span>
+  <span class="debug-name">{{ entry.clip.name }}</span>
 
   <div class="media-clip-holder" #mediaHolder>
     <video #video *ngSwitchCase="2" class="media-clip"
            (canplay)="addLog('canplay', $event)"
            (canplaythrough)="addLog('canplaythrough', $event)"
-           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
+           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying();"
            (loadeddata)="addLog('loadeddata', $event)"
            (loadedmetadata)="addLog('loadedmetadata', $event)"
-           (loadstart)="addLog('loadstart', $event); addToMap(entry.value.clip, video)"
+           (loadstart)="addLog('loadstart', $event); addToMap(entry.clip, video)"
            (play)="addLog('play', $event)"
            (playing)="addLog('playing', $event)"
            (progress)="addLog('progress', $event)"
            [class.visible]="mediaToggleVar.isVisible$ | async"
-           [src]="entry.value.clip | mediaToUrl"
-           [loop]="entry.value.clipSetting.loop"
-           [volume]="entry.value.clip.volumeSetting / 100"
+           [src]="entry.clip | mediaToUrl"
+           [loop]="entry.clipSetting.loop"
+           [volume]="entry.clip.volumeSetting / 100"
     ></video>
     <audio #audio *ngSwitchCase="1"  class="media-clip"
-           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying(entry);"
-           (loadstart)="addToMap(entry.value.clip, audio)"
+           (ended)="addLog('ended', $event); mediaToggleVar.stopIfStillPlaying();"
+           (loadstart)="addToMap(entry.clip, audio)"
            (play)="addLog('play', $event)"
            (playing)="addLog('playing', $event)"
            [class.visible]="mediaToggleVar.isVisible$ | async"
-           [src]="entry.value.clip | mediaToUrl"
-           [volume]="entry.value.clip.volumeSetting / 100"
-           [loop]="entry.value.clipSetting.loop"
+           [src]="entry.clip | mediaToUrl"
+           [volume]="entry.clip.volumeSetting / 100"
+           [loop]="entry.clipSetting.loop"
            controls
            preload="auto"
     ></audio>
     <img #img *ngSwitchCase="0"  class="media-clip"
-         (loadstart)="addToMap(entry.value.clip, img)"
+         (loadstart)="addToMap(entry.clip, img)"
          [class.visible]="mediaToggleVar.isVisible$ | async"
-         [src]="entry.value.clip | mediaToUrl"
+         [src]="entry.clip | mediaToUrl"
     />
     <iframe #iFrame *ngSwitchCase="3"  class="media-clip"
-            (load)="addToMap(entry.value.clip, iFrame)"
+            (load)="addToMap(entry.clip, iFrame)"
             [class.visible]="(mediaToggleVar.isVisible$ | async)"
-            [src]="entry.value.clip.path | safeurl">
+            [src]="entry.clip.path | safeurl">
     </iframe>
 
     <app-dynamic-iframe *ngSwitchCase="4"  class="media-clip" #dynamicIframeComponent
-                        (load)="addToMap(entry.value.clip, dynamicIframeComponent)"
-                        [content]="entry.value.clip | clipToIframe"
+                        (load)="addToMap(entry.clip, dynamicIframeComponent)"
+                        [mediaId]="entry.clip.id"
                         [class.visible]="(mediaToggleVar.isVisible$ | async)">
 
     </app-dynamic-iframe>
@@ -81,9 +72,7 @@ The Loaded Clips need to stay cached?
   </div>
 </div>
 
-</ng-container>
-
 <pre style="display: none;">
   {{ log | json }}
-  {{ mediaClipMap$ | async | json }}
+  {{ mediaList$ | async | json }}
 </pre>

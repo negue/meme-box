@@ -6,22 +6,101 @@
 }
 
 :host {
+  display: flex;
+  flex-direction: column;
+
   app-filter {
     display: block;
-    padding-top: 1rem;
     padding-bottom: 1rem;
     padding-left: 2rem;
     width: 100%;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 3.05rem;
-    z-index: 1;
-    background: var(--palette-background-background) !important;
+    background-color: var(--palette-background-background) !important;
 
     ::ng-deep {
       .filterRow {
-        margin-bottom: 1rem;
       }
     }
+  }
+}
+
+.mo__content-container {
+  overflow: auto;
+}
+
+.mo__casual-overview {
+  padding: 2rem;
+  padding-top: 0;
+
+  &__group {
+    display: flex;
+    flex-wrap: wrap;
+
+    &:not(:first-child) {
+      padding-top: 12px;
+    }
+
+    &__title {
+      flex: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: var(--palette-background-background);
+      margin-bottom: 0;
+      padding-bottom: 16px;
+      display: flex;
+      align-items: center;
+
+      .mo__gt__amount {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+    }
+
+    &__medias {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+      gap: 12px;
+    }
+  }
+}
+
+.getting-started-info-pane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  position: absolute;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  font-size: 3rem;
+
+  .getting-started-info-pane__icon.mat-icon {
+    --info-size: 12rem;
+    height: var(--info-size);
+    width: var(--info-size);
+    line-height: var(--info-size);
+    margin-right: 1rem;
+  }
+
+  .info-pane-inline-btn {
+    position: relative;
+    top: -0.5rem;
+
+    &.fake-add {
+      cursor: default;
+    }
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+    max-width: 75vw;
   }
 }

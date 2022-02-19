@@ -1,20 +1,27 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from "@angular/router";
-import { MainPageComponent } from "./main-page.component";
-import { MatSidenavModule } from "@angular/material/sidenav";
-import { MatListModule } from "@angular/material/list";
-import { QRCodeModule } from "angular2-qrcode";
-import { MatButtonModule } from "@angular/material/button";
-import { NavigationModule } from "../navigation/navigation.module";
-import { StateModule } from "../../state/state.module";
-import { ServicesModule } from "../../core/services/services.module";
-import { DialogsModule } from "../../shared/dialogs/dialogs.module";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule, Routes} from "@angular/router";
+import {MainPageComponent} from "./main-page.component";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {QRCodeModule} from "angular2-qrcode";
+import {MatButtonModule} from "@angular/material/button";
+import {NavigationModule} from "../navigation/navigation.module";
+import {DialogsModule} from "../../shared/dialogs/dialogs.module";
+import {MatIconModule} from "@angular/material/icon";
+import {NotesComponent} from './notes/notes.component';
+import {MatBottomSheetModule} from "@angular/material/bottom-sheet";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {ReactiveFormsModule} from "@angular/forms";
+import {WidgetStoreRemoteAdapter} from "../../shared/components/dynamic-iframe/widget-store-remote-adapter.service";
 
+// TODO cleanup / move to /pages folder
 
 const mainRoutes: Routes = [
   {
-    path: 'media',
+    path: 'actions',
     loadChildren: () => import('../media/media.module').then(module => module.MediaModule)
   },
   {
@@ -30,8 +37,13 @@ const mainRoutes: Routes = [
     loadChildren: () => import('../triggers/triggers.module').then(module => module.TriggersModule)
   },
   {
+    path: 'dashboard',
+    loadChildren: () => import('../../pages/dashboard/dashboard.module')
+      .then(module => module.DashboardModule)
+  },
+  {
     path: '',
-    redirectTo: 'media',
+    redirectTo: 'actions',
     pathMatch: 'full'
   }
 ];
@@ -47,7 +59,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  declarations: [MainPageComponent],
+  declarations: [MainPageComponent, NotesComponent],
   imports: [
     CommonModule,
     MatSidenavModule,
@@ -56,9 +68,16 @@ const routes: Routes = [
     QRCodeModule,
     MatButtonModule,
     NavigationModule,
-    StateModule,
-    ServicesModule,
-    DialogsModule
+    DialogsModule,
+    MatIconModule,
+    MatBottomSheetModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
+  providers: [
+    WidgetStoreRemoteAdapter
   ]
 })
 export class MainPageModule {

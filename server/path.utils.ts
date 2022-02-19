@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import path from "path";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 export function createDirIfNotExists(dir: string) {
   if (!fs.existsSync(dir)){
@@ -7,10 +8,12 @@ export function createDirIfNotExists(dir: string) {
   }
 }
 
+export function safeResolve(basePath: string, targetFolder: string) {
+  const targetPath = '.' + path.normalize('/' + targetFolder)
+  return path.resolve(basePath, targetPath)
+}
 
 // Get the config path (for the settings.json)
-const configPathArgument = process.argv.find(arg => arg.includes('--config'));
-
 // Gets the correct User-AppData Folder
 const userDataFolder = process.env.APPDATA ||
   (process.platform == 'darwin'
@@ -18,13 +21,12 @@ const userDataFolder = process.env.APPDATA ||
     : `${process.env.HOME}/.local/share`)
 ;
 
-export const NEW_CONFIG_PATH = configPathArgument
-  ? configPathArgument.replace('--config=', '')
-  : path.join(userDataFolder, 'meme-box');
-
+export const NEW_CONFIG_PATH = CLI_OPTIONS.CONFIG_PATH ?? path.join(userDataFolder, 'meme-box');
 createDirIfNotExists(NEW_CONFIG_PATH);
 
 export const LOG_PATH = path.join(NEW_CONFIG_PATH, 'logs');
-
 createDirIfNotExists(LOG_PATH);
+
+export const MEDIA_SCREENSHOT_PATH = path.join(NEW_CONFIG_PATH, 'media-screenshot');
+createDirIfNotExists(MEDIA_SCREENSHOT_PATH);
 

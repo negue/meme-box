@@ -1,0 +1,184 @@
+:host {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+
+  .arrange-buffer-area ::ng-deep {
+    // Change the default background colors of the actions
+    .arrange-actions > button,
+    .arrange-selection-actions .mat-form-field-appearance-fill .mat-form-field-flex,
+    .arrange-global-actions .mat-button-toggle.mat-button-toggle-appearance-standard,
+    .arrange-global-actions .mat-button-toggle.mat-button-toggle-disabled .mat-button-toggle-button {
+      background-color: var(--palette-background-background);
+    }
+  }
+
+  // Highlight the field when you hover over it
+  .arrange-selection-actions-container.clip-is-selected > .arrange-selection-actions {
+    ::ng-deep .mat-form-field:not(.form-field-disabled).mat-form-field-appearance-fill .mat-form-field-flex:hover {
+      background-color: rgba(255, 255, 255, 0.07);
+    }
+  }
+
+  .arrange-selection-actions-container > .arrange-selection-actions {
+    display: flex;
+
+    // Vertically align the mat-input-fields because we don't need the error/hint line below the actual input
+    ::ng-deep .mat-form-field-wrapper {
+      position: relative;
+      top: -6px;
+    }
+  }
+
+}
+
+.dragging-config {
+  display: flex;
+  flex-direction: row;
+  height: 4rem;
+
+  .spacer {
+    min-height: 4rem;
+  }
+}
+
+.inline {
+  display: flex;
+  flex-direction: row;
+  min-height: 4rem;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: #444;
+  padding-right: 1rem;
+  padding-left: 1rem;
+
+  mat-checkbox {
+    margin-left: 1rem;
+  }
+}
+
+
+.drag-drop-area-holder {
+  flex: 1;
+  min-height: 0;
+}
+
+
+.drag-drop-area {
+  position: relative;
+  overflow: hidden;
+
+  background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 50px 50px;
+}
+
+
+.arrange-global-actions, .arrange-selection-actions, .arrange-actions {
+  border: 1px solid #FFFFFF;
+  border-radius: 4px;
+
+  height: 50px;
+  overflow: hidden;
+}
+
+.arrange-buffer-area {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+app-open-feedback-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.arrange-actions {
+  display: flex;
+}
+
+.arrange-selection-actions-container {
+  opacity: 1;
+  transition: opacity 100ms;
+
+  &:not(.clip-is-selected) {
+    opacity: 0.3;
+  }
+
+  .arrange-size-control {
+    width: 5rem;
+  }
+
+  .arrange-position-control {
+    width: 10rem;
+  }
+
+  .arrange-width-control,
+  .arrange-height-control,
+  .arrange-left-control,
+  .arrange-top-control,
+  .arrange-right-control,
+  .arrange-bottom-control {
+    width: 7rem;
+  }
+}
+
+.arrange-global-actions .mat-button-toggle {
+  opacity: 1;
+  transition: opacity 100ms;
+
+  // Change default style of disabled toggle-button
+  &.mat-button-toggle-disabled {
+    opacity: 0.3;
+  }
+
+  // Change the default color of the toggle button to our primary
+  &.mat-button-toggle-checked:not(.mat-button-toggle-disabled) {
+    background-color: rgba(var(--palette-accent-500), 1);
+  }
+}
+
+.expander-button {
+  display: flex;
+  align-items: center;
+  background-color: var(--palette-background-background);
+  z-index: 1;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.07);
+  }
+
+  .mat-icon {
+    transform: rotate(0);
+    transition: transform 200ms;
+  }
+
+  &.expander-button-minimize .mat-icon {
+    transform: rotate(180deg);
+  }
+}
+
+.extender {
+  display: flex;
+  transition: width 600ms;
+  overflow: hidden;
+
+  &.extender-full-screen {
+    width: 14rem;
+  }
+
+  &.extender-absolute {
+    width: 28rem;
+  }
+
+  &.extender-closed, &:not(.extender-absolute):not(.extender-full-screen) {
+    width: 0 !important;
+  }
+}

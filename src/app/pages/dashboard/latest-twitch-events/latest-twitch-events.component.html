@@ -1,0 +1,72 @@
+<div *ngIf="twitchEvents$ | async as latestEvents">
+  <ng-container *ngIf="latestEvents.length === 0">
+    <i>No Twitch Events in this session yet.</i> <br/>
+  </ng-container>
+  <ng-container *ngIf="latestEvents.length !== 0">
+    <i>Note: Messages / Chat Commands are filtered out.</i> <br/>
+  </ng-container>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let twitchEvent of latestEvents" [ngSwitch]="twitchEvent.type">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <button mat-icon-button (click)="replayEvent($event, twitchEvent)">
+            <mat-icon svgIcon="replay"></mat-icon>
+          </button>
+
+          <span class="event_label">
+                <ng-container  *transloco="let t; read: 'twitch', scope: 'twitch' ">
+                {{ t(twitchEvent.type)  }}:
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'channelPoints'">
+                  <ng-container *ngIf="twitchEvent | guardType: isChannelPointRedemption as channelPoint">
+                    <b>{{channelPoint.payload.rewardName}}</b> <br/> by {{ channelPoint.payload.userDisplayName }}
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'bits'">
+                  <ng-container *ngIf="twitchEvent | guardType: isCheer as cheer">
+
+                    <b>{{cheer.payload.bits}}</b> - {{cheer.payload.message}}
+
+                    <br/> by{{ cheer.payload.userstate["display-name"] }}
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'subscription'">
+                  <ng-container *ngIf="twitchEvent | guardType: isSub as sub">
+
+                    <b>{{sub.payload.username}}</b>  - "{{sub.payload.message}}"
+
+                    <br/>
+                    <ng-container *ngIf="sub.payload.gifter">
+                      gifted by {{ sub.payload.gifter }}
+                    </ng-container>
+                    Sub-Method: <b>{{sub.payload.subtype}}</b>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'gift'">
+                  <ng-container *ngIf="twitchEvent | guardType: isGiftSub as sub">
+
+                    <b>{{ sub.payload.gifter }} gifted to {{sub.payload.recipientDisplayName}}</b> - Total: {{sub.payload.totalGifts}}
+
+                    <br/>
+                    Sub-Method: <b>{{sub.payload.subtype}}</b>
+                  </ng-container>
+                </ng-container>
+               <ng-container *ngSwitchCase="'raid'">
+                  <ng-container *ngIf="twitchEvent | guardType: isRaid as raid">
+                    <b>{{ raid.payload.channel }} raided with {{raid.payload.viewers}}</b>
+                  </ng-container>
+                </ng-container>
+                <ng-container *ngSwitchDefault>
+                  No template for this type yet
+                </ng-container>
+                  </span>
+        </mat-panel-title>
+        <mat-panel-description>
+          {{twitchEvent.timestamp | date: 'mediumTime'}}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <pre [highlight]="twitchEvent | json" lang="json" class="pre-wrap-break"></pre>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -1,4 +1,7 @@
-import {Clip} from "@memebox/contracts";
+import {Action, Dictionary} from "@memebox/contracts";
+import {replaceVariablesInString} from "./utils";
+import {ActionVariableConfig} from "@memebox/action-variables";
+import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
@@ -10,6 +13,11 @@ export interface DynamicIframeContent {
   html?: string;
   js?: string;
   libraries?: HtmlExternalFile[];
+  variablesConfig?: ActionVariableConfig[];
+  variables?: Dictionary<any>;
+  settings?: {
+    subscribeToTwitchEvent?: boolean;
+  }
 }
 
 export function dynamicIframe (iframe: HTMLIFrameElement,
@@ -17,13 +25,17 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   const iframeDocument = iframe.contentDocument;
 
+  if (!iframeDocument) {
+    return;
+  }
+
   // clean up the previous external files
   const allExistingScripts = iframeDocument.body.getElementsByTagName('script');
 
   for (let scriptIndex = 0; scriptIndex < allExistingScripts.length; scriptIndex++) {
     const script = allExistingScripts.item(scriptIndex);
     console.info({script});
-    script.remove();
+    script?.remove();
   }
 
   const allExistingStyleLinks = iframeDocument.body.getElementsByTagName('link');
@@ -31,7 +43,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   for (let styleLinkIndex = 0; styleLinkIndex < allExistingStyleLinks.length; styleLinkIndex++) {
     const style = allExistingStyleLinks.item(styleLinkIndex);
     console.info({style, length: allExistingStyleLinks.length});
-    style.remove();
+    style?.remove();
   }
 
   // re-add
@@ -40,7 +52,12 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
     return;
   }
 
-  for (const externalFile of content.libraries) {
+  const valueBag = content.variables ?? {};
+
+  const librariesArray = content.libraries ?? [];
+  const variablesConfig = content.variablesConfig ?? [];
+
+  for (const externalFile of librariesArray) {
     if (externalFile.type === 'css') {
       const newStyle = iframeDocument.createElement("link");
       newStyle.rel = 'stylesheet'
@@ -60,9 +77,29 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   const elementsToReplace: string[] = [];
 
   if (content.html) {
+
+    const htmlValueBag: Record<string, unknown> = {};
+
+    variablesConfig
+      .forEach(config => {
+        htmlValueBag[config.name] = getVariableValueOrFallback(config, valueBag, true);
+
+        if (config.type === 'textarea') {
+          let valueOfName = htmlValueBag[config.name] as string;
+
+          if (config.htmlNewLineBreak) {
+            valueOfName = valueOfName.replaceAll('\n', '<br/>');
+          }
+
+          htmlValueBag[config.name] = valueOfName;
+        }
+      });
+
+    const replacedHtmlWithVariablesContent = replaceVariablesInString(content.html, variablesConfig.map(v => v.name), htmlValueBag);
+
     elementsToReplace.push(`
       <div>
-        ${content.html}
+        ${replacedHtmlWithVariablesContent}
       </div>
     `);
   }
@@ -72,6 +109,17 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   elementsToReplace.push(`
     <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+
+        ${getCssCustomVariables(variablesConfig, valueBag)}
+      }
+
+      iframe {
+        border: 0;
+      }
+
       body {
         overflow: hidden;
       }
@@ -98,44 +146,116 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
     iframeDocument.body.appendChild(customScript);
 
-
-    customScript.text = content.js;
+    customScript.text = ` {
+      ${getJsCustomVariables(variablesConfig, valueBag)}
+      ${content.js}
+    }`;
   }
 }
 
-export function clipDataToDynamicIframeContent (clip: Partial<Clip>) {
-  if (!clip.extended) {
+function getVariableValueOrFallback (config: ActionVariableConfig,
+                                     valueBag: Dictionary<any>,
+                                     justReturnIt: boolean = false) {
+  const valueOfBag = valueBag[config.name];
+  const valueToReturn = typeof valueOfBag === 'undefined'
+    ? config.fallback
+    : valueOfBag;
+
+  if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
+    return valueToReturn;
+  }
+
+  if (config.type === 'textarea') {
+    return "`" + valueToReturn + "`";
+  }
+
+  // string
+  return `"${valueToReturn}"`;
+}
+
+function getJsCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
+  return variables
+    .filter(config => !!config.fallback)
+    .map(config => {
+    return `const ${config.name} = ${getVariableValueOrFallback(config, valueBag)};`;
+  }).join(' ');
+}
+
+
+function getCssCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
+  return variables
+    .filter(config => !!config.fallback && config.type !== "textarea" && config.type !== "boolean")
+    .map(config => { return `--${config.name}: ${getVariableValueOrFallback(config, valueBag, true)};`;
+  }).join(' ');
+}
+
+
+const DYNAMIC_IFRAME_HTML_KEY = 'html';
+const DYNAMIC_IFRAME_CSS_KEY = 'css';
+const DYNAMIC_IFRAME_JS_KEY = 'js';
+const DYNAMIC_IFRAME_EXTERNAL_KEY = 'external';
+
+const DYNAMIC_IFRAME_SETTINGS_KEY = '_settings';
+
+export function actionDataToWidgetContent (action: Partial<Action>): DynamicIframeContent|null {
+  if (!action?.extended) {
     return null;
   }
 
   const dynamicContent: DynamicIframeContent = {
-    html: clip.extended['html'],
-    css: clip.extended['css'],
-    js: clip.extended['js']
+    html: action.extended[DYNAMIC_IFRAME_HTML_KEY] ?? '',
+    css: action.extended[DYNAMIC_IFRAME_CSS_KEY] ?? '',
+    js: action.extended[DYNAMIC_IFRAME_JS_KEY] ?? ''
   };
 
-  console.info({extended: clip.extended});
+  console.info({extended: action.extended});
 
-  // JSON
-  const externalFiles: HtmlExternalFile[] = JSON.parse(clip.extended['external'] ?? '[]');
+  // External Files are saved as JSON
+  const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
   dynamicContent.libraries = externalFiles;
 
+  dynamicContent.variablesConfig = getVariablesListOfAction(action);
+
   console.info('json', JSON.stringify(dynamicContent));
+
+  // todo add a settings type
+  const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');
+  dynamicContent.settings = settings;
 
   return dynamicContent;
 }
 
 
-export function applyDynamicIframeContentToClipData (iframeContent: DynamicIframeContent, targetClip: Partial<Clip>) {
+export function applyDynamicIframeContentToClipData (
+  iframeContent: DynamicIframeContent,
+  targetClip: Partial<Action>
+) {
   console.info('PRE CHANGE', JSON.stringify(targetClip));
 
   console.info({iframeContent});
 
-  targetClip.extended['html'] = iframeContent.html;
-  targetClip.extended['css'] = iframeContent.css;
-  targetClip.extended['js'] = iframeContent.js;
+  if (!targetClip.extended) {
+    targetClip.extended = {};
+  }
 
-  targetClip.extended['external'] = JSON.stringify(iframeContent.libraries);
+  targetClip.extended[DYNAMIC_IFRAME_HTML_KEY] = iframeContent.html ?? '';
+  targetClip.extended[DYNAMIC_IFRAME_CSS_KEY] = iframeContent.css ?? '';
+  targetClip.extended[DYNAMIC_IFRAME_JS_KEY] = iframeContent.js ?? '';
+
+  targetClip.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] = JSON.stringify(iframeContent.libraries);
+  targetClip.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(iframeContent.variablesConfig);
+  targetClip.extended[DYNAMIC_IFRAME_SETTINGS_KEY] = JSON.stringify(iframeContent.settings);
 
   console.info('POST CHANGE', JSON.stringify(targetClip));
 }
+
+export const NOT_ALLOWED_WIDGET_VARIABLE_NAMES = [
+  SCRIPT_VARIABLES_KEY,
+  DYNAMIC_IFRAME_JS_KEY,
+  DYNAMIC_IFRAME_CSS_KEY,
+  DYNAMIC_IFRAME_EXTERNAL_KEY,
+  DYNAMIC_IFRAME_HTML_KEY,
+  DYNAMIC_IFRAME_SETTINGS_KEY
+];
+
+

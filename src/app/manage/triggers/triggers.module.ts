@@ -12,12 +12,13 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatCardModule} from "@angular/material/card";
 import {MatChipsModule} from "@angular/material/chips";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
-import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-setting/twitch-setting.module";
-import {ClipPreviewModule} from "../../shared/components/clip-preview/clip-preview.module";
+import {ActionPreviewModule} from "@memebox/state-components";
 import {TimedEventInfoComponent} from "./events-overview/twitch-event-info/timed-event-info.component";
 import {TwitchEventInfoComponent} from "./events-overview/timed-event-info/twitch-event-info.component";
-import {PipesModule} from "../../core/pipes/pipes.module";
+import {CheckboxChipModule, PipesModule} from "@memebox/ui-components";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatMenuModule} from "@angular/material/menu";
+import {TRANSLOCO_TWITCH_SCOPE} from "../../transloco/transloco.scopes";
 
 const routes: Routes = [
   {
@@ -41,10 +42,14 @@ const routes: Routes = [
     MatCardModule,
     MatChipsModule,
     CardOverviewModule,
-    TwitchSettingModule,
-    ClipPreviewModule,
+    ActionPreviewModule,
     PipesModule,
     MatTooltipModule,
+    MatMenuModule,
+    CheckboxChipModule
+  ],
+  providers: [
+    TRANSLOCO_TWITCH_SCOPE
   ]
 })
 export class TriggersModule {

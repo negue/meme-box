@@ -1,0 +1,15 @@
+<div class="drag-drop-area-holder"
+     #holdingElement
+>
+  <gewd-auto-scale [width]="holdingElement.clientWidth"
+                   [height]="holdingElement.clientHeight"
+  >
+
+    <div [style.width.px]="screen.width"
+         [style.height.px]="screen.height"
+         class="drag-drop-area">
+      <app-target-screen [screenId]="screen.id"></app-target-screen>
+    </div>
+
+  </gewd-auto-scale>
+</div>

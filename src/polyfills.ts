@@ -56,8 +56,42 @@
  * Zone JS is required by default for Angular itself.
  */
 import 'zone.js/dist/zone'; // Included with Angular CLI.
-
-
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+/***************************************************************************************************
+ * TYPES
+ */
+import type {electronAPI, electronAPIKey} from '../preload'
+
+declare global {
+  interface Window {
+    [electronAPIKey]: typeof electronAPI
+  }
+}
+
+
+if (typeof localStorage === 'undefined' || localStorage === null) {
+  const localStorageMock = (() => {
+    let store = {};
+
+    return {
+      getItem(key) {
+        return store[key] || null;
+      },
+      setItem(key, value) {
+        store[key] = value.toString();
+      },
+      removeItem(key) {
+        delete store[key];
+      },
+      clear() {
+        store = {};
+      }
+    };
+  })();
+
+  Object.defineProperty(window, 'localStorage', {
+    value: localStorageMock
+  });
+}

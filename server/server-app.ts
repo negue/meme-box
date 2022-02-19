@@ -1,35 +1,54 @@
 import {createExpress} from "./express-server";
-import {createWebSocketServer, sendDataToAllSockets} from "./websocket-server";
-import {DEFAULT_PORT, REMOTE_VERSION_FILE} from "./constants";
+import {sendDataToAllSockets} from "./websocket-server";
+import {DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE} from "./constants";
 import {debounceTime, startWith, take} from "rxjs/operators";
-import {TwitchHandler} from './twitch.handler';
 import {PersistenceInstance} from "./persistence";
-import {ACTIONS} from "@memebox/contracts";
+import {ACTIONS, ChangedInfo} from "@memebox/contracts";
 import {LOGGER} from "./logger.utils";
-import {ExampleTwitchCommandsSubject} from "./shared";
 import {TimedHandler} from "./timed.handler";
 
 import https from 'https';
 import currentVersionJson from '@memebox/version';
 import {STATE_OBJECT} from "./rest-endpoints/state";
+import {Lazy} from "@gewd/markdown/utils";
+import {CLI_OPTIONS} from "./utils/cli-options";
 
 // This file creates the "shared" server logic between headless / electron
 
 // TODO use config values?
 
-const portArgument = process.argv.find(arg => arg.includes('--port'));
+const CONFIG_IS_LOADED$ = PersistenceInstance.configLoaded$.pipe(
+  take(1)
+).toPromise();
 
-export const NEW_PORT = portArgument ? +portArgument.replace('--port=', '') : DEFAULT_PORT;
+export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value => {
+  const SAVED_PORT = PersistenceInstance.getConfig()?.customPort;
 
-export const expressServer = createExpress(NEW_PORT);
-export const {server, wss} = createWebSocketServer(NEW_PORT);
+  if (CLI_OPTIONS.PORT) {
+    LOGGER.info(`Using the --port Argument: ${CLI_OPTIONS.PORT}`,  {
+      port: CLI_OPTIONS.PORT
+    });
+  } else if (!SAVED_PORT) {
+    LOGGER.info(`Using the default Port: ${DEFAULT_PORT}`, {
+      port: DEFAULT_PORT
+    });
+  } else {
+    LOGGER.info(`Using port: ${SAVED_PORT}`, {
+      port: SAVED_PORT
+    });
+  }
 
-// Also mount the app here
-server.on('request', expressServer);
+  const NEW_PORT = CLI_OPTIONS.PORT ?? SAVED_PORT ?? DEFAULT_PORT;
 
-let currentConfigJsonString = '';
-let currentTimers = '';
-let twitchHandler:TwitchHandler = null;
+  const expressServer = createExpress(NEW_PORT);
+  // Also mount the app here
+ // server.on('request', expressServer);
+
+  return {
+    expressServer
+  };
+}));
+
 
 PersistenceInstance.hardRefresh$()
   .pipe(
@@ -47,92 +66,127 @@ timedHandler.startTimers();
 PersistenceInstance.dataUpdated$()
   .pipe(
     debounceTime(600),
-    startWith(true)
+    startWith({
+      dataType: 'everything'
+    } as ChangedInfo)
   )
-  .subscribe(() => {
-    sendDataToAllSockets(ACTIONS.UPDATE_DATA);
+  .subscribe((dataChanged) => {
+    // TODO move to a different place?
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA+'='+JSON.stringify(dataChanged));
 
-    const config = PersistenceInstance.getConfig();
-    const jsonOfConfig = JSON.stringify(config.twitch);
-
-    if (currentConfigJsonString !== jsonOfConfig
-      && !!config.twitch?.channel
-    ) {
-      currentConfigJsonString = jsonOfConfig;
-
-      LOGGER.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
-
-      if (twitchHandler != null) {
-        twitchHandler.disconnect();
-      }
-
-      twitchHandler = new TwitchHandler(config.twitch);
-    }
-
-    const jsonOfTimers = JSON.stringify(PersistenceInstance.listTimedEvents());
-
-    if (currentTimers != jsonOfTimers) {
-      timedHandler.refreshTimers();
-      currentTimers = jsonOfTimers;
+    if (['everything', 'timers'].includes(dataChanged.dataType)) {
+      timedHandler.refreshTimers(dataChanged.id);
 
       LOGGER.info(`Refreshing TimedHandler`);
     }
   });
 
-ExampleTwitchCommandsSubject.subscribe(value => {
-  if (twitchHandler) {
-    twitchHandler.handle(value);
-  }
-});
-
 // Check Version & Log it
 
-function cmpVersions (a, b) {
-  var i, diff;
-  var regExStrip0 = /(\.0+)+$/;
-  var segmentsA = a.replace(regExStrip0, '').split('.');
-  var segmentsB = b.replace(regExStrip0, '').split('.');
-  var l = Math.min(segmentsA.length, segmentsB.length);
+// from https://stackoverflow.com/a/6832721
+function versionCompare(v1, v2, options = null) {
+  const lexicographical = options && options.lexicographical,
+    zeroExtend = options && options.zeroExtend;
 
-  for (i = 0; i < l; i++) {
-    diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
-    if (diff) {
-      return diff;
+  let v1parts = v1.split('.'),
+    v2parts = v2.split('.');
+
+  function isValidPart(x) {
+    return (lexicographical ? /^\d+[A-Za-z]*$/ : /^\d+$/).test(x);
+  }
+
+  if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+    return NaN;
+  }
+
+  if (zeroExtend) {
+    while (v1parts.length < v2parts.length) v1parts.push("0");
+    while (v2parts.length < v1parts.length) v2parts.push("0");
+  }
+
+  if (!lexicographical) {
+    v1parts = v1parts.map(Number);
+    v2parts = v2parts.map(Number);
+  }
+
+  for (let i = 0; i < v1parts.length; ++i) {
+    if (v2parts.length == i) {
+      return 1;
+    }
+
+    if (v1parts[i] == v2parts[i]) {
+      continue;
+    }
+
+    if (v1parts[i] > v2parts[i]) {
+      return 1;
+    }
+    else {
+      return -1;
     }
   }
-  return segmentsA.length - segmentsB.length;
+
+  if (v1parts.length != v2parts.length) {
+    return -1;
+  }
+
+  return 0;
 }
 
 
 PersistenceInstance.configLoaded$.pipe(
   take(1)
-).subscribe(() => {
+).subscribe(async () => {
 
   const versionCheckEnabled = PersistenceInstance.getConfig().enableVersionCheck;
   console.info({ versionCheckEnabled });
 
   if (versionCheckEnabled) {
-    https.get(REMOTE_VERSION_FILE, function(res){
-      var body = '';
+    if (IS_NIGHTLY) {
+      const {VERSION_TAG} = JSON.parse(await loadJsonAsync(REMOTE_NIGHTLY_VERSION_FILE));
 
-      res.on('data', function(chunk){
-        body += chunk;
-      });
+      const local = currentVersionJson.VERSION_TAG;
 
-      res.on('end', function(){
-        const {version} = JSON.parse(body);
+      const isRemoteNewer = VERSION_TAG > local;
 
-        const local = currentVersionJson.VERSION_TAG;
+      LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, {remote: VERSION_TAG, local});
 
-        const isRemoteNewer = cmpVersions(version, local) > 0;
+      STATE_OBJECT.update.available = isRemoteNewer;
+      STATE_OBJECT.update.version = VERSION_TAG;
+    } else {
+      // Release
+      const {version} = JSON.parse(await loadJsonAsync(REMOTE_RELEASE_VERSION_FILE));
 
-        LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, { remote: version, local });
+      const local = currentVersionJson.VERSION_TAG;
 
-        STATE_OBJECT.update.available = isRemoteNewer;
-        STATE_OBJECT.update.version = version;
-      });
-    }).on('error', function(e){
-      LOGGER.error("Error loading version json: ", e);
-    });
+      const isRemoteNewer = versionCompare(version, local) > 0;
+
+      LOGGER.info(`Remote Version newer? - ${isRemoteNewer}`, {remote: version, local});
+
+      STATE_OBJECT.update.available = isRemoteNewer;
+      STATE_OBJECT.update.version = version;
+    }
   }
 });
+
+
+function loadJsonAsync (url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+
+  https.get(url, function(res){
+    var body = '';
+
+    res.on('data', function(chunk){
+      body += chunk;
+    });
+
+    res.on('end', function(){
+
+      resolve(body);
+    });
+  }).on('error', function(e){
+    LOGGER.error(e, "Error loading version json");
+  });
+
+  });
+}

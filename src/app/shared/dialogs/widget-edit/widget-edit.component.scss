@@ -1,0 +1,87 @@
+:host {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  ::ng-deep {
+    .mat-expansion-panel-header-description {
+      flex-grow: 0;
+    }
+  }
+}
+
+mat-dialog-content {
+  flex: 1;
+  max-height: unset;
+}
+
+.padding {
+  margin: 2rem;
+  width: calc(100% - 4rem);
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.external-file-panel ::ng-deep .mat-expansion-panel-body {
+  padding-right: 0.5rem;
+}
+
+.external-file-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+
+  .file-type-select {
+    width: 100px;
+  }
+
+  .file-url {
+    flex: 1;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: row;
+
+  height: 100%;
+}
+
+mat-accordion {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.iframe-preview {
+  flex: 1;
+  padding-left: 1rem;
+
+  display: flex;
+  flex-direction: column;
+
+  .iframe-preview-options {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+
+    button {
+      margin-left: 1rem;
+    }
+  }
+
+  app-dynamic-iframe {
+    flex: 1;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}

@@ -1,0 +1,56 @@
+<h2 mat-dialog-title> Choose your Twitch API Scopes </h2>
+
+<mat-dialog-content class="mat-typography" [scrollTop]="0" #dialogContent>
+  In case you need to have more Twitch API scopes for your scripts, you can add those here:
+
+  Please check: <a mat-button color="primary" href="https://dev.twitch.tv/docs/authentication#scopes" target="_blank">https://dev.twitch.tv/docs/authentication#scopes</a>
+
+  <br/>
+  <br/>
+
+  <div class="two-columns">
+    <div class="column">
+
+      <h3>Needed Scopes: </h3>
+  <div *ngFor="let readonlyScope of defaultScopes"
+       class="scope-row">
+
+    {{ readonlyScope }}
+  </div>
+    </div>
+
+    <div class="column">
+      <h3>Custom Scopes: </h3>
+
+  <div *ngFor="let scope of data.scopes; trackBy: trackByIndex; let index = index; "
+       class="scope-row">
+
+    <mat-form-field class="file-url">
+      <mat-label>Scope</mat-label>
+
+      <input matInput  [(ngModel)]="data.scopes[index]"
+             autocomplete="off"/>
+    </mat-form-field>
+
+    <button mat-icon-button color="warn" (click)="deleteScope(index)">
+      <mat-icon svgIcon="delete"></mat-icon>
+    </button>
+  </div>
+
+      <button mat-raised-button
+              (click)="addScope()"
+              color="primary">
+        <mat-icon svgIcon="add"></mat-icon>
+        Add
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <app-open-feedback-button></app-open-feedback-button>
+  <span class="space"></span>
+  <button mat-button [mat-dialog-close]="null">Close</button>
+  <button mat-button color="primary" (click)="chooseScopes()">Authenticate</button>
+</mat-dialog-actions>
+

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { Title } from "@angular/platform-browser";
-import { filter, map, take } from "rxjs/operators";
-import { AppQueries } from "../../state/app.queries";
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
+import {Title} from "@angular/platform-browser";
+import {filter, map, take} from "rxjs/operators";
+import {AppQueries} from "../../../../projects/app-state/src/lib/state/app.queries";
 
 @Component({
   selector: 'app-screen-route',

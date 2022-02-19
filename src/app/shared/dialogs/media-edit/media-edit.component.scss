@@ -1,5 +1,24 @@
 :host {
   display: block;
+
+  ::ng-deep {
+    .mat-form-field {
+      display: block !important;
+    }
+
+    .step-content {
+      margin: 0.5rem;
+    }
+
+    lib-stepper-content .steps {
+      min-width: 10rem;
+      max-width: 10rem;
+    }
+
+    .mat-line {
+      white-space: normal !important;
+    }
+  }
 }
 
 form {
@@ -19,9 +38,6 @@ img {
   width: 100%;
 }
 
-::ng-deep .mat-form-field {
-  display: block !important;
-}
 
 .slider__row {
   display: flex;
@@ -41,15 +57,12 @@ img {
 
 .action-buttons {
   display: flex;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   align-content: space-around;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-evenly;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
 
   button {
-    width: 30%;
     margin-bottom: 0.5rem;
   }
 }
@@ -75,6 +88,16 @@ img {
       align-self: center;
     }
 
+    &.script {
+      align-self: stretch;
+      width: 50%;
+
+      gewd-codemirror {
+        height: 100%;
+      }
+    }
+
+
     @media screen and (min-width: 920px) {
       margin-left: 1rem;
     }
@@ -90,7 +113,7 @@ img {
   max-height: 76vh;
 }
 
-.mobile-checkbox {
+.action_id{
   float: right;
 }
 
@@ -106,3 +129,37 @@ img {
   flex-direction: column;
   gap: 0.5rem;
 }
+
+app-dynamic-iframe {
+  flex: 1;
+}
+
+.action_name_header {
+  gap: 1rem;
+}
+
+.flex_row {
+
+  display: flex;
+  flex-direction: row;
+}
+
+mat-button-toggle-group {
+  border: 1px solid #FFFFFF;
+  border-radius: 4px;
+  flex-shrink: 0;
+align-self: center;
+  margin-bottom: 2rem;
+  width: 100%;
+
+  ::ng-deep {
+    mat-button-toggle {
+      flex: 1
+    }
+
+    .mat-button-toggle-checked:not(.mat-button-toggle-disabled) {
+      background-color: rgba(var(--palette-accent-500), 1);
+    }
+  }
+}
+

@@ -1,53 +1,39 @@
 <app-card-overview>
   <app-overview-item>
-    <div class="title-row">
-      <h2 class="mat-h2 title-name">Media folder</h2>
-      <mat-icon svgIcon="folder"></mat-icon>
-    </div>
+    <app-config-card title="Media Folder" icon="folder">
+      <p class="media-folder-name">{{ (config$ | async).mediaFolder | showOnlyLastCharacters: 30}}</p>
 
-    <p class="media-folder-name">{{ (config$ | async).mediaFolder}}</p>
+      <div class="explanation">You need this "Media Folder" if you want to select local media files from it.</div>
 
-    <div class="explanation">You need this "Media Folder" if you want to select local media files from it.</div>
-
-    <div class="action-buttons">
-      <button (click)="openMediaFolderExplorer()" color="accent"
-              mat-raised-button>
-        <mat-icon svgIcon="launch"></mat-icon>
-        Open Media Folder
-      </button>
-      <button (click)="openMediaFolderDialog()" color="primary"
-              mat-raised-button>
-        <mat-icon svgIcon="edit"></mat-icon>
-        Change Media Folder
-      </button>
-    </div>
-  </app-overview-item>
-
-
-
-  <app-overview-item>
-    <app-twitch-setting></app-twitch-setting>
-  </app-overview-item>
-
-  <app-overview-item *ngIf="(config$ | async)?.twitch?.bot?.enabled">
-    <app-twitchbot-config></app-twitchbot-config>
+      <div class="action-buttons">
+        <button (click)="openMediaFolderExplorer()" color="accent"
+                mat-raised-button>
+          <mat-icon svgIcon="launch"></mat-icon>
+          Open Media Folder
+        </button>
+        <button (click)="openMediaFolderDialog()" color="primary"
+                mat-raised-button>
+          <mat-icon svgIcon="edit"></mat-icon>
+          Change Media Folder
+        </button>
+      </div>
+    </app-config-card>
   </app-overview-item>
 
 
   <app-overview-item>
-    <div class="title-row">
-      <h2 class="mat-h2 title-name">Danger!!</h2>
-      <mat-icon svgIcon="warning"></mat-icon>
-    </div>
+    <app-connections-list></app-connections-list>
+  </app-overview-item>
 
+  <app-overview-item>
+    <app-config-card title="Danger!!" icon="warning">
     <app-persistence-actions></app-persistence-actions>
+    </app-config-card>
   </app-overview-item>
 
 <app-overview-item>
-  <div class="title-row">
-    <h2 class="mat-h2 title-name">Reload</h2>
-    <mat-icon svgIcon="replay"></mat-icon>
-  </div>
+
+  <app-config-card title="Reload" icon="replay">
 
   In case the view, is used inside OBS Custom Docks, and it maybe not refreshing, you can use this button to reload.
 <br/>
@@ -57,14 +43,13 @@
     Reload Screen
   </button>
 
-
+  </app-config-card>
 </app-overview-item>
 
   <app-overview-item>
-    <div class="title-row">
-      <h2 class="mat-h2 title-name">Config folder</h2>
-      <mat-icon svgIcon="folder"></mat-icon>
-    </div>
+
+    <app-config-card title="Config folder" icon="folder">
+
 
     <div class="action-buttons">
       <button (click)="openConfigFolder()" color="accent"
@@ -73,26 +58,54 @@
         Open Config Folder
       </button>
     </div>
+    </app-config-card>
   </app-overview-item>
 
   <app-overview-item>
     <app-version-card></app-version-card>
   </app-overview-item>
 
+  <app-overview-item>
+    <app-custom-port-setting></app-custom-port-setting>
+  </app-overview-item>
 
   <app-overview-item>
-    <div class="title-row">
-      <h2 class="mat-h2 title-name">
+    <app-config-card>
+      <div configCardTitle >
         Streamdeck Plugin
 
         <button (click)="downloadStreamdeckPlugin()" color="primary"
                 mat-icon-button>
           <mat-icon svgIcon="launch"></mat-icon>
         </button>
-      </h2>
-    </div>
+      </div>
 
     <br/>
     You can also trigger MemeBox Media with the Streamdeck Plugin.
+    </app-config-card>
   </app-overview-item>
+
+  <app-overview-item *ngIf="offlineMode$ | async">
+    <app-config-card title="More Dummy Data" icon="settings">
+
+    <button mat-raised-button (click)="addMoreDummyItems()">
+      Add more dummy items
+    </button>
+    </app-config-card>
+  </app-overview-item>
+
+  <!--<app-overview-item>
+    <app-config-card title="Translations">
+
+
+    <mat-select *ngIf="availableLanguages.length > 1"
+                [value]="currentLanguage"
+                (valueChange)="selectNewLanguage($event)">
+      <mat-option *ngFor="let lang of availableLanguages"
+      [value]="lang.id">
+        {{ lang.label }}
+      </mat-option>
+    </mat-select>
+    </app-config-card>
+  </app-overview-item>-->
 </app-card-overview>

@@ -13,9 +13,11 @@ import {ImportMediaFilesDialogComponent} from './persistence-actions/import-medi
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
-import {TwitchSettingModule} from "../../shared/components/config-cards/twitch-setting/twitch-setting.module";
-import { TwitchbotConfigModule } from '../../shared/components/config-cards/twitchbot-config/twitchbot-config.module';
 import {VersionCardModule} from "../../shared/components/config-cards/version-card/version-card.module";
+import {CustomPortSettingModule} from "../../shared/components/config-cards/custom-port-setting/custom-port-setting.module";
+import {ConnectionsListModule} from "../../shared/components/config-cards/connections-list/connections-list.module";
+import {ConfigCardModule} from "../../shared/components/config-cards/config-card/config-card.module";
+import {PipesModule} from "@memebox/ui-components";
 
 const routes: Routes = [
   {
@@ -38,10 +40,12 @@ const routes: Routes = [
     MatDialogModule,
     MatSelectModule,
     CardOverviewModule,
-    TwitchSettingModule,
-    TwitchbotConfigModule,
     VersionCardModule,
-  ],
+    CustomPortSettingModule,
+    ConnectionsListModule,
+    ConfigCardModule,
+    PipesModule
+  ]
 })
 export class SettingsModule {
 }

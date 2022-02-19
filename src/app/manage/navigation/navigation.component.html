@@ -1,16 +1,19 @@
 <div class="navigation">
 
-  <nav class="mat-tab-links navigation__mainLinks " mat-tab-nav-bar>
+  <nav class="mat-tab-links navigation__mainLinks " mat-tab-nav-bar
+       *transloco="let t;  read: 'TABS'">
     <a *ngFor="let link of links" [routerLink]="link.path"
        mat-tab-link routerLinkActive="mat-tab-links-active"
-    >{{link.displayName}}</a>
+    >
+      {{t(link.displayName)}}
+    </a>
   </nav>
 
   <div class="navigation__iconLinks">
     <span>
       <button mat-icon-button (click)="openMobileViewDialog()"
               matTooltip="Mobile-View">
-        <mat-icon svgIcon="qr_code_scanner"></mat-icon>
+        <mat-icon svgIcon="smartphone"></mat-icon>
       </button>
     </span>
     <span>
@@ -39,4 +42,3 @@
     </span>
   </div>
 </div>
-

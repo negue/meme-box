@@ -1,5 +1,7 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AppConfig} from "@memebox/app/env";
+import {OAuthGuard} from "./o-auth.guard";
 
 // root
 // | main page (with sidebar)
@@ -28,13 +30,20 @@ const rootRoutes: Routes = [
       .then(module => module.TestpageModule)
   },
   {
+    path: 'debug',
+    loadChildren: () => import('./pages/debug/debug.module')
+      .then(module => module.DebugModule)
+  },
+  {
     path: 'mobile',
     loadChildren: () => import('./mobile/mobile.module')
       .then(module => module.MobileModule)
   },
   {
     path: '**',
-    redirectTo: 'manage'
+    canActivate:[OAuthGuard],
+    loadChildren: () => import('./oauth-target/o-auth-target.module')
+      .then(module => module.OAuthTargetModule)
   }
 ];
 
@@ -42,7 +51,7 @@ const rootRoutes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(rootRoutes, {
-      enableTracing: true,
+      enableTracing: !AppConfig.production,
       useHash: true,
       relativeLinkResolution: 'legacy'
     }),

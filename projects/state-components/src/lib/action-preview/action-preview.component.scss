@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+img {
+  object-fit: var(--clip-setting-img-fit, contain);
+
+  height: 100%;
+  width: 100%;
+}
+
+app-clip-type {
+  height: 100%;
+}

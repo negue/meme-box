@@ -1,21 +1,37 @@
 import {body, validationResult} from "express-validator";
-import {MediaType} from "@memebox/contracts";
+import {ActionType} from "@memebox/contracts";
+
+// TODO refactor those MediaType Checks
+export const MediaTypesWithoutPath = [
+  ActionType.Widget,
+  ActionType.WidgetTemplate,
+  ActionType.Script,
+  ActionType.Meta,
+  ActionType.PermanentScript
+]
 
 export const clipValidations = [
   body('name').isString(),
-  body('path').isString(),
+  body('path').if((value, {req }, ...rest) => {
+    const bodyJson = req.body;
+
+
+    const bodyType: ActionType = bodyJson.type;
+
+    return !MediaTypesWithoutPath.includes(bodyType);
+  }).isString(),
   body('type').not().isEmpty(),
   body('playLength').custom((value, {req }, ...rest) => {
     const bodyJson = req.body;
 
 
-    const bodyType: MediaType = bodyJson.type;
+    const bodyType: ActionType = bodyJson.type;
 
     const playLengthExists = typeof bodyJson.playLength === 'number';
 
     // playLength is neede for types Picture / iFrame
 
-    if ([MediaType.Picture, MediaType.IFrame].includes(bodyType) && !playLengthExists) {
+    if ([ActionType.Picture, ActionType.IFrame].includes(bodyType) && !playLengthExists) {
       return false;
     }
 
@@ -61,3 +77,14 @@ export function validOrLeave(req, res, next) {
 export function allowedFileUrl(pathToFile: string) {
   return !pathToFile.includes('..');  // more to add?
 }
+
+export const twitchPostValidator = [
+  body('clipId').isString(),
+  body('name').isString(),
+  body('active').isBoolean()
+];
+
+export const twitchPutValidator = [
+  ...twitchPostValidator,
+  body('id').isString(),
+];

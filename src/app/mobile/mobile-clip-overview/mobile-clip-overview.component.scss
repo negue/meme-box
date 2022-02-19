@@ -26,11 +26,7 @@ $toolbarHeight: 64px;
     text-overflow: ellipsis;
     overflow: hidden;
     overflow-wrap: break-word;
-    word-break: break-all;
-
-    app-clip-type {
-      float: left;
-    }
+    word-break: break-word;
   }
 
   &.reload-item {
@@ -60,7 +56,7 @@ mat-toolbar {
   flex: 1 1 auto;
 }
 
-app-clip-type, mat-icon {
+app-clip-type {
   display: inline-block;
   padding-right: 0.5rem;
 }
@@ -70,4 +66,36 @@ app-clip-type, mat-icon {
   height: 5rem;
   width: 5rem;
   margin: 2rem;
+}
+
+
+
+// Todo extract indicator to its own component/directive
+mat-card.media-active:after {
+  background-color: #00bf92;
+  border: 2px solid;
+  border-radius: 11px;
+  content: attr(data-count);
+  color: #fff;
+  display: block;
+  font-size: 10px;
+  font-family: helvetica;
+  height: 9px;
+  line-height: 8px;
+  min-width: 9px;
+  padding: 4px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+}
+
+mat-card.mobile-action {
+  display: flex !important;
+  flex-direction: row;
+}
+
+.variable-trigger-button {
+  margin-left: -0.5rem;
+  line-height: 18px;
 }

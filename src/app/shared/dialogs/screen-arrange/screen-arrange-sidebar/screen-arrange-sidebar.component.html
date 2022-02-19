@@ -1,0 +1,68 @@
+<div class="sidebar__title">
+  <div>
+    <button mat-button (click)="hiddenSelect.open()"
+            matTooltip="Select Media to be listed / previewed">
+      <ng-container *ngIf="selectedItems.value?.length === 0">
+        All media visible
+      </ng-container>
+      <ng-container *ngIf="0 != selectedItems.value?.length">
+        {{selectedItems.value?.length}} visible
+      </ng-container>
+      <mat-icon svgIcon="arrow_drop_down"></mat-icon>
+    </button>
+
+    <mat-select multiple [formControl]="selectedItems"
+                style="visibility:hidden;width: 0"
+                #hiddenSelect>
+      <mat-option *ngFor="let item of allItems" [value]="item.clip.id">
+        {{item.clip.name}}
+      </mat-option>
+      <mat-select-trigger>
+
+      </mat-select-trigger>
+    </mat-select>
+
+    <button (click)="assignMedia()"
+            color="accent"
+            mat-flat-button>
+      <mat-icon svgIcon="playlist_add"></mat-icon>
+      Assign Media
+    </button>
+
+  </div>
+
+
+</div>
+
+<div class="sidebar__items">
+  <mat-selection-list [multiple]="false">
+    <mat-list-option *ngFor="let visibleItem of visibleItems"
+                     [selected]="currentSelectedClip === visibleItem"
+                     (click)="onSelectMedia($event, visibleItem)"
+                     (mousedown)="preventEvent($event)"
+    >
+      <div mat-list-avatar class="clip-avatar">
+        <app-clip-type [type]="visibleItem.clip.type"
+                       iconSize="40px">
+        </app-clip-type>
+
+        <mat-icon *ngIf="unsavedChangesIds.includes(visibleItem.clip.id)"
+                  class="clip-modified-icon"
+                  svgIcon="edit"
+                  color="primary"
+        ></mat-icon>
+      </div>
+      <div mat-line>{{visibleItem.clip.name}}</div>
+      <div mat-line>{{visibleItem.clipSetting.visibility | visibilityToString}}
+        / {{visibleItem.clipSetting.position | positionToString}}</div>
+
+
+      <div mat-list-icon class="card-settings-icon">
+        <button (click)="openMediaSettingsDialog($event, visibleItem)"
+                mat-icon-button>
+          <mat-icon svgIcon="settings"></mat-icon>
+        </button>
+      </div>
+    </mat-list-option>
+  </mat-selection-list>
+</div>

@@ -1,5 +1,5 @@
 import {expose} from 'comlink';
-import * as marked from 'marked';
+import {marked} from 'marked';
 import * as xss from 'xss';
 import {Lazy} from '@gewd/markdown/utils';
 import {checkAndReplaceToUnicodeChar, emojiRegex, highlightCode, mermaidRegex} from '@gewd/markdown/worker-functions';
@@ -80,7 +80,13 @@ const workerMethods: MarkdownWorker = {
           whiteList: {
             ...xss.whiteList,
             div: ['class'],  // mermaid class
-            span: ['class', 'style']  // prism colors
+            span: ['class', 'style'],  // prism colors
+            h1: ['id'],
+            h2: ['id'],
+            h3: ['id'],
+            h4: ['id'],
+            h5: ['id'],
+            h6: ['id'],
           }
         });
 

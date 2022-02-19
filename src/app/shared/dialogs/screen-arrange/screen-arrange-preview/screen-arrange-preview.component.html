@@ -1,0 +1,279 @@
+<div class="arrange-buffer-area" style="display: flex;">
+  <div>
+    <div class="arrange-label">Global options</div>
+
+    <mat-button-toggle-group class="arrange-global-actions"
+                             aria-label="Actions for selected media file"
+                             multiple
+                             [formControl]="globalActionsForm"
+    >
+      <mat-button-toggle [value]="GlobalArrangeOptions.Drag"
+                         [disabled]="!isDragEnabled"
+      >
+        Drag
+      </mat-button-toggle>
+
+      <mat-button-toggle [value]="GlobalArrangeOptions.Rotate"
+                         [disabled]="!isRotateEnabled"
+      >
+        Rotate
+      </mat-button-toggle>
+
+      <!--      TODO: Find solution/control to show user it can only be resize OR warp.-->
+      <mat-button-toggle [value]="GlobalArrangeOptions.Resize"
+
+                         (change)="warpButton.checked = false"
+                         [disabled]="!isResizeEnabled" #resizeButton
+      >
+        Resize
+      </mat-button-toggle>
+
+      <mat-button-toggle [value]="GlobalArrangeOptions.Warp"
+
+                         (change)="resizeButton.checked = false"
+                         [disabled]="!isWarpEnabled" #warpButton
+      >
+        Warp
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="arrange-selection-actions-container" [class.clip-is-selected]="currentSelectedClip">
+    <div class="arrange-label">
+      Selection options
+
+      <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === 3">
+        <strong class="mat-error" style="display: inline"
+                matTooltip="Random Position will only work if your OBS Version is at least 27.2.">
+          Might not work
+        </strong>
+      </ng-container>
+    </div>
+
+    <div class="arrange-selection-actions">
+      <mat-form-field appearance="fill" class="arrange-size-control">
+        <mat-label>Size</mat-label>
+        <mat-select
+          [value]="currentSelectedClip ? (currentSelectedClip?.clipSetting | settingsToSizingType) : undefined"
+          [disabled]="currentSelectedClip == null"
+          (valueChange)="sizeOptionChanged($event)"
+          placeholder="Size"
+        >
+          <mat-option value="px">px</mat-option>
+          <mat-option value="%">%</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-divider [vertical]="true"></mat-divider>
+
+      <mat-form-field appearance="fill" class="arrange-position-control">
+        <mat-label>Media Position</mat-label>
+        <mat-select [value]="currentSelectedClip?.clipSetting?.position"
+                    [disabled]="currentSelectedClip == null"
+                    (valueChange)="positionOptionChanged($event)"
+                    placeholder="Media Position"
+        >
+          <mat-option [value]="PositionEnum.FullScreen">{{PositionEnum.FullScreen | positionToString}}</mat-option>
+          <mat-option [value]="PositionEnum.Absolute">{{PositionEnum.Absolute | positionToString}}</mat-option>
+          <mat-option [value]="PositionEnum.Centered">{{PositionEnum.Centered | positionToString}}</mat-option>
+          <mat-option [value]="PositionEnum.Random">{{PositionEnum.Random | positionToString}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="extender" [class.extender-closed]="!actionsExpanded"
+           [class.extender-full-screen]="currentSelectedClip?.clipSetting?.position === PositionEnum.FullScreen"
+           [class.extender-absolute]="currentSelectedClip?.clipSetting?.position === PositionEnum.Absolute"
+      >
+        <mat-divider [vertical]="true"></mat-divider>
+
+        <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.FullScreen">
+          <mat-form-field appearance="fill" class="arrange-width-control form-field-disabled">
+            <mat-label>Width</mat-label>
+            <input matInput placeholder="Width" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.width">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-height-control form-field-disabled">
+            <mat-label>Height</mat-label>
+            <input matInput placeholder="Height" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.height">
+          </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.Absolute">
+          <mat-form-field appearance="fill" class="arrange-left-control form-field-disabled">
+            <mat-label>Left</mat-label>
+            <input matInput placeholder="Left" [disabled]="true" [value]="currentSelectedClip.clipSetting.left">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-top-control form-field-disabled">
+            <mat-label>Top</mat-label>
+            <input matInput placeholder="Top" [disabled]="true" [value]="currentSelectedClip.clipSetting.top">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-right-control form-field-disabled">
+            <mat-label>Right</mat-label>
+            <input matInput placeholder="Right" [disabled]="true" [value]="currentSelectedClip.clipSetting.right">
+          </mat-form-field>
+
+          <mat-divider [vertical]="true"></mat-divider>
+
+          <mat-form-field appearance="fill" class="arrange-bottom-control form-field-disabled">
+            <mat-label>Bottom</mat-label>
+            <input matInput placeholder="Bottom" [disabled]="true" [value]="currentSelectedClip.clipSetting.bottom">
+          </mat-form-field>
+        </ng-container>
+      </div>
+
+      <mat-divider [vertical]="true"></mat-divider>
+
+      <div class="expander-button"
+           [class.expander-button-minimize]="actionsExpanded"
+           (click)="actionsExpanded = !actionsExpanded">
+        <mat-icon svgIcon="chevron_right"></mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="arrange-label">Actions</div>
+
+    <div class="arrange-actions">
+      <button mat-button
+              color="primary"
+              aria-label="Apply change for selected media"
+              matTooltip="Apply change for selected media"
+              [disabled]="currentSelectedClip == null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
+              (click)="applySingleChanges()"
+      >
+        <mat-icon svgIcon="check"></mat-icon>
+      </button>
+
+      <mat-divider [vertical]="true"></mat-divider>
+
+      <button mat-button (click)="applyAllchanges()"
+              color="primary"
+              aria-label="Apply changes for all changed medias"
+              matTooltip="Apply changes for all changed medias"
+              [disabled]="unsavedChangesIds.length === 0"
+      >
+        <mat-icon svgIcon="check-all"></mat-icon>
+      </button>
+
+      <mat-divider [vertical]="true"></mat-divider>
+
+      <button mat-button
+              color="warn"
+              aria-label="Reset changes for selected media"
+              matTooltip="Reset changes for selected media"
+              [disabled]="currentSelectedClip == null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
+              (click)="reset()"
+      >
+        <mat-icon svgIcon="cancel2"></mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <app-open-feedback-button feedbackTarget="Screen Arrange View"></app-open-feedback-button>
+</div>
+
+<div class="drag-drop-area-holder" #holdingElement>
+
+  <gewd-auto-scale [width]="holdingElement.clientWidth"
+                   [height]="holdingElement.clientHeight"
+
+  >
+    <div class="drag-drop-area" (click)="clickedOutside()"
+         [style.width.px]="screen?.width || 1920"
+         [style.height.px]="screen?.height || 1080"
+    >
+      <ng-container *ngFor="let pair of visibleItems; trackBy: trackByClip">
+        <!-- todo create a directive that handles all of those properties -->
+
+        <!-- improve the duplicate settings -->
+        <app-action-preview *ngIf="pair.clipSetting.position === PositionEnum.FullScreen"
+                            [action]="pair.clip"
+                          [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+                          [style.position]="'absolute'"
+                          [style.width.%]="100"
+                          [style.height.%]="100"
+                          [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
+                          [style.--clip-setting-img-fit]="pair.clipSetting.imgFit"
+                          draggable="false"
+                          class="preview-box"></app-action-preview>
+
+        <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Centered"
+                               [clip]="pair.clip"
+                               [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+                               [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
+                               [screen]="screen"
+                               [sizeType]="sizeSelection"
+                               [showResizeBorder]="pair === currentSelectedClip"
+                               [settings]="pair.clipSetting" #dragResizeMediaComponent
+                               (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
+                               (elementChanged)="userChangedElement()"
+                               (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
+
+                               transformOrigin="center center"
+                               [draggingEnabled]="false"
+                               [resizeEnabled]="isResizeSet"
+                               [rotateEnabled]="isRotateSet"
+                               [warpEnabled]="isWarpSet"
+                               class="preview-box"
+        >
+
+        </app-drag-resize-media>
+
+        <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Random"
+                               [clip]="pair.clip"
+                               [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+                               [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
+                               [screen]="screen"
+                               [sizeType]="sizeSelection"
+                               [showResizeBorder]="pair === currentSelectedClip"
+                               [settings]="pair.clipSetting" #dragResizeMediaComponent
+                               (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
+                               (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
+                               (elementChanged)="userChangedElement()"
+                               [draggingEnabled]="false"
+                               [resizeEnabled]="isResizeSet"
+                               [rotateEnabled]="isRotateSet"
+                               [warpEnabled]="isWarpSet"
+                               class="preview-box"
+        >
+
+        </app-drag-resize-media>
+
+        <app-drag-resize-media
+          *ngIf="pair.clipSetting.position === PositionEnum.Absolute"
+          [clip]="pair.clip"
+          [screen]="screen"
+          [sizeType]="sizeSelection"
+          [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+          [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
+          [showResizeBorder]="pair === currentSelectedClip"
+          (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
+          [settings]="pair.clipSetting" #dragResizeMediaComponent
+          (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
+          (elementChanged)="userChangedElement()"
+
+          [draggingEnabled]="isDragSet"
+          [resizeEnabled]="isResizeSet"
+          [rotateEnabled]="isRotateSet"
+          [warpEnabled]="isWarpSet"
+
+          class="preview-box"
+        >
+
+        </app-drag-resize-media>
+      </ng-container>
+    </div>
+  </gewd-auto-scale>
+
+
+</div>
+
