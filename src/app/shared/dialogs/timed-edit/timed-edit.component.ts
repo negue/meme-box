@@ -38,12 +38,13 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     this.clipDictionary$,
     this.selectedActionId$
   ]).pipe(
-    filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
-    map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
+    filter(([actionMap, selectedActionId]) => !!actionMap && !!selectedActionId),
+    map(([actionMap, selectedActionId]) => actionMap[selectedActionId]),
+    filter(selectedAction => !!selectedAction)
   );
 
   showScreenSelection$ = this.selectedAction$.pipe(
-    map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
+    map(action => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(action.type) )
   );
 
   screenList$ = combineLatest([
