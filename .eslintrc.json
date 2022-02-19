@@ -45,7 +45,8 @@
         "@typescript-eslint/no-empty-interface": 0,
         "@angular-eslint/component-selector": "warn",
         "@typescript-eslint/no-unsafe-argument": "warn",
-        "@typescript-eslint/restrict-plus-operands": "warn"
+        "@typescript-eslint/restrict-plus-operands": "warn",
+        "@typescript-eslint/restrict-template-expressions": "warn"
       }
     },
     {

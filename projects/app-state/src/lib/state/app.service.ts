@@ -31,9 +31,9 @@ export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 // TODO split up service per module??
 
-
-
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class AppService {
   private offlineMode$ = new BehaviorSubject<boolean>(true);
 
@@ -60,10 +60,10 @@ export class AppService {
       ).toPromise();
 
       this.offlineMode$.next(false);
-      
+
       this.appStore.update(state => httpResult);
 
-      
+
       this.appStore.setLoading(false);
     } catch (error: any) {
       if (error.name === 'HttpErrorResponse') {

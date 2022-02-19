@@ -19,8 +19,9 @@ import {SnackbarService} from "./snackbar.service";
 
 const NOT_POSSIBLE_OFFLINE = 'Not possible in Offline-Mode.';
 
-
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class ConfigService {
 
   constructor(private appStore: AppStore,

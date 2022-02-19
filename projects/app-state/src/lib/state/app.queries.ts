@@ -3,7 +3,9 @@ import {Query} from "@datorama/akita";
 import {AppState} from "@memebox/contracts";
 import {AppStore} from "./app.store";
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class AppQueries extends Query<AppState> {
   state$ = this.select().pipe(
 
