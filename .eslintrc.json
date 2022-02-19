@@ -42,7 +42,10 @@
         "@typescript-eslint/no-floating-promises": 0,
         "@angular-eslint/use-injectable-provided-in": "error",
         "@angular-eslint/no-attribute-decorator": "error",
-        "@typescript-eslint/no-empty-interface": 0
+        "@typescript-eslint/no-empty-interface": 0,
+        "@angular-eslint/component-selector": "warn",
+        "@typescript-eslint/no-unsafe-argument": "warn",
+        "@typescript-eslint/restrict-plus-operands": "warn"
       }
     },
     {
@@ -50,7 +53,7 @@
       "parser": "@angular-eslint/template-parser",
       "plugins": ["@angular-eslint/template"],
       "rules": {
-          "@angular-eslint/template/banana-in-a-box": "error",
+          "@angular-eslint/template/banana-in-box": "error",
           "@angular-eslint/template/no-negated-async": "error"
       }
     }

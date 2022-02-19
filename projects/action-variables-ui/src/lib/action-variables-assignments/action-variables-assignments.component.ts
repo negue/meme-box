@@ -36,6 +36,7 @@ export class ActionVariablesAssignmentsComponent implements OnInit {
       case ActionVariableTypes.actionList:
       {
         newDataObject[name] = JSON.stringify($event);
+        break;
       }
       default: {
 

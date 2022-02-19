@@ -10,30 +10,14 @@
       ],
       "parserOptions": {
         "project": [
-          "projects/action-variables-ui/tsconfig.lib.json",
-          "projects/action-variables-ui/tsconfig.spec.json"
+          "./projects/action-variables-ui/tsconfig.lib.json",
+          "./projects/action-variables-ui/tsconfig.spec.json"
         ],
         "createDefaultProgram": true
       },
       "extends": [
       ],
       "rules": {
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "lib",
-            "style": "kebab-case"
-          }
-        ],
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "lib",
-            "style": "camelCase"
-          }
-        ]
       }
     },
     {
