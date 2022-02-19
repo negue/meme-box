@@ -46,7 +46,9 @@
         "@angular-eslint/component-selector": "warn",
         "@typescript-eslint/no-unsafe-argument": "warn",
         "@typescript-eslint/restrict-plus-operands": "warn",
-        "@typescript-eslint/restrict-template-expressions": "warn"
+        "@typescript-eslint/restrict-template-expressions": "warn",
+        "@typescript-eslint/no-misused-promises": "warn",
+        "no-async-promise-executor": "warn"
       }
     },
     {
