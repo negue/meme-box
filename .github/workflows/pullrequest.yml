@@ -50,6 +50,7 @@ jobs:
           node-version: 12.16.2
 
       - run: npm install
+      - run: npm run affected:lint
       - run: npm run build:prepare
       - run: npm run build:nexe -- -o release/out/memebox
 

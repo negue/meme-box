@@ -55,7 +55,8 @@
     "electron:build:serve": "npm run electron:build_0compile && npm run electron:build_1combineJs &&  npx electron out-electron/index.js --serve --built-serve",
     "docs:json": "compodoc -p ./tsconfig.base.json -e json -d .",
     "storybook": "npm run docs:json && start-storybook -p 6006",
-    "build-storybook": "npm run docs:json && build-storybook"
+    "build-storybook": "npm run docs:json && build-storybook",
+    "affected:lint": "nx affected:lint"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "11.0.0",
