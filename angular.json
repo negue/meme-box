@@ -31,13 +31,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/action-variables/tsconfig.lib.json",
-              "projects/action-variables/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "projects/action-variables/**/*.ts",
+              "projects/action-variables/**/*.html"
+            ]
           }
         }
       }
@@ -67,13 +66,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/action-variables-ui/tsconfig.lib.json",
-              "projects/action-variables-ui/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "projects/action-variables-ui/**/*.ts",
+              "projects/action-variables-ui/**/*.html"
+            ]
           }
         }
       }
@@ -103,13 +101,47 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/app-state/tsconfig.lib.json",
-              "projects/app-state/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "projects/app-state/**/*.ts",
+              "projects/app-state/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "shared-state": {
+      "projectType": "library",
+      "root": "projects/shared-state",
+      "sourceRoot": "projects/shared-state/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/shared-state/tsconfig.lib.json",
+            "project": "projects/shared-state/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/shared-state/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "projects/shared-state/tsconfig.spec.json"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/shared-state/**/*.ts",
+              "projects/shared-state/**/*.html"
+            ]
           }
         }
       }
@@ -139,13 +171,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/contracts/tsconfig.lib.json",
-              "projects/contracts/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "projects/contracts/**/*.ts",
+              "projects/contracts/**/*.html"
+            ]
           }
         }
       }
@@ -308,8 +339,12 @@
             "polyfills": "src/polyfills-test.ts",
             "tsConfig": "tsconfig.spec.json",
             "scripts": [],
-            "styles": ["src/styles.scss"],
-            "assets": ["src/assets"],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "assets": [
+              "src/assets"
+            ],
             "customWebpackConfig": {
               "path": "./angular.webpack.cjs",
               "target": "electron-renderer"
@@ -319,14 +354,10 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "eslintConfig": ".eslintrc.json",
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "tsconfig.spec.json",
-              "tsconfig.worker.json",
-              "cypress/tsconfig.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         },
         "cypress-run": {
@@ -394,13 +425,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/state-components/tsconfig.lib.json",
-              "projects/state-components/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "projects/state-components/**/*.ts",
+              "projects/state-components/**/*.html"
+            ]
           }
         }
       }
@@ -430,13 +460,12 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/ui-components/tsconfig.lib.json",
-              "projects/ui-components/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "projects/ui-components/**/*.ts",
+              "projects/ui-components/**/*.html"
+            ]
           }
         }
       }
@@ -466,27 +495,15 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/utils/tsconfig.lib.json",
-              "projects/utils/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
+            "lintFilePatterns": [
+              "projects/ui-components/**/*.ts",
+              "projects/ui-components/**/*.html"
+            ]
           }
         }
       }
-    }
-  },
-  "schematics": {
-    "@schematics/angular:component": {
-      "prefix": "app",
-      "style": "scss",
-      "skipTests": true
-    },
-    "@schematics/angular:directive": {
-      "prefix": "app",
-      "skipTests": true
     }
   }
 }

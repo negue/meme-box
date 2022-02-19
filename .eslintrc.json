@@ -32,14 +32,6 @@
         "@angular-eslint/eslint-plugin"
       ],
       "rules": {
-        "@typescript-eslint/indent": [
-          "error", 2, {
-            "SwitchCase": 1,
-            "CallExpression": {"arguments": "first"},
-            "FunctionExpression": {"parameters": "first"},
-            "FunctionDeclaration": {"parameters": "first"}
-          }
-        ],
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/no-explicit-any": 0,
@@ -49,7 +41,8 @@
         "@typescript-eslint/no-unsafe-return": 0,
         "@typescript-eslint/no-floating-promises": 0,
         "@angular-eslint/use-injectable-provided-in": "error",
-        "@angular-eslint/no-attribute-decorator": "error"
+        "@angular-eslint/no-attribute-decorator": "error",
+        "@typescript-eslint/no-empty-interface": 0
       }
     },
     {
