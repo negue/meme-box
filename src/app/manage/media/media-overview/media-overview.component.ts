@@ -96,7 +96,7 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
 
   async onDelete(clipId: string) {
     const result = await this._dialog.showConfirmationDialog({
-      title: 'Are you sure you want to delete this clip?'
+      title: 'Are you sure you want to delete this action?'
     });
 
     if (result) {
