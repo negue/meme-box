@@ -1,9 +1,9 @@
 {
   "env": {
-      "browser": true,
-      "node": true,
-      "es6": true,
-      "es2017": true
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "es2017": true
   },
   "overrides": [
     {
@@ -18,19 +18,14 @@
       "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "ecmaVersion": 10,
-        "project": [
-          "./src/tsconfig.app.json",
-          "./tsconfig.spec.json",
-          "./server/tsconfig.server.json"
-        ],
+        "project": [ ],
         "sourceType": "module",
         "ecmaFeatures": {
             "modules": true
         }
       },
       "plugins": [
-        "@typescript-eslint",
-        "@angular-eslint/eslint-plugin"
+        "@typescript-eslint"
       ],
       "rules": {
         "@typescript-eslint/no-empty-function": 0,
@@ -41,10 +36,7 @@
         "@typescript-eslint/no-unsafe-assignment": 0,
         "@typescript-eslint/no-unsafe-return": 0,
         "@typescript-eslint/no-floating-promises": 0,
-        "@angular-eslint/use-injectable-provided-in": "error",
-        "@angular-eslint/no-attribute-decorator": "error",
         "@typescript-eslint/no-empty-interface": 0,
-        "@angular-eslint/component-selector": "warn",
         "@typescript-eslint/no-unsafe-argument": "warn",
         "@typescript-eslint/restrict-plus-operands": "warn",
         "@typescript-eslint/restrict-template-expressions": "warn",
@@ -56,16 +48,6 @@
             "ignoreStatic": true
           }
         ]
-      }
-    },
-    {
-      "files": ["*.component.html"],
-      "excludedFiles": ["**/index.html"],
-      "parser": "@angular-eslint/template-parser",
-      "plugins": ["@angular-eslint/template"],
-      "rules": {
-          "@angular-eslint/template/banana-in-box": "error",
-          "@angular-eslint/template/no-negated-async": "error"
       }
     }
   ]

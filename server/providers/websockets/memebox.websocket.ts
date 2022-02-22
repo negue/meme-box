@@ -101,8 +101,6 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
       case ACTIONS.MEDIA_STATE: {
         const mediaStatePayload: ActionActiveStatePayload = JSON.parse(payload);
 
-        console.warn('RECEIVED MEDIA STATE', mediaStatePayload);
-
         this.mediaStateEventBus.updateActionState(mediaStatePayload);
 
         break;

@@ -70,7 +70,7 @@ export class Persistence {
       flag: 'a+' // open or create if not exist
     }, (err, data) => {
       if (err) {
-        return console.log(err);
+        return this.logger.error(err, "Error reading the settings.json");
       }
 
       let dataFromFile = {};
@@ -541,7 +541,6 @@ export class Persistence {
     if (typeof newTwitchConfig.bot.auth.token !== 'undefined'
       && newTwitchConfig.bot.auth.token !== TOKEN_EXISTS_MARKER) {
       twitchConfig.bot.auth.token = newTwitchConfig.bot.auth.token;
-      console.info('updating bot auth token?');
     }
 
     this.saveData({
