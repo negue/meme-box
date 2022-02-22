@@ -1,18 +1,28 @@
 {
   "extends": "../.eslintrc-angular-specific.json",
-  "ignorePatterns": [
-    "!**/*"
-  ],
+  "ignorePatterns": [],
   "overrides": [
     {
       "files": [
-        "*.ts"
+        "**/*.ts"
       ],
+      "parser": "@typescript-eslint/parser",
       "parserOptions": {
+        "ecmaVersion": 10,
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "modules": true
+        },
         "project": [
-          "src/tsconfig.app.json"
+          "src/tsconfig.eslint.json"
         ]
       },
+      "excludedFiles": [
+        "*.d.ts",
+        "**/*.d.ts",
+        "*.spec.ts",
+        "**/*.spec.ts"
+      ],
       "extends": [
       ],
       "rules": {

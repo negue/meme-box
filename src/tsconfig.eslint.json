@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["main.ts", "**/environments/*.ts"],
+  "exclude": [
+    "*.spec.ts",
+    "**/*.spec.ts",
+    "**/*.worker.ts",
+    "**/*.stories.*",
+    "typings.d.ts"]
+}
