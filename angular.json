@@ -354,6 +354,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
+            "cache": true,
             "lintFilePatterns": [
               "src/**/*.ts",
               "src/**/*.html"

@@ -8,7 +8,7 @@
   "overrides": [
     {
       "files": ["*.ts"],
-      "excludedFiles": ["*.d.ts"],
+      "excludedFiles": ["**/*.d.ts"],
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
@@ -60,7 +60,7 @@
     },
     {
       "files": ["*.component.html"],
-      "excludedFiles": ["index.html"],
+      "excludedFiles": ["**/index.html"],
       "parser": "@angular-eslint/template-parser",
       "plugins": ["@angular-eslint/template"],
       "rules": {

@@ -2,15 +2,12 @@ import {Action, Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig, convertExtendedToTypeValues} from "@memebox/action-variables";
 import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
-
 export interface ScriptConfig {
   executionScript: string;
   bootstrapScript: string;
   variablesConfig?: ActionVariableConfig[];
-  settings?: {
-  }
+  settings?: Record<string, unknown>
 }
-
 
 const SCRIPT_EXECUTION_KEY = '_executionScript';
 const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
