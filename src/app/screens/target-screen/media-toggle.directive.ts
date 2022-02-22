@@ -127,7 +127,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       this.parentComp.mediaList$
     ]).pipe(
       takeUntil(this._destroy$)
-    ).subscribe(async ([newClipId, mediaClipList]) => {
+    ).subscribe(([newClipId, mediaClipList]) => {
       const combinedClip = mediaClipList.find(combined => combined.clip.id
        === newClipId);
 
@@ -279,7 +279,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       this.element.nativeElement.style.setProperty('--clip-setting-left', randomLeft);
       this.element.nativeElement.style.setProperty('--clip-setting-top', randomTop);
 
-      var computedStyle = getComputedStyle(this.element.nativeElement);
+      const computedStyle = getComputedStyle(this.element.nativeElement);
       const {left, top} = computedStyle;
 
       console.info({randomLeft, left, randomTop,  top, element: this.element});

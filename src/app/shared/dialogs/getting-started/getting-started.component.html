@@ -9,7 +9,7 @@
         Media Folder:
       </td>
       <td>
-        <ng-container *ngIf="!(hasMediaFolder$ | async); else mediaFolderSelected">
+        <ng-container *ngIf="(hasMediaFolder$ | async) === false; else mediaFolderSelected">
           <div class="item-with-padding entry">
             <button (click)="openMediaFolderDialog()" color="primary"
                     mat-raised-button class="full-width">

@@ -8,6 +8,7 @@
   "overrides": [
     {
       "files": ["*.ts"],
+      "excludedFiles": ["*.d.ts"],
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
@@ -48,11 +49,18 @@
         "@typescript-eslint/restrict-plus-operands": "warn",
         "@typescript-eslint/restrict-template-expressions": "warn",
         "@typescript-eslint/no-misused-promises": "warn",
-        "no-async-promise-executor": "warn"
+        "no-async-promise-executor": "warn",
+        "@typescript-eslint/unbound-method": [
+          "error",
+          {
+            "ignoreStatic": true
+          }
+        ]
       }
     },
     {
       "files": ["*.component.html"],
+      "excludedFiles": ["index.html"],
       "parser": "@angular-eslint/template-parser",
       "plugins": ["@angular-eslint/template"],
       "rules": {
