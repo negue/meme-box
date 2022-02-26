@@ -63,7 +63,9 @@ export class FileController {
       //return loadedFile
       response.header({
         'Content-type': contentType
-      }).status(200).send(loadedFile);
+      });
+
+      return loadedFile;
     }
 
     throw new NotFound('no media file found');
@@ -97,7 +99,9 @@ export class FileController {
       //return loadedFile
       response.header({
         'Content-type': contentType
-      }).status(200).send(loadedFile);
+      });
+
+      return loadedFile;
     }
 
     throw new NotFound('no media file found');
@@ -134,7 +138,9 @@ export class FileController {
       //return loadedFile
       response.header({
         'Content-type': contentType
-      }).status(200).send(loadedFile);
+      });
+
+      return loadedFile;
     }
 
     throw new NotFound('no media file found');
@@ -153,18 +159,24 @@ export class FileController {
      * image/svg+xml
      */
     let contentType = 'image/jpeg';
-    switch (path.extname(fileName?.toLowerCase() ?? '')) {
-      case 'jpg':
-      case 'jpeg':
+    const extension = path.extname(fileName ?? '');
+    console.log(fileName, extension);
+    switch (extension.toLowerCase()) {
+      case '.jpg':
+      case '.jpeg':
         contentType = 'image/jpeg';
         break;
 
-      case 'png':
+      case '.png':
         contentType = 'image/png';
         break;
 
-      case 'gif':
+      case '.gif':
         contentType = 'image/gif';
+        break;
+
+      case '.webp':
+        contentType = 'image/webp';
         break;
     }
 
