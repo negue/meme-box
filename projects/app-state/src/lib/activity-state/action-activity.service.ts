@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ActivityStore} from './activity.store';
 import {HttpClient} from '@angular/common/http';
-import {ActionActiveStatePayload, ENDPOINTS, WEBSOCKET_PATHS} from "@memebox/contracts";
+import {ActionActiveStatePayload, ENDPOINTS, ScreenState, WEBSOCKET_PATHS} from "@memebox/contracts";
 import {take} from "rxjs/operators";
 import {API_BASE} from "@memebox/app-state";
 import {ActionStateEntries, updateActivityInState} from "@memebox/shared-state";
@@ -23,22 +23,41 @@ export class ActionActivityService {
       this.activityStore.update(() => value);
     });
 
-    const wsHandler = new WebsocketHandler(
+    const actionStateWSHandler = new WebsocketHandler(
       AppConfig.wsBase + WEBSOCKET_PATHS.ACTION_ACTIVITY,
       3000
     );
 
-    wsHandler.connect();
+    actionStateWSHandler.connect();
 
     // Subscribe to Websocket Updates
-    wsHandler.onMessage$.pipe(
+    actionStateWSHandler.onMessage$.pipe(
       //  takeUntil(this._destroy$)
     ).subscribe((activityUpdateJson) => {
-
       const activityUpdate = JSON.parse(activityUpdateJson) as ActionActiveStatePayload;
 
-      this.activityStore.update(currentState =>
-        updateActivityInState(currentState, activityUpdate))
+      this.activityStore.update(currentState => {
+        updateActivityInState(currentState.actionState, activityUpdate)
+      });
+    });
+
+
+    const screenStateWSHandler = new WebsocketHandler(
+      AppConfig.wsBase + WEBSOCKET_PATHS.SCREEN_ACTIVITY,
+      3000
+    );
+
+    screenStateWSHandler.connect();
+
+    // Subscribe to Websocket Updates
+    screenStateWSHandler.onMessage$.pipe(
+      //  takeUntil(this._destroy$)
+    ).subscribe((activityUpdateJson) => {
+      const activityUpdate = JSON.parse(activityUpdateJson) as ScreenState;
+
+      this.activityStore.update(currentState => {
+        currentState.screenState = activityUpdate;
+      });
     });
   }
 }
