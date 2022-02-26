@@ -60,7 +60,6 @@ export class FileController {
 
       const contentType = this._getContentTypeFromExtension(filename);
 
-      //return loadedFile
       response.header({
         'Content-type': contentType
       });
@@ -96,7 +95,6 @@ export class FileController {
       const loadedFile = fs.readFileSync(filename);
       const contentType = this._getContentTypeFromExtension(filename);
 
-      //return loadedFile
       response.header({
         'Content-type': contentType
       });
@@ -135,7 +133,6 @@ export class FileController {
 
       const contentType = this._getContentTypeFromExtension(filename);
 
-      //return loadedFile
       response.header({
         'Content-type': contentType
       });
