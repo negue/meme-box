@@ -123,7 +123,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   twitchNotAuthenticated$ = this.appQuery.config$.pipe(
     map(config => !config.twitch?.token)
   );
-  channelPoints$ = this.appService.channelPoints$();
+  channelPointsAsync = this.appService.channelPointsAsync();
 
   twitchEvents = TwitchTypesArray;
   TWITCH_LEVELS = TWITCH_LEVELS;
@@ -240,9 +240,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     }
 
     if (newTwitchValue.event === TwitchEventTypes.channelPoints) {
-      const allChannelPoints = await this.channelPoints$.pipe(
-        take(1)
-      ).toPromise();
+      const allChannelPoints = await this.appService.channelPointsAsync();
 
       const selectedChannelPointData = allChannelPoints.find(c => c.id === newTwitchValue.channelPointId);
 

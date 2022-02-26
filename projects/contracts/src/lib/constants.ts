@@ -29,6 +29,11 @@ export const ENDPOINTS = {
     LAST_20_EVENTS: '/last_events'
   },
 
+  OBS_DATA: {
+    PREFIX: 'obsData',
+    CURRENT_BROWSER_SOURCES: '/currentBrowserSources'
+  },
+
 
   TWITCH_DATA: {
     PREFIX: 'twitchData',

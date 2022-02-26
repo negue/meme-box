@@ -65,7 +65,7 @@
           <mat-label>Choose ChannelPoint Redemption</mat-label>
           <mat-select [required]="true"
                       formControlName="channelPointId">
-            <mat-option *ngFor="let item of channelPoints$ | async"
+            <mat-option *ngFor="let item of channelPointsAsync | async"
                         [value]="item.id"
                         [style.background]="item.background_color"
                         [style.color]="item.background_color | fontColorContrast"

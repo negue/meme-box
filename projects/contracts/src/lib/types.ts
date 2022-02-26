@@ -345,3 +345,26 @@ export interface ScreenActiveStatePayload {
   screenId?: string;
   state: boolean;
 }
+
+// TODO cleanup / split up types
+
+
+export interface RegisterServicePayload {
+  name: string;
+  color?: string;
+}
+
+export interface StatePayload {
+  label: string;
+  description?: string;
+  backgroundColor?: string;
+  color?: string;
+}
+
+export interface StateOfAService extends RegisterServicePayload {
+  state: StatePayload;
+}
+
+export interface ConnectionState {
+  [id: string]: StateOfAService
+}

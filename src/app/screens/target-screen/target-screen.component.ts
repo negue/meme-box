@@ -13,7 +13,7 @@ import {
   TriggerAction
 } from "@memebox/contracts";
 import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
-import {AppQueries, AppService, ConnectionState, MemeboxWebsocketService} from "@memebox/app-state";
+import {AppQueries, AppService, ConnectionStateEnum, MemeboxWebsocketService} from "@memebox/app-state";
 import {ActivatedRoute} from "@angular/router";
 import {KeyValue} from "@angular/common";
 
@@ -72,10 +72,10 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   clipToControlMap = new Map<string, HTMLVideoElement | HTMLAudioElement | HTMLImageElement | HTMLIFrameElement>();
 
   showOfflineIcon$ = this.wsService.connectionState$.pipe(
-    map(value => ![ConnectionState.Connected, ConnectionState.Offline].includes(value))
+    map(value => ![ConnectionStateEnum.Connected, ConnectionStateEnum.Offline].includes(value))
   );
 
-  ConnectionState = ConnectionState;
+  ConnectionState = ConnectionStateEnum;
 
   screen$ = combineLatest([
     this.screenId$,

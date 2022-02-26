@@ -13,6 +13,23 @@
       </table>
     </mat-card>
 
+    <br/>
+    <br/>
+
+    Screens in OBS Overview: <br/>
+
+    <br>
+
+    <mat-card>
+      <table class="connections-table">
+        <tr *ngFor="let service of connectionState$ | async">
+          <td>{{service.name}}</td>
+          <td>{{service.state.label}}</td>
+        </tr>
+      </table>
+    </mat-card>
+
+
     <app-open-feedback-button feedbackTarget="Dashboard"></app-open-feedback-button>
   </div>
   <div class="column">
