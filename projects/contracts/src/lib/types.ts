@@ -338,3 +338,10 @@ export interface ChangedInfo {
   actionType?: ActionType;
   changeType: 'added'|'changed'|'removed';
 }
+
+export type ScreenState = Record<string, boolean>;
+
+export interface ScreenActiveStatePayload {
+  screenId?: string;
+  state: boolean;
+}
