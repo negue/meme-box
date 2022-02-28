@@ -31,7 +31,8 @@ export const ENDPOINTS = {
 
   OBS_DATA: {
     PREFIX: 'obsData',
-    CURRENT_BROWSER_SOURCES: '/currentBrowserSources'
+    CURRENT_BROWSER_SOURCES: '/currentBrowserSources',
+    REFRESH_BROWSER_SOURCE: '/refreshBrowserSource'
   },
 
 

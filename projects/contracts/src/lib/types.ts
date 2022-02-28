@@ -368,3 +368,11 @@ export interface StateOfAService extends RegisterServicePayload {
 export interface ConnectionState {
   [id: string]: StateOfAService
 }
+
+export interface ObsBrowserSourceData {
+  messageId: string;
+  status: "ok";
+  sourceName: string;
+  sourceType: string;
+  sourceSettings: Record<string, unknown>;
+}

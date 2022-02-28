@@ -1,5 +1,5 @@
-import {Controller, Get} from "@tsed/common";
-import {ENDPOINTS} from "@memebox/contracts";
+import {Controller, Get, PathParams, Post} from "@tsed/common";
+import {ENDPOINTS, ObsBrowserSourceData} from "@memebox/contracts";
 import {ObsConnection} from "../providers/obs-connection";
 
 @Controller(ENDPOINTS.OBS_DATA.PREFIX)
@@ -11,7 +11,7 @@ export class ObsDataController {
   }
 
   @Get(ENDPOINTS.OBS_DATA.CURRENT_BROWSER_SOURCES)
-  async listBrowserSources(): Promise<unknown[]> {
+  async listBrowserSources(): Promise<ObsBrowserSourceData[]> {
     await this._obsConnection.connectIfNot();
 
     // browser_source
@@ -22,13 +22,7 @@ export class ObsDataController {
 
     const onlyBrowserSources = sourceTypes.sources.filter( source => source.typeId === 'browser_source');
 
-    const browserSourceSettings: {
-      messageId: string;
-      status: "ok";
-      sourceName: string;
-      sourceType: string;
-      sourceSettings: {};
-    }[] = [];
+    const browserSourceSettings: ObsBrowserSourceData[] = [];
 
     for (const onlyBrowserSource of onlyBrowserSources) {
       const settingsPerBrowserSource = await obsWS.send('GetSourceSettings', {
@@ -41,4 +35,17 @@ export class ObsDataController {
     return browserSourceSettings;
   }
 
+
+  @Post(`${ENDPOINTS.OBS_DATA.REFRESH_BROWSER_SOURCE}/:sourceName`)
+  async refreshBrowserSource(
+    @PathParams("sourceName") sourceName: string,
+  ): Promise<unknown> {
+    await this._obsConnection.connectIfNot();
+
+    const obsWS = await this._obsConnection.getCurrentConnection();
+
+    return await obsWS.send('RefreshBrowserSource', {
+      sourceName: sourceName
+    });
+  }
 }

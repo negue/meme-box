@@ -1,17 +1,23 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
-import {StateOfAService, WEBSOCKET_PATHS} from "@memebox/contracts";
-import {Observable} from "rxjs";
+import {ENDPOINTS, ObsBrowserSourceData, Screen, StateOfAService, WEBSOCKET_PATHS} from "@memebox/contracts";
+import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
+import {ActivityQueries, AppQueries, MemeboxApiService} from "@memebox/app-state";
+import {fromPromise} from "rxjs/internal-compatibility";
+
 
 // TODO extract a componentbase to use for _destroy$ or find some alternative
 
 interface ScreenInOBS {
-  screenId: string;
+  screenData: Screen;
   connected: boolean;
   correctPort: boolean;
   correctResolution: boolean;
+  obsData: ObsBrowserSourceData;
+  statusString: string;
+  showRefreshButton: boolean;
 }
 
 @Component({
@@ -29,32 +35,73 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
   public connectionState$: Observable<StateOfAService[]>;
 
-  public screensInOBS: Observable<ScreenInOBS[]>;
+  public screensInOBS$: Observable<ScreenInOBS[]>;
 
-  constructor() {
+  constructor(
+    private memeboxApi: MemeboxApiService,
+    private appQuery: AppQueries,
+    private activityState: ActivityQueries,
+  ) {
     this.connectionState$ = this.connectionStateWS.onMessage$.asObservable().pipe(
       map(str => Object.values(JSON.parse(str))),
+    );
+
+    const loadedObsBrowsersource =  this.memeboxApi.get<ObsBrowserSourceData[]>(`${ENDPOINTS.OBS_DATA.PREFIX}${ENDPOINTS.OBS_DATA.CURRENT_BROWSER_SOURCES}`);
+    this.screensInOBS$ = combineLatest([
+      fromPromise(loadedObsBrowsersource),
+      this.appQuery.screensList$,
+      activityState.state$
+    ]).pipe(
+      map(([obsBrowserSources, allScreens, activityState]) => {
+        return obsBrowserSources.map(browserSource => {
+          const url = browserSource.sourceSettings['url'] + '';
+          const foundScreen = allScreens.find(screen => url.includes(screen.id));
+
+          if (!foundScreen) {
+            return null;
+          }
+
+          const correctResolution = foundScreen.width === browserSource.sourceSettings['width']
+          && foundScreen.height === browserSource.sourceSettings['height'];
+
+          const correctPort = url.includes(AppConfig.port + '');
+
+          const connected = activityState.screenState[foundScreen.id] && false;
+
+          let statusString = '';
+          let showRefreshButton = false;
+
+          if (!correctPort) {
+            statusString = 'Not using the Memebox-Port';
+          } else if (!connected) {
+            statusString = 'Browser Source is not connected to Memebox (try refreshing)';
+            showRefreshButton = true;
+          } else if (!correctResolution) {
+            statusString = 'The Browser Source in OBS has a different resolution';
+          } else {
+            statusString = 'Ok!'
+          }
+
+          return {
+            screenData: foundScreen,
+            correctPort,
+            correctResolution,
+            connected,
+            obsData: browserSource,
+            statusString,
+            showRefreshButton
+          } as ScreenInOBS;
+        }).filter(bs => !!bs);
+      })
     );
 
     // browserSource.sourceName
     // browserSource.sourceSettings
     // - fps
+    // - fps_custom
     // - height
     // - width
     // - url
-
-    /*
-    {"message-id":"2","sourceName":"Browser","sourceSettings":{"css":"",
-    "fps":30,
-    "fps_custom":false,
-    "height":600,
-    "reroute_audio":false,
-    "restart_when_active":false,
-    "shutdown":false,
-    "url":"https://obsproject.com/browser-source",
-    webpage_control_level":1,
-    "width":800},"sourceType":"browser_source","status":"ok","messageId":"2"}
-     */
   }
 
   ngOnInit(): void {
@@ -65,4 +112,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
     this.connectionStateWS.stopReconnects();
   }
 
+  triggerObsReload(screenInOBS: ScreenInOBS) {
+    this.memeboxApi.post(`${ENDPOINTS.OBS_DATA.PREFIX}${ENDPOINTS.OBS_DATA.REFRESH_BROWSER_SOURCE}/${screenInOBS.obsData.sourceName}`, null, null);
+  }
 }
