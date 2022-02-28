@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
 import {ActivityStore} from './activity.store';
-import {HttpClient} from '@angular/common/http';
 import {ActionActiveStatePayload, ENDPOINTS, ScreenState, WEBSOCKET_PATHS} from "@memebox/contracts";
-import {take} from "rxjs/operators";
-import {API_BASE} from "@memebox/app-state";
 import {ActionStateEntries, updateActivityInState} from "@memebox/shared-state";
 import {WebsocketHandler} from "../services/websocket.handler";
 import {AppConfig} from "@memebox/app/env";
+import {MemeboxApiService} from "../state/memeboxApi.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,14 +12,13 @@ import {AppConfig} from "@memebox/app/env";
 export class ActionActivityService {
 
   constructor(private activityStore: ActivityStore,
-              public http: HttpClient,  // todo extract http client and api_url base including the offline checks
+              private memeboxApi: MemeboxApiService,
   ) {
     // Load State once
-    this.http.get<ActionStateEntries>(`${API_BASE}${ENDPOINTS.ACTION_ACTIVITY.PREFIX}${ENDPOINTS.ACTION_ACTIVITY.CURRENT}`).pipe(
-      take(1)
-    ).subscribe(value => {
-      this.activityStore.update(() => value);
-    });
+    this.memeboxApi.get<ActionStateEntries>(`${ENDPOINTS.ACTION_ACTIVITY.PREFIX}${ENDPOINTS.ACTION_ACTIVITY.CURRENT}`)
+      .then( actionStateInitialValue => {
+        this.activityStore.update(() => actionStateInitialValue);
+      });
 
     const actionStateWSHandler = new WebsocketHandler(
       AppConfig.wsBase + WEBSOCKET_PATHS.ACTION_ACTIVITY,

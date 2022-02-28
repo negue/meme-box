@@ -5,7 +5,7 @@ import {BehaviorSubject} from "rxjs";
   providedIn: "root"
 })
 export class ConnectionStateService {
-  private offlineMode$ = new BehaviorSubject<boolean>(true);
+  private offlineMode$ = new BehaviorSubject<boolean>(false);
 
   public setOfflineMode(value: boolean) {
     this.offlineMode$.next(value);

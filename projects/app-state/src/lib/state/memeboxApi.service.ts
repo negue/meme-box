@@ -8,7 +8,9 @@ export const EXPRESS_BASE = AppConfig.expressBase;
 export const API_BASE = `${EXPRESS_BASE}${API_PREFIX}/`;
 
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class MemeboxApiService {
   constructor(
     private http: HttpClient,

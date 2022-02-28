@@ -1,23 +1,20 @@
 import {Injectable} from "@angular/core";
 import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
-import {API_BASE, AppService} from "@memebox/app-state";
-import {take} from "rxjs/operators";
+import {AppService, MemeboxApiService} from "@memebox/app-state";
 
 @Injectable()
 export class WidgetStoreRemoteAdapter implements ActionStoreAdapter {
   constructor(
     private appService: AppService,
+    private memeboxApi: MemeboxApiService,
   ) {
   }
 
   getCurrentData(mediaId: string): Promise<ActionStore> {
-    return this.appService.http.get<ActionStore>(`${API_BASE}widget-state/${mediaId}`)
-      .pipe(
-        take(1)
-      ).toPromise();
+    return this.memeboxApi.get<ActionStore>(`widget-state/${mediaId}`);
   }
 
   updateData(mediaId: string, instanceId: string, newData: ActionStore) {
-    this.appService.tryHttpPut(`${API_BASE}widget-state/${mediaId}/${instanceId}`, newData);
+    this.memeboxApi.put(`widget-state/${mediaId}/${instanceId}`, newData);
   }
 }
