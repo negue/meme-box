@@ -66,7 +66,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
           const correctPort = url.includes(AppConfig.port + '');
 
-          const connected = activityState.screenState[foundScreen.id] && false;
+          const connected = activityState.screenState[foundScreen.id];
 
           let statusString = '';
           let showRefreshButton = false;
