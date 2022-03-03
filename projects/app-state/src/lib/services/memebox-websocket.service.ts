@@ -13,7 +13,7 @@ import {SnackbarService} from "./snackbar.service";
 import {filter, mapTo, take} from "rxjs/operators";
 import {uuid} from "@gewd/utils";
 
-export enum ConnectionState{
+export enum ConnectionStateEnum {
   NONE,
   Disconnected,
   Connected,
@@ -38,7 +38,7 @@ export class MemeboxWebsocketService {
   public onReloadScreen$ = new Subject();
   public onTriggerAction$ = new Subject<TriggerAction>();
   public onUpdateMedia$ = new Subject<TriggerAction>();
-  public connectionState$ = new BehaviorSubject<ConnectionState>(ConnectionState.NONE)
+  public connectionState$ = new BehaviorSubject<ConnectionStateEnum>(ConnectionStateEnum.NONE)
 
   private ws?: WebSocket | null = null;
   private firstConnectionWorked = true;
@@ -163,14 +163,14 @@ export class MemeboxWebsocketService {
       this.intervalId = 0;
     }
 
-    this.connectionState$.next(ConnectionState.Reconnecting);
+    this.connectionState$.next(ConnectionStateEnum.Reconnecting);
 
     this.ws = new WebSocket(this.wsBasePath);
 
     this.ws.onopen = () => {
       this.isConnected = true;
       this.onOpenConnection$.next();
-      this.connectionState$.next(ConnectionState.Connected);
+      this.connectionState$.next(ConnectionStateEnum.Connected);
 
       if (!this.firstConnectionWorked) {
         this.onReconnection$.next();
@@ -185,7 +185,7 @@ export class MemeboxWebsocketService {
       this.isConnected = false;
       this.firstConnectionWorked = false;
 
-      this.connectionState$.next(ConnectionState.Disconnected);
+      this.connectionState$.next(ConnectionStateEnum.Disconnected);
 
       if (this.intervalId === 0) {
         if (this.allowReconnections) {
@@ -194,7 +194,7 @@ export class MemeboxWebsocketService {
           }, 2000);
 
         } else {
-          this.connectionState$.next(ConnectionState.Offline);
+          this.connectionState$.next(ConnectionStateEnum.Offline);
         }
       }
     };
@@ -210,7 +210,7 @@ export class MemeboxWebsocketService {
 
   isReady() : Promise<boolean> {
     return this.connectionState$.pipe(
-      filter(connectionState => connectionState === ConnectionState.Connected),
+      filter(connectionState => connectionState === ConnectionStateEnum.Connected),
       take(1),
       mapTo(true)
     ).toPromise();

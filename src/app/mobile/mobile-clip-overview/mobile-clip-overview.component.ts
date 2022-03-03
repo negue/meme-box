@@ -3,7 +3,7 @@ import {
   ActivityQueries,
   AppQueries,
   AppService,
-  ConnectionState,
+  ConnectionStateEnum,
   MemeboxWebsocketService,
   SettingsService
 } from "@memebox/app-state";
@@ -69,7 +69,7 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
 
   connectionState$ = this._wsService.connectionState$;
 
-  ConnectionState = ConnectionState;
+  ConnectionState = ConnectionStateEnum;
 
   disabledRipple = false;
 

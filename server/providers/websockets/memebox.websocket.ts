@@ -6,6 +6,7 @@ import {Subject} from "rxjs";
 import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
 import {ActionActiveStateEventBus} from "../actions/action-active-state-event.bus";
 import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
+import {ScreenActiveStateEventBus} from "../screens/screen-active-state-event.bus";
 
 // UNTIL everything in the backend is refactored to TSED, we need some global instance
 export let CURRENT_MEMEBOX_WEBSOCKET: MemeboxWebsocket;
@@ -22,7 +23,8 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
   constructor(
     @UseOpts({name: 'WS.MemeBox'}) public logger: NamedLogger,
     private mediaTriggerEventBus: ActionQueueEventBus,
-    private mediaStateEventBus: ActionActiveStateEventBus
+    private mediaStateEventBus: ActionActiveStateEventBus,
+    private screenEventBus: ScreenActiveStateEventBus
   ) {
     super('');
 
@@ -45,6 +47,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
     return this._socketsPerScreen[screenId].some(ws => ws.readyState === WebSocket.OPEN);
   }
 
+  // used for usages of CURRENT_MEMEBOX_WEBSOCKET
   sendDataToAllSockets(message) {
     super.sendDataToAllSockets(message);
   }
@@ -73,7 +76,11 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
           this._socketsPerScreen[payload] = [ws];
         }
 
-        this._connectedSocketList.push(ws);
+        this.screenEventBus.updateScreenState({
+          screenId: payload,
+          state: true
+        });
+
         break;
       }
       case ACTIONS.I_AM_MANAGE: {
@@ -101,7 +108,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
       case ACTIONS.MEDIA_STATE: {
         const mediaStatePayload: ActionActiveStatePayload = JSON.parse(payload);
 
-        console.warn('RECEIVED MEDIA STATE', mediaStatePayload);
+        this.logger.warn('RECEIVED MEDIA STATE', mediaStatePayload);
 
         this.mediaStateEventBus.updateActionState(mediaStatePayload);
 
@@ -111,7 +118,27 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
   }
 
   protected onSocketClosed(ws: WebSocket) {
+    this.logger.info('OnSocketClosed');
+    const manageViewSocketIndex = this._manageViewSockets.indexOf(ws);
 
+    if (manageViewSocketIndex != -1) {
+      this._manageViewSockets.splice(manageViewSocketIndex, 1);
+    }
+
+    for (const [screenId, connectedWS] of Object.entries(this._socketsPerScreen)) {
+      const socketFoundIndex = connectedWS.indexOf(ws);
+
+      if (socketFoundIndex != -1) {
+        connectedWS.splice(socketFoundIndex, 1);
+      }
+
+      if (connectedWS.length === 0) {
+        this.screenEventBus.updateScreenState({
+          screenId,
+          state: false
+        });
+      }
+    }
   }
 
   WebSocketServerLabel = 'WS: Memebox Connections';

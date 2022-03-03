@@ -29,6 +29,12 @@ export const ENDPOINTS = {
     LAST_20_EVENTS: '/last_events'
   },
 
+  OBS_DATA: {
+    PREFIX: 'obsData',
+    CURRENT_BROWSER_SOURCES: '/currentBrowserSources',
+    REFRESH_BROWSER_SOURCE: '/refreshBrowserSource'
+  },
+
 
   TWITCH_DATA: {
     PREFIX: 'twitchData',
@@ -76,6 +82,7 @@ export const TwitchTypesArray = [
 export const WEBSOCKET_PATHS = {
   TWITCH_EVENTS: '/ws/twitch_events',
   ACTION_ACTIVITY: '/ws/action_activity',
+  SCREEN_ACTIVITY: '/ws/screen_activity',
   CONNECTIONS_STATE: '/ws/connections_state',
   ERRORS: '/ws/errors',
 };

@@ -338,3 +338,41 @@ export interface ChangedInfo {
   actionType?: ActionType;
   changeType: 'added'|'changed'|'removed';
 }
+
+export type ScreenState = Record<string, boolean>;
+
+export interface ScreenActiveStatePayload {
+  screenId?: string;
+  state: boolean;
+}
+
+// TODO cleanup / split up types
+
+
+export interface RegisterServicePayload {
+  name: string;
+  color?: string;
+}
+
+export interface StatePayload {
+  label: string;
+  description?: string;
+  backgroundColor?: string;
+  color?: string;
+}
+
+export interface StateOfAService extends RegisterServicePayload {
+  state: StatePayload;
+}
+
+export interface ConnectionState {
+  [id: string]: StateOfAService
+}
+
+export interface ObsBrowserSourceData {
+  messageId: string;
+  status: "ok";
+  sourceName: string;
+  sourceType: string;
+  sourceSettings: Record<string, unknown>;
+}

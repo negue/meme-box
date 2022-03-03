@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {DialogService} from "../../../dialogs/dialog.service";
 import {combineLatest, Observable} from "rxjs";
-import {AppQueries, AppService} from "@memebox/app-state";
+import {AppQueries, AppService, ConnectionStateService} from "@memebox/app-state";
 import {switchMap} from "rxjs/operators";
 import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
@@ -33,7 +33,7 @@ export class ConnectionsListComponent implements OnInit {
   groupedConnections$: Observable<Record<string, ConnectionEntry[]>> =
     combineLatest([
       this.config$,
-      this.appService.isOffline$()
+      this.connectionStateService.isOffline$()
   ]).pipe(
     switchMap(async ([config, isOffline]) => {
       const authInformation = isOffline
@@ -96,7 +96,8 @@ export class ConnectionsListComponent implements OnInit {
   constructor(private dialogService: DialogService,
               private appQuery: AppQueries,
               private appService: AppService,
-              private configService: ConfigService
+              private configService: ConfigService,
+              private connectionStateService: ConnectionStateService
               ) { }
 
   ngOnInit(): void {

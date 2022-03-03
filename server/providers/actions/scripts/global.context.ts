@@ -15,5 +15,5 @@ export function setGlobalVMScope (vm: VM) {
   vm.freeze(EnumsApi, 'enums');
   vm.freeze(fetch, 'fetch');
   vm.freeze(ProcessApi, 'process');
-  vm.freeze(lodash, 'lodash')
+  vm.freeze(lodash, 'lodash');
 }

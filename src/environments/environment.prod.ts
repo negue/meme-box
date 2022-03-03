@@ -4,7 +4,8 @@ export const AppConfig = {
   production: true,
   environment: 'PROD',
   expressBase: `${location.protocol}//${location.hostname}:${location.port}`,
-  wsBase: `${IS_HTTPS ? 'wss' : 'ws'}://${location.hostname}:${location.port}`
+  wsBase: `${IS_HTTPS ? 'wss' : 'ws'}://${location.hostname}:${location.port}`,
+  port: location.port
 };
 
 

@@ -2,12 +2,10 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Action, ScreenViewEntry} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {filter, map, tap} from "rxjs/operators";
-import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
+import {AppQueries, EXPRESS_BASE, NetworkInterfacesService} from "@memebox/app-state";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {EXPRESS_BASE} from "../../../../../../projects/app-state/src/lib/state/app.service";
-import {NetworkInterfacesService} from "../../../../../../projects/app-state/src/lib/services/network-interfaces.service";
-import {sortClips} from "../../../../../../projects/utils/src/lib/sort-clips";
+import {sortClips} from "@memebox/utils";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
