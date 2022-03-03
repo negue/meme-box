@@ -107,7 +107,7 @@ export class KeyValuePipe implements PipeTransform {
     if (differChanges) {
       this.keyValues = [];
       differChanges.forEachItem((r: KeyValueChangeRecord<K, V>) => {
-        this.keyValues.push(makeKeyValuePair(r.key, r.currentValue!));
+        this.keyValues.push(makeKeyValuePair(r.key, r.currentValue));
       });
       this.keyValues.sort(compareFn);
     }

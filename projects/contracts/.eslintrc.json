@@ -1,0 +1,30 @@
+{
+  "extends": "../../.eslintrc-shared-libs.json",
+  "ignorePatterns": [
+    "!**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "./projects/contracts/tsconfig.lib.json",
+          "./projects/contracts/tsconfig.spec.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [],
+      "rules": {
+
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ]
+}

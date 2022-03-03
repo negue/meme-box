@@ -112,7 +112,7 @@ export class ActionTriggerHandler {
     this._memeboxWebSocket.sendDataToScreen(payload.targetScreen, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(payload)}`);
   }
 
-  async updateMediaEvent(payloadObs: TriggerAction) {
+  updateMediaEvent(payloadObs: TriggerAction) {
     if (payloadObs.targetScreen) {
       this._memeboxWebSocket.sendDataToScreen(payloadObs.targetScreen, `${ACTIONS.UPDATE_MEDIA}=${JSON.stringify(payloadObs)}`);
       return;

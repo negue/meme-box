@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, TrackByFunction} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Action, Screen, Tag} from '@memebox/contracts';
 import {AppQueries, AppService, MemeboxWebsocketService} from '@memebox/app-state';
@@ -18,7 +18,7 @@ import {savedBehaviorSubject} from "@memebox/utils";
   styleUrls: ['./media-overview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MediaOverviewComponent implements OnInit, OnDestroy{
+export class MediaOverviewComponent implements OnDestroy{
   public uiMode$ = this._uiService.getCurrentUiMode$().pipe(
     shareReplay({ refCount: true, bufferSize: 1 })
   );
@@ -70,9 +70,6 @@ export class MediaOverviewComponent implements OnInit, OnDestroy{
               private _uiService: OverviewUiService,
               private configService: ConfigService,) {
     savedBehaviorSubject('mediaOverviewFilter', this.filteredItems$, this.destroy$);
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {

@@ -12,8 +12,6 @@ bootstrapTsED().then(async ({expressServer}) => {
   if (!isProduction) {
     const waitForLocalhost = require('wait-for-localhost');
 
-    console.info('Waiting on Angular to finish the build :)');
-
     await waitForLocalhost({port: 4200});
 
     if (CLI_OPTIONS.OPEN_BROWSER) {

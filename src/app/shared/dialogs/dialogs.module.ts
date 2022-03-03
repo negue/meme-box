@@ -1,6 +1,5 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { DialogService } from "./dialog.service";
+import {NgModule} from "@angular/core";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -9,6 +8,5 @@ import { DialogService } from "./dialog.service";
   imports: [
     CommonModule,
   ],
-  providers: [DialogService],
 })
 export class DialogsModule {}

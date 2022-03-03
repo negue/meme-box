@@ -25,7 +25,7 @@ export class NetworkInterfacesService {
       map(networkInfos => {
         const networkInfoResult: NetworkInfo[] = [
           ...networkInfos.map(networkInfo => {
-            let urlBase = `${networkInfo.address}:${port}`;
+            const urlBase = `${networkInfo.address}:${port}`;
 
             return {
               ifname: `${networkInfo.ifname} (${urlBase})`,

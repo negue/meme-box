@@ -10,7 +10,7 @@ export class TimedHandler {
   private intervalDictionary: Dictionary<Timeout> = {};
 
   startTimers(timerId?: string) {
-    var timedClips = PersistenceInstance.listTimedEvents();
+    const timedClips = PersistenceInstance.listTimedEvents();
 
     if (timerId) {
       const foundTimer = timedClips.find(timer => timer.id === timerId)

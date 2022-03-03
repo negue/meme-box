@@ -34,7 +34,6 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   for (let scriptIndex = 0; scriptIndex < allExistingScripts.length; scriptIndex++) {
     const script = allExistingScripts.item(scriptIndex);
-    console.info({script});
     script?.remove();
   }
 
@@ -42,7 +41,6 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
   for (let styleLinkIndex = 0; styleLinkIndex < allExistingStyleLinks.length; styleLinkIndex++) {
     const style = allExistingStyleLinks.item(styleLinkIndex);
-    console.info({style, length: allExistingStyleLinks.length});
     style?.remove();
   }
 
@@ -208,15 +206,11 @@ export function actionDataToWidgetContent (action: Partial<Action>): DynamicIfra
     js: action.extended[DYNAMIC_IFRAME_JS_KEY] ?? ''
   };
 
-  console.info({extended: action.extended});
-
   // External Files are saved as JSON
   const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
   dynamicContent.libraries = externalFiles;
 
   dynamicContent.variablesConfig = getVariablesListOfAction(action);
-
-  console.info('json', JSON.stringify(dynamicContent));
 
   // todo add a settings type
   const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');
@@ -230,10 +224,6 @@ export function applyDynamicIframeContentToClipData (
   iframeContent: DynamicIframeContent,
   targetClip: Partial<Action>
 ) {
-  console.info('PRE CHANGE', JSON.stringify(targetClip));
-
-  console.info({iframeContent});
-
   if (!targetClip.extended) {
     targetClip.extended = {};
   }
@@ -245,8 +235,6 @@ export function applyDynamicIframeContentToClipData (
   targetClip.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] = JSON.stringify(iframeContent.libraries);
   targetClip.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(iframeContent.variablesConfig);
   targetClip.extended[DYNAMIC_IFRAME_SETTINGS_KEY] = JSON.stringify(iframeContent.settings);
-
-  console.info('POST CHANGE', JSON.stringify(targetClip));
 }
 
 export const NOT_ALLOWED_WIDGET_VARIABLE_NAMES = [

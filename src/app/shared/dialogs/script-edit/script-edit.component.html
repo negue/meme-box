@@ -18,7 +18,6 @@
       </app-hint-panel>
 
       <app-variables-config [variablesList]="variablesList"
-                            (onEditVariable)="markForCheck()"
                             (onDeleteVariable)="deleteVariable($event)"
                             (onAddNewVariable)="addNewVariable()">
 
@@ -36,7 +35,7 @@
         >
           <gewd-codemirror [value]="workingValue.bootstrapScript"
                            [codemirrorExtensions]="jsExtensions"
-                           (changed)="workingValue.bootstrapScript = $event; markForCheck();">
+                           (changed)="workingValue.bootstrapScript = $event;">
 
           </gewd-codemirror>
         </gewd-custom-form-control>

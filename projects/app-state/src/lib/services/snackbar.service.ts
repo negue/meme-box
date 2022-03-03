@@ -41,7 +41,9 @@ const DEFAULT_ERROR_OPTIONS: SnackbarOptions = {
 }
 
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class SnackbarService {
 
   constructor(private matSnackBar: MatSnackBar) {

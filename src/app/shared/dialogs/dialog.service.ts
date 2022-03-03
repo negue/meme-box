@@ -16,8 +16,11 @@ import {
   TwitchScopeSelectionResult
 } from "./dialog.contract";
 import {MediaEditDialogPayload} from "./media-edit/media-edit.component";
+import {DialogsModule} from "./dialogs.module";
 
-@Injectable()
+@Injectable({
+  providedIn: DialogsModule
+})
 export class DialogService {
 
   constructor(

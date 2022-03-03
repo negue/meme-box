@@ -5,7 +5,13 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "test", "lint", "package", "prepare"]
+        "cacheableOperations": [
+          "build",
+          "test",
+          "lint",
+          "package",
+          "prepare"
+        ]
       }
     }
   },
@@ -31,7 +37,8 @@
     "appsDir": "projects"
   },
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "defaultCollection": "@nrwl/angular"
   },
   "generators": {
     "@schematics/angular:component": {

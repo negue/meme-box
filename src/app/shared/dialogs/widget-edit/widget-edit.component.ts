@@ -136,12 +136,12 @@ export class WidgetEditComponent implements OnInit {
     console.info({$event, file});
 
     // setting up the reader
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.readAsText(file,'UTF-8');
 
     // here we tell the reader what to do when it's done reading...
     reader.onload = readerEvent => {
-      var content = readerEvent.target.result; // this is the content!
+      const content = readerEvent.target.result; // this is the content!
 
       if (typeof content === 'string' ) {
         const importedPayload: DynamicIframeContent = JSON.parse(content);
@@ -153,7 +153,7 @@ export class WidgetEditComponent implements OnInit {
 
   exportWidget(): void {
     const jsonData = JSON.stringify(this.workingValue);
-    var dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
+    const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
 
     console.info({jsonData, dataStr});
     downloadFile(this.data.name+'-widget.json',dataStr);

@@ -1,0 +1,4 @@
+node_modules
+typings.d.ts
+# if someone wants to fight this eslint config, to not include spec files on normal include settings, please, try it
+*.spec.ts

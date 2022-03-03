@@ -1,4 +1,4 @@
-import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {Component, TrackByFunction} from '@angular/core';
 import {Action, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map, take} from "rxjs/operators";
@@ -17,7 +17,7 @@ function timeout(ms) {
   templateUrl: './screen-overview.component.html',
   styleUrls: ['./screen-overview.component.scss']
 })
-export class ScreenOverviewComponent implements OnInit {
+export class ScreenOverviewComponent {
 
   public screenList$: Observable<Screen[]> = this._queries.screensList$.pipe(
     map(stateUrlArray => orderBy(stateUrlArray, 'name'))
@@ -34,9 +34,6 @@ export class ScreenOverviewComponent implements OnInit {
     private webSocket: MemeboxWebsocketService,
     private snackbar: SnackbarService
   ) {
-  }
-
-  ngOnInit(): void {
   }
 
   showDialog(screen: Partial<Screen>) {

@@ -71,7 +71,7 @@ export class ObsApi extends DisposableBase {
   // todo add types once OBSWebsocketJS is built completely on types
   public onEvent$(type: string) {
     return fromEventPattern(
-      // @ts-expect-error
+      // @ts-expect-error because the .raw.on needs a specific union type
       handler => this.raw.on(type, handler),
       handler => this.raw.off(type, handler)
     ).pipe(

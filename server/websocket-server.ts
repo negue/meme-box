@@ -4,11 +4,11 @@ import {CURRENT_MEMEBOX_ACTION_QUEUE_EVENT_BUS} from "./providers/actions/action
 
 // Once all services are in the TsED way - these functions can be removed
 
-export async function triggerMediaClipById(payloadObs: TriggerAction) {
+export function triggerMediaClipById(payloadObs: TriggerAction) {
   return CURRENT_MEMEBOX_ACTION_QUEUE_EVENT_BUS.queueAction(payloadObs);
 }
 
 
-export async function sendDataToAllSockets(message: string) {
+export function sendDataToAllSockets(message: string) {
   return CURRENT_MEMEBOX_WEBSOCKET?.sendDataToAllSockets(message);
 }

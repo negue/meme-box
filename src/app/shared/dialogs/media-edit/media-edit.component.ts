@@ -530,30 +530,30 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     }
   }
 
-  async copyIdToClipboard() {
+  copyIdToClipboard() {
     if (this.clipboard.copy(this.actionToEdit.id)) {
       this.snackbar.normal("The Action ID was copied to the clipboard");
     }
   }
 
-  async makeScreenshot(videoElement: HTMLVideoElement) {
+  makeScreenshot(videoElement: HTMLVideoElement) {
     videoElement.controls = false;
 
     const WANTED_WIDTH = 320;
     const RATIO_TO_CHANGE = videoElement.videoWidth / WANTED_WIDTH;
 
-    var canvas = document.createElement('canvas');
+    const canvas = document.createElement('canvas');
     canvas.width = videoElement.videoWidth / RATIO_TO_CHANGE;
     canvas.height = videoElement.videoHeight / RATIO_TO_CHANGE;
 
-    var ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
 
     // ctx.scale(0.5,0.5);
     //draw image to canvas. scale to target dimensions
     ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
     //convert to desired file format
-    var dataPath = canvas.toDataURL('image/jpeg'); // can also use 'image/png'
+    const dataPath = canvas.toDataURL('image/jpeg'); // can also use 'image/png'
 
     this.form.patchValue({
       previewUrl: dataPath

@@ -3,7 +3,9 @@ import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
 import {API_BASE, AppService} from "@memebox/app-state";
 import {take} from "rxjs/operators";
 
-@Injectable()
+@Injectable({
+  providedIn: "any"
+})
 export class WidgetStoreRemoteAdapter implements ActionStoreAdapter {
   constructor(
     private appService: AppService,

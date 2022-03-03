@@ -21,9 +21,9 @@ export class ScreensRouteComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    var queryMap = this.route.snapshot.queryParamMap;
+    const queryMap = this.route.snapshot.queryParamMap;
 
-    var keys = queryMap.keys.filter(k => k !== 'debug');
+    const keys = queryMap.keys.filter(k => k !== 'debug');
 
     this.alLScreens = keys.map(k => {
       return {
