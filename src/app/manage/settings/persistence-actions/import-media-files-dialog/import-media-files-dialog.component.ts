@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {TargetScreenType} from "@memebox/contracts";
 import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
@@ -8,7 +8,7 @@ import {ConfigService} from "../../../../../../projects/app-state/src/lib/servic
   templateUrl: './import-media-files-dialog.component.html',
   styleUrls: ['./import-media-files-dialog.component.scss']
 })
-export class ImportMediaFilesDialogComponent implements OnInit {
+export class ImportMediaFilesDialogComponent {
   public form = new FormBuilder().group({
     targetScreenType: TargetScreenType.OneScreen,
   });
@@ -18,9 +18,6 @@ export class ImportMediaFilesDialogComponent implements OnInit {
   constructor(
     private configService: ConfigService,
   ) { }
-
-  ngOnInit(): void {
-  }
 
   executeImport() {
       if (!this.form.valid) {

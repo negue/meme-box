@@ -1,4 +1,7 @@
 {
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nrwl/nx"],
   "env": {
     "browser": true,
     "node": true,
@@ -8,14 +11,16 @@
   "overrides": [
     {
       "files": ["*.ts"],
-      "excludedFiles": ["**/*.d.ts"],
+      "excludedFiles": ["**/*.d.ts", "**/*.spec.ts"],
       "extends": [
-        "eslint:recommended",
+        "plugin:@nrwl/nx/angular",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
       ],
       "plugins": [
+        "eslint-plugin-import",
+        "@angular-eslint/eslint-plugin",
         "@typescript-eslint"
       ],
       "rules": {
@@ -38,7 +43,11 @@
           {
             "ignoreStatic": true
           }
-        ]
+        ],
+        "no-restricted-syntax": "warn",
+        "@typescript-eslint/member-ordering": "off",
+        "@angular-eslint/no-output-on-prefix": "warn",
+        "@angular-eslint/no-empty-lifecycle-method": "warn"
       }
     }
   ]

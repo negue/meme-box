@@ -9,7 +9,7 @@ import {DEFAULT_PRISM_OPTIONS, MarkdownWorker, PrismOptions, WorkerOptions} from
 declare function importScripts (...urls: string[]): void;
 
 const renderer = new marked.Renderer();
-const oldCodeRenderer = renderer.code;
+const oldCodeRenderer = renderer.code; // eslint-disable-line @typescript-eslint/unbound-method
 renderer.code = function(code, language, isEscaped) {
   if (mermaidRegex.test(language)) {
     return `<div class="mermaid">${language}\n${code}</div>`;
@@ -98,7 +98,7 @@ const workerMethods: MarkdownWorker = {
 
     return;
   }),
-  highlight: (code, lang) => new Promise<string>(async (resolve, reject) => {
+  highlight: (code, lang) => new Promise<string>((resolve, reject) => {
     if (!code) {
       resolve('');
       return;
