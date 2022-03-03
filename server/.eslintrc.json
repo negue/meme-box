@@ -2,7 +2,9 @@
   "extends": [
     "../.eslintrc-shared-libs.json"
   ],
-  "ignorePatterns": [],
+  "ignorePatterns": [
+    "!**/*"
+  ],
   "overrides": [
     {
       "files": [
