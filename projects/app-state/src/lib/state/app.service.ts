@@ -59,10 +59,11 @@ export class AppService {
     try {
       const filesResult = await this.memeboxApi.get<FileInfo[]>(ENDPOINTS.FILE.PREFIX);
 
-      console.info('LOADED FILES ', filesResult);
-      this.appStore.update(state => {
-        state.currentMediaFiles = filesResult!;
-      });
+      if (filesResult) {
+        this.appStore.update(state => {
+          state.currentMediaFiles = filesResult;
+        });
+      }
     } catch (error) {
       this.snackbar.sorry(error.error.error, {
         config: {
@@ -410,17 +411,21 @@ export class AppService {
     try {
       const newVersionResponse = await this.memeboxApi.get<UpdateState>(`${ENDPOINTS.STATE}/update_available`);
 
-      this.appStore.update(state => {
-        state.update = newVersionResponse!;
-      });
+      if (newVersionResponse) {
+        this.appStore.update(state => {
+          state.update = newVersionResponse;
+        });
 
-      return newVersionResponse!;
+        return newVersionResponse;
+      }
     } catch {
-      return {
-        available: false,
-        version: 'none'
-      };
+
     }
+
+    return {
+      available: false,
+      version: 'none'
+    };
   }
 
   public channelPointsAsync(): Promise<ChannelPointRedemption[] | undefined> {
