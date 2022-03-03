@@ -419,7 +419,7 @@ export class AppService {
         return newVersionResponse;
       }
     } catch {
-
+      /* ignore errors */
     }
 
     return {
