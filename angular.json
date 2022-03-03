@@ -104,8 +104,7 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "projects/app-state/**/*.ts",
-              "projects/app-state/**/*.html"
+              "projects/app-state/**/*.ts"
             ]
           }
         }
@@ -533,8 +532,7 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "projects/ui-components/**/*.ts",
-              "projects/ui-components/**/*.html"
+              "projects/utils/**/*.ts"
             ]
           }
         }
