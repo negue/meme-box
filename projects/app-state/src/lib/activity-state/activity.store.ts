@@ -1,12 +1,15 @@
 import {Store, StoreConfig} from '@datorama/akita';
 import {Injectable} from "@angular/core";
 import {produce} from 'immer';
-import {ActionStateEntries} from "@memebox/shared-state"; // the best state helper!!
+import {ActivityState} from "./activity.types";
 
 @Injectable({providedIn: 'root'})
 @StoreConfig({name: 'action-activity', producerFn: produce})
-export class ActivityStore extends Store<ActionStateEntries> {
+export class ActivityStore extends Store<ActivityState> {
   constructor() {
-    super({});
+    super({
+      actionState: {},
+      screenState: {}
+    });
   }
 }

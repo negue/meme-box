@@ -27,7 +27,8 @@ export const AppConfig = {
   production: false,
   environment: 'DEV',
   expressBase: `http://${location.hostname}:${NEW_PORT}`,
-  wsBase: `ws://${location.hostname}:${NEW_PORT}`
+  wsBase: `ws://${location.hostname}:${NEW_PORT}`,
+  port: NEW_PORT
 };
 
 console.info({AppConfig});

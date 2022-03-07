@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ENDPOINTS, NetworkInfo} from "@memebox/contracts";
-import {EXPRESS_BASE} from "../state/app.service";
 import {map, shareReplay} from "rxjs/operators";
 import {Observable} from "rxjs";
+import {EXPRESS_BASE} from "../state";
 
 const CURRENT_NETWORK_INFO: NetworkInfo = {
   ifname: `Current Location (${location.protocol}//${location.host})`,

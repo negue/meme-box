@@ -1,26 +1,8 @@
-import { BehaviorSubject } from "rxjs";
-import { Service } from "@tsed/di";
-import { uuid } from "@gewd/utils";
+import {BehaviorSubject} from "rxjs";
+import {Service} from "@tsed/di";
+import {uuid} from "@gewd/utils";
+import {ConnectionState, RegisterServicePayload, StatePayload} from "@memebox/contracts";
 
-export interface RegisterServicePayload {
-  name: string;
-  color?: string;
-}
-
-export interface StatePayload {
-  label: string;
-  description?: string;
-  backgroundColor?: string;
-  color?: string;
-}
-
-interface StateOfAService extends RegisterServicePayload {
-  state: StatePayload;
-}
-
-interface ConnectionState {
-  [id: string]: StateOfAService
-}
 
 export type UpdateStateFunc = (state: StatePayload) => void;
 

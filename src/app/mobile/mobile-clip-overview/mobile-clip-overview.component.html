@@ -50,7 +50,7 @@
               mat-ripple [matRippleDisabled]="disabledRipple"
               hover-class="mat-elevation-z5"
               class="mat-elevation-z1 mobile-action"
-              [class.media-active]="activityState.isActive$(action.id) | async">
+              [class.media-active]="activityState.isActionActive$(action.id) | async">
 
       <div>
       <app-clip-type [type]="action.type"></app-clip-type>

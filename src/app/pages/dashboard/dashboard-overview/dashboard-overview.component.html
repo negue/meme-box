@@ -13,6 +13,39 @@
       </table>
     </mat-card>
 
+    <br/>
+    <br/>
+
+    Screens in OBS Overview: <br/>
+
+    <br>
+
+    <mat-card>
+      <table class="connections-table">
+        <tr *ngFor="let screenInOBS of screensInOBS$ | async">
+          <td>{{screenInOBS.screenData.name}}</td>
+          <td>
+            {{screenInOBS.statusString}}  <br />
+
+            <div *ngIf="!screenInOBS.correctResolution">
+              Screen: W{{screenInOBS.screenData.width}}/H{{screenInOBS.screenData.height}} <br/>
+              OBS: W{{screenInOBS.obsData.sourceSettings['width']}}/H{{screenInOBS.obsData.sourceSettings['height']}} <br/>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="screenInOBS.showRefreshButton">
+              <button (click)="triggerObsReload(screenInOBS)"
+                      style="margin: -4px;"
+                      color="primary" mat-icon-button>
+                <mat-icon svgIcon="replay"></mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </mat-card>
+
+
     <app-open-feedback-button feedbackTarget="Dashboard"></app-open-feedback-button>
   </div>
   <div class="column">
