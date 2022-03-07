@@ -10,6 +10,9 @@ jobs:
   forward-merge:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: release
       - uses: NicholasBoll/action-forward-merge-pr@v1.0.0
         with:
           token: ${{secrets.GITHUB_TOKEN}}
