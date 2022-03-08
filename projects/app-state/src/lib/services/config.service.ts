@@ -5,8 +5,6 @@ import {
   Config,
   ENDPOINTS,
   ObsConfig,
-  OPEN_CONFIG_PATH,
-  OPEN_FILES_PATH,
   TwitchAuthInformation,
   TwitchConfig,
   TwitchConnectionType
@@ -121,7 +119,7 @@ export class ConfigService {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       // update path & await
-      await this.http.get<string>(this.openEndpoint(OPEN_FILES_PATH)).toPromise();
+      await this.memeboxApi.get<string>(this.openEndpoint(ENDPOINTS.OPEN.FILES));
     }
   }
 
@@ -130,7 +128,7 @@ export class ConfigService {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
     } else {
       // update path & await
-      await this.http.get<string>(this.openEndpoint(OPEN_CONFIG_PATH)).toPromise();
+      await this.memeboxApi.get<string>(this.openEndpoint(ENDPOINTS.OPEN.CONFIG));
     }
   }
 
@@ -171,6 +169,6 @@ export class ConfigService {
   }
 
   private openEndpoint(endpoint: string) {
-    return `${ENDPOINTS.OPEN}${endpoint}`;
+    return `${ENDPOINTS.OPEN.PREFIX}${endpoint}`;
   }
 }

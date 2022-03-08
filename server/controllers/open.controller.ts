@@ -1,11 +1,11 @@
-import {ENDPOINTS, OPEN_CONFIG_PATH, OPEN_FILES_PATH} from "@memebox/contracts";
+import {ENDPOINTS} from "@memebox/contracts";
 import open from "open";
 import {NEW_CONFIG_PATH} from "../path.utils";
 import {Controller, Get, Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
 import {Persistence} from "../persistence";
 
-@Controller(ENDPOINTS.OPEN)
+@Controller(ENDPOINTS.OPEN.PREFIX)
 export class OpenController {
 
   constructor(
@@ -13,7 +13,7 @@ export class OpenController {
   ) {
   }
 
-  @Get(OPEN_CONFIG_PATH)
+  @Get(ENDPOINTS.OPEN.CONFIG)
   async openConfigPath() {
     await open(NEW_CONFIG_PATH);
 
@@ -22,7 +22,7 @@ export class OpenController {
     };
   }
 
-  @Get(OPEN_FILES_PATH)
+  @Get(ENDPOINTS.OPEN.FILES)
   async openFilePath() {
     const mediaFolder = this._persistence.getConfig().mediaFolder;
 

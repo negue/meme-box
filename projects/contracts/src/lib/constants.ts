@@ -8,11 +8,16 @@ export const ENDPOINTS = {
   SCREEN: 'screen',
   OBS_CLIPS: 'clips',
   ERROR: 'error',
-  OPEN: 'open',
   STATE: 'state',
 
   TIMED_EVENTS: 'timed_events',
   NETWORK_LIST: 'network_ip_list',
+
+  OPEN: {
+    PREFIX: 'open',
+    CONFIG: '/config',
+    FILES: '/files',
+  },
 
   CONFIG: {
     PREFIX: 'config',
@@ -63,9 +68,6 @@ export const ENDPOINTS = {
     PREVIEW: '/preview/'
   },
 }
-
-export const OPEN_CONFIG_PATH = `/config`;
-export const OPEN_FILES_PATH = `/files`;
 
 export const TwitchTypesArray = [
   // TwitchEventTypes.follow,
