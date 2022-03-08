@@ -6,10 +6,6 @@ export interface TwitchEvent {
   timestamp: Date;
 }
 
-export interface TwitchEventHasMessage {
-  message: string;
-}
-
 abstract class TwitchEventBase implements TwitchEvent {
   timestamp: Date = new Date();
   abstract type: TwitchEventTypes;
@@ -17,7 +13,7 @@ abstract class TwitchEventBase implements TwitchEvent {
 
 export class TwitchChatMessage
   extends TwitchEventBase
-  implements TwitchEvent, TwitchEventHasMessage {
+  implements TwitchEvent {
 
   readonly type = TwitchEventTypes.message;
 
@@ -30,15 +26,11 @@ export class TwitchChatMessage
   ) {
     super();
   }
-
-  get message() {
-    return this.payload.message;
-  }
 }
 
 export class TwitchCheerMessage
   extends TwitchEventBase
-  implements TwitchEvent, TwitchEventHasMessage {
+  implements TwitchEvent {
   readonly type = TwitchEventTypes.bits;
 
   public payload: {
@@ -59,10 +51,6 @@ export class TwitchCheerMessage
       ...payload,
       bits: parseInt(payload.userstate.bits)
     }
-  }
-
-  get message() {
-    return this.payload.message;
   }
 }
 
