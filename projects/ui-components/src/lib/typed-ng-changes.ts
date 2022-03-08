@@ -10,6 +10,7 @@ export type NgChanges<Component extends object, Props = ExcludeFunctions<Compone
 }
 
 type MarkFunctionPropertyNames<Component> = {
+  // eslint-disable-next-line @typescript-eslint/ban-types
   [Key in keyof Component]: Component[Key] extends Function | Subject<any> ? never : Key;
 }
 

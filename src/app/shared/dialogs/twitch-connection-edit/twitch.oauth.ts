@@ -54,7 +54,7 @@ export function checkToken(): boolean {
     return false;
   }
 
-  const jwt = jwtDecode(tokenId!);
+  const jwt = jwtDecode(tokenId);
 
   const {preferred_username: userName, sub: userId} = jwt as any;
 

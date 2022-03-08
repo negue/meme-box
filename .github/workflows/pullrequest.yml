@@ -3,6 +3,9 @@ name: Pull-Request CI
 on:
   pull_request:
     branches: [ release, develop ]
+env:
+  BEFORE_SHA: ${{ github.event.before }}
+  TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
 
 jobs:
   build_test:
@@ -11,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Cache multiple paths
         uses: actions/cache@v2
         with:
@@ -22,6 +27,9 @@ jobs:
         with:
           node-version: 12.16.2
       - run: npm install --legacy-peer-deps
+      - name: Run Affected Lint
+        shell: bash
+        run: npm run affected:lint -- --base=origin/$TARGET_BRANCH
       - run: npm run build:prepare
       - run: npm run test:ci
       - name: Run Cypress tests 🧪

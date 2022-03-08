@@ -1,0 +1,31 @@
+{
+  "extends": "./.eslintrc.json",
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "excludedFiles": [
+        "**/*.d.ts"
+      ],
+      "plugins": [
+        "@angular-eslint/eslint-plugin"
+      ],
+      "rules": {
+        "@angular-eslint/use-injectable-provided-in": "error",
+        "@angular-eslint/no-attribute-decorator": "error",
+        "@angular-eslint/component-selector": "warn"
+      }
+    },
+    {
+      "files": ["*.component.html"],
+      "excludedFiles": ["**/index.html"],
+      "parser": "@angular-eslint/template-parser",
+      "plugins": ["@angular-eslint/template"],
+      "rules": {
+        "@angular-eslint/template/banana-in-box": "error",
+        "@angular-eslint/template/no-negated-async": "error"
+      }
+    }
+  ]
+}

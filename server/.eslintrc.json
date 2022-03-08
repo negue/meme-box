@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "../.eslintrc-shared-libs.json"
+  ],
+  "ignorePatterns": [
+    "!**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": [
+          "./server/tsconfig.server.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [],
+      "rules": {
+        "@angular-eslint/use-injectable-provided-in": 0
+      }
+    }
+  ]
+}

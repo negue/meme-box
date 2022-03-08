@@ -1,0 +1,24 @@
+{
+  "extends": "../.eslintrc.json",
+  "ignorePatterns": ["!**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "excludedFiles": ["**/*.d.ts", "**/*.spec.ts"],
+      "extends": [
+        "plugin:@angular-eslint/template/process-inline-templates"
+      ],
+      "parserOptions": {
+        "project": ["src/tsconfig.*?.json"]
+      },
+      "rules": {
+        "no-restricted-syntax": 0
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@nrwl/nx/angular-template"],
+      "rules": {}
+    }
+  ]
+}

@@ -43,7 +43,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   content: DynamicIframeContent;
 
   @Output()
-  load = new EventEmitter();
+  iframeLoaded = new EventEmitter();
 
   errorSubject$ = new BehaviorSubject<string>('');
 
@@ -76,7 +76,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
       this.targetIframe.nativeElement.contentWindow.postMessage(twitchEvent, '*');
     });
 
-    this.load.emit();
+    this.iframeLoaded.emit();
 
   }
 

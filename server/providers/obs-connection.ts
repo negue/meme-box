@@ -63,8 +63,8 @@ export class ObsConnection {
   async getCurrentConnection() : Promise<OBSWebSocket> {
     try {
       await this.connectIfNot();
-    } catch (e) {
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) { }
 
     return this.obsConnection
   }

@@ -19,8 +19,7 @@ export class ActionActivityUpdatesWebsocket extends AbstractWebsocketHandler {
     });
   }
 
-  protected onConnectedSocket(ws: WebSocket): void {
-  }
+  protected onConnectedSocket(ws: WebSocket): void { }
 
   WebSocketServerLabel = '';
 }

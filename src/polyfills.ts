@@ -55,6 +55,7 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
+import './zone-flags';
 import 'zone.js/dist/zone'; // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
@@ -62,7 +63,7 @@ import 'zone.js/dist/zone'; // Included with Angular CLI.
 /***************************************************************************************************
  * TYPES
  */
-import type {electronAPI, electronAPIKey} from '../preload'
+import type { electronAPI, electronAPIKey } from '../preload'
 
 declare global {
   interface Window {

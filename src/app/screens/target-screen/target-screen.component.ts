@@ -91,7 +91,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   @Input()
-  public screenId: string = '';
+  public screenId = '';
 
   @HostBinding('id')
   public get cssId() {
@@ -382,7 +382,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
   }
 
   private randomAnimation(animations: string[]) {
-    var randomIndex = Math.floor(Math.random() * animations.length);     // returns a random integer from 0 to 9
+    const randomIndex = Math.floor(Math.random() * animations.length);     // returns a random integer from 0 to 9
 
     return animations[randomIndex];
   }

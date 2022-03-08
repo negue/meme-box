@@ -9,17 +9,12 @@ export function setDummyData(state: AppState) {
   const clipB = uuid();
 
   state.screen[newScreenId] = {
-    "name": "Firefox",
+    "name": "Example OBS Browsersource",
     "id": newScreenId,
     "clips": {
       [clipA]: {
         "position": 0,
         "id": clipA,
-        "left": null,
-        "right": null,
-        "bottom": null,
-        "top": null,
-        "imgFit": null,
         visibility: VisibilityEnum.Play,
         animationIn: "random",
         animationOut: "random",
@@ -27,11 +22,6 @@ export function setDummyData(state: AppState) {
       [clipB]: {
         "position": 0,
         "id": clipB,
-        "left": null,
-        "right": null,
-        "bottom": null,
-        "top": null,
-        "imgFit": null,
         visibility: VisibilityEnum.Play,
         animationIn: "random",
         animationOut: "random",
@@ -47,20 +37,16 @@ export function setDummyData(state: AppState) {
       "name": "Fill Murray",
       "type": 0,
       "volumeSetting": 10,
-      "clipLength": null,
       "playLength": 4000,
-      "path": "https://www.fillmurray.com/460/300",
-      "previewUrl": null
+      "path": "https://www.fillmurray.com/460/300"
     },
     [clipB]: {
       "id": clipB,
       "name": "Placekitten",
       "type": 0,
       "volumeSetting": 100,
-      "clipLength": null,
       "playLength": 4000,
-      "path": "https://placekitten.com/408/287",
-      "previewUrl": null
+      "path": "https://placekitten.com/408/287"
     },
   }
 }

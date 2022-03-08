@@ -55,7 +55,7 @@
         <mat-label>Size</mat-label>
         <mat-select
           [value]="currentSelectedClip ? (currentSelectedClip?.clipSetting | settingsToSizingType) : undefined"
-          [disabled]="currentSelectedClip == null"
+          [disabled]="currentSelectedClip === null"
           (valueChange)="sizeOptionChanged($event)"
           placeholder="Size"
         >
@@ -69,7 +69,7 @@
       <mat-form-field appearance="fill" class="arrange-position-control">
         <mat-label>Media Position</mat-label>
         <mat-select [value]="currentSelectedClip?.clipSetting?.position"
-                    [disabled]="currentSelectedClip == null"
+                    [disabled]="currentSelectedClip === null"
                     (valueChange)="positionOptionChanged($event)"
                     placeholder="Media Position"
         >
@@ -147,7 +147,7 @@
               color="primary"
               aria-label="Apply change for selected media"
               matTooltip="Apply change for selected media"
-              [disabled]="currentSelectedClip == null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
+              [disabled]="currentSelectedClip === null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
               (click)="applySingleChanges()"
       >
         <mat-icon svgIcon="check"></mat-icon>
@@ -170,7 +170,7 @@
               color="warn"
               aria-label="Reset changes for selected media"
               matTooltip="Reset changes for selected media"
-              [disabled]="currentSelectedClip == null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
+              [disabled]="currentSelectedClip === null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
               (click)="reset()"
       >
         <mat-icon svgIcon="cancel2"></mat-icon>

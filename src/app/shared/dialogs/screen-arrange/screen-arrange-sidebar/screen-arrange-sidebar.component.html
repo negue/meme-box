@@ -5,7 +5,7 @@
       <ng-container *ngIf="selectedItems.value?.length === 0">
         All media visible
       </ng-container>
-      <ng-container *ngIf="0 != selectedItems.value?.length">
+      <ng-container *ngIf="0 !== selectedItems.value?.length">
         {{selectedItems.value?.length}} visible
       </ng-container>
       <mat-icon svgIcon="arrow_drop_down"></mat-icon>

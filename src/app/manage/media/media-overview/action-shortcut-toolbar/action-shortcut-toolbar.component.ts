@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Action, TwitchTrigger} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
@@ -10,7 +10,7 @@ import {DialogService} from "../../../../shared/dialogs/dialog.service";
   templateUrl: './action-shortcut-toolbar.component.html',
   styleUrls: ['./action-shortcut-toolbar.component.scss']
 })
-export class ActionShortcutToolbarComponent implements OnInit {
+export class ActionShortcutToolbarComponent {
 
   @Input()
   public action: Action;
@@ -26,9 +26,6 @@ export class ActionShortcutToolbarComponent implements OnInit {
     private appQueries: AppQueries,
     private dialogService: DialogService
   ) { }
-
-  ngOnInit(): void {
-  }
 
   onToggleMobileShow() {
     const newClip = {

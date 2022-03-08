@@ -20,7 +20,7 @@ export interface ConfirmationsPayload {
 export class SimpleConfirmationDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationsPayload) {
-    data.content = data.content.trim();
+   data.content = data.content?.trim() ?? '';
 
     if (!data.overrideButtons) {
       data.yesButton = 'Yes';

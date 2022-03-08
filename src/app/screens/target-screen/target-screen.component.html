@@ -63,7 +63,7 @@ The Loaded Media need to stay cached?
     </iframe>
 
     <app-dynamic-iframe *ngSwitchCase="4"  class="media-clip" #dynamicIframeComponent
-                        (load)="addToMap(entry.clip, dynamicIframeComponent)"
+                        (iframeLoaded)="addToMap(entry.clip, dynamicIframeComponent)"
                         [mediaId]="entry.clip.id"
                         [class.visible]="(mediaToggleVar.isVisible$ | async)">
 

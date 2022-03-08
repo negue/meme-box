@@ -2,7 +2,9 @@ import {Injectable} from "@angular/core";
 import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
 import {AppService, MemeboxApiService} from "@memebox/app-state";
 
-@Injectable()
+@Injectable({
+  providedIn: "any"
+})
 export class WidgetStoreRemoteAdapter implements ActionStoreAdapter {
   constructor(
     private appService: AppService,

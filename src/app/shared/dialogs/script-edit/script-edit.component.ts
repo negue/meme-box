@@ -98,14 +98,6 @@ export class ScriptEditComponent implements OnInit {
     this.dialogRef.close(this.workingValue);
   }
 
-  markForCheck(force = false): void {
-    const enableSubjectRefresh = force || this.autoRefreshCheckbox?.checked;
-
-    if (this.initDone && enableSubjectRefresh) {
-
-    }
-  }
-
   addNewVariable(): void {
     this.variablesList.push({
       hint: '',
@@ -113,8 +105,6 @@ export class ScriptEditComponent implements OnInit {
       fallback: '',
       type: ActionVariableTypes.text
     });
-
-    this.markForCheck();
   }
 
   deleteVariable($event: ActionVariableConfig): void {
@@ -123,8 +113,6 @@ export class ScriptEditComponent implements OnInit {
     const foundIndex = this.variablesList.findIndex(value => value.name === $event.name);
 
     this.variablesList.splice(foundIndex, 1);
-
-    this.markForCheck();
   }
 
   // todo extract to common utils function
@@ -203,7 +191,5 @@ export class ScriptEditComponent implements OnInit {
     this.workingValue.executionScript = newExecutionScriptCode;
 
     this.declaredActionsEntries$.next(returnDeclaredActionEntries(newExecutionScriptCode));
-
-    this.markForCheck();
   }
 }

@@ -1,4 +1,4 @@
-<app-filter *ngIf="(dontHaveActions$ | async) == false"
+<app-filter *ngIf="(dontHaveActions$ | async) === false"
             [items]="filterItems$ | async"
             [selectedArray]="filteredItems$ | async"
             (selected)="filteredItems$.next($event)"

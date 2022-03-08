@@ -74,7 +74,7 @@ export class ScriptContext implements CanDispose {
     const isPermanentScript = this.script.type === ActionType.PermanentScript;
 
     // TODO error$ subject for logger or other stuff
-    var error$ = new Subject<string>();
+    const error$ = new Subject<string>();
 
     this.store = new ActionStoreApi(
       script.id,

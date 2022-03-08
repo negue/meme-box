@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.app.json",
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "*.spec.ts",
+    "*.d.ts",
+    "**/*.spec.ts",
+    "**/*.d.ts",
+    "**/*.stories.*",
+    "typings.d.ts"
+  ]
+}

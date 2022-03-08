@@ -56,7 +56,6 @@ PersistenceInstance.hardRefresh$()
     startWith(true)
   )
   .subscribe(() => {
-    console.info('Data Hard-Refresh');
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
   });
 
@@ -139,7 +138,6 @@ PersistenceInstance.configLoaded$.pipe(
 ).subscribe(async () => {
 
   const versionCheckEnabled = PersistenceInstance.getConfig().enableVersionCheck;
-  console.info({ versionCheckEnabled });
 
   if (versionCheckEnabled) {
     if (IS_NIGHTLY) {
@@ -174,7 +172,7 @@ function loadJsonAsync (url: string): Promise<string> {
   return new Promise((resolve, reject) => {
 
   https.get(url, function(res){
-    var body = '';
+    let body = '';
 
     res.on('data', function(chunk){
       body += chunk;

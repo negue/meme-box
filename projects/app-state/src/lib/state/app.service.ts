@@ -20,9 +20,9 @@ import {uuid} from "@gewd/utils";
 import {SnackbarService} from "../services/snackbar.service";
 import {ConnectionStateService} from "./connection-state.service";
 import {MemeboxApiService} from "./memeboxApi.service";
-
-
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class AppService {
 
   constructor(private appStore: AppStore,
@@ -39,7 +39,6 @@ export class AppService {
       const httpResult = await this.memeboxApi.get<AppState>('');
 
       this.connectionState.setOfflineMode(false);
-
       this.appStore.update(state => httpResult);
 
       this.appStore.setLoading(false);

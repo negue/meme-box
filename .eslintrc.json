@@ -1,45 +1,29 @@
 {
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nrwl/nx"],
   "env": {
-      "browser": true,
-      "node": true,
-      "es6": true,
-      "es2017": true
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "es2017": true
   },
   "overrides": [
     {
       "files": ["*.ts"],
+      "excludedFiles": ["**/*.d.ts", "**/*.spec.ts"],
       "extends": [
-        "eslint:recommended",
+        "plugin:@nrwl/nx/angular",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking"
       ],
-      "parser": "@typescript-eslint/parser",
-      "parserOptions": {
-        "ecmaVersion": 10,
-        "project": [
-          "./src/tsconfig.app.json",
-          "./tsconfig.spec.json",
-          "./server/tsconfig.server.json"
-        ],
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "modules": true
-        }
-      },
       "plugins": [
-        "@typescript-eslint",
-        "@angular-eslint/eslint-plugin"
+        "eslint-plugin-import",
+        "@angular-eslint/eslint-plugin",
+        "@typescript-eslint"
       ],
       "rules": {
-        "@typescript-eslint/indent": [
-          "error", 2, {
-            "SwitchCase": 1,
-            "CallExpression": {"arguments": "first"},
-            "FunctionExpression": {"parameters": "first"},
-            "FunctionDeclaration": {"parameters": "first"}
-          }
-        ],
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/no-explicit-any": 0,
@@ -48,17 +32,22 @@
         "@typescript-eslint/no-unsafe-assignment": 0,
         "@typescript-eslint/no-unsafe-return": 0,
         "@typescript-eslint/no-floating-promises": 0,
-        "@angular-eslint/use-injectable-provided-in": "error",
-        "@angular-eslint/no-attribute-decorator": "error"
-      }
-    },
-    {
-      "files": ["*.component.html"],
-      "parser": "@angular-eslint/template-parser",
-      "plugins": ["@angular-eslint/template"],
-      "rules": {
-          "@angular-eslint/template/banana-in-a-box": "error",
-          "@angular-eslint/template/no-negated-async": "error"
+        "@typescript-eslint/no-empty-interface": 0,
+        "@typescript-eslint/no-unsafe-argument": "warn",
+        "@typescript-eslint/restrict-plus-operands": "warn",
+        "@typescript-eslint/restrict-template-expressions": "warn",
+        "@typescript-eslint/no-misused-promises": "warn",
+        "no-async-promise-executor": "warn",
+        "@typescript-eslint/unbound-method": [
+          "error",
+          {
+            "ignoreStatic": true
+          }
+        ],
+        "no-restricted-syntax": "warn",
+        "@typescript-eslint/member-ordering": "off",
+        "@angular-eslint/no-output-on-prefix": "warn",
+        "@angular-eslint/no-empty-lifecycle-method": "warn"
       }
     }
   ]
