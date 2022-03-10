@@ -26,7 +26,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="actionToEdit?.id === null && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)"
+      <mat-form-field *ngIf="!actionToEdit?.id && !MEDIA_TYPES_WITHOUT_PLAYTIME.includes(form.value.type)"
                       style="width: 30%">
         <mat-label>to this Screen:</mat-label>
         <mat-select [(value)]="selectedScreenId">
