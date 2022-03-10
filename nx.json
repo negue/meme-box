@@ -38,7 +38,17 @@
   },
   "defaultProject": "memebox-app",
   "projects": {
-    "logic-step-ui": { "tags": [] },
-    "logic-step-core": { "tags": [] }
+    "action-variables": { "tags": [] },
+    "action-variables-ui": { "tags": [] },
+    "app-state": { "tags": [] },
+    "contracts": { "tags": [] },
+    "memebox-app": { "tags": [] },
+    "server": { "tags": [] },
+    "shared-state": { "tags": [] },
+    "state-components": { "tags": [] },
+    "ui-components": { "tags": [] },
+    "utils": { "tags": [] },
+    "logic-step-core": { "tags": [] },
+    "logic-step-ui": { "tags": [] }
   }
 }
