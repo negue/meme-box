@@ -2,9 +2,6 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "",
-  "cli": {
-    "defaultCollection": "@nrwl/angular"
-  },
   "projects": {
     "action-variables": {
       "projectType": "library",
@@ -103,9 +100,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "projects/app-state/**/*.ts"
-            ]
+            "lintFilePatterns": ["projects/app-state/**/*.ts"]
           }
         }
       }
@@ -315,7 +310,11 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "cache": true,
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html", "!src/**/*.spec.ts"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html",
+              "!src/**/*.spec.ts"
+            ]
           }
         },
         "cypress-run": {
@@ -377,7 +376,7 @@
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
-              "fileReplacements": [ ]
+              "fileReplacements": []
             }
           }
         },
@@ -531,22 +530,100 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
+            "lintFilePatterns": ["projects/utils/**/*.ts"]
+          }
+        }
+      }
+    },
+    "logic-step-ui": {
+      "projectType": "library",
+      "root": "projects/logic-step-ui",
+      "sourceRoot": "projects/logic-step-ui/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/logic-step-ui/tsconfig.lib.json",
+            "project": "projects/logic-step-ui/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/logic-step-ui/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
             "lintFilePatterns": [
-              "projects/utils/**/*.ts"
+              "projects/logic-step-ui/src/**/*.ts",
+              "projects/logic-step-ui/src/**/*.html"
             ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/logic-step-ui"],
+          "options": {
+            "jestConfig": "projects/logic-step-ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "logic-step-core": {
+      "projectType": "library",
+      "root": "projects/logic-step-core",
+      "sourceRoot": "projects/logic-step-core/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/logic-step-core/tsconfig.lib.json",
+            "project": "projects/logic-step-core/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/logic-step-core/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/logic-step-core/src/**/*.ts",
+              "projects/logic-step-core/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/logic-step-core"],
+          "options": {
+            "jestConfig": "projects/logic-step-core/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }
     }
   },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
   "schematics": {
-    "@schematics/angular:component": {
-      "style": "scss"
-    },
-    "@nrwl/angular:library": {
+    "@nrwl/angular:application": {
       "style": "scss",
       "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:library": {
+      "linter": "eslint",
       "unitTestRunner": "jest",
+      "buildable": true,
+      "style": "scss",
       "strict": true
     },
     "@nrwl/angular:component": {

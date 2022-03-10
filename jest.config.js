@@ -11,10 +11,10 @@ for (const [key, value] of currentPaths) {
 module.exports = {
   moduleNameMapper,
   modulePathIgnorePatterns: [
-    "<rootDir>/dist/",
-    "<rootDir>/out*",
-    "<rootDir>/memebox-streamdeck",
-    "<rootDir>/cypress"
+    '<rootDir>/dist/',
+    '<rootDir>/out*',
+    '<rootDir>/memebox-streamdeck',
+    '<rootDir>/cypress'
   ],
   rootDir: __dirname,
   preset: 'jest-preset-angular',
