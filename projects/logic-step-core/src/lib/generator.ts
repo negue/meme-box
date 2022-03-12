@@ -1,4 +1,5 @@
 import orderBy from "lodash/orderBy";
+import {guid} from "@datorama/akita";
 
 
 export interface LogicTypeProperty {
@@ -18,6 +19,8 @@ export interface LogicTypeMethod {
 }
 
 export class LogicTypeMetadata {
+  // todo label to show in UI (instead of TypeName)
+
   constructor(public typeName: string,
               public properties: LogicTypeProperty[],
               public methods: LogicTypeMethod[]) {
@@ -25,11 +28,16 @@ export class LogicTypeMetadata {
 }
 
 export class LogicVariable {
+  public id = guid();
   public isGlobal = false;
 
   constructor(public name: string,
               public typeName: string) {
   }
+}
+
+export class LogicVariableGlobal extends LogicVariable {
+  isGlobal = true;
 }
 
 // todo add base type

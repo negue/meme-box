@@ -39,6 +39,22 @@ export class LogicContextState extends Store<LogicContextStateType> {
       }
     });
   }
+
+  public updateVariable(variableToUpdate: LogicVariable): void {
+    this.update(state => {
+      const indexOf = state.staticVariables.findIndex(variable => variable.id === variableToUpdate.id);
+
+      state.staticVariables.splice(indexOf, 1, variableToUpdate);
+    });
+  }
+
+  public deleteVariable(variableId: string): void {
+    this.update(state => {
+      const indexOf = state.staticVariables.findIndex(variable => variable.id === variableId);
+
+      state.staticVariables.splice(indexOf, 1);
+    });
+  }
 }
 
 @Injectable({
@@ -46,6 +62,13 @@ export class LogicContextState extends Store<LogicContextStateType> {
 })
 export class LogicContextStateQuery extends Query<LogicContextStateType> {
   public currentLogicSteps$ = this.select(state => state.steps);
+  public nonGlobalVariables$ = this.select(state => state.staticVariables.filter(variable => !variable.isGlobal));
+
+  public allPossibleTypes$ = this.logicContextMetadata.select(meta => {
+    const allEntries = Object.values(meta);
+
+    return allEntries.map(metaEntry => metaEntry.typeName);
+  });
 
   public generatedSourceCode$ = combineLatest([
     this.logicContextMetadata.select(),

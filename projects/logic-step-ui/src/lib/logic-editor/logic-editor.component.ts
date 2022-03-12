@@ -22,4 +22,8 @@ export class LogicEditorComponent implements  OnInit {
   ngOnInit(): void {
     this.generatedCode$ = this.logicQueries.generatedSourceCode$;
   }
+
+  addVariable() {
+    this.state.registerVariables(new LogicVariable('newVar', 'actionApi'))
+  }
 }

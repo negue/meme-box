@@ -1,0 +1,23 @@
+<mat-form-field>
+  <mat-label>Name</mat-label>
+  <input matNativeControl #nameControl
+         [disabled]="variable.isGlobal"
+         [value]="variable.name"
+         (change)="updateName(nameControl.value)">
+</mat-form-field>
+
+<mat-form-field>
+  <mat-label>Type</mat-label>
+  <mat-select [value]="variable.typeName"
+              #typeControl
+              (valueChange)="updateType(typeControl.value)">
+    <ng-container *ngIf="allTypes$ | async as typeList">
+      <mat-option *ngFor="let type of typeList"
+                  [value]="type">
+        {{type}}
+      </mat-option>
+    </ng-container>
+  </mat-select>
+</mat-form-field>
+
+<button mat-button (click)="removeVariable()">Remove</button>

@@ -1,3 +1,9 @@
+<div *ngFor="let variable of logicQueries.nonGlobalVariables$ | async">
+  <logic-variable [variable]="variable"></logic-variable>
+</div>
+
+<button mat-button (click)="addVariable()">Add variable</button>
+
 
   <logic-group data="items" >
   </logic-group>
