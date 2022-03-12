@@ -1,17 +1,16 @@
 import {Injectable} from "@angular/core";
-import {Query, Store} from "@datorama/akita";
+import {Query, Store, StoreConfig} from "@datorama/akita";
 import {produce} from "immer";
 import {LogicMetadataDictionary, LogicTypeMetadata} from "./generator";
 
 @Injectable({
   providedIn: "root"
 })
+@StoreConfig({ name: 'logicContextMetadata', producerFn: produce })
 export class LogicContextMetadata extends Store<LogicMetadataDictionary> {
 
   constructor() {
-    super({}, {
-      producerFn: produce
-    });
+    super({});
   }
 
   public registerType(...typesToRegister: LogicTypeMetadata[]): void {

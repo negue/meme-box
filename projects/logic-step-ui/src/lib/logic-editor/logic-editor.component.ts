@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {LogicContextState, LogicContextStateQuery, LogicVariable} from "@memebox/logic-step-core";
+import {LogicContextState, LogicContextStateQuery, LogicStepGroup, LogicVariable} from "@memebox/logic-step-core";
 import {Observable} from "rxjs";
+import {guid} from "@datorama/akita";
 
 @Component({
   selector: 'logic-editor',
@@ -25,5 +26,23 @@ export class LogicEditorComponent implements  OnInit {
 
   addVariable() {
     this.state.registerVariables(new LogicVariable('newVar', 'actionApi'))
+  }
+
+  addStep(parent: LogicStepGroup|null) {
+    this.state.addStep({
+      id: guid(),
+      stepVariableName: '',
+      logicStepType: "step",
+      methodToCall: ''
+    }, parent);
+  }
+
+  addGroup(parent: LogicStepGroup|null) {
+    this.state.addGroup({
+      id: guid(),
+      logicStepType: "group",
+      steps: [],
+      awaited: true
+    }, parent)
   }
 }

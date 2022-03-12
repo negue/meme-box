@@ -3,7 +3,22 @@
 </div>
 
 <button mat-button (click)="addVariable()">Add variable</button>
+<br/>
+
+<logic-group [steps]="logicQueries.currentLogicSteps$ | async"
+             [stepTemplate]="stepTemplate"
+[addActionsTemplate]="actionsTemplate">
+
+</logic-group>
+
+<ng-template #stepTemplate let-step>
+  This would be the step {{ step | json }}
+</ng-template>
 
 
-  <logic-group data="items" >
-  </logic-group>
+<ng-template #actionsTemplate let-parent="parent">
+  <button mat-button (click)="addStep(parent)">add step</button>
+  <button mat-button (click)="addGroup(parent)">add group</button>
+</ng-template>
+
+<br/>

@@ -47,10 +47,10 @@ export interface LogicStep {
 }
 
 export interface LogicStepCall extends LogicStep {
-  logicStepType: 'call';
+  logicStepType: 'step';
   stepVariableName: string;
   methodToCall: string;
-  arguments: {[key: string]: unknown}| unknown[]
+  arguments?: {[key: string]: unknown}| unknown[]
 }
 
 export interface LogicStepGroup  extends LogicStep {
@@ -82,7 +82,7 @@ export function generateCodeBySteps(
 
   for (const step of steps) {
     switch (step.logicStepType) {
-      case 'call': {
+      case 'step': {
         result.push( (awaited ? 'await ' : '') + generateCallCode(step, variables, metaData).trim());
         break;
       }

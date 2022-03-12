@@ -8,9 +8,10 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSelectModule} from "@angular/material/select";
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 @NgModule({
-  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule],
+  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, DragDropModule],
   declarations: [
     LogicGroupComponent,
     LogicCallComponent,
