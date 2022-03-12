@@ -11,7 +11,36 @@
 
 </logic-group>
 
-<ng-template #stepTemplate let-step>
+<ng-template #stepTemplate let-step let-parent="parent">
+  <mat-form-field>
+    <mat-label>Variable</mat-label>
+    <mat-select [value]="step.stepVariableName"
+                #variableNameControl
+                (valueChange)="updateStepVariableName(step, variableNameControl.value, parent)">
+      <ng-container *ngIf="allVariableNames$ | async as variableNameList">
+        <mat-option *ngFor="let name of variableNameList"
+                    [value]="name">
+          {{name}}
+        </mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Method</mat-label>
+    <mat-select [value]="step.methodToCall"
+                #methodToCallControl
+                (valueChange)="updateMethodToCall(step, methodToCallControl.value, parent)">
+      <ng-container *ngIf="variableNameControl.value | logicStepMethodList$ | async as methods">
+        <mat-option *ngFor="let method of methods"
+                    [value]="method.name">
+          {{method.name}}
+        </mat-option>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+
+  <br/>
   This would be the step {{ step | json }}
 </ng-template>
 

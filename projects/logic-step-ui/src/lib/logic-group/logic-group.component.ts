@@ -6,7 +6,7 @@ import {CdkDragDrop} from "@angular/cdk/drag-drop";
 @Component({
   selector: 'logic-group',
   templateUrl: './logic-group.component.html',
-  styleUrls: ['./logic-group.component.css']
+  styleUrls: ['./logic-group.component.scss']
 })
 export class LogicGroupComponent {
   @Input()

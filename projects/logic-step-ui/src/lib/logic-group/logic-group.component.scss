@@ -1,11 +1,16 @@
-.example-list {
-  width: 500px;
-  max-width: 100%;
+:host {
+  display: block;
+  padding-left: 1rem;
+}
+
+
+.entry-list {
   border: solid 1px #ccc;
   min-height: 60px;
   display: block;
   border-radius: 4px;
   overflow: hidden;
+  padding-left: 0.5rem;
 }
 
 .cdk-drag-preview {
@@ -28,6 +33,24 @@
   border: none;
 }
 
-.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+.entry-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.sub-group {
+  margin-left: 1rem;
+  display: inline-block;
+}
+
+.step-entry {
+  position: relative;
+}
+
+.step-grab {
+  &.group {
+    position: absolute;
+    top: 3rem;
+  }
+
+  cursor: grab;
 }

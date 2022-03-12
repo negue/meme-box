@@ -1,7 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {LogicContextState, LogicContextStateQuery, LogicStepGroup, LogicVariable} from "@memebox/logic-step-core";
+import {
+  LogicContextState,
+  LogicContextStateQuery,
+  LogicStepCall,
+  LogicStepGroup,
+  LogicVariable
+} from "@memebox/logic-step-core";
 import {Observable} from "rxjs";
 import {guid} from "@datorama/akita";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'logic-editor',
@@ -10,6 +17,10 @@ import {guid} from "@datorama/akita";
 })
 export class LogicEditorComponent implements  OnInit {
   public generatedCode$!: Observable<string>;
+
+  public allVariableNames$ = this.logicQueries.allVariables$.pipe(
+    map(variableAr => variableAr.map(variable => variable.name))
+  );
 
   constructor(
     public state: LogicContextState,
@@ -44,5 +55,19 @@ export class LogicEditorComponent implements  OnInit {
       steps: [],
       awaited: true
     }, parent)
+  }
+
+  updateStepVariableName(step: LogicStepCall, value: string, parent: LogicStepGroup|null) {
+    this.state.updateCallStep({
+      ...step,
+      stepVariableName: value
+    }, parent);
+  }
+
+  updateMethodToCall(step: LogicStepCall, value: string, parent: LogicStepGroup|null) {
+    this.state.updateCallStep({
+      ...step,
+      methodToCall: value
+    }, parent);
   }
 }

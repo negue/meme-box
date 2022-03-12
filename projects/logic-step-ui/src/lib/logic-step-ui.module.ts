@@ -9,6 +9,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatSelectModule} from "@angular/material/select";
 import {DragDropModule} from "@angular/cdk/drag-drop";
+import {LogicStepMethodListPipe} from "./logic-step-method-list.pipe";
 
 @NgModule({
   imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, DragDropModule],
@@ -16,7 +17,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
     LogicGroupComponent,
     LogicCallComponent,
     LogicEditorComponent,
-    LogicVariableComponent
+    LogicVariableComponent,
+    LogicStepMethodListPipe
   ],
   exports: [
     LogicEditorComponent

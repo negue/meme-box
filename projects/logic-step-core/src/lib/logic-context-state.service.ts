@@ -79,6 +79,16 @@ export class LogicContextState extends Store<LogicContextStateType> {
     });
   }
 
+  updateCallStep(stepToUpdate: LogicStepCall, parent: LogicStepGroup | null) {
+    this.update(state => {
+      const stepsArrayToUpdate = this.findTargetGroupSteps(state.steps, parent);
+
+      const indexOf = stepsArrayToUpdate.findIndex(step => step.id === stepToUpdate.id);
+
+      stepsArrayToUpdate.splice(indexOf, 1, stepToUpdate);
+    });
+  }
+
   // todo refactor the state to find items more easier
   private findTargetGroupSteps (allSteps: AllLogicSteps[], parent: LogicStepGroup|null) {
     if (parent === null) {
@@ -105,6 +115,7 @@ export class LogicContextState extends Store<LogicContextStateType> {
 
     throw new Error('Group not found');
   }
+
 }
 
 @Injectable({
@@ -112,6 +123,7 @@ export class LogicContextState extends Store<LogicContextStateType> {
 })
 export class LogicContextStateQuery extends Query<LogicContextStateType> {
   public currentLogicSteps$ = this.select(state => state.steps);
+  public allVariables$ = this.select(state => state.staticVariables);
   public nonGlobalVariables$ = this.select(state => state.staticVariables.filter(variable => !variable.isGlobal));
 
   public allPossibleTypes$ = this.logicContextMetadata.select(meta => {
