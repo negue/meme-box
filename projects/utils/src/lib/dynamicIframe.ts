@@ -153,7 +153,7 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
 
 function getVariableValueOrFallback (config: ActionVariableConfig,
                                      valueBag: Dictionary<any>,
-                                     justReturnIt: boolean = false) {
+                                     justReturnIt = false) {
   const valueOfBag = valueBag[config.name];
   const valueToReturn = typeof valueOfBag === 'undefined'
     ? config.fallback
