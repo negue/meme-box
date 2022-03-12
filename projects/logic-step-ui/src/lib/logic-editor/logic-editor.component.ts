@@ -44,7 +44,9 @@ export class LogicEditorComponent implements  OnInit {
       id: guid(),
       stepVariableName: '',
       logicStepType: "step",
-      methodToCall: ''
+      methodToCall: '',
+      callbackSteps: [],
+      methodArguments: {}
     }, parent);
   }
 
@@ -68,6 +70,23 @@ export class LogicEditorComponent implements  OnInit {
     this.state.updateCallStep({
       ...step,
       methodToCall: value
+    }, parent);
+  }
+
+  chooseActionToTrigger() {
+      alert('todo');
+  }
+
+  updateMethodArgument(step: LogicStepCall,
+                       argumentName: string,
+                       value: unknown,
+                       parent: LogicStepGroup|null) {
+    this.state.updateCallStep({
+      ...step,
+      methodArguments: {
+        ...step.methodArguments,
+        [argumentName]: value
+      },
     }, parent);
   }
 }

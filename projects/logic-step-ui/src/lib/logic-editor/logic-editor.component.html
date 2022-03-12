@@ -3,6 +3,7 @@
 </div>
 
 <button mat-button (click)="addVariable()">Add variable</button>
+<button mat-button (click)="chooseActionToTrigger()">Choose action</button>
 <br/>
 
 <logic-group [steps]="logicQueries.currentLogicSteps$ | async"
@@ -12,6 +13,7 @@
 </logic-group>
 
 <ng-template #stepTemplate let-step let-parent="parent">
+  <div style="display: inline-block">
   <mat-form-field>
     <mat-label>Variable</mat-label>
     <mat-select [value]="step.stepVariableName"
@@ -40,8 +42,27 @@
     </mat-select>
   </mat-form-field>
 
+  <br />
+  <div *ngIf="step | logicMethodArguments$ | async as methodArguments">
+    <div *ngFor="let argument of methodArguments">
+      {{argument.name}}: {{argument.typeName}}
+
+      <div *ngIf="argument.typeName === 'time:seconds'">
+        <mat-form-field>
+          <mat-label>Seconds</mat-label>
+          <input matNativeControl #secondsControl type="number"
+                 [value]="step.methodArguments[argument.name] || 0"
+                 (change)="updateMethodArgument(step, argument.name, secondsControl.value, parent)">
+        </mat-form-field>
+
+      </div>
+
+    </div>
+  </div>
+
   <br/>
   This would be the step {{ step | json }}
+  </div>
 </ng-template>
 
 

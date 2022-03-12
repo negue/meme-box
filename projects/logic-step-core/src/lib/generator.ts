@@ -27,12 +27,15 @@ export class LogicTypeMetadata {
   }
 }
 
+// todo refactor maybe merge this with a logic step / method arguments
+
 export class LogicVariable {
   public id = guid();
   public isGlobal = false;
 
   constructor(public name: string,
-              public typeName: string) {
+              public typeName: string,
+              public payload: {[key: string]: unknown}|null = null) {
   }
 }
 
@@ -50,7 +53,8 @@ export interface LogicStepCall extends LogicStep {
   logicStepType: 'step';
   stepVariableName: string;
   methodToCall: string;
-  arguments?: {[key: string]: unknown}| unknown[]
+  methodArguments: {[key: string]: unknown};
+  callbackSteps: AllLogicSteps[];
 }
 
 export interface LogicStepGroup  extends LogicStep {
@@ -80,7 +84,7 @@ export function generateCodeBySteps(
 ) {
   const result: string[] = [];
 
-  for (const step of steps) {
+  for (const step of (steps||[])) {
     switch (step.logicStepType) {
       case 'step': {
         result.push( (awaited ? 'await ' : '') + generateCallCode(step, variables, metaData).trim());
@@ -131,9 +135,7 @@ export function generateCallCode(step: LogicStepCall, variables: LogicTypeProper
 
   const orderedArguments = orderBy(methodMetadata.arguments, ['index'])
     .map(m => {
-      const valuePassed = typeof step.arguments === 'object'
-        ? step.arguments[m.name]
-        : null;
+      const valuePassed = step.methodArguments[m.name];
 
       switch (m.typeName) {
         case 'time:seconds': return valuePassed;
@@ -143,11 +145,12 @@ export function generateCallCode(step: LogicStepCall, variables: LogicTypeProper
           const callbackVariables = scopeVariables.map(sv => sv.name).join(', ');
 
           return `async (${callbackVariables}) => {
-              ${generateCodeBySteps(step.arguments as AllLogicSteps[], [...variables, ...scopeVariables], metaData)}
+              ${generateCodeBySteps(step.callbackSteps, [...variables, ...scopeVariables], metaData)}
             }`;
         }
       }
 
+      // json data - like actionOverrides
       return JSON.stringify(valuePassed);
     })
     .join(',');
