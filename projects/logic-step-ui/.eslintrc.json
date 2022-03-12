@@ -1,5 +1,5 @@
 {
-  "extends": ["../../.eslintrc.json"],
+  "extends": ["../../.eslintrc.js"],
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
@@ -12,14 +12,7 @@
         "project": ["projects/logic-step-ui/tsconfig.*?.json"]
       },
       "rules": {
-        "@angular-eslint/directive-selector": [
-          "error",
-          { "type": "attribute", "prefix": "memebox", "style": "camelCase" }
-        ],
-        "@angular-eslint/component-selector": [
-          "error",
-          { "type": "element", "prefix": "memebox", "style": "kebab-case" }
-        ]
+
       }
     },
     {
