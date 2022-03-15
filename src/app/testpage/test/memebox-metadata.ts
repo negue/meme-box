@@ -1,4 +1,5 @@
-import {LogicContextMetadata, LogicTypeMetadata, LogicTypeMetadataBuilder} from "@memebox/logic-step-core";
+import {LogicTypeMetadata, LogicTypeMetadataBuilder} from "@memebox/logic-step-core";
+import {LogicContextMetadata} from "@memebox/logic-step-ui";
 
 const actionApi = new LogicTypeMetadataBuilder('actionApi')
   .withProperties(  {

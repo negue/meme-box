@@ -1,14 +1,9 @@
 import {Component, Input, OnInit, TemplateRef} from '@angular/core';
-import {
-  LogicContextState,
-  LogicContextStateQuery,
-  LogicStepCall,
-  LogicStepGroup,
-  LogicVariable
-} from "@memebox/logic-step-core";
+import {LogicStepCall, LogicStepGroup, LogicVariable} from "@memebox/logic-step-core";
 import {Observable} from "rxjs";
 import {guid} from "@datorama/akita";
 import {map} from "rxjs/operators";
+import {LogicContextState, LogicContextStateQuery} from "../logic-context-state.service";
 
 @Component({
   selector: 'logic-editor',

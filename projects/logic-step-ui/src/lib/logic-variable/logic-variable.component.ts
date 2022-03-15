@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {LogicContextMetadataQuery, LogicVariable} from "@memebox/logic-step-core";
+import {LogicVariable} from "@memebox/logic-step-core";
 import {LogicEditorComponent} from "../logic-editor/logic-editor.component";
 import {BehaviorSubject} from "rxjs";
 import {switchMap} from "rxjs/operators";
+import {LogicContextMetadataQuery} from "../logic-context-metadata.service";
 
 @Component({
   selector: 'logic-variable',

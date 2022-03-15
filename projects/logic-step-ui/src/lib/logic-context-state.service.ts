@@ -1,7 +1,13 @@
 import {Injectable} from "@angular/core";
 import {Query, Store, StoreConfig} from "@datorama/akita";
 import {produce} from "immer";
-import {AllLogicSteps, generateCodeBySteps, LogicStepCall, LogicStepGroup, LogicVariable} from "./generator";
+import {
+  AllLogicSteps,
+  generateCodeBySteps,
+  LogicStepCall,
+  LogicStepGroup,
+  LogicVariable
+} from "../../../logic-step-core/src/lib/generator";
 import {LogicContextMetadataQuery} from "./logic-context-metadata.service";
 import {combineLatest} from "rxjs";
 import {debounceTime, map} from "rxjs/operators";

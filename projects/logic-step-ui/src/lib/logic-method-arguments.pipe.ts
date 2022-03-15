@@ -1,12 +1,9 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {
-  LogicContextMetadataQuery,
-  LogicContextStateQuery,
-  LogicStepCall,
-  LogicTypeMethodArgument
-} from "@memebox/logic-step-core";
+import {LogicStepCall, LogicTypeMethodArgument} from "@memebox/logic-step-core";
 import {Observable, of} from "rxjs";
 import {switchMap} from "rxjs/operators";
+import {LogicContextStateQuery} from "./logic-context-state.service";
+import {LogicContextMetadataQuery} from "./logic-context-metadata.service";
 
 @Pipe({
   name: 'logicMethodArguments$'
