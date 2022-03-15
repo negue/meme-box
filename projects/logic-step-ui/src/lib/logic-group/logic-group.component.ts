@@ -1,7 +1,7 @@
 import {Component, Input, TemplateRef} from '@angular/core';
-import {LogicEditorComponent} from "../logic-editor/logic-editor.component";
 import {AllLogicSteps, LogicStepGroup} from "@memebox/logic-step-core";
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
+import {LogicContextState} from "../logic-context-state.service";
 
 @Component({
   selector: 'logic-group',
@@ -21,15 +21,16 @@ export class LogicGroupComponent {
   @Input()
   addActionsTemplate!: TemplateRef<unknown>;
 
-  constructor(
-    private logicContext: LogicEditorComponent
-  ) { }
+  @Input()
+  context!: LogicContextState;
+
+  constructor() { }
 
 
   stepRearranged($event: CdkDragDrop<unknown, unknown>) {
     const newPos = $event.currentIndex;
     const oldPos = $event.previousIndex;
 
-    this.logicContext.state.moveStep(newPos, oldPos, this.parent);
+    this.context.moveStep(newPos, oldPos, this.parent);
   }
 }

@@ -9,18 +9,18 @@
 <br/>
 
 <logic-group [steps]="logicQueries.currentLogicSteps$ | async"
-             [stepTemplate]="stepTemplate"
+             [stepTemplate]="stepTemplate" [context]="state"
              [addActionsTemplate]="actionsTemplate">
 
 </logic-group>
 
-<ng-template #stepTemplate let-step let-parent="parent">
+<ng-template #stepTemplate let-step let-parent="parent" let-context="context">
   <div style="display: inline-block">
   <mat-form-field>
     <mat-label>Variable</mat-label>
     <mat-select [value]="step.stepVariableName"
                 #variableNameControl
-                (valueChange)="updateStepVariableName(step, variableNameControl.value, parent)">
+                (valueChange)="updateStepVariableName(step, variableNameControl.value, parent, context)">
       <ng-container *ngIf="allVariableNames$ | async as variableNameList">
         <mat-option *ngFor="let name of variableNameList"
                     [value]="name">
@@ -34,7 +34,7 @@
     <mat-label>Method</mat-label>
     <mat-select [value]="step.methodToCall"
                 #methodToCallControl
-                (valueChange)="updateMethodToCall(step, methodToCallControl.value, parent)">
+                (valueChange)="updateMethodToCall(step, methodToCallControl.value, parent, context)">
       <ng-container *ngIf="variableNameControl.value | logicStepMethodList$ | async as methods">
         <mat-option *ngFor="let method of methods"
                     [value]="method.name">
@@ -44,9 +44,11 @@
     </mat-select>
   </mat-form-field>
 
+    <button mat-button (click)="removeStep(step)">Remove</button>
+
   <br />
   <div *ngIf="step | logicMethodArguments$ | async as methodArguments">
-    <div *ngFor="let argument of methodArguments">
+    <div *ngFor="let argument of methodArguments; trackBy: trackByMethodArgument">
       {{argument.name}}: {{argument.typeName}}
 
       <div *ngIf="argument.typeName === 'time:seconds'">
@@ -54,9 +56,15 @@
           <mat-label>Seconds</mat-label>
           <input matNativeControl #secondsControl type="number"
                  [value]="step.methodArguments[argument.name] || 0"
-                 (change)="updateMethodArgument(step, argument.name, secondsControl.value, parent)">
+                 (change)="updateMethodArgument(step, argument.name, secondsControl.value, parent, context)">
         </mat-form-field>
 
+      </div>
+
+      <div *ngIf="argument.typeName === 'callback'">
+        <logic-group [steps]="step.callbackSteps[argument.name]"
+                     [stepTemplate]="stepTemplate" [context]="getContext(step, argument.name, parent, context)"
+                     [addActionsTemplate]="actionsTemplate"></logic-group>
       </div>
 
     </div>
@@ -68,9 +76,9 @@
 </ng-template>
 
 
-<ng-template #actionsTemplate let-parent="parent">
-  <button mat-button (click)="addStep(parent)">add step</button>
-  <button mat-button (click)="addGroup(parent)">add group</button>
+<ng-template #actionsTemplate let-parent="parent" let-context="context">
+  <button mat-button (click)="addStep(parent, context)">add step</button>
+  <button mat-button (click)="addGroup(parent, context)">add group</button>
 </ng-template>
 
 <br/>

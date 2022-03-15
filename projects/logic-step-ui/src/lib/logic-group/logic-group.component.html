@@ -1,5 +1,5 @@
 <ng-container [ngTemplateOutlet]="addActionsTemplate"
-              [ngTemplateOutletContext]="{ parent: parent }"></ng-container>
+              [ngTemplateOutletContext]="{ parent: parent, context: context}"></ng-container>
 
 <div cdkDropList class="entry-list"
      (cdkDropListDropped)="stepRearranged($event)">
@@ -14,11 +14,11 @@
 
   <ng-container *ngIf="step.logicStepType === 'step'; else stepWasAGroup"
                 [ngTemplateOutlet]="stepTemplate"
-                [ngTemplateOutletContext]="{ $implicit: step, parent: parent }"></ng-container>
+                [ngTemplateOutletContext]="{ $implicit: step, parent: parent, context: context }"></ng-container>
 
   <ng-template #stepWasAGroup>
     <logic-group [steps]="step.steps" [parent]="$any(step)"
-                 class="sub-group"
+                 class="sub-group" [context]="context"
                  [addActionsTemplate]="addActionsTemplate"
                  [stepTemplate]="stepTemplate"></logic-group>
   </ng-template>

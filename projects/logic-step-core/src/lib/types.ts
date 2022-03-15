@@ -88,7 +88,7 @@ export interface LogicStepCall extends LogicStep {
   stepVariableName: string;
   methodToCall: string;
   methodArguments: {[key: string]: unknown};
-  callbackSteps: AllLogicSteps[];
+  callbackSteps: {[key: string]: AllLogicSteps[]};
 }
 
 export interface LogicStepGroup  extends LogicStep {

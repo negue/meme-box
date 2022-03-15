@@ -40,7 +40,7 @@ const actionApi = new LogicTypeMetadataBuilder('actionApi')
   })
   .build();
 
-variableGenerators['actionApi'] = (variable, metaData) => {
+variableGenerators['actionApi'] = variableGenerators['mediaApi'] = (variable, metaData) => {
   const isMedia = !!variable.payload['screenId'];
 
   if (isMedia) {

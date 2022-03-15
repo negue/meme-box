@@ -75,7 +75,7 @@ export function generateCallCode(step: LogicStepCall,
           const callbackVariables = scopeVariables.map(sv => sv.name).join(', ');
 
           return `async (${callbackVariables}) => {
-              ${generateCodeBySteps(step.callbackSteps, [...variables, ...scopeVariables], metaData)}
+              ${generateCodeBySteps(step.callbackSteps[m.name], [...variables, ...scopeVariables], metaData)}
             }`;
         }
       }
