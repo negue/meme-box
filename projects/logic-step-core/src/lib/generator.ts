@@ -23,7 +23,42 @@ export class LogicTypeMetadata {
 
   constructor(public typeName: string,
               public properties: LogicTypeProperty[],
-              public methods: LogicTypeMethod[]) {
+              public methods: LogicTypeMethod[],
+              public contextSettings: LogicTypeProperty[] = []) {
+  }
+}
+
+export class LogicTypeMetadataBuilder {
+  private properties: LogicTypeProperty[] = [];
+  private methods: LogicTypeMethod[] = [];
+  private settings: LogicTypeProperty[] = [];
+
+  constructor(private typeName: string) {
+  }
+
+  public withProperties(...properties: LogicTypeProperty[]): LogicTypeMetadataBuilder {
+    this.properties = properties;
+
+    return this;
+  }
+
+  public withMethods(...methods: LogicTypeMethod[]): LogicTypeMetadataBuilder {
+    this.methods = methods;
+
+    return this;
+  }
+
+  public withContextSettings(...settings: LogicTypeProperty[]): LogicTypeMetadataBuilder {
+    this.settings = settings;
+
+    return this;
+  }
+
+  public build(): LogicTypeMetadata {
+    return new LogicTypeMetadata(this.typeName,
+      this.properties,
+      this.methods,
+      this.settings);
   }
 }
 
@@ -35,7 +70,7 @@ export class LogicVariable {
 
   constructor(public name: string,
               public typeName: string,
-              public payload: {[key: string]: unknown}|null = null) {
+              public payload: {[key: string]: unknown} = {}) {
   }
 }
 

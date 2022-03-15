@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ClipAssigningMode, CombinedClip, Screen, UnassignedFilterEnum } from '@memebox/contracts';
-import { FormControl } from '@angular/forms';
-import { DialogService } from '../../dialog.service';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ClipAssigningMode, CombinedClip, Screen, UnassignedFilterEnum} from '@memebox/contracts';
+import {FormControl} from '@angular/forms';
+import {DialogService} from '../../dialog.service';
 
 @Component({
   selector: 'app-screen-arrange-sidebar',
@@ -63,7 +63,7 @@ export class ScreenArrangeSidebarComponent {
   }
 
   private showAssignmentDialog(screen: Partial<Screen>) {
-    this.dialogs.showClipSelectionDialog({
+    this.dialogs.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Multiple,
       screenId: screen.id,
 

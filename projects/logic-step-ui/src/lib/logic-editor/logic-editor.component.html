@@ -2,13 +2,15 @@
   <logic-variable [variable]="variable"></logic-variable>
 </div>
 
-<button mat-button (click)="addVariable()">Add variable</button>
-<button mat-button (click)="chooseActionToTrigger()">Choose action</button>
+<ng-container [ngTemplateOutlet]="editorActionPanelTemplate">
+
+</ng-container>
+
 <br/>
 
 <logic-group [steps]="logicQueries.currentLogicSteps$ | async"
              [stepTemplate]="stepTemplate"
-[addActionsTemplate]="actionsTemplate">
+             [addActionsTemplate]="actionsTemplate">
 
 </logic-group>
 

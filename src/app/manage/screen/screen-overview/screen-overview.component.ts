@@ -58,7 +58,7 @@ export class ScreenOverviewComponent {
   }
 
   showAssignmentDialog(screen: Partial<Screen>) {
-    return this._dialog.showClipSelectionDialog({
+    return this._dialog.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Multiple,
       screenId: screen.id,
 

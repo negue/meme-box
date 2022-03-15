@@ -18,6 +18,8 @@ import {
 import {MediaEditDialogPayload} from "./media-edit/media-edit.component";
 import {DialogsModule} from "./dialogs.module";
 
+// TODO rename async methods - maybe as eslint rule?
+
 @Injectable({
   providedIn: DialogsModule
 })
@@ -111,7 +113,8 @@ export class DialogService {
     );
   }
 
-  async showClipSelectionDialog(payload: ActionAssigningDialogOptions) {
+  // todo more data on promise resolve
+  async showActionSelectionDialogAsync(payload: ActionAssigningDialogOptions) {
     const dialogRef = await this.loadAndOpen(
       import('./action-assigning-dialog/action-assigning-dialog.module'),
       payload

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {
   LogicContextState,
   LogicContextStateQuery,
@@ -22,6 +22,9 @@ export class LogicEditorComponent implements  OnInit {
     map(variableAr => variableAr.map(variable => variable.name))
   );
 
+  @Input()
+  editorActionPanelTemplate!: TemplateRef<unknown>;
+
   constructor(
     public state: LogicContextState,
     public logicQueries: LogicContextStateQuery
@@ -35,8 +38,8 @@ export class LogicEditorComponent implements  OnInit {
     this.generatedCode$ = this.logicQueries.generatedSourceCode$;
   }
 
-  addVariable() {
-    this.state.registerVariables(new LogicVariable('newVar', 'actionApi'))
+  addVariable(variablePayload: LogicVariable|null = null) {
+    this.state.registerVariables(variablePayload ?? new LogicVariable('newVar', 'actionApi'))
   }
 
   addStep(parent: LogicStepGroup|null) {
@@ -71,10 +74,6 @@ export class LogicEditorComponent implements  OnInit {
       ...step,
       methodToCall: value
     }, parent);
-  }
-
-  chooseActionToTrigger() {
-      alert('todo');
   }
 
   updateMethodArgument(step: LogicStepCall,

@@ -27,4 +27,8 @@ export class LogicContextMetadata extends Store<LogicMetadataDictionary> {
 })
 export class LogicContextMetadataQuery extends Query<LogicMetadataDictionary> {
   constructor(protected store: LogicContextMetadata) { super(store); }
+
+  public getTypeMetadata$(typeName: string) {
+    return this.select(store => store[typeName]);
+  }
 }

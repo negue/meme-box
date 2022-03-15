@@ -21,3 +21,16 @@
 </mat-form-field>
 
 <button mat-button (click)="removeVariable()">Remove</button>
+
+<br/>
+
+<div *ngIf="typeMetaData$ | async as typeMetadata">
+  <span *ngFor="let context of typeMetadata.contextSettings">
+    <mat-form-field>
+      <mat-label>{{context.name}}</mat-label>
+      <input matNativeControl #contextControl
+             [value]="variable.payload[context.name] || ''"
+             (change)="updateSettingPayload(context.name, contextControl.value)">
+    </mat-form-field>
+  </span>
+</div>

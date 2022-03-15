@@ -59,7 +59,7 @@ export class ActionVariableInputComponent implements OnInit, OnChanges {
   }
 
   async selectSingleMedia() {
-    const actionId = await this.dialogService.showClipSelectionDialog({
+    const actionId = await this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
       selectedItemId: this.visibleActionIdList$.value[0] ?? null,
       dialogTitle: 'Action Variable',

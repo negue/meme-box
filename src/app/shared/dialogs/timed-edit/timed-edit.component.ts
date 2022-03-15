@@ -113,7 +113,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   }
 
   async selectEventClip() {
-    const clipId = await this.dialogService.showClipSelectionDialog({
+    const clipId = await this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
       dialogTitle: 'Timer',

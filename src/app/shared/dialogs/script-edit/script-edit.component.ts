@@ -157,7 +157,7 @@ export class ScriptEditComponent implements OnInit {
   async addActionAtCursor(codemirrorComponent: CodemirrorComponent) {
     // console.info({ editorState });
 
-    const actionId = await this.dialogService.showClipSelectionDialog({
+    const actionId = await this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
       dialogTitle: 'Action',
       showMetaItems: true
