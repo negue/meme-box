@@ -1,4 +1,4 @@
-import {LogicTypeMetadata, LogicTypeMetadataBuilder} from "@memebox/logic-step-core";
+import {LogicTypeMetadata, LogicTypeMetadataBuilder, variableGenerators} from "@memebox/logic-step-core";
 import {LogicContextMetadata} from "@memebox/logic-step-ui";
 
 const actionApi = new LogicTypeMetadataBuilder('actionApi')
@@ -39,6 +39,16 @@ const actionApi = new LogicTypeMetadataBuilder('actionApi')
     typeName: 'memebox:screenId'
   })
   .build();
+
+variableGenerators['actionApi'] = (variable, metaData) => {
+  const isMedia = !!variable.payload['screenId'];
+
+  if (isMedia) {
+    return `memebox.getMedia('${variable.payload['actionId']}', '${variable.payload['screenId']}');`
+  }
+
+  return `memebox.getAction('${variable.payload['actionId']}');`
+}
 
 export function registerMemeboxMetadata (metadataRegister: LogicContextMetadata) {
   metadataRegister.registerType(

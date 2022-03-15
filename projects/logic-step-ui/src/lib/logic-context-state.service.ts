@@ -4,10 +4,11 @@ import {produce} from "immer";
 import {
   AllLogicSteps,
   generateCodeBySteps,
+  generateVariables,
   LogicStepCall,
   LogicStepGroup,
   LogicVariable
-} from "../../../logic-step-core/src/lib/generator";
+} from "@memebox/logic-step-core";
 import {LogicContextMetadataQuery} from "./logic-context-metadata.service";
 import {combineLatest} from "rxjs";
 import {debounceTime, map} from "rxjs/operators";
@@ -143,10 +144,19 @@ export class LogicContextStateQuery extends Query<LogicContextStateType> {
     this.select()
   ]).pipe(
     debounceTime(250),
-    map(([metadata, context]) => generateCodeBySteps(
-      context.steps,
-      context.staticVariables,
-      metadata))
+    map(([metadata, context]) => {
+      const variableDeclarationCode = generateVariables(
+        context.staticVariables,
+        metadata
+      );
+
+      const stepCode = generateCodeBySteps(
+        context.steps,
+        context.staticVariables,
+        metadata);
+
+      return [variableDeclarationCode, stepCode].join('\n');
+    })
   )
 
 

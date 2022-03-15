@@ -1,4 +1,3 @@
-import orderBy from "lodash/orderBy";
 import {guid} from "@datorama/akita";
 
 
@@ -64,7 +63,7 @@ export class LogicTypeMetadataBuilder {
 
 // todo refactor maybe merge this with a logic step / method arguments
 
-export class LogicVariable {
+export class LogicVariable implements LogicTypeProperty {
   public id = guid();
   public isGlobal = false;
 
@@ -111,88 +110,3 @@ export type AllLogicSteps = LogicStepCall | LogicStepGroup;
 
 export type LogicMetadataDictionary = {[key: string]: LogicTypeMetadata};
 
-export function generateCodeBySteps(
-  steps: AllLogicSteps[],
-  variables: LogicTypeProperty[],
-  metaData: LogicMetadataDictionary,
-  awaited = true
-) {
-  const result: string[] = [];
-
-  for (const step of (steps||[])) {
-    switch (step.logicStepType) {
-      case 'step': {
-        result.push( (awaited ? 'await ' : '') + generateCallCode(step, variables, metaData).trim());
-        break;
-      }
-
-      case 'group': {
-        if (step.awaited) {
-          result.push('(async () => {');
-        }
-
-        result.push(
-          `
-            ${generateCodeBySteps(step.steps, variables, metaData, step.awaited)}
-          `
-        );
-
-        if (step.awaited) {
-          result.push('})');
-        }
-
-
-        break;
-      }
-    }
-  }
-
-  return result.join('\r\n');
-}
-
-
-export function generateCallCode(step: LogicStepCall, variables: LogicTypeProperty[], metaData: LogicMetadataDictionary) {
-  const result: string[] = [];
-
-  // todo check possible methods of variable / metadata
-  const variableInfo = variables.find(v => v.name === step.stepVariableName);
-
-  if (!variableInfo) {
-    return `Unknown: Variable ${step.stepVariableName}`;
-  }
-
-  const metaDataOfType = metaData[variableInfo.typeName];
-  const methodMetadata = metaDataOfType.methods.find(m => m.name === step.methodToCall);
-
-  if (!methodMetadata) {
-    return `Unknown: Method ${step.methodToCall}`;
-  }
-
-  const orderedArguments = orderBy(methodMetadata.arguments, ['index'])
-    .map(m => {
-      const valuePassed = step.methodArguments[m.name];
-
-      switch (m.typeName) {
-        case 'time:seconds': return valuePassed;
-        case 'callback': {
-          const scopeVariables = m.scopeVariables ?? [];
-
-          const callbackVariables = scopeVariables.map(sv => sv.name).join(', ');
-
-          return `async (${callbackVariables}) => {
-              ${generateCodeBySteps(step.callbackSteps, [...variables, ...scopeVariables], metaData)}
-            }`;
-        }
-      }
-
-      // json data - like actionOverrides
-      return JSON.stringify(valuePassed);
-    })
-    .join(',');
-
-  result.push(`
-      ${step.stepVariableName}.${step.methodToCall}(${orderedArguments});
-    `);
-
-  return result.join('\r\n');
-}
