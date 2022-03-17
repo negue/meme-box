@@ -22,7 +22,7 @@ export const ACTIONS = {
   UNREGISTER_WIDGET_INSTANCE: 'UNREGISTER_WIDGET_INSTANCE',
 }
 
-export enum TriggerClipOrigin {
+export enum TriggerActionOrigin {
   Unknown,
   AppPreview,
   StreamDeck, // currently also Unknown
@@ -43,7 +43,7 @@ export interface InternalActionTriggerBase {
   targetScreen?: string;
 
   fromWebsocket?: boolean;
-  origin?: TriggerClipOrigin;
+  origin?: TriggerActionOrigin;
   originId?: string;
   originUniqueId?: string;
 }

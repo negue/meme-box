@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  {{ (actionToEdit?.id ? 'Update ' : 'Add ') + MEDIA_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
+  {{ (actionToEdit?.id ? 'Update ' : 'Add ') + ACTION_TYPE_INFORMATION[form.value.type].labelFallback +': "' + form.value.name + '"'}}
 
   <div class="action_id" *ngIf="actionToEdit.id">
     ID: {{actionToEdit.id}} <button mat-icon-button (click)="copyIdToClipboard()">
@@ -57,7 +57,7 @@
 
     <lib-step [label]="(form.value.type | mediaEnumToLabel | async) + ' Settings'">
       <div  class="two-columns">
-      <div class="column" [class.hidden]="!MEDIA_EDIT_CONFIG[form.value.type].hasTypeSettings">
+      <div class="column" [class.hidden]="!ACTION_EDIT_CONFIG[form.value.type].hasTypeSettings">
       <mat-form-field *ngIf="false">
         <input autocomplete="off"
                formControlName="clipLength"
@@ -68,11 +68,11 @@
         <span matSuffix>ms</span>
       </mat-form-field>
 
-      <div class="" [class.hidden]="MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)">
+      <div [class.hidden]="!ACTION_EDIT_CONFIG[form.value.type].hasPath">
         <mat-button-toggle-group #mediaPathType="matButtonToggleGroup"
           style="margin-right: 1rem"
-          [value]="(!form.value.path || form.value.path?.includes('{$SERVER_URL}')) && form.value.type !== MediaType.IFrame  ? 'media' : 'custom'"
-          [class.hidden]="form.value.type === MediaType.IFrame">
+          [value]="(!form.value.path || form.value.path?.includes('{$SERVER_URL}')) && form.value.type !== ActionType.IFrame  ? 'media' : 'custom'"
+          [class.hidden]="form.value.type === ActionType.IFrame">
           <mat-button-toggle
 value="media">Media</mat-button-toggle>
           <mat-button-toggle value="custom">Url</mat-button-toggle>
@@ -100,7 +100,7 @@ value="media">Media</mat-button-toggle>
             <input autocomplete="off"
                    formControlName="path"
                    matInput #mediaPathInput
-                   [required]="!MEDIA_TYPES_WITHOUT_PATH.includes(form.value.type)"
+                   [required]="ACTION_EDIT_CONFIG[form.value.type].hasPath"
                    type="text"
             />
 
@@ -135,7 +135,7 @@ value="media">Media</mat-button-toggle>
           </div>
         </app-hint-panel>
       </div>
-      <ng-container *ngIf="[MediaType.Audio, MediaType.Video].includes(form.value.type)">
+      <ng-container *ngIf="[ActionType.Audio, ActionType.Video].includes(form.value.type)">
         <mat-label>Volume</mat-label>
         <div class="slider__row">
           <mat-slider #volumeSlider
@@ -180,7 +180,7 @@ value="media">Media</mat-button-toggle>
       </div>
 
 
-      <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta">
+      <div class="form-field-row" *ngIf="form.value.type === ActionType.Meta">
         <mat-form-field>
           <mat-label>Meta Type</mat-label>
           <mat-select formControlName="metaType"
@@ -196,7 +196,7 @@ value="media">Media</mat-button-toggle>
       </div>
 
 
-        <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta">
+        <div class="form-field-row" *ngIf="form.value.type === ActionType.Meta">
           <mat-form-field class="example-chip-list">
             <mat-label>Assign a new tag...</mat-label>
             <mat-chip-list #chipList aria-label="Tag selection">
@@ -227,7 +227,7 @@ value="media">Media</mat-button-toggle>
 
         </div>
 
-      <div class="form-field-row" *ngIf="form.value.type === MediaType.Meta && form.value.metaType === 2">
+      <div class="form-field-row" *ngIf="form.value.type === ActionType.Meta && form.value.metaType === 2">
         <mat-form-field>
           <mat-label>Delay between clip-trigger (ms)</mat-label>
           <input required
@@ -245,7 +245,7 @@ value="media">Media</mat-button-toggle>
       </div>
 
 
-        <ng-container *ngIf="form.value.type === MediaType.Widget">
+        <ng-container *ngIf="form.value.type === ActionType.Widget">
           <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
             <h3 *ngIf="currentHtml?.variablesConfig.length !== 0">Variables:</h3>
             <app-action-variables-assignments [variablesConfig]="currentHtml?.variablesConfig"
@@ -265,14 +265,30 @@ value="media">Media</mat-button-toggle>
 
           </app-action-variables-assignments>
         </ng-container>
+
+        <ng-container *ngIf="form.value.type === ActionType.Blueprint">
+          <logic-editor #editorComponent
+                        (init)="editorInitialized(editorComponent)"
+                        (destroyed)="unsubscribeEditorChanges()"
+
+                        [editorActionPanelTemplate]="actionPanel">
+
+          </logic-editor>
+
+          <ng-template #actionPanel>
+            <button mat-button (click)="editorComponent.addVariable()">Add variable</button>
+            <button mat-button (click)="chooseActionToTrigger(editorComponent)">Choose action</button>
+          </ng-template>
+        </ng-container>
       </div>
       <!-- Preview of a Media -->
       <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
-           [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
-           [class.script]="[MediaType.Script, MediaType.PermanentScript].includes(form.value.type)"
+           [class.custom-html-preview]="ACTION_EDIT_CONFIG[form.value.type].hasHtmlPreview"
+           [class.blueprint]="ActionType.Blueprint === form.value.type"
+           [class.script]="[ActionType.Script, ActionType.PermanentScript].includes(form.value.type)"
       >
         <!-- Meta => AppClipType or list all assign actions by tags -->
-        <div *ngSwitchCase="MediaType.Meta">
+        <div *ngSwitchCase="ActionType.Meta">
           <h3>Assigned Actions by Tags</h3>
           <app-compact-action-card *ngFor="let assignedClip of taggedActions$ | async"
                                    [action]="assignedClip">
@@ -280,7 +296,7 @@ value="media">Media</mat-button-toggle>
           </app-compact-action-card>
         </div>
 
-        <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
+        <div *ngSwitchCase="ActionType.Widget" class="custom-html-holder">
           <mat-select formControlName="fromTemplate" #fromTemplateSelect
                       (valueChange)="onTemplateChanged($event)">
             <mat-option value="">No Template</mat-option>
@@ -313,7 +329,7 @@ value="media">Media</mat-button-toggle>
         </div>
 
 
-        <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
+        <div *ngSwitchCase="ActionType.WidgetTemplate" class="custom-html-holder">
           <button mat-raised-button color="primary" (click)="editHTML()">Edit HTML</button>
           <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
@@ -336,19 +352,19 @@ value="media">Media</mat-button-toggle>
           </ng-container>
         </div>
 
-        <div *ngSwitchCase="MediaType.Script" >
+        <div *ngSwitchCase="ActionType.Script" >
           <button mat-raised-button color="primary" (click)="editScript()">
             Edit Script + Config
           </button>
         </div>
 
-        <div *ngSwitchCase="MediaType.PermanentScript" >
+        <div *ngSwitchCase="ActionType.PermanentScript" >
           <button mat-raised-button color="primary" (click)="editScript()">
             Edit Script + Config
           </button>
         </div>
 
-        <div *ngSwitchCase="MediaType.Video" >
+        <div *ngSwitchCase="ActionType.Video" >
 
           <div *ngIf="mediaPathInput.value">
             <video width="320" height="240" controls #videoElement
@@ -366,7 +382,7 @@ value="media">Media</mat-button-toggle>
           </div>
         </div>
 
-        <div *ngSwitchCase="MediaType.Audio" >
+        <div *ngSwitchCase="ActionType.Audio" >
 
           <div *ngIf="mediaPathInput.value">
             <audio [src]="mediaPathInput.value | mediaPathToUrl"
@@ -377,6 +393,10 @@ value="media">Media</mat-button-toggle>
             </audio>
           </div>
         </div>
+
+        <div *ngSwitchCase="ActionType.Blueprint" >
+        </div>
+
         <!-- All others => AppClipType -->
         <gewd-auto-scale width="100%" [height]="500"
                          class="preview-box"
@@ -412,7 +432,7 @@ value="media">Media</mat-button-toggle>
         If this action should be visible on the mobile view.
       </app-hint-panel>
 
-      <div class="form-field-row" *ngIf="form.value.type !== MediaType.Meta">
+      <div class="form-field-row" *ngIf="form.value.type !== ActionType.Meta">
         <!-- extract both Tag Assignment Components -->
         <mat-form-field class="example-chip-list">
           <mat-label>Assign a new tag...</mat-label>
@@ -450,7 +470,7 @@ value="media">Media</mat-button-toggle>
         </app-hint-panel>
       </div>
 
-      <div class="form-field-row" *ngIf="MEDIA_EDIT_CONFIG[form.value.type].canSelectQueue">
+      <div class="form-field-row" *ngIf="ACTION_EDIT_CONFIG[form.value.type].canSelectQueue">
         <mat-form-field class="example-chip-list">
           <mat-label>Select Queue</mat-label>
           <input

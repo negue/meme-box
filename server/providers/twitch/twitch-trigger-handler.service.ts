@@ -3,7 +3,7 @@ import {TwitchConnector} from "./twitch.connector";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
-import {Action, AllTwitchEvents, Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
+import {Action, AllTwitchEvents, Dictionary, TriggerActionOrigin, TwitchTriggerCommand} from "@memebox/contracts";
 import {TwitchLogger} from "./twitch.logger";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
@@ -102,7 +102,7 @@ export class TwitchTriggerHandler {
       id: trigger.command.clipId,
       uniqueId: uuid(),
       targetScreen: trigger.command.screenId,
-      origin: TriggerClipOrigin.TwitchEvent,
+      origin: TriggerActionOrigin.TwitchEvent,
       originId: trigger.command.id,
 
       byTwitch: trigger.twitchEvent,

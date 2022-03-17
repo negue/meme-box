@@ -22,7 +22,7 @@ import {
   deleteInArray,
   deleteItemInDictionary,
   simpleDateString,
-  sortClips,
+  sortActions,
   updateItemInDictionary
 } from "@memebox/utils";
 import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
@@ -218,7 +218,7 @@ export class Persistence {
   }
 
   public listActions(): Action[] {
-    return sortClips(Object.values(this.data.clips));
+    return sortActions(Object.values(this.data.clips));
   }
 
 

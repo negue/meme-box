@@ -1,11 +1,11 @@
 :host {
   display: block;
 
-  ::ng-deep {
-    .mat-form-field {
-      display: block !important;
-    }
+  .mat-form-field {
+    display: block !important;
+  }
 
+  ::ng-deep {
     .step-content {
       margin: 0.5rem;
     }
@@ -86,6 +86,10 @@ img {
   &:last-child {
     &:not(.custom-html-preview) {
       align-self: center;
+    }
+
+    &.blueprint {
+      display: none;
     }
 
     &.script {

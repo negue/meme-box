@@ -5,8 +5,8 @@ import {
   ActionStateEnum,
   ChangedInfo,
   TriggerAction,
-  TriggerActionOverrides,
-  TriggerClipOrigin
+  TriggerActionOrigin,
+  TriggerActionOverrides
 } from "@memebox/contracts";
 import {BehaviorSubject, Subject} from "rxjs";
 import {SnackbarService} from "./snackbar.service";
@@ -89,7 +89,7 @@ export class MemeboxWebsocketService {
       repeatX: 0,  // todo after streamdeck ?
       repeatSecond: 0,
 
-      origin: TriggerClipOrigin.AppPreview,
+      origin: TriggerActionOrigin.AppPreview,
       overrides
     }
 

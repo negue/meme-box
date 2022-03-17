@@ -139,6 +139,7 @@ export class LogicContextStateQuery extends Query<LogicContextStateType> {
     return allEntries.map(metaEntry => metaEntry.typeName);
   });
 
+  // todo remove again?
   public generatedSourceCode$ = combineLatest([
     this.logicContextMetadata.select(),
     this.select()

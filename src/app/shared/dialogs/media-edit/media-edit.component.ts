@@ -14,6 +14,7 @@ import {
   ACTION_TYPE_INFORMATION,
   ACTION_TYPE_INFORMATION_ARRAY,
   ActionType,
+  ClipAssigningMode,
   FileInfo,
   MetaTriggerTypes,
   Tag
@@ -47,11 +48,13 @@ import {
 import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
 import {
-  MEDIA_EDIT_CONFIG,
+  ACTION_EDIT_CONFIG,
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH,
-  MEDIA_TYPES_WITHOUT_PATH,
   MEDIA_TYPES_WITHOUT_PLAYTIME
 } from "./media-edit.type-config";
+import {LogicVariable, LogicVariableGlobal} from "@memebox/logic-step-core";
+import {LogicContextMetadata, LogicEditorComponent} from "@memebox/logic-step-ui";
+import {registerMemeboxMetadata} from "../../memebox-metadata";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -59,7 +62,7 @@ const META_DELAY_DEFAULT = 750;
 const INITIAL_CLIP: Partial<Action> = {
   tags: [],
   type: ActionType.Picture,
-  name: 'Media Filename',
+  name: 'New Action',
   volumeSetting: 10,
   gainSetting: 0,
   playLength: DEFAULT_PLAY_LENGTH,
@@ -130,11 +133,12 @@ export class MediaEditComponent
     })
   );
 
-  MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
+  ACTION_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
+  ACTION_EDIT_CONFIG = ACTION_EDIT_CONFIG;
+
+  // TODO REFACTOR OF THIS - TWICE
   MEDIA_TYPES_WITHOUT_PLAYTIME = MEDIA_TYPES_WITHOUT_PLAYTIME;
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
-  MEDIA_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
-  MEDIA_EDIT_CONFIG = MEDIA_EDIT_CONFIG;
 
   mediaTypeList: MediaTypeButton[] = ACTION_TYPE_INFORMATION_ARRAY
     .map((value) => {
@@ -205,6 +209,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   // endregion
 
   private _destroy$ = new Subject();
+  private _blueprintEditorUnsub$ = new Subject();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: MediaEditDialogPayload,
@@ -214,8 +219,12 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     private dialogService: DialogService,
     private cd: ChangeDetectorRef,
     private clipboard: Clipboard,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+
+    private logicContextMetadata: LogicContextMetadata,
   ) {
+    registerMemeboxMetadata(logicContextMetadata);
+
     const defaultValues = Object.assign({}, INITIAL_CLIP, this.data?.defaults ?? {});
 
     this.actionToEdit = Object.assign({}, defaultValues, {
@@ -242,7 +251,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.currentMediaType$.next(this.actionToEdit.type);
   }
 
-  get MediaType() {
+  get ActionType() {
     return ActionType;
   }
 
@@ -278,14 +287,21 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
           });
         }
 
-        if (MEDIA_TYPES_WITHOUT_PATH.includes(prev)) {
+        const prevActionConfig = ACTION_EDIT_CONFIG[prev];
+
+        if (prev === ActionType.Blueprint) {
+          this.actionToEdit.blueprint = null;
+        }
+
+        if (!prevActionConfig.hasPath) {
           console.info('adding validators');
           this.form.controls['path'].setValidators([
             Validators.required,
           ]);
         }
 
-        if (MEDIA_TYPES_WITHOUT_PATH.includes(next)){
+        const nextActionConfig = ACTION_EDIT_CONFIG[next];
+        if (!nextActionConfig.hasPath){
           console.info('clearing validators');
           this.form.controls['path'].clearValidators();
         }
@@ -386,6 +402,8 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
+
+    this._blueprintEditorUnsub$.next();
   }
 
   // region Tag specific methods
@@ -583,5 +601,50 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     console.info($event);
 
 
+  }
+
+
+  async chooseActionToTrigger(editorComponent: LogicEditorComponent) {
+    const actionId = await this.dialogService.showActionSelectionDialogAsync({
+      mode: ClipAssigningMode.Single,
+      dialogTitle: 'Action',
+      showMetaItems: true,
+
+      showOnlyUnassignedFilter: true
+    });
+
+    const variableToAdd = new LogicVariable('action1', 'actionApi',{
+      actionId: actionId
+    });
+
+    editorComponent.addVariable(variableToAdd);
+  }
+
+  editorInitialized(editorComponent: LogicEditorComponent) {
+    // todo extract the memebox api descriptions
+    editorComponent.registerGlobalVariables(new LogicVariableGlobal('sleep', 'sleepApi'));
+
+    if (this.actionToEdit.blueprint) {
+      editorComponent.state.update(state => {
+        state.steps = this.actionToEdit.blueprint.steps;
+        state.staticVariables = this.actionToEdit.blueprint.staticVariables;
+      });
+    }
+
+    combineLatest([
+      editorComponent.logicQueries.nonGlobalVariables$,
+      editorComponent.logicQueries.currentLogicSteps$
+    ]).pipe(
+      takeUntil(this._blueprintEditorUnsub$),
+    ).subscribe(([variables, logicSteps]) => {
+      this.actionToEdit.blueprint = {
+        staticVariables: variables,
+        steps: logicSteps
+      };
+    });
+  }
+
+  unsubscribeEditorChanges() {
+    this._blueprintEditorUnsub$.next();
   }
 }

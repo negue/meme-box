@@ -9,7 +9,8 @@ export enum ActionType {
 
   PermanentScript = 98,
   WidgetTemplate = 99,
-  Meta = 100
+  Meta = 100,
+  Blueprint = 101,
 }
 
 export interface ActionTypeInformations {
@@ -100,7 +101,15 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     className: "", // not visible in target-screen-component
     sortOrder: 100,
     mediaType: ActionType.Meta
-  }
+  },
+  [ActionType.Blueprint]: {
+    translationKey: "blueprint",
+    icon: "art_track",
+    labelFallback: "blueprint",
+    className: "", // not visible in target-screen-component
+    sortOrder: 101,
+    mediaType: ActionType.Blueprint
+}
 } as const;
 
 export const ACTION_TYPE_INFORMATION_ARRAY = Object.values(ACTION_TYPE_INFORMATION)

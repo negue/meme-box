@@ -1,8 +1,8 @@
 import {ActionApi} from "./action.api";
 import {
   ScreenMediaOverridableProperties,
+  TriggerActionOrigin,
   TriggerActionOverrides,
-  TriggerClipOrigin,
   VisibilityEnum
 } from "@memebox/contracts";
 import {timeoutAsync} from "./sleep.api";
@@ -23,7 +23,7 @@ export class MediaApi extends ActionApi {
     this.memeboxApi.actionTriggerEventBus.updateActionProps({
       id: this.actionId,
       uniqueId: uuid(),
-      origin: TriggerClipOrigin.Scripts,
+      origin: TriggerActionOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,
       overrides: {
@@ -53,7 +53,7 @@ export class MediaApi extends ActionApi {
     this.memeboxApi.actionTriggerEventBus.queueAction({
       id: this.actionId,
       uniqueId: uuid(),
-      origin: TriggerClipOrigin.Scripts,
+      origin: TriggerActionOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,
       overrides: newOverrides,

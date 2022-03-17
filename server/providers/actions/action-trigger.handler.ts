@@ -8,7 +8,7 @@ import {
   MetaTriggerTypes,
   Screen,
   TriggerAction,
-  TriggerClipOrigin
+  TriggerActionOrigin
 } from "@memebox/contracts";
 import {Persistence} from "../../persistence";
 import {NamedLogger} from "../named-logger";
@@ -165,7 +165,7 @@ export class ActionTriggerHandler {
         await this._actionQueue.triggerAndWaitUntilDone({
           id: clipToTrigger.id,
           uniqueId: uuid(),
-          origin: TriggerClipOrigin.Meta,
+          origin: TriggerActionOrigin.Meta,
           originId: mediaConfig.id,
           originUniqueId: payloadObs.uniqueId
         });
@@ -180,7 +180,7 @@ export class ActionTriggerHandler {
             this._actionQueue.triggerAndWaitUntilDone({
               id: clipToTrigger.id,
               uniqueId: uuid(),
-              origin: TriggerClipOrigin.Meta,
+              origin: TriggerActionOrigin.Meta,
               originId: mediaConfig.id,
               originUniqueId: payloadObs.uniqueId
             })
@@ -197,7 +197,7 @@ export class ActionTriggerHandler {
           await this._actionQueue.triggerAndWaitUntilDone({
             id: clipToTrigger.id,
             uniqueId: uuid(),
-            origin: TriggerClipOrigin.Meta,
+            origin: TriggerActionOrigin.Meta,
             originId: mediaConfig.id,
             originUniqueId: payloadObs.uniqueId
           });

@@ -1,4 +1,14 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, TemplateRef, TrackByFunction} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  TemplateRef,
+  TrackByFunction
+} from '@angular/core';
 import {LogicStepCall, LogicStepGroup, LogicTypeMethodArgument, LogicVariable} from "@memebox/logic-step-core";
 import {Observable, Subscription} from "rxjs";
 import {guid} from "@datorama/akita";
@@ -11,7 +21,7 @@ import {LogicContextState, LogicContextStateQuery} from "../logic-context-state.
   styleUrls: ['./logic-editor.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LogicEditorComponent implements  OnInit {
+export class LogicEditorComponent implements OnInit, OnDestroy {
   private subMethodArgumentContextCache: {[key: string]: LogicContextState} = {};
   private stateSubscriptionCache: {[key: string]: Subscription} = {};
 
@@ -20,6 +30,12 @@ export class LogicEditorComponent implements  OnInit {
   public allVariableNames$ = this.logicQueries.allVariables$.pipe(
     map(variableAr => variableAr.map(variable => variable.name))
   );
+
+  @Output()
+  public init = new EventEmitter<void>();
+
+  @Output()
+  public destroyed = new EventEmitter<void>();
 
   @Input()
   editorActionPanelTemplate!: TemplateRef<unknown>;
@@ -39,6 +55,12 @@ export class LogicEditorComponent implements  OnInit {
 
   ngOnInit(): void {
     this.generatedCode$ = this.logicQueries.generatedSourceCode$;
+
+    this.init.emit();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed.emit();
   }
 
   addVariable(variablePayload: LogicVariable|null = null) {

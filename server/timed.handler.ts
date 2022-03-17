@@ -1,5 +1,5 @@
 import {uuid} from "@gewd/utils";
-import {Dictionary, TimedAction, TriggerClipOrigin} from "@memebox/contracts";
+import {Dictionary, TimedAction, TriggerActionOrigin} from "@memebox/contracts";
 import {PersistenceInstance} from "./persistence";
 import {triggerMediaClipById} from "./websocket-server";
 import Timeout = NodeJS.Timeout;
@@ -35,7 +35,7 @@ export class TimedHandler {
         id: timer.clipId,
         uniqueId: uuid(),
         targetScreen: timer.screenId,
-        origin: TriggerClipOrigin.Timer,
+        origin: TriggerActionOrigin.Timer,
         originId: timer.id,
 
         overrides: {
