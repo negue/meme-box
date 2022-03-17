@@ -10,7 +10,7 @@ import {
 import {Observable, Subject} from "rxjs";
 import {Action, ACTION_TYPE_INFORMATION} from "@memebox/contracts";
 import {map, take, takeUntil, tap} from "rxjs/operators";
-import {sortClips} from "@memebox/utils";
+import {sortActions} from "@memebox/utils";
 import orderBy from 'lodash/orderBy';
 import {DialogService} from "../../shared/dialogs/dialog.service";
 
@@ -42,7 +42,7 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
   public currentColumnSize = 50;
   public groupedActionList$: Observable<IGroupedList[]> = this.appQueries.actionList$.pipe(
     tap(allClips => console.info('PRE',{allClips})),
-    map(allClips => sortClips(allClips.filter(c => c.showOnMobile))),
+    map(allClips => sortActions(allClips.filter(c => c.showOnMobile))),
     tap(allClips => console.info('POST', {allClips})),
     map(allClips => {
       const groupedDictionary = groupBy(allClips, "type");

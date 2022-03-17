@@ -5,7 +5,7 @@ import {filter, map, tap} from "rxjs/operators";
 import {AppQueries, EXPRESS_BASE, NetworkInterfacesService} from "@memebox/app-state";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {sortClips} from "@memebox/utils";
+import {sortActions} from "@memebox/utils";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
@@ -45,7 +45,7 @@ export class ScreenInfoComponent implements OnInit {
     this.info$,
     this.appQueries.actionList$
   ]).pipe(
-    map(([screen, clipList]) => sortClips(
+    map(([screen, clipList]) => sortActions(
       clipList.filter(clip => !!screen.clips[clip.id])
     ))
   );

@@ -1,6 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Action, ACTION_TYPE_INFORMATION, ActionType} from '@memebox/contracts';
+import {Action, ACTION_TYPE_INFORMATION, ActionType, getSortOrderByType} from '@memebox/contracts';
 import groupBy from 'lodash/groupBy';
+import orderBy from "lodash/orderBy";
 
 export interface ActionTypeGroup {
   groupName: string;
@@ -22,7 +23,7 @@ export class GroupByMediaTypePipe implements PipeTransform {
 
     const groups = groupBy(medias, m => validTypes.includes(m.type) ? m.type : ActionType.Invalid);
 
-    return Object.keys(groups).map(gKey => {
+    const allGroups = Object.keys(groups).map(gKey => {
       const mediaType = groups[gKey][0].type;
 
       return {
@@ -31,6 +32,9 @@ export class GroupByMediaTypePipe implements PipeTransform {
         medias: groups[gKey]
       };
     });
+
+    return orderBy(allGroups, [c => getSortOrderByType(c.mediaType)])
+
   }
 
 }

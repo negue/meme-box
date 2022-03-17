@@ -2,7 +2,7 @@ import {combineLatest, Observable} from "rxjs";
 import {FilterTypes, IFilterItem, TYPE_FILTER_ITEMS} from "./filter.component";
 import {debounceTime, map} from "rxjs/operators";
 import {Action, ActionType, AppState} from "@memebox/contracts";
-import {actionContentContainsText, hasAdditionalContentToSearch, sortClips} from "@memebox/utils";
+import {actionContentContainsText, hasAdditionalContentToSearch, sortActions} from "@memebox/utils";
 
 export function createCombinedFilterItems$ (
   state$: Observable<AppState>,
@@ -143,6 +143,6 @@ export function filterClips$(
       })
 
     }),
-    map(clipsToList => sortClips(clipsToList))
+    map(clipsToList => sortActions(clipsToList))
   );
 }

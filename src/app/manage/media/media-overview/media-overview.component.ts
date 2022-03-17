@@ -28,7 +28,7 @@ export class MediaOverviewComponent implements OnDestroy{
 
   public searchText$ = new BehaviorSubject<string>('');
 
-  public mediaList$: Observable<Action[]> = filterClips$(
+  public actionList$: Observable<Action[]> = filterClips$(
     this.query.state$,
     this.filteredItems$,
     this.searchText$
