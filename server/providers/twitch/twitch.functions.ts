@@ -18,7 +18,7 @@ export function* getCommandsOfTwitchEvent(
     case TwitchEventTypes.message: {
       yield* returnAllCommandsByMessage(
         onlyActiveConfigs,
-        twitchEvent.message,
+        twitchEvent.payload.message,
         twitchEvent.payload.userstate,
         twitchEvent
       );
@@ -34,7 +34,7 @@ export function* getCommandsOfTwitchEvent(
 
       yield* returnAllCommandsByMessage(
         onlyActiveConfigs,
-        twitchEvent.message,
+        twitchEvent.payload.message,
         twitchEvent.payload.userstate,
         twitchEvent
       );
@@ -123,7 +123,6 @@ function* returnAllCommandsByMessage (
   chatUserState: CommonUserstate,
   twitchEvent: AllTwitchEvents
 ) : IterableIterator<TwitchTriggerCommand> {
-
   if (!message) {
     return;
   }
