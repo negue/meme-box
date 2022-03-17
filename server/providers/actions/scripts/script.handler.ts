@@ -8,7 +8,7 @@ import {Persistence} from "../../../persistence";
 import {ActionQueueEventBus} from "../action-queue-event.bus";
 import {ActionActiveState} from "../action-active-state";
 import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
-import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
+import {ActionStore, ActionStoreAdapter, metadataDictionary} from "@memebox/shared-state";
 import {ScriptContext} from "./script.context";
 import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 import {MemeboxApiFactory} from "./apis/memebox.api";
@@ -19,6 +19,8 @@ import {TwitchApi} from "./apis/twitch.api";
 import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
 import {setGlobalVMScope} from "./global.context";
 import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
+import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
+import {generateCodeBySteps, generateVariables, LogicVariableGlobal} from "@memebox/logic-step-core";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -94,8 +96,51 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // endregion ActionStoreAdapter
 
-  public async handleScript(script: Action, payloadObs: TriggerAction) {
+  public async handleBlueprint(script: Action, payloadObs: TriggerAction) {
+    this.logger.info('Handle Blueprint!!');
+
+    const variablesArray = [
+      ...script.blueprint.staticVariables,
+      // todo list of global variables to be used on both sides
+      new LogicVariableGlobal('sleep', 'sleepApi')
+  ]
+
+    const variableDeclarationCode = generateVariables(
+      variablesArray,
+      metadataDictionary
+    );
+
+    const stepCode = generateCodeBySteps(
+      script.blueprint.steps,
+      variablesArray,
+      metadataDictionary);
+
+    const scriptConfig: ScriptConfig = {
+      bootstrapScript: '',
+      variablesConfig: [],
+      executionScript: [variableDeclarationCode, stepCode].join('\n'),
+      settings: {
+
+      }
+    };
+
+    return this.handleGenericScript(script, scriptConfig, payloadObs);
+  }
+
+  public handleScript(script: Action, payloadObs: TriggerAction) {
     this.logger.info('Handle Script!!');
+
+    const scriptConfig = actionDataToScriptConfig(script);
+
+    return this.handleGenericScript(script, scriptConfig, payloadObs);
+  }
+
+  private async handleGenericScript(
+    script: Action,
+    scriptConfig: ScriptConfig,
+    payloadObs: TriggerAction
+  ) {
+    // todo rename logs per target type script/blueprint
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
@@ -114,6 +159,7 @@ export class ScriptHandler implements ActionStoreAdapter {
         this._vm,
         this,
         script,
+        scriptConfig,
         this.memeboxApiFactory.getApiFor(script.id, script.type),
         this.logger,
         obsApi,
@@ -122,10 +168,10 @@ export class ScriptHandler implements ActionStoreAdapter {
 
       try {
         scriptHoldingData.compile();
-     } catch (err) {
-      this.logger.error(err.message, 'Script: '+script.name);
-      return;
-    }
+      } catch (err) {
+        this.logger.error(err.message, 'Script: '+script.name);
+        return;
+      }
       this._compiledScripts.set(script.id, scriptHoldingData);
     }
 

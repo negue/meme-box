@@ -13,7 +13,7 @@ const SCRIPT_EXECUTION_KEY = '_executionScript';
 const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
 const SCRIPT_SETTINGS_KEY = '_settings';
 
-export function actionDataToScriptConfig (action: Partial<Action>) {
+export function actionDataToScriptConfig (action: Partial<Action>): ScriptConfig|null {
   if (!action?.extended) {
     return null;
   }

@@ -74,6 +74,9 @@ export class ActionTriggerHandler {
       case ActionType.Script:
         await this._scriptHandler.handleScript(mediaConfig, payloadObs);
         break;
+      case ActionType.Blueprint:
+        await this._scriptHandler.handleBlueprint(mediaConfig, payloadObs);
+        break;
       default: {
         if (payloadObs.targetScreen) {
           this.triggerActionOnScreen(payloadObs);

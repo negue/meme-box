@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Query, Store, StoreConfig} from "@datorama/akita";
 import {produce} from "immer";
-import {LogicMetadataDictionary, LogicTypeMetadata} from "../../../logic-step-core/src/lib/types";
+import {LogicMetadataDictionary, LogicTypeMetadata} from "@memebox/logic-step-core";
 
 @Injectable({
   providedIn: "root"

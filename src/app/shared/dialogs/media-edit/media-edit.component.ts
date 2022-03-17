@@ -621,15 +621,16 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   editorInitialized(editorComponent: LogicEditorComponent) {
-    // todo extract the memebox api descriptions
-    editorComponent.registerGlobalVariables(new LogicVariableGlobal('sleep', 'sleepApi'));
-
     if (this.actionToEdit.blueprint) {
       editorComponent.state.update(state => {
         state.steps = this.actionToEdit.blueprint.steps;
         state.staticVariables = this.actionToEdit.blueprint.staticVariables;
       });
     }
+
+    // todo figure out how to also register global ones without having them to add here
+    // todo extract the memebox api descriptions
+    editorComponent.registerGlobalVariables(new LogicVariableGlobal('sleep', 'sleepApi'));
 
     combineLatest([
       editorComponent.logicQueries.nonGlobalVariables$,
