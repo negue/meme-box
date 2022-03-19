@@ -1,0 +1,15 @@
+{{ entry.type }}
+
+<ng-container *ngIf="entry.type === 'step' && entry | getEntryStepMetaData$ | async as stepMetadata">
+  {{ stepMetadata.label }}
+</ng-container>
+
+<div *ngFor="let subStepInfo of entry | getEntrySubStepInfo$ | async">
+  <div>{{subStepInfo.label}}</div>
+  <div>
+    // maybe other component? maybe all internally here
+    <div *ngFor="let subStep of (entry.subSteps[subStepInfo.name] || [])">
+      <app-blueprint-entry [entry]="subStep"></app-blueprint-entry>
+    </div>
+  </div>
+</div>

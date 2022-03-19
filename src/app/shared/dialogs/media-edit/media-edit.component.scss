@@ -24,6 +24,7 @@
 form {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 img {
@@ -115,6 +116,7 @@ img {
 
 .dialog-content {
   max-height: 76vh;
+  height: 76vh;
 }
 
 .action_id{
@@ -167,3 +169,6 @@ align-self: center;
   }
 }
 
+lib-stepper-content {
+  height: 100%;
+}

@@ -33,8 +33,7 @@
       "buildable": true,
       "style": "scss",
       "strict": true
-    },
-    "@nrwl/angular:component": {}
+    }
   },
   "defaultProject": "memebox-app",
   "projects": {

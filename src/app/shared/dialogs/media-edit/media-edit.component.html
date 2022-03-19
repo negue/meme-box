@@ -11,7 +11,7 @@
 <mat-dialog-content class="mat-typography dialog-content">
   <form [formGroup]="form">
 
-  <lib-stepper-content style="min-height: 600px" [selectedIndex]="isEditMode ? 1 : 0">
+  <lib-stepper-content [selectedIndex]="isEditMode ? 1 : 0">
     <div stepperHeader class="action_name_header flex_row">
       <mat-form-field style="flex: 1">
         <mat-label>Name</mat-label>

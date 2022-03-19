@@ -1,18 +1,25 @@
-<div *ngFor="let variable of logicQueries.nonGlobalVariables$ | async">
-  <logic-variable [variable]="variable"></logic-variable>
-</div>
+<mat-tab-group>
+  <mat-tab label="Variables">
+    <div *ngFor="let variable of logicQueries.nonGlobalVariables$ | async">
+      <logic-variable [variable]="variable"></logic-variable>
+    </div>
+
+  </mat-tab>
+  <mat-tab label="Steps">
+
+    <logic-group [steps]="logicQueries.currentLogicSteps$ | async"
+                 [stepTemplate]="stepTemplate" [context]="state"
+                 [addActionsTemplate]="actionsTemplate">
+
+    </logic-group>
+  </mat-tab>
+</mat-tab-group>
+
+
 
 <ng-container [ngTemplateOutlet]="editorActionPanelTemplate">
 
 </ng-container>
-
-<br/>
-
-<logic-group [steps]="logicQueries.currentLogicSteps$ | async"
-             [stepTemplate]="stepTemplate" [context]="state"
-             [addActionsTemplate]="actionsTemplate">
-
-</logic-group>
 
 <ng-template #stepTemplate let-step let-parent="parent" let-context="context">
   <div style="display: inline-block">
@@ -75,10 +82,7 @@
   </div>
 </ng-template>
 
-
 <ng-template #actionsTemplate let-parent="parent" let-context="context">
   <button mat-button (click)="addStep(parent, context)">add step</button>
   <button mat-button (click)="addGroup(parent, context)">add group</button>
 </ng-template>
-
-<br/>

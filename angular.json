@@ -626,8 +626,10 @@
       "style": "scss",
       "strict": true
     },
-    "@nrwl/angular:component": {
-      "style": "scss"
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "style": "scss",
+      "skipTests": true
     }
   }
 }

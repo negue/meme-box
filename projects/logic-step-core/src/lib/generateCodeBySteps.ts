@@ -96,7 +96,7 @@ export function generateCallCode(step: LogicStepCall,
 export function generateVariables (
   variables: LogicVariable[],
   metaData: LogicMetadataDictionary,
-  ) {
+) {
   const result: string[] = [];
 
   for (const variable of variables) {

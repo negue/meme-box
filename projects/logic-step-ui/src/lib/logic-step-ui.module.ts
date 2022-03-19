@@ -11,16 +11,27 @@ import {MatSelectModule} from "@angular/material/select";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {LogicStepMethodListPipe} from "./logic-step-method-list.pipe";
 import {LogicMethodArgumentsPipe} from './logic-method-arguments.pipe';
+import {MatTabsModule} from "@angular/material/tabs";
+import {BlueprintEntryCallComponent} from './blueprint-entry-call/blueprint-entry-call.component';
+import {BlueprintEntryGroupComponent} from './blueprint-entry-group/blueprint-entry-group.component';
+import {BlueprintEntryComponent} from './blueprint-entry/blueprint-entry.component';
+import {GetEntrySubStepInfoPipe} from './get-entry-sub-step-info.pipe';
+import {GetEntryStepMetaDataPipe} from './get-entry-step-meta-data.pipe';
 
 @NgModule({
-  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, DragDropModule],
+  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, DragDropModule, MatTabsModule],
   declarations: [
     LogicGroupComponent,
     LogicCallComponent,
     LogicEditorComponent,
     LogicVariableComponent,
     LogicStepMethodListPipe,
-    LogicMethodArgumentsPipe
+    LogicMethodArgumentsPipe,
+    BlueprintEntryCallComponent,
+    BlueprintEntryGroupComponent,
+    BlueprintEntryComponent,
+    GetEntrySubStepInfoPipe,
+    GetEntryStepMetaDataPipe
   ],
   exports: [
     LogicEditorComponent
