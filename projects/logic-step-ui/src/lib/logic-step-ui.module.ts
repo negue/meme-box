@@ -1,40 +1,40 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {LogicGroupComponent} from './logic-group/logic-group.component';
-import {LogicCallComponent} from './logic-call/logic-call.component';
-import {LogicEditorComponent} from './logic-editor/logic-editor.component';
-import {LogicVariableComponent} from './logic-variable/logic-variable.component';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatButtonModule} from "@angular/material/button";
-import {MatSelectModule} from "@angular/material/select";
-import {DragDropModule} from "@angular/cdk/drag-drop";
-import {LogicStepMethodListPipe} from "./logic-step-method-list.pipe";
-import {LogicMethodArgumentsPipe} from './logic-method-arguments.pipe';
-import {MatTabsModule} from "@angular/material/tabs";
-import {BlueprintEntryCallComponent} from './blueprint-entry-call/blueprint-entry-call.component';
-import {BlueprintEntryGroupComponent} from './blueprint-entry-group/blueprint-entry-group.component';
-import {BlueprintEntryComponent} from './blueprint-entry/blueprint-entry.component';
-import {GetEntrySubStepInfoPipe} from './get-entry-sub-step-info.pipe';
-import {GetEntryStepMetaDataPipe} from './get-entry-step-meta-data.pipe';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatSelectModule } from "@angular/material/select";
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { MatTabsModule } from "@angular/material/tabs";
+import { BlueprintEntryComponent } from './blueprint-entry/blueprint-entry.component';
+import { GetEntrySubStepInfoPipe } from './get-entry-sub-step-info.pipe';
+import { GetEntryStepMetaDataPipe } from './get-entry-step-meta-data.pipe';
+import { BlueprintContextDirective } from './blueprint-context.directive';
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { BlueprintStepSelectorComponent } from './blueprint-step-selector/blueprint-step-selector.component';
+import { OpenFeedbackButtonModule } from "../../../../src/app/shared/components/open-feedback-button/open-feedback-button.module";
+import { MatIconModule } from "@angular/material/icon";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatListModule } from "@angular/material/list";
+import { DialogsModule } from "../../../../src/app/shared/dialogs/dialogs.module";
+import { BlueprintStepCreatorService } from "./blueprint-step-creator.service";
 
 @NgModule({
-  imports: [CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, DragDropModule, MatTabsModule],
+  imports: [
+    CommonModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatSelectModule, DragDropModule, MatTabsModule, MatCheckboxModule, OpenFeedbackButtonModule, MatIconModule, MatDialogModule, MatListModule, DialogsModule],
   declarations: [
-    LogicGroupComponent,
-    LogicCallComponent,
-    LogicEditorComponent,
-    LogicVariableComponent,
-    LogicStepMethodListPipe,
-    LogicMethodArgumentsPipe,
-    BlueprintEntryCallComponent,
-    BlueprintEntryGroupComponent,
     BlueprintEntryComponent,
     GetEntrySubStepInfoPipe,
-    GetEntryStepMetaDataPipe
+    GetEntryStepMetaDataPipe,
+    BlueprintContextDirective,
+    BlueprintStepSelectorComponent
+  ],
+  providers: [
+    BlueprintStepCreatorService
   ],
   exports: [
-    LogicEditorComponent
+    BlueprintEntryComponent,
+    BlueprintContextDirective
   ]
 })
 export class LogicStepUiModule {}

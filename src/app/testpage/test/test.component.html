@@ -1,1 +1,14 @@
-<app-screen-clip-config></app-screen-clip-config>
+<mat-checkbox #editModeCheckbox>Edit Mode</mat-checkbox>
+
+<app-blueprint-entry blueprintContext
+                     [blueprint]="blueprint"
+                     [asBlock]="true"
+                     [isRoot]="true"
+                     [editMode]="editModeCheckbox.checked"
+
+                      #blueprintContextTemplate="blueprintContext">
+</app-blueprint-entry>
+
+
+<pre [highlight]="blueprintContextTemplate.state$ | async | json"
+     lang="json" class="pre-wrap-break"></pre>

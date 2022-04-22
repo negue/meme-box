@@ -1,9 +1,9 @@
-import {ChatUserstate} from "tmi.js";
-import {ActionType} from "./media.types";
-import {TriggerAction} from "./actions";
-import {AllTwitchEvents} from "./twitch.connector.types";
-import {DefaultImage} from "./twitch-data.types";
-import {AllLogicSteps, LogicVariable} from "@memebox/logic-step-core";
+import { ChatUserstate } from "tmi.js";
+import { ActionType } from "./media.types";
+import { TriggerAction } from "./actions";
+import { AllTwitchEvents } from "./twitch.connector.types";
+import { DefaultImage } from "./twitch-data.types";
+import { BlueprintContext } from "@memebox/logic-step-core";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -64,10 +64,7 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
   fromTemplate?: string; // GUID / Clip.Id of the Template
   description?: string;
 
-  blueprint?: {
-    staticVariables: LogicVariable[];
-    steps: AllLogicSteps[];
-  }
+  blueprint?: BlueprintContext;
 }
 
 export interface Screen extends HasId {

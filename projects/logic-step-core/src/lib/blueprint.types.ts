@@ -7,33 +7,37 @@ subSteps*/
 export interface BlueprintSubStepInfo {
   name: string; // property to save the subSteps
   label: string; // to show in the UI
+  entries: string[];
 }
 
 export interface BlueprintStepInfo {
-  name: string; // unique name of this step
+  stepType: string; // unique name of this step
   label: string;
-  hasSubSteps: BlueprintSubStepInfo[]; // different types of steps to show
 }
 
 // at some point custom controls/ui for each stepInfo could be shown
 
 export interface BlueprintEntryBase {
-  subSteps: {[key: string]: BlueprintEntry[]}
+  id: string;
+  awaited?: boolean;
+  subSteps: {
+    label: string;
+    entries: string[]  // entryId
+  }[];
 }
 
 export interface BlueprintEntryStepCall extends BlueprintEntryBase {
-  type: 'step';
-  stepName: string; // connection to BlueprintStepInfo
+  entryType: 'step';
+  stepType: string; // connection to BlueprintStepInfo
   payload: unknown;
 }
 
 export interface BlueprintEntryStepGroup extends BlueprintEntryBase {
-  type: 'group';
-  awaited: boolean; // really needed?
+  entryType: 'group';
 }
 
 export interface BlueprintEntryStepFunction extends BlueprintEntryBase {
-  type: 'function';
+  entryType: 'function';
   functionName: string;
 }
 
@@ -46,4 +50,9 @@ export type BlueprintEntry = BlueprintEntryStepCall | BlueprintEntryStepGroup | 
 
 export interface Blueprint {
   entries: BlueprintEntry[];
+}
+
+export interface BlueprintContext {
+  rootEntry: string;
+  entries: {[entryId: string]: BlueprintEntry}
 }
