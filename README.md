@@ -143,11 +143,9 @@ Misc:
 >
 > To see the updated `Getting Started` / Tutorials from the released version - [click here!](https://github.com/negue/meme-box/tree/release#getting-started)
 
-[`1. Installation`](./tutorials/installation.md)
+[`Installation and Getting Started`](https://github.com/meme-box/memebox-101/blob/main/00/README.md)
 
-[`2. Getting Started`](./tutorials/getting_started.md)
-
-`3. Advanced`:
+`Advanced`:
 
 - [`Trigger multiple / randoms`][URL_META_CLIPS]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
