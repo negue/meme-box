@@ -10,5 +10,12 @@
 </app-blueprint-entry>
 
 
+
+<pre [highlight]="toScriptCode(blueprintContextTemplate.state$ | async)"
+     lang="js" class="pre-wrap-break"></pre>
+
+
+
 <pre [highlight]="blueprintContextTemplate.state$ | async | json"
      lang="json" class="pre-wrap-break"></pre>
+

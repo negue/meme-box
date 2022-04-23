@@ -267,18 +267,9 @@ value="media">Media</mat-button-toggle>
         </ng-container>
 
         <ng-container *ngIf="form.value.type === ActionType.Blueprint">
-          <logic-editor #editorComponent
-                        (init)="editorInitialized(editorComponent)"
-                        (destroyed)="unsubscribeEditorChanges()"
+          Blueprint WIP
 
-                        [editorActionPanelTemplate]="actionPanel">
 
-          </logic-editor>
-
-          <ng-template #actionPanel>
-            <button mat-button (click)="editorComponent.addVariable()">Add variable</button>
-            <button mat-button (click)="chooseActionToTrigger(editorComponent)">Choose action</button>
-          </ng-template>
         </ng-container>
       </div>
       <!-- Preview of a Media -->

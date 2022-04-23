@@ -29,7 +29,7 @@ export interface BlueprintEntryBase {
 export interface BlueprintEntryStepCall extends BlueprintEntryBase {
   entryType: 'step';
   stepType: string; // connection to BlueprintStepInfo
-  payload: unknown;
+  payload: {[prop: string]: unknown};
 }
 
 export interface BlueprintEntryStepGroup extends BlueprintEntryBase {

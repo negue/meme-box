@@ -8,7 +8,7 @@ import {Persistence} from "../../../persistence";
 import {ActionQueueEventBus} from "../action-queue-event.bus";
 import {ActionActiveState} from "../action-active-state";
 import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
-import {ActionStore, ActionStoreAdapter, metadataDictionary} from "@memebox/shared-state";
+import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
 import {ScriptContext} from "./script.context";
 import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 import {MemeboxApiFactory} from "./apis/memebox.api";
@@ -20,7 +20,6 @@ import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
 import {setGlobalVMScope} from "./global.context";
 import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
 import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
-import {generateCodeBySteps, generateVariables, LogicVariableGlobal} from "@memebox/logic-step-core";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -98,7 +97,7 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   public async handleBlueprint(script: Action, payloadObs: TriggerAction) {
     this.logger.info('Handle Blueprint!!');
-
+/*
     const variablesArray = [
       ...script.blueprint.staticVariables,
       // todo list of global variables to be used on both sides
@@ -114,11 +113,13 @@ export class ScriptHandler implements ActionStoreAdapter {
       script.blueprint.steps,
       variablesArray,
       metadataDictionary);
-
+*/
     const scriptConfig: ScriptConfig = {
       bootstrapScript: '',
       variablesConfig: [],
-      executionScript: [variableDeclarationCode, stepCode].join('\n'),
+      executionScript: [
+      //  variableDeclarationCode, stepCode
+      ].join('\n'),
       settings: {
 
       }

@@ -8,19 +8,18 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   Action,
   ACTION_TYPE_INFORMATION,
   ACTION_TYPE_INFORMATION_ARRAY,
   ActionType,
-  ClipAssigningMode,
   FileInfo,
   MetaTriggerTypes,
   Tag
 } from "@memebox/contracts";
-import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { AppQueries, AppService, SnackbarService } from "@memebox/app-state";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -32,11 +31,11 @@ import {
   take,
   takeUntil
 } from "rxjs/operators";
-import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { DialogService } from "../dialog.service";
+import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {DialogService} from "../dialog.service";
 import {
   actionDataToScriptConfig,
   actionDataToWidgetContent,
@@ -45,15 +44,13 @@ import {
   DynamicIframeContent,
   ScriptConfig
 } from "@memebox/utils";
-import { Clipboard } from "@angular/cdk/clipboard";
-import { DialogData } from "../dialog.contract";
+import {Clipboard} from "@angular/cdk/clipboard";
+import {DialogData} from "../dialog.contract";
 import {
   ACTION_EDIT_CONFIG,
   MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH,
   MEDIA_TYPES_WITHOUT_PLAYTIME
 } from "./media-edit.type-config";
-import { LogicVariable, LogicVariableGlobal } from "@memebox/logic-step-core";
-import { registerMemeboxMetadata } from "../../memebox-metadata";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -220,7 +217,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     private clipboard: Clipboard,
     private snackbar: SnackbarService,
   ) {
-    registerMemeboxMetadata(logicContextMetadata);
+    // registerMemeboxMetadata(logicContextMetadata);
 
     const defaultValues = Object.assign({}, INITIAL_CLIP, this.data?.defaults ?? {});
 
@@ -598,48 +595,6 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     console.info($event);
 
 
-  }
-
-
-  async chooseActionToTrigger(editorComponent: LogicEditorComponent) {
-    const actionId = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
-      dialogTitle: 'Action',
-      showMetaItems: true,
-
-      showOnlyUnassignedFilter: true
-    });
-
-    const variableToAdd = new LogicVariable('action1', 'actionApi',{
-      actionId: actionId
-    });
-
-    editorComponent.addVariable(variableToAdd);
-  }
-
-  editorInitialized(editorComponent: LogicEditorComponent) {
-    if (this.actionToEdit.blueprint) {
-      editorComponent.state.update(state => {
-        state.steps = this.actionToEdit.blueprint.steps;
-        state.staticVariables = this.actionToEdit.blueprint.staticVariables;
-      });
-    }
-
-    // todo figure out how to also register global ones without having them to add here
-    // todo extract the memebox api descriptions
-    editorComponent.registerGlobalVariables(new LogicVariableGlobal('sleep', 'sleepApi'));
-
-    combineLatest([
-      editorComponent.logicQueries.nonGlobalVariables$,
-      editorComponent.logicQueries.currentLogicSteps$
-    ]).pipe(
-      takeUntil(this._blueprintEditorUnsub$),
-    ).subscribe(([variables, logicSteps]) => {
-      this.actionToEdit.blueprint = {
-        staticVariables: variables,
-        steps: logicSteps
-      };
-    });
   }
 
   unsubscribeEditorChanges() {

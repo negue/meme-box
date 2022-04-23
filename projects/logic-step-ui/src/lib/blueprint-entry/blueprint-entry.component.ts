@@ -1,12 +1,12 @@
-import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo } from "@memebox/logic-step-core";
-import { CdkDragDrop } from "@angular/cdk/drag-drop";
-import { BlueprintContextDirective } from "../blueprint-context.directive";
-import { MatCheckboxChange } from "@angular/material/checkbox";
-import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
-import { BlueprintStepSelectorComponent } from "../blueprint-step-selector/blueprint-step-selector.component";
-import { takeUntil } from "rxjs/operators";
-import { Subject } from "rxjs";
+import {ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
+import {BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo} from "@memebox/logic-step-core";
+import {CdkDragDrop} from "@angular/cdk/drag-drop";
+import {BlueprintContextDirective} from "../blueprint-context.directive";
+import {MatCheckboxChange} from "@angular/material/checkbox";
+import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
+import {BlueprintStepSelectorComponent} from "../blueprint-step-selector/blueprint-step-selector.component";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-blueprint-entry',
@@ -64,12 +64,16 @@ export class BlueprintEntryComponent
   }
 
   removeStep (subStep: BlueprintEntry, parent: BlueprintEntry) {
-    
+
   }
 
   async addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo) {
     const result = this.dialogService.open(BlueprintStepSelectorComponent, {
-      data: {}
+      data: {
+        entry,
+        subStepInfo,
+        context: this.context.blueprint
+      }
     });
 
     const dialogInstance = result.componentInstance;
@@ -81,7 +85,7 @@ export class BlueprintEntryComponent
   }
 
   changeAwaited (entry: BlueprintEntry, $event: MatCheckboxChange) {
-
+    this.context.changeAwaited(entry, $event.checked);
   }
 
   ngOnDestroy (): void {

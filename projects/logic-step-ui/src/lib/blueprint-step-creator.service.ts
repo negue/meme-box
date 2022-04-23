@@ -1,38 +1,24 @@
-import { Injectable } from '@angular/core';
-import { BlueprintEntryStepCall, BlueprintStepInfo } from "@memebox/logic-step-core";
-import { DialogService } from "../../../../src/app/shared/dialogs/dialog.service";
-import { ClipAssigningMode } from "@memebox/contracts";
-import { uuid } from "@gewd/utils";
+import {Injectable} from '@angular/core';
+import {
+  BlueprintContext,
+  BlueprintEntry,
+  BlueprintEntryStepCall,
+  BlueprintStepInfo,
+  BlueprintStepRegistry
+} from "@memebox/logic-step-core";
+import {DialogService} from "../../../../src/app/shared/dialogs/dialog.service";
+import {ClipAssigningMode} from "@memebox/contracts";
 
 @Injectable({
   providedIn: 'any'
 })
 export class BlueprintStepCreatorService {
-   public possibleSteps: BlueprintStepInfo[] = [
-    {
-      stepType: "triggerAction",
-      label: "Trigger Action"
-    },
-     {
-       stepType: "triggerActionWhile",
-       label: "Trigger Action and keep it visible while doing other steps"
-     },
-     {
-       stepType: "sleepSeconds",
-       label: "Wait for Seconds"
-     },
-     {
-       stepType: "obsSwitchScene",
-       label: "Switch Scene"
-     }
-  ];
-
   constructor(
     private dialogService: DialogService,
   ) { }
 
-  async generateStepData (step: BlueprintStepInfo): Promise<BlueprintEntryStepCall|void> {
-    switch (step.stepType) {
+  async generateStepData (parentStep: BlueprintEntry, stepInfo: BlueprintStepInfo): Promise<BlueprintEntryStepCall|void> {
+    switch (stepInfo.stepType) {
       case 'triggerAction':
       case 'triggerActionWhile':
       {
@@ -48,36 +34,40 @@ export class BlueprintStepCreatorService {
           return;
         }
 
-        const result: BlueprintEntryStepCall = {
-          id: uuid(),
-          stepType: step.stepType,
-          payload: {
-            actionId
-          },
-          entryType: "step",
-          subSteps: [],
-        };
-
-        if (step.stepType === 'triggerActionWhile') {
-          result.subSteps.push({
-            label: "Execute Actions",
-            entries: []
-          });
-        }
+        const result = BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({
+          actionId
+        }, parentStep)
 
         return result;
       }
       case "sleepSeconds": {
-         return {
-          id: uuid(),
-          stepType: step.stepType,
-          payload: {
-            seconds: 1337
-          },
-          entryType: "step",
-          subSteps: [],
-        };
+        return BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({
+          seconds: 1337
+        }, parentStep)
+      }
+      default: {
+        return BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({
+
+        }, parentStep)
       }
     }
+  }
+
+  getPossibleSteps (step: BlueprintEntry, context: BlueprintContext): BlueprintStepInfo[] {
+    return Object.entries(BlueprintStepRegistry)
+      .filter(([key, value]) => {
+        if (!value.allowedToBeAdded) {
+          return true;
+        }
+
+        return value.allowedToBeAdded(step, context);
+      })
+      .map(([key, value]) => {
+        return {
+          stepType: key,
+          label: value.pickerLabel
+        }
+
+      });
   }
 }

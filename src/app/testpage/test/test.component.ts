@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { BlueprintContext } from "../../../../projects/logic-step-core/src";
-import { AppService } from "../../../../projects/app-state/src/lib/state";
+import {Component, OnInit} from '@angular/core';
+import {BlueprintContext, generateCodeByBlueprint} from "../../../../projects/logic-step-core/src";
+import {AppService} from "../../../../projects/app-state/src/lib/state";
 
 @Component({
   selector: 'app-test',
@@ -31,5 +31,9 @@ export class TestComponent implements OnInit {
 
   ngOnInit(): void {
     this.appService.loadState();
+  }
+
+  toScriptCode (blueprint: BlueprintContext) {
+    return generateCodeByBlueprint(blueprint);
   }
 }

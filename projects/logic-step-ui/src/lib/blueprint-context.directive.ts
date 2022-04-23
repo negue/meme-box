@@ -1,13 +1,8 @@
-import { Directive, Input, OnInit, Output } from '@angular/core';
-import { filterNil, Store, StoreConfig } from "@datorama/akita";
-import {
-  BlueprintContext,
-  BlueprintEntry,
-  BlueprintEntryStepCall,
-  BlueprintSubStepInfo
-} from "@memebox/logic-step-core";
-import { Observable } from "rxjs";
-import { produce } from "immer";
+import {Directive, Input, OnInit, Output} from '@angular/core';
+import {filterNil, Store, StoreConfig} from "@datorama/akita";
+import {BlueprintContext, BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo} from "@memebox/logic-step-core";
+import {Observable} from "rxjs";
+import {produce} from "immer";
 
 
 @Directive({
@@ -107,6 +102,14 @@ export class BlueprintContextDirective
     entry: BlueprintEntry
   ) {
     return state.entries[entry.id];
+  }
+
+  changeAwaited(entry: BlueprintEntry, checked: boolean) {
+    this.update(state => {
+      const foundEntry = this.findEntry(state, entry);
+
+      foundEntry.awaited = checked;
+    });
   }
 }
 
