@@ -27,7 +27,7 @@ export const ACTION_TYPES_WITH_VARIABLES: ActionType[] = [
   ActionType.Script, ActionType.PermanentScript
 ];
 
-export function actionHasVariables (action: Action) {
+export function actionHasVariables (action: Action): boolean  {
   return ACTION_TYPES_WITH_VARIABLES.includes(action.type)
     && !!action.extended?.[SCRIPT_VARIABLES_KEY]
     && action.extended[SCRIPT_VARIABLES_KEY] !== '[]';
@@ -38,7 +38,7 @@ export const ACTION_TYPES_WITH_TRIGGERABLE_VARIABLES: ActionType[] = [
   ActionType.Script
 ];
 
-export function actionCanBeTriggeredWithVariables (action: Action) {
+export function actionCanBeTriggeredWithVariables (action: Action): boolean  {
   return ACTION_TYPES_WITH_TRIGGERABLE_VARIABLES.includes(action.type) && actionHasVariables(action);
 }
 
