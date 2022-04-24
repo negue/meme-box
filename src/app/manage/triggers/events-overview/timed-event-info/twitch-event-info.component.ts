@@ -45,7 +45,7 @@ export class TwitchEventInfoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onActiveChanged() {
+  onActiveChanged(): void  {
     this.appService.toggleTwitchActiveState(this.item.id);
   }
 }

@@ -39,7 +39,7 @@ export class TimedEventInfoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onActiveChanged() {
+  onActiveChanged(): void  {
     this.appService.toggleTimedClipActiveState(this.item.id);
   }
 }

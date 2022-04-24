@@ -17,7 +17,7 @@ export class ErrorHub {
     shareReplay()
   );
 
-  public queueError(error: Error, context?: string) {
+  public queueError(error: Error, context?: string): void  {
     this._newestError$.next({
       error,
       context

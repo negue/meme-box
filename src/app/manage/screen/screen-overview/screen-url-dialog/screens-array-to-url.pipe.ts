@@ -3,7 +3,7 @@ import {SelectionStateDictionary} from "./screen-url-dialog.component";
 
 @Pipe({
   name: 'screensArrayToUrl',
-  pure: false
+  pure: true
 })
 export class ScreensArrayToUrlPipe implements PipeTransform {
 

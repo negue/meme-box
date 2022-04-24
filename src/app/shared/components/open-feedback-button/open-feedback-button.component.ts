@@ -10,7 +10,7 @@ export class OpenFeedbackButtonComponent {
   @Input()
   public feedbackTarget = '';
 
-  openFeedback() {
+  openFeedback(): void  {
     const title = `Feedback for: ${this.feedbackTarget}`;
     const body =  `Please extend the title with a short version of your feedback/suggestion`
     // const urlToOpen = `https://github.com/negue/meme-box/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;

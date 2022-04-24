@@ -48,7 +48,7 @@ export class VariablesConfigByActionIdDirective implements OnInit, OnDestroy, On
     })
     }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void  {
     this.inputs.onChanges();
   }
 }

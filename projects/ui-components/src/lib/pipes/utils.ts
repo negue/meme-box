@@ -1,4 +1,9 @@
-export function readableSeconds(differenceInSeconds: number) {
+export function readableSeconds(differenceInSeconds: number): {hour: number;
+min: number;
+sec: number;
+days: number;
+string: string;
+}  {
   const days = Math.floor(differenceInSeconds / 3600 / 24);
   const hour = Math.floor((differenceInSeconds / 3600) % 24);
   const min = Math.floor((differenceInSeconds / 60) % 60); // maybe?

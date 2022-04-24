@@ -50,7 +50,7 @@ export class TwitchScopeSelectionComponent implements OnInit {
     this.cd.markForCheck();
   }
 
-  chooseScopes() {
+  chooseScopes(): void  {
     this.dialogRef.close({
       defaultScopes: DEFAULT_TWITCH_SCOPES,
        custom: this.data.scopes

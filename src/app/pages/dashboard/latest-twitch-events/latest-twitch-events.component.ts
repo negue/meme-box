@@ -50,7 +50,7 @@ export class LatestTwitchEventsComponent implements OnInit, OnDestroy {
   isGiftSub = isGiftSub;
   isBan = isBan;
 
-  replayEvent($event: MouseEvent, twitchEvent: TwitchEvent) {
+  replayEvent($event: MouseEvent, twitchEvent: TwitchEvent): void  {
     $event.stopImmediatePropagation();
 
     const newEvent: TwitchEvent = {

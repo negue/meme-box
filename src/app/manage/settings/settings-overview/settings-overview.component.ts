@@ -65,23 +65,23 @@ export class SettingsOverviewComponent implements OnInit {
     this.configService.openMediaFolder();
   }
 
-  reload() {
+  reload(): void  {
     location.reload();
   }
 
-  openConfigFolder() {
+  openConfigFolder(): void  {
     this.configService.openConfigFolder();
   }
 
-  downloadStreamdeckPlugin() {
+  downloadStreamdeckPlugin(): void  {
     openStreamdeckPluginUrl();
   }
 
-  addMoreDummyItems () {
+  addMoreDummyItems (): void  {
     dummyItemsCreatorLazy().then(value => value.addMoreItems(this.service));
   }
 
-  selectNewLanguage($event: LanguageEntry) {
+  selectNewLanguage($event: LanguageEntry): void  {
     this.selectedLangService.setSelectedLang($event.id)
   }
 }

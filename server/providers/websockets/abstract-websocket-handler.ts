@@ -50,14 +50,14 @@ export abstract class AbstractWebsocketHandler {
     });
   }
 
-  handleUpgrade(request: any, socket: any, head: any) {
+  handleUpgrade(request: any, socket: any, head: any): void  {
     this._wss.handleUpgrade(request, socket, head, (ws) => {
       this._wss.emit('connection', ws, request);
     });
   }
 
 
-  protected sendDataToAllSockets (message: string) {
+  protected sendDataToAllSockets (message: string): void  {
     if (this._connectedSocketList.length === 0) {
       return;
     }
@@ -65,7 +65,7 @@ export abstract class AbstractWebsocketHandler {
     this.sendDataToSockets(message, this._connectedSocketList);
   }
 
-  protected sendDataToSockets(message: string, targetSockets: WebSocket[]) {
+  protected sendDataToSockets(message: string, targetSockets: WebSocket[]): void  {
     for (const targetSocket of targetSockets) {
       if (targetSocket.readyState === WebSocket.OPEN) {
         targetSocket.send(message);

@@ -59,7 +59,7 @@ export class CustomPortSettingComponent implements OnInit, OnDestroy {
     await this.configService.updateCustomPort(this.form.value.port);
   }
 
-  toggleOrSave() {
+  toggleOrSave(): void  {
     if (this.editMode) {
       this.save();
     } else {

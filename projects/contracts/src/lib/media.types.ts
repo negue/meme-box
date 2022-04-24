@@ -115,6 +115,6 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
 export const ACTION_TYPE_INFORMATION_ARRAY = Object.values(ACTION_TYPE_INFORMATION)
   .filter(value => !!value);
 
-export function getSortOrderByType(mediaType: ActionType) {
+export function getSortOrderByType(mediaType: ActionType): number  {
   return ACTION_TYPE_INFORMATION[mediaType]?.sortOrder;
 }

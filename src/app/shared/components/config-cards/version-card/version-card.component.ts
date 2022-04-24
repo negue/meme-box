@@ -37,14 +37,14 @@ export class VersionCardComponent implements OnInit {
   }
 
   onVersionCheckChanged($event: MatCheckboxChange,
-                        config: Partial<Config>) {
+                        config: Partial<Config>): void  {
 
     this.configService.updateConfig({
       enableVersionCheck: $event.checked
     });
   }
 
-  openGitubPage() {
+  openGitubPage(): void  {
     window.open(RELEASE_PAGE, '_blank');
   }
 }

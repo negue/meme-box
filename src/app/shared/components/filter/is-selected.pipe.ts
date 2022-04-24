@@ -14,7 +14,7 @@ export class IsSelectedPipe implements PipeTransform {
 }
 
 export function isItemTheSame (item: IFilterItem) {
-  return (differentItem: IFilterItem) => {
+  return (differentItem: IFilterItem): boolean  => {
     return item.type === differentItem.type
       && item.value === differentItem.value
   }

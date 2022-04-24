@@ -3,7 +3,7 @@ import {SelectionStateDictionary} from "./screen-url-dialog.component";
 
 @Pipe({
   name: 'selectedScreensAmount',
-  pure: false
+  pure: true
 })
 export class SelectedScreenAmountPipe implements PipeTransform {
 

@@ -26,7 +26,7 @@ function createInitialScreenClipObj(): ScreenClip {
 
 // region Screen Operations
 
-export function addScreen(state: SettingsState, screen: Partial<Screen>) {
+export function addScreen(state: SettingsState, screen: Partial<Screen>): void  {
   screen.id = uuid();
   state.screen[screen.id] = Object.assign(createInitialScreenObj(), screen);
 }
@@ -39,7 +39,7 @@ export function fillDefaultsScreenClip (screenClip: Partial<ScreenClip>) {
   return Object.assign(createInitialScreenClipObj(), screenClip);
 }
 
-export function addOrUpdateScreenClip(state: SettingsState, screenId: string, screenClip: Partial<ScreenClip>) {
+export function addOrUpdateScreenClip(state: SettingsState, screenId: string, screenClip: Partial<ScreenClip>): void  {
   const newScreenClipObj = fillDefaultsScreenClip(screenClip);
 
   updateItemInDictionary(state.screen[screenId].clips, newScreenClipObj);

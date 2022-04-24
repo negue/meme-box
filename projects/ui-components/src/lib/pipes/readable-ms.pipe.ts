@@ -16,7 +16,7 @@ export class ReadableMsPipe implements PipeTransform {
 
 }
 
-export function msToString (value: number) {
+export function msToString (value: number): string  {
   if (!value) {
     return '';
   }
