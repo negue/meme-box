@@ -1,24 +1,15 @@
-import {ActionApi} from "./action.api";
+import { ActionApi } from "./action.api";
 import {
   ScreenMediaOverridableProperties,
   TriggerActionOrigin,
   TriggerActionOverrides,
   VisibilityEnum
 } from "@memebox/contracts";
-import {timeoutAsync} from "./sleep.api";
+import { timeoutAsync } from "./sleep.api";
 import merge from "lodash/merge";
-import {MemeboxApi} from "./memebox.api";
-import {uuid} from "@gewd/utils";
+import { uuid } from "@gewd/utils";
 
 export class MediaApi extends ActionApi {
-  constructor(
-    memeboxApi: MemeboxApi,
-    actionId: string,
-    screenId?: string | undefined
-  ) {
-    super(memeboxApi, actionId, screenId);
-  }
-
   updateScreenOptions(overrides: ScreenMediaOverridableProperties, timeoutInMs = 50): Promise<void> {
     this.memeboxApi.actionTriggerEventBus.updateActionProps({
       id: this.actionId,

@@ -1,6 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {BlueprintContext, generateCodeByBlueprint} from "../../../../projects/logic-step-core/src";
-import {AppService} from "../../../../projects/app-state/src/lib/state";
+import { Component, OnInit } from '@angular/core';
+import {
+  BlueprintContext,
+  createBlueprintContext,
+  generateCodeByBlueprint
+} from "../../../../projects/logic-step-core/src";
+import { AppService } from "../../../../projects/app-state/src/lib/state";
 
 @Component({
   selector: 'app-test',
@@ -8,22 +12,7 @@ import {AppService} from "../../../../projects/app-state/src/lib/state";
   styleUrls: ['./test.component.scss']
 })
 export class TestComponent implements OnInit {
-  public blueprint: BlueprintContext = {
-    rootEntry: 'root',
-    entries: {
-      ['root']: {
-        id: 'root',
-        entryType: "group",
-        awaited: false,
-        subSteps: [
-          {
-            label: 'Blueprint',
-            entries: []
-          }
-        ]
-      }
-    }
-  };
+  public blueprint: BlueprintContext = createBlueprintContext();
 
   constructor(
     private appService: AppService

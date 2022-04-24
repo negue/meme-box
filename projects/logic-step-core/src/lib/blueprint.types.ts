@@ -4,6 +4,8 @@ for example "trigger action while"
 => will be able to call other steps
 subSteps*/
 
+import { uuid } from "@gewd/utils";
+
 export interface BlueprintSubStepInfo {
   name: string; // property to save the subSteps
   label: string; // to show in the UI
@@ -55,4 +57,26 @@ export interface Blueprint {
 export interface BlueprintContext {
   rootEntry: string;
   entries: {[entryId: string]: BlueprintEntry}
+}
+
+
+export function createBlueprintContext (): BlueprintContext {
+  const rootId = uuid();
+
+  return {
+    rootEntry: rootId,
+    entries: {
+      [rootId]: {
+        id: rootId,
+        entryType: "group",
+        awaited: false,
+        subSteps: [
+          {
+            label: 'Blueprint',
+            entries: []
+          }
+        ]
+      }
+    }
+  };
 }

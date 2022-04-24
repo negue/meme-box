@@ -1,9 +1,9 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {IFilterItem} from "./filter.component";
+import { Pipe, PipeTransform } from '@angular/core';
+import { IFilterItem } from "./filter.component";
 
 @Pipe({
   name: 'isSelected',
-  pure: false
+  pure: true
 })
 export class IsSelectedPipe implements PipeTransform {
 

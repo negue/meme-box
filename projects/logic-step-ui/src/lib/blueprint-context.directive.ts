@@ -1,8 +1,14 @@
-import {Directive, Input, OnInit, Output} from '@angular/core';
-import {filterNil, Store, StoreConfig} from "@datorama/akita";
-import {BlueprintContext, BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo} from "@memebox/logic-step-core";
-import {Observable} from "rxjs";
-import {produce} from "immer";
+import { Directive, Input, OnInit, Output } from '@angular/core';
+import { filterNil, Store, StoreConfig } from "@datorama/akita";
+import {
+  BlueprintContext,
+  BlueprintEntry,
+  BlueprintEntryStepCall,
+  BlueprintSubStepInfo
+} from "@memebox/logic-step-core";
+import { Observable } from "rxjs";
+import { produce } from "immer";
+import { skip } from "rxjs/operators";
 
 
 @Directive({
@@ -21,14 +27,17 @@ export class BlueprintContextDirective
   public blueprint: BlueprintContext | null = null;
 
   @Output()
-  public blueprintUpdated: Observable<BlueprintEntry> = this._select(store => store.entries[store.rootEntry]).pipe(
+  public readonly blueprintUpdated: Observable<BlueprintEntry> = this._select(store => store.entries[store.rootEntry]).pipe(
     filterNil
   );
 
   @Output()
-  public state$: Observable<BlueprintContext> = this._select(store => ({...store})).pipe(
-    filterNil
-  );
+  public readonly state$: Observable<BlueprintContext> =
+    this._select(store => ({...store}))
+      .pipe(
+        skip(1),
+        filterNil
+      );
 
   constructor (
   ) {
@@ -40,7 +49,6 @@ export class BlueprintContextDirective
 
   ngOnInit (): void {
     if (this.blueprint) {
-      console.info('setting to blueprint', this.blueprint);
       this.update({
         ...this.blueprint
       });
@@ -71,7 +79,7 @@ export class BlueprintContextDirective
     });
   }
 
-  private addEntryToPath (
+  private static addEntryToPath (
     state: BlueprintContext,
     entry: BlueprintEntry
   ) {
@@ -84,16 +92,9 @@ export class BlueprintContextDirective
 
       const subEntries = foundEntry?.subSteps.find(s => subStepInfo.label === s.label);
 
-      console.info({
-        entry,
-        foundEntry,
-        subEntries,
-        subStepInfo
-      });
-
       subEntries?.entries.push(stepToAdd.id);
 
-      this.addEntryToPath(state, stepToAdd);
+      BlueprintContextDirective.addEntryToPath(state, stepToAdd);
     });
   }
 
@@ -117,14 +118,4 @@ function arraymove(arr: unknown[], fromIndex: number, toIndex: number) {
   const element = arr[fromIndex];
   arr.splice(fromIndex, 1);
   arr.splice(toIndex, 0, element);
-}
-
-function deProxify(obj: unknown) {
-  try {
-    return JSON.parse(JSON.stringify(obj));
-  } catch (e) {
-    console.info(e, obj);
-
-    return obj;
-  }
 }

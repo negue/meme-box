@@ -1,25 +1,26 @@
-import {Service, UseOpts} from "@tsed/di";
-import {VM} from "vm2";
-import {Action, ActionStateEnum, ActionType, TriggerAction} from "@memebox/contracts";
-import {NamedLogger} from "../../named-logger";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../../contracts";
-import {Persistence} from "../../../persistence";
-import {ActionQueueEventBus} from "../action-queue-event.bus";
-import {ActionActiveState} from "../action-active-state";
-import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
-import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
-import {ScriptContext} from "./script.context";
-import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
-import {MemeboxApiFactory} from "./apis/memebox.api";
-import {ObsConnection} from "../../obs-connection";
-import {ObsApi} from "./apis/obs.api";
-import {TwitchConnector} from "../../twitch/twitch.connector";
-import {TwitchApi} from "./apis/twitch.api";
-import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
-import {setGlobalVMScope} from "./global.context";
-import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
-import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
+import { Service, UseOpts } from "@tsed/di";
+import { VM } from "vm2";
+import { Action, ActionStateEnum, ActionType, TriggerAction } from "@memebox/contracts";
+import { NamedLogger } from "../../named-logger";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "../../contracts";
+import { Persistence } from "../../../persistence";
+import { ActionQueueEventBus } from "../action-queue-event.bus";
+import { ActionActiveState } from "../action-active-state";
+import { ActionActiveStateEventBus } from "../action-active-state-event.bus";
+import { ActionStore, ActionStoreAdapter } from "@memebox/shared-state";
+import { ScriptContext } from "./script.context";
+import { ActionPersistentStateHandler } from "../action-persistent-state.handler";
+import { MemeboxApiFactory } from "./apis/memebox.api";
+import { ObsConnection } from "../../obs-connection";
+import { ObsApi } from "./apis/obs.api";
+import { TwitchConnector } from "../../twitch/twitch.connector";
+import { TwitchApi } from "./apis/twitch.api";
+import { TwitchDataProvider } from "../../twitch/twitch.data-provider";
+import { setGlobalVMScope } from "./global.context";
+import { TwitchQueueEventBus } from "../../twitch/twitch-queue-event.bus";
+import { actionDataToScriptConfig, ScriptConfig } from "@memebox/utils";
+import { generateCodeByBlueprint } from "../../../../projects/logic-step-core/src";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -97,28 +98,12 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   public async handleBlueprint(script: Action, payloadObs: TriggerAction) {
     this.logger.info('Handle Blueprint!!');
-/*
-    const variablesArray = [
-      ...script.blueprint.staticVariables,
-      // todo list of global variables to be used on both sides
-      new LogicVariableGlobal('sleep', 'sleepApi')
-  ]
 
-    const variableDeclarationCode = generateVariables(
-      variablesArray,
-      metadataDictionary
-    );
-
-    const stepCode = generateCodeBySteps(
-      script.blueprint.steps,
-      variablesArray,
-      metadataDictionary);
-*/
     const scriptConfig: ScriptConfig = {
       bootstrapScript: '',
       variablesConfig: [],
       executionScript: [
-      //  variableDeclarationCode, stepCode
+        generateCodeByBlueprint(script.blueprint)
       ].join('\n'),
       settings: {
 
