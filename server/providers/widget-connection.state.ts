@@ -60,7 +60,7 @@ export class WidgetConnectionState {
     });
   }
 
-  public isTheMainInstance(mediaId: string, instanceId: string) {
+  public isTheMainInstance(mediaId: string, instanceId: string): boolean  {
     return this.connectionState[mediaId]?.mainId === instanceId;
   }
 

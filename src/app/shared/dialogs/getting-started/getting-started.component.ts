@@ -72,15 +72,15 @@ export class GettingStartedComponent
   }
 
 
-  newMediaClip() {
+  newMediaClip(): void  {
     this.dialogService.showMediaEditDialog(null);
   }
 
-  newScreen() {
+  newScreen(): void  {
     this.dialogService.showScreenEditDialog({});
   }
 
-  fillData() {
+  fillData(): void  {
     this.configService.fillDummyData();
   }
 
@@ -91,21 +91,21 @@ export class GettingStartedComponent
     });
   }
 
-  openTwitchConfigs() {
+  openTwitchConfigs(): void  {
     this.dialogService.openTwitchConnectionConfig();
   }
 
-  showMobileUrlDialog() {
+  showMobileUrlDialog(): void  {
     this.dialogService.open(QrcodeDialogComponent, {
 
     });
   }
 
-  openStreamDeckPluginUrl() {
+  openStreamDeckPluginUrl(): void  {
     openStreamdeckPluginUrl();
   }
 
-  newTwitchTrigger() {
+  newTwitchTrigger(): void  {
     this.dialogService.showTwitchEditDialog(null);
   }
 }

@@ -79,7 +79,7 @@ export class ActionController {
     @PathParams("actionId") actionId: string,
 
     @Optional() @BodyParams() triggerAction: TriggerAction
-  ) {
+  ): void  {
     const actionToTrigger: TriggerAction = {
       id: actionId,
       ...triggerAction

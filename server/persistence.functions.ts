@@ -5,7 +5,7 @@ import { writeFileSync } from "fs";
 
 export const GetPreviewFilePath = (actionId: string) => safeResolve(MEDIA_SCREENSHOT_PATH, actionId+'.jpg');
 
-export function SavePreviewFile(action: Action) {
+export function SavePreviewFile(action: Action): void  {
   if (action.type === ActionType.Video && action.previewUrl?.includes('data:image/jpeg;base64')) {
     const previewImgBase64 = action.previewUrl.replace('data:image/jpeg;base64,', '');
 

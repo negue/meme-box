@@ -6,7 +6,7 @@ import {checkToken} from "./shared/dialogs/twitch-connection-edit/twitch.oauth";
 export class OAuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
-  canActivate() {
+  canActivate(): boolean  {
     const tokenAvailable = checkToken();
 
     if (tokenAvailable) {

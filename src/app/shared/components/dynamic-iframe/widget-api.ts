@@ -40,11 +40,11 @@ export class WidgetTwitchApi {
   on(
     eventType: TwitchEventTypes|'*',
      callback: TwitchEventCallback
-  ) {
+  ): void  {
     this.callbackMap.set(eventType, callback);
   }
 
-  dispose() {
+  dispose(): void  {
     this.callbackMap.clear();
     this.subscription.unsubscribe();
   }
@@ -87,15 +87,15 @@ export class WidgetApi {
     this.store = new ActionStoreApi(mediaId, instanceId, storeAdapter, _errorSubject$);
   }
 
-  public triggered(callback: TriggeredEventCallback) {
+  public triggered(callback: TriggeredEventCallback): void  {
     this.triggeredCallback = callback;
   }
 
-  dispose() {
+  dispose(): void  {
     this.twitch.dispose();
   }
 
-  triggerIsShown(currentTriggeredPayload: TriggerAction) {
+  triggerIsShown(currentTriggeredPayload: TriggerAction): void  {
     if (this.triggeredCallback) {
       try {
         console.info({currentTriggeredPayload});

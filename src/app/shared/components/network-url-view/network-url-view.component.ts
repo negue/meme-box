@@ -64,7 +64,7 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
     this._currentPath$.next(this.urlPath);
   }
 
-  ngOnChanges ({urlPath}: SimpleChanges) {
+  ngOnChanges ({urlPath}: SimpleChanges): void  {
     if (urlPath) {
       this._currentPath$.next(urlPath.currentValue);
     }
@@ -86,14 +86,14 @@ export class NetworkUrlViewComponent implements OnInit, OnChanges {
     }
   }
 
-  openUrl (value: string) {
+  openUrl (value: string): void  {
     // TODO fix open new window in electron
     window.open(value, '_blank');
   }
 
   selectItem ($event: MatSelectChange,
               networkInterfaces: NetworkInfo[]
-  ) {
+  ): void  {
     this.selectedItem = networkInterfaces.find(i => i.address === $event.value);
   }
 }

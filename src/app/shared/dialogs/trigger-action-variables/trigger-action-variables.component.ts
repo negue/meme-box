@@ -34,7 +34,7 @@ export class TriggerActionVariablesComponent {
     }
   }
 
-  trigger() {
+  trigger(): void  {
     this._wsService.triggerClipOnScreen(this.data.id, null, {
       action: {
         variables: this.variables

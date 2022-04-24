@@ -55,7 +55,7 @@ export class TwitchTriggerHandler {
     });
   }
 
-  handle(trigger: TwitchTriggerCommand) {
+  handle(trigger: TwitchTriggerCommand): void  {
     if (!trigger.command) {
       return;
     }

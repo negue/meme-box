@@ -31,11 +31,11 @@ export class MarkdownComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openMarkdownOnGitHub() {
+  openMarkdownOnGitHub(): void  {
     window.open(TUTORIALS_GITHUB_PAGE + '/' + this.data.githubName, '_blank');
   }
 
-  handleLinkClick($event: MarkdownLinkClicked) {
+  handleLinkClick($event: MarkdownLinkClicked): void  {
     $event.event.preventDefault();
 
     const linkAttributes = $event.link.attributes;

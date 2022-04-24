@@ -16,11 +16,11 @@ export class HelpOverviewComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openDialog(item: MarkdownDialogPayload) {
+  openDialog(item: MarkdownDialogPayload): void  {
     this.dialogService.showMarkdownFile(item)
   }
 
-  openGithubRepo() {
+  openGithubRepo(): void  {
     window.open(TUTORIALS_GITHUB_PAGE, '_blank');
   }
 }
