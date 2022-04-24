@@ -16,13 +16,13 @@ export class OverviewUiService {
     return this._currentUiMode;
   }
 
-  public changeCurrentUiMode(newMode: OverviewUiMode) {
+  public changeCurrentUiMode(newMode: OverviewUiMode): void  {
     if (newMode !== this._currentUiMode.getValue()) {
       this._currentUiMode.next(newMode);
     }
   }
 
-  public toggleCurrentUiMode() {
+  public toggleCurrentUiMode(): void  {
     const newMode = this._currentUiMode.getValue() === OverviewUiMode.casual
       ? OverviewUiMode.pro
       : OverviewUiMode.casual;

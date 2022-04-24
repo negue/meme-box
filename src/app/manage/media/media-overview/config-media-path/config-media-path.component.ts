@@ -63,7 +63,7 @@ export class ConfigMediaPathComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  openNativeFolderPicker() {
+  openNativeFolderPicker(): void  {
     if (this.isElectron) {
 
       const electronApi = window.electron;

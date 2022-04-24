@@ -39,13 +39,13 @@ export class TwitchLogger {
       });
   }
 
-  public log(data: any) {
+  public log(data: any): void  {
     if (this._logEnabled) {
       this.logger.info(data);
     }
   }
 
-  public error(data: any) {
+  public error(data: any): void  {
     if (this._logEnabled) {
       this.logger.error(data);
     }

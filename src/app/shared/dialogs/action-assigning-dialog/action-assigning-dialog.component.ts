@@ -171,7 +171,7 @@ export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  clickToSelect(clip: Action) {
+  clickToSelect(clip: Action): void  {
     if (this.data.mode === ClipAssigningMode.Multiple) {
 
       const isSelected = this.checkedMap[clip.id] || false;

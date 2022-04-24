@@ -29,7 +29,7 @@ export class PersistenceActionsComponent implements OnInit {
     }
   }
 
-  importAll() {
+  importAll(): void  {
     this.dialog.open(ImportMediaFilesDialogComponent);
   }
 }

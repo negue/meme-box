@@ -24,15 +24,15 @@ export class NamedLogger {
     addDefaultLoggerAppenders(this.logger);
   }
 
-  warn(...data: unknown[]) {
+  warn(...data: unknown[]): void  {
     this.logger.warn(...data);
   }
 
-  info(...data: unknown[]) {
+  info(...data: unknown[]): void  {
     this.logger.info(...data);
   }
 
-  customFile(param: { date: boolean; name: string, maxLogSize?: number }) {
+  customFile(param: { date: boolean; name: string, maxLogSize?: number }): void  {
     this.logger.appenders.delete('file');
 
     const TODAY_LOG_SUFFIX = `.${ new Date().toISOString().slice(0,10) }`;
@@ -52,7 +52,7 @@ export class NamedLogger {
     })
   }
 
-  error(error: Error|unknown, context?: string) {
+  error(error: Error|unknown, context?: string): void  {
     NamedLogger.NewestError$.next({
       error,
       context
@@ -63,7 +63,7 @@ export class NamedLogger {
 
 }
 
-export function addDefaultLoggerAppenders (logger: Logger) {
+export function addDefaultLoggerAppenders (logger: Logger): void  {
   const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
 
   const jsonLayout = {

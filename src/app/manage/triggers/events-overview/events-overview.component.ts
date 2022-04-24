@@ -83,30 +83,30 @@ export class EventsOverviewComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  createNewTwitchCommand() {
+  createNewTwitchCommand(): void  {
     this.dialogService.showTwitchEditDialog(null);
   }
-  createNewTimer() {
+  createNewTimer(): void  {
     this.dialogService.showTimedEditDialog(null);
   }
 
-  deleteTwitchEvent(id: string) {
+  deleteTwitchEvent(id: string): void  {
     this.appService.deleteTwitchEvent(id);
   }
 
-  editTwitchEvent(twitchEventItem: TwitchTrigger) {
+  editTwitchEvent(twitchEventItem: TwitchTrigger): void  {
     this.dialogService.showTwitchEditDialog( twitchEventItem);
   }
 
-  deleteTimedEvent(id: string) {
+  deleteTimedEvent(id: string): void  {
     this.appService.deleteTimedEvent(id);
   }
 
-  editTimedEvent(twitchEventItem: TimedAction) {
+  editTimedEvent(twitchEventItem: TimedAction): void  {
     this.dialogService.showTimedEditDialog( twitchEventItem);
   }
 
-  previewEvent(item: TwitchTrigger) {
+  previewEvent(item: TwitchTrigger): void  {
     const badges = {};
 
     for(const role of item.roles ) {
@@ -119,11 +119,11 @@ export class EventsOverviewComponent implements OnInit {
       .toPromise();
   }
 
-  openTwitchConfigs() {
+  openTwitchConfigs(): void  {
     this.dialogService.openTwitchConnectionConfig();
   }
 
-  updateSearchField(value: string) {
+  updateSearchField(value: string): void  {
     this.searchText = value;
     this.searchText$.next(value);
   }

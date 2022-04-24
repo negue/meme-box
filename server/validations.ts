@@ -74,7 +74,7 @@ export function validOrLeave(req, res, next) {
 
 
 // no ".."
-export function allowedFileUrl(pathToFile: string) {
+export function allowedFileUrl(pathToFile: string): boolean  {
   return !pathToFile.includes('..');  // more to add?
 }
 

@@ -86,7 +86,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       .loadFile({})
   }
 
-  public updateData(mediaId: string, instanceId: string, newData: ActionStore) {
+  public updateData(mediaId: string, instanceId: string, newData: ActionStore): void  {
     return this.actionStateHandler
       .getActionFileHandler(mediaId)
       .update(newData);

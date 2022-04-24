@@ -110,5 +110,5 @@ export function getElectronPath () {
   return __dirname;
 }
 
-export function getPreloadJsPath () {
+export function getPreloadJsPath (): void  {
 }

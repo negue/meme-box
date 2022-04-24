@@ -9,7 +9,7 @@ export class ActionActiveStateEventBus {
   public AllEvents$ = this._allEvents$.asObservable();
 
   // todo refactor use the TriggerAction Payload instead , including the target State-Enum Value
-  public updateActionState(payload: ActionActiveStatePayload) {
+  public updateActionState(payload: ActionActiveStatePayload): void  {
     this._allEvents$.next(payload);
   }
 }

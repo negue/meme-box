@@ -62,7 +62,7 @@ export class FilterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  toggleFilter(item: IFilterItem) {
+  toggleFilter(item: IFilterItem): void  {
     if (this.selectedArray.some(isItemTheSame(item))) {
       const indexOfItem = this.selectedArray.findIndex(isItemTheSame(item));
 
@@ -74,14 +74,14 @@ export class FilterComponent implements OnInit {
     this.selected.emit(this.selectedArray);
   }
 
-  clearFilter($event: MouseEvent) {
+  clearFilter($event: MouseEvent): void  {
     $event.stopPropagation();
 
     this.selectedArray.splice(0, this.selectedArray.length);
     this.selected.emit(this.selectedArray);
   }
 
-  updateSearchField(value: string) {
+  updateSearchField(value: string): void  {
     this.searchText = value;
     this.searchChanged.next(value);
   }

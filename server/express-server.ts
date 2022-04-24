@@ -98,7 +98,7 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 
 
 
-export function createExpress(port: number) {
+export function createExpress(port: number): Express  {
   app.set('port', port);
 
   // app.get('port')

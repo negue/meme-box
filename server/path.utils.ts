@@ -2,7 +2,7 @@ import * as fs from "fs";
 import path from "path";
 import {CLI_OPTIONS} from "./utils/cli-options";
 
-export function createDirIfNotExists(dir: string) {
+export function createDirIfNotExists(dir: string): void  {
   if (!fs.existsSync(dir)){
     fs.mkdirSync(dir);
   }
