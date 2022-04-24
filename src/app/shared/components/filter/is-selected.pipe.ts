@@ -3,7 +3,7 @@ import {IFilterItem} from "./filter.component";
 
 @Pipe({
   name: 'isSelected',
-  pure: false
+  pure: true
 })
 export class IsSelectedPipe implements PipeTransform {
 
