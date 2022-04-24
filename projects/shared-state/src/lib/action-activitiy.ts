@@ -5,7 +5,7 @@ export type ActionStateEntries = Record<string, Record<string, ActionStateEnum>>
 export function updateActivityInState (
   state: ActionStateEntries,
   update: ActionActiveStatePayload
-) {
+): void  {
   if (!state[update.mediaId]) {
     state[update.mediaId] = {};
   }
@@ -18,7 +18,7 @@ export function isActionCurrently (
   activeState: ActionStateEnum,
   actionId: string,
   screenId?: string
-) {
+): boolean  {
   const mediaInState = state[actionId];
 
   if (!mediaInState) {

@@ -1,4 +1,4 @@
-export function simpleDateString(milliseconds = false) {
+export function simpleDateString(milliseconds = false): string  {
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;

@@ -3,7 +3,7 @@ import {Action, SettingsState} from "@memebox/contracts";
 import {uuid} from "@gewd/utils";
 
 
-export function addAction(state: SettingsState, clip: Partial<Action>, fillId = false) {
+export function addAction(state: SettingsState, clip: Partial<Action>, fillId = false): void  {
   if (fillId) {
     clip.id = uuid();
   }
@@ -11,7 +11,7 @@ export function addAction(state: SettingsState, clip: Partial<Action>, fillId = 
   state.clips[clip.id] = clip as Action;
 }
 
-export function deleteAction(data: SettingsState, id: string) {
+export function deleteAction(data: SettingsState, id: string): void  {
   deleteItemInDictionary(data.clips, id);
 
   const screenKeys = Object.keys(data.screen);

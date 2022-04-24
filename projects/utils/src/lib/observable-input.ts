@@ -18,7 +18,7 @@ class ObservableInput<T> {
 export class ObservableInputs {
   private readonly _inputs: ObservableInput<any>[] = [];
 
-  onChanges() {
+  onChanges(): void  {
     for (const input of this._inputs) {
       input.onChanges();
     }

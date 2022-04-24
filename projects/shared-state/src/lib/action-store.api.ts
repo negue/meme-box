@@ -56,7 +56,7 @@ export class ActionStoreApi {
     return defaultValue;
   }
 
-  public setString(key: string, value: unknown) {
+  public setString(key: string, value: unknown): void  {
     if (typeof value !== 'string') {
       this._errorSubject$.next(`The "${key}" value needs to be a string`);
       return;
@@ -78,7 +78,7 @@ export class ActionStoreApi {
     return defaultValue;
   }
 
-  public setNumber(key: string, value: unknown) {
+  public setNumber(key: string, value: unknown): void  {
     if (typeof value !== 'number') {
       this._errorSubject$.next(`The "${key}" value needs to be a number`);
       return;
@@ -99,7 +99,7 @@ export class ActionStoreApi {
     return defaultValue;
   }
 
-  public setObject(key: string, value: unknown) {
+  public setObject(key: string, value: unknown): void  {
     if (typeof value !== 'object') {
       this._errorSubject$.next(`The "${key}" value needs to be an object`);
       return;
@@ -110,7 +110,7 @@ export class ActionStoreApi {
     this.updateObservable();
   }
 
-  dispose() {
+  dispose(): void  {
     this._state$$.unsubscribe();
   }
 
