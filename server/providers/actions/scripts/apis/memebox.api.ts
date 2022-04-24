@@ -1,14 +1,18 @@
-import {Service} from "@tsed/di";
-import {ActionQueueEventBus} from "../../action-queue-event.bus";
-import {ActionType} from "@memebox/contracts";
-import {ActionActiveState} from "../../action-active-state";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../../../contracts";
-import {Persistence} from "../../../../persistence";
-import {DisposableBase} from "./disposableBase";
-import {takeUntil} from "rxjs/operators";
-import {ActionApi} from "./action.api";
-import {MediaApi} from "./media.api";
+// noinspection JSUnusedGlobalSymbols
+
+import { Service } from "@tsed/di";
+import { ActionQueueEventBus } from "../../action-queue-event.bus";
+import { ActionType, SimpleTriggerAction, TriggerActionOrigin } from "@memebox/contracts";
+import { ActionActiveState } from "../../action-active-state";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "../../../contracts";
+import { Persistence } from "../../../../persistence";
+import { DisposableBase } from "./disposableBase";
+import { takeUntil } from "rxjs/operators";
+import { ActionApi } from "./action.api";
+import { MediaApi } from "./media.api";
+import { UtilsApi } from "./utils.api";
+import { uuid } from "@gewd/utils";
 
 
 // todo multiple actions
@@ -19,9 +23,7 @@ export type ActionSelector = string  | {
 }
 
 export class MemeboxApi extends DisposableBase {
-
-  // for permanent scripts
-  public onAction$ = this.actionTriggerEventBus.AllQueuedActions$.pipe(
+  public readonly onAction$ = this.actionTriggerEventBus.AllQueuedActions$.pipe(
     takeUntil(this._destroy$)
   );
 
@@ -45,6 +47,24 @@ export class MemeboxApi extends DisposableBase {
 
   getMedia(mediaid: string, screenId?: string): MediaApi {
     return new MediaApi(this, mediaid, screenId);
+  }
+
+  async triggerRandom(actions: SimpleTriggerAction[]): Promise<void> {
+    const selectedAction = UtilsApi.randomElement(actions);
+
+    this.actionTriggerEventBus.queueAction({
+      id: selectedAction.actionId,
+      uniqueId: uuid(),
+      origin: TriggerActionOrigin.Scripts,
+      originId: this.scriptId,
+      targetScreen: selectedAction.screenId,
+      overrides: selectedAction.overrides
+    });
+
+    await this.actionActiveState.waitUntilDoneAsync(
+      selectedAction.actionId,
+      selectedAction.screenId
+    );
   }
 }
 

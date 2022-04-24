@@ -1,10 +1,15 @@
-import {BlueprintContext, BlueprintEntry, BlueprintEntryStepCall} from "./blueprint.types";
-import {TriggerActionOverrides} from "@memebox/contracts";
-import {uuid} from "@gewd/utils";
+import { BlueprintContext, BlueprintEntry, BlueprintEntryStepCall } from "./blueprint.types";
+import { TriggerActionOverrides } from "@memebox/contracts";
+import { uuid } from "@gewd/utils";
 
 export interface BlueprintStepDefinition {
   pickerLabel: string;
   needConfigDialog?: string; // special, generic
+  configArguments: {
+    name: string;
+    label: string;
+    type: string;
+  }[]; // each argument name will be applied to the payload as prop
   generateBlueprintStep: (payload: {[prop: string]: unknown}, parentStep: BlueprintEntry) => BlueprintEntryStepCall;
   allowedToBeAdded?: (step: BlueprintEntry, context: BlueprintContext) => boolean;
   toScriptCode: (step: BlueprintEntryStepCall, context: BlueprintContext) => string;
@@ -14,6 +19,13 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
   "triggerAction": {
     pickerLabel: "Trigger Action",
     needConfigDialog: "special",
+    configArguments: [
+      {
+        name: "action",
+        label: "Action to trigger",
+        type: "action"
+      }
+    ],
     generateBlueprintStep: (payload) => {
       return {
         id: uuid(),
@@ -34,6 +46,13 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
   "triggerActionWhile": {
     pickerLabel: "Trigger Action and keep it visible while doing other steps",
     needConfigDialog: "special",
+    configArguments: [
+      {
+        name: "action",
+        label: "Action to trigger",
+        type: "action"
+      }
+    ],
     generateBlueprintStep: (payload) => {
       return {
         id: uuid(),
@@ -72,6 +91,7 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
   },
   "triggerActionWhileReset": {
     pickerLabel: "Reset the 'triggerActionWhileAction' (todo label)",
+    configArguments: [],
     generateBlueprintStep: (_, parentStep) => {
       return {
         id: uuid(),
@@ -97,6 +117,13 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
   "sleepSeconds": {
     pickerLabel: "Wait for Seconds",
     needConfigDialog: "generic", // todo generic field config
+    configArguments: [
+      {
+        name: "seconds",
+        label: "Seconds",
+        type: "number"
+      }
+    ],
     generateBlueprintStep: (payload) => {
       return {
         id: uuid(),
@@ -111,6 +138,13 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
   "obsSwitchScene": {
     pickerLabel: "Switch Scene",
     needConfigDialog: "generic", // todo generic field config
+    configArguments: [
+      {
+        name: "targetScene",
+        label: "Target Scene",
+        type: "obs:scene"
+      }
+    ],
     generateBlueprintStep: (payload) => {
       return {
         id: uuid(),
@@ -121,7 +155,34 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
       };
     },
     toScriptCode: (step, context) => 'todoCode();',
-  }
+  },
+  "triggerRandom": {
+    pickerLabel: "Trigger Random Action",
+    needConfigDialog: "special",
+    configArguments: [
+      {
+        name: "actions",
+        label: "Actions",
+        type: "actionList"
+      }
+    ],
+    generateBlueprintStep: (payload) => {
+      return {
+        id: uuid(),
+        stepType: "triggerRandom",
+        payload,
+        entryType: "step",
+        subSteps: [],
+      };
+    },
+    toScriptCode: (step, context) => {
+      const actionId = step.payload.actionId;
+      const actionOverrides = step.payload.actionOverrides as TriggerActionOverrides;
+
+      return `memebox.getAction('${actionId}')
+                    .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
+    },
+  },
 };
 
 export function generateCodeByBlueprint(

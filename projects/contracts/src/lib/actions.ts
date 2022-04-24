@@ -1,5 +1,5 @@
-import {Dictionary, ScreenMediaOverridableProperties} from "./types";
-import {AllTwitchEvents} from "./twitch.connector.types";
+import { Dictionary, ScreenMediaOverridableProperties } from "./types";
+import { AllTwitchEvents } from "./twitch.connector.types";
 
 // TODO refactor / rename to more understandable names
 
@@ -74,11 +74,16 @@ export interface TriggerActionOverrides {
 
    *
    */
-
   action?: ActionOverridableProperties;
 
   screenMedia?: ScreenMediaOverridableProperties
+}
 
+export interface SimpleTriggerAction {
+  actionId: string;
+  screenId?: string;
+
+  overrides: TriggerActionOverrides;
 }
 
 export interface TriggerAction extends InternalActionTriggerBase {

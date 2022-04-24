@@ -1,6 +1,6 @@
 import { ChatUserstate } from "tmi.js";
 import { ActionType } from "./media.types";
-import { TriggerAction } from "./actions";
+import { ActionOverridableProperties, TriggerAction } from "./actions";
 import { AllTwitchEvents } from "./twitch.connector.types";
 import { DefaultImage } from "./twitch-data.types";
 import { BlueprintContext } from "@memebox/logic-step-core";
@@ -29,16 +29,13 @@ export enum MetaTriggerTypes {
   AllDelay
 }
 
-export interface ActionOverridableProperies {
-  // Empty for now
-}
 
 export interface HasExtendedData {
   // used for Widgets and/or variables / -config
   extended?: Dictionary<string>;
 }
 
-export interface Action extends HasId, ActionOverridableProperies, HasExtendedData {
+export interface Action extends HasId, ActionOverridableProperties, HasExtendedData {
   name: string;
   previewUrl?: string;
   hasPreview?: boolean;
