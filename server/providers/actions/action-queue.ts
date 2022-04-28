@@ -19,7 +19,10 @@ export class ActionQueue {
   }
 
   public async triggerAndWaitUntilDone(triggerAction: TriggerAction) {
-    const actionConfig = this._persistence.fullState().clips[triggerAction.id];
+    const allActionsDictionary = this._persistence.fullState().clips;
+
+    const actionConfig = allActionsDictionary[triggerAction.id];
+
     if (actionConfig.queueName) {
       const subject = this.createOrGetQueueSubject(actionConfig.queueName);
       subject.next(triggerAction);

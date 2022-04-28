@@ -6,12 +6,13 @@ import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {MatButtonModule} from "@angular/material/button";
 import {ActionPreviewModule} from "@memebox/state-components";
-import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
+import {ActionVariableInputModule, ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {ActionVariableConfigPipe} from './action-variable-config.pipe';
 import {
   OpenFeedbackButtonModule
 } from "../../../../../src/app/shared/components/open-feedback-button/open-feedback-button.module";
 
+// todo extract this module to its own internal library ^
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {
     ActionPreviewModule,
     ActionVariablesAssignmentsModule,
     MatDialogModule,
-    OpenFeedbackButtonModule
+    OpenFeedbackButtonModule,
+    ActionVariableInputModule
   ]
 })
 export class StepSettingDialogModule implements DialogContract<StepSettingDialogPayload> {

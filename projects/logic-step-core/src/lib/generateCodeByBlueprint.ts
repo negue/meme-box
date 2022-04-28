@@ -169,7 +169,7 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
     },
     toScriptCode: (step, context) => `sleep.secondsAsync(${step.payload.seconds});`,
     stepEntryLabelAsync: (queries, payload, parentStep) => {
-      return Promise.resolve('sleep');
+      return Promise.resolve('sleep: ' + payload.seconds);
     },
   },
   "obsSwitchScene": {
@@ -250,11 +250,15 @@ function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
       if (subEntry.entryType === 'step'){
         const entryDefinition = BlueprintStepRegistry[subEntry.stepType];
 
+        // result.push(`logger.log('Pre: ${subEntry.stepType}');`);
+
         if (subEntry.awaited) {
           result.push('await ');
         }
 
         result.push(entryDefinition.toScriptCode(subEntry, context).trim());
+
+        // result.push(`logger.log('Post: ${subEntry.stepType}');`);
       } else {
         result.push('TODO FOR TYPE: '+subEntry.entryType);
       }

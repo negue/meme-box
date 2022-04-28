@@ -10,6 +10,12 @@
   <strong>{{config.label}}:</strong> <br />
 
   <div [ngSwitch]="config.type">
+    <ng-container *ngSwitchCase="'number'">
+      <app-action-variable-input [variableType]="$any('number')" [label]="config.label"
+                                 [value]="payload[config.name]"
+                                 (valueChanged)="payload[config.name] = $event">
+      </app-action-variable-input>
+    </ng-container>
     <ng-container *ngSwitchCase="'action'">
       <div class="two-columns">
         <div class="column">
