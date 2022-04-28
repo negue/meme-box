@@ -1,4 +1,4 @@
-<ng-container *ngIf="entry?.entryType === 'step' && entry | getEntryStepMetaData$ | async as stepMetadata">
+<ng-container *ngIf="entry?.entryType === 'step' && entry | getEntryStepMetaData$: parent | async as stepMetadata">
 
   {{ stepMetadata.label }}
 

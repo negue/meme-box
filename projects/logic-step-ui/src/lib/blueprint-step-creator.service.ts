@@ -3,11 +3,12 @@ import {
   BlueprintContext,
   BlueprintEntry,
   BlueprintEntryStepCall,
+  BlueprintEntryStepPayload,
   BlueprintStepInfo,
   BlueprintStepRegistry
 } from "@memebox/logic-step-core";
 import {DialogService} from "../../../../src/app/shared/dialogs/dialog.service";
-import {ClipAssigningMode} from "@memebox/contracts";
+import type {StepSettingDialogPayload} from "./step-setting-dialog/step-setting-dialog.component";
 
 @Injectable({
   providedIn: 'any'
@@ -18,38 +19,28 @@ export class BlueprintStepCreatorService {
   ) { }
 
   async generateStepData (parentStep: BlueprintEntry, stepInfo: BlueprintStepInfo): Promise<BlueprintEntryStepCall|void> {
-    switch (stepInfo.stepType) {
-      case 'triggerAction':
-      case 'triggerActionWhile':
-      {
-        const actionId = await this.dialogService.showActionSelectionDialogAsync({
-          mode: ClipAssigningMode.Single,
-          dialogTitle: 'Action Variable',
-          showMetaItems: true,
 
-          showOnlyUnassignedFilter: true
-        });
+    const blueprintRegistryEntry = BlueprintStepRegistry[stepInfo.stepType];
 
-        if (!actionId) {
-          return;
-        }
+    if (blueprintRegistryEntry.configArguments.length !== 0) {
+      const dialogRef = await this.dialogService.loadAndOpen(
+        import('./step-setting-dialog/step-setting-dialog.module'),
+        {
+          configArguments: blueprintRegistryEntry.configArguments
+        } as StepSettingDialogPayload
+      );
 
-        const result = BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({
-          actionId
-        }, parentStep)
+      const dialogResult: BlueprintEntryStepPayload = await dialogRef.afterClosed().toPromise();
 
-        return result;
+      if (!dialogResult) {
+        return;
       }
-      case "sleepSeconds": {
-        return BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({
-          seconds: 1337
-        }, parentStep)
-      }
-      default: {
-        return BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({
 
-        }, parentStep)
-      }
+      const generatedBlueprintStep = BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep(dialogResult, parentStep)
+
+      return generatedBlueprintStep;
+    } else {
+      return BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({}, parentStep)
     }
   }
 

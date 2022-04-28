@@ -4,7 +4,8 @@ for example "trigger action while"
 => will be able to call other steps
 subSteps*/
 
-import { uuid } from "@gewd/utils";
+import {uuid} from "@gewd/utils";
+import {TriggerActionOverrides} from "@memebox/contracts";
 
 export interface BlueprintSubStepInfo {
   name: string; // property to save the subSteps
@@ -28,10 +29,14 @@ export interface BlueprintEntryBase {
   }[];
 }
 
+export interface BlueprintEntryStepPayload {
+  [prop: string]: unknown
+}
+
 export interface BlueprintEntryStepCall extends BlueprintEntryBase {
   entryType: 'step';
   stepType: string; // connection to BlueprintStepInfo
-  payload: {[prop: string]: unknown};
+  payload: BlueprintEntryStepPayload;
 }
 
 export interface BlueprintEntryStepGroup extends BlueprintEntryBase {
@@ -79,4 +84,10 @@ export function createBlueprintContext (): BlueprintContext {
       }
     }
   };
+}
+
+export interface BlueprintStepConfigActionPayload {
+  actionId: string;
+  screenId?: string;
+  overrides: TriggerActionOverrides;
 }

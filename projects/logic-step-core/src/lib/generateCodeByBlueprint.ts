@@ -1,16 +1,27 @@
-import { BlueprintContext, BlueprintEntry, BlueprintEntryStepCall } from "./blueprint.types";
-import { TriggerActionOverrides } from "@memebox/contracts";
-import { uuid } from "@gewd/utils";
+import {
+  BlueprintContext,
+  BlueprintEntry,
+  BlueprintEntryStepCall,
+  BlueprintEntryStepPayload,
+  BlueprintStepConfigActionPayload
+} from "./blueprint.types";
+import {TriggerActionOverrides} from "@memebox/contracts";
+import {uuid} from "@gewd/utils";
+import {AppQueries} from "@memebox/app-state";
+import {map, take} from "rxjs/operators";
+
+export interface BlueprintStepConfigArgument {
+  name: string;
+  label: string;
+  type: string;
+}
 
 export interface BlueprintStepDefinition {
   pickerLabel: string;
+  stepEntryLabelAsync: (queries: AppQueries, payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => Promise<string>;
   needConfigDialog?: string; // special, generic
-  configArguments: {
-    name: string;
-    label: string;
-    type: string;
-  }[]; // each argument name will be applied to the payload as prop
-  generateBlueprintStep: (payload: {[prop: string]: unknown}, parentStep: BlueprintEntry) => BlueprintEntryStepCall;
+  configArguments: BlueprintStepConfigArgument[]; // each argument name will be applied to the payload as prop
+  generateBlueprintStep: (payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => BlueprintEntryStepCall;
   allowedToBeAdded?: (step: BlueprintEntry, context: BlueprintContext) => boolean;
   toScriptCode: (step: BlueprintEntryStepCall, context: BlueprintContext) => string;
 }
@@ -36,12 +47,22 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
       };
     },
     toScriptCode: (step, context) => {
-      const actionId = step.payload.actionId;
-      const actionOverrides = step.payload.actionOverrides as TriggerActionOverrides;
+      const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
+
+      const actionId = actionPayload.actionId;
+      const actionOverrides = actionPayload.overrides;
 
       return `memebox.getAction('${actionId}')
                     .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
     },
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
+      const actionPayload = payload.action as BlueprintStepConfigActionPayload;
+
+      return queries.getActionById$(actionPayload.actionId).pipe(
+        map(actionInfo => actionInfo?.name ?? 'unknown action'),
+        take(1)
+      ).toPromise();
+    }
   },
   "triggerActionWhile": {
     pickerLabel: "Trigger Action and keep it visible while doing other steps",
@@ -71,10 +92,12 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
       };
     },
     toScriptCode: (step, context) => {
-      const actionId = step.payload.actionId;
-      const screenId = step.payload.screenId;
+      const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
 
-      const actionOverrides = step.payload.actionOverrides as TriggerActionOverrides;
+      const actionId = actionPayload.actionId;
+      const screenId = actionPayload.screenId;
+
+      const actionOverrides = actionPayload.overrides;
 
       const methodArguments = [`'${actionId}'`];
 
@@ -88,6 +111,14 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
+      const actionPayload = payload.action as BlueprintStepConfigActionPayload;
+
+      return queries.getActionById$(actionPayload.actionId).pipe(
+        map(actionInfo => actionInfo?.name ?? 'unknown action'),
+        take(1)
+      ).toPromise();
+    }
   },
   "triggerActionWhileReset": {
     pickerLabel: "Reset the 'triggerActionWhileAction' (todo label)",
@@ -113,6 +144,9 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
 
       return `${helpersName}.reset();`
     },
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
+      return Promise.resolve('reset');
+    },
   },
   "sleepSeconds": {
     pickerLabel: "Wait for Seconds",
@@ -134,6 +168,9 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
       };
     },
     toScriptCode: (step, context) => `sleep.secondsAsync(${step.payload.seconds});`,
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
+      return Promise.resolve('sleep');
+    },
   },
   "obsSwitchScene": {
     pickerLabel: "Switch Scene",
@@ -155,6 +192,9 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
       };
     },
     toScriptCode: (step, context) => 'todoCode();',
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
+      return Promise.resolve('obs: switch scene');
+    },
   },
   "triggerRandom": {
     pickerLabel: "Trigger Random Action",
@@ -181,6 +221,9 @@ export const BlueprintStepRegistry: {[stepType: string]: BlueprintStepDefinition
 
       return `memebox.getAction('${actionId}')
                     .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
+    },
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
+      return Promise.resolve('trigger random');
     },
   },
 };

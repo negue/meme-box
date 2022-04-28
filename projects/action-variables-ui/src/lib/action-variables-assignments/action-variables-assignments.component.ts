@@ -11,13 +11,13 @@ import {MatCheckboxChange} from "@angular/material/checkbox";
 export class ActionVariablesAssignmentsComponent implements OnInit {
 
   @Input()
-  public data: Dictionary<string> = {};
+  public data: Dictionary<unknown> = {};
 
   @Input()
   public fallbackData: Dictionary<string> = {};
 
   @Output()
-  public dataChanged = new EventEmitter<Dictionary<string>>();
+  public dataChanged = new EventEmitter<Dictionary<unknown>>();
 
   @Input()
   public variablesConfig: ActionVariableConfig[];

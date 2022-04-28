@@ -9,8 +9,8 @@ export class VariableValueOrFallbackPipe implements PipeTransform {
 
   transform(
     variable: ActionVariableConfig,
-    currentData: Dictionary<string>,
-    fallbackData: Dictionary<string>
+    currentData: Dictionary<unknown>,
+    fallbackData: Dictionary<unknown>
   ): unknown {
     if (typeof currentData[variable.name] !== 'undefined') {
       return currentData[variable.name];
