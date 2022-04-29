@@ -1,4 +1,4 @@
-{
+module.exports = {
   "root": true,
   "ignorePatterns": ["**/*"],
   "plugins": ["@nrwl/nx"],
@@ -7,6 +7,10 @@
     "node": true,
     "es6": true,
     "es2017": true
+  },
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    sourceType: "module",
   },
   "overrides": [
     {
@@ -51,4 +55,4 @@
       }
     }
   ]
-}
+};
