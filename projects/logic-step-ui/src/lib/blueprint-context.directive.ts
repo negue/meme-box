@@ -1,6 +1,12 @@
 import {Directive, Input, OnInit, Output} from '@angular/core';
 import {filterNil, Store, StoreConfig} from "@datorama/akita";
-import {BlueprintContext, BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo} from "@memebox/logic-step-core";
+import {
+  BlueprintContext,
+  BlueprintEntry,
+  BlueprintEntryStepCall,
+  BlueprintEntryStepPayload,
+  BlueprintSubStepInfo
+} from "@memebox/logic-step-core";
 import {Observable} from "rxjs";
 import {produce} from "immer";
 import {skip} from "rxjs/operators";
@@ -121,6 +127,16 @@ export class BlueprintContextDirective
       stepsArrayToMove.splice(indexOfStep, 1);
 
       delete state.entries[subStep.id];
+    });
+  }
+
+  changePayload(entry: BlueprintEntryStepCall, newPayload: BlueprintEntryStepPayload) {
+    this.update(state => {
+      const foundEntry = this.findEntry(state, entry);
+
+      if (foundEntry.entryType === 'step') {
+        foundEntry.payload = newPayload;
+      }
     });
   }
 }

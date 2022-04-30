@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   BlueprintEntryStepPayload,
@@ -9,9 +9,11 @@ import {Action, ClipAssigningMode, Dictionary, UnassignedFilterEnum} from "@meme
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {Observable} from "rxjs";
 import {AppQueries} from "@memebox/app-state";
+import cloneDeep from "lodash/cloneDeep";
 
 export interface StepSettingDialogPayload {
   configArguments: BlueprintStepConfigArgument[];
+  currentStepData?: BlueprintEntryStepPayload;
 }
 
 @Component({
@@ -19,7 +21,7 @@ export interface StepSettingDialogPayload {
   templateUrl: './step-setting-dialog.component.html',
   styleUrls: ['./step-setting-dialog.component.scss']
 })
-export class StepSettingDialogComponent implements OnInit {
+export class StepSettingDialogComponent {
 
   public payload: BlueprintEntryStepPayload = {};
 
@@ -32,14 +34,9 @@ export class StepSettingDialogComponent implements OnInit {
     private dialogService: DialogService,
     private appQuery: AppQueries,
   ) {
-    for (const config of data.configArguments) {
-      if (config.type === 'action') {
-      //   this.payload[config.name] = {} as BlueprintStepConfigActionPayload;
-      }
+    if (data.currentStepData) {
+      this.payload = cloneDeep(data.currentStepData);
     }
-  }
-
-  ngOnInit(): void {
   }
 
   async selectEventClip(configName: string) {

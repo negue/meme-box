@@ -23,14 +23,9 @@ export class BlueprintStepCreatorService {
     const blueprintRegistryEntry = BlueprintStepRegistry[stepInfo.stepType];
 
     if (blueprintRegistryEntry.configArguments.length !== 0) {
-      const dialogRef = await this.dialogService.loadAndOpen(
-        import('./step-setting-dialog/step-setting-dialog.module'),
-        {
-          configArguments: blueprintRegistryEntry.configArguments
-        } as StepSettingDialogPayload
-      );
-
-      const dialogResult: BlueprintEntryStepPayload = await dialogRef.afterClosed().toPromise();
+      const dialogResult = await this._loadAndOpenSettingDialog({
+        configArguments: blueprintRegistryEntry.configArguments
+      });
 
       if (!dialogResult) {
         return;
@@ -42,6 +37,25 @@ export class BlueprintStepCreatorService {
     } else {
       return BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({}, parentStep)
     }
+  }
+
+  async editStepData (currentStep: BlueprintEntry): Promise<BlueprintEntryStepPayload|void> {
+    if (currentStep.entryType !== 'step'){
+      return;
+    }
+
+    const blueprintRegistryEntry = BlueprintStepRegistry[currentStep.stepType];
+
+    if (blueprintRegistryEntry.configArguments.length === 0) {
+      return;
+    }
+
+    const dialogResult = await this._loadAndOpenSettingDialog({
+      configArguments: blueprintRegistryEntry.configArguments,
+      currentStepData: currentStep.payload
+    });
+
+    return dialogResult;
   }
 
   getPossibleSteps (step: BlueprintEntry, context: BlueprintContext): BlueprintStepInfo[] {
@@ -60,5 +74,16 @@ export class BlueprintStepCreatorService {
         }
 
       });
+  }
+
+  async _loadAndOpenSettingDialog(payload: StepSettingDialogPayload): Promise<BlueprintEntryStepPayload> {
+    const dialogRef = await this.dialogService.loadAndOpen(
+      import('./step-setting-dialog/step-setting-dialog.module'),
+      payload
+    );
+
+    const dialogResult: BlueprintEntryStepPayload = await dialogRef.afterClosed().toPromise();
+
+    return dialogResult;
   }
 }

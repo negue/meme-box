@@ -3,10 +3,16 @@
   {{ stepMetadata.label }}
 
 
-  <mat-checkbox [checked]="entry.awaited" *ngIf="editMode"
+  <ng-container *ngIf="editMode">
+  <mat-checkbox [checked]="entry.awaited"
                 (change)="changeAwaited(entry, $event)">Wait?</mat-checkbox>
-   <button mat-button *ngIf="editMode"
+
+  <button mat-button
+          (click)="editStepConfig(entry, parent)">Edit</button>
+
+   <button mat-button
            (click)="removeStep(entry, parent)">Remove</button>
+  </ng-container>
 </ng-container>
 
 
