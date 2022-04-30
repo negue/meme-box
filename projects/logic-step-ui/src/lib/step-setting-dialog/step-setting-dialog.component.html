@@ -33,16 +33,16 @@
         </div>
 
         <ng-container *ngIf="getActionPayload(config.name) as actionPayload;">
-          <div *ngIf="actionDictionary[actionPayload.actionId] | actionVariableConfig as actionVariableConfigs"
-               class="column">
+          <ng-container *ngIf="actionDictionary[actionPayload.actionId] | actionVariableConfig as actionVariableConfigs">
+            <div class="column" *ngIf="actionVariableConfigs.length">
             Variables: <br>
-            {{ actionVariableConfigs | json }}
             <app-action-variables-assignments   [variablesConfig]="actionVariableConfigs"
                                                 [data]="actionPayload.overrides.action.variables"
                                                 (dataChanged)="actionPayload.overrides.action.variables = $event;">
 
             </app-action-variables-assignments>
-          </div>
+            </div>
+          </ng-container>
         </ng-container>
       </div>
     </ng-container>
