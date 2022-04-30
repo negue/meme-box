@@ -1,4 +1,4 @@
-import {Inject, Injectable, InjectionToken} from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
   ActionActiveStatePayload,
   ACTIONS,
@@ -8,10 +8,10 @@ import {
   TriggerActionOrigin,
   TriggerActionOverrides
 } from "@memebox/contracts";
-import {BehaviorSubject, Subject} from "rxjs";
-import {SnackbarService} from "./snackbar.service";
-import {filter, mapTo, take} from "rxjs/operators";
-import {uuid} from "@gewd/utils";
+import { BehaviorSubject, Subject } from "rxjs";
+import { SnackbarService } from "./snackbar.service";
+import { filter, mapTo, take } from "rxjs/operators";
+import { uuid } from "@gewd/utils";
 
 export enum ConnectionStateEnum {
   NONE,
@@ -74,6 +74,7 @@ export class MemeboxWebsocketService {
       mediaId,
       screenId,
       state: showing ? ActionStateEnum.Active : ActionStateEnum.Done,
+      overrides: null // maybe sent the current state here too?
     };
 
     this.sendToTheSocket(`${ACTIONS.MEDIA_STATE}=${JSON.stringify(triggerObj)}`);
