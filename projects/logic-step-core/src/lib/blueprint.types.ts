@@ -1,11 +1,7 @@
-/*blueprint:
-  - step of type (which is unique)
-for example "trigger action while"
-=> will be able to call other steps
-subSteps*/
-
 import {uuid} from "@gewd/utils";
 import {TriggerActionOverrides} from "@memebox/contracts";
+import {AppQueries} from "@memebox/app-state";
+import {BlueprintStepConfigArgument} from "./generateCodeByBlueprint";
 
 export interface BlueprintSubStepInfo {
   name: string; // property to save the subSteps
@@ -91,3 +87,22 @@ export interface BlueprintStepConfigActionPayload {
   screenId?: string;
   overrides: TriggerActionOverrides;
 }
+
+
+
+// Registry Types
+export interface BlueprintStepDefinition {
+  pickerLabel: string;
+  stepEntryLabelAsync: (queries: AppQueries, payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => Promise<string>;
+  needConfigDialog?: string; // special, generic
+  configArguments: BlueprintStepConfigArgument[]; // each argument name will be applied to the payload as prop
+  generateBlueprintStep: (payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => BlueprintEntryStepCall;
+  allowedToBeAdded?: (step: BlueprintEntry, context: BlueprintContext) => boolean;
+  toScriptCode: (step: BlueprintEntryStepCall, context: BlueprintContext) => string;
+}
+
+export interface BlueprintRegistry {
+  [stepType: string]: BlueprintStepDefinition
+}
+
+export type generateCodeByStep = (step: BlueprintEntry, context: BlueprintContext) => string;
