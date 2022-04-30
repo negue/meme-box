@@ -64,7 +64,10 @@ export class BlueprintEntryComponent
   }
 
   removeStep (subStep: BlueprintEntry, parent: BlueprintEntry) {
-
+    this.context.removeStep(
+      subStep,
+      parent
+    );
   }
 
   async addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo) {
