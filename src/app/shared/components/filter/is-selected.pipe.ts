@@ -3,14 +3,12 @@ import {IFilterItem} from "./filter.component";
 
 @Pipe({
   name: 'isSelected',
-  pure: true
+  pure: false   // pure false is needed since the list is not changing the reference, only the items inside
 })
 export class IsSelectedPipe implements PipeTransform {
-
   transform(item: IFilterItem, list: IFilterItem[]): boolean {
     return list.some(isItemTheSame(item));
   }
-
 }
 
 export function isItemTheSame (item: IFilterItem) {

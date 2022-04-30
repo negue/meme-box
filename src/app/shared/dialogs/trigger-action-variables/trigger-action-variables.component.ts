@@ -1,9 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Action, ActionType, Dictionary, ENDPOINTS, TriggerActionOverrides } from "@memebox/contracts";
-import { actionDataToScriptConfig, actionDataToWidgetContent, extractVariablesFromExtended } from "@memebox/utils";
-import { ActionVariableConfig } from "@memebox/action-variables";
-import { MemeboxApiService, MemeboxWebsocketService } from "@memebox/app-state";
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {Action, ActionType, Dictionary, ENDPOINTS, TriggerActionOverrides} from "@memebox/contracts";
+import {actionDataToScriptConfig, actionDataToWidgetContent, extractVariablesFromExtended} from "@memebox/utils";
+import {ActionVariableConfig} from "@memebox/action-variables";
+import {MemeboxApiService, MemeboxWebsocketService} from "@memebox/app-state";
 
 @Component({
   selector: 'app-trigger-action-variables',
@@ -47,6 +47,6 @@ export class TriggerActionVariablesComponent implements OnInit {
     const overrides = await this._memeboxApi.get<TriggerActionOverrides>(
       `${ENDPOINTS.ACTION.PREFIX}${ENDPOINTS.ACTION.LAST_OVERRIDES}${this.data.id}`);
 
-    this.variables = overrides?.action?.variables;
+    this.variables = overrides?.action?.variables ?? {};
   }
 }

@@ -1,24 +1,24 @@
-import { Service, UseOpts } from "@tsed/di";
-import { VM } from "vm2";
-import { Action, ActionStateEnum, ActionType, TriggerAction } from "@memebox/contracts";
-import { NamedLogger } from "../../named-logger";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "../../contracts";
-import { Persistence } from "../../../persistence";
-import { ActionQueueEventBus } from "../action-queue-event.bus";
-import { ActionActiveState } from "../action-active-state";
-import { ActionActiveStateEventBus } from "../action-active-state-event.bus";
-import { ActionStore, ActionStoreAdapter } from "@memebox/shared-state";
-import { ScriptContext } from "./script.context";
-import { ActionPersistentStateHandler } from "../action-persistent-state.handler";
-import { MemeboxApiFactory } from "./apis/memebox.api";
-import { ObsConnection } from "../../obs-connection";
-import { ObsApi } from "./apis/obs.api";
-import { TwitchConnector } from "../../twitch/twitch.connector";
-import { TwitchApi } from "./apis/twitch.api";
-import { TwitchDataProvider } from "../../twitch/twitch.data-provider";
-import { setGlobalVMScope } from "./global.context";
-import { TwitchQueueEventBus } from "../../twitch/twitch-queue-event.bus";
+import {Service, UseOpts} from "@tsed/di";
+import {VM} from "vm2";
+import {Action, ActionStateEnum, ActionType, TriggerAction} from "@memebox/contracts";
+import {NamedLogger} from "../../named-logger";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "../../contracts";
+import {Persistence} from "../../../persistence";
+import {ActionQueueEventBus} from "../action-queue-event.bus";
+import {ActionActiveState} from "../action-active-state";
+import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
+import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
+import {ScriptContext} from "./script.context";
+import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
+import {MemeboxApiFactory} from "./apis/memebox.api";
+import {ObsConnection} from "../../obs-connection";
+import {ObsApi} from "./apis/obs.api";
+import {TwitchConnector} from "../../twitch/twitch.connector";
+import {TwitchApi} from "./apis/twitch.api";
+import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
+import {setGlobalVMScope} from "./global.context";
+import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -100,7 +100,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
       state: ActionStateEnum.Active,
-      overrides: payloadObs.overrides
+      overrides: payloadObs?.overrides
     });
 
     let scriptHoldingData: ScriptContext;
