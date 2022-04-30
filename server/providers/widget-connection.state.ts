@@ -1,8 +1,8 @@
-import {Injectable, UseOpts} from "@tsed/di";
-import {MemeboxWebsocket} from "./websockets/memebox.websocket";
-import {ACTIONS, ActionStateEnum} from "@memebox/contracts";
-import {NamedLogger} from "./named-logger";
-import {ActionActiveStateEventBus} from "./actions/action-active-state-event.bus";
+import { Injectable, UseOpts } from "@tsed/di";
+import { MemeboxWebsocket } from "./websockets/memebox.websocket";
+import { ACTIONS, ActionStateEnum } from "@memebox/contracts";
+import { NamedLogger } from "./named-logger";
+import { ActionActiveStateEventBus } from "./actions/action-active-state-event.bus";
 
 @Injectable()
 export class WidgetConnectionState {
@@ -67,7 +67,8 @@ export class WidgetConnectionState {
   private unregisterWidgetConnection (mediaId: string, instanceId: string)  {
     this.actionActiveState.updateActionState({
       mediaId,
-      state: ActionStateEnum.Unset
+      state: ActionStateEnum.Unset,
+      overrides: null
     });
 
     if (this.connectionState[mediaId]) {

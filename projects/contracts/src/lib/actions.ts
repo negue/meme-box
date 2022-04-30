@@ -1,5 +1,5 @@
-import {Dictionary, ScreenMediaOverridableProperties} from "./types";
-import {AllTwitchEvents} from "./twitch.connector.types";
+import { Dictionary, ScreenMediaOverridableProperties } from "./types";
+import { AllTwitchEvents } from "./twitch.connector.types";
 
 // TODO refactor / rename to more understandable names
 
@@ -116,4 +116,5 @@ export interface ActionActiveStatePayload {
   mediaId: string;
   screenId?: string;
   state: ActionStateEnum;
+  overrides: TriggerActionOverrides|null;
 }
