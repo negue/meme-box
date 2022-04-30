@@ -2,6 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   BlueprintEntryStepPayload,
+  BlueprintStepConfigActionListPayload,
   BlueprintStepConfigActionPayload,
   BlueprintStepConfigArgument
 } from "@memebox/logic-step-core";
@@ -36,10 +37,16 @@ export class StepSettingDialogComponent {
   ) {
     if (data.currentStepData) {
       this.payload = cloneDeep(data.currentStepData);
+    } else {
+      for (const config of data.configArguments) {
+        if (config.type === 'actionList') {
+          this.payload[config.name] = [];
+        }
+      }
     }
   }
 
-  async selectEventClip(configName: string) {
+  async selectAction(configName: string) {
     let actionPayload = this.payload[configName] as any as BlueprintStepConfigActionPayload;
 
     if (!actionPayload) {
@@ -52,15 +59,15 @@ export class StepSettingDialogComponent {
       } as BlueprintStepConfigActionPayload;
     }
 
-    const actionId = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
-      selectedItemId: actionPayload.actionId,
-      dialogTitle: 'Config Argument',
-      showMetaItems: true,
+    const actionId = await this._selectAction();
 
-      unassignedFilterType: UnassignedFilterEnum.BlueprintStepArgument,
-      // showOnlyUnassignedFilter: true
-    });
+    if (actionId) {
+      actionPayload.actionId = actionId;
+    }
+  }
+
+  async selectActionListEntry(actionPayload: BlueprintStepConfigActionPayload) {
+    const actionId = await this._selectAction();
 
     if (actionId) {
       actionPayload.actionId = actionId;
@@ -71,7 +78,44 @@ export class StepSettingDialogComponent {
     return this.payload[configName] as any as BlueprintStepConfigActionPayload;
   }
 
+  getActionListPayload(configName: string) {
+    return this.payload[configName] as any as BlueprintStepConfigActionListPayload;
+  }
+
   save() {
     this.dialogRef.close(this.payload);
+  }
+
+  async addActionEntry(actionList: BlueprintStepConfigActionPayload[]) {
+    const actionId = await this._selectAction();
+
+    if (actionId) {
+      actionList.push({
+        actionId,
+        overrides: {
+          action: {
+            variables: {}
+          }
+        }
+      })
+    }
+  }
+
+  private _selectAction (actionId?: string | undefined): Promise<string> {
+    return this.dialogService.showActionSelectionDialogAsync({
+      mode: ClipAssigningMode.Single,
+      selectedItemId: actionId,
+      dialogTitle: 'Config Argument',
+      showMetaItems: true,
+
+      unassignedFilterType: UnassignedFilterEnum.BlueprintStepArgument,
+      // showOnlyUnassignedFilter: true
+    });
+  }
+
+  removeActionEntry(actionList: BlueprintStepConfigActionPayload[], actionEntry: BlueprintStepConfigActionPayload) {
+    const indexOf = actionList.indexOf(actionEntry);
+
+    actionList.splice(indexOf, 1);
   }
 }

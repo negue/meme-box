@@ -88,6 +88,7 @@ export interface BlueprintStepConfigActionPayload {
   overrides: TriggerActionOverrides;
 }
 
+export type BlueprintStepConfigActionListPayload = BlueprintStepConfigActionPayload[];
 
 
 // Registry Types

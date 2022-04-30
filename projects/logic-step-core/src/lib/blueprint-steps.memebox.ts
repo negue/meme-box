@@ -3,6 +3,7 @@ import {uuid} from "@gewd/utils";
 import {map, take} from "rxjs/operators";
 import {generateRandomCharacters} from "./utils";
 import {TriggerActionOverrides} from "@memebox/contracts";
+import {combineLatest} from "rxjs";
 
 export function registerMemeboxSteps (
   registry: BlueprintRegistry,
@@ -157,8 +158,21 @@ export function registerMemeboxSteps (
       return `memebox.getAction('${actionId}')
                     .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
     },
-    stepEntryLabelAsync: (queries, payload, parentStep) => {
-      return Promise.resolve('trigger random');
+    stepEntryLabelAsync: async (queries, payload, parentStep) => {
+      const actionPayload = payload.actions as BlueprintStepConfigActionPayload[];
+
+      const namesOfActions = await combineLatest(
+        actionPayload.map(a => queries.getActionById$(a.actionId).pipe(
+          map(actionInfo => actionInfo?.name ?? 'unknown action'),
+          take(1)
+        ))
+      )
+        .pipe(
+          map(allNames => allNames.join(','))
+        )
+        .toPromise();
+
+      return 'trigger random: '+ namesOfActions;
     },
   };
 }
