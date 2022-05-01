@@ -179,7 +179,9 @@ export class ScriptEditComponent implements OnInit {
 
     const codeToAdd = `const myActionVar = memebox.get${isAction ? 'Action' : 'Media'}('${actionId}');\n`;
 
-    const selection = codemirrorComponent.selectedRange;
+    const selection = codemirrorComponent.selectedRange ?? {
+      from: 0
+    };
 
     codemirrorComponent.insertText(
       selection.from, selection.from,

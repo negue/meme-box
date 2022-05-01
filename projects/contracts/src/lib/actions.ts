@@ -121,4 +121,5 @@ export interface ActionActiveStatePayload {
   mediaId: string;
   screenId?: string;
   state: ActionStateEnum;
+  overrides: TriggerActionOverrides|null;
 }

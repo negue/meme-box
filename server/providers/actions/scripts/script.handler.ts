@@ -130,7 +130,8 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
-      state: ActionStateEnum.Active
+      state: ActionStateEnum.Active,
+      overrides: payloadObs?.overrides
     });
 
     let scriptHoldingData: ScriptContext;
@@ -172,7 +173,8 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
-      state: ActionStateEnum.Done
+      state: ActionStateEnum.Done,
+      overrides: null
     });
   }
 

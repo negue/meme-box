@@ -1,4 +1,4 @@
-import {Service, UseOpts} from "@tsed/di";
+import { Service, UseOpts } from "@tsed/di";
 import {
   Action,
   ACTIONS,
@@ -10,19 +10,19 @@ import {
   TriggerAction,
   TriggerActionOrigin
 } from "@memebox/contracts";
-import {Persistence} from "../../persistence";
-import {NamedLogger} from "../named-logger";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
-import {MemeboxWebsocket} from "../websockets/memebox.websocket";
+import { Persistence } from "../../persistence";
+import { NamedLogger } from "../named-logger";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "../contracts";
+import { MemeboxWebsocket } from "../websockets/memebox.websocket";
 
-import {ActionQueueEventBus} from "./action-queue-event.bus";
-import {ScriptHandler} from "./scripts/script.handler";
-import {timeoutAsync} from "./scripts/apis/sleep.api";
-import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
-import {uuid} from "@gewd/utils";
-import {ActionQueue} from "./action-queue";
-import {ActionActiveState} from "./action-active-state";
+import { ActionQueueEventBus } from "./action-queue-event.bus";
+import { ScriptHandler } from "./scripts/script.handler";
+import { timeoutAsync } from "./scripts/apis/sleep.api";
+import { ActionActiveStateEventBus } from "./action-active-state-event.bus";
+import { uuid } from "@gewd/utils";
+import { ActionQueue } from "./action-queue";
+import { ActionActiveState } from "./action-active-state";
 
 @Service()
 export class ActionTriggerHandler {
@@ -109,7 +109,8 @@ export class ActionTriggerHandler {
     this.actionStateEventBus.updateActionState({
       mediaId: payload.id,
       screenId: payload.targetScreen,
-      state: ActionStateEnum.Triggered
+      state: ActionStateEnum.Triggered,
+      overrides: payload.overrides
     });
 
     this._memeboxWebSocket.sendDataToScreen(payload.targetScreen, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(payload)}`);
@@ -142,7 +143,8 @@ export class ActionTriggerHandler {
     if (assignedTags.length === 0) {
       this.actionStateEventBus.updateActionState({
         mediaId: mediaConfig.id,
-        state: ActionStateEnum.Done
+        state: ActionStateEnum.Done,
+        overrides: null
       });
 
       return;
@@ -150,7 +152,8 @@ export class ActionTriggerHandler {
 
     this.actionStateEventBus.updateActionState({
       mediaId: mediaConfig.id,
-      state: ActionStateEnum.Active
+      state: ActionStateEnum.Active,
+      overrides: payloadObs.overrides
     });
 
     // Get all clips assigned with these tags
@@ -213,7 +216,8 @@ export class ActionTriggerHandler {
 
     this.actionStateEventBus.updateActionState({
       mediaId: mediaConfig.id,
-      state: ActionStateEnum.Done
+      state: ActionStateEnum.Done,
+      overrides: null
     });
   }
 
