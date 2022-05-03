@@ -3,6 +3,7 @@ import { IFilterItem } from "./filter.component";
 
 @Pipe({
   name: 'isSelected',
+  // skipcq: JS-0575
   pure: false   // pure false is needed since the list is not changing the reference, only the items inside
 })
 export class IsSelectedPipe implements PipeTransform {

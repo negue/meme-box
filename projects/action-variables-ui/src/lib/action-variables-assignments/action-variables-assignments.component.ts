@@ -1,14 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Dictionary} from "@memebox/contracts";
-import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
-import {MatCheckboxChange} from "@angular/material/checkbox";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Dictionary } from "@memebox/contracts";
+import { ActionVariableConfig, ActionVariableTypes } from "@memebox/action-variables";
+import { MatCheckboxChange } from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-action-variables-assignments',
   templateUrl: './action-variables-assignments.component.html',
   styleUrls: ['./action-variables-assignments.component.scss']
 })
-export class ActionVariablesAssignmentsComponent implements OnInit {
+export class ActionVariablesAssignmentsComponent {
 
   @Input()
   public data: Dictionary<unknown> = {};
@@ -23,9 +23,6 @@ export class ActionVariablesAssignmentsComponent implements OnInit {
   public variablesConfig: ActionVariableConfig[];
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
   variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown) {
     const newDataObject = {

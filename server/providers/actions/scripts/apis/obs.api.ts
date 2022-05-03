@@ -1,8 +1,8 @@
-import {ObsConnection} from "../../../obs-connection";
+import { ObsConnection } from "../../../obs-connection";
 import type OBSWebSocket from "obs-websocket-js";
-import {DisposableBase} from "./disposableBase";
-import {fromEventPattern} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import { DisposableBase } from "./disposableBase";
+import { fromEventPattern } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 
 export class ObsFilterApi {
@@ -85,5 +85,38 @@ export class ObsApi extends DisposableBase {
     await this.raw.send('RefreshBrowserSource' as any, {
       sourceName
     });
+  }
+
+  public async listScenes() {
+    await this.obsConnectionService.connectIfNot();
+
+    const result = await this.raw.send('GetSceneList');
+
+    return result.status === 'ok'
+      ? result.scenes
+      : [];
+  }
+
+
+  public async listSources() {
+    await this.obsConnectionService.connectIfNot();
+
+    const result = await this.raw.send('GetSourcesList');
+
+    return result.status === 'ok'
+      ? result.sources
+      : [];
+  }
+
+  public async listSourceFilters(sourceName: string) {
+    await this.obsConnectionService.connectIfNot();
+
+    const result = await this.raw.send('GetSourceFilters', {
+      sourceName
+    });
+
+    return result.status === 'ok'
+      ? result.filters
+      : [];
   }
 }

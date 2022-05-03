@@ -1,6 +1,8 @@
-import {Controller, Get, PathParams, Post} from "@tsed/common";
-import {ENDPOINTS, ObsBrowserSourceData} from "@memebox/contracts";
-import {ObsConnection} from "../providers/obs-connection";
+import { Controller, Get, PathParams, Post } from "@tsed/common";
+import { ENDPOINTS, ObsBrowserSourceData } from "@memebox/contracts";
+import { ObsConnection } from "../providers/obs-connection";
+import { ObsApi } from "../providers/actions/scripts/apis/obs.api";
+import type { Scene } from "obs-websocket-js";
 
 @Controller(ENDPOINTS.OBS_DATA.PREFIX)
 export class ObsDataController {
@@ -35,17 +37,44 @@ export class ObsDataController {
     return browserSourceSettings;
   }
 
-
   @Post(`${ENDPOINTS.OBS_DATA.REFRESH_BROWSER_SOURCE}/:sourceName`)
   async refreshBrowserSource(
     @PathParams("sourceName") sourceName: string,
-  ): Promise<unknown> {
-    await this._obsConnection.connectIfNot();
+  ): Promise<void> {
+    const obsApi = await this.getObsApi();
 
-    const obsWS = await this._obsConnection.getCurrentConnection();
+    await obsApi.refreshBrowserSource(sourceName)
+  }
 
-    return await obsWS.send('RefreshBrowserSource', {
-      sourceName: sourceName
-    });
+  @Get(ENDPOINTS.OBS_DATA.SCENE_LIST)
+  async getSceneList(): Promise<Scene[]> {
+    const obsApi = await this.getObsApi();
+
+    return obsApi.listScenes()
+  }
+
+  @Get(ENDPOINTS.OBS_DATA.SOURCE_LIST)
+  async getSourceList(): Promise<{ name: string; typeId: string; type: string }[]> {
+    const obsApi = await this.getObsApi();
+
+    return obsApi.listSources()
+  }
+
+  @Get(`${ENDPOINTS.OBS_DATA.SOURCE_FILTER_LIST}/:sourceName`)
+  async getSourceFilterList(
+    @PathParams("sourceName") sourceName: string,
+  ): Promise<{ enabled: boolean; type: string; name: string; settings: Record<string, unknown> }[]> {
+    const obsApi = await this.getObsApi();
+
+    return obsApi.listSourceFilters(sourceName)
+  }
+
+  private obsApi: ObsApi;
+
+  private async getObsApi(): Promise<ObsApi> {
+    return this.obsApi ?? (this.obsApi = new ObsApi(
+      this._obsConnection,
+      await this._obsConnection.getCurrentConnection()
+    ));
   }
 }
