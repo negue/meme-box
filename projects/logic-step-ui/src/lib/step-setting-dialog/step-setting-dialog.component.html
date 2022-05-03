@@ -23,7 +23,8 @@
           </app-action-variable-input>
         </ng-container>
         <ng-container *ngSwitchCase="'boolean'">
-          <app-action-variable-input [variableType]="$any('boolean')" [label]="config.label"
+          <app-action-variable-input [variableType]="$any('boolean')"
+                                     label="Enabled"
                                      [value]="payload[config.name]"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>

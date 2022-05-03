@@ -1,15 +1,15 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
   BlueprintEntryStepPayload,
   BlueprintStepConfigActionListPayload,
   BlueprintStepConfigActionPayload,
   BlueprintStepConfigArgument
 } from "@memebox/logic-step-core";
-import {Action, ClipAssigningMode, Dictionary, UnassignedFilterEnum} from "@memebox/contracts";
-import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
-import {Observable} from "rxjs";
-import {AppQueries} from "@memebox/app-state";
+import { Action, ClipAssigningMode, Dictionary, UnassignedFilterEnum } from "@memebox/contracts";
+import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
+import { Observable } from "rxjs";
+import { AppQueries } from "@memebox/app-state";
 import cloneDeep from "lodash/cloneDeep";
 
 export interface StepSettingDialogPayload {
@@ -39,8 +39,18 @@ export class StepSettingDialogComponent {
       this.payload = cloneDeep(data.currentStepData);
     } else {
       for (const config of data.configArguments) {
+        switch (config.type) {
+          case 'actionList': {
+            this.payload[config.name] = [];
+            break;
+          }
+          case 'boolean': {
+            this.payload[config.name] = false;
+            break;
+          }
+        }
+
         if (config.type === 'actionList') {
-          this.payload[config.name] = [];
         }
       }
     }

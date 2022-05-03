@@ -206,7 +206,6 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   // endregion
 
   private _destroy$ = new Subject();
-  private _blueprintEditorUnsub$ = new Subject();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: MediaEditDialogPayload,
@@ -332,6 +331,11 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     if (this.actionToEdit.fromTemplate) {
       this.onTemplateChanged(this.actionToEdit.fromTemplate);
     }
+
+    if (this.actionToEdit?.type === ActionType.Blueprint
+      && !this.actionToEdit.blueprint ) {
+      this.actionToEdit.blueprint = createBlueprintContext();
+    }
   }
 
   async save() {
@@ -400,8 +404,6 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
-
-    this._blueprintEditorUnsub$.next();
   }
 
   // region Tag specific methods
@@ -593,15 +595,5 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
         this.makeScreenshot(videoElement);
       }, 1500);
     }
-  }
-
-  onSourceChange($event: Event, videoElement: HTMLVideoElement): void {
-    console.info($event);
-
-
-  }
-
-  unsubscribeEditorChanges(): void  {
-    this._blueprintEditorUnsub$.next();
   }
 }

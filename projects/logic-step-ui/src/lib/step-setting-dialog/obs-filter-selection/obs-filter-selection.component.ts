@@ -1,11 +1,11 @@
-import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormControl} from "@angular/forms";
-import {Scene} from "obs-websocket-js";
-import {ENDPOINTS, ObsSourceEntry, ObsSourceFilterEntry} from "@memebox/contracts";
-import {combineLatest, from, Observable, of, Subject} from "rxjs";
-import {map, startWith, switchMap, takeUntil} from "rxjs/operators";
-import {MemeboxApiService} from "@memebox/app-state";
-import {BlueprintStepConfigObsSetFilterStatePayload} from "@memebox/logic-step-core";
+import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl } from "@angular/forms";
+import { Scene } from "obs-websocket-js";
+import { ENDPOINTS, ObsSourceEntry, ObsSourceFilterEntry } from "@memebox/contracts";
+import { combineLatest, from, Observable, of, Subject } from "rxjs";
+import { map, startWith, switchMap, takeUntil } from "rxjs/operators";
+import { MemeboxApiService } from "@memebox/app-state";
+import { BlueprintStepConfigObsSetFilterStatePayload } from "@memebox/logic-step-core";
 
 @Component({
   selector: 'app-obs-filter-selection',
@@ -109,12 +109,10 @@ export class ObsFilterSelectionComponent implements OnInit, OnDestroy {
       this.sourceFormControl.patchValue(this.payload.sourceName);
       this.filterFormControl.patchValue(this.payload.filterName);
 
-      console.info({
-        payload: this.payload
+      setTimeout(() => {
+        this.selectedSourceSubject.next(this.payload.sourceName);
+        this.selectedFilterSubject.next(this.payload.filterName);
       });
-
-      this.selectedSourceSubject.next(this.payload.sourceName);
-      this.selectedFilterSubject.next(this.payload.filterName);
     }
 
     this.sourceFormControl.valueChanges.pipe(

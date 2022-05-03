@@ -8,6 +8,7 @@
     "widgetTemplate": "Widget Template",
     "meta": "Meta",
     "script": "Script",
-    "permanent_script": "Permanent Script"
+    "permanent_script": "Permanent Script",
+    "blueprint": "Blueprint"
   }
 }

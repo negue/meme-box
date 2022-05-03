@@ -1,5 +1,5 @@
-import {BlueprintRegistry, BlueprintStepConfigObsSetFilterStatePayload, generateCodeByStep} from "./blueprint.types";
-import {uuid} from "@gewd/utils";
+import { BlueprintRegistry, BlueprintStepConfigObsSetFilterStatePayload, generateCodeByStep } from "./blueprint.types";
+import { uuid } from "@gewd/utils";
 
 export function registerObsSteps (
   registry: BlueprintRegistry,
@@ -31,10 +31,10 @@ export function registerObsSteps (
 
       return `obs.switchToScene('${scenePayload}');`;
     },
-    stepEntryLabelAsync: async (queries, payload, parentStep) => {
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
       const scenePayload = payload.scene as string;
 
-      return 'OBS: switch scene: '+ scenePayload;
+      return Promise.resolve('OBS: switch scene: '+ scenePayload);
     }
   };
 
@@ -71,11 +71,11 @@ export function registerObsSteps (
       return `obs.getFilter('${filterPayload.sourceName}', '${filterPayload.filterName}')
                  .updateEnabled(${enabled});`;
     },
-    stepEntryLabelAsync: async (queries, payload, parentStep) => {
+    stepEntryLabelAsync: (queries, payload, parentStep) => {
       const filterPayload = payload.filter as BlueprintStepConfigObsSetFilterStatePayload;
       const enabled = payload.enabled as boolean;
 
-      return `OBS: setting Filter: ${filterPayload.filterName} to ${enabled}`;
+      return Promise.resolve(`OBS: setting Filter: ${filterPayload.filterName} to ${enabled}`);
     }
   };
 }
