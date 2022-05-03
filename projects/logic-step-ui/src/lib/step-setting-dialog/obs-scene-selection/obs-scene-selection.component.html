@@ -3,8 +3,8 @@
   <input
     matInput
     [formControl]="sceneFormControl"
-    [matAutocomplete]="queueAutocomplete">
-  <mat-autocomplete #queueAutocomplete="matAutocomplete"
+    [matAutocomplete]="sceneAutocomplete">
+  <mat-autocomplete #sceneAutocomplete="matAutocomplete"
                     (optionSelected)="sceneSelected.next($event.option.value)">
     <mat-option *ngFor="let scene of filteredSceneList$ | async"
                 [value]="scene.name">

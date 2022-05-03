@@ -16,6 +16,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ObsFilterSelectionComponent} from './obs-filter-selection/obs-filter-selection.component';
 
 // todo extract this module to its own internal library ^
 
@@ -23,7 +24,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
   declarations: [
     StepSettingDialogComponent,
     ActionVariableConfigPipe,
-    ObsSceneSelectionComponent
+    ObsSceneSelectionComponent,
+    ObsFilterSelectionComponent
   ],
   imports: [
     CommonModule,

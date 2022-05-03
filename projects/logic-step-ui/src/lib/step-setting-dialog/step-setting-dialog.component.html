@@ -107,7 +107,10 @@
           <app-obs-scene-selection [selectedScene]="payload[config.name]"
                                    (sceneSelected)="payload[config.name] = $event"></app-obs-scene-selection>
         </ng-container>
-
+        <ng-container *ngSwitchCase="'obs:filter'">
+          <app-obs-filter-selection [payload]="payload[config.name]"
+                                   (payloadChanged)="payload[config.name] = $event"></app-obs-filter-selection>
+        </ng-container>
         <ng-container *ngSwitchDefault>
           Default Switch Case NEED TO DO: {{config.type}}
         </ng-container>

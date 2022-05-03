@@ -1,8 +1,8 @@
-import { Controller, Get, PathParams, Post } from "@tsed/common";
-import { ENDPOINTS, ObsBrowserSourceData } from "@memebox/contracts";
-import { ObsConnection } from "../providers/obs-connection";
-import { ObsApi } from "../providers/actions/scripts/apis/obs.api";
-import type { Scene } from "obs-websocket-js";
+import {Controller, Get, PathParams, Post} from "@tsed/common";
+import {ENDPOINTS, ObsBrowserSourceData, ObsSourceEntry, ObsSourceFilterEntry} from "@memebox/contracts";
+import {ObsConnection} from "../providers/obs-connection";
+import {ObsApi} from "../providers/actions/scripts/apis/obs.api";
+import type {Scene} from "obs-websocket-js";
 
 @Controller(ENDPOINTS.OBS_DATA.PREFIX)
 export class ObsDataController {
@@ -54,16 +54,16 @@ export class ObsDataController {
   }
 
   @Get(ENDPOINTS.OBS_DATA.SOURCE_LIST)
-  async getSourceList(): Promise<{ name: string; typeId: string; type: string }[]> {
+  async getSourceList(): Promise<ObsSourceEntry[]> {
     const obsApi = await this.getObsApi();
 
     return obsApi.listSources()
   }
 
-  @Get(`${ENDPOINTS.OBS_DATA.SOURCE_FILTER_LIST}/:sourceName`)
+  @Get(`${ENDPOINTS.OBS_DATA.SOURCE_FILTER_LIST}:sourceName`)
   async getSourceFilterList(
     @PathParams("sourceName") sourceName: string,
-  ): Promise<{ enabled: boolean; type: string; name: string; settings: Record<string, unknown> }[]> {
+  ): Promise<ObsSourceFilterEntry[]> {
     const obsApi = await this.getObsApi();
 
     return obsApi.listSourceFilters(sourceName)

@@ -1,9 +1,9 @@
-import { ChatUserstate } from "tmi.js";
-import { ActionType } from "./media.types";
-import { ActionOverridableProperties, TriggerAction } from "./actions";
-import { AllTwitchEvents } from "./twitch.connector.types";
-import { DefaultImage } from "./twitch-data.types";
-import { BlueprintContext } from "@memebox/logic-step-core";
+import {ChatUserstate} from "tmi.js";
+import {ActionType} from "./media.types";
+import {ActionOverridableProperties, TriggerAction} from "./actions";
+import {AllTwitchEvents} from "./twitch.connector.types";
+import {DefaultImage} from "./twitch-data.types";
+import {BlueprintContext} from "@memebox/logic-step-core";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -375,4 +375,17 @@ export interface ObsBrowserSourceData {
   sourceName: string;
   sourceType: string;
   sourceSettings: Record<string, unknown>;
+}
+
+export interface ObsSourceEntry {
+ name: string;
+ typeId: string;
+ type: string;
+}
+
+export interface ObsSourceFilterEntry {
+  enabled: boolean;
+  type: string;
+  name: string;
+  settings: Record<string, unknown>;
 }
