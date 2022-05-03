@@ -19,9 +19,14 @@ import {TwitchApi} from "./apis/twitch.api";
 import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
 import {setGlobalVMScope} from "./global.context";
 import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
-import { actionDataToScriptConfig, ScriptConfig } from "@memebox/utils";
-import { generateCodeByBlueprint } from "../../../../projects/logic-step-core/src";
+import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
+import {generateCodeByBlueprint} from "@memebox/logic-step-core";
 
+const ActionTypesToResetScriptContext = [
+  ActionType.Script,
+  ActionType.PermanentScript,
+  ActionType.Blueprint
+];
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -56,7 +61,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     _persistence.dataUpdated$().subscribe((changedInfo) => {
       if (
         changedInfo.dataType == 'action'
-        && [ActionType.Script, ActionType.PermanentScript].includes(changedInfo.actionType)
+        && ActionTypesToResetScriptContext.includes(changedInfo.actionType)
       ) {
         this.refreshCompiledScriptsAndStartPermanents(changedInfo.id);
       }
@@ -98,14 +103,12 @@ export class ScriptHandler implements ActionStoreAdapter {
   // endregion ActionStoreAdapter
 
   public async handleBlueprint(script: Action, payloadObs: TriggerAction) {
-    this.logger.info('Handle Blueprint!!');
+    const generatedScript = generateCodeByBlueprint(script.blueprint);
 
     const scriptConfig: ScriptConfig = {
       bootstrapScript: '',
       variablesConfig: [],
-      executionScript: [
-        generateCodeByBlueprint(script.blueprint)
-      ].join('\n'),
+      executionScript: generatedScript,
       settings: {
 
       }
