@@ -1,6 +1,7 @@
 import {BlueprintContext, BlueprintEntry, BlueprintRegistry} from "./blueprint.types";
 import {uuid} from "@gewd/utils";
 import {registerMemeboxSteps} from "./blueprint-steps.memebox";
+import {registerObsSteps} from "./blueprint-steps.obs";
 
 export interface BlueprintStepConfigArgument {
   name: string;
@@ -12,7 +13,7 @@ export interface BlueprintStepConfigArgument {
 export const BlueprintStepRegistry: BlueprintRegistry = {
   "sleepSeconds": {
     pickerLabel: "Wait for Seconds",
-    needConfigDialog: "generic", // todo generic field config
+    stepGroup: "generic",
     configArguments: [
       {
         name: "seconds",
@@ -36,7 +37,7 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
   },
   "sleepMs": {
     pickerLabel: "Wait for Milliseconds",
-    needConfigDialog: "generic", // todo generic field config
+    stepGroup: "generic",
     configArguments: [
       {
         name: "ms",
@@ -57,31 +58,7 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
     stepEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.ms}ms`);
     },
-  },
-  "obsSwitchScene": {
-    pickerLabel: "Switch Scene",
-    needConfigDialog: "generic", // todo generic field config
-    configArguments: [
-      {
-        name: "targetScene",
-        label: "Target Scene",
-        type: "obs:scene"
-      }
-    ],
-    generateBlueprintStep: (payload) => {
-      return {
-        id: uuid(),
-        stepType: "obsSwitchScene",
-        payload,
-        entryType: "step",
-        subSteps: [],
-      };
-    },
-    toScriptCode: (step, context) => 'todoCode();',
-    stepEntryLabelAsync: (queries, payload, parentStep) => {
-      return Promise.resolve('obs: switch scene');
-    },
-  },
+  }
 };
 
 
@@ -127,3 +104,4 @@ function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
 }
 
 registerMemeboxSteps(BlueprintStepRegistry, generateCodeByStep);
+registerObsSteps(BlueprintStepRegistry, generateCodeByStep);

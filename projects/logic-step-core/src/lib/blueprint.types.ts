@@ -90,16 +90,29 @@ export interface BlueprintStepConfigActionPayload {
 
 export type BlueprintStepConfigActionListPayload = BlueprintStepConfigActionPayload[];
 
+export interface BlueprintStepConfigObsSetFilterStatePayload {
+  sourceName: string;
+  filterName: string;
+}
+
 
 // Registry Types
 export interface BlueprintStepDefinition {
   pickerLabel: string;
   stepEntryLabelAsync: (queries: AppQueries, payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => Promise<string>;
-  needConfigDialog?: string; // special, generic
+  stepGroup: string;
   configArguments: BlueprintStepConfigArgument[]; // each argument name will be applied to the payload as prop
+
+  // todo refactor so that each call doesn't need to fill ALL the properties only the needed onces for this type
   generateBlueprintStep: (payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => BlueprintEntryStepCall;
   allowedToBeAdded?: (step: BlueprintEntry, context: BlueprintContext) => boolean;
   toScriptCode: (step: BlueprintEntryStepCall, context: BlueprintContext) => string;
+}
+
+export interface BlueprintStepSelectionGroup {
+  name: string;
+  label: string;
+  order: number;
 }
 
 export interface BlueprintRegistry {

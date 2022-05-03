@@ -22,6 +22,12 @@
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
         </ng-container>
+        <ng-container *ngSwitchCase="'boolean'">
+          <app-action-variable-input [variableType]="$any('boolean')" [label]="config.label"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
+        </ng-container>
         <ng-container *ngSwitchCase="'action'">
           <div class="two-columns">
             <div class="column">
@@ -96,6 +102,12 @@
           </ng-container>
 
         </ng-container>
+
+        <ng-container *ngSwitchCase="'obs:scene'">
+          <app-obs-scene-selection [selectedScene]="payload[config.name]"
+                                   (sceneSelected)="payload[config.name] = $event"></app-obs-scene-selection>
+        </ng-container>
+
         <ng-container *ngSwitchDefault>
           Default Switch Case NEED TO DO: {{config.type}}
         </ng-container>

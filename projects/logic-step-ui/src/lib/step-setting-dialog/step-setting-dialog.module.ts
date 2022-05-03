@@ -11,13 +11,19 @@ import {ActionVariableConfigPipe} from './action-variable-config.pipe';
 import {
   OpenFeedbackButtonModule
 } from "../../../../../src/app/shared/components/open-feedback-button/open-feedback-button.module";
+import {ObsSceneSelectionComponent} from './obs-scene-selection/obs-scene-selection.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 // todo extract this module to its own internal library ^
 
 @NgModule({
   declarations: [
     StepSettingDialogComponent,
-    ActionVariableConfigPipe
+    ActionVariableConfigPipe,
+    ObsSceneSelectionComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +32,12 @@ import {
     ActionVariablesAssignmentsModule,
     MatDialogModule,
     OpenFeedbackButtonModule,
-    ActionVariableInputModule
+    ActionVariableInputModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class StepSettingDialogModule implements DialogContract<StepSettingDialogPayload> {
@@ -36,6 +47,7 @@ export class StepSettingDialogModule implements DialogContract<StepSettingDialog
   public openDialog (payload: StepSettingDialogPayload): MatDialogRef<any> {
     const dialogRef = this.dialog.open(StepSettingDialogComponent, {
       data: payload,
+      autoFocus: false,
     //  width: 'calc(min(1100px, 96%))',
     //  maxWidth: '96vw'
     });

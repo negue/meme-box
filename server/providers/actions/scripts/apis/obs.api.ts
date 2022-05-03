@@ -1,8 +1,8 @@
-import { ObsConnection } from "../../../obs-connection";
+import {ObsConnection} from "../../../obs-connection";
 import type OBSWebSocket from "obs-websocket-js";
-import { DisposableBase } from "./disposableBase";
-import { fromEventPattern } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import {DisposableBase} from "./disposableBase";
+import {fromEventPattern} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 
 export class ObsFilterApi {
@@ -97,7 +97,6 @@ export class ObsApi extends DisposableBase {
       : [];
   }
 
-
   public async listSources() {
     await this.obsConnectionService.connectIfNot();
 
@@ -118,5 +117,13 @@ export class ObsApi extends DisposableBase {
     return result.status === 'ok'
       ? result.filters
       : [];
+  }
+
+  public async switchToScene(sceneName: string): Promise<void> {
+    await this.obsConnectionService.connectIfNot();
+
+    await this.raw.send('SetCurrentScene', {
+      ['scene-name']: sceneName
+    });
   }
 }

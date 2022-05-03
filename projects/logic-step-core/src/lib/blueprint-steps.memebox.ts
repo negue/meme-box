@@ -11,7 +11,7 @@ export function registerMemeboxSteps (
 ): void  {
   registry["triggerAction"] = {
     pickerLabel: "Trigger Action",
-    needConfigDialog: "special",
+    stepGroup: "memebox",
     configArguments: [
       {
         name: "action",
@@ -49,7 +49,7 @@ export function registerMemeboxSteps (
 
   registry["triggerActionWhile"] = {
     pickerLabel: "Trigger Action and keep it visible while doing other steps",
-    needConfigDialog: "special",
+    stepGroup: "memebox",
     configArguments: [
       {
         name: "action",
@@ -105,6 +105,7 @@ export function registerMemeboxSteps (
   };
   registry["triggerActionWhileReset"] = {
     pickerLabel: "Reset the 'triggerActionWhileAction' (todo label)",
+    stepGroup: "memebox",
     configArguments: [],
     generateBlueprintStep: (_, parentStep) => {
       return {
@@ -134,7 +135,7 @@ export function registerMemeboxSteps (
 
   registry["triggerRandom"] = {
     pickerLabel: "Trigger Random Action",
-    needConfigDialog: "special",
+    stepGroup: "memebox",
     configArguments: [
       {
         name: "actions",
