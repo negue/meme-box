@@ -91,7 +91,7 @@ export class ScriptContext implements CanDispose {
     this.eventBus = new EventBusApi();
   }
 
-  public compile() {
+  public compile(): void  {
     try {
       this.compiledBootstrapScript = new VMScript(`
           async function bootstrap(

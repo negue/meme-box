@@ -87,7 +87,7 @@ export class BlueprintContextDirective
     state.entries[entry.id] = entry;
   }
 
-  addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo, stepToAdd: BlueprintEntryStepCall) {
+  addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo, stepToAdd: BlueprintEntryStepCall): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -102,7 +102,7 @@ export class BlueprintContextDirective
   findEntry (
     state: BlueprintContext,
     entry: BlueprintEntry
-  ) {
+  ): BlueprintEntry  {
     if (entry) {
       return state.entries[entry.id];
     } else {
@@ -110,7 +110,7 @@ export class BlueprintContextDirective
     }
   }
 
-  changeAwaited(entry: BlueprintEntry, checked: boolean) {
+  changeAwaited(entry: BlueprintEntry, checked: boolean): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -118,7 +118,7 @@ export class BlueprintContextDirective
     });
   }
 
-  removeStep(subStep: BlueprintEntry, parent: BlueprintEntry) {
+  removeStep(subStep: BlueprintEntry, parent: BlueprintEntry): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, parent);
 
@@ -130,7 +130,7 @@ export class BlueprintContextDirective
     });
   }
 
-  changePayload(entry: BlueprintEntryStepCall, newPayload: BlueprintEntryStepPayload) {
+  changePayload(entry: BlueprintEntryStepCall, newPayload: BlueprintEntryStepPayload): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 

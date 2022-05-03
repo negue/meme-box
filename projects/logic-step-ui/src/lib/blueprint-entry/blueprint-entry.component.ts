@@ -55,7 +55,7 @@ export class BlueprintEntryComponent
 
 
   stepRearranged ($event: CdkDragDrop<unknown, unknown>,
-                  subStepInfo: BlueprintSubStepInfo) {
+                  subStepInfo: BlueprintSubStepInfo): void  {
     const newPos = $event.currentIndex;
     const oldPos = $event.previousIndex;
 
@@ -65,7 +65,7 @@ export class BlueprintEntryComponent
     );
   }
 
-  removeStep (subStep: BlueprintEntry, parent: BlueprintEntry) {
+  removeStep (subStep: BlueprintEntry, parent: BlueprintEntry): void  {
     this.context.removeStep(
       subStep,
       parent
@@ -89,7 +89,7 @@ export class BlueprintEntryComponent
     }
   }
 
-  changeAwaited (entry: BlueprintEntry, $event: MatCheckboxChange) {
+  changeAwaited (entry: BlueprintEntry, $event: MatCheckboxChange): void  {
     this.context.changeAwaited(entry, $event.checked);
   }
 

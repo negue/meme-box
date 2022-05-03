@@ -87,7 +87,7 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
 
 export function generateCodeByBlueprint(
   blueprint: BlueprintContext
-) {
+): string  {
   const result: string[] = [];
 
   const rootEntry = blueprint.entries[blueprint.rootEntry];

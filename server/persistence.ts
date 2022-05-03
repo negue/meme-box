@@ -174,7 +174,7 @@ export class Persistence {
    *  Actions Persistence
    */
 
-  public addAction(action: Action) {
+  public addAction(action: Action): string  {
     action.id = uuid();
     SavePreviewFile(action);
     operations.addAction(this.data, action, true);
@@ -204,7 +204,7 @@ export class Persistence {
     return action;
   }
 
-  public deleteAction(id: string) {
+  public deleteAction(id: string): void  {
     const actionType = this.data.clips[id].type;
 
     operations.deleteAction(this.data, id);
@@ -226,7 +226,7 @@ export class Persistence {
    *  Tags Persistence
    */
 
-  public addTag(tag: Tag) {
+  public addTag(tag: Tag): string  {
     tag.id = uuid();
     this.data.tags[tag.id] = tag;
 
@@ -253,7 +253,7 @@ export class Persistence {
   }
 
   // TODO Extract shared state logic between app/ server
-  public deleteTag(id: string) {
+  public deleteTag(id: string): void  {
     deleteItemInDictionary(this.data.tags, id);
 
     for(const action of Object.values(this.data.clips)) {
@@ -278,7 +278,7 @@ export class Persistence {
    *  Screens Persistence
    */
 
-  public addScreen(screen: Partial<Screen>) {
+  public addScreen(screen: Partial<Screen>): string  {
     operations.addScreen(this.data, screen);
 
     this.saveData({
@@ -303,7 +303,7 @@ export class Persistence {
     return screen;
   }
 
-  public deleteScreen(id: string) {
+  public deleteScreen(id: string): void  {
     deleteItemInDictionary(this.data.screen, id);
 
     this.saveData({
@@ -336,7 +336,7 @@ export class Persistence {
     return screenClip;
   }
 
-  public deleteScreenClip(targetUrlId: string, id: string) {
+  public deleteScreenClip(targetUrlId: string, id: string): void  {
     deleteItemInDictionary(this.data.screen[targetUrlId].clips, id);
 
 
@@ -354,7 +354,7 @@ export class Persistence {
    *  Twitch Event Settings
    */
 
-  public addTwitchEvent(twitchEvent: TwitchTrigger) {
+  public addTwitchEvent(twitchEvent: TwitchTrigger): string  {
     twitchEvent.id = uuid();
     this.data.twitchEvents[twitchEvent.id] = twitchEvent;
 
@@ -381,7 +381,7 @@ export class Persistence {
     return twitchEvent;
   }
 
-  public deleteTwitchEvent(id: string) {
+  public deleteTwitchEvent(id: string): void  {
     deleteItemInDictionary(this.data.twitchEvents, id);
 
 
@@ -401,7 +401,7 @@ export class Persistence {
    *  Timed Actions Settings
    */
 
-  public addTimedEvent(timedEvent: TimedAction) {
+  public addTimedEvent(timedEvent: TimedAction): string  {
     timedEvent.id = uuid();
     this.data.timers[timedEvent.id] = timedEvent;
 
@@ -427,7 +427,7 @@ export class Persistence {
     return timedEvent;
   }
 
-  public deleteTimedEvent(id: string) {
+  public deleteTimedEvent(id: string): void  {
     deleteItemInDictionary(this.data.timers, id);
 
 
@@ -447,7 +447,7 @@ export class Persistence {
    */
 
   // TODO maybe key/value safety / validations
-  public updateConfig(config: Config) {
+  public updateConfig(config: Config): void  {
     this.data.config = config;
 
     this.saveData({
@@ -456,7 +456,7 @@ export class Persistence {
     });
   }
 
-  public updatePartialConfig(config: Partial<Config>) {
+  public updatePartialConfig(config: Partial<Config>): void  {
     this.data.config = Object.assign({}, this.data.config, config);
 
     this.saveData({
@@ -465,7 +465,7 @@ export class Persistence {
     });
   }
 
-  public updateMediaFolder (newFolder: string) {
+  public updateMediaFolder (newFolder: string): void  {
     this.data.config = this.data.config || {};
     this.data.config.mediaFolder = newFolder;
 
@@ -475,7 +475,7 @@ export class Persistence {
     });
   }
 
-  public updateObsConfig(newObsConfig: ObsConfig) {
+  public updateObsConfig(newObsConfig: ObsConfig): void  {
     this.data.config = this.data.config || {};
 
     let obsConfig = this.data.config.obs;
@@ -499,7 +499,7 @@ export class Persistence {
   }
 
 
-  public updateTwitchConfig(newTwitchConfig: TwitchConfig) {
+  public updateTwitchConfig(newTwitchConfig: TwitchConfig): void  {
     this.data.config = this.data.config || {};
 
     const twitchConfig = this.data.config.twitch;
@@ -549,7 +549,7 @@ export class Persistence {
     });
   }
 
-  public updateCustomPort (newPort: number) {
+  public updateCustomPort (newPort: number): void  {
     this.data.config = this.data.config || {};
 
     this.data.config.customPort = newPort;
@@ -587,7 +587,7 @@ export class Persistence {
     };
   }
 
-  public cleanUpConfigs() {
+  public cleanUpConfigs(): void  {
     this.data.clips = {};
     this.data.tags = {};
     this.data.screen = {};
@@ -601,7 +601,7 @@ export class Persistence {
     this._hardRefresh$.next();
   }
 
-  public addAllClipsToScreen(screenId: string, clipList: Partial<Action>[]) {
+  public addAllClipsToScreen(screenId: string, clipList: Partial<Action>[]): void  {
     // add all clips to state
     // assign all clips to screen
     clipList.forEach(clip => {

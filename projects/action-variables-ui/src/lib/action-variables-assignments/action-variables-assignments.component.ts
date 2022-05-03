@@ -24,7 +24,7 @@ export class ActionVariablesAssignmentsComponent {
 
   constructor() { }
 
-  variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown) {
+  variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown): void  {
     const newDataObject = {
       ...this.data
     };
@@ -47,7 +47,7 @@ export class ActionVariablesAssignmentsComponent {
     this.dataChanged.next(newDataObject);
   }
 
-  unsetValue($event: MatCheckboxChange, variable: ActionVariableConfig) {
+  unsetValue($event: MatCheckboxChange, variable: ActionVariableConfig): void  {
     if ($event.checked) {
       return;
     }

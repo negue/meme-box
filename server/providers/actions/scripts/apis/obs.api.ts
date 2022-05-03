@@ -47,7 +47,7 @@ export class ObsApi extends DisposableBase {
     return new ObsFilterApi(this, sourceName, filterName);
   }
 
-  public isConnected () {
+  public isConnected (): boolean  {
     return this._isConnected;
   }
 

@@ -22,7 +22,7 @@ export class TestComponent implements OnInit {
     this.appService.loadState();
   }
 
-  toScriptCode (blueprint: BlueprintContext) {
+  toScriptCode (blueprint: BlueprintContext): string  {
     return generateCodeByBlueprint(blueprint);
   }
 }

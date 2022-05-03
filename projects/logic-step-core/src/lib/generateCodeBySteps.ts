@@ -9,7 +9,7 @@ export function generateCodeBySteps(
   variables: LogicTypeProperty[],
   metaData: LogicMetadataDictionary,
   awaited = true
-) {
+): string  {
   const result: string[] = [];
 
   for (const step of (steps || [])) {
@@ -46,7 +46,7 @@ export function generateCodeBySteps(
 
 export function generateCallCode(step: LogicStepCall,
                                  variables: LogicTypeProperty[],
-                                 metaData: LogicMetadataDictionary) {
+                                 metaData: LogicMetadataDictionary): string  {
   const result: string[] = [];
 
   // todo check possible methods of variable / metadata
@@ -96,7 +96,7 @@ export function generateCallCode(step: LogicStepCall,
 export function generateVariables (
   variables: LogicVariable[],
   metaData: LogicMetadataDictionary,
-) {
+): string  {
   const result: string[] = [];
 
   for (const variable of variables) {

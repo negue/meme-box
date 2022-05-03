@@ -21,7 +21,7 @@ export interface DynamicIframeContent {
 }
 
 export function dynamicIframe (iframe: HTMLIFrameElement,
-                               content: DynamicIframeContent) {
+                               content: DynamicIframeContent): void  {
 
   const iframeDocument = iframe.contentDocument;
 
@@ -223,7 +223,7 @@ export function actionDataToWidgetContent (action: Partial<Action>): DynamicIfra
 export function applyDynamicIframeContentToClipData (
   iframeContent: DynamicIframeContent,
   targetClip: Partial<Action>
-) {
+): void  {
   if (!targetClip.extended) {
     targetClip.extended = {};
   }

@@ -8,7 +8,7 @@ import {combineLatest} from "rxjs";
 export function registerMemeboxSteps (
   registry: BlueprintRegistry,
   generateCodeByStep: generateCodeByStep
-) {
+): void  {
   registry["triggerAction"] = {
     pickerLabel: "Trigger Action",
     needConfigDialog: "special",

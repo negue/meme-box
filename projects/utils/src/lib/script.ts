@@ -36,7 +36,7 @@ export function actionDataToScriptConfig (action: Partial<Action>): ScriptConfig
 export function applyScriptConfigToClipData (
   scriptConfig: ScriptConfig,
   targetClip: Partial<Action>
-) {
+): void  {
   if (!targetClip.extended) {
     targetClip.extended = {};
   }

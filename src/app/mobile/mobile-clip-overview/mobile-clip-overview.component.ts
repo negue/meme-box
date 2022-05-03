@@ -103,11 +103,11 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
   }
 
 
-  onPreview(item: Action) {
+  onPreview(item: Action): void  {
     this._wsService.triggerClipOnScreen(item.id);
   }
 
-  onColumnSizeChanged($event: number) {
+  onColumnSizeChanged($event: number): void  {
     this.currentColumnSize = $event;
     this._settingsService.saveSetting(SettingMobileColumnSize, `${$event}`);
   }
@@ -117,11 +117,11 @@ export class MobileClipOverviewComponent implements OnInit, OnDestroy {
     this._destroy$.complete();
   }
 
-  reloadPage() {
+  reloadPage(): void  {
     location.reload();
   }
 
-  showVariableDialog(action: Action) {
+  showVariableDialog(action: Action): void  {
     this._dialogService.showTriggerActionVariables(action);
   }
 }

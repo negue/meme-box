@@ -546,13 +546,13 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     }
   }
 
-  copyIdToClipboard() {
+  copyIdToClipboard(): void  {
     if (this.clipboard.copy(this.actionToEdit.id)) {
       this.snackbar.normal("The Action ID was copied to the clipboard");
     }
   }
 
-  makeScreenshot(videoElement: HTMLVideoElement) {
+  makeScreenshot(videoElement: HTMLVideoElement): void  {
     videoElement.controls = false;
 
     const WANTED_WIDTH = 320;
@@ -601,7 +601,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
   }
 
-  unsubscribeEditorChanges() {
+  unsubscribeEditorChanges(): void  {
     this._blueprintEditorUnsub$.next();
   }
 }

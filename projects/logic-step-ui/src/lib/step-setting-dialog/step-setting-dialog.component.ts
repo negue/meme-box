@@ -78,11 +78,11 @@ export class StepSettingDialogComponent {
     return this.payload[configName] as any as BlueprintStepConfigActionPayload;
   }
 
-  getActionListPayload(configName: string) {
+  getActionListPayload(configName: string): BlueprintStepConfigActionListPayload  {
     return this.payload[configName] as any as BlueprintStepConfigActionListPayload;
   }
 
-  save() {
+  save(): void  {
     this.dialogRef.close(this.payload);
   }
 
@@ -113,7 +113,7 @@ export class StepSettingDialogComponent {
     });
   }
 
-  removeActionEntry(actionList: BlueprintStepConfigActionPayload[], actionEntry: BlueprintStepConfigActionPayload) {
+  removeActionEntry(actionList: BlueprintStepConfigActionPayload[], actionEntry: BlueprintStepConfigActionPayload): void  {
     const indexOf = actionList.indexOf(actionEntry);
 
     actionList.splice(indexOf, 1);

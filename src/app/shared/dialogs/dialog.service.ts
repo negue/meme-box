@@ -42,35 +42,35 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  showMediaEditDialog(clipInfo: MediaEditDialogPayload) {
+  showMediaEditDialog(clipInfo: MediaEditDialogPayload): void  {
     this.loadAndOpen(
       import('./media-edit/media-edit.module'),
       clipInfo
     )
   }
 
-  showScreenEditDialog(screen: Partial<Screen>) {
+  showScreenEditDialog(screen: Partial<Screen>): void  {
     this.loadAndOpen(
       import('./screen-edit/screen-edit.module'),
       screen
     )
   }
 
-  showScreenClipOptionsDialog(payload: ScreenClipOptionsPayload) {
+  showScreenClipOptionsDialog(payload: ScreenClipOptionsPayload): void  {
     this.loadAndOpen(
       import('./screen-clip-options/screen-clip-options.module'),
       payload
     )
   }
 
-  showTwitchEditDialog(info: TwitchTrigger) {
+  showTwitchEditDialog(info: TwitchTrigger): void  {
     this.loadAndOpen(
       import('./twitch-edit/twitch-edit.module'),
       info
     );
   }
 
-  showGettingStarted(info: any) {
+  showGettingStarted(info: any): void  {
     this.loadAndOpen(
       import('./getting-started/getting-started-dialog.module'),
       info
@@ -106,7 +106,7 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  showTimedEditDialog(info: Partial<TimedAction>) {
+  showTimedEditDialog(info: Partial<TimedAction>): void  {
     this.loadAndOpen(
       import('./timed-edit/timed-edit.module'),
       info
@@ -123,21 +123,21 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  showHelpOverview() {
+  showHelpOverview(): void  {
     this.loadAndOpen(
       import('./help-overview/helpoverview-dialog.module'),
       null
     );
   }
 
-  showMarkdownFile(info: MarkdownDialogPayload) {
+  showMarkdownFile(info: MarkdownDialogPayload): void  {
     this.loadAndOpen(
       import('./markdown/markdown-dialog.module'),
       info
     );
   }
 
-  arrangeMediaInScreen(info: Screen) {
+  arrangeMediaInScreen(info: Screen): void  {
     this.loadAndOpen(
       import('./screen-arrange/screen-arrange.module'),
       info
@@ -153,14 +153,14 @@ export class DialogService {
     return await dialogRef.afterClosed().toPromise();
   }
 
-  openTwitchConnectionConfig() {
+  openTwitchConnectionConfig(): void  {
     this.loadAndOpen(
       import('./twitch-connection-edit/twitch-connection-edit.module'),
       null
     );
   }
 
-  openObsConnectionDialog() {
+  openObsConnectionDialog(): void  {
     this.loadAndOpen(
       import('./obs-connection-edit/obs-connection-edit.module'),
       null

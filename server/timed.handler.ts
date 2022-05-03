@@ -9,7 +9,7 @@ import Timeout = NodeJS.Timeout;
 export class TimedHandler {
   private intervalDictionary: Dictionary<Timeout> = {};
 
-  startTimers(timerId?: string) {
+  startTimers(timerId?: string): void  {
     const timedClips = PersistenceInstance.listTimedEvents();
 
     if (timerId) {
@@ -25,7 +25,7 @@ export class TimedHandler {
     }
   }
 
-  startTimerIfActive (timer: TimedAction) {
+  startTimerIfActive (timer: TimedAction): void  {
     if (!timer || !timer.active) {
       return;
     }
@@ -47,7 +47,7 @@ export class TimedHandler {
     }, timer.everyXms);
   }
 
-  refreshTimers(timerId?: string) {
+  refreshTimers(timerId?: string): void  {
     // easiest way
     this.stopTimers(timerId);
     this.startTimers(timerId);
@@ -55,7 +55,7 @@ export class TimedHandler {
     // todo more fine-tuned approach, only reset the changed timers
   }
 
-  stopTimers(timerId?: string) {
+  stopTimers(timerId?: string): void  {
     if (timerId) {
       const timerInterval = this.intervalDictionary[timerId];
       clearInterval(timerInterval);

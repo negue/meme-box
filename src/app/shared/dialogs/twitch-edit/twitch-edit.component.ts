@@ -335,7 +335,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  enterNewAlias($event: MatChipInputEvent) {
+  enterNewAlias($event: MatChipInputEvent): void  {
     const input = $event.input;
     const value = $event.value;
 
@@ -355,7 +355,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     this.currentAliases$.next(currentAliases);
   }
 
-  removeAlias(alias: string) {
+  removeAlias(alias: string): void  {
     const currentAliases = this.currentAliases$.value;
 
     const index = currentAliases.indexOf(alias);
