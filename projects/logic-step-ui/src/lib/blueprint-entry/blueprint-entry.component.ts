@@ -7,6 +7,7 @@ import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.servic
 import {BlueprintStepSelectorComponent} from "../blueprint-step-selector/blueprint-step-selector.component";
 import {takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {BlueprintStepCreatorService} from "../blueprint-step-creator.service";
 
 @Component({
   selector: 'app-blueprint-entry',
@@ -35,6 +36,7 @@ export class BlueprintEntryComponent
 
   constructor(
     public context: BlueprintContextDirective,
+    private stepCreator: BlueprintStepCreatorService,
     private dialogService: DialogService,
     private cd: ChangeDetectorRef
   ) { }
@@ -64,7 +66,10 @@ export class BlueprintEntryComponent
   }
 
   removeStep (subStep: BlueprintEntry, parent: BlueprintEntry) {
-
+    this.context.removeStep(
+      subStep,
+      parent
+    );
   }
 
   async addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo) {
@@ -91,5 +96,17 @@ export class BlueprintEntryComponent
   ngOnDestroy (): void {
     this._destroy$.next();
     this._destroy$.complete();
+  }
+
+  async editStepConfig(entry: BlueprintEntry, parent: BlueprintEntry) {
+    if (entry.entryType !== 'step') {
+      return;
+    }
+
+    const newPayload = await this.stepCreator.editStepData(entry);
+
+    if (newPayload) {
+      this.context.changePayload(entry, newPayload);
+    }
   }
 }

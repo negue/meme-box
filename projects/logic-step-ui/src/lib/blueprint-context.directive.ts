@@ -1,14 +1,15 @@
-import { Directive, Input, OnInit, Output } from '@angular/core';
-import { filterNil, Store, StoreConfig } from "@datorama/akita";
+import {Directive, Input, OnInit, Output} from '@angular/core';
+import {filterNil, Store, StoreConfig} from "@datorama/akita";
 import {
   BlueprintContext,
   BlueprintEntry,
   BlueprintEntryStepCall,
+  BlueprintEntryStepPayload,
   BlueprintSubStepInfo
 } from "@memebox/logic-step-core";
-import { Observable } from "rxjs";
-import { produce } from "immer";
-import { skip } from "rxjs/operators";
+import {Observable} from "rxjs";
+import {produce} from "immer";
+import {skip} from "rxjs/operators";
 
 
 @Directive({
@@ -102,7 +103,11 @@ export class BlueprintContextDirective
     state: BlueprintContext,
     entry: BlueprintEntry
   ) {
-    return state.entries[entry.id];
+    if (entry) {
+      return state.entries[entry.id];
+    } else {
+      return state.entries[state.rootEntry];
+    }
   }
 
   changeAwaited(entry: BlueprintEntry, checked: boolean) {
@@ -110,6 +115,28 @@ export class BlueprintContextDirective
       const foundEntry = this.findEntry(state, entry);
 
       foundEntry.awaited = checked;
+    });
+  }
+
+  removeStep(subStep: BlueprintEntry, parent: BlueprintEntry) {
+    this.update(state => {
+      const foundEntry = this.findEntry(state, parent);
+
+      const stepsArrayToMove = foundEntry?.subSteps.find(s => s.entries.includes(subStep.id))?.entries ?? [];
+      const indexOfStep = stepsArrayToMove.indexOf(subStep.id);
+      stepsArrayToMove.splice(indexOfStep, 1);
+
+      delete state.entries[subStep.id];
+    });
+  }
+
+  changePayload(entry: BlueprintEntryStepCall, newPayload: BlueprintEntryStepPayload) {
+    this.update(state => {
+      const foundEntry = this.findEntry(state, entry);
+
+      if (foundEntry.entryType === 'step') {
+        foundEntry.payload = newPayload;
+      }
     });
   }
 }

@@ -4,55 +4,104 @@
 
 <mat-dialog-content>
 
-<ng-container *ngIf="actionDictionary$ | async as actionDictionary">
+  <ng-container *ngIf="actionDictionary$ | async as actionDictionary">
 
-<div *ngFor="let config of data.configArguments">
-  <strong>{{config.label}}:</strong> <br />
+    <div *ngFor="let config of data.configArguments">
+      <strong>{{config.label}}:</strong> <br/>
 
-  <div [ngSwitch]="config.type">
-    <ng-container *ngSwitchCase="'number'">
-      <app-action-variable-input [variableType]="$any('number')" [label]="config.label"
-                                 [value]="payload[config.name]"
-                                 (valueChanged)="payload[config.name] = $event">
-      </app-action-variable-input>
-    </ng-container>
-    <ng-container *ngSwitchCase="'action'">
-      <div class="two-columns">
-        <div class="column">
-      <button mat-raised-button (click)="selectEventClip(config.name)">
-        <ng-container *ngIf="getActionPayload(config.name) as actionPayload; else notSelected">
-          <app-action-preview [action]="actionDictionary[actionPayload.actionId]"
-                              height="100px" width="200px"></app-action-preview>
-          {{ actionDictionary[actionPayload.actionId]?.name }}
+      <div [ngSwitch]="config.type">
+        <ng-container *ngSwitchCase="'number'">
+          <app-action-variable-input [variableType]="$any('number')" [label]="config.label"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
         </ng-container>
+        <ng-container *ngSwitchCase="'string'">
+          <app-action-variable-input [variableType]="$any('string')" [label]="config.label"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'action'">
+          <div class="two-columns">
+            <div class="column">
+              <button mat-raised-button (click)="selectAction(config.name)">
+                <ng-container *ngIf="getActionPayload(config.name) as actionPayload; else notSelected">
+                  <app-action-preview [action]="actionDictionary[actionPayload.actionId]"
+                                      height="100px" width="200px"></app-action-preview>
+                  {{ actionDictionary[actionPayload.actionId]?.name }}
+                </ng-container>
 
-        <ng-template #notSelected>
-          Choose action to trigger
-        </ng-template>
-      </button>
-        </div>
+                <ng-template #notSelected>
+                  Choose action to trigger
+                </ng-template>
+              </button>
+            </div>
 
-        <ng-container *ngIf="getActionPayload(config.name) as actionPayload;">
-          <div *ngIf="actionDictionary[actionPayload.actionId] | actionVariableConfig as actionVariableConfigs"
-               class="column">
-            Variables: <br>
-            {{ actionVariableConfigs | json }}
-            <app-action-variables-assignments   [variablesConfig]="actionVariableConfigs"
-                                                [data]="actionPayload.overrides.action.variables"
-                                                (dataChanged)="actionPayload.overrides.action.variables = $event;">
+            <ng-container *ngIf="getActionPayload(config.name) as actionPayload;">
+              <ng-container
+                *ngIf="actionDictionary[actionPayload.actionId] | actionVariableConfig as actionVariableConfigs">
+                <div class="column" *ngIf="actionVariableConfigs.length">
+                  Variables: <br>
+                  <app-action-variables-assignments [variablesConfig]="actionVariableConfigs"
+                                                    [data]="actionPayload.overrides.action.variables"
+                                                    (dataChanged)="actionPayload.overrides.action.variables = $event;">
 
-            </app-action-variables-assignments>
+                  </app-action-variables-assignments>
+                </div>
+              </ng-container>
+            </ng-container>
           </div>
         </ng-container>
-      </div>
-    </ng-container>
 
-    <ng-container *ngSwitchDefault>
-      Default Switch Case NEED TO DO: {{config.type}}
-    </ng-container>
-  </div>
-</div>
-</ng-container>
+        <ng-container *ngSwitchCase="'actionList'">
+          <ng-container *ngIf="getActionListPayload(config.name) as actionList">
+            <div *ngFor="let actionEntry of actionList">
+              <div class="two-columns">
+                <div class="column">
+                  <button mat-raised-button (click)="selectAction(config.name)">
+                    <ng-container *ngIf="actionEntry; else notSelected">
+                      <app-action-preview [action]="actionDictionary[actionEntry.actionId]"
+                                          height="100px" width="200px"></app-action-preview>
+                      {{ actionDictionary[actionEntry.actionId]?.name }}
+                    </ng-container>
+
+                    <ng-template #notSelected>
+                      Choose action to trigger
+                    </ng-template>
+                  </button>
+                </div>
+
+                <ng-container *ngIf="actionEntry">
+                  <ng-container
+                    *ngIf="actionDictionary[actionEntry.actionId] | actionVariableConfig as actionVariableConfigs">
+                    <div class="column" *ngIf="actionVariableConfigs.length">
+                      Variables: <br>
+                      <app-action-variables-assignments [variablesConfig]="actionVariableConfigs"
+                                                        [data]="actionEntry.overrides.action.variables"
+                                                        (dataChanged)="actionEntry.overrides.action.variables = $event;">
+
+                      </app-action-variables-assignments>
+                    </div>
+                  </ng-container>
+                </ng-container>
+
+
+
+              </div>
+              <button (click)="removeActionEntry(actionList, actionEntry)">remove action</button>
+
+            </div>
+            <button (click)="addActionEntry(actionList)">add action</button>
+          </ng-container>
+
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          Default Switch Case NEED TO DO: {{config.type}}
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
 
 </mat-dialog-content>
 
@@ -60,10 +109,11 @@
   <div class="column">
     <app-open-feedback-button feedbackTarget="Blueprint Step Config"></app-open-feedback-button>
   </div>
-  <div class="column" align="end" >
+  <div class="column" align="end">
     <button mat-button [mat-dialog-close]="null">Cancel</button>
     <button (click)="save()"
             color="accent"
-            mat-raised-button>Save</button>
+            mat-raised-button>Save
+    </button>
   </div>
 </mat-dialog-actions>
