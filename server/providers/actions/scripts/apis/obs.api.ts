@@ -3,7 +3,7 @@ import type OBSWebSocket from "obs-websocket-js";
 import {DisposableBase} from "./disposableBase";
 import {fromEventPattern} from "rxjs";
 import {takeUntil} from "rxjs/operators";
-
+import {ObsBrowserSourceData} from "@memebox/contracts";
 
 export class ObsFilterApi {
   constructor(
@@ -35,7 +35,7 @@ export class ObsApi extends DisposableBase {
     this.onEvent$('ConnectionOpened').subscribe(
       value => {
         this._isConnected = true
-    });
+      });
 
     this.onEvent$('ConnectionClosed').subscribe(
       value => {
@@ -47,7 +47,7 @@ export class ObsApi extends DisposableBase {
     return new ObsFilterApi(this, sourceName, filterName);
   }
 
-  public isConnected () {
+  public isConnected (): boolean  {
     return this._isConnected;
   }
 
@@ -84,6 +84,64 @@ export class ObsApi extends DisposableBase {
 
     await this.raw.send('RefreshBrowserSource' as any, {
       sourceName
+    });
+  }
+
+  public async listScenes() {
+    await this.obsConnectionService.connectIfNot();
+
+    const result = await this.raw.send('GetSceneList');
+
+    return result.status === 'ok'
+      ? result.scenes
+      : [];
+  }
+
+  public async listSources() {
+    await this.obsConnectionService.connectIfNot();
+
+    const result = await this.raw.send('GetSourcesList');
+
+    return result.status === 'ok'
+      ? result.sources
+      : [];
+  }
+
+  public async listBrowserSources() {
+    const sourceTypes = await this.listSources();
+
+    const onlyBrowserSources = sourceTypes.filter( source => source.typeId === 'browser_source');
+
+    const browserSourceSettings: ObsBrowserSourceData[] = [];
+
+    for (const onlyBrowserSource of onlyBrowserSources) {
+      const settingsPerBrowserSource = await this.raw.send('GetSourceSettings', {
+        sourceName: onlyBrowserSource.name
+      });
+
+      browserSourceSettings.push(settingsPerBrowserSource);
+    }
+
+    return browserSourceSettings;
+  }
+
+  public async listSourceFilters(sourceName: string) {
+    await this.obsConnectionService.connectIfNot();
+
+    const result = await this.raw.send('GetSourceFilters', {
+      sourceName
+    });
+
+    return result.status === 'ok'
+      ? result.filters
+      : [];
+  }
+
+  public async switchToScene(sceneName: string): Promise<void> {
+    await this.obsConnectionService.connectIfNot();
+
+    await this.raw.send('SetCurrentScene', {
+      ['scene-name']: sceneName
     });
   }
 }

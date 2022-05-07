@@ -376,3 +376,16 @@ export interface ObsBrowserSourceData {
   sourceType: string;
   sourceSettings: Record<string, unknown>;
 }
+
+export interface ObsSourceEntry {
+  name: string;
+  typeId: string;
+  type: string;
+}
+
+export interface ObsSourceFilterEntry {
+  enabled: boolean;
+  type: string;
+  name: string;
+  settings: Record<string, unknown>;
+}
