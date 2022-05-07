@@ -17,7 +17,7 @@ import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-sc
 import {delay, skip, take, takeUntil} from "rxjs/operators";
 import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
 import {AppQueries, MemeboxWebsocketService} from "@memebox/app-state";
-import {actionDataToWidgetContent, DynamicIframeContent} from "@memebox/utils";
+import {getWidgetFromActionInfo} from "@memebox/utils";
 
 export enum MediaState {
   HIDDEN,
@@ -59,7 +59,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private currentActionContext: CombinedActionContext;
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
-  private clipMap: Dictionary<Action>;
+  private actionMap: Dictionary<Action>;
 
   constructor(private element: ElementRef<HTMLElement>,
               private parentComp: TargetScreenComponent,
@@ -69,7 +69,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.appQueries.actionMap$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(value => {
-      this.clipMap = value;
+      this.actionMap = value;
     })
   }
 
@@ -577,34 +577,9 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private applyWidgetContent() {
-
     const variableOverrides = this.currentActionContext.triggerPayload?.overrides?.action?.variables ?? {};
 
-    const media = this.currentActionContext.action;
-
-    let config: DynamicIframeContent;
-
-    if (media.fromTemplate) {
-      const widgetTemplate = this.clipMap[media.fromTemplate];
-
-      config = {
-        ...actionDataToWidgetContent(widgetTemplate),
-        variables: {
-          ...media.extended,
-          ...variableOverrides
-        }
-      };
-    } else {
-      const configFromWidgetContent = actionDataToWidgetContent(media);
-
-      config = {
-        ...configFromWidgetContent,
-        variables: {
-          ...configFromWidgetContent.variables,
-          ...variableOverrides
-        }
-      };
-    }
+    const config = getWidgetFromActionInfo(this.currentActionContext.action, this.actionMap, variableOverrides);
 
     const control = this.parentComp.clipToControlMap.get(this.currentActionContext.action.id);
 
