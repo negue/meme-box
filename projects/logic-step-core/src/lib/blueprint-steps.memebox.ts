@@ -1,8 +1,12 @@
-import {BlueprintRegistry, BlueprintStepConfigActionPayload, generateCodeByStep} from "./blueprint.types";
+import {
+  BlueprintRegistry,
+  BlueprintStepConfigActionListPayload,
+  BlueprintStepConfigActionPayload,
+  generateCodeByStep
+} from "./blueprint.types";
 import {uuid} from "@gewd/utils";
 import {map, take} from "rxjs/operators";
 import {generateRandomCharacters} from "./utils";
-import {TriggerActionOverrides} from "@memebox/contracts";
 import {combineLatest} from "rxjs";
 
 export function registerMemeboxSteps (
@@ -152,12 +156,22 @@ export function registerMemeboxSteps (
         subSteps: [],
       };
     },
+    awaitCodeHandledInternally: true,
     toScriptCode: (step, context) => {
-      const actionId = step.payload.actionId;
-      const actionOverrides = step.payload.actionOverrides as TriggerActionOverrides;
+      const awaitCode = step.awaited ? 'await ': '';
 
-      return `memebox.getAction('${actionId}')
-                    .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
+      return `
+        const actionsToChooseFrom = [${
+          (step.payload.actions as BlueprintStepConfigActionListPayload)
+            .map(action => JSON.stringify(action))
+            .join(',')
+        }];
+
+        const selectedAction = utils.randomElement(actionsToChooseFrom);
+
+        ${awaitCode} memebox.getAction(selectedAction.actionId)
+                    .trigger(selectedAction.overrides)
+      `;
     },
     stepEntryLabelAsync: async (queries, payload, parentStep) => {
       const actionPayload = payload.actions as BlueprintStepConfigActionPayload[];

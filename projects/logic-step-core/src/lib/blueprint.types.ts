@@ -107,6 +107,7 @@ export interface BlueprintStepDefinition {
   generateBlueprintStep: (payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => BlueprintEntryStepCall;
   allowedToBeAdded?: (step: BlueprintEntry, context: BlueprintContext) => boolean;
   toScriptCode: (step: BlueprintEntryStepCall, context: BlueprintContext) => string;
+  awaitCodeHandledInternally?: boolean
 }
 
 export interface BlueprintStepSelectionGroup {

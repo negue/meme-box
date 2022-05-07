@@ -86,7 +86,7 @@ function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
 
         // result.push(`logger.log('Pre: ${subEntry.stepType}');`);
 
-        if (subEntry.awaited) {
+        if (!entryDefinition.awaitCodeHandledInternally && subEntry.awaited) {
           result.push('await ');
         }
 
