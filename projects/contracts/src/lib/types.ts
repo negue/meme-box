@@ -69,7 +69,7 @@ export interface Screen extends HasId {
   /**
    * Key: clip.id == screenClip.id
    */
-  clips: Dictionary<ScreenClip>;
+  clips: Dictionary<ScreenMedia>;
   customCss?: string;
 
   height: number;
@@ -129,7 +129,7 @@ export interface ScreenMediaOverridableProperties {
   customCss?: string;
 }
 
-export interface ScreenClip extends HasId, ScreenMediaOverridableProperties {
+export interface ScreenMedia extends HasId, ScreenMediaOverridableProperties {
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
 
@@ -315,10 +315,10 @@ export interface FileResult {
   fileType: ActionType
 }
 
-export interface CombinedClip {
-  clip: Action;
-  clipSetting: ScreenClip;
-  originalClipSetting?: ScreenClip;
+export interface CombinedActionContext {
+  action: Action;
+  screenMediaConfig: ScreenMedia;
+  originalClipSetting?: ScreenMedia;
   triggerPayload?: TriggerAction;
   backgroundColor?: string;
 }
@@ -378,9 +378,9 @@ export interface ObsBrowserSourceData {
 }
 
 export interface ObsSourceEntry {
- name: string;
- typeId: string;
- type: string;
+  name: string;
+  typeId: string;
+  type: string;
 }
 
 export interface ObsSourceFilterEntry {

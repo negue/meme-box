@@ -14,27 +14,9 @@ export class ObsDataController {
 
   @Get(ENDPOINTS.OBS_DATA.CURRENT_BROWSER_SOURCES)
   async listBrowserSources(): Promise<ObsBrowserSourceData[]> {
-    await this._obsConnection.connectIfNot();
+    const obsApi = await this.getObsApi();
 
-    // browser_source
-
-    const obsWS = await this._obsConnection.getCurrentConnection();
-
-    const sourceTypes = await obsWS.send('GetSourcesList');
-
-    const onlyBrowserSources = sourceTypes.sources.filter( source => source.typeId === 'browser_source');
-
-    const browserSourceSettings: ObsBrowserSourceData[] = [];
-
-    for (const onlyBrowserSource of onlyBrowserSources) {
-      const settingsPerBrowserSource = await obsWS.send('GetSourceSettings', {
-        sourceName: onlyBrowserSource.name
-      });
-
-      browserSourceSettings.push(settingsPerBrowserSource);
-    }
-
-    return browserSourceSettings;
+    return obsApi.listBrowserSources();
   }
 
   @Post(`${ENDPOINTS.OBS_DATA.REFRESH_BROWSER_SOURCE}/:sourceName`)
@@ -50,7 +32,7 @@ export class ObsDataController {
   async getSceneList(): Promise<Scene[]> {
     const obsApi = await this.getObsApi();
 
-    return obsApi.listScenes()
+    return obsApi.listScenes();
   }
 
   @Get(ENDPOINTS.OBS_DATA.SOURCE_LIST)

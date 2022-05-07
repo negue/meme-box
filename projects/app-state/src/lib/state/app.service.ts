@@ -8,7 +8,7 @@ import {
   FileInfo,
   Response,
   Screen,
-  ScreenClip,
+  ScreenMedia,
   Tag,
   TimedAction,
   TwitchTrigger,
@@ -20,6 +20,7 @@ import {uuid} from "@gewd/utils";
 import {SnackbarService} from "../services/snackbar.service";
 import {ConnectionStateService} from "./connection-state.service";
 import {MemeboxApiService} from "./memeboxApi.service";
+
 @Injectable({
   providedIn: "root"
 })
@@ -216,7 +217,7 @@ export class AppService {
 
   public async addScreenClipById(screenId: string, clipId: string) {
 
-    const screenClip: ScreenClip = {
+    const screenClip: ScreenMedia = {
       id: clipId,
       visibility: VisibilityEnum.Play
     };
@@ -233,7 +234,7 @@ export class AppService {
     this.snackbar.normal('Media saved!');
   }
 
-  public async addOrUpdateScreenClip(screenId: string, screenClip: Partial<ScreenClip>) {
+  public async addOrUpdateScreenClip(screenId: string, screenClip: Partial<ScreenMedia>) {
     screenClip = fillDefaultsScreenClip(screenClip);
 
     // add the action to api & await
@@ -250,7 +251,7 @@ export class AppService {
   }
 
   // TODO rename action and screenclip settings
-  public async addOrUpdateScreenActionInBulk(screenId: string, changedActions: Partial<ScreenClip>[]) {
+  public async addOrUpdateScreenActionInBulk(screenId: string, changedActions: Partial<ScreenMedia>[]) {
     changedActions = changedActions.map(screenAction => fillDefaultsScreenClip(screenAction));
 
     // add the action to api & await

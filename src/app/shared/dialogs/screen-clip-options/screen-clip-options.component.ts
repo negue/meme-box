@@ -7,7 +7,7 @@ import {
   ANIMATION_OUT_ARRAY,
   PositionEnum,
   Screen,
-  ScreenClip,
+  ScreenMedia,
   VisibilityEnum
 } from "@memebox/contracts";
 import {map, take} from "rxjs/operators";
@@ -74,7 +74,7 @@ export class ScreenClipOptionsComponent implements OnInit {
     map(clipMap => clipMap[this.data.clipId])
   );
 
-  public mediaInScreenInfo$: Observable<ScreenClip&{type: ActionType}> = combineLatest([
+  public mediaInScreenInfo$: Observable<ScreenMedia&{type: ActionType}> = combineLatest([
     this.currentScreen$,
  this.actionInfo$
   ]).pipe(
@@ -93,7 +93,7 @@ export class ScreenClipOptionsComponent implements OnInit {
   public cssExtensions = cssCodemirror;
 
 
-  private _clipInfo: ScreenClip = null;
+  private _clipInfo: ScreenMedia = null;
   private destroy$ = new Subject();
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ScreenClipOptionsPayload,
@@ -125,7 +125,7 @@ export class ScreenClipOptionsComponent implements OnInit {
 
     const {value} = this.form;
 
-    const newScreenClipValue: ScreenClip = {
+    const newScreenClipValue: ScreenMedia = {
       ...this._clipInfo,
       ...value,
       arrangeLock: this.lockOptions

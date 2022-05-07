@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {AppQueries} from '../../../../../projects/app-state/src/lib/state/app.queries';
 import {map, publishReplay, refCount, startWith} from 'rxjs/operators';
-import {ActionType, CombinedClip, Screen} from '@memebox/contracts';
+import {ActionType, CombinedActionContext, Screen} from '@memebox/contracts';
 import {AppService} from '../../../../../projects/app-state/src/lib/state/app.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {FormControl} from '@angular/forms';
@@ -27,7 +27,7 @@ export class ScreenArrangeComponent implements OnInit {
     this.appQueries.actionMap$
   ]).pipe(
     map(([screen, clipMap]) => {
-      const result: CombinedClip[] = [];
+      const result: CombinedActionContext[] = [];
 
       for (const [key, entry] of Object.entries(screen.clips)) {
         const clip = clipMap[key];
@@ -37,10 +37,10 @@ export class ScreenArrangeComponent implements OnInit {
         }
 
         result.push({
-          clipSetting: {
+          screenMediaConfig: {
             ...entry
           },
-          clip
+          action: clip
         });
       }
 
@@ -66,11 +66,11 @@ export class ScreenArrangeComponent implements OnInit {
         return clipList;
       }
 
-      return clipList.filter(clip => selectedItems.includes(clip.clip.id));
+      return clipList.filter(clip => selectedItems.includes(clip.action.id));
     })
   );
 
-  public currentSelectedClip: CombinedClip | null = null;
+  public currentSelectedClip: CombinedActionContext | null = null;
 
   @ViewChild(ScreenArrangePreviewComponent)
   private _screenArrangePreviewComponent: ScreenArrangePreviewComponent;

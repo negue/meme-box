@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { CombinedClip, Screen } from '@memebox/contracts';
+import {Component, Input} from '@angular/core';
+import {CombinedActionContext, Screen} from '@memebox/contracts';
 
 @Component({
   selector: 'app-screen-preview',
@@ -11,5 +11,5 @@ export class ScreenPreviewComponent {
   screen: Screen;
 
   @Input()
-  allItems: CombinedClip[];
+  allItems: CombinedActionContext[];
 }
