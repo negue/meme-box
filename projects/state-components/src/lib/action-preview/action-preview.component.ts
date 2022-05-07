@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Action, ActionType, ScreenClip} from "@memebox/contracts";
+import {Action, ActionType, ScreenMedia} from "@memebox/contracts";
 
 @Component({
   selector: 'app-action-preview',
@@ -22,7 +22,7 @@ export class ActionPreviewComponent implements OnInit {
   public action: Action;
 
   @Input()
-  public setting: ScreenClip;
+  public setting: ScreenMedia;
 
   @Input()
   public showIframe = true;

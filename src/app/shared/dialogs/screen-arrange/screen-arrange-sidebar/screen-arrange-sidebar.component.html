@@ -14,8 +14,8 @@
     <mat-select multiple [formControl]="selectedItems"
                 style="visibility:hidden;width: 0"
                 #hiddenSelect>
-      <mat-option *ngFor="let item of allItems" [value]="item.clip.id">
-        {{item.clip.name}}
+      <mat-option *ngFor="let item of allItems" [value]="item.action.id">
+        {{item.action.name}}
       </mat-option>
       <mat-select-trigger>
 
@@ -42,19 +42,19 @@
                      (mousedown)="preventEvent($event)"
     >
       <div mat-list-avatar class="clip-avatar">
-        <app-clip-type [type]="visibleItem.clip.type"
+        <app-clip-type [type]="visibleItem.action.type"
                        iconSize="40px">
         </app-clip-type>
 
-        <mat-icon *ngIf="unsavedChangesIds.includes(visibleItem.clip.id)"
+        <mat-icon *ngIf="unsavedChangesIds.includes(visibleItem.action.id)"
                   class="clip-modified-icon"
                   svgIcon="edit"
                   color="primary"
         ></mat-icon>
       </div>
-      <div mat-line>{{visibleItem.clip.name}}</div>
-      <div mat-line>{{visibleItem.clipSetting.visibility | visibilityToString}}
-        / {{visibleItem.clipSetting.position | positionToString}}</div>
+      <div mat-line>{{visibleItem.action.name}}</div>
+      <div mat-line>{{visibleItem.screenMediaConfig.visibility | visibilityToString}}
+        / {{visibleItem.screenMediaConfig.position | positionToString}}</div>
 
 
       <div mat-list-icon class="card-settings-icon">

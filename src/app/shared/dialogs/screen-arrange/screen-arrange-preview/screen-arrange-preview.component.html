@@ -42,7 +42,7 @@
     <div class="arrange-label">
       Selection options
 
-      <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === 3">
+      <ng-container *ngIf="currentSelectedClip?.screenMediaConfig?.position === 3">
         <strong class="mat-error" style="display: inline"
                 matTooltip="Random Position will only work if your OBS Version is at least 27.2.">
           Might not work
@@ -54,7 +54,7 @@
       <mat-form-field appearance="fill" class="arrange-size-control">
         <mat-label>Size</mat-label>
         <mat-select
-          [value]="currentSelectedClip ? (currentSelectedClip?.clipSetting | settingsToSizingType) : undefined"
+          [value]="currentSelectedClip ? (currentSelectedClip?.screenMediaConfig | settingsToSizingType) : undefined"
           [disabled]="currentSelectedClip === null"
           (valueChange)="sizeOptionChanged($event)"
           placeholder="Size"
@@ -68,7 +68,7 @@
 
       <mat-form-field appearance="fill" class="arrange-position-control">
         <mat-label>Media Position</mat-label>
-        <mat-select [value]="currentSelectedClip?.clipSetting?.position"
+        <mat-select [value]="currentSelectedClip?.screenMediaConfig?.position"
                     [disabled]="currentSelectedClip === null"
                     (valueChange)="positionOptionChanged($event)"
                     placeholder="Media Position"
@@ -81,50 +81,50 @@
       </mat-form-field>
 
       <div class="extender" [class.extender-closed]="!actionsExpanded"
-           [class.extender-full-screen]="currentSelectedClip?.clipSetting?.position === PositionEnum.FullScreen"
-           [class.extender-absolute]="currentSelectedClip?.clipSetting?.position === PositionEnum.Absolute"
+           [class.extender-full-screen]="currentSelectedClip?.screenMediaConfig?.position === PositionEnum.FullScreen"
+           [class.extender-absolute]="currentSelectedClip?.screenMediaConfig?.position === PositionEnum.Absolute"
       >
         <mat-divider [vertical]="true"></mat-divider>
 
-        <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.FullScreen">
+        <ng-container *ngIf="currentSelectedClip?.screenMediaConfig?.position === PositionEnum.FullScreen">
           <mat-form-field appearance="fill" class="arrange-width-control form-field-disabled">
             <mat-label>Width</mat-label>
-            <input matInput placeholder="Width" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.width">
+            <input matInput placeholder="Width" [disabled]="true" [value]="currentSelectedClip?.screenMediaConfig?.width">
           </mat-form-field>
 
           <mat-divider [vertical]="true"></mat-divider>
 
           <mat-form-field appearance="fill" class="arrange-height-control form-field-disabled">
             <mat-label>Height</mat-label>
-            <input matInput placeholder="Height" [disabled]="true" [value]="currentSelectedClip?.clipSetting?.height">
+            <input matInput placeholder="Height" [disabled]="true" [value]="currentSelectedClip?.screenMediaConfig?.height">
           </mat-form-field>
         </ng-container>
 
-        <ng-container *ngIf="currentSelectedClip?.clipSetting?.position === PositionEnum.Absolute">
+        <ng-container *ngIf="currentSelectedClip?.screenMediaConfig?.position === PositionEnum.Absolute">
           <mat-form-field appearance="fill" class="arrange-left-control form-field-disabled">
             <mat-label>Left</mat-label>
-            <input matInput placeholder="Left" [disabled]="true" [value]="currentSelectedClip.clipSetting.left">
+            <input matInput placeholder="Left" [disabled]="true" [value]="currentSelectedClip.screenMediaConfig.left">
           </mat-form-field>
 
           <mat-divider [vertical]="true"></mat-divider>
 
           <mat-form-field appearance="fill" class="arrange-top-control form-field-disabled">
             <mat-label>Top</mat-label>
-            <input matInput placeholder="Top" [disabled]="true" [value]="currentSelectedClip.clipSetting.top">
+            <input matInput placeholder="Top" [disabled]="true" [value]="currentSelectedClip.screenMediaConfig.top">
           </mat-form-field>
 
           <mat-divider [vertical]="true"></mat-divider>
 
           <mat-form-field appearance="fill" class="arrange-right-control form-field-disabled">
             <mat-label>Right</mat-label>
-            <input matInput placeholder="Right" [disabled]="true" [value]="currentSelectedClip.clipSetting.right">
+            <input matInput placeholder="Right" [disabled]="true" [value]="currentSelectedClip.screenMediaConfig.right">
           </mat-form-field>
 
           <mat-divider [vertical]="true"></mat-divider>
 
           <mat-form-field appearance="fill" class="arrange-bottom-control form-field-disabled">
             <mat-label>Bottom</mat-label>
-            <input matInput placeholder="Bottom" [disabled]="true" [value]="currentSelectedClip.clipSetting.bottom">
+            <input matInput placeholder="Bottom" [disabled]="true" [value]="currentSelectedClip.screenMediaConfig.bottom">
           </mat-form-field>
         </ng-container>
       </div>
@@ -147,7 +147,7 @@
               color="primary"
               aria-label="Apply change for selected media"
               matTooltip="Apply change for selected media"
-              [disabled]="currentSelectedClip === null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
+              [disabled]="currentSelectedClip === null || !unsavedChangesIds.includes(currentSelectedClip.action.id)"
               (click)="applySingleChanges()"
       >
         <mat-icon svgIcon="check"></mat-icon>
@@ -170,7 +170,7 @@
               color="warn"
               aria-label="Reset changes for selected media"
               matTooltip="Reset changes for selected media"
-              [disabled]="currentSelectedClip === null || !unsavedChangesIds.includes(currentSelectedClip.clip.id)"
+              [disabled]="currentSelectedClip === null || !unsavedChangesIds.includes(currentSelectedClip.action.id)"
               (click)="reset()"
       >
         <mat-icon svgIcon="cancel2"></mat-icon>
@@ -195,25 +195,25 @@
         <!-- todo create a directive that handles all of those properties -->
 
         <!-- improve the duplicate settings -->
-        <app-action-preview *ngIf="pair.clipSetting.position === PositionEnum.FullScreen"
-                            [action]="pair.clip"
-                          [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+        <app-action-preview *ngIf="pair.screenMediaConfig.position === PositionEnum.FullScreen"
+                            [action]="pair.action"
+                          [style.z-index]="pair === currentSelectedClip ? 10000 : pair.screenMediaConfig.zIndex"
                           [style.position]="'absolute'"
                           [style.width.%]="100"
                           [style.height.%]="100"
                           [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
-                          [style.--clip-setting-img-fit]="pair.clipSetting.imgFit"
+                          [style.--clip-setting-img-fit]="pair.screenMediaConfig.imgFit"
                           draggable="false"
                           class="preview-box"></app-action-preview>
 
-        <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Centered"
-                               [clip]="pair.clip"
-                               [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+        <app-drag-resize-media *ngIf="pair.screenMediaConfig.position === PositionEnum.Centered"
+                               [clip]="pair.action"
+                               [style.z-index]="pair === currentSelectedClip ? 10000 : pair.screenMediaConfig.zIndex"
                                [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
                                [screen]="screen"
                                [sizeType]="sizeSelection"
                                [showResizeBorder]="pair === currentSelectedClip"
-                               [settings]="pair.clipSetting" #dragResizeMediaComponent
+                               [settings]="pair.screenMediaConfig" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                                (elementChanged)="userChangedElement()"
                                (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
@@ -228,14 +228,14 @@
 
         </app-drag-resize-media>
 
-        <app-drag-resize-media *ngIf="pair.clipSetting.position === PositionEnum.Random"
-                               [clip]="pair.clip"
-                               [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+        <app-drag-resize-media *ngIf="pair.screenMediaConfig.position === PositionEnum.Random"
+                               [clip]="pair.action"
+                               [style.z-index]="pair === currentSelectedClip ? 10000 : pair.screenMediaConfig.zIndex"
                                [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
                                [screen]="screen"
                                [sizeType]="sizeSelection"
                                [showResizeBorder]="pair === currentSelectedClip"
-                               [settings]="pair.clipSetting" #dragResizeMediaComponent
+                               [settings]="pair.screenMediaConfig" #dragResizeMediaComponent
                                (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
                                (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
                                (elementChanged)="userChangedElement()"
@@ -249,15 +249,15 @@
         </app-drag-resize-media>
 
         <app-drag-resize-media
-          *ngIf="pair.clipSetting.position === PositionEnum.Absolute"
-          [clip]="pair.clip"
+          *ngIf="pair.screenMediaConfig.position === PositionEnum.Absolute"
+          [clip]="pair.action"
           [screen]="screen"
           [sizeType]="sizeSelection"
-          [style.z-index]="pair === currentSelectedClip ? 10000 : pair.clipSetting.zIndex"
+          [style.z-index]="pair === currentSelectedClip ? 10000 : pair.screenMediaConfig.zIndex"
           [style.opacity]="pair === currentSelectedClip ? 1 : 0.67"
           [showResizeBorder]="pair === currentSelectedClip"
           (elementClicked)="elementClicked(dragResizeMediaComponent, pair)"
-          [settings]="pair.clipSetting" #dragResizeMediaComponent
+          [settings]="pair.screenMediaConfig" #dragResizeMediaComponent
           (inputApplied)="elementCreated(dragResizeMediaComponent, pair)"
           (elementChanged)="userChangedElement()"
 

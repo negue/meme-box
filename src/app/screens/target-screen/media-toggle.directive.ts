@@ -11,7 +11,7 @@ import {
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import {Action, ActionType, CombinedClip, Dictionary, PositionEnum, VisibilityEnum} from "@memebox/contracts";
+import {Action, ActionType, CombinedActionContext, Dictionary, PositionEnum, VisibilityEnum} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest, Subject} from "rxjs";
 import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
 import {delay, skip, take, takeUntil} from "rxjs/operators";
@@ -55,8 +55,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   private currentState = MediaState.HIDDEN;
   private queueCounter = 0;
-  private queueTrigger = new Subject<CombinedClip>();
-  private currentCombinedClip: CombinedClip;
+  private queueTrigger = new Subject<CombinedActionContext>();
+  private currentActionContext: CombinedActionContext;
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
   private clipMap: Dictionary<Action>;
@@ -99,7 +99,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
   stopIfStillPlaying() {
     console.info('stopifPlaying', {
-      animationOut: this.currentCombinedClip.clipSetting.animationOut,
+      animationOut: this.currentActionContext.screenMediaConfig.animationOut,
       state: this.currentState,
       clipVisibility: this.clipVisibility,
       currentState: this.currentState
@@ -128,10 +128,10 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     ]).pipe(
       takeUntil(this._destroy$)
     ).subscribe(([newClipId, mediaClipList]) => {
-      const combinedClip = mediaClipList.find(combined => combined.clip.id
+      const combinedClip = mediaClipList.find(combined => combined.action.id
        === newClipId);
 
-      this.currentCombinedClip = combinedClip;
+      this.currentActionContext = combinedClip;
 
       this.updateNeededVariables();
       this.applyPositions();
@@ -146,7 +146,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.clipId === triggerPayload.id &&
         this.screenId == triggerPayload.targetScreen
       ) {
-        this.currentCombinedClip = mergeCombinedClipWithOverrides(this.currentCombinedClip, triggerPayload);
+        this.currentActionContext = mergeCombinedClipWithOverrides(this.currentActionContext, triggerPayload);
 
         this.applyPositions();
         this.applyWidgetContent();
@@ -156,8 +156,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.queueTrigger.pipe(
       takeUntil(this._destroy$)
     ).subscribe((triggerEvent) => {
-      this.currentCombinedClip = triggerEvent;
-      this.log('Name: ', this.currentCombinedClip.clip.name);
+      this.currentActionContext = triggerEvent;
+      this.log('Name: ', this.currentActionContext.action.name);
       this.log('Queue Trigger - Subscribe', this.queueCounter);
 
       if (this.clipVisibility !== VisibilityEnum.Toggle && this.queueCounter <= 0) {
@@ -175,19 +175,19 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.animateOutOrHide();
       } else {
         this.updateNeededVariables();
-        const targetMediaState = this.currentCombinedClip.clipSetting.animationIn
+        const targetMediaState = this.currentActionContext.screenMediaConfig.animationIn
           ? MediaState.ANIMATE_IN
           : MediaState.VISIBLE;
 
         if (targetMediaState !== MediaState.ANIMATE_IN
-          && !this.currentCombinedClip.clipSetting.animating) {
+          && !this.currentActionContext.screenMediaConfig.animating) {
           this.log('adding css class');
           this.element.nativeElement.classList.add('animationDisabled');
         }
 
         this.applyPositions();
 
-        if (this.currentCombinedClip.clip.type === ActionType.Widget
+        if (this.currentActionContext.action.type === ActionType.Widget
           && targetMediaState === MediaState.VISIBLE) {
           this.applyWidgetContent();
         }
@@ -195,7 +195,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.log('before trigger state', targetMediaState);
 
         if (targetMediaState !== MediaState.ANIMATE_IN
-          && !this.currentCombinedClip.clipSetting.animating) {
+          && !this.currentActionContext.screenMediaConfig.animating) {
           this.isVisible$.pipe(
             skip(1),
             delay(300),
@@ -218,7 +218,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.parentComp.mediaClipToShow$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(toShow => {
-      if (toShow?.clip?.id === this.clipId) {
+      if (toShow?.action?.id === this.clipId) {
         if (this.clipVisibility === VisibilityEnum.Toggle) {
           console.info('toggle - just add it to the queue');
           this.queueTrigger.next(toShow);
@@ -248,28 +248,22 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private applyPositions() {
-    if (!this.currentCombinedClip) {
+    if (!this.currentActionContext) {
       return;
     }
 
-    const {clipSetting, clip, backgroundColor} = this.currentCombinedClip;
-    const currentPosition = clipSetting.position;
+    const {screenMediaConfig, backgroundColor} = this.currentActionContext;
+    const currentPosition = screenMediaConfig.position;
 
-    console.info({
-      clipSettings: this.currentCombinedClip.clipSetting
-    });
     if (currentPosition === PositionEnum.Absolute) {
-      this.element.nativeElement.style.setProperty('--clip-setting-left', clipSetting.left);
-      this.element.nativeElement.style.setProperty('--clip-setting-top', clipSetting.top);
-      this.element.nativeElement.style.setProperty('--clip-setting-right', clipSetting.right);
-      this.element.nativeElement.style.setProperty('--clip-setting-bottom', clipSetting.bottom);
-
-      console.info('Applied Positions', {clipSetting});
+      this.element.nativeElement.style.setProperty('--clip-setting-left', screenMediaConfig.left);
+      this.element.nativeElement.style.setProperty('--clip-setting-top', screenMediaConfig.top);
+      this.element.nativeElement.style.setProperty('--clip-setting-right', screenMediaConfig.right);
+      this.element.nativeElement.style.setProperty('--clip-setting-bottom', screenMediaConfig.bottom);
     }
 
     if (currentPosition === PositionEnum.Random) {
-      console.warn('RAMDOM');
-      const {height, width} = this.currentCombinedClip.clipSetting;
+      const {height, width} = this.currentActionContext.screenMediaConfig;
 
       const randomPosition = () => Math.floor(Math.random()*100);
 
@@ -281,8 +275,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
       const computedStyle = getComputedStyle(this.element.nativeElement);
       const {left, top} = computedStyle;
-
-      console.info({randomLeft, left, randomTop,  top, element: this.element});
 
       if (left.includes("-")) {
         this.element.nativeElement.style.setProperty('--clip-setting-left', '0px');
@@ -299,33 +291,31 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       transformToApply = 'translate(-50%, -50%) ';
     }
 
-    if (clipSetting.transform) {
-      transformToApply += clipSetting.transform;
+    if (screenMediaConfig.transform) {
+      transformToApply += screenMediaConfig.transform;
     }
-
-    console.info({transformToApply, clipSetting});
 
     this.element.nativeElement.style.setProperty('--clip-setting-transform', transformToApply);
 
     this.applyClass(this.element.nativeElement, 'absolute',
-      clipSetting.position === PositionEnum.Absolute);
+      screenMediaConfig.position === PositionEnum.Absolute);
 
     this.applyClass(this.element.nativeElement, 'centered',
-      clipSetting.position === PositionEnum.Centered);
+      screenMediaConfig.position === PositionEnum.Centered);
 
     this.applyClass(this.element.nativeElement, 'random',
-      clipSetting.position === PositionEnum.Random);
+      screenMediaConfig.position === PositionEnum.Random);
 
-    this.applyClass(this.element.nativeElement, 'fullscreen', !clipSetting.position);
+    this.applyClass(this.element.nativeElement, 'fullscreen', !screenMediaConfig.position);
 
 
     this.element.nativeElement.style.setProperty('--clip-background', backgroundColor);
-    this.element.nativeElement.style.setProperty('--clip-setting-img-fit', clipSetting.imgFit);
-    this.element.nativeElement.style.setProperty('z-index', ''+clipSetting.zIndex);
+    this.element.nativeElement.style.setProperty('--clip-setting-img-fit', screenMediaConfig.imgFit);
+    this.element.nativeElement.style.setProperty('z-index', ''+screenMediaConfig.zIndex);
 
-    if (clipSetting.position !== PositionEnum.FullScreen) {
-      this.element.nativeElement.style.setProperty('--clip-setting-height', clipSetting.height);
-      this.element.nativeElement.style.setProperty('--clip-setting-width', clipSetting.width);
+    if (screenMediaConfig.position !== PositionEnum.FullScreen) {
+      this.element.nativeElement.style.setProperty('--clip-setting-height', screenMediaConfig.height);
+      this.element.nativeElement.style.setProperty('--clip-setting-width', screenMediaConfig.width);
     } else {
       this.element.nativeElement.style.setProperty('--clip-setting-height', null);
       this.element.nativeElement.style.setProperty('--clip-setting-width', null);
@@ -347,7 +337,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private animateOutOrHide() {
-    const targetState = this.currentCombinedClip.clipSetting.animationOut
+    const targetState = this.currentActionContext.screenMediaConfig.animationOut
       ? MediaState.ANIMATE_OUT
       : MediaState.HIDDEN;
 
@@ -362,11 +352,11 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private updateNeededVariables() {
     const lastVisibility = this.clipVisibility;
 
-    if (!this.currentCombinedClip) {
+    if (!this.currentActionContext) {
       return;
     }
 
-    this.clipVisibility = this.currentCombinedClip.clipSetting.visibility ?? VisibilityEnum.Play;
+    this.clipVisibility = this.currentActionContext.screenMediaConfig.visibility ?? VisibilityEnum.Play;
 
     setTimeout(() => {
       if (
@@ -377,13 +367,13 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
 
       if (this.clipVisibility === VisibilityEnum.Static) {
-        if(ALL_MEDIA.includes(this.currentCombinedClip.clip.type)) {
+        if(ALL_MEDIA.includes(this.currentActionContext.action.type)) {
           this.playMedia();
         }
 
         this.isVisible$.next(true);
       } else if (lastVisibility === VisibilityEnum.Static) {
-        if(ALL_MEDIA.includes(this.currentCombinedClip.clip.type)) {
+        if(ALL_MEDIA.includes(this.currentActionContext.action.type)) {
           this.stopMedia();
         }
       }
@@ -391,39 +381,36 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private playMedia() {
-    const control = this.parentComp.clipToControlMap.get(this.currentCombinedClip.clip.id);
+    const control = this.parentComp.clipToControlMap.get(this.currentActionContext.action.id);
 
     if (control instanceof HTMLAudioElement
       || control instanceof HTMLVideoElement) {
       control.currentTime = 0;
-      console.info('Media Play triggered');
 
       this.attachGain(control);
 
-      control.play().then(() => {
-        console.info('Media Play done');
-      });
+      control.play();
     }
 
     if (control instanceof HTMLImageElement) {
       // reset if its a gif
-      if (this.currentCombinedClip.clip.path.includes('.gif')) {
+      if (this.currentActionContext.action.path.includes('.gif')) {
         control.src = '';
-        control.src = this.currentCombinedClip.clip.path;
+        control.src = this.currentActionContext.action.path;
       }
     }
 
-    if (this.currentCombinedClip.clip.playLength) {
+    if (this.currentActionContext.action.playLength) {
       setTimeout(() => {
         this.stopIfStillPlaying();
-      }, this.currentCombinedClip.clip.playLength)
+      }, this.currentActionContext.action.playLength)
     }
   }
 
   private attachedGainAlready: Dictionary<boolean> = {};
 
   private attachGain(mediaElement: HTMLMediaElement) {
-    const media = this.currentCombinedClip.clip;
+    const media = this.currentActionContext.action;
     const gainSetting = media.gainSetting;
 
     if (!gainSetting || this.attachedGainAlready[media.id]) {
@@ -448,7 +435,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private stopMedia () {
-    const control = this.parentComp.clipToControlMap.get(this.currentCombinedClip.clip.id);
+    const control = this.parentComp.clipToControlMap.get(this.currentActionContext.action.id);
 
     if (control instanceof HTMLMediaElement) {
       control.pause();
@@ -462,9 +449,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     switch (newState) {
       case MediaState.HIDDEN:
       {
-        console.info('HIDDEN TRIGGERED');
         if (newState === this.currentState) {
-          console.warn('ALREADY HIDDEN');
           return;
         }
 
@@ -473,7 +458,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
         this.currentState = MediaState.HIDDEN;
         this.webSocket.updateMediaState(
-          this.currentCombinedClip.clip.id,
+          this.currentActionContext.action.id,
           this.screenId,
           false
         );
@@ -482,19 +467,16 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
         if (this.clipVisibility !== VisibilityEnum.Toggle) {
           this.queueCounter--;
-          this.queueTrigger.next(this.currentCombinedClip);
+          this.queueTrigger.next(this.currentActionContext);
         }
-
-        console.info('MEDIA DONE - Queue Counter', this.queueCounter);
 
         return;
       }
       case MediaState.ANIMATE_IN:
       {
-        console.warn('changing to ANIMATE_IN');
-        this.startAnimation(this.currentCombinedClip.clipSetting.animationIn, this.currentCombinedClip.clipSetting.animationInDuration);
+        this.startAnimation(this.currentActionContext.screenMediaConfig.animationIn, this.currentActionContext.screenMediaConfig.animationInDuration);
 
-        if (this.currentCombinedClip.clip.type === ActionType.Widget) {
+        if (this.currentActionContext.action.type === ActionType.Widget) {
           this.applyWidgetContent();
         }
 
@@ -504,9 +486,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.VISIBLE:
       {
-        console.warn('changing to VISIBLE');
         this.isVisible$.next(true);
-        this.removeAnimation(this.currentCombinedClip.clipSetting.animationIn);
+        this.removeAnimation(this.currentActionContext.screenMediaConfig.animationIn);
         this.triggerComponentIsShown();
 
         // "once its done"
@@ -514,7 +495,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         this.playMedia();
 
         this.webSocket.updateMediaState(
-          this.currentCombinedClip.clip.id,
+          this.currentActionContext.action.id,
           this.screenId,
           true
         );
@@ -523,9 +504,8 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       }
       case MediaState.ANIMATE_OUT:
       {
-        const animateOut = this.currentCombinedClip.clipSetting.animationOut;
-        console.warn('Animation OUT', animateOut, this.currentCombinedClip.clipSetting);
-        this.startAnimation(animateOut, this.currentCombinedClip.clipSetting.animationOutDuration);
+        const animateOut = this.currentActionContext.screenMediaConfig.animationOut;
+        this.startAnimation(animateOut, this.currentActionContext.screenMediaConfig.animationOutDuration);
 
         this.stopMedia();
 
@@ -537,7 +517,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private getElementToAddAnimation() {
-    // this.parentComp.clipToControlMap.get(this.currentCombinedClip.clip.id);
+    // this.parentComp.clipToControlMap.get(this.currentActionContext.clip.id);
 
     return this.mediaHoldingElement;
   }
@@ -548,20 +528,13 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     const elementToAnimate = this.getElementToAddAnimation();
 
     if (!elementToAnimate) {
-      console.info('no element available?!', this.currentCombinedClip, this.parentComp.clipToControlMap);
       return;
     }
 
-    console.info('Adding Animation to Element: ', animationName);
     elementToAnimate.classList.add('animate__animated', animationName);
 
     const animationDuration = animationDurationValue || 777;
-
-    console.info('duration', animationDurationValue);
-
     elementToAnimate.style.setProperty('--animate-duration', `${animationDuration}ms`);
-
-    console.info('After Adding', elementToAnimate.classList.toString());
   }
   private removeAnimation(animationName: string) {
     this.element.nativeElement.classList.remove('isAnimating');
@@ -570,9 +543,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     elementToAnimate.classList.remove('animate__animated');
 
     if (animationName) {
-      console.info('Removing Animation from Element: ', animationName);
       elementToAnimate.classList.remove(animationName);
-      console.info('After Remove', elementToAnimate.classList.toString());
     }
   }
 
@@ -598,18 +569,18 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
 
   private triggerComponentIsShown() {
-    const control = this.parentComp.clipToControlMap.get(this.currentCombinedClip.clip.id);
+    const control = this.parentComp.clipToControlMap.get(this.currentActionContext.action.id);
 
     if (control instanceof DynamicIframeComponent) {
-      control.componentIsShown(this.currentCombinedClip.triggerPayload);
+      control.componentIsShown(this.currentActionContext.triggerPayload);
     }
   }
 
   private applyWidgetContent() {
 
-    const variableOverrides = this.currentCombinedClip.triggerPayload?.overrides?.action?.variables ?? {};
+    const variableOverrides = this.currentActionContext.triggerPayload?.overrides?.action?.variables ?? {};
 
-    const media = this.currentCombinedClip.clip;
+    const media = this.currentActionContext.action;
 
     let config: DynamicIframeContent;
 
@@ -624,19 +595,18 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
         }
       };
     } else {
-      config = {
-        ...actionDataToWidgetContent(media),
-        variables: variableOverrides
-      };
+      const configFromWidgetContent = actionDataToWidgetContent(media);
 
+      config = {
+        ...configFromWidgetContent,
+        variables: {
+          ...configFromWidgetContent.variables,
+          ...variableOverrides
+        }
+      };
     }
 
-    console.info({
-      variableOverrides,
-      config
-    })
-
-    const control = this.parentComp.clipToControlMap.get(this.currentCombinedClip.clip.id);
+    const control = this.parentComp.clipToControlMap.get(this.currentActionContext.action.id);
 
     if (control instanceof DynamicIframeComponent) {
       control.content = config;
@@ -645,6 +615,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private log(...args: unknown[]) {
-    console.info(`[${this.currentCombinedClip.clip.id}]`, ...args);
+    console.info(`[${this.currentActionContext.action.id}]`, ...args);
   }
 }
