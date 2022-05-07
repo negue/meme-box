@@ -1,6 +1,6 @@
 import {Action, Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig, convertExtendedToTypeValues} from "@memebox/action-variables";
-import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
+import {getVariablesConfigListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
 export interface ScriptConfig {
   executionScript: string;
@@ -23,7 +23,7 @@ export function actionDataToScriptConfig (action: Partial<Action>) {
     bootstrapScript: action.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
   };
 
-  dynamicContent.variablesConfig = getVariablesListOfAction(action);
+  dynamicContent.variablesConfig = getVariablesConfigListOfAction(action);
 
   // todo add a settings type
   const settings: any = JSON.parse(action.extended[SCRIPT_SETTINGS_KEY] ?? '{}');

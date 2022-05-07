@@ -1,7 +1,7 @@
 import {Action, Dictionary} from "@memebox/contracts";
 import {replaceVariablesInString} from "./utils";
 import {ActionVariableConfig} from "@memebox/action-variables";
-import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
+import {getVariableMapOfAction, getVariablesConfigListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
@@ -14,7 +14,7 @@ export interface DynamicIframeContent {
   js?: string;
   libraries?: HtmlExternalFile[];
   variablesConfig?: ActionVariableConfig[];
-  variables?: Dictionary<any>;
+  variables?: Dictionary<unknown>;
   settings?: {
     subscribeToTwitchEvent?: boolean;
   }
@@ -210,7 +210,8 @@ export function actionDataToWidgetContent (action: Partial<Action>): DynamicIfra
   const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
   dynamicContent.libraries = externalFiles;
 
-  dynamicContent.variablesConfig = getVariablesListOfAction(action);
+  dynamicContent.variablesConfig = getVariablesConfigListOfAction(action);
+  dynamicContent.variables = getVariableMapOfAction(action);
 
   // todo add a settings type
   const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');

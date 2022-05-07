@@ -30,7 +30,7 @@ export class ObsConnection {
     this.obsConnection = new OBSWebSocket();
 
     this._persistence.dataUpdated$().subscribe(
-      value => {
+      async value => {
         if (value.dataType === "settings") {
           if (this.isObsConnected()) {
             this.logger.error(`Can't change the OBS while is already connected. You need to restart.`);
@@ -54,7 +54,7 @@ export class ObsConnection {
             label: 'New Configuration Received',
           });
 
-          this.connectIfNot();
+          await this.connectIfNot();
         }
       }
     )
@@ -101,11 +101,19 @@ export class ObsConnection {
     return obsConnection;
   }
 
+  private connectionPromise: Promise<unknown>;
+
   async connectIfNot () {
+    if (this.connectionPromise) {
+      await this.connectionPromise;
+    }
+
     const isConnected = this.isObsConnected();
 
     if (!isConnected) {
-     await this.createConnectionPromise();
+      this.connectionPromise = this.createConnectionPromise();
+
+      await this.connectionPromise;
 
       this.obsConnectionState({
         label: 'Connected'

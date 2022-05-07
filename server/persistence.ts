@@ -8,7 +8,7 @@ import {
   ObsConfig,
   PositionEnum,
   Screen,
-  ScreenClip,
+  ScreenMedia,
   SettingsState,
   Tag,
   TimedAction,
@@ -321,7 +321,7 @@ export class Persistence {
    *  Screen Clips Settings
    */
 
-  public updateScreenClip(targetUrlId: string, id: string, screenClip: ScreenClip) {
+  public updateScreenClip(targetUrlId: string, id: string, screenClip: ScreenMedia) {
     screenClip.id = id;
 
     operations.addOrUpdateScreenClip(this.data, targetUrlId, screenClip);

@@ -1,6 +1,8 @@
 import {Controller, Get, PathParams, Post} from "@tsed/common";
-import {ENDPOINTS, ObsBrowserSourceData} from "@memebox/contracts";
+import {ENDPOINTS, ObsBrowserSourceData, ObsSourceEntry, ObsSourceFilterEntry} from "@memebox/contracts";
 import {ObsConnection} from "../providers/obs-connection";
+import {ObsApi} from "../providers/actions/scripts/apis/obs.api";
+import type {Scene} from "obs-websocket-js";
 
 @Controller(ENDPOINTS.OBS_DATA.PREFIX)
 export class ObsDataController {
@@ -12,40 +14,49 @@ export class ObsDataController {
 
   @Get(ENDPOINTS.OBS_DATA.CURRENT_BROWSER_SOURCES)
   async listBrowserSources(): Promise<ObsBrowserSourceData[]> {
-    await this._obsConnection.connectIfNot();
+    const obsApi = await this.getObsApi();
 
-    // browser_source
-
-    const obsWS = await this._obsConnection.getCurrentConnection();
-
-    const sourceTypes = await obsWS.send('GetSourcesList');
-
-    const onlyBrowserSources = sourceTypes.sources.filter( source => source.typeId === 'browser_source');
-
-    const browserSourceSettings: ObsBrowserSourceData[] = [];
-
-    for (const onlyBrowserSource of onlyBrowserSources) {
-      const settingsPerBrowserSource = await obsWS.send('GetSourceSettings', {
-        sourceName: onlyBrowserSource.name
-      });
-
-      browserSourceSettings.push(settingsPerBrowserSource);
-    }
-
-    return browserSourceSettings;
+    return obsApi.listBrowserSources();
   }
-
 
   @Post(`${ENDPOINTS.OBS_DATA.REFRESH_BROWSER_SOURCE}/:sourceName`)
   async refreshBrowserSource(
     @PathParams("sourceName") sourceName: string,
-  ): Promise<unknown> {
-    await this._obsConnection.connectIfNot();
+  ): Promise<void> {
+    const obsApi = await this.getObsApi();
 
-    const obsWS = await this._obsConnection.getCurrentConnection();
+    await obsApi.refreshBrowserSource(sourceName)
+  }
 
-    return await obsWS.send('RefreshBrowserSource', {
-      sourceName: sourceName
-    });
+  @Get(ENDPOINTS.OBS_DATA.SCENE_LIST)
+  async getSceneList(): Promise<Scene[]> {
+    const obsApi = await this.getObsApi();
+
+    return obsApi.listScenes();
+  }
+
+  @Get(ENDPOINTS.OBS_DATA.SOURCE_LIST)
+  async getSourceList(): Promise<ObsSourceEntry[]> {
+    const obsApi = await this.getObsApi();
+
+    return obsApi.listSources()
+  }
+
+  @Get(`${ENDPOINTS.OBS_DATA.SOURCE_FILTER_LIST}:sourceName`)
+  async getSourceFilterList(
+    @PathParams("sourceName") sourceName: string,
+  ): Promise<ObsSourceFilterEntry[]> {
+    const obsApi = await this.getObsApi();
+
+    return obsApi.listSourceFilters(sourceName)
+  }
+
+  private obsApi: ObsApi;
+
+  private async getObsApi(): Promise<ObsApi> {
+    return this.obsApi ?? (this.obsApi = new ObsApi(
+      this._obsConnection,
+      await this._obsConnection.getCurrentConnection()
+    ));
   }
 }
