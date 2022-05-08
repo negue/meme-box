@@ -1,7 +1,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {AppQueries} from "@memebox/app-state";
 import {Observable} from "rxjs";
-import {actionDataToWidgetContent, DynamicIframeContent} from "@memebox/utils";
+import {DynamicIframeContent, getWidgetFromActionInfo} from "@memebox/utils";
 import {distinctUntilChanged, filter, map, withLatestFrom} from "rxjs/operators";
 import {isEqual} from "lodash";
 import {CombinedActionContext} from "@memebox/contracts";
@@ -18,30 +18,15 @@ export class WidgetTemplatePipe implements PipeTransform {
     return mediaClipToShow$.pipe(
       filter(m => !!m),
       withLatestFrom(this.appQueries.actionMap$),
-      map(([mediaToShow, clipMap]) => {
+      map(([mediaToShow, actionMap]) => {
 
         const variableOverrides = mediaToShow.triggerPayload?.overrides?.action?.variables ?? {};
 
-        if (mediaToShow.action.fromTemplate) {
-          const widgetTemplate = clipMap[mediaToShow.action.fromTemplate];
-
-          const config: DynamicIframeContent = {
-            ...actionDataToWidgetContent(widgetTemplate),
-            variables: {
-              ...mediaToShow.action.extended,
-              ...variableOverrides
-            }
-          };
-
-          return config;
-        }
-
-        const result: DynamicIframeContent =  {
-          ...actionDataToWidgetContent(mediaToShow.action),
-          variables: variableOverrides
-        };
-
-        return result;
+        return getWidgetFromActionInfo(
+          mediaToShow.action,
+          actionMap,
+          variableOverrides
+        );
       }),
       distinctUntilChanged((x, y) => isEqual(x, y))
     );

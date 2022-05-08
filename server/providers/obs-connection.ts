@@ -1,17 +1,17 @@
-import {Service, UseOpts} from "@tsed/di";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "./contracts";
-import {Persistence} from "../persistence";
+import { Service, UseOpts } from "@tsed/di";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "./contracts";
+import { Persistence } from "../persistence";
 import OBSWebSocket from "obs-websocket-js";
-import {NamedLogger} from "./named-logger";
-import {timeoutAsync} from "./actions/scripts/apis/sleep.api";
-import {ObsConfig} from "@memebox/contracts";
-import {ConnectionsStateHub, UpdateStateFunc} from "./connections-state.hub";
+import { NamedLogger } from "./named-logger";
+import { timeoutAsync } from "./actions/scripts/apis/sleep.api";
+import { ObsConfig } from "@memebox/contracts";
+import { ConnectionsStateHub, UpdateStateFunc } from "./connections-state.hub";
 
 @Service()
 export class ObsConnection {
   private obsConfig: ObsConfig;
-  private obsConfigExists: boolean;
+  public readonly obsConfigExists: boolean;
   private obsConnection: OBSWebSocket;
   private obsConnectionState: UpdateStateFunc;
 
