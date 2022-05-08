@@ -1,7 +1,7 @@
-import type {Rule} from 'css';
+import type { Rule } from 'css';
 import * as css from 'css';
-import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
+import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit, TrackByFunction } from '@angular/core';
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
 import {
   Action,
   ActionType,
@@ -12,10 +12,10 @@ import {
   ScreenMedia,
   TriggerAction
 } from "@memebox/contracts";
-import {distinctUntilChanged, filter, map, take, takeUntil} from "rxjs/operators";
-import {AppQueries, AppService, ConnectionStateEnum, MemeboxWebsocketService} from "@memebox/app-state";
-import {ActivatedRoute} from "@angular/router";
-import {KeyValue} from "@angular/common";
+import { distinctUntilChanged, filter, map, take, takeUntil } from "rxjs/operators";
+import { AppQueries, AppService, ConnectionStateEnum, MemeboxWebsocketService } from "@memebox/app-state";
+import { ActivatedRoute } from "@angular/router";
+import { KeyValue } from "@angular/common";
 
 // TODO Extract Target-Screen Component from the PAGE itself
 
@@ -228,14 +228,6 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
         const iframeCss =  foundMedia.screenMediaConfig.customCss;
 
         this.addOrUpdateStyleTag(iframeElement.contentDocument, 'iframe', iframeCss);
-      } )
-    }
-
-    if (value.type === ActionType.Widget){
-      this.mediaList$.pipe(
-        take(1)
-      ).subscribe(map => {
-        // custom css for custom html?!
       } )
     }
 
