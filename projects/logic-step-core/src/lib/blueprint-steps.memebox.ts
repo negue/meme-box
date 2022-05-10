@@ -4,9 +4,9 @@ import {
   BlueprintStepConfigActionPayload,
   generateCodeByStep
 } from "./blueprint.types";
-import { map, take } from "rxjs/operators";
-import { generateRandomCharacters } from "./utils";
-import { combineLatest } from "rxjs";
+import {map, take} from "rxjs/operators";
+import {generateRandomCharacters} from "./utils";
+import {combineLatest} from "rxjs";
 
 export function registerMemeboxSteps (
   registry: BlueprintRegistry,
@@ -22,7 +22,7 @@ export function registerMemeboxSteps (
         type: "action"
       }
     ],
-    toScriptCode: (step, context) => {
+    toScriptCode: (step) => {
       const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
 
       const actionId = actionPayload.actionId;
@@ -31,7 +31,7 @@ export function registerMemeboxSteps (
       return `memebox.getAction('${actionId}')
                     .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
     },
-    stepEntryLabelAsync: (queries, payload, parentStep) => {
+    stepEntryLabelAsync: (queries, payload) => {
       const actionPayload = payload.action as BlueprintStepConfigActionPayload;
 
       return queries.getActionById$(actionPayload.actionId).pipe(
@@ -82,7 +82,7 @@ export function registerMemeboxSteps (
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
-    stepEntryLabelAsync: (queries, payload, parentStep) => {
+    stepEntryLabelAsync: (queries, payload) => {
       const actionPayload = payload.action as BlueprintStepConfigActionPayload;
 
       return queries.getActionById$(actionPayload.actionId).pipe(
@@ -98,17 +98,17 @@ export function registerMemeboxSteps (
     extendBlueprintStep: (step, parentStep) => {
       step.payload._suffix = parentStep.entryType === 'step' && parentStep.payload._suffix;
     },
-    allowedToBeAdded: (step, context) => {
+    allowedToBeAdded: (step) => {
       // todo find a way to have that in multi level scopes available
 
       return step.entryType === 'step' && step.stepType === 'triggerActionWhile';
     },
-    toScriptCode: (step, context) => {
+    toScriptCode: (step) => {
       const helpersName = `helpers_${step.payload._suffix}`;
 
       return `${helpersName}.reset();`
     },
-    stepEntryLabelAsync: (queries, payload, parentStep) => {
+    stepEntryLabelAsync: () => {
       return Promise.resolve('reset');
     },
   };
@@ -124,23 +124,22 @@ export function registerMemeboxSteps (
       }
     ],
     awaitCodeHandledInternally: true,
-    toScriptCode: (step, context) => {
+    toScriptCode: (step) => {
       const awaitCode = step.awaited ? 'await ': '';
 
       return `
+        ${awaitCode} (() => {
         const actionsToChooseFrom = [${
           (step.payload.actions as BlueprintStepConfigActionListPayload)
             .map(action => JSON.stringify(action))
             .join(',')
         }];
 
-        const selectedAction = utils.randomElement(actionsToChooseFrom);
-
-        ${awaitCode} memebox.getAction(selectedAction.actionId)
-                    .trigger(selectedAction.overrides)
+        return memebox.triggerRandom(actionsToChooseFrom);
+        })();
       `;
     },
-    stepEntryLabelAsync: async (queries, payload, parentStep) => {
+    stepEntryLabelAsync: async (queries, payload) => {
       const actionPayload = payload.actions as BlueprintStepConfigActionPayload[];
 
       const namesOfActions = await combineLatest(
@@ -156,5 +155,72 @@ export function registerMemeboxSteps (
 
       return 'trigger random: '+ namesOfActions;
     },
+  };
+
+
+  registry["updateActionProperties"] = {
+    pickerLabel: "Update Action Properties",
+    stepGroup: "memebox",
+    configArguments: [
+      {
+        name: "action",
+        label: "Action to update properties",
+        type: "action"
+      },
+    /*  {
+        name: "overrides",
+        label: "Properties to update",
+        type: "actionOverrides"
+      }*/
+    ],
+    awaitCodeHandledInternally: true,
+    toScriptCode: (step) => {
+      const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
+      const overrides = actionPayload.overrides;
+
+      const actionId = actionPayload.actionId;
+
+      const awaitCode = step.awaited ? 'await ': '';
+
+      const actionApiVariable = overrides.screenMedia
+        ? `memebox.getMedia('${actionId}')`
+        : `memebox.getAction('${actionId}')`;
+
+      const updateVariables = overrides.action?.variables
+        ? `promisesArray.push(action.updateVariables(${JSON.stringify(overrides.action)}));`
+        : '';
+
+      const updateMediaProps = overrides.screenMedia
+        ? `promisesArray.push(action.updateScreenOptions(${JSON.stringify(overrides.screenMedia)}));`
+        : '';
+
+      console.info({
+        actionApiVariable,
+        updateVariables,
+        updateMediaProps
+      });
+
+      return `
+${awaitCode} (() => {
+        const action = ${actionApiVariable};
+
+        const promisesArray = [];
+
+      ${updateVariables}
+      ${updateMediaProps}
+
+
+                    return Promise.all(promisesArray);
+                    })();
+                    `;
+    },
+    stepEntryLabelAsync: (queries, payload) => {
+      const actionPayload = payload.action as BlueprintStepConfigActionPayload;
+
+      return queries.getActionById$(actionPayload.actionId).pipe(
+        map(actionInfo =>  'Update Properties of: ' + actionInfo?.name ?? 'unknown action'),
+        take(1)
+      ).toPromise();
+    }
   };
 }

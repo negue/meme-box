@@ -1,15 +1,22 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   BlueprintEntryStepPayload,
   BlueprintStepConfigActionListPayload,
   BlueprintStepConfigActionPayload,
   BlueprintStepConfigArgument
 } from "@memebox/logic-step-core";
-import { Action, ClipAssigningMode, Dictionary, UnassignedFilterEnum } from "@memebox/contracts";
-import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
-import { Observable } from "rxjs";
-import { AppQueries } from "@memebox/app-state";
+import {
+  Action,
+  ActionType,
+  ClipAssigningMode,
+  Dictionary,
+  TriggerActionOverrides,
+  UnassignedFilterEnum
+} from "@memebox/contracts";
+import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
+import {Observable} from "rxjs";
+import {AppQueries} from "@memebox/app-state";
 import cloneDeep from "lodash/cloneDeep";
 
 export interface StepSettingDialogPayload {
@@ -64,6 +71,9 @@ export class StepSettingDialogComponent {
         overrides: {
           action: {
             variables: {}
+          },
+          screenMedia: {
+
           }
         }
       } as BlueprintStepConfigActionPayload;
@@ -84,9 +94,37 @@ export class StepSettingDialogComponent {
     }
   }
 
+  getActionPayloadOfConfigList() {
+    const findActionConfig = this.data.configArguments.find(c => c.type === 'action');
+
+    if (!findActionConfig) {
+      return null;
+    }
+
+    return this.payload[findActionConfig.name] as any as BlueprintStepConfigActionPayload;
+  }
+
+  getActionOverridesPayload(configName: string) {
+    const action = this.getActionPayloadOfConfigList();
+
+    return {
+      action,
+      configPayload: this.payload[configName] as any as TriggerActionOverrides
+    }
+  }
+
   getActionPayload(configName: string) {
     return this.payload[configName] as any as BlueprintStepConfigActionPayload;
   }
+
+  isMedia(action: Action) {
+    if (!action) {
+      return false;
+    }
+
+    return [ActionType.IFrame, ActionType.Widget, ActionType.Picture, ActionType.Video].includes(action.type);
+  }
+
 
   getActionListPayload(configName: string): BlueprintStepConfigActionListPayload  {
     return this.payload[configName] as any as BlueprintStepConfigActionListPayload;
