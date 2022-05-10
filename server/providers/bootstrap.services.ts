@@ -1,14 +1,14 @@
-import { Service } from "@tsed/di";
-import { ActionTriggerHandler } from "./actions/action-trigger.handler";
-import { TwitchBootstrap } from "./twitch/twitch.bootstrap";
-import { WebsocketBootstrap } from "./websockets/websocket.bootstrap";
-import { ScriptHandler } from "./actions/scripts/script.handler";
-import { ObsConnection } from "./obs-connection";
-import { ObsApi } from "./actions/scripts/apis/obs.api";
-import { Persistence } from "../persistence";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "./contracts";
-import { Logger } from "@tsed/logger";
+import {Service} from "@tsed/di";
+import {ActionTriggerHandler} from "./actions/action-trigger.handler";
+import {TwitchBootstrap} from "./twitch/twitch.bootstrap";
+import {WebsocketBootstrap} from "./websockets/websocket.bootstrap";
+import {ScriptHandler} from "./actions/scripts/script.handler";
+import {ObsConnection} from "./obs-connection";
+import {ObsApi} from "./actions/scripts/apis/obs.api";
+import {Persistence} from "../persistence";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "./contracts";
+import {Logger} from "@tsed/logger";
 
 /**
  * This file is used to bootstrap all services that "just" do some work
@@ -46,9 +46,12 @@ export class BootstrapServices {
       return;
     }
 
-    await this._obsConnection.connectIfNot();
+    this._obsConnection.tryConnecting();
+
+    await this._obsConnection.onConnected$.asObservable().toPromise()
 
     const obsWS = await this._obsConnection.getCurrentConnection();
+
     const obsApi = new ObsApi(this._obsConnection, obsWS);
 
     const allBrowserSources = await obsApi.listBrowserSources();

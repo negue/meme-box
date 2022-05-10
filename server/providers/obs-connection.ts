@@ -1,19 +1,24 @@
-import { Service, UseOpts } from "@tsed/di";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "./contracts";
-import { Persistence } from "../persistence";
+import {Service, UseOpts} from "@tsed/di";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "./contracts";
+import {Persistence} from "../persistence";
 import OBSWebSocket from "obs-websocket-js";
-import { NamedLogger } from "./named-logger";
-import { timeoutAsync } from "./actions/scripts/apis/sleep.api";
-import { ObsConfig } from "@memebox/contracts";
-import { ConnectionsStateHub, UpdateStateFunc } from "./connections-state.hub";
+import {NamedLogger} from "./named-logger";
+import {timeoutAsync} from "./actions/scripts/apis/sleep.api";
+import {ObsConfig} from "@memebox/contracts";
+import {ConnectionsStateHub, UpdateStateFunc} from "./connections-state.hub";
+import {Subject} from "rxjs";
 
 @Service()
 export class ObsConnection {
   private obsConfig: ObsConfig;
   public readonly obsConfigExists: boolean;
+
+  public onConnected$ = new Subject();
+
   private obsConnection: OBSWebSocket;
   private obsConnectionState: UpdateStateFunc;
+  private isConnected = false;
 
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
@@ -28,6 +33,14 @@ export class ObsConnection {
     this.obsConfigExists = !!this.obsConfig?.hostname;
 
     this.obsConnection = new OBSWebSocket();
+    this.obsConnection.on('ConnectionOpened', () => {
+      this.isConnected = true;
+      this.onConnected$.next();
+
+      this.obsConnection.once('ConnectionClosed', () => {
+        this.isConnected = false;
+      })
+    });
 
     this._persistence.dataUpdated$().subscribe(
       async value => {
@@ -70,6 +83,8 @@ export class ObsConnection {
   }
 
   async tryConnecting() {
+    console.trace();
+
     let lastError;
     for (let i = 0; i<5;i++) {
       try {
@@ -122,7 +137,7 @@ export class ObsConnection {
   }
 
   private isObsConnected () {
-    return this.obsConnection["_connected"];
+    return this.isConnected;
   }
 
   private async createConnectionPromise() {
