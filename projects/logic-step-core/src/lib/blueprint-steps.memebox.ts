@@ -4,10 +4,9 @@ import {
   BlueprintStepConfigActionPayload,
   generateCodeByStep
 } from "./blueprint.types";
-import {uuid} from "@gewd/utils";
-import {map, take} from "rxjs/operators";
-import {generateRandomCharacters} from "./utils";
-import {combineLatest} from "rxjs";
+import { map, take } from "rxjs/operators";
+import { generateRandomCharacters } from "./utils";
+import { combineLatest } from "rxjs";
 
 export function registerMemeboxSteps (
   registry: BlueprintRegistry,
@@ -23,15 +22,6 @@ export function registerMemeboxSteps (
         type: "action"
       }
     ],
-    generateBlueprintStep: (payload) => {
-      return {
-        id: uuid(),
-        stepType: "triggerAction",
-        payload,
-        entryType: "step",
-        subSteps: [],
-      };
-    },
     toScriptCode: (step, context) => {
       const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
 
@@ -61,22 +51,16 @@ export function registerMemeboxSteps (
         type: "action"
       }
     ],
-    generateBlueprintStep: (payload) => {
-      return {
-        id: uuid(),
-        stepType: "triggerActionWhile",
-        payload: {
-          ...payload,
-          _suffix: generateRandomCharacters(5)
-        },
-        entryType: "step",
-        subSteps: [
-          {
-            label: "Execute Actions",
-            entries: []
-          }
-        ],
+    extendBlueprintStep: (step) => {
+      step.payload = {
+        ...step.payload,
+        _suffix: generateRandomCharacters(5)
       };
+
+      step.subSteps.push( {
+        label: "Execute Actions",
+        entries: []
+      });
     },
     toScriptCode: (step, context) => {
       const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
@@ -111,16 +95,8 @@ export function registerMemeboxSteps (
     pickerLabel: "Reset the 'triggerActionWhileAction' (todo label)",
     stepGroup: "memebox",
     configArguments: [],
-    generateBlueprintStep: (_, parentStep) => {
-      return {
-        id: uuid(),
-        stepType: "triggerActionWhileReset",
-        payload: {
-          _suffix: parentStep.entryType === 'step' && parentStep.payload._suffix
-        },
-        entryType: "step",
-        subSteps: [],
-      };
+    extendBlueprintStep: (step, parentStep) => {
+      step.payload._suffix = parentStep.entryType === 'step' && parentStep.payload._suffix;
     },
     allowedToBeAdded: (step, context) => {
       // todo find a way to have that in multi level scopes available
@@ -147,15 +123,6 @@ export function registerMemeboxSteps (
         type: "actionList"
       }
     ],
-    generateBlueprintStep: (payload) => {
-      return {
-        id: uuid(),
-        stepType: "triggerRandom",
-        payload,
-        entryType: "step",
-        subSteps: [],
-      };
-    },
     awaitCodeHandledInternally: true,
     toScriptCode: (step, context) => {
       const awaitCode = step.awaited ? 'await ': '';

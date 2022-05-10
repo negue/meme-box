@@ -1,14 +1,15 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   BlueprintContext,
   BlueprintEntry,
   BlueprintEntryStepCall,
   BlueprintEntryStepPayload,
   BlueprintStepInfo,
-  BlueprintStepRegistry
+  BlueprintStepRegistry,
+  generateStepEntry
 } from "@memebox/logic-step-core";
-import {DialogService} from "../../../../src/app/shared/dialogs/dialog.service";
-import type {StepSettingDialogPayload} from "./step-setting-dialog/step-setting-dialog.component";
+import { DialogService } from "../../../../src/app/shared/dialogs/dialog.service";
+import type { StepSettingDialogPayload } from "./step-setting-dialog/step-setting-dialog.component";
 
 @Injectable({
   providedIn: 'any'
@@ -31,11 +32,17 @@ export class BlueprintStepCreatorService {
         return;
       }
 
-      const generatedBlueprintStep = BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep(dialogResult, parentStep)
+      const generatedBlueprintStep = generateStepEntry(stepInfo.stepType, {});
+
+      if (blueprintRegistryEntry.extendBlueprintStep) {
+        blueprintRegistryEntry.extendBlueprintStep(
+          generatedBlueprintStep, parentStep
+        );
+      }
 
       return generatedBlueprintStep;
     } else {
-      return BlueprintStepRegistry[stepInfo.stepType].generateBlueprintStep({}, parentStep)
+      return generateStepEntry(stepInfo.stepType, {})
     }
   }
 

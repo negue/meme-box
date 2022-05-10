@@ -1,7 +1,13 @@
-import {BlueprintContext, BlueprintEntry, BlueprintRegistry} from "./blueprint.types";
-import {uuid} from "@gewd/utils";
-import {registerMemeboxSteps} from "./blueprint-steps.memebox";
-import {registerObsSteps} from "./blueprint-steps.obs";
+import {
+  BlueprintContext,
+  BlueprintEntry,
+  BlueprintEntryStepCall,
+  BlueprintEntryStepPayload,
+  BlueprintRegistry
+} from "./blueprint.types";
+import { uuid } from "@gewd/utils";
+import { registerMemeboxSteps } from "./blueprint-steps.memebox";
+import { registerObsSteps } from "./blueprint-steps.obs";
 
 export interface BlueprintStepConfigArgument {
   name: string;
@@ -21,15 +27,6 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
         type: "number"
       }
     ],
-    generateBlueprintStep: (payload) => {
-      return {
-        id: uuid(),
-        stepType: "sleepSeconds",
-        payload,
-        entryType: "step",
-        subSteps: [],
-      };
-    },
     toScriptCode: (step, context) => `sleep.secondsAsync(${step.payload.seconds});`,
     stepEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.seconds} seconds`);
@@ -45,15 +42,6 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
         type: "number"
       }
     ],
-    generateBlueprintStep: (payload) => {
-      return {
-        id: uuid(),
-        stepType: "sleepMs",
-        payload,
-        entryType: "step",
-        subSteps: [],
-      };
-    },
     toScriptCode: (step, context) => `sleep.msAsync(${step.payload.ms});`,
     stepEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.ms}ms`);
@@ -61,18 +49,6 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
   }
 };
 
-
-export function generateCodeByBlueprint(
-  blueprint: BlueprintContext
-): string  {
-  const result: string[] = [];
-
-  const rootEntry = blueprint.entries[blueprint.rootEntry];
-
-  result.push(generateCodeByStep(rootEntry, blueprint));
-
-  return result.join('\r\n');
-}
 
 function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
   const result: string[] = [];
@@ -103,5 +79,30 @@ function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
 
 }
 
+export function generateCodeByBlueprint(
+  blueprint: BlueprintContext
+): string  {
+  const result: string[] = [];
+
+  const rootEntry = blueprint.entries[blueprint.rootEntry];
+
+  result.push(generateCodeByStep(rootEntry, blueprint));
+
+  return result.join('\r\n');
+}
+
+export function generateStepEntry (
+  stepType: string,
+  payload: BlueprintEntryStepPayload
+): BlueprintEntryStepCall {
+  return {
+    id: uuid(),
+    stepType,
+    payload,
+    entryType: "step",
+    subSteps: [],
+  };
+}
+
 registerMemeboxSteps(BlueprintStepRegistry, generateCodeByStep);
-registerObsSteps(BlueprintStepRegistry, generateCodeByStep);
+registerObsSteps(BlueprintStepRegistry);

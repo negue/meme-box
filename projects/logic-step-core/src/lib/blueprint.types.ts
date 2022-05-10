@@ -1,7 +1,7 @@
-import {uuid} from "@gewd/utils";
-import {TriggerActionOverrides} from "@memebox/contracts";
-import {AppQueries} from "@memebox/app-state";
-import {BlueprintStepConfigArgument} from "./generateCodeByBlueprint";
+import { uuid } from "@gewd/utils";
+import { TriggerActionOverrides } from "@memebox/contracts";
+import { AppQueries } from "@memebox/app-state";
+import { BlueprintStepConfigArgument } from "./generateCodeByBlueprint";
 
 export interface BlueprintSubStepInfo {
   name: string; // property to save the subSteps
@@ -104,7 +104,7 @@ export interface BlueprintStepDefinition {
   configArguments: BlueprintStepConfigArgument[]; // each argument name will be applied to the payload as prop
 
   // todo refactor so that each call doesn't need to fill ALL the properties only the needed onces for this type
-  generateBlueprintStep: (payload: BlueprintEntryStepPayload, parentStep: BlueprintEntry) => BlueprintEntryStepCall;
+  extendBlueprintStep?: (step: BlueprintEntryStepCall, parentStep: BlueprintEntry) => void;
   allowedToBeAdded?: (step: BlueprintEntry, context: BlueprintContext) => boolean;
   toScriptCode: (step: BlueprintEntryStepCall, context: BlueprintContext) => string;
   awaitCodeHandledInternally?: boolean
