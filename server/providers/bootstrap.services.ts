@@ -46,9 +46,13 @@ export class BootstrapServices {
       return;
     }
 
-    await this._obsConnection.connectIfNot();
+    this._obsConnection.tryConnecting();
+
+    // waiting until the connection is successfully established
+    await this._obsConnection.isConnectedAsync;
 
     const obsWS = await this._obsConnection.getCurrentConnection();
+
     const obsApi = new ObsApi(this._obsConnection, obsWS);
 
     const allBrowserSources = await obsApi.listBrowserSources();
