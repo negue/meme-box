@@ -13,7 +13,7 @@ import {DirectivesModule} from "../shared/directives/directives.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DialogsModule} from "../shared/dialogs/dialogs.module";
 import {MatDialogModule} from "@angular/material/dialog";
-import {PipesModule} from "@memebox/ui-components";
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 
 
 const routes: Routes = [
@@ -40,7 +40,7 @@ const routes: Routes = [
     MatTooltipModule,
     DialogsModule,
     MatDialogModule,
-    PipesModule
+    UiComponentsPipesModule
   ]
 })
 export class MobileModule {

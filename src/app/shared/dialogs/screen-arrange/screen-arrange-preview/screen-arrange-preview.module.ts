@@ -8,7 +8,7 @@ import {ActionPreviewModule} from '@memebox/state-components';
 import {DragResizeMediaModule} from '../drag-resize-media/drag-resize-media.module';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatButtonModule} from '@angular/material/button';
-import {PipesModule} from '@memebox/ui-components';
+import {UiComponentsPipesModule} from '@memebox/ui-components';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDividerModule} from '@angular/material/divider';
@@ -32,7 +32,7 @@ import {OpenFeedbackButtonModule} from "../../../components/open-feedback-button
     DragResizeMediaModule,
     MatCheckboxModule,
     MatButtonModule,
-    PipesModule,
+    UiComponentsPipesModule,
     MatButtonToggleModule,
     ReactiveFormsModule,
     FormsModule,

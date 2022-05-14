@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ActionVariableInputModule} from "../action-variable-input/action-variable-input.module";
-import {PipesModule} from "@memebox/ui-components";
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 import {VariablesConfigComponent} from "./variables-config.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatButtonModule} from "@angular/material/button";
@@ -21,7 +21,7 @@ import {FormsModule} from "@angular/forms";
   ],
   imports: [
     CommonModule,
-    PipesModule,
+    UiComponentsPipesModule,
     ActionVariableInputModule,
     MatCheckboxModule,
     MatButtonModule,

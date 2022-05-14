@@ -2,10 +2,10 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ScreenPreviewSidebarComponent} from './screen-preview-sidebar.component';
 import {MatCardModule} from '@angular/material/card';
-import {ClipTypeModule} from '../../../../../../../projects/state-components/src/lib/clip-type/clip-type.module';
+import {ClipTypeModule} from '@memebox/state-components';
 import {MatRippleModule} from '@angular/material/core';
 import {MatListModule} from '@angular/material/list';
-import {PipesModule} from '../../../../../../../projects/ui-components/src/lib/pipes/pipes.module';
+import {UiComponentsPipesModule} from '@memebox/ui-components';
 
 
 @NgModule({
@@ -19,7 +19,7 @@ import {PipesModule} from '../../../../../../../projects/ui-components/src/lib/p
     ClipTypeModule,
     MatRippleModule,
     MatListModule,
-    PipesModule
+    UiComponentsPipesModule
   ]
 })
 export class ScreenPreviewSidebarModule {

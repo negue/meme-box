@@ -17,6 +17,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ObsFilterSelectionComponent} from './obs-filter-selection/obs-filter-selection.component';
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 
 // todo extract this module to its own internal library ^
 
@@ -39,7 +40,8 @@ import {ObsFilterSelectionComponent} from './obs-filter-selection/obs-filter-sel
     MatInputModule,
     MatAutocompleteModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    UiComponentsPipesModule
   ]
 })
 export class StepSettingDialogModule implements DialogContract<StepSettingDialogPayload> {

@@ -17,6 +17,10 @@ import {ActionPreviewLabelPipe, ActionPreviewVariablesTooltipPipe} from "./actio
 import {ActionCanPreviewPipe} from "./action-can-preview.pipe";
 import {MediaEnumToLabel} from "./media-enum-to-label.pipe";
 import {ActionHasTriggerableVariablesPipe} from "./action-has-triggerable-variables.pipe";
+import {ShowScreenSelectionPipe} from "./show-screen-selection.pipe";
+
+// TODO Split up pipes into their own modules
+// or wait until Angular 14 for module-spam
 
 const PIPES = [
   SafePipe,
@@ -28,7 +32,8 @@ const PIPES = [
   ShowOnlyLastCharactersPipe, FontColorContrastPipe,
   ActionPreviewLabelPipe, ActionCanPreviewPipe,
   ActionPreviewVariablesTooltipPipe,
-  MediaEnumToLabel, ActionHasTriggerableVariablesPipe
+  MediaEnumToLabel, ActionHasTriggerableVariablesPipe,
+  ShowScreenSelectionPipe
 ];
 
 @NgModule({
@@ -36,4 +41,4 @@ const PIPES = [
   declarations: PIPES,
   exports: [...PIPES],
 })
-export class PipesModule {}
+export class UiComponentsPipesModule {}
