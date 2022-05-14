@@ -220,6 +220,36 @@ export function actionDataToWidgetContent (action: Partial<Action>): DynamicIfra
   return dynamicContent;
 }
 
+export function getWidgetFromActionInfo(action: Partial<Action>,
+                                        actionMap: Dictionary<Action>,
+                                        variableOverrides: Dictionary<unknown>) {
+
+  let config: DynamicIframeContent;
+
+  if (action.fromTemplate) {
+    const widgetTemplate = actionMap[action.fromTemplate];
+
+    config = {
+      ...actionDataToWidgetContent(widgetTemplate),
+      variables: {
+        ...action.extended,
+        ...variableOverrides
+      }
+    };
+  } else {
+    const configFromWidgetContent = actionDataToWidgetContent(action);
+
+    config = {
+      ...configFromWidgetContent,
+      variables: {
+        ...configFromWidgetContent?.variables ?? {},
+        ...variableOverrides
+      }
+    };
+  }
+
+  return config;
+}
 
 export function applyDynamicIframeContentToClipData (
   iframeContent: DynamicIframeContent,

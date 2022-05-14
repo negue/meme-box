@@ -1,24 +1,24 @@
-import {Service, UseOpts} from "@tsed/di";
-import {VM} from "vm2";
-import {Action, ActionStateEnum, ActionType, TriggerAction} from "@memebox/contracts";
-import {NamedLogger} from "../../named-logger";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../../contracts";
-import {Persistence} from "../../../persistence";
-import {ActionQueueEventBus} from "../action-queue-event.bus";
-import {ActionActiveState} from "../action-active-state";
-import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
-import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
-import {ScriptContext} from "./script.context";
-import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
-import {MemeboxApiFactory} from "./apis/memebox.api";
-import {ObsConnection} from "../../obs-connection";
-import {ObsApi} from "./apis/obs.api";
-import {TwitchConnector} from "../../twitch/twitch.connector";
-import {TwitchApi} from "./apis/twitch.api";
-import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
-import {setGlobalVMScope} from "./global.context";
-import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
+import { Service, UseOpts } from "@tsed/di";
+import { VM } from "vm2";
+import { Action, ActionStateEnum, ActionType, TriggerAction } from "@memebox/contracts";
+import { NamedLogger } from "../../named-logger";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "../../contracts";
+import { Persistence } from "../../../persistence";
+import { ActionQueueEventBus } from "../action-queue-event.bus";
+import { ActionActiveState } from "../action-active-state";
+import { ActionActiveStateEventBus } from "../action-active-state-event.bus";
+import { ActionStore, ActionStoreAdapter } from "@memebox/shared-state";
+import { ScriptContext } from "./script.context";
+import { ActionPersistentStateHandler } from "../action-persistent-state.handler";
+import { MemeboxApiFactory } from "./apis/memebox.api";
+import { ObsConnection } from "../../obs-connection";
+import { ObsApi } from "./apis/obs.api";
+import { TwitchConnector } from "../../twitch/twitch.connector";
+import { TwitchApi } from "./apis/twitch.api";
+import { TwitchDataProvider } from "../../twitch/twitch.data-provider";
+import { setGlobalVMScope } from "./global.context";
+import { TwitchQueueEventBus } from "../../twitch/twitch-queue-event.bus";
 import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
 import {generateCodeByBlueprint} from "@memebox/logic-step-core";
 
@@ -41,17 +41,15 @@ export class ScriptHandler implements ActionStoreAdapter {
     eval: false
   });
 
-  constructor(
+  constructor (
     @UseOpts({name: 'ScriptHandler'}) public logger: NamedLogger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private actionTriggerEventBus: ActionQueueEventBus,
     private actionStateEventBus: ActionActiveStateEventBus,
     private actionActiveState: ActionActiveState,
-
     private actionStateHandler: ActionPersistentStateHandler,
     private memeboxApiFactory: MemeboxApiFactory,
-    private obsConnection : ObsConnection,
-
+    private obsConnection: ObsConnection,
     private twitchConnector: TwitchConnector,
     private twitchDataProvider: TwitchDataProvider,
     private twitchEventBus: TwitchQueueEventBus,
@@ -74,7 +72,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     this.refreshCompiledScriptsAndStartPermanents();
   }
 
-  public async getObsApi() : Promise<ObsApi> {
+  public async getObsApi (): Promise<ObsApi> {
     if (this.obsApi) {
       return this.obsApi;
     }
@@ -88,13 +86,13 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // region ActionStoreAdapter
 
-  public getCurrentData(mediaId: string): Promise<ActionStore> {
+  public getCurrentData (mediaId: string): Promise<ActionStore> {
     return this.actionStateHandler
       .getActionFileHandler(mediaId)
       .loadFile({})
   }
 
-  public updateData(mediaId: string, instanceId: string, newData: ActionStore): void  {
+  public updateData (mediaId: string, instanceId: string, newData: ActionStore): void  {
     return this.actionStateHandler
       .getActionFileHandler(mediaId)
       .update(newData);
@@ -117,7 +115,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     return this.handleGenericScript(script, scriptConfig, payloadObs);
   }
 
-  public handleScript(script: Action, payloadObs: TriggerAction) {
+  public handleScript (script: Action, payloadObs: TriggerAction) {
     this.logger.info('Handle Script!!');
 
     const scriptConfig = actionDataToScriptConfig(script);
@@ -168,12 +166,15 @@ export class ScriptHandler implements ActionStoreAdapter {
 
     try {
       await scriptHoldingData.execute(payloadObs);
-    }
-    catch(err) {
+    } catch (err) {
       this.logger.error(err, `Failed to run script for "${script.name}" [${script.id}]`);
     }
 
-    this.logger.info(`Script "${script.name}" is done.`);
+    const scriptRunningType = script.type === ActionType.PermanentScript
+      ? 'is running'
+      : 'is done';
+
+    this.logger.info(`Script "${script.name}" ${scriptRunningType}.`);
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
@@ -182,24 +183,41 @@ export class ScriptHandler implements ActionStoreAdapter {
     });
   }
 
-  private async refreshCompiledScriptsAndStartPermanents(changedScriptId?: string) {
-    // todo only reset the script by id
-
-    // go through all scripts and dispose the APIs/subscriptions
-    if (this._compiledScripts) {
-      for (const scriptContext of this._compiledScripts.values()) {
-        scriptContext.dispose();
+  private async refreshCompiledScriptsAndStartPermanents (
+    scriptIdToReset?: string
+  ) {
+    if (scriptIdToReset && this._compiledScripts.has(scriptIdToReset)) {
+      this.disposeScript(scriptIdToReset);
+    } else {
+      for (const scriptContext of this._compiledScripts.keys()) {
+        this.disposeScript(scriptContext);
       }
-    }
 
-    this._compiledScripts = new Map<string, ScriptContext>();
+      this._compiledScripts.clear();
+    }
 
     // start each permanent script after another
     for (const action of this._persistence.listActions()) {
-      if (action.type === ActionType.PermanentScript && action.isActive) {
+      if (
+        (!scriptIdToReset || action.id === scriptIdToReset)
+        && action.type === ActionType.PermanentScript
+      && action.isActive) {
         await this.handleScript(action, null);
       }
     }
   }
-}
 
+  private disposeScript (scriptId: string): void {
+    const cachedCompiledScript = this._compiledScripts.get(scriptId);
+
+    cachedCompiledScript.dispose();
+
+    if (cachedCompiledScript.script.type === ActionType.PermanentScript) {
+      this.logger.info(`Script: "${cachedCompiledScript.script.name}" stopped.`);
+    } else {
+      this.logger.info(`Script Cache: "${cachedCompiledScript.script.name}" cleared.`);
+    }
+
+    this._compiledScripts.delete(scriptId);
+  }
+}

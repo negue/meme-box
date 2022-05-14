@@ -231,14 +231,6 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
       } )
     }
 
-    if (value.type === ActionType.Widget){
-      this.mediaList$.pipe(
-        take(1)
-      ).subscribe(map => {
-        // custom css for custom html?!
-      } )
-    }
-
     this.mediaClipControlAdded$.next(value.id);
   }
 
@@ -392,7 +384,7 @@ export class TargetScreenComponent implements OnInit, OnDestroy {
 export function mergeCombinedClipWithOverrides (
   sourceCombinedClip: CombinedActionContext,
   triggerPayload: TriggerAction
-) {
+): CombinedActionContext {
   let clipSetting = Object.assign({}, sourceCombinedClip.originalClipSetting);
 
   if (triggerPayload.useOverridesAsBase) {
@@ -407,7 +399,7 @@ export function mergeCombinedClipWithOverrides (
 
   return {
     ...sourceCombinedClip,
-    clipSetting,
+    screenMediaConfig: clipSetting,
     triggerPayload
   };
 }

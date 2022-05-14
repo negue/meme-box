@@ -11,13 +11,20 @@ import {
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import {Action, ActionType, CombinedActionContext, Dictionary, PositionEnum, VisibilityEnum} from "@memebox/contracts";
-import {BehaviorSubject, combineLatest, Subject} from "rxjs";
-import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
-import {delay, skip, take, takeUntil} from "rxjs/operators";
-import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
-import {AppQueries, MemeboxWebsocketService} from "@memebox/app-state";
-import {actionDataToWidgetContent, DynamicIframeContent} from "@memebox/utils";
+import {
+  Action,
+  ActionType,
+  CombinedActionContext,
+  Dictionary,
+  PositionEnum,
+  VisibilityEnum
+} from "@memebox/contracts";
+import { BehaviorSubject, combineLatest, Subject } from "rxjs";
+import { mergeCombinedClipWithOverrides, TargetScreenComponent } from "./target-screen.component";
+import { delay, map, skip, take, takeUntil } from "rxjs/operators";
+import { DynamicIframeComponent } from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
+import { AppQueries, MemeboxWebsocketService } from "@memebox/app-state";
+import { getWidgetFromActionInfo } from "@memebox/utils";
 
 export enum MediaState {
   HIDDEN,
@@ -59,7 +66,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   private currentActionContext: CombinedActionContext;
   private _destroy$ = new Subject();
   private clipVisibility: VisibilityEnum;
-  private clipMap: Dictionary<Action>;
+  private actionMap: Dictionary<Action>;
 
   constructor(private element: ElementRef<HTMLElement>,
               private parentComp: TargetScreenComponent,
@@ -69,22 +76,19 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     this.appQueries.actionMap$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(value => {
-      this.clipMap = value;
+      this.actionMap = value;
     })
   }
 
   @HostListener('animationend', ['$event'])
   onAnimationEnd(event: any) {
-    console.info(this.clipId, this.currentState, 'animationend', event);
     if (this.currentState === MediaState.ANIMATE_IN) {
-      console.warn('Change to Visible');
       this.triggerState(MediaState.VISIBLE);
 
       return;
     }
 
     if (this.currentState === MediaState.ANIMATE_OUT) {
-      console.warn('Change to Hidden');
       this.triggerState(MediaState.HIDDEN);
 
       return;
@@ -98,14 +102,6 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   stopIfStillPlaying() {
-    console.info('stopifPlaying', {
-      animationOut: this.currentActionContext.screenMediaConfig.animationOut,
-      state: this.currentState,
-      clipVisibility: this.clipVisibility,
-      currentState: this.currentState
-    });
-
-
     if (this.currentState === MediaState.VISIBLE
       && this.clipVisibility === VisibilityEnum.Play) {
 
@@ -126,12 +122,39 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
       this.clipId$,
       this.parentComp.mediaList$
     ]).pipe(
-      takeUntil(this._destroy$)
-    ).subscribe(([newClipId, mediaClipList]) => {
-      const combinedClip = mediaClipList.find(combined => combined.action.id
+      map(([newClipId, actionList]) => {
+        const combinedActionContext = actionList.find(combined => combined.action.id
        === newClipId);
 
-      this.currentActionContext = combinedClip;
+        return {
+          combinedActionContext,
+          newJsonToCompare: JSON.stringify({
+            action: combinedActionContext.action,
+            // backgroundColor: combinedActionContext.backgroundColor,
+            screenMediaConfig: combinedActionContext.screenMediaConfig
+          } as CombinedActionContext)
+        };
+      }),
+      takeUntil(this._destroy$)
+    ).subscribe(({
+      combinedActionContext,
+      newJsonToCompare
+    }) => {
+      const objToCompare: CombinedActionContext = {
+        action: this.currentActionContext?.action,
+        // backgroundColor: this.currentActionContext?.backgroundColor,
+        screenMediaConfig: this.currentActionContext?.screenMediaConfig,
+        originalClipSetting: undefined
+      };
+
+      const currentActionContextJson = JSON.stringify(objToCompare);
+
+      if (currentActionContextJson === newJsonToCompare) {
+        // nothing changed, ignore this
+        return;
+      }
+
+      this.currentActionContext = combinedActionContext;
 
       this.updateNeededVariables();
       this.applyPositions();
@@ -577,36 +600,20 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   }
 
   private applyWidgetContent() {
+    if (!this.currentActionContext) {
+      return;
+    }
 
     const variableOverrides = this.currentActionContext.triggerPayload?.overrides?.action?.variables ?? {};
 
-    const media = this.currentActionContext.action;
+    const config = getWidgetFromActionInfo(
+      this.currentActionContext.action,
+      this.actionMap, variableOverrides
+    );
 
-    let config: DynamicIframeContent;
-
-    if (media.fromTemplate) {
-      const widgetTemplate = this.clipMap[media.fromTemplate];
-
-      config = {
-        ...actionDataToWidgetContent(widgetTemplate),
-        variables: {
-          ...media.extended,
-          ...variableOverrides
-        }
-      };
-    } else {
-      const configFromWidgetContent = actionDataToWidgetContent(media);
-
-      config = {
-        ...configFromWidgetContent,
-        variables: {
-          ...configFromWidgetContent.variables,
-          ...variableOverrides
-        }
-      };
-    }
-
-    const control = this.parentComp.clipToControlMap.get(this.currentActionContext.action.id);
+    const control = this.parentComp.clipToControlMap.get(
+      this.currentActionContext.action.id
+    );
 
     if (control instanceof DynamicIframeComponent) {
       control.content = config;

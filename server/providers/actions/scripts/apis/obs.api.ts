@@ -1,9 +1,8 @@
-import {ObsConnection} from "../../../obs-connection";
+import { ObsConnection, onWsEvent$ } from "../../../obs-connection";
 import type OBSWebSocket from "obs-websocket-js";
-import {DisposableBase} from "./disposableBase";
-import {fromEventPattern} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {ObsBrowserSourceData} from "@memebox/contracts";
+import { DisposableBase } from "./disposableBase";
+import { takeUntil } from "rxjs/operators";
+import { ObsBrowserSourceData } from "@memebox/contracts";
 
 export class ObsFilterApi {
   constructor(
@@ -70,11 +69,7 @@ export class ObsApi extends DisposableBase {
 
   // todo add types once OBSWebsocketJS is built completely on types
   public onEvent$(type: string) {
-    return fromEventPattern(
-      // @ts-expect-error because the .raw.on needs a specific union type
-      handler => this.raw.on(type, handler),
-      handler => this.raw.off(type, handler)
-    ).pipe(
+    return onWsEvent$(this.raw, type).pipe(
       takeUntil(this._destroy$)
     )
   }
