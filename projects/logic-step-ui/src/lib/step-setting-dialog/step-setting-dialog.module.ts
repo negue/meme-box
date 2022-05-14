@@ -5,7 +5,7 @@ import {DialogContract} from "../../../../../src/app/shared/dialogs/dialog.contr
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {MatButtonModule} from "@angular/material/button";
-import {ActionPreviewModule} from "@memebox/state-components";
+import {ActionPreviewModule, StateBasedPipesModule} from "@memebox/state-components";
 import {ActionVariableInputModule, ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {ActionVariableConfigPipe} from './action-variable-config.pipe';
 import {
@@ -18,6 +18,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ObsFilterSelectionComponent} from './obs-filter-selection/obs-filter-selection.component';
 import {UiComponentsPipesModule} from "@memebox/ui-components";
+import {MatSelectModule} from "@angular/material/select";
 
 // todo extract this module to its own internal library ^
 
@@ -41,7 +42,9 @@ import {UiComponentsPipesModule} from "@memebox/ui-components";
     MatAutocompleteModule,
     FormsModule,
     ReactiveFormsModule,
-    UiComponentsPipesModule
+    UiComponentsPipesModule,
+    StateBasedPipesModule,
+    MatSelectModule
   ]
 })
 export class StepSettingDialogModule implements DialogContract<StepSettingDialogPayload> {

@@ -143,13 +143,6 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
   );
 
-  screenList$ = combineLatest([
-    this.selectedAction$,
-    this.appQuery.screensList$
-  ]).pipe(
-    map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
-  );
-
   showWarningClipSelection = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   aliasesFrmControl = new FormControl();

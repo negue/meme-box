@@ -8,7 +8,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {ActionPreviewModule} from "@memebox/state-components";
+import {ActionPreviewModule, StateBasedPipesModule} from "@memebox/state-components";
 import {TwitchEditComponent} from "./twitch-edit.component";
 import {MatSelectModule} from "@angular/material/select";
 import {MatCheckboxModule} from "@angular/material/checkbox";
@@ -43,7 +43,8 @@ import {TRANSLOCO_TWITCH_SCOPE} from "../../../transloco/transloco.scopes";
     OpenFeedbackButtonModule,
     MatChipsModule,
     MatIconModule,
-    TranslocoModule
+    TranslocoModule,
+    StateBasedPipesModule
   ],
   providers: [
     TRANSLOCO_TWITCH_SCOPE

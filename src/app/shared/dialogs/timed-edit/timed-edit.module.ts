@@ -9,7 +9,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {ActionPreviewModule} from "@memebox/state-components";
+import {ActionPreviewModule, StateBasedPipesModule} from "@memebox/state-components";
 import {UiComponentsPipesModule} from "@memebox/ui-components";
 import {MatSelectModule} from "@angular/material/select";
 import {
@@ -34,7 +34,8 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
     MatSelectModule,
     OpenActionSettingsButtonModule,
     ActionVariablesAssignmentsModule,
-    OpenFeedbackButtonModule
+    OpenFeedbackButtonModule,
+    StateBasedPipesModule
   ],
   providers: [],
 })

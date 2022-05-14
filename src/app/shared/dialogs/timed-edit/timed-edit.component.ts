@@ -43,12 +43,6 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     filter(selectedAction => !!selectedAction)
   );
 
-  screenList$ = combineLatest([
-    this.selectedAction$,
-    this.appQuery.screensList$
-  ]).pipe(
-    map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
-  );
 
 
   private _destroy$ = new Subject();
