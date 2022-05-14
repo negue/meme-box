@@ -8,6 +8,25 @@ import {map, take} from "rxjs/operators";
 import {generateRandomCharacters} from "./utils";
 import {combineLatest} from "rxjs";
 
+function createMemeboxApiVariable(
+  actionPayload: BlueprintStepConfigActionPayload
+) {
+  const actionId = actionPayload.actionId;
+  const screenId = actionPayload.screenId;
+
+  const methodArguments = [`'${actionId}'`];
+
+  if (screenId) {
+    methodArguments.push(`'${screenId}'`)
+  }
+
+  const actionApiVariable = methodArguments.length > 1 || actionPayload.overrides?.screenMedia
+    ? `memebox.getMedia(${methodArguments.join(',')})`
+    : `memebox.getAction('${actionId}')`;
+
+  return actionApiVariable;
+}
+
 export function registerMemeboxSteps (
   registry: BlueprintRegistry,
   generateCodeByStep: generateCodeByStep
@@ -25,11 +44,10 @@ export function registerMemeboxSteps (
     toScriptCode: (step) => {
       const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
 
-      const actionId = actionPayload.actionId;
       const actionOverrides = actionPayload.overrides;
 
-      return `memebox.getAction('${actionId}')
-                    .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
+      return `${createMemeboxApiVariable(actionPayload)}
+              .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
     },
     stepEntryLabelAsync: (queries, payload) => {
       const actionPayload = payload.action as BlueprintStepConfigActionPayload;
@@ -65,18 +83,9 @@ export function registerMemeboxSteps (
     toScriptCode: (step, context) => {
       const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
 
-      const actionId = actionPayload.actionId;
-      const screenId = actionPayload.screenId;
-
       const actionOverrides = actionPayload.overrides;
 
-      const methodArguments = [`'${actionId}'`];
-
-      if (screenId) {
-        methodArguments.push(`'${screenId}'`)
-      }
-
-      return `memebox.getMedia(${methodArguments.join(',')})
+      return `${createMemeboxApiVariable(actionPayload)}
                      .triggerWhile(async (helpers_${step.payload._suffix}) => {
                         ${generateCodeByStep(step, context)}
                       }
@@ -178,13 +187,7 @@ export function registerMemeboxSteps (
       const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
       const overrides = actionPayload.overrides;
 
-      const actionId = actionPayload.actionId;
-
       const awaitCode = step.awaited ? 'await ': '';
-
-      const actionApiVariable = overrides.screenMedia
-        ? `memebox.getMedia('${actionId}')`
-        : `memebox.getAction('${actionId}')`;
 
       const updateVariables = overrides.action?.variables
         ? `promisesArray.push(action.updateVariables(${JSON.stringify(overrides.action)}));`
@@ -194,15 +197,9 @@ export function registerMemeboxSteps (
         ? `promisesArray.push(action.updateScreenOptions(${JSON.stringify(overrides.screenMedia)}));`
         : '';
 
-      console.info({
-        actionApiVariable,
-        updateVariables,
-        updateMediaProps
-      });
-
       return `
 ${awaitCode} (() => {
-        const action = ${actionApiVariable};
+        const action = ${createMemeboxApiVariable(actionPayload)};
 
         const promisesArray = [];
 
