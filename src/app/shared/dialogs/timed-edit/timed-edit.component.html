@@ -74,7 +74,7 @@
         </ng-container>
       </ng-container>
 
-      <div class="example-container" *ngIf="showScreenSelection$ | async">
+      <div class="example-container" *ngIf="selectedAction$ | async | showScreenSelection">
         <mat-form-field appearance="fill">
           <mat-label>Target Screen</mat-label>
           <mat-select formControlName="screenId">

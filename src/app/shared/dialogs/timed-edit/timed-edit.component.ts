@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Action, ActionType, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
+import {Action, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {filter, map} from "rxjs/operators";
@@ -41,10 +41,6 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     filter(([actionMap, selectedActionId]) => !!actionMap && !!selectedActionId),
     map(([actionMap, selectedActionId]) => actionMap[selectedActionId]),
     filter(selectedAction => !!selectedAction)
-  );
-
-  showScreenSelection$ = this.selectedAction$.pipe(
-    map(action => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(action.type) )
   );
 
   screenList$ = combineLatest([

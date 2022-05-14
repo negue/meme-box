@@ -10,9 +10,11 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {ActionPreviewModule} from "@memebox/state-components";
-import {PipesModule} from "@memebox/ui-components";
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 import {MatSelectModule} from "@angular/material/select";
-import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
+import {
+  OpenActionSettingsButtonModule
+} from "../../components/open-action-settings-button/open-action-settings-button.module";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
@@ -28,7 +30,7 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
     MatInputModule,
     MatButtonModule,
     ActionPreviewModule,
-    PipesModule,
+    UiComponentsPipesModule,
     MatSelectModule,
     OpenActionSettingsButtonModule,
     ActionVariablesAssignmentsModule,

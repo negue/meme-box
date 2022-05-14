@@ -4,7 +4,6 @@ import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
   Action,
-  ActionType,
   ClipAssigningMode,
   Dictionary,
   TwitchEventFields,
@@ -142,11 +141,6 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   ]).pipe(
     filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
     map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
-  );
-
-  showScreenSelection$ = this.selectedAction$.pipe(
-    filter(action => !!action),
-    map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
   );
 
   screenList$ = combineLatest([
