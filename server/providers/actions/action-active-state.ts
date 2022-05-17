@@ -74,6 +74,21 @@ export class ActionActiveState {
     return isActionCurrently(this.getState(), activeState, actionId, screenId)
   }
 
+  public waitUntilActiveAsync(actionId: string, screenId?: string): Promise<void> {
+    if (this.isCurrently(ActionStateEnum.Active, actionId, screenId)) {
+      return Promise.resolve();
+    }
+
+    return this._state$
+      .pipe(
+        filter(( state) => {
+          return isActionCurrently(state, ActionStateEnum.Active, actionId, screenId ?? actionId);
+        }),
+        map(_ => {}),
+        take(1)
+      ).toPromise();
+  }
+
   public waitUntilDoneAsync(actionId: string, screenId?: string): Promise<void> {
     if (!this.isCurrently(ActionStateEnum.Active, actionId, screenId)
     && !this.isCurrently(ActionStateEnum.Triggered, actionId, screenId)) {
