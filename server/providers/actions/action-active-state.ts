@@ -28,6 +28,8 @@ type ActionActiveStateEvents = ActionActivityEvent|ScreenIsHiddenEvent;
 export class ActionActiveState {
   // actionId   -> actionId/screenId --> visible state
   private _state$ = new BehaviorSubject<ActionStateEntries>({});
+
+  // TODO refactor publish these to the WS, so that the client can use those
   private _events$ = new Subject<ActionActiveStateEvents>();
 
   constructor(
@@ -62,23 +64,28 @@ export class ActionActiveState {
     return Object.freeze(cloneDeep(this._state$.value));
   }
 
+  public getActiveStateEntry(actionId: string, screenId?: string) {
+    const state = this.getState();
+
+    return state[actionId]?.[screenId];
+  }
+
   public isCurrently (activeState: ActionStateEnum, actionId: string, screenId?: string) {
     return isActionCurrently(this.getState(), activeState, actionId, screenId)
   }
 
-  public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {
-    if (!this.isCurrently(ActionStateEnum.Active, mediaId, screenId)
-    && !this.isCurrently(ActionStateEnum.Triggered, mediaId, screenId)) {
-
+  public waitUntilDoneAsync(actionId: string, screenId?: string): Promise<void> {
+    if (!this.isCurrently(ActionStateEnum.Active, actionId, screenId)
+    && !this.isCurrently(ActionStateEnum.Triggered, actionId, screenId)) {
       return Promise.resolve();
     }
 
     return this._state$
     .pipe(
       filter(( state) => {
-        const mediaObject = state[mediaId];
+        const done = isActionCurrently(state, ActionStateEnum.Done, actionId, screenId ?? actionId);
 
-        return mediaObject[screenId ?? mediaId] === ActionStateEnum.Done;
+        return done;
       }),
       map(_ => {}),
       take(1)
