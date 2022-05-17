@@ -2,6 +2,20 @@ import {ActionActiveStatePayload, ActionStateEnum} from "@memebox/contracts";
 
 export type ActionStateEntries = Record<string, Record<string, ActionStateEnum>>;
 
+export function resetActivityForScreenId (
+  state: ActionStateEntries,
+  screenId: string
+): void {
+  for (const actionId of Object.keys(state)) {
+    for (const stateScreenId of Object.keys(state[actionId])) {
+      if (stateScreenId === screenId) {
+        state[actionId][screenId] = ActionStateEnum.Unset;
+        break;
+      }
+    }
+  }
+}
+
 export function updateActivityInState (
   state: ActionStateEntries,
   update: ActionActiveStatePayload
