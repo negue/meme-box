@@ -6,18 +6,12 @@ import {
   BlueprintStepConfigActionPayload,
   BlueprintStepConfigArgument
 } from "@memebox/logic-step-core";
-import {
-  Action,
-  ActionType,
-  ClipAssigningMode,
-  Dictionary,
-  TriggerActionOverrides,
-  UnassignedFilterEnum
-} from "@memebox/contracts";
+import {Action, ClipAssigningMode, Dictionary, TriggerActionOverrides, UnassignedFilterEnum} from "@memebox/contracts";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {Observable} from "rxjs";
 import {AppQueries} from "@memebox/app-state";
 import cloneDeep from "lodash/cloneDeep";
+import {isVisibleMedia} from "@memebox/shared-state";
 
 export interface StepSettingDialogPayload {
   configArguments: BlueprintStepConfigArgument[];
@@ -122,7 +116,7 @@ export class StepSettingDialogComponent {
       return false;
     }
 
-    return [ActionType.IFrame, ActionType.Widget, ActionType.Picture, ActionType.Video].includes(action.type);
+    return isVisibleMedia(action.type);
   }
 
 
