@@ -1,56 +1,108 @@
 import {Service} from "@tsed/di";
 import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
-import {filter, map, take} from "rxjs/operators";
-import {ActionStateEnum} from "@memebox/contracts";
-import {ActionStateEntries, isActionCurrently, updateActivityInState} from "@memebox/shared-state";
+import {filter, map, take, withLatestFrom} from "rxjs/operators";
+import {ActionActiveStatePayload, ActionStateEnum} from "@memebox/contracts";
+import {
+  ActionStateEntries,
+  isActionCurrently,
+  resetActivityForScreenId,
+  updateActivityInState
+} from "@memebox/shared-state";
+import {ScreenActiveStateEventBus} from "../screens/screen-active-state-event.bus";
+import {BehaviorSubject, Subject} from "rxjs";
+import cloneDeep from "lodash/cloneDeep"
+
+interface ActionActivityEvent {
+  type: 'action-activity';
+  payload: ActionActiveStatePayload;
+}
+
+interface ScreenIsHiddenEvent {
+  type: 'screen-is-hidden';
+  screenId: string;
+}
+
+type ActionActiveStateEvents = ActionActivityEvent|ScreenIsHiddenEvent;
 
 @Service()
 export class ActionActiveState {
   // actionId   -> actionId/screenId --> visible state
-  private state: ActionStateEntries = {};
+  private _state$ = new BehaviorSubject<ActionStateEntries>({});
+
+  // TODO refactor publish these to the WS, so that the client can use those
+  private _events$ = new Subject<ActionActiveStateEvents>();
 
   constructor(
-    private mediaStateEventBus: ActionActiveStateEventBus
+    private mediaStateEventBus: ActionActiveStateEventBus,
+    private screenStateEventBus: ScreenActiveStateEventBus
   ) {
-    mediaStateEventBus.AllEvents$.subscribe(
-      value => {
-        updateActivityInState(this.state, value)
-      }
-    )
+    this._events$
+      .pipe(
+        withLatestFrom(this._state$)
+      )
+      .subscribe(([event, currentState]) => {
+        switch (event.type) {
+          case 'action-activity': {
+            updateActivityInState(currentState, event.payload)
+
+            break;
+          }
+          case 'screen-is-hidden': {
+            resetActivityForScreenId(currentState, event.screenId);
+
+            break;
+          }
+        }
+
+        this._state$.next(currentState);
+      });
+
+    this.subscribeForActions();
   }
 
-  // todo real readonly
   public getState (): Readonly<ActionStateEntries> {
-    return {
-      ...this.state
-    }
+    return Object.freeze(cloneDeep(this._state$.value));
+  }
+
+  public getActiveStateEntry(actionId: string, screenId?: string) {
+    const state = this.getState();
+
+    return state[actionId]?.[screenId];
   }
 
   public isCurrently (activeState: ActionStateEnum, actionId: string, screenId?: string) {
-    return isActionCurrently(this.state, activeState, actionId, screenId)
+    return isActionCurrently(this.getState(), activeState, actionId, screenId)
   }
 
-  public waitUntilDoneAsync(mediaId: string, screenId?: string): Promise<void> {
-    if (!this.isCurrently(ActionStateEnum.Active, mediaId, screenId)
-    && !this.isCurrently(ActionStateEnum.Triggered, mediaId, screenId)) {
-
+  public waitUntilActiveAsync(actionId: string, screenId?: string): Promise<void> {
+    if (this.isCurrently(ActionStateEnum.Active, actionId, screenId)) {
       return Promise.resolve();
     }
 
-    // first try
-    return this.mediaStateEventBus.AllEvents$.pipe(
-      filter(e => {
-        if (e.mediaId !== mediaId) {
-          return false;
-        }
+    return this._state$
+      .pipe(
+        filter(( state) => {
+          return isActionCurrently(state, ActionStateEnum.Active, actionId, screenId ?? actionId);
+        }),
+        map(_ => {}),
+        take(1)
+      ).toPromise();
+  }
 
-        if (screenId && screenId !== e.screenId) {
-          return false;
-        }
+  public waitUntilDoneAsync(actionId: string, screenId?: string): Promise<void> {
+    if (!this.isCurrently(ActionStateEnum.Active, actionId, screenId)
+    && !this.isCurrently(ActionStateEnum.Triggered, actionId, screenId)) {
+      return Promise.resolve();
+    }
 
-        return e.state === ActionStateEnum.Done;
+    return this._state$
+    .pipe(
+      filter(( state) => {
+        const done = isActionCurrently(state, ActionStateEnum.Done, actionId, screenId ?? actionId);
+
+        return done;
       }),
-      map(value => {}),
+      map(_ => {}),
       take(1)
     ).toPromise();
 
@@ -61,5 +113,27 @@ export class ActionActiveState {
      - [ ] wait until of them are done
      - [ ] a specific one is done
      */
+  }
+
+  private subscribeForActions() {
+    this.mediaStateEventBus.AllEvents$
+      .subscribe((event) => {
+        this._events$.next({
+          type: 'action-activity',
+          payload: event
+        });
+      });
+
+    this.screenStateEventBus.AllEvents$
+      .subscribe(event => {
+        for (const [screenId, isVisible] of Object.entries(event)) {
+          if (!isVisible) {
+            this._events$.next({
+              type: 'screen-is-hidden',
+              screenId: screenId
+            });
+          }
+        }
+      })
   }
 }
