@@ -34,7 +34,12 @@ export class BlueprintContextDirective
 
   @Output()
   public readonly state$: Observable<BlueprintContext> =
-    this._select(store => ({...store}))
+    this._select(store => ({...store}));
+
+
+  @Output()
+  public readonly stateUpdated$: Observable<BlueprintContext> =
+    this.state$
       .pipe(
         skip(1),
         filterNil

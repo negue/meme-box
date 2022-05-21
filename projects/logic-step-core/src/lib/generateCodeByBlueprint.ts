@@ -114,6 +114,7 @@ export function generateStepEntry (
     id: uuid(),
     stepType,
     payload,
+    awaited: true,
     entryType: "step",
     subSteps: [],
   };

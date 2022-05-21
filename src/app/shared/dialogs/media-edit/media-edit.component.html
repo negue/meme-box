@@ -269,7 +269,7 @@ value="media">Media</mat-button-toggle>
         <ng-container *ngIf="form.value.type === ActionType.Blueprint">
           <app-blueprint-entry blueprintContext
                                [blueprint]="actionToEdit.blueprint"
-                               (state$)="actionToEdit.blueprint = $event"
+                               (stateUpdated$)="actionToEdit.blueprint = $event"
                                [asBlock]="true" [isRoot]="true"
                                [editMode]="true">
           </app-blueprint-entry>
