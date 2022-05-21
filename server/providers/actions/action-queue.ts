@@ -5,6 +5,7 @@ import {ActionStateEnum, TriggerAction, VisibilityEnum} from "@memebox/contracts
 import {Subject} from "rxjs";
 import {concatMap, filter, take} from "rxjs/operators";
 import {ActionActiveState} from "./action-active-state";
+import {isVisibleMedia} from "@memebox/shared-state";
 
 export class ActionQueue {
   private _queueSubjectsDictionary: Record<string, Subject<TriggerAction>> = {};
@@ -24,18 +25,19 @@ export class ActionQueue {
     const actionConfig = fullState.clips[triggerAction.id];
 
     if (actionConfig.queueName) {
-      const currentState = this.actionState.getActiveStateEntry(triggerAction.id, triggerAction.targetScreen);
-      const mediaInScreenConfig = fullState.screen[triggerAction.targetScreen]?.clips[triggerAction.id];
+      if (isVisibleMedia(actionConfig.type)) {
+        const currentState = this.actionState.getActiveStateEntry(triggerAction.id, triggerAction.targetScreen);
+        const mediaInScreenConfig = fullState.screen[triggerAction.targetScreen]?.clips[triggerAction.id];
 
-      const visibilityOfOverrides =currentState?.currentOverrides?.screenMedia?.visibility;
-      const visibilityOfMedia =mediaInScreenConfig.visibility;
+        const visibilityOfOverrides =currentState?.currentOverrides?.screenMedia?.visibility;
+        const visibilityOfMedia = mediaInScreenConfig?.visibility;
 
-      const currentVisibilityConfig = visibilityOfOverrides
-        ?? visibilityOfMedia;
+        const currentVisibilityConfig = visibilityOfOverrides ?? visibilityOfMedia;
 
-      if (currentState?.state === ActionStateEnum.Active && currentVisibilityConfig === VisibilityEnum.Toggle) {
-        await this.executeTriggerWithoutQueueAndWait(triggerAction);
-        return;
+        if (currentState?.state === ActionStateEnum.Active && currentVisibilityConfig === VisibilityEnum.Toggle) {
+          await this.executeTriggerWithoutQueueAndWait(triggerAction);
+          return;
+        }
       }
 
       const subject = this.createOrGetQueueSubject(actionConfig.queueName);
