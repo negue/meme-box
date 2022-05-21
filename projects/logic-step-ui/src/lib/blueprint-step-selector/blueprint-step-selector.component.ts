@@ -1,11 +1,36 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {BlueprintContext, BlueprintEntry, BlueprintStepInfo, BlueprintSubStepInfo} from "@memebox/logic-step-core";
+import {
+  BlueprintCommandBlockGroups,
+  BlueprintContext,
+  BlueprintEntry,
+  BlueprintStepDefinition,
+  BlueprintStepSelectionGroup,
+  BlueprintSubStepInfo
+} from "@memebox/logic-step-core";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {MatListOption} from "@angular/material/list";
-import {SelectionModel} from "@angular/cdk/collections";
 import {AppQueries} from "@memebox/app-state";
 import {BlueprintStepCreatorService} from "../blueprint-step-creator.service";
+import groupBy from 'lodash/groupBy';
+import orderBy from 'lodash/orderBy';
+
+interface BlueprintCommandBlockGroup extends BlueprintStepSelectionGroup {
+  blocks: BlueprintStepDefinition[];
+}
+
+function groupByCommandBlocksType(
+  allBlocks: BlueprintStepDefinition[]
+) : BlueprintCommandBlockGroup[] {
+  const groupedByArray  = Object.entries(groupBy(allBlocks, 'stepGroup'));
+
+  return orderBy( groupedByArray
+    .map(([groupName, blocks]) => {
+      return {
+        ...BlueprintCommandBlockGroups[groupName],
+        blocks
+      } as BlueprintCommandBlockGroup;
+  }), ['order']);
+}
 
 @Component({
   selector: 'app-blueprint-step-selector',
@@ -13,7 +38,7 @@ import {BlueprintStepCreatorService} from "../blueprint-step-creator.service";
   styleUrls: ['./blueprint-step-selector.component.scss']
 })
 export class BlueprintStepSelectorComponent implements OnInit {
-  public possibleSteps: BlueprintStepInfo[] = [];
+  public possibleCommandBlocks: BlueprintCommandBlockGroup[] = [];
 
   constructor(
     private dialogService: DialogService,
@@ -28,18 +53,18 @@ export class BlueprintStepSelectorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.possibleSteps = this.stepCreator.getPossibleSteps(this.data.entry, this.data.context);
+    this.possibleCommandBlocks =
+      groupByCommandBlocksType(
+        this.stepCreator.getPossibleSteps(this.data.entry, this.data.context)
+      );
   }
 
-  async save (selectedOptions: SelectionModel<MatListOption>) {
+  async selectCommandBlock(step: BlueprintStepDefinition) {
+    if (!step.stepType) {
+      return;
+    }
 
-    const selected: BlueprintStepInfo = selectedOptions.selected.map(s => s.value)[0];
-
-    await this.saveByStep(selected);
-  }
-
-  async saveByStep (step: BlueprintStepInfo) {
-    const createdStep = await this.stepCreator.generateStepData(this.data.entry, step);
+    const createdStep = await this.stepCreator.generateStepData(this.data.entry, step.stepType);
 
     if (createdStep) {
        this.dialogRef.close(createdStep);

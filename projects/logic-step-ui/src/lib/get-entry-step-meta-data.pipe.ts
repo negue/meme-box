@@ -19,7 +19,7 @@ export class GetEntryStepMetaDataPipe implements PipeTransform {
 
     const blueprintRegistryEntry = BlueprintStepRegistry[value.stepType];
 
-    const entryLabel = await blueprintRegistryEntry.stepEntryLabelAsync(this.appQueries, value.payload, null);
+    const entryLabel = await blueprintRegistryEntry.stepEntryLabelAsync(this.appQueries, value.payload, parentEntry);
 
     return {
       stepType: value.stepType,

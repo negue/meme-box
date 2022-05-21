@@ -60,7 +60,7 @@ export function registerMemeboxSteps (
   };
 
   registry["triggerActionWhile"] = {
-    pickerLabel: "Trigger Action and keep it visible while doing other steps",
+    pickerLabel: "Trigger Action and keep it visible while doing other Command Block",
     stepGroup: "memebox",
     configArguments: [
       {
@@ -76,7 +76,7 @@ export function registerMemeboxSteps (
       };
 
       step.subSteps.push( {
-        label: "Execute Actions",
+        label: "Keep Media Visible while: ",
         entries: []
       });
     },

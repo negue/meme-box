@@ -1,13 +1,27 @@
-<h2 mat-dialog-title>Select a Step</h2>
+<h2 mat-dialog-title>Select a Command Block to add</h2>
 <mat-dialog-content class="mat-typography">
 
-  <mat-selection-list #selectionList [multiple]="false">
-  <mat-list-option *ngFor="let step of possibleSteps"
-                   [value]="step" (click)="saveByStep(step)">
-    {{step.label}}
-  </mat-list-option>
-</mat-selection-list>
+  <div *ngFor="let groupInfo of possibleCommandBlocks">
+    <h3>{{groupInfo.label}}</h3>
 
+    <div class="two-columns wrap">
+      <div class="column-50 flex"
+           *ngFor="let block of groupInfo.blocks"
+      >
+        <button class="flex-inline"  (click)="selectCommandBlock(block)"
+                mat-icon-button color="primary">
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
+
+        <div class="column">
+          {{block.pickerLabel}}
+        </div>
+      </div>
+
+    </div>
+
+    <br/>
+  </div>
 </mat-dialog-content>
 
 

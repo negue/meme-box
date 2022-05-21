@@ -3,11 +3,12 @@ import {
   BlueprintEntry,
   BlueprintEntryStepCall,
   BlueprintEntryStepPayload,
-  BlueprintRegistry
+  BlueprintRegistry,
+  BlueprintStepSelectionGroup
 } from "./blueprint.types";
-import { uuid } from "@gewd/utils";
-import { registerMemeboxSteps } from "./blueprint-steps.memebox";
-import { registerObsSteps } from "./blueprint-steps.obs";
+import {uuid} from "@gewd/utils";
+import {registerMemeboxSteps} from "./blueprint-steps.memebox";
+import {registerObsSteps} from "./blueprint-steps.obs";
 
 export interface BlueprintStepConfigArgument {
   name: string;
@@ -15,6 +16,20 @@ export interface BlueprintStepConfigArgument {
   type: string;
 }
 
+export const BlueprintCommandBlockGroups: Record<string, BlueprintStepSelectionGroup> = {
+  generic: {
+    label: "Generic",
+    order: 1
+  },
+  memebox: {
+    label: "Memebox",
+    order: 2
+  },
+  obs: {
+    label: "OBS",
+    order: 3
+  }
+};
 
 export const BlueprintStepRegistry: BlueprintRegistry = {
   "sleepSeconds": {

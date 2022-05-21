@@ -78,7 +78,8 @@ export class BlueprintEntryComponent
         entry,
         subStepInfo,
         context: this.context.blueprint
-      }
+      },
+      autoFocus: false
     });
 
     const dialogInstance = result.componentInstance;

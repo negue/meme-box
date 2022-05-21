@@ -4,7 +4,7 @@ import {
   BlueprintEntry,
   BlueprintEntryStepCall,
   BlueprintEntryStepPayload,
-  BlueprintStepInfo,
+  BlueprintStepDefinition,
   BlueprintStepRegistry,
   generateStepEntry
 } from "@memebox/logic-step-core";
@@ -19,9 +19,9 @@ export class BlueprintStepCreatorService {
     private dialogService: DialogService,
   ) { }
 
-  async generateStepData (parentStep: BlueprintEntry, stepInfo: BlueprintStepInfo): Promise<BlueprintEntryStepCall|void> {
+  async generateStepData (parentStep: BlueprintEntry, stepType: string): Promise<BlueprintEntryStepCall|void> {
 
-    const blueprintRegistryEntry = BlueprintStepRegistry[stepInfo.stepType];
+    const blueprintRegistryEntry = BlueprintStepRegistry[stepType];
 
     if (blueprintRegistryEntry.configArguments.length !== 0) {
       const dialogResult = await this._loadAndOpenSettingDialog({
@@ -32,7 +32,7 @@ export class BlueprintStepCreatorService {
         return;
       }
 
-      const generatedBlueprintStep = generateStepEntry(stepInfo.stepType, dialogResult);
+      const generatedBlueprintStep = generateStepEntry(stepType, dialogResult);
 
       if (blueprintRegistryEntry.extendBlueprintStep) {
         blueprintRegistryEntry.extendBlueprintStep(
@@ -42,7 +42,7 @@ export class BlueprintStepCreatorService {
 
       return generatedBlueprintStep;
     } else {
-      return generateStepEntry(stepInfo.stepType, {})
+      return generateStepEntry(stepType, {})
     }
   }
 
@@ -65,9 +65,9 @@ export class BlueprintStepCreatorService {
     return dialogResult;
   }
 
-  getPossibleSteps (step: BlueprintEntry, context: BlueprintContext): BlueprintStepInfo[] {
+  getPossibleSteps (step: BlueprintEntry, context: BlueprintContext): BlueprintStepDefinition[] {
     return Object.entries(BlueprintStepRegistry)
-      .filter(([key, value]) => {
+      .filter(([_, value]) => {
         if (!value.allowedToBeAdded) {
           return true;
         }
@@ -77,7 +77,7 @@ export class BlueprintStepCreatorService {
       .map(([key, value]) => {
         return {
           stepType: key,
-          label: value.pickerLabel
+          ...value
         }
 
       });
