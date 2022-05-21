@@ -32,6 +32,10 @@ export class MediaApi extends ActionApi {
         resetAfterDone: (delayAfterTriggered: number) => void,
       }
   ) => Promise<void>, overrides?: TriggerActionOverrides | undefined) {
+    if (!this.screenId) {
+      throw new Error("triggerWhile needs to know the target screen id");
+    }
+
     // if there is one already running
     await this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
 

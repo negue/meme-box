@@ -1,7 +1,7 @@
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../contracts";
 import {Persistence} from "../../persistence";
-import {TriggerAction} from "@memebox/contracts";
+import {ActionStateEnum, TriggerAction, VisibilityEnum} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {concatMap, filter, take} from "rxjs/operators";
 import {ActionActiveState} from "./action-active-state";
@@ -19,15 +19,29 @@ export class ActionQueue {
   }
 
   public async triggerAndWaitUntilDone(triggerAction: TriggerAction) {
-    const allActionsDictionary = this._persistence.fullState().clips;
+    const fullState = this._persistence.fullState();
 
-    const actionConfig = allActionsDictionary[triggerAction.id];
+    const actionConfig = fullState.clips[triggerAction.id];
 
     if (actionConfig.queueName) {
+      const currentState = this.actionState.getActiveStateEntry(triggerAction.id, triggerAction.targetScreen);
+      const mediaInScreenConfig = fullState.screen[triggerAction.targetScreen]?.clips[triggerAction.id];
+
+      const visibilityOfOverrides =currentState?.currentOverrides?.screenMedia?.visibility;
+      const visibilityOfMedia =mediaInScreenConfig.visibility;
+
+      const currentVisibilityConfig = visibilityOfOverrides
+        ?? visibilityOfMedia;
+
+      if (currentState?.state === ActionStateEnum.Active && currentVisibilityConfig === VisibilityEnum.Toggle) {
+        await this.executeTriggerWithoutQueueAndWait(triggerAction);
+        return;
+      }
+
       const subject = this.createOrGetQueueSubject(actionConfig.queueName);
       subject.next(triggerAction);
 
-      return this._queueDone$.pipe(
+      await this._queueDone$.pipe(
         filter(uniqueDone => uniqueDone === triggerAction.uniqueId),
         take(1),
       ).toPromise();

@@ -47,4 +47,8 @@ export class ActionApi {
 
     return timeoutAsync(timeoutInMs);
   }
+
+  waitUnilActiveAsync() {
+    return this.memeboxApi.actionActiveState.waitUntilActiveAsync(this.actionId, this.screenId);
+  }
 }

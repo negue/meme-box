@@ -1,7 +1,7 @@
 import {BehaviorSubject, Subject, Subscription} from "rxjs";
 import {debounceTime, skip} from "rxjs/operators";
 
-export type ActionStore = Record<string, string|number|object>;
+export type ActionStore = Record<string, string|number|object|boolean>;
 
 export interface ActionStoreAdapter {
   getCurrentData(mediaId: string): Promise<ActionStore>;
@@ -102,6 +102,27 @@ export class ActionStoreApi {
   public setObject(key: string, value: unknown): void  {
     if (typeof value !== 'object') {
       this._errorSubject$.next(`The "${key}" value needs to be an object`);
+      return;
+    }
+
+    this._state[key] = value;
+
+    this.updateObservable();
+  }
+
+  public getBool(key: string, defaultValue: boolean): boolean {
+    const value = this._state[key];
+
+    if (typeof value === 'boolean') {
+      return value ?? defaultValue;
+    }
+
+    return defaultValue;
+  }
+
+  public setBool(key: string, value: unknown): void  {
+    if (typeof value !== 'boolean') {
+      this._errorSubject$.next(`The "${key}" value needs to be a boolean`);
       return;
     }
 
