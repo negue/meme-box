@@ -16,6 +16,7 @@
   margin-top: 0.25rem;
   margin-right: 1rem;
   padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .cdk-drag-preview {
@@ -51,6 +52,9 @@
   position: relative;
   display: flex;
   align-items: flex-start;
+  border: 1px transparent;
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
 
   &:hover {
     background: #00000022;
@@ -58,7 +62,10 @@
 }
 
 .step-grab {
-  padding-top: 8px;
+  padding: 0;
+  margin-top: 0.5rem;
+  height: 18px;
+  width: 18px;
 
   &.group {
     position: absolute;
