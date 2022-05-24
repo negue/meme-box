@@ -46,12 +46,7 @@ import {
 } from "@memebox/utils";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
-import {
-  MEDIA_EDIT_CONFIG,
-  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH,
-  MEDIA_TYPES_WITHOUT_PATH,
-  MEDIA_TYPES_WITHOUT_PLAYTIME
-} from "./media-edit.type-config";
+import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -130,11 +125,8 @@ export class MediaEditComponent
     })
   );
 
-  MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
-  MEDIA_TYPES_WITHOUT_PLAYTIME = MEDIA_TYPES_WITHOUT_PLAYTIME;
-  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
-  MEDIA_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
-  MEDIA_EDIT_CONFIG = MEDIA_EDIT_CONFIG;
+  ACTION_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
+  ACTION_CONFIG_FLAGS = ACTION_CONFIG_FLAGS;
 
   mediaTypeList: MediaTypeButton[] = ACTION_TYPE_INFORMATION_ARRAY
     .map((value) => {
@@ -272,21 +264,17 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
           });
         }
 
-        if (MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(next)) {
+        if (ACTION_CONFIG_FLAGS[next].hasRequiredPlayLength) {
           this.form.patchValue({
             playLength: DEFAULT_PLAY_LENGTH
           });
         }
 
-        if (MEDIA_TYPES_WITHOUT_PATH.includes(prev)) {
-          console.info('adding validators');
+        if (ACTION_CONFIG_FLAGS[next].hasPathSelection) {
           this.form.controls['path'].setValidators([
             Validators.required,
           ]);
-        }
-
-        if (MEDIA_TYPES_WITHOUT_PATH.includes(next)){
-          console.info('clearing validators');
+        } else {
           this.form.controls['path'].clearValidators();
         }
       });
