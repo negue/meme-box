@@ -25,10 +25,10 @@
 
 
   <ng-container *ngSwitchCase="'boolean'">
-    <mat-checkbox [checked]="!!value"
-                  (change)="value = $event.checked; valueChanged.emit($event.checked)" >
+    <mat-slide-toggle [checked]="!!value"
+                      (change)="value = $event.checked; valueChanged.emit($event.checked)">
       {{label}}
-    </mat-checkbox>
+    </mat-slide-toggle>
   </ng-container>
 
   <ng-container *ngSwitchCase="'media'">

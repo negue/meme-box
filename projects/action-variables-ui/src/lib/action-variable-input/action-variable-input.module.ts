@@ -6,6 +6,7 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {CompactClipCardModule} from "@memebox/state-components";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {CompactClipCardModule} from "@memebox/state-components";
     MatInputModule,
     FormsModule,
     MatCheckboxModule,
-    CompactClipCardModule
+    CompactClipCardModule,
+    MatSlideToggleModule
   ]
 })
 export class ActionVariableInputModule { }
