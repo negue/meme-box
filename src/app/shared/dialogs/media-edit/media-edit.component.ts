@@ -40,18 +40,23 @@ import {
   actionDataToScriptConfig,
   actionDataToWidgetContent,
   applyDynamicIframeContentToClipData,
-  applyScriptConfigToClipData,
+  applyScriptConfigToAction,
+  convertMarkdownStructureToScript,
+  convertScriptToMarkdownStructure,
   DynamicIframeContent,
-  ScriptConfig
+  fromMarkdown,
+  ScriptConfig,
+  toMarkdown
 } from "@memebox/utils";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
 import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
+import {downloadFile} from "@gewd/utils";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
 
-const INITIAL_CLIP: Partial<Action> = {
+const ACTION_DEFAULT_PROPERTIES: Partial<Action> = {
   tags: [],
   type: ActionType.Picture,
   name: 'Media Filename',
@@ -114,7 +119,7 @@ export class MediaEditComponent
     description: ""
   });
 
-  currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
+  currentMediaType$ = new BehaviorSubject(ACTION_DEFAULT_PROPERTIES.type);
 
   availableMediaFiles$ = combineLatest([
     this.appQuery.currentMediaFile$.pipe(filter((files) => !!files)),
@@ -181,8 +186,7 @@ export class MediaEditComponent
     shareReplay(1)
   );
 
-
-separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   tagFormCtrl = new FormControl();  // needed in form?!
   localMediaFormCtrl = new FormControl();  // needed in form?!
   mediaPathTypeFormCtrl = new FormControl();  // needed in form?!
@@ -208,14 +212,8 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     private clipboard: Clipboard,
     private snackbar: SnackbarService
   ) {
-    const defaultValues = Object.assign({}, INITIAL_CLIP, this.data?.defaults ?? {});
-
-    this.actionToEdit = Object.assign({}, defaultValues, {
-      ...this.data?.actionToEdit,
-      extended: {
-        ...this.data?.actionToEdit?.extended
-      }
-    }) as Action;
+    const defaultValues = Object.assign({}, ACTION_DEFAULT_PROPERTIES, this.data?.defaults ?? {});
+    this.setNewActionEditData(this.data?.actionToEdit, defaultValues);
 
     this.isEditMode = !!this.data?.actionToEdit;
 
@@ -234,12 +232,13 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.currentMediaType$.next(this.actionToEdit.type);
   }
 
-  get MediaType() {
+  get ActionType() {
     return ActionType;
   }
 
   ngOnInit(): void {
-    this.form.reset(this.actionToEdit);
+    this.fillUiRelatedDataBasedOnAction();
+
     this.appService.listFiles();
 
     this.form.valueChanges
@@ -279,12 +278,6 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
         }
       });
 
-    this.availableTags$.pipe(
-      take(1)
-    ).subscribe(allTags => {
-      this.currentTags$.next(allTags.filter(tag => this.actionToEdit.tags.includes(tag.id)));
-    });
-
     this.filteredTags$ = combineLatest([
       this.tagFormCtrl.valueChanges.pipe(
         startWith(null)
@@ -301,11 +294,22 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     ).subscribe( () => {
       this.executeHTMLRefresh();
     });
+  }
 
+  fillUiRelatedDataBasedOnAction() {
+    this.form.reset(this.actionToEdit);
+
+    this.availableTags$.pipe(
+      take(1)
+    ).subscribe(allTags => {
+      this.currentTags$.next(allTags.filter(tag => this.actionToEdit.tags.includes(tag.id)));
+    });
 
     if (this.actionToEdit.fromTemplate) {
       this.onTemplateChanged(this.actionToEdit.fromTemplate);
     }
+
+    this.triggerHTMLRefresh();
   }
 
   async save() {
@@ -476,6 +480,10 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   executeHTMLRefresh (): void {
+    if (!this.isWidget()) {
+      return;
+    }
+
     const currentExtendedValues = this.actionToEdit.extended;
 
     const updatedHtmlDataset: DynamicIframeContent  = {
@@ -511,7 +519,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     });
 
     if (dialogResult) {
-      applyScriptConfigToClipData(dialogResult, this.actionToEdit);
+      applyScriptConfigToAction(dialogResult, this.actionToEdit);
 
       this.currentScript = dialogResult;
       this.cd.detectChanges();
@@ -524,6 +532,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     }
   }
 
+  // todo extract
   makeScreenshot(videoElement: HTMLVideoElement) {
     videoElement.controls = false;
 
@@ -572,4 +581,89 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
 
   }
+
+  // region Import / Export Methods
+
+  onFileInputChanged($event: Event): void {
+    if (!ACTION_CONFIG_FLAGS[this.form.value.type].showImportExportPanel) {
+      return;
+    }
+
+    if (this.form.value.type !== ActionType.Script){
+      return;
+    }
+
+
+    const target = $event.target as HTMLInputElement;
+    const files = target.files;
+
+    const file = files[0];
+
+    console.info({$event, file});
+
+    // setting up the reader
+    const reader = new FileReader();
+    reader.readAsText(file,'UTF-8');
+
+    // here we tell the reader what to do when it's done reading...
+    reader.onload = readerEvent => {
+      const content = readerEvent.target.result; // this is the content!
+
+      if (typeof content === 'string' ) {
+        const parseMarkdownStructure = fromMarkdown(content);
+
+        const actionToImport = convertMarkdownStructureToScript(parseMarkdownStructure);
+
+        console.info({
+          parseMarkdownStructure,
+          actionToImport
+        });
+        this.setNewActionEditData(actionToImport);
+        this.fillUiRelatedDataBasedOnAction();
+
+        // const importedPayload: DynamicIframeContent = JSON.parse(content);
+
+        // this.setWorkingValues(importedPayload);
+      }
+    }
+  }
+
+  exportAction(): void {
+    if (this.form.value.type !== ActionType.Script){
+      return;
+    }
+
+    const mdStructure = convertScriptToMarkdownStructure(this.actionToEdit);
+
+    const createdMarkdownString = toMarkdown(mdStructure);
+
+    const dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(createdMarkdownString);
+
+    console.info({mdStructure, dataStr});
+    downloadFile(this.actionToEdit.name+'-script.md',dataStr);
+  }
+
+
+  // endregion Import / Export Methods
+
+  // region Helper Methods
+
+  private currentActionType (): ActionType {
+    return this.form.value.type;
+  }
+
+  private isWidget() {
+    return [ActionType.Widget, ActionType.WidgetTemplate].includes(this.currentActionType());
+  }
+
+  private setNewActionEditData (newActionData: Partial<Action>, defaultValues = ACTION_DEFAULT_PROPERTIES) {
+    this.actionToEdit = Object.assign({}, defaultValues, {
+      ...newActionData,
+      extended: {
+        ...newActionData?.extended
+      }
+    }) as Action;
+  }
+
+  // endregion Helper Methods
 }

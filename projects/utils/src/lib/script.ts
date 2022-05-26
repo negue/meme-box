@@ -13,7 +13,7 @@ const SCRIPT_EXECUTION_KEY = '_executionScript';
 const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
 const SCRIPT_SETTINGS_KEY = '_settings';
 
-export function actionDataToScriptConfig (action: Partial<Action>) {
+export function actionDataToScriptConfig (action: Partial<Action>): ScriptConfig|null {
   if (!action?.extended) {
     return null;
   }
@@ -33,19 +33,19 @@ export function actionDataToScriptConfig (action: Partial<Action>) {
 }
 
 
-export function applyScriptConfigToClipData (
+export function applyScriptConfigToAction (
   scriptConfig: ScriptConfig,
-  targetClip: Partial<Action>
-) {
-  if (!targetClip.extended) {
-    targetClip.extended = {};
+  targetAction: Partial<Action>
+): void {
+  if (!targetAction.extended) {
+    targetAction.extended = {};
   }
 
-  targetClip.extended[SCRIPT_EXECUTION_KEY] = scriptConfig.executionScript;
-  targetClip.extended[SCRIPT_BOOTSTRAP_KEY] = scriptConfig.bootstrapScript;
+  targetAction.extended[SCRIPT_EXECUTION_KEY] = scriptConfig.executionScript;
+  targetAction.extended[SCRIPT_BOOTSTRAP_KEY] = scriptConfig.bootstrapScript;
 
-  targetClip.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(scriptConfig.variablesConfig);
-  targetClip.extended[SCRIPT_SETTINGS_KEY] = JSON.stringify(scriptConfig.settings);
+  targetAction.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(scriptConfig.variablesConfig);
+  targetAction.extended[SCRIPT_SETTINGS_KEY] = JSON.stringify(scriptConfig.settings);
 }
 
 export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [

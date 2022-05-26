@@ -71,8 +71,8 @@
 
             <div [class.hidden]="!ACTION_CONFIG_FLAGS[form.value.type].hasPathSelection" class="">
               <mat-button-toggle-group #mediaPathType="matButtonToggleGroup"
-                                       [class.hidden]="form.value.type === MediaType.IFrame"
-                                       [value]="(!form.value.path || form.value.path?.includes('{$SERVER_URL}')) && form.value.type !== MediaType.IFrame  ? 'media' : 'custom'"
+                                       [class.hidden]="form.value.type === ActionType.IFrame"
+                                       [value]="(!form.value.path || form.value.path?.includes('{$SERVER_URL}')) && form.value.type !== ActionType.IFrame  ? 'media' : 'custom'"
                                        style="margin-right: 1rem">
                 <mat-button-toggle
                   value="media">Media
@@ -137,7 +137,7 @@
                 </div>
               </app-hint-panel>
             </div>
-            <ng-container *ngIf="[MediaType.Audio, MediaType.Video].includes(form.value.type)">
+            <ng-container *ngIf="[ActionType.Audio, ActionType.Video].includes(form.value.type)">
               <mat-label>Volume</mat-label>
               <div class="slider__row">
                 <mat-slider #volumeSlider
@@ -181,7 +181,7 @@
               </mat-form-field>
             </div>
 
-            <div *ngIf="form.value.type === MediaType.Meta" class="form-field-row">
+            <div *ngIf="form.value.type === ActionType.Meta" class="form-field-row">
               <mat-form-field>
                 <mat-label>Meta Type</mat-label>
                 <mat-select formControlName="metaType"
@@ -194,7 +194,7 @@
               </mat-form-field>
             </div>
 
-            <div *ngIf="form.value.type === MediaType.Meta" class="form-field-row">
+            <div *ngIf="form.value.type === ActionType.Meta" class="form-field-row">
               <mat-form-field class="example-chip-list">
                 <mat-label>Assign a new tag...</mat-label>
                 <mat-chip-list #chipList aria-label="Tag selection">
@@ -225,7 +225,7 @@
 
             </div>
 
-            <div *ngIf="form.value.type === MediaType.Meta && form.value.metaType === 2" class="form-field-row">
+            <div *ngIf="form.value.type === ActionType.Meta && form.value.metaType === 2" class="form-field-row">
               <mat-form-field>
                 <mat-label>Delay between clip-trigger (ms)</mat-label>
                 <input autocomplete="off"
@@ -243,7 +243,7 @@
             </div>
 
 
-            <ng-container *ngIf="form.value.type === MediaType.Widget">
+            <ng-container *ngIf="form.value.type === ActionType.Widget">
               <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
                 <h3 *ngIf="currentHtml?.variablesConfig?.length !== 0">Variables:</h3>
                 <app-action-variables-assignments (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()"
@@ -261,24 +261,35 @@
                                                 [data]="actionToEdit.extended"
                                                 [variablesConfig]="currentScript?.variablesConfig">
 
-          </app-action-variables-assignments>
-        </ng-container>
-      </div>
-      <!-- Preview of a Media -->
-      <div class="column" [ngSwitch]="form.value.type" [formGroup]="form"
-           [class.custom-html-preview]="[MediaType.Widget, MediaType.WidgetTemplate].includes(form.value.type)"
-           [class.script]="[MediaType.Script, MediaType.PermanentScript].includes(form.value.type)"
-      >
-        <!-- Meta => AppClipType or list all assign actions by tags -->
-        <div *ngSwitchCase="MediaType.Meta">
-          <h3>Assigned Actions by Tags</h3>
-          <app-compact-action-card *ngFor="let assignedClip of taggedActions$ | async"
-                                   [action]="assignedClip">
+              </app-action-variables-assignments>
+            </ng-container>
+          </div>
+          <!-- Preview of a Media -->
+          <div [class.custom-html-preview]="[ActionType.Widget, ActionType.WidgetTemplate].includes(form.value.type)"
+               [class.script]="[ActionType.Script, ActionType.PermanentScript].includes(form.value.type)" [formGroup]="form"
+               [ngSwitch]="form.value.type"
+               class="column"
+          >
+            <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].showImportExportPanel"
+                 class="import-export-panel">
+              <button mat-raised-button (click)="exportAction()">Export</button>
+              <button mat-raised-button (click)="fileSelection.click()" >Import</button>
+              <input type="file" style="display: none"
+                     #fileSelection accept="text/markdown"
+                     (change)="onFileInputChanged($event)">
+            </div>
+
+
+            <!-- Meta => AppClipType or list all assign actions by tags -->
+            <div *ngSwitchCase="ActionType.Meta">
+              <h3>Assigned Actions by Tags</h3>
+              <app-compact-action-card *ngFor="let assignedClip of taggedActions$ | async"
+                                       [action]="assignedClip">
 
               </app-compact-action-card>
             </div>
 
-            <div *ngSwitchCase="MediaType.Widget" class="custom-html-holder">
+            <div *ngSwitchCase="ActionType.Widget" class="custom-html-holder">
               <mat-select #fromTemplateSelect (valueChange)="onTemplateChanged($event)"
                           formControlName="fromTemplate">
                 <mat-option value="">No Template</mat-option>
@@ -311,7 +322,7 @@
             </div>
 
 
-            <div *ngSwitchCase="MediaType.WidgetTemplate" class="custom-html-holder">
+            <div *ngSwitchCase="ActionType.WidgetTemplate" class="custom-html-holder">
               <button (click)="editHTML()" color="primary" mat-raised-button>Edit HTML</button>
               <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
@@ -334,19 +345,19 @@
               </ng-container>
             </div>
 
-            <div *ngSwitchCase="MediaType.Script">
+            <div *ngSwitchCase="ActionType.Script">
               <button (click)="editScript()" color="primary" mat-raised-button>
                 Edit Script + Config
               </button>
             </div>
 
-            <div *ngSwitchCase="MediaType.PermanentScript">
+            <div *ngSwitchCase="ActionType.PermanentScript">
               <button (click)="editScript()" color="primary" mat-raised-button>
                 Edit Script + Config
               </button>
             </div>
 
-            <div *ngSwitchCase="MediaType.Video">
+            <div *ngSwitchCase="ActionType.Video">
 
               <div *ngIf="mediaPathInput.value">
                 <video #videoElement (loadeddata)="onVideoLoaded($event, videoElement)" [src]="mediaPathInput.value | mediaPathToUrl" [volume]="form.value.volumeSetting / 100"
@@ -364,7 +375,7 @@
               </div>
             </div>
 
-            <div *ngSwitchCase="MediaType.Audio">
+            <div *ngSwitchCase="ActionType.Audio">
 
               <div *ngIf="mediaPathInput.value">
                 <audio [src]="mediaPathInput.value | mediaPathToUrl"
@@ -410,7 +421,7 @@
           If this action should be visible on the mobile view.
         </app-hint-panel>
 
-        <div *ngIf="form.value.type !== MediaType.Meta" class="form-field-row">
+        <div *ngIf="form.value.type !== ActionType.Meta" class="form-field-row">
           <!-- extract both Tag Assignment Components -->
           <mat-form-field class="example-chip-list">
             <mat-label>Assign a new tag...</mat-label>

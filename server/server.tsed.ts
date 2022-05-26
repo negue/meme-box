@@ -11,11 +11,8 @@ import {CLI_OPTIONS} from "./utils/cli-options";
 import {ScriptHandler} from "./providers/actions/scripts/script.handler";
 import {Action, ActionType} from "@memebox/contracts";
 import {uuid} from "@gewd/utils";
-import {applyScriptConfigToClipData} from "@memebox/utils";
+import {applyScriptConfigToAction} from "@memebox/utils";
 // import * as bodyParser from "body-parser";
-// import * as compress from "compression";
-// import * as cookieParser from "cookie-parser";
-// import * as methodOverride from "method-override";
 
 export const isProduction = !fs.existsSync('package.json')
   || process.env.NODE_ENV === Env.PROD;
@@ -80,7 +77,7 @@ export class ServerTsED implements BeforeRoutesInit, BeforeInit, OnReady {
         type: ActionType.Script
       };
 
-      applyScriptConfigToClipData({
+      applyScriptConfigToAction({
         settings: {
 
         },
