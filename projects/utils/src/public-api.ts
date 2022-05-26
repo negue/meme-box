@@ -13,3 +13,4 @@ export * from './lib/searchInActions';
 
 export * from './lib/markdown-as-datastructure/md-structure';
 export * from './lib/markdown-as-datastructure/script-md-structure';
+export * from './lib/markdown-as-datastructure/widget-md-structure';

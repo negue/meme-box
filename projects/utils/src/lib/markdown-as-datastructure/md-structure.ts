@@ -42,15 +42,6 @@ export function toMarkdown (markdownDataStructure: MarkdownStructure){
   return markdownFileStrings.map(ln => ln.trim()).join('\n\n');
 }
 
-export function startNewMarkdownSection(name: string, highlightType: string): MarkdownStructureSection {
-  return {
-    description: '',
-    name,
-    highlightType,
-    content: ''
-  };
-}
-
 export function startNewMarkdownStructure(): MarkdownStructure {
   return {
     metadata: {
@@ -61,6 +52,34 @@ export function startNewMarkdownStructure(): MarkdownStructure {
     sections: []
   };
 }
+
+
+export function mdSection (name: string, highlightType: string, content: unknown): MarkdownStructureSection {
+  return {
+    description: '',
+    name,
+    highlightType,
+    content
+  };
+}
+
+export function mdSectionAsTypedObject<T>(structure: MarkdownStructure, name: string): T|null {
+  const foundSection = structure.sections.find(s => s.name === name);
+  if (foundSection) {
+   return JSON.parse(foundSection.content as string);
+  }
+return null;
+}
+
+
+export function mdSectionAsString(structure: MarkdownStructure, name: string): string {
+  const foundSection = structure.sections.find(s => s.name === name);
+  if (foundSection) {
+    return foundSection.content as string;
+  }
+  return '';
+}
+
 
 export function fromMarkdown (markdownRaw: string) {
 
@@ -74,7 +93,7 @@ export function fromMarkdown (markdownRaw: string) {
   let metadataInProcess = false;
   let firstHeaderFound = false;
 
-  let currentSection: MarkdownStructureSection = startNewMarkdownSection('','');
+  let currentSection: MarkdownStructureSection = mdSection('','', null);
 
   for(const token of markdownTokens) {
     if (token.type === 'hr') {
@@ -101,7 +120,7 @@ export function fromMarkdown (markdownRaw: string) {
       if (firstHeaderFound) {
         markdownDataStructure.sections.push(currentSection);
 
-        currentSection = startNewMarkdownSection('','');
+        currentSection = mdSection('','', null);
       }
 
       firstHeaderFound = true;

@@ -42,9 +42,12 @@ import {
   applyDynamicIframeContentToClipData,
   applyScriptConfigToAction,
   convertMarkdownStructureToScript,
+  convertMarkdownStructureToWidget,
   convertScriptToMarkdownStructure,
+  convertWidgetToMarkdownStructure,
   DynamicIframeContent,
   fromMarkdown,
+  MarkdownStructure,
   ScriptConfig,
   toMarkdown
 } from "@memebox/utils";
@@ -471,6 +474,7 @@ export class MediaEditComponent
 
   executeHTMLRefresh (): void {
     if (!this.isWidget()) {
+      console.warn('NOPE');
       return;
     }
 
@@ -575,62 +579,70 @@ export class MediaEditComponent
   // region Import / Export Methods
 
   onFileInputChanged($event: Event): void {
-    if (!ACTION_CONFIG_FLAGS[this.form.value.type].showImportExportPanel) {
+    if (!ACTION_CONFIG_FLAGS[this.actionToEdit.type].showImportExportPanel) {
       return;
     }
-
-    if (this.form.value.type !== ActionType.Script){
-      return;
-    }
-
 
     const target = $event.target as HTMLInputElement;
     const files = target.files;
 
     const file = files[0];
 
-    console.info({$event, file});
-
     // setting up the reader
     const reader = new FileReader();
-    reader.readAsText(file,'UTF-8');
+    reader.readAsText(file, 'UTF-8');
 
     // here we tell the reader what to do when it's done reading...
     reader.onload = readerEvent => {
       const content = readerEvent.target.result; // this is the content!
 
-      if (typeof content === 'string' ) {
+      if (typeof content === 'string') {
         const parseMarkdownStructure = fromMarkdown(content);
 
-        const actionToImport = convertMarkdownStructureToScript(parseMarkdownStructure);
+        const currentlyWidgetIsh = this.isWidget();
+        const importedMarkdownIsWidgetIsh = this.isWidget(parseMarkdownStructure.metadata.type as ActionType);
 
-        console.info({
-          parseMarkdownStructure,
-          actionToImport
-        });
-        this.setNewActionEditData(actionToImport);
-        this.fillUiRelatedDataBasedOnAction();
+        if ((currentlyWidgetIsh && !importedMarkdownIsWidgetIsh)
+          || parseMarkdownStructure.metadata.type !== this.actionToEdit.type) {
+          const typeLabel = ACTION_TYPE_INFORMATION[this.actionToEdit.type].labelFallback;
 
-        // const importedPayload: DynamicIframeContent = JSON.parse(content);
+          this.snackbar.sorry(`Expected file to be of type: ${typeLabel}`);
 
-        // this.setWorkingValues(importedPayload);
+          return;
+        }
+
+        if (currentlyWidgetIsh) {
+          const actionToImport = convertMarkdownStructureToWidget(parseMarkdownStructure, this.actionToEdit.type);
+
+          this.setNewActionEditData(actionToImport);
+          this.fillUiRelatedDataBasedOnAction();
+
+        } else {
+          const actionToImport = convertMarkdownStructureToScript(parseMarkdownStructure, this.actionToEdit.type);
+
+          this.setNewActionEditData(actionToImport);
+          this.fillUiRelatedDataBasedOnAction();
+        }
       }
     }
   }
 
   exportAction(): void {
-    if (this.form.value.type !== ActionType.Script){
-      return;
-    }
+    let mdStructure: MarkdownStructure;
 
-    const mdStructure = convertScriptToMarkdownStructure(this.actionToEdit);
+    if (this.isScript()) {
+      mdStructure = convertScriptToMarkdownStructure(this.actionToEdit);
+    } else {
+      mdStructure = convertWidgetToMarkdownStructure(this.actionToEdit);
+    }
 
     const createdMarkdownString = toMarkdown(mdStructure);
 
     const dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(createdMarkdownString);
 
-    console.info({mdStructure, dataStr});
-    downloadFile(this.actionToEdit.name+'-script.md',dataStr);
+    const suffix = ACTION_TYPE_INFORMATION[this.actionToEdit.type].labelFallback;
+
+    downloadFile(`${this.actionToEdit.name}-${suffix}.md`,dataStr);
   }
 
 
@@ -639,11 +651,17 @@ export class MediaEditComponent
   // region Helper Methods
 
   private currentActionType (): ActionType {
-    return this.form.value.type;
+    return this.actionToEdit.type;
   }
 
-  private isWidget() {
-    return [ActionType.Widget, ActionType.WidgetTemplate].includes(this.currentActionType());
+  private isWidget(actionTypeToCheck?: ActionType) {
+    return [ActionType.Widget, ActionType.WidgetTemplate].includes(
+      actionTypeToCheck ?? this.currentActionType()
+    );
+  }
+
+  private isScript() {
+    return [ActionType.Script, ActionType.PermanentScript].includes(this.currentActionType());
   }
 
   private setNewActionEditData (newActionData: Partial<Action>, defaultValues = ACTION_DEFAULT_PROPERTIES) {

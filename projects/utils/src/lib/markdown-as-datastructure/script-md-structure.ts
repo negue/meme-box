@@ -1,6 +1,6 @@
 import {Action, ActionType} from "@memebox/contracts";
-import {actionDataToScriptConfig, applyScriptConfigToAction, ScriptConfig} from "@memebox/utils";
-import {MarkdownStructure, startNewMarkdownSection, startNewMarkdownStructure} from "./md-structure";
+import {actionDataToScriptConfig, applyScriptConfigToAction, mdSection, ScriptConfig} from "@memebox/utils";
+import {MarkdownStructure, startNewMarkdownStructure} from "./md-structure";
 
 export function convertScriptToMarkdownStructure(
   action: Action
@@ -9,24 +9,25 @@ export function convertScriptToMarkdownStructure(
 
   const mdStructure = startNewMarkdownStructure();
   mdStructure.metadata.title = action.name;
+  mdStructure.metadata.type = action.type;
   mdStructure.description = action.description ?? '';
 
   if ((scriptObj?.variablesConfig?.length ?? 0) > 0){
-    const variablesSection = startNewMarkdownSection('variables', 'json');
-    variablesSection.content = scriptObj?.variablesConfig;
-    mdStructure.sections.push(variablesSection);
+    mdStructure.sections.push(mdSection(
+      'variables', 'json', scriptObj?.variablesConfig
+    ));
   }
 
   if (scriptObj?.bootstrapScript) {
-    const bootstrapCode = startNewMarkdownSection('bootstrapScript', 'js');
-    bootstrapCode.content = scriptObj.bootstrapScript;
-    mdStructure.sections.push(bootstrapCode);
+    mdStructure.sections.push(mdSection(
+      'bootstrapScript', 'js', scriptObj?.bootstrapScript
+    ));
   }
 
   if (scriptObj?.executionScript) {
-    const executionCode = startNewMarkdownSection('executionScript', 'js');
-    executionCode.content = scriptObj?.executionScript;
-    mdStructure.sections.push(executionCode);
+    mdStructure.sections.push(mdSection(
+      'executionScript', 'js', scriptObj?.executionScript
+    ));
   }
 
   return mdStructure;
@@ -34,11 +35,12 @@ export function convertScriptToMarkdownStructure(
 
 
 export function convertMarkdownStructureToScript(
-  mdStructure: MarkdownStructure
+  mdStructure: MarkdownStructure,
+  targetType: ActionType
 ): Action {
   const action: Action = {
     id: '',
-    type: ActionType.Script,
+    type: targetType,
     name: mdStructure.metadata.title as string,
     description: mdStructure.description
   };
