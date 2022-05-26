@@ -46,14 +46,14 @@ export const ACTION_CONFIG_FLAGS: Record<string, MediaEditConfig> = {
     hasRequiredPlayLength: true,
   },
   [ActionType.Script]: {
-    hasTypeSettings: false,
+    hasTypeSettings: true,
     canSelectQueue: true,
     showImportExportPanel: true,
     hasVisibleDuration: false,
     hasPathSelection: false,
   },
   [ActionType.PermanentScript]: {
-    hasTypeSettings: false,
+    hasTypeSettings: true,
     canSelectQueue: false,
     showImportExportPanel: true,
     hasVisibleDuration: false,

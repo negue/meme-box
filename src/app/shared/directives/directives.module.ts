@@ -1,12 +1,15 @@
 import {NgModule} from "@angular/core";
 import {HoverClassDirective} from "./hover-class.directive";
+import {HighlightDirective} from "./highlight.directive";
 
 @NgModule({
   exports: [
-    HoverClassDirective
+    HoverClassDirective,
+    HighlightDirective
   ],
   declarations: [
-    HoverClassDirective
+    HoverClassDirective,
+    HighlightDirective
   ]
 })
 export class DirectivesModule {

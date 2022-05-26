@@ -17,6 +17,7 @@ import {ActionPreviewLabelPipe, ActionPreviewVariablesTooltipPipe} from "./actio
 import {ActionCanPreviewPipe} from "./action-can-preview.pipe";
 import {MediaEnumToLabel} from "./media-enum-to-label.pipe";
 import {ActionHasTriggerableVariablesPipe} from "./action-has-triggerable-variables.pipe";
+import {TrimLinesPipe} from "./trim-lines.pipe";
 
 const PIPES = [
   SafePipe,
@@ -28,7 +29,8 @@ const PIPES = [
   ShowOnlyLastCharactersPipe, FontColorContrastPipe,
   ActionPreviewLabelPipe, ActionCanPreviewPipe,
   ActionPreviewVariablesTooltipPipe,
-  MediaEnumToLabel, ActionHasTriggerableVariablesPipe
+  MediaEnumToLabel, ActionHasTriggerableVariablesPipe,
+  TrimLinesPipe
 ];
 
 @NgModule({

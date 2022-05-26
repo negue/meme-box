@@ -242,26 +242,30 @@
               </mat-form-field>
             </div>
 
+            <ng-container *ngIf="[ActionType.Widget, ActionType.Script, ActionType.PermanentScript].includes(form.value.type)" >
+              <h3>Override Variables:</h3>
 
-            <ng-container *ngIf="form.value.type === ActionType.Widget">
-              <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
-                <h3 *ngIf="currentHtml?.variablesConfig?.length !== 0">Variables:</h3>
-                <app-action-variables-assignments (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()"
+              <ng-container *ngIf="form.value.type === ActionType.Widget">
+                <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
+                  <i *ngIf="currentHtml?.variablesConfig?.length === 0">No variables configured</i>
+                  <app-action-variables-assignments (dataChanged)="actionToEdit.extended = $event; triggerHTMLRefresh()"
+                                                    [data]="actionToEdit.extended"
+                                                    [variablesConfig]="currentHtml?.variablesConfig">
+
+                  </app-action-variables-assignments>
+                </ng-container>
+              </ng-container>
+
+              <ng-container *ngIf="currentScript?.variablesConfig">
+                <i *ngIf="currentScript?.variablesConfig.length === 0">No variables configured</i>
+
+                <app-action-variables-assignments (dataChanged)="actionToEdit.extended = $event"
                                                   [data]="actionToEdit.extended"
-                                                  [variablesConfig]="currentHtml?.variablesConfig">
+                                                  [variablesConfig]="currentScript?.variablesConfig">
 
                 </app-action-variables-assignments>
               </ng-container>
-            </ng-container>
 
-            <ng-container *ngIf="currentScript?.variablesConfig">
-              <h3 *ngIf="currentScript?.variablesConfig.length !== 0">Variables:</h3>
-
-              <app-action-variables-assignments (dataChanged)="actionToEdit.extended = $event"
-                                                [data]="actionToEdit.extended"
-                                                [variablesConfig]="currentScript?.variablesConfig">
-
-              </app-action-variables-assignments>
             </ng-container>
           </div>
           <!-- Preview of a Media -->
@@ -271,12 +275,25 @@
                class="column"
           >
             <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].showImportExportPanel"
-                 class="import-export-panel">
-              <button mat-raised-button (click)="exportAction()">Export</button>
-              <button mat-raised-button (click)="fileSelection.click()" >Import</button>
-              <input type="file" style="display: none"
-                     #fileSelection accept="text/markdown"
-                     (change)="onFileInputChanged($event)">
+                 class="two-columns">
+              <div class="column">
+                <div *ngIf="[ActionType.Script, ActionType.PermanentScript].includes(form.value.type)">
+                  <button (click)="editScript()" color="primary" mat-raised-button>
+                    Edit Script + Config
+                  </button>
+                </div>
+
+                <dynamic-portal key="importExportPanelLeft">
+                </dynamic-portal>
+              </div>
+
+              <div class="import-export-panel column">
+                <button mat-raised-button (click)="exportAction()" color="accent">Export</button>
+                <button mat-raised-button (click)="fileSelection.click()" color="warn">Import</button>
+                <input type="file" style="display: none"
+                       #fileSelection accept="text/markdown"
+                       (change)="onFileInputChanged($event)">
+              </div>
             </div>
 
 
@@ -297,10 +314,13 @@
                             [value]="template.id">{{template.name}}</mat-option>
               </mat-select>
 
-              <button (click)="editHTML()" *ngIf="fromTemplateSelect.value === ''" color="primary"
-                      mat-raised-button>
-                Edit HTML
-              </button>
+              <ng-template dynamicPortalSource="importExportPanelLeft">
+                <button (click)="editHTML()" *ngIf="fromTemplateSelect.value === ''" color="primary"
+                        mat-raised-button>
+                  Edit HTML
+                </button>
+              </ng-template>
+
               <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
                 <app-dynamic-iframe #dynamicIframeComponent [content]="currentHtml"
@@ -323,7 +343,10 @@
 
 
             <div *ngSwitchCase="ActionType.WidgetTemplate" class="custom-html-holder">
-              <button (click)="editHTML()" color="primary" mat-raised-button>Edit HTML</button>
+              <ng-template dynamicPortalSource="importExportPanelLeft">
+                <button (click)="editHTML()" color="primary" mat-raised-button>Edit HTML</button>
+              </ng-template>
+
               <ng-container *ngIf="currentHtmlToPreview$ | async as currentHtml">
 
 
@@ -346,15 +369,13 @@
             </div>
 
             <div *ngSwitchCase="ActionType.Script">
-              <button (click)="editScript()" color="primary" mat-raised-button>
-                Edit Script + Config
-              </button>
+              <script-readonly-view [scriptObject]="currentScript">
+              </script-readonly-view>
             </div>
 
             <div *ngSwitchCase="ActionType.PermanentScript">
-              <button (click)="editScript()" color="primary" mat-raised-button>
-                Edit Script + Config
-              </button>
+              <script-readonly-view [scriptObject]="currentScript">
+              </script-readonly-view>
             </div>
 
             <div *ngSwitchCase="ActionType.Video">

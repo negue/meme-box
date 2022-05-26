@@ -217,16 +217,6 @@ export class MediaEditComponent
 
     this.isEditMode = !!this.data?.actionToEdit;
 
-
-    if (this.actionToEdit.type === ActionType.Widget) {
-      this.currentHtmlConfig = actionDataToWidgetContent(this.actionToEdit);
-      this.executeHTMLRefresh();
-    }
-
-    if ([ActionType.Script, ActionType.PermanentScript].includes(this.actionToEdit.type)) {
-      this.currentScript = actionDataToScriptConfig(this.actionToEdit);
-    }
-
     this.showOnMobile = this.actionToEdit.showOnMobile;
 
     this.currentMediaType$.next(this.actionToEdit.type);
@@ -663,6 +653,15 @@ export class MediaEditComponent
         ...newActionData?.extended
       }
     }) as Action;
+
+    if (this.actionToEdit.type === ActionType.Widget) {
+      this.currentHtmlConfig = actionDataToWidgetContent(this.actionToEdit);
+      this.executeHTMLRefresh();
+    }
+
+    if ([ActionType.Script, ActionType.PermanentScript].includes(this.actionToEdit.type)) {
+      this.currentScript = actionDataToScriptConfig(this.actionToEdit);
+    }
   }
 
   // endregion Helper Methods
