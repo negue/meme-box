@@ -1,0 +1,16 @@
+
+<div *ngIf="scriptObject?.bootstrapScript">
+  <br />
+  <h3>
+    Bootstrap Script
+  </h3>
+  <pre [highlight]="scriptObject?.bootstrapScript | trimLines: 7" lang="js" class="pre-wrap-break"></pre>
+</div>
+
+<div *ngIf="scriptObject?.executionScript">
+  <br />
+  <h3>
+    Execution Script
+  </h3>
+  <pre [highlight]="scriptObject?.executionScript | trimLines: 7" lang="js" class="pre-wrap-break"></pre>
+</div>
