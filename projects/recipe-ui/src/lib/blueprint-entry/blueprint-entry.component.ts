@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
-import {BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo} from "@memebox/logic-step-core";
-import {CdkDragDrop} from "@angular/cdk/drag-drop";
-import {BlueprintContextDirective} from "../blueprint-context.directive";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
-import {BlueprintStepSelectorComponent} from "../blueprint-step-selector/blueprint-step-selector.component";
-import {takeUntil} from "rxjs/operators";
-import {Subject} from "rxjs";
-import {BlueprintStepCreatorService} from "../blueprint-step-creator.service";
+import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo } from "@memebox/logic-step-core";
+import { CdkDragDrop } from "@angular/cdk/drag-drop";
+import { BlueprintContextDirective } from "../blueprint-context.directive";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
+import { BlueprintStepSelectorComponent } from "../blueprint-step-selector/blueprint-step-selector.component";
+import { takeUntil } from "rxjs/operators";
+import { Subject } from "rxjs";
+import { BlueprintStepCreatorService } from "../blueprint-step-creator.service";
 
 @Component({
   selector: 'app-blueprint-entry',

@@ -1,5 +1,5 @@
-import {Directive, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {filterNil, Store, StoreConfig} from "@datorama/akita";
+import { Directive, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { filterNil, Store, StoreConfig } from "@datorama/akita";
 import {
   BlueprintEntry,
   BlueprintEntryStepCall,
@@ -7,9 +7,9 @@ import {
   BlueprintSubStepInfo,
   RecipeContext
 } from "@memebox/logic-step-core";
-import {Observable} from "rxjs";
-import {produce} from "immer";
-import {skip} from "rxjs/operators";
+import { Observable } from "rxjs";
+import { produce } from "immer";
+import { skip } from "rxjs/operators";
 
 
 @Directive({

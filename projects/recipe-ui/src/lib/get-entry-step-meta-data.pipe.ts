@@ -1,6 +1,6 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {BlueprintEntry, BlueprintStepInfo, BlueprintStepRegistry} from "@memebox/logic-step-core";
-import {AppQueries} from "@memebox/app-state";
+import { Pipe, PipeTransform } from '@angular/core';
+import { BlueprintEntry, BlueprintStepInfo, BlueprintStepRegistry } from "@memebox/logic-step-core";
+import { AppQueries } from "@memebox/app-state";
 
 @Pipe({
   name: 'getEntryStepMetaData$'

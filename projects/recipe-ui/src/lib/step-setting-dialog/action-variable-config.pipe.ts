@@ -1,6 +1,6 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {Action, ActionType} from "@memebox/contracts";
-import {ActionVariableConfig, getVariablesListOfAction} from "@memebox/action-variables";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Action, ActionType } from "@memebox/contracts";
+import { ActionVariableConfig, getVariablesListOfAction } from "@memebox/action-variables";
 
 @Pipe({
   name: 'actionVariableConfig'

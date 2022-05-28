@@ -1,17 +1,23 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
   BlueprintEntryStepPayload,
   BlueprintStepConfigActionListPayload,
   BlueprintStepConfigActionPayload,
   BlueprintStepConfigArgument
 } from "@memebox/logic-step-core";
-import {Action, ClipAssigningMode, Dictionary, TriggerActionOverrides, UnassignedFilterEnum} from "@memebox/contracts";
-import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
-import {Observable} from "rxjs";
-import {AppQueries} from "@memebox/app-state";
+import {
+  Action,
+  ClipAssigningMode,
+  Dictionary,
+  TriggerActionOverrides,
+  UnassignedFilterEnum
+} from "@memebox/contracts";
+import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
+import { Observable } from "rxjs";
+import { AppQueries } from "@memebox/app-state";
 import cloneDeep from "lodash/cloneDeep";
-import {isVisibleMedia} from "@memebox/shared-state";
+import { isVisibleMedia } from "@memebox/shared-state";
 
 export interface StepSettingDialogPayload {
   configArguments: BlueprintStepConfigArgument[];

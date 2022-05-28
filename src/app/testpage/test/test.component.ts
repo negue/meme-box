@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {createRecipeContext, generateCodeByBlueprint, RecipeContext} from "../../../../projects/logic-step-core/src";
-import {AppService} from "../../../../projects/app-state/src/lib/state";
+import { Component, OnInit } from '@angular/core';
+import { createRecipeContext, generateCodeByBlueprint, RecipeContext } from "../../../../projects/recipe-core/src";
+import { AppService } from "../../../../projects/app-state/src/lib/state";
 
 @Component({
   selector: 'app-test',

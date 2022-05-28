@@ -1,8 +1,8 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {BlueprintEntry, BlueprintSubStepInfo} from "@memebox/logic-step-core";
-import {Observable, of} from "rxjs";
-import {AppQueries} from "@memebox/app-state";
-import {BlueprintContextDirective} from "./blueprint-context.directive";
+import { Pipe, PipeTransform } from '@angular/core';
+import { BlueprintEntry, BlueprintSubStepInfo } from "@memebox/logic-step-core";
+import { Observable, of } from "rxjs";
+import { AppQueries } from "@memebox/app-state";
+import { BlueprintContextDirective } from "./blueprint-context.directive";
 
 @Pipe({
   name: 'getEntrySubStepInfo$'
