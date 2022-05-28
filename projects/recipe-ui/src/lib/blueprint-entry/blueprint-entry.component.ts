@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo } from "@memebox/logic-step-core";
+import { BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo } from "@memebox/recipe-core";
 import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import { BlueprintContextDirective } from "../blueprint-context.directive";
 import { MatCheckboxChange } from "@angular/material/checkbox";

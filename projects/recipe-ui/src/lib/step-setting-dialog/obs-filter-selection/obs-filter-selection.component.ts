@@ -5,7 +5,7 @@ import { ENDPOINTS, ObsSourceEntry, ObsSourceFilterEntry } from "@memebox/contra
 import { combineLatest, from, Observable, of, Subject } from "rxjs";
 import { map, startWith, switchMap, takeUntil } from "rxjs/operators";
 import { MemeboxApiService } from "@memebox/app-state";
-import { BlueprintStepConfigObsSetFilterStatePayload } from "@memebox/logic-step-core";
+import { BlueprintStepConfigObsSetFilterStatePayload } from "@memebox/recipe-core";
 
 @Component({
   selector: 'app-obs-filter-selection',

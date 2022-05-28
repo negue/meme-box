@@ -1,7 +1,7 @@
-import {uuid} from "@gewd/utils";
-import {TriggerActionOverrides} from "@memebox/contracts";
-import {AppQueries} from "@memebox/app-state";
-import {BlueprintStepConfigArgument} from "./generateCodeByBlueprint";
+import { uuid } from "@gewd/utils";
+import { TriggerActionOverrides } from "@memebox/contracts";
+import { AppQueries } from "@memebox/app-state";
+import { BlueprintStepConfigArgument } from "./generateCodeByBlueprint";
 
 export interface BlueprintSubStepInfo {
   name: string; // property to save the subSteps

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   BlueprintCommandBlockGroups,
   BlueprintEntry,
@@ -6,11 +6,11 @@ import {
   BlueprintStepSelectionGroup,
   BlueprintSubStepInfo,
   RecipeContext
-} from "@memebox/logic-step-core";
-import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {AppQueries} from "@memebox/app-state";
-import {BlueprintStepCreatorService} from "../blueprint-step-creator.service";
+} from "@memebox/recipe-core";
+import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { AppQueries } from "@memebox/app-state";
+import { BlueprintStepCreatorService } from "../blueprint-step-creator.service";
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
 

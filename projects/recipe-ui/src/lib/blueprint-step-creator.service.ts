@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   BlueprintEntry,
   BlueprintEntryStepCall,
@@ -7,9 +7,9 @@ import {
   BlueprintStepRegistry,
   generateStepEntry,
   RecipeContext
-} from "@memebox/logic-step-core";
-import {DialogService} from "../../../../src/app/shared/dialogs/dialog.service";
-import type {StepSettingDialogPayload} from "./step-setting-dialog/step-setting-dialog.component";
+} from "@memebox/recipe-core";
+import { DialogService } from "../../../../src/app/shared/dialogs/dialog.service";
+import type { StepSettingDialogPayload } from "./step-setting-dialog/step-setting-dialog.component";
 
 @Injectable({
   providedIn: 'any'

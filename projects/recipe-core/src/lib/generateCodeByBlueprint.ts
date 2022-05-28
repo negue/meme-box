@@ -6,9 +6,9 @@ import {
   BlueprintStepSelectionGroup,
   RecipeContext
 } from "./blueprint.types";
-import {uuid} from "@gewd/utils";
-import {registerMemeboxSteps} from "./blueprint-steps.memebox";
-import {registerObsSteps} from "./blueprint-steps.obs";
+import { uuid } from "@gewd/utils";
+import { registerMemeboxSteps } from "./blueprint-steps.memebox";
+import { registerObsSteps } from "./blueprint-steps.obs";
 
 export interface BlueprintStepConfigArgument {
   name: string;

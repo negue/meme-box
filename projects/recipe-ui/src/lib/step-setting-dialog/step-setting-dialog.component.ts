@@ -5,7 +5,7 @@ import {
   BlueprintStepConfigActionListPayload,
   BlueprintStepConfigActionPayload,
   BlueprintStepConfigArgument
-} from "@memebox/logic-step-core";
+} from "@memebox/recipe-core";
 import {
   Action,
   ClipAssigningMode,

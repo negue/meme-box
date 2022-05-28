@@ -6,7 +6,7 @@ import {
   BlueprintEntryStepPayload,
   BlueprintSubStepInfo,
   RecipeContext
-} from "@memebox/logic-step-core";
+} from "@memebox/recipe-core";
 import { Observable } from "rxjs";
 import { produce } from "immer";
 import { skip } from "rxjs/operators";

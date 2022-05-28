@@ -4,9 +4,9 @@ import {
   BlueprintStepConfigActionPayload,
   generateCodeByStep
 } from "./blueprint.types";
-import {map, take} from "rxjs/operators";
-import {generateRandomCharacters} from "./utils";
-import {combineLatest} from "rxjs";
+import { map, take } from "rxjs/operators";
+import { generateRandomCharacters } from "./utils";
+import { combineLatest } from "rxjs";
 
 function createMemeboxApiVariable(
   actionPayload: BlueprintStepConfigActionPayload
