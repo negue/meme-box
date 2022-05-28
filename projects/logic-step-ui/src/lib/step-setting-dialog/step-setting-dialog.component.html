@@ -16,8 +16,14 @@
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
         </ng-container>
-        <ng-container *ngSwitchCase="'string'">
-          <app-action-variable-input [variableType]="$any('string')" [label]="config.label"
+        <ng-container *ngSwitchCase="'text'">
+          <app-action-variable-input [variableType]="$any('text')" [label]="config.label"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'textarea'">
+          <app-action-variable-input [variableType]="$any('textarea')" [label]="config.label"
                                      [value]="payload[config.name]"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>

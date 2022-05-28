@@ -7,8 +7,8 @@ import {
   RecipeContext
 } from "./blueprint.types";
 import {uuid} from "@gewd/utils";
-import {registerMemeboxSteps} from "./blueprint-steps.memebox";
-import {registerObsSteps} from "./blueprint-steps.obs";
+import {registerMemeboxSteps} from "./command-blocks.memebox";
+import {registerObsCommandBlocks} from "./command-blocks.obs";
 
 export interface BlueprintStepConfigArgument {
   name: string;
@@ -123,4 +123,4 @@ export function generateStepEntry (
 }
 
 registerMemeboxSteps(BlueprintStepRegistry, generateCodeByStep);
-registerObsSteps(BlueprintStepRegistry);
+registerObsCommandBlocks(BlueprintStepRegistry);

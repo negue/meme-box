@@ -1,6 +1,6 @@
-import { BlueprintRegistry, BlueprintStepConfigObsSetFilterStatePayload } from "./blueprint.types";
+import {BlueprintRegistry, BlueprintStepConfigObsSetFilterStatePayload} from "./blueprint.types";
 
-export function registerObsSteps (
+export function registerObsCommandBlocks (
   registry: BlueprintRegistry
 ): void {
   const obsSwitchSceneType = "obs:switchScene";
@@ -68,19 +68,19 @@ export function registerObsSteps (
       {
         name: "command",
         label: "Command",
-        type: "string"
+        type: "text"
       },
       {
         name: "obsPayload",
         label: "Payload",
-        type: "text"
+        type: "textarea"
       }
     ],
     toScriptCode: (step) => {
       const obsCommand = step.payload.command as string;
       const obsPayload = step.payload.obsPayload as string;
 
-      return `obs.raw.send('${obsCommand}', '${obsPayload}')`;
+      return `obs.raw.send('${obsCommand}', ${obsPayload})`;
     },
     stepEntryLabelAsync: (queries, payload) => {
       const obsCommand = payload.command as string;
