@@ -41,8 +41,10 @@ import {
   actionDataToWidgetContent,
   applyDynamicIframeContentToClipData,
   applyScriptConfigToAction,
+  convertMarkdownStructureToRecipe,
   convertMarkdownStructureToScript,
   convertMarkdownStructureToWidget,
+  convertRecipeToMarkdownStructure,
   convertScriptToMarkdownStructure,
   convertWidgetToMarkdownStructure,
   DynamicIframeContent,
@@ -55,7 +57,7 @@ import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
 import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
 import {downloadFile} from "@gewd/utils";
-import {BlueprintContext, createBlueprintContext, generateCodeByBlueprint} from "@memebox/logic-step-core";
+import {createRecipeContext, generateCodeByBlueprint, RecipeContext} from "@memebox/logic-step-core";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -218,8 +220,6 @@ export class MediaEditComponent
     private clipboard: Clipboard,
     private snackbar: SnackbarService,
   ) {
-    // registerMemeboxMetadata(logicContextMetadata);
-
     const defaultValues = Object.assign({}, ACTION_DEFAULT_PROPERTIES, this.data?.defaults ?? {});
     this.setNewActionEditData(this.data?.actionToEdit, defaultValues);
 
@@ -276,11 +276,11 @@ export class MediaEditComponent
         }
 
         if (prev === ActionType.Recipe) {
-          this.actionToEdit.blueprint = undefined;
+          this.actionToEdit.recipe = undefined;
         }
 
         if (next === ActionType.Recipe) {
-          this.actionToEdit.blueprint = createBlueprintContext();
+          this.actionToEdit.recipe = createRecipeContext();
         }
 
       });
@@ -320,8 +320,8 @@ export class MediaEditComponent
 
 
     if (this.actionToEdit?.type === ActionType.Recipe
-      && !this.actionToEdit.blueprint ) {
-      this.actionToEdit.blueprint = createBlueprintContext();
+      && !this.actionToEdit.recipe ) {
+      this.actionToEdit.recipe = createRecipeContext();
     }
   }
 
@@ -329,11 +329,6 @@ export class MediaEditComponent
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
-      console.info(this.form);
-
-      for (const [ctrlName, ctrl] of Object.entries(this.form.controls)) {
-        console.info(ctrlName, ctrl.valid);
-      }
 
       return;
     }
@@ -596,7 +591,7 @@ export class MediaEditComponent
 
   }
 
-  toScriptCode (blueprint: BlueprintContext): string  {
+  toScriptCode (blueprint: RecipeContext): string  {
     return generateCodeByBlueprint(blueprint);
   }
 
@@ -641,11 +636,26 @@ export class MediaEditComponent
           this.setNewActionEditData(actionToImport);
           this.fillUiRelatedDataBasedOnAction();
 
-        } else {
+        } else if (this.isScript()) {
           const actionToImport = convertMarkdownStructureToScript(parseMarkdownStructure, this.actionToEdit.type);
 
           this.setNewActionEditData(actionToImport);
           this.fillUiRelatedDataBasedOnAction();
+        } else if (this.isRecipe()) {
+          const actionToImport = convertMarkdownStructureToRecipe(parseMarkdownStructure, this.actionToEdit.type);
+
+          console.info({
+            actionToImport
+          });
+
+          this.setNewActionEditData(actionToImport);
+          this.fillUiRelatedDataBasedOnAction();
+
+          console.info({
+            currentAction: this.actionToEdit
+          });
+
+          this.cd.detectChanges();
         }
       }
     }
@@ -656,8 +666,10 @@ export class MediaEditComponent
 
     if (this.isScript()) {
       mdStructure = convertScriptToMarkdownStructure(this.actionToEdit);
-    } else {
+    } else if (this.isWidget()) {
       mdStructure = convertWidgetToMarkdownStructure(this.actionToEdit);
+    } else if (this.isRecipe()) {
+      mdStructure = convertRecipeToMarkdownStructure(this.actionToEdit);
     }
 
     const createdMarkdownString = toMarkdown(mdStructure);
@@ -688,7 +700,14 @@ export class MediaEditComponent
     return [ActionType.Script, ActionType.PermanentScript].includes(this.currentActionType());
   }
 
-  private setNewActionEditData (newActionData: Partial<Action>, defaultValues = ACTION_DEFAULT_PROPERTIES) {
+  private isRecipe() {
+    return [ActionType.Recipe].includes(this.currentActionType());
+  }
+
+  private setNewActionEditData (
+    newActionData: Partial<Action>,
+    defaultValues = ACTION_DEFAULT_PROPERTIES
+  ) {
     this.actionToEdit = Object.assign({}, defaultValues, {
       ...newActionData,
       extended: {

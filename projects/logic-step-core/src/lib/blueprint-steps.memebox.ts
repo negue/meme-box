@@ -75,8 +75,8 @@ export function registerMemeboxSteps (
         _suffix: generateRandomCharacters(5)
       };
 
-      step.subSteps.push( {
-        label: "Keep Media Visible while: ",
+      step.subCommandBlocks.push( {
+        labelId: "keepVisibleWhile",
         entries: []
       });
     },

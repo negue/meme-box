@@ -1,11 +1,11 @@
-import {Directive, Input, OnInit, Output} from '@angular/core';
+import {Directive, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {filterNil, Store, StoreConfig} from "@datorama/akita";
 import {
-  BlueprintContext,
   BlueprintEntry,
   BlueprintEntryStepCall,
   BlueprintEntryStepPayload,
-  BlueprintSubStepInfo
+  BlueprintSubStepInfo,
+  RecipeContext
 } from "@memebox/logic-step-core";
 import {Observable} from "rxjs";
 import {produce} from "immer";
@@ -21,11 +21,11 @@ import {skip} from "rxjs/operators";
   producerFn: produce
 })
 export class BlueprintContextDirective
-  extends Store<BlueprintContext>
-  implements OnInit
+  extends Store<RecipeContext>
+  implements OnInit, OnChanges
 {
   @Input()
-  public blueprint: BlueprintContext | null = null;
+  public recipe: RecipeContext | null = null;
 
   @Output()
   public readonly blueprintUpdated: Observable<BlueprintEntry> = this._select(store => store.entries[store.rootEntry]).pipe(
@@ -33,12 +33,12 @@ export class BlueprintContextDirective
   );
 
   @Output()
-  public readonly state$: Observable<BlueprintContext> =
+  public readonly state$: Observable<RecipeContext> =
     this._select(store => ({...store}));
 
 
   @Output()
-  public readonly stateUpdated$: Observable<BlueprintContext> =
+  public readonly stateUpdated$: Observable<RecipeContext> =
     this.state$
       .pipe(
         skip(1),
@@ -54,20 +54,29 @@ export class BlueprintContextDirective
   }
 
   ngOnInit (): void {
-    if (this.blueprint) {
+    if (this.recipe) {
       this.update({
-        ...this.blueprint
+        ...this.recipe
       });
     }
   }
 
-  public getSubEntries$(parentEntryId: string, subStepLabel: string) {
+
+  ngOnChanges({recipe}: SimpleChanges): void {
+    if (recipe) {
+      this.update({
+        ...recipe.currentValue
+      });
+    }
+  }
+
+  public getSubEntries$(parentEntryId: string, subStepLabelId: string) {
     return this._select(store => {
       if (!store.entries[parentEntryId]) {
         return [];
       }
 
-      const subStepEntry = store.entries[parentEntryId].subSteps.find(s => s.label === subStepLabel);
+      const subStepEntry = store.entries[parentEntryId].subCommandBlocks.find(s => s.labelId === subStepLabelId);
 
       return subStepEntry.entries.map(e => store.entries[e]);
     })
@@ -79,33 +88,26 @@ export class BlueprintContextDirective
     this.update(state => {
       const foundEntry = this.findEntry(state, parent);
 
-      const stepsArrayToMove = foundEntry?.subSteps.find(s => s.label === parentSubStep)?.entries ?? [];
+      const stepsArrayToMove = foundEntry?.subCommandBlocks.find(s => s.labelId === parentSubStep)?.entries ?? [];
 
       arraymove(stepsArrayToMove, prevPos, newPos);
     });
-  }
-
-  private static addEntryToPath (
-    state: BlueprintContext,
-    entry: BlueprintEntry
-  ) {
-    state.entries[entry.id] = entry;
   }
 
   addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo, stepToAdd: BlueprintEntryStepCall): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
-      const subEntries = foundEntry?.subSteps.find(s => subStepInfo.label === s.label);
+      const subEntries = foundEntry?.subCommandBlocks.find(s => subStepInfo.labelId === s.labelId);
 
       subEntries?.entries.push(stepToAdd.id);
 
-      BlueprintContextDirective.addEntryToPath(state, stepToAdd);
+      addEntryToPath(state, stepToAdd);
     });
   }
 
   findEntry (
-    state: BlueprintContext,
+    state: RecipeContext,
     entry: BlueprintEntry
   ): BlueprintEntry  {
     if (entry) {
@@ -127,7 +129,7 @@ export class BlueprintContextDirective
     this.update(state => {
       const foundEntry = this.findEntry(state, parent);
 
-      const stepsArrayToMove = foundEntry?.subSteps.find(s => s.entries.includes(subStep.id))?.entries ?? [];
+      const stepsArrayToMove = foundEntry?.subCommandBlocks.find(s => s.entries.includes(subStep.id))?.entries ?? [];
       const indexOfStep = stepsArrayToMove.indexOf(subStep.id);
       stepsArrayToMove.splice(indexOfStep, 1);
 
@@ -144,6 +146,13 @@ export class BlueprintContextDirective
       }
     });
   }
+}
+
+function addEntryToPath (
+  state: RecipeContext,
+  entry: BlueprintEntry
+) {
+  state.entries[entry.id] = entry;
 }
 
 function arraymove(arr: unknown[], fromIndex: number, toIndex: number) {

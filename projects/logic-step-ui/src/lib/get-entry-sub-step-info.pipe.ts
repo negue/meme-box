@@ -1,8 +1,8 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { BlueprintEntry, BlueprintSubStepInfo } from "@memebox/logic-step-core";
-import { Observable, of } from "rxjs";
-import { AppQueries } from "@memebox/app-state";
-import { BlueprintContextDirective } from "./blueprint-context.directive";
+import {Pipe, PipeTransform} from '@angular/core';
+import {BlueprintEntry, BlueprintSubStepInfo} from "@memebox/logic-step-core";
+import {Observable, of} from "rxjs";
+import {AppQueries} from "@memebox/app-state";
+import {BlueprintContextDirective} from "./blueprint-context.directive";
 
 @Pipe({
   name: 'getEntrySubStepInfo$'
@@ -23,10 +23,11 @@ export class GetEntrySubStepInfoPipe implements PipeTransform {
     switch (value.entryType) {
       case 'step':
       case  'group':
-        return of(value.subSteps.map(({label,entries}) => {
+        return of(value.subCommandBlocks.map(({labelId,entries}) => {
           return {
-            name: label,
-            label: label,
+            name: labelId,
+            labelId: labelId,
+            label: 'TODO LABEL OF '+labelId,
             entries
           };
         }));
@@ -35,7 +36,8 @@ export class GetEntrySubStepInfoPipe implements PipeTransform {
         return of([
           {
             name: 'entries',
-            label: 'Steps',
+            labelId: 'step',
+            label: 'TODO LABEL OF step',
             entries: []
           }
         ]);

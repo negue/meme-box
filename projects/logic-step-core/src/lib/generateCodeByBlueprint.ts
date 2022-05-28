@@ -1,10 +1,10 @@
 import {
-  BlueprintContext,
   BlueprintEntry,
   BlueprintEntryStepCall,
   BlueprintEntryStepPayload,
   BlueprintRegistry,
-  BlueprintStepSelectionGroup
+  BlueprintStepSelectionGroup,
+  RecipeContext
 } from "./blueprint.types";
 import {uuid} from "@gewd/utils";
 import {registerMemeboxSteps} from "./blueprint-steps.memebox";
@@ -65,10 +65,10 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
 };
 
 
-function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
+function generateCodeByStep (step: BlueprintEntry, context: RecipeContext) {
   const result: string[] = [];
 
-  for (const subStepInfo of step.subSteps) {
+  for (const subStepInfo of step.subCommandBlocks) {
     for (const entryId of subStepInfo.entries) {
       const subEntry = context.entries[entryId];
 
@@ -97,7 +97,7 @@ function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
 }
 
 export function generateCodeByBlueprint(
-  blueprint: BlueprintContext
+  blueprint: RecipeContext
 ): string  {
   const result: string[] = [];
 
@@ -118,7 +118,7 @@ export function generateStepEntry (
     payload,
     awaited: true,
     entryType: "step",
-    subSteps: [],
+    subCommandBlocks: [],
   };
 }
 

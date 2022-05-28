@@ -21,7 +21,7 @@
      (cdkDropListDropped)="stepRearranged($event, subStepInfo)">
 
   <span>{{subStepInfo.label}}</span>
-  <div *ngFor="let subStep of context.getSubEntries$(entry.id, subStepInfo.label) | async"
+  <div *ngFor="let subStep of context.getSubEntries$(entry.id, subStepInfo.labelId) | async"
        [cdkDragDisabled]="!editMode"
        cdkDrag [cdkDragData]="subStep"
        class="step-entry">

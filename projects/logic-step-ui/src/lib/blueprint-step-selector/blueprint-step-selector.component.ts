@@ -1,11 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {
   BlueprintCommandBlockGroups,
-  BlueprintContext,
   BlueprintEntry,
   BlueprintStepDefinition,
   BlueprintStepSelectionGroup,
-  BlueprintSubStepInfo
+  BlueprintSubStepInfo,
+  RecipeContext
 } from "@memebox/logic-step-core";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -46,7 +46,7 @@ export class BlueprintStepSelectorComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: {
       entry: BlueprintEntry;
       subStepInfo: BlueprintSubStepInfo;
-      context: BlueprintContext
+      context: RecipeContext
     },
     private appQuery: AppQueries,
     private stepCreator: BlueprintStepCreatorService

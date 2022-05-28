@@ -101,7 +101,7 @@ export class ScriptHandler implements ActionStoreAdapter {
   // endregion ActionStoreAdapter
 
   public async handleBlueprint(script: Action, payloadObs: TriggerAction) {
-    const generatedScript = generateCodeByBlueprint(script.blueprint);
+    const generatedScript = generateCodeByBlueprint(script.recipe);
 
     const scriptConfig: ScriptConfig = {
       bootstrapScript: '',

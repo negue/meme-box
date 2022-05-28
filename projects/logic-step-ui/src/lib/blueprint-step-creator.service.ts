@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {
-  BlueprintContext,
   BlueprintEntry,
   BlueprintEntryStepCall,
   BlueprintEntryStepPayload,
   BlueprintStepDefinition,
   BlueprintStepRegistry,
-  generateStepEntry
+  generateStepEntry,
+  RecipeContext
 } from "@memebox/logic-step-core";
 import {DialogService} from "../../../../src/app/shared/dialogs/dialog.service";
 import type {StepSettingDialogPayload} from "./step-setting-dialog/step-setting-dialog.component";
@@ -65,7 +65,7 @@ export class BlueprintStepCreatorService {
     return dialogResult;
   }
 
-  getPossibleSteps (step: BlueprintEntry, context: BlueprintContext): BlueprintStepDefinition[] {
+  getPossibleSteps (step: BlueprintEntry, context: RecipeContext): BlueprintStepDefinition[] {
     return Object.entries(BlueprintStepRegistry)
       .filter(([_, value]) => {
         if (!value.allowedToBeAdded) {

@@ -420,14 +420,14 @@
 
             <app-blueprint-entry blueprintContext #recipeContext="blueprintContext"
                                  [class.hidden]="selectedRecipeTabIndex !== 0"
-                                 [blueprint]="actionToEdit.blueprint"
-                                 (stateUpdated$)="actionToEdit.blueprint = $event"
+                                 [recipe]="actionToEdit.recipe"
+                                 (stateUpdated$)="actionToEdit.recipe = $event"
                                  [asBlock]="true" [isRoot]="true"
                                  [editMode]="true">
             </app-blueprint-entry>
 
           <ng-container *ngIf="selectedRecipeTabIndex !== 0">
-            <pre [highlight]="toScriptCode(recipeContext.blueprint)"
+            <pre [highlight]="toScriptCode(recipeContext.recipe)"
                  lang="js" class="pre-wrap-break"></pre>
 
           </ng-container>

@@ -3,7 +3,7 @@ import {ActionType} from "./media.types";
 import {ActionOverridableProperties, TriggerAction} from "./actions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {DefaultImage} from "./twitch-data.types";
-import {BlueprintContext} from "@memebox/logic-step-core";
+import {RecipeContext} from "@memebox/logic-step-core";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -61,7 +61,7 @@ export interface Action extends HasId, ActionOverridableProperties, HasExtendedD
   fromTemplate?: string; // GUID / Clip.Id of the Template
   description?: string;
 
-  blueprint?: BlueprintContext;
+  recipe?: RecipeContext;
 }
 
 export interface Screen extends HasId {

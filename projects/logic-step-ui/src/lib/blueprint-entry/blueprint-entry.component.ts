@@ -77,7 +77,7 @@ export class BlueprintEntryComponent
       data: {
         entry,
         subStepInfo,
-        context: this.context.blueprint
+        context: this.context.recipe
       },
       autoFocus: false
     });
