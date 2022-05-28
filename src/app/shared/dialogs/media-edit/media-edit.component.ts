@@ -55,7 +55,7 @@ import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
 import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
 import {downloadFile} from "@gewd/utils";
-import {createBlueprintContext} from "@memebox/logic-step-core";
+import {BlueprintContext, createBlueprintContext, generateCodeByBlueprint} from "@memebox/logic-step-core";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -150,6 +150,8 @@ export class MediaEditComponent
   availableScreens$ = this.appQuery.screensList$;
   selectedScreenId = '';
   showOnMobile = true;
+
+  selectedRecipeTabIndex = 0;
 
   // region Tag specific
 
@@ -592,6 +594,10 @@ export class MediaEditComponent
     console.info($event);
 
 
+  }
+
+  toScriptCode (blueprint: BlueprintContext): string  {
+    return generateCodeByBlueprint(blueprint);
   }
 
   // region Import / Export Methods

@@ -73,7 +73,7 @@ export const ACTION_CONFIG_FLAGS: Record<string, ActionEditConfig> = {
     hasPathSelection: false,
   },
   [ActionType.Recipe]: {
-    hasTypeSettings: true,
+    hasTypeSettings: false,  // currently using the space of the other column to fill up, todo refactor
     canSelectQueue: true,
     hasPathSelection: false,
     hasVisibleDuration: false,

@@ -72,7 +72,9 @@ function generateCodeByStep (step: BlueprintEntry, context: BlueprintContext) {
     for (const entryId of subStepInfo.entries) {
       const subEntry = context.entries[entryId];
 
-      if (subEntry.entryType === 'step'){
+      if (!subEntry) {
+        result.push(`logger.error('this shouldnt have happened: cant find command block information of ${entryId});`);
+      } else if (subEntry.entryType === 'step'){
         const entryDefinition = BlueprintStepRegistry[subEntry.stepType];
 
         // result.push(`logger.log('Pre: ${subEntry.stepType}');`);

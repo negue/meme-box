@@ -31,6 +31,7 @@ import {ScriptReadonlyViewComponent} from './script-readonly-view/script-readonl
 import {DynamicPortalModule} from "@gewd/ng-utils/dynamic-portal";
 import {LogicStepUiModule} from "@memebox/logic-step-ui";
 import {DialogsModule} from "../dialogs.module";
+import {MatTabsModule} from "@angular/material/tabs";
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import {DialogsModule} from "../dialogs.module";
 
     DirectivesModule,
     LogicStepUiModule,
-    DialogsModule
+    DialogsModule,
+    MatTabsModule
   ],
   providers: [],
 })

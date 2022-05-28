@@ -267,15 +267,6 @@
               </ng-container>
 
             </ng-container>
-
-            <ng-container *ngIf="form.value.type === ActionType.Recipe">
-              <app-blueprint-entry blueprintContext
-                                   [blueprint]="actionToEdit.blueprint"
-                                   (stateUpdated$)="actionToEdit.blueprint = $event"
-                                   [asBlock]="true" [isRoot]="true"
-                                   [editMode]="true">
-              </app-blueprint-entry>
-            </ng-container>
           </div>
           <!-- Preview of a Media -->
           <div [class.custom-html-preview]="[ActionType.Widget, ActionType.WidgetTemplate].includes(form.value.type)"
@@ -418,7 +409,28 @@
         </div>
 
         <div *ngSwitchCase="ActionType.Recipe" >
-          Test
+          <ng-template dynamicPortalSource="importExportPanelLeft">
+            <mat-tab-group style="height: 50px"
+                           mat-stretch-tabs
+                           (selectedIndexChange)="selectedRecipeTabIndex = $event">
+              <mat-tab label="Recipe" ></mat-tab>
+              <mat-tab label="Generated Script-Code"></mat-tab>
+            </mat-tab-group>
+          </ng-template>
+
+            <app-blueprint-entry blueprintContext #recipeContext="blueprintContext"
+                                 [class.hidden]="selectedRecipeTabIndex !== 0"
+                                 [blueprint]="actionToEdit.blueprint"
+                                 (stateUpdated$)="actionToEdit.blueprint = $event"
+                                 [asBlock]="true" [isRoot]="true"
+                                 [editMode]="true">
+            </app-blueprint-entry>
+
+          <ng-container *ngIf="selectedRecipeTabIndex !== 0">
+            <pre [highlight]="toScriptCode(recipeContext.blueprint)"
+                 lang="js" class="pre-wrap-break"></pre>
+
+          </ng-container>
         </div>
 
         <!-- All others => AppClipType -->
