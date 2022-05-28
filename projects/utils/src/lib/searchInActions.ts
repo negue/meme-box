@@ -12,7 +12,9 @@ const fieldsToCheck = NOT_ALLOWED_WIDGET_VARIABLE_NAMES.concat(NOT_ALLOWED_SCRIP
 
 export function actionContentContainsText (action: Action, lowerCaseTextToSearch: string): boolean  {
   for (const fieldToCheck of fieldsToCheck) {
-    if (action.extended?.[fieldToCheck]?.toLowerCase().includes(lowerCaseTextToSearch)) {
+    const extendedValueOfField = action.extended?.[fieldToCheck];
+
+    if (typeof extendedValueOfField === 'string' && extendedValueOfField?.toLowerCase().includes(lowerCaseTextToSearch)) {
       return true;
     }
   }

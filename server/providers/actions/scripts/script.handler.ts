@@ -25,7 +25,7 @@ import {generateCodeByBlueprint} from "@memebox/logic-step-core";
 const ActionTypesToResetScriptContext = [
   ActionType.Script,
   ActionType.PermanentScript,
-  ActionType.Blueprint
+  ActionType.Recipe
 ];
 
 @Service()

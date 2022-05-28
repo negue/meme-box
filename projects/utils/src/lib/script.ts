@@ -19,14 +19,14 @@ export function actionDataToScriptConfig (action: Partial<Action>): ScriptConfig
   }
 
   const dynamicContent: ScriptConfig = {
-    executionScript: action.extended[SCRIPT_EXECUTION_KEY] ?? '',
-    bootstrapScript: action.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
+    executionScript: action.extended[SCRIPT_EXECUTION_KEY] as string ?? '',
+    bootstrapScript: action.extended[SCRIPT_BOOTSTRAP_KEY] as string ?? '',
   };
 
   dynamicContent.variablesConfig = getVariablesConfigListOfAction(action);
 
   // todo add a settings type
-  const settings: any = JSON.parse(action.extended[SCRIPT_SETTINGS_KEY] ?? '{}');
+  const settings: any = JSON.parse(action.extended[SCRIPT_SETTINGS_KEY] as string ?? '{}');
   dynamicContent.settings = settings;
 
   return dynamicContent;

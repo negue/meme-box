@@ -32,7 +32,7 @@ export enum MetaTriggerTypes {
 
 export interface HasExtendedData {
   // used for Widgets and/or variables / -config
-  extended?: Dictionary<string>;
+  extended?: Dictionary<unknown>;
 }
 
 export interface Action extends HasId, ActionOverridableProperties, HasExtendedData {

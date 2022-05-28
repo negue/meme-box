@@ -9,7 +9,7 @@ interface ActionEditConfig {
   hasRequiredPlayLength?: boolean;
 }
 
-export const ACTION_CONFIG_FLAGS: Record<string, MediaEditConfig> = {
+export const ACTION_CONFIG_FLAGS: Record<string, ActionEditConfig> = {
   [ActionType.Invalid]: undefined,
   [ActionType.Picture]: {
     hasTypeSettings: true,
@@ -69,13 +69,15 @@ export const ACTION_CONFIG_FLAGS: Record<string, MediaEditConfig> = {
   [ActionType.Meta]: {
     hasTypeSettings: true,
     canSelectQueue: true,
-  hasVisibleDuration: false,
+    hasVisibleDuration: false,
     hasPathSelection: false,
   },
-  [ActionType.Blueprint]: {
+  [ActionType.Recipe]: {
     hasTypeSettings: true,
     canSelectQueue: true,
-    hasPath: false
+    hasPathSelection: false,
+    hasVisibleDuration: false,
+    showImportExportPanel: true,
   }
 } as const;
 

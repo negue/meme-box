@@ -43,7 +43,7 @@ export function actionCanBeTriggeredWithVariables (action: Action): boolean  {
 }
 
 export function getVariablesConfigListOfAction (action: Partial<Action>): ActionVariableConfig[] {
- return JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] ?? '[]');
+ return JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] as string ?? '[]');
 }
 
 export function getVariableMapOfAction(action: Partial<Action>): Dictionary<unknown> {

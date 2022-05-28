@@ -74,7 +74,7 @@ export class ActionTriggerHandler {
       case ActionType.Script:
         await this._scriptHandler.handleScript(mediaConfig, payloadObs);
         break;
-      case ActionType.Blueprint:
+      case ActionType.Recipe:
         await this._scriptHandler.handleBlueprint(mediaConfig, payloadObs);
         break;
       default: {

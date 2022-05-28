@@ -201,20 +201,20 @@ export function actionDataToWidgetContent (action: Partial<Action>): DynamicIfra
   }
 
   const dynamicContent: DynamicIframeContent = {
-    html: action.extended[DYNAMIC_IFRAME_HTML_KEY] ?? '',
-    css: action.extended[DYNAMIC_IFRAME_CSS_KEY] ?? '',
-    js: action.extended[DYNAMIC_IFRAME_JS_KEY] ?? ''
+    html: action.extended[DYNAMIC_IFRAME_HTML_KEY] as string ?? '',
+    css: action.extended[DYNAMIC_IFRAME_CSS_KEY] as string ?? '',
+    js: action.extended[DYNAMIC_IFRAME_JS_KEY] as string ?? ''
   };
 
   // External Files are saved as JSON
-  const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
+  const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] as string ?? '[]');
   dynamicContent.libraries = externalFiles;
 
   dynamicContent.variablesConfig = getVariablesConfigListOfAction(action);
   dynamicContent.variables = getVariableMapOfAction(action);
 
   // todo add a settings type
-  const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');
+  const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] as string ?? '{}');
   dynamicContent.settings = settings;
 
   return dynamicContent;

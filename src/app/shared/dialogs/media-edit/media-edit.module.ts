@@ -21,7 +21,7 @@ import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {HintPanelModule, PipesModule, StepperContentModule} from "@memebox/ui-components";
+import {HintPanelModule, StepperContentModule, UiComponentsPipesModule} from "@memebox/ui-components";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
