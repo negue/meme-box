@@ -1,2 +1,2 @@
-export * from './lib/blueprint.types';
-export * from './lib/generateCodeByBlueprint';
+export * from './lib/recipe.types';
+export * from './lib/generateCodeByRecipe';

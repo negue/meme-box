@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { BlueprintEntry, BlueprintStepInfo, BlueprintStepRegistry } from "@memebox/recipe-core";
+import { RecipeCommandInfo, RecipeCommandRegistry, RecipeEntry } from "@memebox/recipe-core";
 import { AppQueries } from "@memebox/app-state";
 
 @Pipe({
@@ -12,14 +12,14 @@ export class GetEntryStepMetaDataPipe implements PipeTransform {
   ) {
   }
 
-  async transform(value: BlueprintEntry, parentEntry: BlueprintEntry): Promise<BlueprintStepInfo|null> {
+  async transform(value: RecipeEntry, parentEntry: RecipeEntry): Promise<RecipeCommandInfo|null> {
     if (value.entryType !== 'step') {
       return  Promise.resolve(null)
     }
 
-    const blueprintRegistryEntry = BlueprintStepRegistry[value.stepType];
+    const blueprintRegistryEntry = RecipeCommandRegistry[value.stepType];
 
-    const entryLabel = await blueprintRegistryEntry.stepEntryLabelAsync(this.appQueries, value.payload, parentEntry);
+    const entryLabel = await blueprintRegistryEntry.commandEntryLabelAsync(this.appQueries, value.payload, parentEntry);
 
     return {
       stepType: value.stepType,

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { BlueprintEntry, BlueprintEntryStepCall, BlueprintSubStepInfo } from "@memebox/recipe-core";
+import { RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo } from "@memebox/recipe-core";
 import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import { BlueprintContextDirective } from "../blueprint-context.directive";
 import { MatCheckboxChange } from "@angular/material/checkbox";
@@ -19,10 +19,10 @@ export class BlueprintEntryComponent
   private _destroy$ = new Subject<void>();
 
   @Input()
-  public entry!: BlueprintEntry;
+  public entry!: RecipeEntry;
 
   @Input()
-  public parent!: BlueprintEntry;
+  public parent!: RecipeEntry;
 
   @Input()
   @HostBinding('class.block')
@@ -55,7 +55,7 @@ export class BlueprintEntryComponent
 
 
   stepRearranged ($event: CdkDragDrop<unknown, unknown>,
-                  subStepInfo: BlueprintSubStepInfo): void  {
+                  subStepInfo: RecipeSubCommandInfo): void  {
     const newPos = $event.currentIndex;
     const oldPos = $event.previousIndex;
 
@@ -65,14 +65,14 @@ export class BlueprintEntryComponent
     );
   }
 
-  removeStep (subStep: BlueprintEntry, parent: BlueprintEntry): void  {
+  removeStep (subStep: RecipeEntry, parent: RecipeEntry): void  {
     this.context.removeStep(
       subStep,
       parent
     );
   }
 
-  async addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo) {
+  async addStep (entry: RecipeEntry, subStepInfo: RecipeSubCommandInfo) {
     const result = this.dialogService.open(BlueprintStepSelectorComponent, {
       data: {
         entry,
@@ -83,14 +83,14 @@ export class BlueprintEntryComponent
     });
 
     const dialogInstance = result.componentInstance;
-    const dialogResult: BlueprintEntryStepCall = await result.afterClosed().toPromise();
+    const dialogResult: RecipeEntryCommandCall = await result.afterClosed().toPromise();
 
     if (dialogResult) {
       this.context.addStep(entry, subStepInfo, dialogResult)
     }
   }
 
-  changeAwaited (entry: BlueprintEntry, $event: MatCheckboxChange): void  {
+  changeAwaited (entry: RecipeEntry, $event: MatCheckboxChange): void  {
     this.context.changeAwaited(entry, $event.checked);
   }
 
@@ -99,7 +99,7 @@ export class BlueprintEntryComponent
     this._destroy$.complete();
   }
 
-  async editStepConfig(entry: BlueprintEntry, parent: BlueprintEntry) {
+  async editStepConfig(entry: RecipeEntry, parent: RecipeEntry) {
     if (entry.entryType !== 'step') {
       return;
     }

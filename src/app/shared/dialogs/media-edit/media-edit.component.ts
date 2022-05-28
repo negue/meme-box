@@ -57,7 +57,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import { DialogData } from "../dialog.contract";
 import { ACTION_CONFIG_FLAGS } from "./media-edit.type-config";
 import { downloadFile } from "@gewd/utils";
-import { createRecipeContext, generateCodeByBlueprint, RecipeContext } from "@memebox/recipe-core";
+import { createRecipeContext, generateCodeByRecipe, RecipeContext } from "@memebox/recipe-core";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -592,7 +592,7 @@ export class MediaEditComponent
   }
 
   toScriptCode (blueprint: RecipeContext): string  {
-    return generateCodeByBlueprint(blueprint);
+    return generateCodeByRecipe(blueprint);
   }
 
   // region Import / Export Methods

@@ -1,15 +1,15 @@
 import {
-  BlueprintRegistry,
-  BlueprintStepConfigActionListPayload,
-  BlueprintStepConfigActionPayload,
-  generateCodeByStep
-} from "./blueprint.types";
+  generateCodeByStep,
+  RecipeCommandBlockRegistry,
+  RecipeCommandConfigActionListPayload,
+  RecipeCommandConfigActionPayload
+} from "./recipe.types";
 import { map, take } from "rxjs/operators";
 import { generateRandomCharacters } from "./utils";
 import { combineLatest } from "rxjs";
 
 function createMemeboxApiVariable(
-  actionPayload: BlueprintStepConfigActionPayload
+  actionPayload: RecipeCommandConfigActionPayload
 ) {
   const actionId = actionPayload.actionId;
   const screenId = actionPayload.screenId;
@@ -27,13 +27,13 @@ function createMemeboxApiVariable(
   return actionApiVariable;
 }
 
-export function registerMemeboxSteps (
-  registry: BlueprintRegistry,
+export function registerMemeboxCommandBlocks (
+  registry: RecipeCommandBlockRegistry,
   generateCodeByStep: generateCodeByStep
 ): void  {
   registry["triggerAction"] = {
     pickerLabel: "Trigger Action",
-    stepGroup: "memebox",
+    commandGroup: "memebox",
     configArguments: [
       {
         name: "action",
@@ -42,15 +42,15 @@ export function registerMemeboxSteps (
       }
     ],
     toScriptCode: (step) => {
-      const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
+      const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
 
       const actionOverrides = actionPayload.overrides;
 
       return `${createMemeboxApiVariable(actionPayload)}
               .trigger(${actionOverrides ? JSON.stringify(actionOverrides) : ''});`;
     },
-    stepEntryLabelAsync: (queries, payload) => {
-      const actionPayload = payload.action as BlueprintStepConfigActionPayload;
+    commandEntryLabelAsync: (queries, payload) => {
+      const actionPayload = payload.action as RecipeCommandConfigActionPayload;
 
       return queries.getActionById$(actionPayload.actionId).pipe(
         map(actionInfo => actionInfo?.name ?? 'unknown action'),
@@ -61,7 +61,7 @@ export function registerMemeboxSteps (
 
   registry["triggerActionWhile"] = {
     pickerLabel: "Trigger Action and keep it visible while doing other Command Block",
-    stepGroup: "memebox",
+    commandGroup: "memebox",
     configArguments: [
       {
         name: "action",
@@ -69,7 +69,7 @@ export function registerMemeboxSteps (
         type: "action"
       }
     ],
-    extendBlueprintStep: (step) => {
+    extendCommandBlock: (step) => {
       step.payload = {
         ...step.payload,
         _suffix: generateRandomCharacters(5)
@@ -81,7 +81,7 @@ export function registerMemeboxSteps (
       });
     },
     toScriptCode: (step, context) => {
-      const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
+      const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
 
       const actionOverrides = actionPayload.overrides;
 
@@ -91,8 +91,8 @@ export function registerMemeboxSteps (
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
-    stepEntryLabelAsync: (queries, payload) => {
-      const actionPayload = payload.action as BlueprintStepConfigActionPayload;
+    commandEntryLabelAsync: (queries, payload) => {
+      const actionPayload = payload.action as RecipeCommandConfigActionPayload;
 
       return queries.getActionById$(actionPayload.actionId).pipe(
         map(actionInfo => actionInfo?.name ?? 'unknown action'),
@@ -102,9 +102,9 @@ export function registerMemeboxSteps (
   };
   registry["triggerActionWhileReset"] = {
     pickerLabel: "Reset the 'triggerActionWhileAction' (todo label)",
-    stepGroup: "memebox",
+    commandGroup: "memebox",
     configArguments: [],
-    extendBlueprintStep: (step, parentStep) => {
+    extendCommandBlock: (step, parentStep) => {
       step.payload._suffix = parentStep.entryType === 'step' && parentStep.payload._suffix;
     },
     allowedToBeAdded: (step) => {
@@ -117,14 +117,14 @@ export function registerMemeboxSteps (
 
       return `${helpersName}.reset();`
     },
-    stepEntryLabelAsync: () => {
+    commandEntryLabelAsync: () => {
       return Promise.resolve('reset');
     },
   };
 
   registry["triggerRandom"] = {
     pickerLabel: "Trigger Random Action",
-    stepGroup: "memebox",
+    commandGroup: "memebox",
     configArguments: [
       {
         name: "actions",
@@ -139,7 +139,7 @@ export function registerMemeboxSteps (
       return `
         ${awaitCode} (() => {
         const actionsToChooseFrom = [${
-          (step.payload.actions as BlueprintStepConfigActionListPayload)
+          (step.payload.actions as RecipeCommandConfigActionListPayload)
             .map(action => JSON.stringify(action))
             .join(',')
         }];
@@ -148,8 +148,8 @@ export function registerMemeboxSteps (
         })();
       `;
     },
-    stepEntryLabelAsync: async (queries, payload) => {
-      const actionPayload = payload.actions as BlueprintStepConfigActionPayload[];
+    commandEntryLabelAsync: async (queries, payload) => {
+      const actionPayload = payload.actions as RecipeCommandConfigActionPayload[];
 
       const namesOfActions = await combineLatest(
         actionPayload.map(a => queries.getActionById$(a.actionId).pipe(
@@ -169,7 +169,7 @@ export function registerMemeboxSteps (
 
   registry["updateActionProperties"] = {
     pickerLabel: "Update Action Properties",
-    stepGroup: "memebox",
+    commandGroup: "memebox",
     configArguments: [
       {
         name: "action",
@@ -184,7 +184,7 @@ export function registerMemeboxSteps (
     ],
     awaitCodeHandledInternally: true,
     toScriptCode: (step) => {
-      const actionPayload = step.payload.action as BlueprintStepConfigActionPayload;
+      const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
       const overrides = actionPayload.overrides;
 
       const awaitCode = step.awaited ? 'await ': '';
@@ -211,8 +211,8 @@ ${awaitCode} (() => {
                     })();
                     `;
     },
-    stepEntryLabelAsync: (queries, payload) => {
-      const actionPayload = payload.action as BlueprintStepConfigActionPayload;
+    commandEntryLabelAsync: (queries, payload) => {
+      const actionPayload = payload.action as RecipeCommandConfigActionPayload;
 
       return queries.getActionById$(actionPayload.actionId).pipe(
         map(actionInfo =>  'Update Properties of: ' + actionInfo?.name ?? 'unknown action'),

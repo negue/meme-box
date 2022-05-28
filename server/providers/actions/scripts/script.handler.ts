@@ -20,7 +20,7 @@ import { TwitchDataProvider } from "../../twitch/twitch.data-provider";
 import { setGlobalVMScope } from "./global.context";
 import { TwitchQueueEventBus } from "../../twitch/twitch-queue-event.bus";
 import { actionDataToScriptConfig, ScriptConfig } from "@memebox/utils";
-import { generateCodeByBlueprint } from "@memebox/recipe-core";
+import { generateCodeByRecipe } from "@memebox/recipe-core";
 
 const ActionTypesToResetScriptContext = [
   ActionType.Script,
@@ -101,7 +101,7 @@ export class ScriptHandler implements ActionStoreAdapter {
   // endregion ActionStoreAdapter
 
   public async handleBlueprint(script: Action, payloadObs: TriggerAction) {
-    const generatedScript = generateCodeByBlueprint(script.recipe);
+    const generatedScript = generateCodeByRecipe(script.recipe);
 
     const scriptConfig: ScriptConfig = {
       bootstrapScript: '',

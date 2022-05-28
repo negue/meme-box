@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { createRecipeContext, generateCodeByBlueprint, RecipeContext } from "../../../../projects/recipe-core/src";
+import { createRecipeContext, generateCodeByRecipe, RecipeContext } from "../../../../projects/recipe-core/src";
 import { AppService } from "../../../../projects/app-state/src/lib/state";
 
 @Component({
@@ -19,6 +19,6 @@ export class TestComponent implements OnInit {
   }
 
   toScriptCode (blueprint: RecipeContext): string  {
-    return generateCodeByBlueprint(blueprint);
+    return generateCodeByRecipe(blueprint);
   }
 }

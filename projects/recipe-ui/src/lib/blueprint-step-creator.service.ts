@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  BlueprintEntry,
-  BlueprintEntryStepCall,
-  BlueprintEntryStepPayload,
-  BlueprintStepDefinition,
-  BlueprintStepRegistry,
   generateStepEntry,
-  RecipeContext
+  RecipeCommandDefinition,
+  RecipeCommandRegistry,
+  RecipeContext,
+  RecipeEntry,
+  RecipeEntryCommandCall,
+  RecipeEntryCommandPayload
 } from "@memebox/recipe-core";
 import { DialogService } from "../../../../src/app/shared/dialogs/dialog.service";
 import type { StepSettingDialogPayload } from "./step-setting-dialog/step-setting-dialog.component";
@@ -19,9 +19,9 @@ export class BlueprintStepCreatorService {
     private dialogService: DialogService,
   ) { }
 
-  async generateStepData (parentStep: BlueprintEntry, stepType: string): Promise<BlueprintEntryStepCall|void> {
+  async generateStepData (parentStep: RecipeEntry, stepType: string): Promise<RecipeEntryCommandCall|void> {
 
-    const blueprintRegistryEntry = BlueprintStepRegistry[stepType];
+    const blueprintRegistryEntry = RecipeCommandRegistry[stepType];
 
     if (blueprintRegistryEntry.configArguments.length !== 0) {
       const dialogResult = await this._loadAndOpenSettingDialog({
@@ -34,8 +34,8 @@ export class BlueprintStepCreatorService {
 
       const generatedBlueprintStep = generateStepEntry(stepType, dialogResult);
 
-      if (blueprintRegistryEntry.extendBlueprintStep) {
-        blueprintRegistryEntry.extendBlueprintStep(
+      if (blueprintRegistryEntry.extendCommandBlock) {
+        blueprintRegistryEntry.extendCommandBlock(
           generatedBlueprintStep, parentStep
         );
       }
@@ -46,12 +46,12 @@ export class BlueprintStepCreatorService {
     }
   }
 
-  async editStepData (currentStep: BlueprintEntry): Promise<BlueprintEntryStepPayload|void> {
+  async editStepData (currentStep: RecipeEntry): Promise<RecipeEntryCommandPayload|void> {
     if (currentStep.entryType !== 'step'){
       return;
     }
 
-    const blueprintRegistryEntry = BlueprintStepRegistry[currentStep.stepType];
+    const blueprintRegistryEntry = RecipeCommandRegistry[currentStep.stepType];
 
     if (blueprintRegistryEntry.configArguments.length === 0) {
       return;
@@ -65,8 +65,8 @@ export class BlueprintStepCreatorService {
     return dialogResult;
   }
 
-  getPossibleSteps (step: BlueprintEntry, context: RecipeContext): BlueprintStepDefinition[] {
-    return Object.entries(BlueprintStepRegistry)
+  getPossibleSteps (step: RecipeEntry, context: RecipeContext): RecipeCommandDefinition[] {
+    return Object.entries(RecipeCommandRegistry)
       .filter(([_, value]) => {
         if (!value.allowedToBeAdded) {
           return true;
@@ -76,20 +76,20 @@ export class BlueprintStepCreatorService {
       })
       .map(([key, value]) => {
         return {
-          stepType: key,
+          commandType: key,
           ...value
         }
 
       });
   }
 
-  async _loadAndOpenSettingDialog(payload: StepSettingDialogPayload): Promise<BlueprintEntryStepPayload> {
+  async _loadAndOpenSettingDialog(payload: StepSettingDialogPayload): Promise<RecipeEntryCommandPayload> {
     const dialogRef = await this.dialogService.loadAndOpen(
       import('./step-setting-dialog/step-setting-dialog.module'),
       payload
     );
 
-    const dialogResult: BlueprintEntryStepPayload = await dialogRef.afterClosed().toPromise();
+    const dialogResult: RecipeEntryCommandPayload = await dialogRef.afterClosed().toPromise();
 
     return dialogResult;
   }

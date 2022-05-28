@@ -5,7 +5,7 @@ import { ENDPOINTS, ObsSourceEntry, ObsSourceFilterEntry } from "@memebox/contra
 import { combineLatest, from, Observable, of, Subject } from "rxjs";
 import { map, startWith, switchMap, takeUntil } from "rxjs/operators";
 import { MemeboxApiService } from "@memebox/app-state";
-import { BlueprintStepConfigObsSetFilterStatePayload } from "@memebox/recipe-core";
+import { RecipeCommandConfigObsSetFilterStatePayload } from "@memebox/recipe-core";
 
 @Component({
   selector: 'app-obs-filter-selection',
@@ -22,10 +22,10 @@ export class ObsFilterSelectionComponent implements OnInit, OnDestroy {
   public selectedFilterSubject = new Subject<string>();
 
   @Input()
-  public payload: BlueprintStepConfigObsSetFilterStatePayload|null = null;
+  public payload: RecipeCommandConfigObsSetFilterStatePayload|null = null;
 
   @Output()
-  public payloadChanged: Observable<BlueprintStepConfigObsSetFilterStatePayload> = combineLatest([
+  public payloadChanged: Observable<RecipeCommandConfigObsSetFilterStatePayload> = combineLatest([
     this.selectedSourceSubject,
     this.selectedFilterSubject
   ]).pipe(

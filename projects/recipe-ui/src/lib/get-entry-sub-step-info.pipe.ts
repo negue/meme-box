@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { BlueprintEntry, BlueprintSubStepInfo } from "@memebox/recipe-core";
+import { RecipeEntry, RecipeSubCommandInfo } from "@memebox/recipe-core";
 import { Observable, of } from "rxjs";
 import { AppQueries } from "@memebox/app-state";
 import { BlueprintContextDirective } from "./blueprint-context.directive";
@@ -15,7 +15,7 @@ export class GetEntrySubStepInfoPipe implements PipeTransform {
   ) {
   }
 
-  transform(value: BlueprintEntry): Observable<BlueprintSubStepInfo[]> {
+  transform(value: RecipeEntry): Observable<RecipeSubCommandInfo[]> {
     if (!value) {
       return of([]);
     }

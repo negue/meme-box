@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
-  BlueprintEntryStepPayload,
-  BlueprintStepConfigActionListPayload,
-  BlueprintStepConfigActionPayload,
-  BlueprintStepConfigArgument
+  RecipeCommandConfigActionListPayload,
+  RecipeCommandConfigActionPayload,
+  RecipeEntryCommandPayload,
+  RecipeStepConfigArgument
 } from "@memebox/recipe-core";
 import {
   Action,
@@ -20,8 +20,8 @@ import cloneDeep from "lodash/cloneDeep";
 import { isVisibleMedia } from "@memebox/shared-state";
 
 export interface StepSettingDialogPayload {
-  configArguments: BlueprintStepConfigArgument[];
-  currentStepData?: BlueprintEntryStepPayload;
+  configArguments: RecipeStepConfigArgument[];
+  currentStepData?: RecipeEntryCommandPayload;
 }
 
 @Component({
@@ -31,7 +31,7 @@ export interface StepSettingDialogPayload {
 })
 export class StepSettingDialogComponent {
 
-  public payload: BlueprintEntryStepPayload = {};
+  public payload: RecipeEntryCommandPayload = {};
 
   actionDictionary$: Observable<Dictionary<Action>> = this.appQuery.actionMap$;
 
@@ -64,7 +64,7 @@ export class StepSettingDialogComponent {
   }
 
   async selectAction(configName: string) {
-    let actionPayload = this.payload[configName] as any as BlueprintStepConfigActionPayload;
+    let actionPayload = this.payload[configName] as any as RecipeCommandConfigActionPayload;
 
     if (!actionPayload) {
       this.payload[configName] = actionPayload = {
@@ -76,7 +76,7 @@ export class StepSettingDialogComponent {
 
           }
         }
-      } as BlueprintStepConfigActionPayload;
+      } as RecipeCommandConfigActionPayload;
     }
 
     const actionId = await this._selectAction();
@@ -86,7 +86,7 @@ export class StepSettingDialogComponent {
     }
   }
 
-  async selectActionListEntry(actionPayload: BlueprintStepConfigActionPayload) {
+  async selectActionListEntry(actionPayload: RecipeCommandConfigActionPayload) {
     const actionId = await this._selectAction();
 
     if (actionId) {
@@ -101,7 +101,7 @@ export class StepSettingDialogComponent {
       return null;
     }
 
-    return this.payload[findActionConfig.name] as any as BlueprintStepConfigActionPayload;
+    return this.payload[findActionConfig.name] as any as RecipeCommandConfigActionPayload;
   }
 
   getActionOverridesPayload(configName: string) {
@@ -114,7 +114,7 @@ export class StepSettingDialogComponent {
   }
 
   getActionPayload(configName: string) {
-    return this.payload[configName] as any as BlueprintStepConfigActionPayload;
+    return this.payload[configName] as any as RecipeCommandConfigActionPayload;
   }
 
   isMedia(action: Action) {
@@ -126,15 +126,15 @@ export class StepSettingDialogComponent {
   }
 
 
-  getActionListPayload(configName: string): BlueprintStepConfigActionListPayload  {
-    return this.payload[configName] as any as BlueprintStepConfigActionListPayload;
+  getActionListPayload(configName: string): RecipeCommandConfigActionListPayload  {
+    return this.payload[configName] as any as RecipeCommandConfigActionListPayload;
   }
 
   save(): void  {
     this.dialogRef.close(this.payload);
   }
 
-  async addActionEntry(actionList: BlueprintStepConfigActionPayload[]) {
+  async addActionEntry(actionList: RecipeCommandConfigActionPayload[]) {
     const actionId = await this._selectAction();
 
     if (actionId) {
@@ -161,7 +161,7 @@ export class StepSettingDialogComponent {
     });
   }
 
-  removeActionEntry(actionList: BlueprintStepConfigActionPayload[], actionEntry: BlueprintStepConfigActionPayload): void  {
+  removeActionEntry(actionList: RecipeCommandConfigActionPayload[], actionEntry: RecipeCommandConfigActionPayload): void  {
     const indexOf = actionList.indexOf(actionEntry);
 
     actionList.splice(indexOf, 1);

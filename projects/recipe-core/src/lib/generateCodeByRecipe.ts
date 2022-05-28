@@ -1,22 +1,22 @@
 import {
-  BlueprintEntry,
-  BlueprintEntryStepCall,
-  BlueprintEntryStepPayload,
-  BlueprintRegistry,
-  BlueprintStepSelectionGroup,
-  RecipeContext
-} from "./blueprint.types";
+  RecipeCommandBlockRegistry,
+  RecipeCommandSelectionGroup,
+  RecipeContext,
+  RecipeEntry,
+  RecipeEntryCommandCall,
+  RecipeEntryCommandPayload
+} from "./recipe.types";
 import { uuid } from "@gewd/utils";
-import { registerMemeboxSteps } from "./blueprint-steps.memebox";
-import { registerObsSteps } from "./blueprint-steps.obs";
+import { registerMemeboxCommandBlocks } from "./command-blocks.memebox";
+import { registerObsCommandBlocks } from "./command-blocks.obs";
 
-export interface BlueprintStepConfigArgument {
+export interface RecipeStepConfigArgument {
   name: string;
   label: string;
   type: string;
 }
 
-export const BlueprintCommandBlockGroups: Record<string, BlueprintStepSelectionGroup> = {
+export const BlueprintCommandBlockGroups: Record<string, RecipeCommandSelectionGroup> = {
   generic: {
     label: "Generic",
     order: 1
@@ -25,16 +25,20 @@ export const BlueprintCommandBlockGroups: Record<string, BlueprintStepSelectionG
     label: "Memebox",
     order: 2
   },
+  twitch: {
+    label: "Twitch",
+    order: 3
+  },
   obs: {
     label: "OBS",
-    order: 3
+    order: 4
   }
 };
 
-export const BlueprintStepRegistry: BlueprintRegistry = {
+export const RecipeCommandRegistry: RecipeCommandBlockRegistry = {
   "sleepSeconds": {
     pickerLabel: "Wait for Seconds",
-    stepGroup: "generic",
+    commandGroup: "generic",
     configArguments: [
       {
         name: "seconds",
@@ -43,13 +47,13 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
       }
     ],
     toScriptCode: (step, context) => `sleep.secondsAsync(${step.payload.seconds});`,
-    stepEntryLabelAsync: (queries, payload, parentStep) => {
+    commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.seconds} seconds`);
     },
   },
   "sleepMs": {
     pickerLabel: "Wait for Milliseconds",
-    stepGroup: "generic",
+    commandGroup: "generic",
     configArguments: [
       {
         name: "ms",
@@ -58,14 +62,14 @@ export const BlueprintStepRegistry: BlueprintRegistry = {
       }
     ],
     toScriptCode: (step, context) => `sleep.msAsync(${step.payload.ms});`,
-    stepEntryLabelAsync: (queries, payload, parentStep) => {
+    commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.ms}ms`);
     },
   }
 };
 
 
-function generateCodeByStep (step: BlueprintEntry, context: RecipeContext) {
+function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
   const result: string[] = [];
 
   for (const subStepInfo of step.subCommandBlocks) {
@@ -75,9 +79,9 @@ function generateCodeByStep (step: BlueprintEntry, context: RecipeContext) {
       if (!subEntry) {
         result.push(`logger.error('this shouldnt have happened: cant find command block information of ${entryId});`);
       } else if (subEntry.entryType === 'step'){
-        const entryDefinition = BlueprintStepRegistry[subEntry.stepType];
+        const entryDefinition = RecipeCommandRegistry[subEntry.stepType];
 
-        // result.push(`logger.log('Pre: ${subEntry.stepType}');`);
+        // result.push(`logger.log('Pre: ${subEntry.commandType}');`);
 
         if (!entryDefinition.awaitCodeHandledInternally && subEntry.awaited) {
           result.push('await ');
@@ -85,7 +89,7 @@ function generateCodeByStep (step: BlueprintEntry, context: RecipeContext) {
 
         result.push(entryDefinition.toScriptCode(subEntry, context).trim());
 
-        // result.push(`logger.log('Post: ${subEntry.stepType}');`);
+        // result.push(`logger.log('Post: ${subEntry.commandType}');`);
       } else {
         result.push('TODO FOR TYPE: '+subEntry.entryType);
       }
@@ -96,7 +100,7 @@ function generateCodeByStep (step: BlueprintEntry, context: RecipeContext) {
 
 }
 
-export function generateCodeByBlueprint(
+export function generateCodeByRecipe(
   blueprint: RecipeContext
 ): string  {
   const result: string[] = [];
@@ -110,8 +114,8 @@ export function generateCodeByBlueprint(
 
 export function generateStepEntry (
   stepType: string,
-  payload: BlueprintEntryStepPayload
-): BlueprintEntryStepCall {
+  payload: RecipeEntryCommandPayload
+): RecipeEntryCommandCall {
   return {
     id: uuid(),
     stepType,
@@ -122,5 +126,5 @@ export function generateStepEntry (
   };
 }
 
-registerMemeboxSteps(BlueprintStepRegistry, generateCodeByStep);
-registerObsSteps(BlueprintStepRegistry);
+registerMemeboxCommandBlocks(RecipeCommandRegistry, generateCodeByStep);
+registerObsCommandBlocks(RecipeCommandRegistry);

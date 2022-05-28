@@ -1,13 +1,13 @@
-import { BlueprintRegistry, BlueprintStepConfigObsSetFilterStatePayload } from "./blueprint.types";
+import { RecipeCommandBlockRegistry, RecipeCommandConfigObsSetFilterStatePayload } from "./recipe.types";
 
-export function registerObsSteps (
-  registry: BlueprintRegistry
+export function registerObsCommandBlocks (
+  registry: RecipeCommandBlockRegistry
 ): void {
   const obsSwitchSceneType = "obs:switchScene";
 
   registry[obsSwitchSceneType] = {
     pickerLabel: "Switch Scene",
-    stepGroup: "obs",
+    commandGroup: "obs",
     configArguments: [
       {
         name: "scene",
@@ -20,7 +20,7 @@ export function registerObsSteps (
 
       return `obs.switchToScene('${scenePayload}');`;
     },
-    stepEntryLabelAsync: (queries, payload) => {
+    commandEntryLabelAsync: (queries, payload) => {
       const scenePayload = payload.scene as string;
 
       return Promise.resolve('OBS: switch scene: '+ scenePayload);
@@ -31,7 +31,7 @@ export function registerObsSteps (
 
   registry[obsSetFilterState] = {
     pickerLabel: "Set Filter State",
-    stepGroup: "obs",
+    commandGroup: "obs",
     configArguments: [
       {
         name: "filter",
@@ -45,14 +45,14 @@ export function registerObsSteps (
       }
     ],
     toScriptCode: (step) => {
-      const filterPayload = step.payload.filter as BlueprintStepConfigObsSetFilterStatePayload;
+      const filterPayload = step.payload.filter as RecipeCommandConfigObsSetFilterStatePayload;
       const enabled = step.payload.enabled as boolean;
 
       return `obs.getFilter('${filterPayload.sourceName}', '${filterPayload.filterName}')
                  .updateEnabled(${enabled});`;
     },
-    stepEntryLabelAsync: (queries, payload) => {
-      const filterPayload = payload.filter as BlueprintStepConfigObsSetFilterStatePayload;
+    commandEntryLabelAsync: (queries, payload) => {
+      const filterPayload = payload.filter as RecipeCommandConfigObsSetFilterStatePayload;
       const enabled = payload.enabled as boolean;
 
       return Promise.resolve(`OBS: setting Filter: ${filterPayload.filterName} to ${enabled}`);
@@ -63,7 +63,7 @@ export function registerObsSteps (
 
   registry[obsSendRaw] = {
     pickerLabel: "Send Raw Request",
-    stepGroup: "obs",
+    commandGroup: "obs",
     configArguments: [
       {
         name: "command",
@@ -82,7 +82,7 @@ export function registerObsSteps (
 
       return `obs.raw.send('${obsCommand}', '${obsPayload}')`;
     },
-    stepEntryLabelAsync: (queries, payload) => {
+    commandEntryLabelAsync: (queries, payload) => {
       const obsCommand = payload.command as string;
 
       return Promise.resolve(`OBS: send raw: ${obsCommand}`);

@@ -1,11 +1,11 @@
 import { Directive, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { filterNil, Store, StoreConfig } from "@datorama/akita";
 import {
-  BlueprintEntry,
-  BlueprintEntryStepCall,
-  BlueprintEntryStepPayload,
-  BlueprintSubStepInfo,
-  RecipeContext
+  RecipeContext,
+  RecipeEntry,
+  RecipeEntryCommandCall,
+  RecipeEntryCommandPayload,
+  RecipeSubCommandInfo
 } from "@memebox/recipe-core";
 import { Observable } from "rxjs";
 import { produce } from "immer";
@@ -28,7 +28,7 @@ export class BlueprintContextDirective
   public recipe: RecipeContext | null = null;
 
   @Output()
-  public readonly blueprintUpdated: Observable<BlueprintEntry> = this._select(store => store.entries[store.rootEntry]).pipe(
+  public readonly blueprintUpdated: Observable<RecipeEntry> = this._select(store => store.entries[store.rootEntry]).pipe(
     filterNil
   );
 
@@ -83,7 +83,7 @@ export class BlueprintContextDirective
   }
 
   public moveStep(prevPos: number, newPos: number,
-                   parent: BlueprintEntry,
+                   parent: RecipeEntry,
                    parentSubStep: string): void {
     this.update(state => {
       const foundEntry = this.findEntry(state, parent);
@@ -94,7 +94,7 @@ export class BlueprintContextDirective
     });
   }
 
-  addStep (entry: BlueprintEntry, subStepInfo: BlueprintSubStepInfo, stepToAdd: BlueprintEntryStepCall): void  {
+  addStep (entry: RecipeEntry, subStepInfo: RecipeSubCommandInfo, stepToAdd: RecipeEntryCommandCall): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -108,8 +108,8 @@ export class BlueprintContextDirective
 
   findEntry (
     state: RecipeContext,
-    entry: BlueprintEntry
-  ): BlueprintEntry  {
+    entry: RecipeEntry
+  ): RecipeEntry  {
     if (entry) {
       return state.entries[entry.id];
     } else {
@@ -117,7 +117,7 @@ export class BlueprintContextDirective
     }
   }
 
-  changeAwaited(entry: BlueprintEntry, checked: boolean): void  {
+  changeAwaited(entry: RecipeEntry, checked: boolean): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -125,7 +125,7 @@ export class BlueprintContextDirective
     });
   }
 
-  removeStep(subStep: BlueprintEntry, parent: BlueprintEntry): void  {
+  removeStep(subStep: RecipeEntry, parent: RecipeEntry): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, parent);
 
@@ -137,7 +137,7 @@ export class BlueprintContextDirective
     });
   }
 
-  changePayload(entry: BlueprintEntryStepCall, newPayload: BlueprintEntryStepPayload): void  {
+  changePayload(entry: RecipeEntryCommandCall, newPayload: RecipeEntryCommandPayload): void  {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -150,7 +150,7 @@ export class BlueprintContextDirective
 
 function addEntryToPath (
   state: RecipeContext,
-  entry: BlueprintEntry
+  entry: RecipeEntry
 ) {
   state.entries[entry.id] = entry;
 }
