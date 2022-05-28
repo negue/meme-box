@@ -1,6 +1,0 @@
-{
-  "settings": {},
-  "executionScript": "const randomEmote = utils.randomElement(bootstrap.allEmotes.data).name;\n\n// trigger em\ntwitch.say(`!drop ${randomEmote}`)",
-  "bootstrapScript": "// get broadcaster ID\nconst broadcasterId = await twitch.getBroadcasterIdAsync();\n\n// get current emotes\nconst allEmotes = await twitch.getHelixDataAsync(`chat/emotes?broadcaster_id=${broadcasterId}`);\n\n\nreturn {allEmotes};",
-  "variablesConfig": []
-}

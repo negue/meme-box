@@ -17,6 +17,7 @@ import {ActionPreviewLabelPipe, ActionPreviewVariablesTooltipPipe} from "./actio
 import {ActionCanPreviewPipe} from "./action-can-preview.pipe";
 import {MediaEnumToLabel} from "./media-enum-to-label.pipe";
 import {ActionHasTriggerableVariablesPipe} from "./action-has-triggerable-variables.pipe";
+import {TrimLinesPipe} from "./trim-lines.pipe";
 import {ShowScreenSelectionPipe} from "./show-screen-selection.pipe";
 
 // TODO Split up pipes into their own modules
@@ -33,6 +34,7 @@ const PIPES = [
   ActionPreviewLabelPipe, ActionCanPreviewPipe,
   ActionPreviewVariablesTooltipPipe,
   MediaEnumToLabel, ActionHasTriggerableVariablesPipe,
+  TrimLinesPipe,
   ShowScreenSelectionPipe
 ];
 

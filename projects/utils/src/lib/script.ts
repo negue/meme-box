@@ -33,19 +33,19 @@ export function actionDataToScriptConfig (action: Partial<Action>): ScriptConfig
 }
 
 
-export function applyScriptConfigToClipData (
+export function applyScriptConfigToAction (
   scriptConfig: ScriptConfig,
-  targetClip: Partial<Action>
+  targetAction: Partial<Action>
 ): void  {
-  if (!targetClip.extended) {
-    targetClip.extended = {};
+  if (!targetAction.extended) {
+    targetAction.extended = {};
   }
 
-  targetClip.extended[SCRIPT_EXECUTION_KEY] = scriptConfig.executionScript;
-  targetClip.extended[SCRIPT_BOOTSTRAP_KEY] = scriptConfig.bootstrapScript;
+  targetAction.extended[SCRIPT_EXECUTION_KEY] = scriptConfig.executionScript;
+  targetAction.extended[SCRIPT_BOOTSTRAP_KEY] = scriptConfig.bootstrapScript;
 
-  targetClip.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(scriptConfig.variablesConfig);
-  targetClip.extended[SCRIPT_SETTINGS_KEY] = JSON.stringify(scriptConfig.settings);
+  targetAction.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(scriptConfig.variablesConfig);
+  targetAction.extended[SCRIPT_SETTINGS_KEY] = JSON.stringify(scriptConfig.settings);
 }
 
 export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [

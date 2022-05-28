@@ -21,18 +21,22 @@ import {TranslocoModule} from "@ngneat/transloco";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {HintPanelModule, UiComponentsPipesModule, StepperContentModule} from "@memebox/ui-components";
+import {HintPanelModule, PipesModule, StepperContentModule} from "@memebox/ui-components";
 import {ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {DirectivesModule} from "../../directives/directives.module";
+import {ScriptReadonlyViewComponent} from './script-readonly-view/script-readonly-view.component';
+import {DynamicPortalModule} from "@gewd/ng-utils/dynamic-portal";
 import {LogicStepUiModule} from "@memebox/logic-step-ui";
 import {DialogsModule} from "../dialogs.module";
 
+
 @NgModule({
   declarations: [
-    MediaEditComponent
+    MediaEditComponent,
+    ScriptReadonlyViewComponent
   ],
   imports: [
     CommonModule,
@@ -63,7 +67,8 @@ import {DialogsModule} from "../dialogs.module";
     OpenFeedbackButtonModule,
     MatButtonToggleModule,
     MatTooltipModule,
-
+    DirectivesModule,
+    DynamicPortalModule,
 
     DirectivesModule,
     LogicStepUiModule,

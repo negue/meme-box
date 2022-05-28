@@ -172,14 +172,13 @@ See finished and upcoming changes in:
   * [ ] Changeable by Trigger Variables
   * [ ] Can be placed like in the Arrange View
 * [ ] OBS Websockets
-  * [ ] "Action Type": `OBS Command`
   * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
 * [ ] Overview of local media files not existing anymore
+* [ ] Replace all selected Trigger Action with an inline Blueprint #439 (name pending) 
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
 * [ ] Stats per commands / media / or something last cheerer and so on
-* [ ] Visual Scripting, if anyone has a good webcomponents for that - open an issue
 * [ ] more to be added :)
 
 ## How to help / contribute?
