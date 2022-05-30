@@ -1,9 +1,9 @@
-import {Opts} from "@tsed/common";
-import {Logger} from "@tsed/logger";
-import {Injectable} from "@tsed/di";
-import {LOG_PATH} from "../path.utils";
-import {BehaviorSubject} from "rxjs";
-import {CLI_OPTIONS} from "../utils/cli-options";
+import { Opts } from "@tsed/common";
+import { Logger } from "@tsed/logger";
+import { Injectable } from "@tsed/di";
+import { LOG_PATH } from "../path.utils";
+import { BehaviorSubject } from "rxjs";
+import { CLI_OPTIONS } from "../utils/cli-options";
 
 // TODO add all other methods
 
@@ -12,6 +12,7 @@ export interface ErrorWithContext {
   context: string;
 }
 
+// skipcq: JS-0579
 @Injectable()
 export class NamedLogger {
   public static NewestError$ = new BehaviorSubject<ErrorWithContext>(null);

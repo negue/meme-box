@@ -12,6 +12,13 @@ import { produce } from "immer";
 import { skip } from "rxjs/operators";
 import { arraymove } from "@memebox/utils";
 
+function addEntryToPath (
+  state: RecipeContext,
+  entry: RecipeEntry
+) {
+  state.entries[entry.id] = entry;
+}
+
 @Directive({
   selector: 'app-recipe-block[recipeContext]',
   exportAs: 'recipeContext'
@@ -146,11 +153,4 @@ export class RecipeContextDirective
       }
     });
   }
-}
-
-function addEntryToPath (
-  state: RecipeContext,
-  entry: RecipeEntry
-) {
-  state.entries[entry.id] = entry;
 }

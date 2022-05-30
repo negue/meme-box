@@ -25,7 +25,7 @@ export class ObsFilterSelectionComponent implements OnInit, OnDestroy {
   public payload: RecipeCommandConfigObsSetFilterStatePayload|null = null;
 
   @Output()
-  public payloadChanged: Observable<RecipeCommandConfigObsSetFilterStatePayload> = combineLatest([
+  public readonly payloadChanged: Observable<RecipeCommandConfigObsSetFilterStatePayload> = combineLatest([
     this.selectedSourceSubject,
     this.selectedFilterSubject
   ]).pipe(

@@ -25,7 +25,11 @@ export function replaceVariablesInString(source: string,
 }
 
 
-export function arraymove(arr: unknown[], fromIndex: number, toIndex: number) {
+export function arraymove(
+  arr: unknown[],
+  fromIndex: number,
+  toIndex: number
+): void {
   const element = arr[fromIndex];
   arr.splice(fromIndex, 1);
   arr.splice(toIndex, 0, element);

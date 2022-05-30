@@ -303,7 +303,7 @@ export class MediaEditComponent
     });
   }
 
-  fillUiRelatedDataBasedOnAction() {
+  fillUiRelatedDataBasedOnAction(): void {
     this.form.reset(this.actionToEdit);
 
     this.availableTags$.pipe(

@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DomSanitizer} from "@angular/platform-browser";
-import {Action, Screen, Tag} from "@memebox/contracts";
-import {combineLatest, Observable} from "rxjs";
-import {map} from "rxjs/operators";
-import {AppQueries} from "@memebox/app-state";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { DomSanitizer } from "@angular/platform-browser";
+import { Action, Screen, Tag } from "@memebox/contracts";
+import { combineLatest, Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { AppQueries } from "@memebox/app-state";
 
 @Component({
   selector: 'app-media-info',
@@ -30,16 +30,16 @@ export class MediaInfoComponent implements OnInit {
   );
 
   @Output()
-  public onPreview = new EventEmitter();
+  public readonly onPreview = new EventEmitter();
 
   @Output()
-  public onEdit = new EventEmitter();
+  public readonly onEdit = new EventEmitter();
 
   @Output()
-  public onDelete = new EventEmitter();
+  public readonly onDelete = new EventEmitter();
 
   @Output()
-  public onEditScreenClipOptions = new EventEmitter<Screen>();
+  public readonly onEditScreenClipOptions = new EventEmitter<Screen>();
 
   constructor(public domSanitizer: DomSanitizer,
               private appQueries: AppQueries) {

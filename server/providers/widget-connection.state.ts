@@ -4,6 +4,7 @@ import { ACTIONS, ActionStateEnum } from "@memebox/contracts";
 import { NamedLogger } from "./named-logger";
 import { ActionActiveStateEventBus } from "./actions/action-active-state-event.bus";
 
+// skipcq: JS-0579
 @Injectable()
 export class WidgetConnectionState {
   private connectedSocketMap = new Map<string, WebSocket>();

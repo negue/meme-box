@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TwitchEventTypes, TwitchTrigger, TwitchTypesArray} from '@memebox/contracts';
-import {AppQueries, AppService} from '@memebox/app-state';
-import {map} from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TwitchEventTypes, TwitchTrigger, TwitchTypesArray } from '@memebox/contracts';
+import { AppQueries, AppService } from '@memebox/app-state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-twitch-info',
@@ -28,13 +28,13 @@ export class TwitchEventInfoComponent implements OnInit {
   );
 
   @Output()
-  onDelete = new EventEmitter<any>();
+  public readonly onDelete = new EventEmitter<any>();
 
   @Output()
-  onEdit = new EventEmitter<any>();
+  public readonly onEdit = new EventEmitter<any>();
 
   @Output()
-  onPreview = new EventEmitter<any>();
+  public readonly onPreview = new EventEmitter<any>();
 
   menuIsOpened = false;
 

@@ -1,20 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-checkbox-chip',
   templateUrl: './checkbox-chip.component.html',
   styleUrls: ['./checkbox-chip.component.scss']
 })
-export class CheckboxChipComponent implements OnInit {
+export class CheckboxChipComponent {
   @Input()
   public checked = false;
 
   @Output()
-  public checkedChange = new EventEmitter();
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  public readonly checkedChange = new EventEmitter();
 }

@@ -18,7 +18,7 @@ export function SavePreviewFile(action: Action): void  {
 }
 
 // TODO change to promise / async
-export function saveFile(filePath: string, data: any, stringify = false) {
+export function saveFile(filePath: string, data: any, stringify = false): void {
   const getDirOfPath = path.dirname(filePath);
 
   createDirIfNotExists(getDirOfPath);

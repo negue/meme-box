@@ -17,12 +17,10 @@ export class ActionVariablesAssignmentsComponent {
   public fallbackData: Dictionary<string> = {};
 
   @Output()
-  public dataChanged = new EventEmitter<Dictionary<unknown>>();
+  public readonly dataChanged = new EventEmitter<Dictionary<unknown>>();
 
   @Input()
   public variablesConfig: ActionVariableConfig[];
-
-  constructor() { }
 
   variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown): void  {
     const newDataObject = {

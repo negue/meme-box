@@ -10,11 +10,11 @@ import {
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import {CombinedActionContext, PositionEnum, Screen} from '@memebox/contracts';
-import {DragResizeMediaComponent} from '../drag-resize-media/drag-resize-media.component';
-import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
-import {FormBuilder, FormControl} from '@angular/forms';
-import {AutoScaleComponent} from '@gewd/components/auto-scale';
+import { CombinedActionContext, PositionEnum, Screen } from '@memebox/contracts';
+import { DragResizeMediaComponent } from '../drag-resize-media/drag-resize-media.component';
+import { AppService } from '../../../../../../projects/app-state/src/lib/state/app.service';
+import { FormBuilder, FormControl } from '@angular/forms';
+import { AutoScaleComponent } from '@gewd/components/auto-scale';
 
 enum GlobalArrangeOptions {
   Drag,
@@ -54,17 +54,17 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   unsavedChangesIds: string[];
 
   @Output()
-  changeCurrSelectedClip = new EventEmitter<CombinedActionContext | null>();
+  public readonly changeCurrSelectedClip = new EventEmitter<CombinedActionContext | null>();
 
   @Output()
-  userChangeElement = new EventEmitter<string>();
+  public readonly userChangeElement = new EventEmitter<string>();
 
   // Outputs the ids of the saved medias
   @Output()
-  changesSaved = new EventEmitter<string | string[]>();
+  public readonly changesSaved = new EventEmitter<string | string[]>();
 
   @Output()
-  mediaReset = new EventEmitter<string>();
+  public readonly mediaReset = new EventEmitter<string>();
 
   actionsExpanded = false;
 

@@ -19,7 +19,7 @@ export class ObsSceneSelectionComponent implements OnInit {
   public selectedScene = '';
 
   @Output()
-  public sceneSelected = new EventEmitter<string>();
+  public readonly sceneSelected = new EventEmitter<string>();
 
   public allSceneListAsync = this.memeboxApi.get<Scene[]>(`${ENDPOINTS.OBS_DATA.PREFIX}${ENDPOINTS.OBS_DATA.SCENE_LIST}`);
 

@@ -117,7 +117,7 @@ export class StepSettingDialogComponent {
     return this.payload[configName] as any as RecipeCommandConfigActionPayload;
   }
 
-  isMedia(action: Action) {
+  isMedia(action: Action): boolean {
     if (!action) {
       return false;
     }

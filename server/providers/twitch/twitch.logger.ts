@@ -1,10 +1,11 @@
-import {Injectable, ProviderScope, ProviderType, UseOpts} from "@tsed/di";
-import {NamedLogger} from "../named-logger";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
-import {Persistence} from "../../persistence";
-import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
+import { Injectable, ProviderScope, ProviderType, UseOpts } from "@tsed/di";
+import { NamedLogger } from "../named-logger";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "../contracts";
+import { Persistence } from "../../persistence";
+import { TwitchQueueEventBus } from "./twitch-queue-event.bus";
 
+// skipcq: JS-0579
 @Injectable({
   type: ProviderType.SERVICE,
   scope: ProviderScope.SINGLETON
