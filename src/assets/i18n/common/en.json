@@ -1,5 +1,5 @@
 {
-  "mediaType": {
+  "actionType": {
     "image": "Image",
     "video": "Video",
     "audio": "Audio",

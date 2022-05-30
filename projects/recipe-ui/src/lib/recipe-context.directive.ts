@@ -78,7 +78,7 @@ export class RecipeContextDirective
 
       const subStepEntry = store.entries[parentEntryId].subCommandBlocks.find(s => s.labelId === subStepLabelId);
 
-      return subStepEntry.entries.map(e => store.entries[e]);
+      return subStepEntry?.entries.map(e => store.entries[e]) ?? [];
     })
   }
 

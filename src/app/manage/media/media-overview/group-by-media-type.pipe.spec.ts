@@ -22,12 +22,12 @@ describe('GroupByMediaTypePipe', () => {
 
     expect(pipe.transform(clips as Action[])).toEqual([
       {
-        groupName: 'mediaType.audio',
+        groupName: 'actionType.audio',
         mediaType: 1,
         medias: [clips[0], clips[1]]
       },
       {
-        groupName: 'mediaType.image',
+        groupName: 'actionType.image',
         mediaType: 0,
         medias: [clips[2]]
       },

@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } f
 import { RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo } from "@memebox/recipe-core";
 import { CdkDragDrop } from "@angular/cdk/drag-drop";
 import { RecipeContextDirective } from "../recipe-context.directive";
-import { MatCheckboxChange } from "@angular/material/checkbox";
 import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
 import { RecipeCommandSelectorComponent } from "../recipe-command-selector/recipe-command-selector.component";
 import { takeUntil } from "rxjs/operators";
@@ -89,8 +88,8 @@ export class RecipeBlockComponent
     }
   }
 
-  changeAwaited (entry: RecipeEntry, $event: MatCheckboxChange): void  {
-    this.context.changeAwaited(entry, $event.checked);
+  toggleAwaited (entry: RecipeEntry): void  {
+    this.context.changeAwaited(entry, !entry.awaited);
   }
 
   ngOnDestroy (): void {

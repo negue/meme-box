@@ -31,7 +31,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     sortOrder: -1
   }*/ undefined,
   [ActionType.Picture]: {
-    translationKey: "mediaType.image",
+    translationKey: "actionType.image",
     labelFallback: "Image",
     className: "image",
     icon: "insert_photo",
@@ -39,7 +39,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.Picture
   },
   [ActionType.Video]: {
-    translationKey: "mediaType.video",
+    translationKey: "actionType.video",
     labelFallback: "Video",
     className: "video",
     icon: "videocam",
@@ -47,7 +47,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.Video
   },
   [ActionType.Audio]: {
-    translationKey: "mediaType.audio",
+    translationKey: "actionType.audio",
     labelFallback: "Audio",
     className: "audio",
     icon: "audiotrack",
@@ -55,7 +55,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.Audio
   },
   [ActionType.IFrame]: {
-    translationKey: "mediaType.iframe",
+    translationKey: "actionType.iframe",
     labelFallback: "iFrame", // IFrame , iframe
     className: "iframe",
     icon: "public",
@@ -63,7 +63,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.IFrame
   },
   [ActionType.Widget]: {
-    translationKey: "mediaType.widget",
+    translationKey: "actionType.widget",
     labelFallback: "Widget", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code",
@@ -71,7 +71,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.Widget
   },
   [ActionType.Script]: {
-    translationKey: "mediaType.script",
+    translationKey: "actionType.script",
     labelFallback: "Script", // todo rename the property, add a "translationKey" to it
     className: "",
     icon: "code",
@@ -79,7 +79,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.Script
   },
   [ActionType.PermanentScript]: {
-    translationKey: "mediaType.permanent_script",
+    translationKey: "actionType.permanent_script",
     labelFallback: "Permanent Script", // todo rename the property, add a "translationKey" to it
     className: "",
     icon: "code",
@@ -87,7 +87,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.PermanentScript
   },
   [ActionType.WidgetTemplate]: {
-    translationKey: "mediaType.widgetTemplate",
+    translationKey: "actionType.widgetTemplate",
     labelFallback: "Widget Template", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code", // new icon?
@@ -95,7 +95,7 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.WidgetTemplate
   },
   [ActionType.Meta]: {
-    translationKey: "mediaType.meta",
+    translationKey: "actionType.meta",
     icon: "art_track",
     labelFallback: "Meta",
     className: "", // not visible in target-screen-component
@@ -103,9 +103,9 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     mediaType: ActionType.Meta
   },
   [ActionType.Recipe]: {
-    translationKey: "recipe",
-    icon: "art_track",
-    labelFallback: "recipe",
+    translationKey: "actionType.recipe",
+    icon: "playlist_play",
+    labelFallback: "Recipe",
     className: "", // not visible in target-screen-component
     sortOrder: 101,
     mediaType: ActionType.Recipe

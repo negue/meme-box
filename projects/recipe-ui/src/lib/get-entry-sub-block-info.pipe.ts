@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { RecipeCommandRegistry, RecipeEntry, RecipeSubCommandInfo } from "@memebox/recipe-core";
+import { RecipeCommandRegistry, RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo } from "@memebox/recipe-core";
 import { from, Observable, of } from "rxjs";
 import { AppQueries } from "@memebox/app-state";
 import { RecipeContextDirective } from "./recipe-context.directive";
@@ -20,15 +20,22 @@ export class GetEntrySubBlockInfoArray$Pipe implements PipeTransform {
       return of([]);
     }
 
+    if (value.id === this.context.recipe?.rootEntry) {
+      return of([
+        {
+          name: 'entries',
+          labelId: 'recipeRoot',
+          label: 'Recipe Commands',
+          entries: []
+        }
+      ]);
+    }
+
     switch (value.entryType) {
       case 'command': {
         const commandBlocksArray = value.subCommandBlocks.map(
           async ({labelId, entries}) => {
-            const commandInfo = RecipeCommandRegistry[value.commandBlockType];
-            const label = commandInfo.subCommandBlockLabelAsync
-              ? await commandInfo.subCommandBlockLabelAsync(this.appQueries, value, labelId)
-              : `TODO LABEL OF ${value.commandBlockType}:${labelId}`;
-
+            const label = await this._getLabelAsync(value, labelId);
             return {
               name: labelId,
               labelId: labelId,
@@ -46,10 +53,22 @@ export class GetEntrySubBlockInfoArray$Pipe implements PipeTransform {
           {
             name: 'entries',
             labelId: 'step',
-            label: 'TODO LABEL OF step',
+            label: 'TODO LABEL OF group/function',
             entries: []
           }
         ]);
     }
+  }
+
+  async _getLabelAsync(
+    recipeEntryCall: RecipeEntryCommandCall,
+    labelId: string
+  ): Promise<string> {
+    const commandInfo = RecipeCommandRegistry[recipeEntryCall.commandBlockType];
+    const label = commandInfo.subCommandBlockLabelAsync
+      ? await commandInfo.subCommandBlockLabelAsync(this.appQueries, recipeEntryCall, labelId)
+      : `TODO LABEL OF ${recipeEntryCall.commandBlockType}:${labelId}`;
+
+    return label;
   }
 }

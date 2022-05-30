@@ -72,15 +72,6 @@ img {
   display: none;
 }
 
-.two-columns {
-  display: flex;
-  flex-direction: row;
-
-  @media screen and (max-width: 920px) {
-    flex-direction: column;
-  }
-}
-
 .column {
   flex: 1;
 
