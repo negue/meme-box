@@ -47,7 +47,7 @@
     "state-components": { "tags": [] },
     "ui-components": { "tags": [] },
     "utils": { "tags": [] },
-    "logic-step-core": { "tags": [] },
-    "logic-step-ui": { "tags": [] }
+    "recipe-core": { "tags": [] },
+    "recipe-ui": { "tags": [] }
   }
 }
