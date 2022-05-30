@@ -9,6 +9,6 @@
     "meta": "Meta",
     "script": "Script",
     "permanent_script": "Permanent Script",
-    "blueprint": "Blueprint"
+    "recipe": "Recipe"
   }
 }

@@ -10,17 +10,17 @@ import {
 import { Observable } from "rxjs";
 import { produce } from "immer";
 import { skip } from "rxjs/operators";
-
+import { arraymove } from "@memebox/utils";
 
 @Directive({
-  selector: 'app-blueprint-entry[blueprintContext]',
-  exportAs: 'blueprintContext'
+  selector: 'app-recipe-block[recipeContext]',
+  exportAs: 'recipeContext'
 })
 @StoreConfig({
-  name: 'blueprintContext',
+  name: 'recipeContext',
   producerFn: produce
 })
-export class BlueprintContextDirective
+export class RecipeContextDirective
   extends Store<RecipeContext>
   implements OnInit, OnChanges
 {
@@ -28,7 +28,7 @@ export class BlueprintContextDirective
   public recipe: RecipeContext | null = null;
 
   @Output()
-  public readonly blueprintUpdated: Observable<RecipeEntry> = this._select(store => store.entries[store.rootEntry]).pipe(
+  public readonly recipeUpdated: Observable<RecipeEntry> = this._select(store => store.entries[store.rootEntry]).pipe(
     filterNil
   );
 
@@ -141,7 +141,7 @@ export class BlueprintContextDirective
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
-      if (foundEntry.entryType === 'step') {
+      if (foundEntry.entryType === 'command') {
         foundEntry.payload = newPayload;
       }
     });
@@ -153,10 +153,4 @@ function addEntryToPath (
   entry: RecipeEntry
 ) {
   state.entries[entry.id] = entry;
-}
-
-function arraymove(arr: unknown[], fromIndex: number, toIndex: number) {
-  const element = arr[fromIndex];
-  arr.splice(fromIndex, 1);
-  arr.splice(toIndex, 0, element);
 }

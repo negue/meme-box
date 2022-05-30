@@ -16,7 +16,7 @@ export interface RecipeStepConfigArgument {
   type: string;
 }
 
-export const BlueprintCommandBlockGroups: Record<string, RecipeCommandSelectionGroup> = {
+export const RecipeCommandBlockGroups: Record<string, RecipeCommandSelectionGroup> = {
   generic: {
     label: "Generic",
     order: 1
@@ -78,8 +78,8 @@ function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
 
       if (!subEntry) {
         result.push(`logger.error('this shouldnt have happened: cant find command block information of ${entryId});`);
-      } else if (subEntry.entryType === 'step'){
-        const entryDefinition = RecipeCommandRegistry[subEntry.stepType];
+      } else if (subEntry.entryType === 'command'){
+        const entryDefinition = RecipeCommandRegistry[subEntry.commandBlockType];
 
         // result.push(`logger.log('Pre: ${subEntry.commandType}');`);
 
@@ -101,27 +101,27 @@ function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
 }
 
 export function generateCodeByRecipe(
-  blueprint: RecipeContext
+  recipeContext: RecipeContext
 ): string  {
   const result: string[] = [];
 
-  const rootEntry = blueprint.entries[blueprint.rootEntry];
+  const rootEntry = recipeContext.entries[recipeContext.rootEntry];
 
-  result.push(generateCodeByStep(rootEntry, blueprint));
+  result.push(generateCodeByStep(rootEntry, recipeContext));
 
   return result.join('\r\n');
 }
 
-export function generateStepEntry (
-  stepType: string,
+export function generateRecipeEntryCommandCall (
+  commandBlockType: string,
   payload: RecipeEntryCommandPayload
 ): RecipeEntryCommandCall {
   return {
     id: uuid(),
-    stepType,
+    commandBlockType,
     payload,
     awaited: true,
-    entryType: "step",
+    entryType: "command",
     subCommandBlocks: [],
   };
 }

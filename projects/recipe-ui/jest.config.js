@@ -4,7 +4,7 @@ module.exports = {
   ...baseConfig,
   globals: {
     'ts-jest': {
-      tsConfig: '<rootDir>/projects/logic-step-ui/tsconfig.spec.json',
+      tsConfig: '<rootDir>/projects/recipe-ui/tsconfig.spec.json',
     },
   },
 };

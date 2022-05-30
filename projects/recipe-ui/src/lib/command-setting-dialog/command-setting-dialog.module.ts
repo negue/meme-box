@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StepSettingDialogComponent, StepSettingDialogPayload } from './step-setting-dialog.component';
+import { CommandSettingDialogPayload, StepSettingDialogComponent } from './step-setting-dialog.component';
 import { DialogContract } from "../../../../../src/app/shared/dialogs/dialog.contract";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { MatDialogRef } from "@angular/material/dialog/dialog-ref";
@@ -45,11 +45,11 @@ import { MatSelectModule } from "@angular/material/select";
     MatSelectModule
   ]
 })
-export class StepSettingDialogModule implements DialogContract<StepSettingDialogPayload> {
+export class CommandSettingDialogModule implements DialogContract<CommandSettingDialogPayload> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: StepSettingDialogPayload): MatDialogRef<any> {
+  public openDialog (payload: CommandSettingDialogPayload): MatDialogRef<any> {
     const dialogRef = this.dialog.open(StepSettingDialogComponent, {
       data: payload,
       autoFocus: false,

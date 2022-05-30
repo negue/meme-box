@@ -31,8 +31,8 @@ export interface RecipeEntryCommandPayload {
 }
 
 export interface RecipeEntryCommandCall extends RecipeEntryBase {
-  entryType: 'step';
-  stepType: string; // connection to RecipeCommandInfo
+  entryType: 'command';
+  commandBlockType: string; // connection to RecipeCommandInfo
   payload: RecipeEntryCommandPayload;
 }
 
@@ -91,7 +91,7 @@ export interface RecipeCommandConfigObsSetFilterStatePayload {
 export interface RecipeCommandDefinition {
   pickerLabel: string;
   commandEntryLabelAsync: (queries: AppQueries, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => Promise<string>;
-  subCommandBlockLabelAsync?: (queries: AppQueries, commandBlock: RecipeEntry) => Promise<string>;
+  subCommandBlockLabelAsync?: (queries: AppQueries, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
   commandGroup: string;
   configArguments: RecipeStepConfigArgument[]; // each argument name will be applied to the payload as prop
 

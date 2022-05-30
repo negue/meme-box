@@ -8,7 +8,7 @@ import { AppService } from "../../../../projects/app-state/src/lib/state";
   styleUrls: ['./test.component.scss']
 })
 export class TestComponent implements OnInit {
-  public blueprint: RecipeContext = createRecipeContext();
+  public recipe: RecipeContext = createRecipeContext();
 
   constructor(
     private appService: AppService
@@ -18,7 +18,7 @@ export class TestComponent implements OnInit {
     this.appService.loadState();
   }
 
-  toScriptCode (blueprint: RecipeContext): string  {
-    return generateCodeByRecipe(blueprint);
+  toScriptCode (recipeContext: RecipeContext): string  {
+    return generateCodeByRecipe(recipeContext);
   }
 }

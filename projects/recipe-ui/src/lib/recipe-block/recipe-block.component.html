@@ -17,7 +17,7 @@
 
 
 <div cdkDropList class="entry-list"
-     *ngFor="let subStepInfo of entry | getEntrySubStepInfo$ | async"
+     *ngFor="let subStepInfo of entry | getEntrySubBlockInfoArray$ | async"
      (cdkDropListDropped)="stepRearranged($event, subStepInfo)">
 
   <span>{{subStepInfo.label}}</span>
@@ -29,10 +29,10 @@
               *ngIf="editMode"
               cdkDragHandle></mat-icon>
 
-    <app-blueprint-entry [entry]="subStep"
-                         [parent]="entry"
-                         [editMode]="editMode">
-    </app-blueprint-entry>
+    <app-recipe-block [entry]="subStep"
+                      [parent]="entry"
+                      [editMode]="editMode">
+    </app-recipe-block>
 </div>
 
    <button mat-button  *ngIf="editMode"

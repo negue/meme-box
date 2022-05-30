@@ -29,7 +29,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { DirectivesModule } from "../../directives/directives.module";
 import { ScriptReadonlyViewComponent } from './script-readonly-view/script-readonly-view.component';
 import { DynamicPortalModule } from "@gewd/ng-utils/dynamic-portal";
-import { LogicStepUiModule } from "@memebox/recipe-ui";
+import { RecipeUiModule } from "@memebox/recipe-ui";
 import { DialogsModule } from "../dialogs.module";
 import { MatTabsModule } from "@angular/material/tabs";
 
@@ -72,7 +72,7 @@ import { MatTabsModule } from "@angular/material/tabs";
     DynamicPortalModule,
 
     DirectivesModule,
-    LogicStepUiModule,
+    RecipeUiModule,
     DialogsModule,
     MatTabsModule
   ],

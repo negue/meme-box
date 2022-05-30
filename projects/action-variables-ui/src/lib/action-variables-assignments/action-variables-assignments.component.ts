@@ -38,7 +38,7 @@ export class ActionVariablesAssignmentsComponent {
       default: {
 
         newDataObject[name] = typeof $event !== 'undefined'
-          ? $event+''
+          ? `${$event}`
           : undefined;
       }
     }

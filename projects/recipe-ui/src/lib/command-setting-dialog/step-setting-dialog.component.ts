@@ -19,7 +19,7 @@ import { AppQueries } from "@memebox/app-state";
 import cloneDeep from "lodash/cloneDeep";
 import { isVisibleMedia } from "@memebox/shared-state";
 
-export interface StepSettingDialogPayload {
+export interface CommandSettingDialogPayload {
   configArguments: RecipeStepConfigArgument[];
   currentStepData?: RecipeEntryCommandPayload;
 }
@@ -37,7 +37,7 @@ export class StepSettingDialogComponent {
 
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: StepSettingDialogPayload,
+    @Inject(MAT_DIALOG_DATA) public data: CommandSettingDialogPayload,
     private dialogRef: MatDialogRef<any>,
     private dialogService: DialogService,
     private appQuery: AppQueries,
@@ -156,7 +156,7 @@ export class StepSettingDialogComponent {
       dialogTitle: 'Config Argument',
       showMetaItems: true,
 
-      unassignedFilterType: UnassignedFilterEnum.BlueprintStepArgument,
+      unassignedFilterType: UnassignedFilterEnum.RecipeCommandArgument,
       // showOnlyUnassignedFilter: true
     });
   }

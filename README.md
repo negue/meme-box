@@ -174,7 +174,7 @@ See finished and upcoming changes in:
 * [ ] OBS Websockets
   * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
 * [ ] Overview of local media files not existing anymore
-* [ ] Replace all selected Trigger Action with an inline Blueprint #439 (name pending) 
+* [ ] Replace all selected Trigger Action with an inline Recipes #439
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)

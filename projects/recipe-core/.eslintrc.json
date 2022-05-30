@@ -10,8 +10,8 @@
       ],
       "parserOptions": {
         "project": [
-          "./projects/logic-step-core/tsconfig.lib.json",
-          "./projects/logic-step-core/tsconfig.spec.json"
+          "./projects/recipe-core/tsconfig.lib.json",
+          "./projects/recipe-core/tsconfig.spec.json"
         ],
         "createDefaultProgram": true
       },

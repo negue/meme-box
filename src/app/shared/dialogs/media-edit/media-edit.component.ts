@@ -591,8 +591,8 @@ export class MediaEditComponent
 
   }
 
-  toScriptCode (blueprint: RecipeContext): string  {
-    return generateCodeByRecipe(blueprint);
+  toScriptCode (recipeContext: RecipeContext): string  {
+    return generateCodeByRecipe(recipeContext);
   }
 
   // region Import / Export Methods

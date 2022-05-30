@@ -1,20 +1,20 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo } from "@memebox/recipe-core";
 import { CdkDragDrop } from "@angular/cdk/drag-drop";
-import { BlueprintContextDirective } from "../blueprint-context.directive";
+import { RecipeContextDirective } from "../recipe-context.directive";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
-import { BlueprintStepSelectorComponent } from "../blueprint-step-selector/blueprint-step-selector.component";
+import { RecipeCommandSelectorComponent } from "../recipe-command-selector/recipe-command-selector.component";
 import { takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
-import { BlueprintStepCreatorService } from "../blueprint-step-creator.service";
+import { RecipeCommandCreatorService } from "../recipe-command-creator.service";
 
 @Component({
-  selector: 'app-blueprint-entry',
-  templateUrl: './blueprint-entry.component.html',
-  styleUrls: ['./blueprint-entry.component.scss']
+  selector: 'app-recipe-block',
+  templateUrl: './recipe-block.component.html',
+  styleUrls: ['./recipe-block.component.scss']
 })
-export class BlueprintEntryComponent
+export class RecipeBlockComponent
   implements OnInit, OnDestroy {
   private _destroy$ = new Subject<void>();
 
@@ -35,15 +35,15 @@ export class BlueprintEntryComponent
   public editMode = false;
 
   constructor(
-    public context: BlueprintContextDirective,
-    private stepCreator: BlueprintStepCreatorService,
+    public context: RecipeContextDirective,
+    private stepCreator: RecipeCommandCreatorService,
     private dialogService: DialogService,
     private cd: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
     if (this.isRoot) {
-      this.context.blueprintUpdated.pipe(
+      this.context.recipeUpdated.pipe(
         takeUntil(this._destroy$)
       ).subscribe(value => {
         console.info('setting the entry', value);
@@ -73,7 +73,7 @@ export class BlueprintEntryComponent
   }
 
   async addStep (entry: RecipeEntry, subStepInfo: RecipeSubCommandInfo) {
-    const result = this.dialogService.open(BlueprintStepSelectorComponent, {
+    const result = this.dialogService.open(RecipeCommandSelectorComponent, {
       data: {
         entry,
         subStepInfo,
@@ -82,7 +82,6 @@ export class BlueprintEntryComponent
       autoFocus: false
     });
 
-    const dialogInstance = result.componentInstance;
     const dialogResult: RecipeEntryCommandCall = await result.afterClosed().toPromise();
 
     if (dialogResult) {
@@ -100,7 +99,7 @@ export class BlueprintEntryComponent
   }
 
   async editStepConfig(entry: RecipeEntry, parent: RecipeEntry) {
-    if (entry.entryType !== 'step') {
+    if (entry.entryType !== 'command') {
       return;
     }
 

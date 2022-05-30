@@ -1,4 +1,4 @@
-import {Dictionary, HasId} from "@memebox/contracts";
+import { Dictionary, HasId } from "@memebox/contracts";
 
 export function updateItemInDictionary<T extends HasId>(dict: Dictionary<T>, item: T): void  {
   dict[item.id] = item;
@@ -22,4 +22,11 @@ export function replaceVariablesInString(source: string,
   });
 
   return source;
+}
+
+
+export function arraymove(arr: unknown[], fromIndex: number, toIndex: number) {
+  const element = arr[fromIndex];
+  arr.splice(fromIndex, 1);
+  arr.splice(toIndex, 0, element);
 }

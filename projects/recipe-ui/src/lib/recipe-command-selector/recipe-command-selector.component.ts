@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
-  BlueprintCommandBlockGroups,
+  RecipeCommandBlockGroups,
   RecipeCommandDefinition,
   RecipeCommandSelectionGroup,
   RecipeContext,
@@ -10,7 +10,7 @@ import {
 import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AppQueries } from "@memebox/app-state";
-import { BlueprintStepCreatorService } from "../blueprint-step-creator.service";
+import { RecipeCommandCreatorService } from "../recipe-command-creator.service";
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
 
@@ -21,23 +21,25 @@ interface RecipeCommandBlockGroup extends RecipeCommandSelectionGroup {
 function groupByCommandBlocksType(
   allBlocks: RecipeCommandDefinition[]
 ) : RecipeCommandBlockGroup[] {
-  const groupedByArray  = Object.entries(groupBy(allBlocks, 'stepGroup'));
+  const groupedByArray  = Object.entries(
+    groupBy(allBlocks, 'commandGroup')
+  );
 
   return orderBy( groupedByArray
     .map(([groupName, blocks]) => {
       return {
-        ...BlueprintCommandBlockGroups[groupName],
+        ...RecipeCommandBlockGroups[groupName],
         blocks
       } as RecipeCommandBlockGroup;
   }), ['order']);
 }
 
 @Component({
-  selector: 'app-blueprint-step-selector',
-  templateUrl: './blueprint-step-selector.component.html',
-  styleUrls: ['./blueprint-step-selector.component.scss']
+  selector: 'app-recipe-command-selector',
+  templateUrl: './recipe-command-selector.component.html',
+  styleUrls: ['./recipe-command-selector.component.scss']
 })
-export class BlueprintStepSelectorComponent implements OnInit {
+export class RecipeCommandSelectorComponent implements OnInit {
   public possibleCommandBlocks: RecipeCommandBlockGroup[] = [];
 
   constructor(
@@ -49,13 +51,13 @@ export class BlueprintStepSelectorComponent implements OnInit {
       context: RecipeContext
     },
     private appQuery: AppQueries,
-    private stepCreator: BlueprintStepCreatorService
+    private stepCreator: RecipeCommandCreatorService
   ) { }
 
   ngOnInit(): void {
     this.possibleCommandBlocks =
       groupByCommandBlocksType(
-        this.stepCreator.getPossibleSteps(this.data.entry, this.data.context)
+        this.stepCreator.getPossibleCommands(this.data.entry, this.data.context)
       );
   }
 
@@ -64,7 +66,7 @@ export class BlueprintStepSelectorComponent implements OnInit {
       return;
     }
 
-    const createdStep = await this.stepCreator.generateStepData(this.data.entry, step.commandType);
+    const createdStep = await this.stepCreator.generateCommandData(this.data.entry, step.commandType);
 
     if (createdStep) {
        this.dialogRef.close(createdStep);

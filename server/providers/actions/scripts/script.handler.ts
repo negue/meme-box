@@ -100,7 +100,7 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // endregion ActionStoreAdapter
 
-  public async handleBlueprint(script: Action, payloadObs: TriggerAction) {
+  public async handleRecipe(script: Action, payloadObs: TriggerAction) {
     const generatedScript = generateCodeByRecipe(script.recipe);
 
     const scriptConfig: ScriptConfig = {
@@ -111,8 +111,6 @@ export class ScriptHandler implements ActionStoreAdapter {
 
       }
     };
-
-    console.info(generatedScript);
 
     return this.handleGenericScript(script, scriptConfig, payloadObs);
   }
@@ -130,7 +128,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     scriptConfig: ScriptConfig,
     payloadObs: TriggerAction
   ) {
-    // todo rename logs per target type script/blueprint
+    // todo rename logs per target type script/recipe
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,

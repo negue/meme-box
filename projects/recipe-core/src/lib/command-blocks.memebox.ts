@@ -105,12 +105,12 @@ export function registerMemeboxCommandBlocks (
     commandGroup: "memebox",
     configArguments: [],
     extendCommandBlock: (step, parentStep) => {
-      step.payload._suffix = parentStep.entryType === 'step' && parentStep.payload._suffix;
+      step.payload._suffix = parentStep.entryType === 'command' && parentStep.payload._suffix;
     },
     allowedToBeAdded: (step) => {
       // todo find a way to have that in multi level scopes available
 
-      return step.entryType === 'step' && step.stepType === 'triggerActionWhile';
+      return step.entryType === 'command' && step.commandBlockType === 'triggerActionWhile';
     },
     toScriptCode: (step) => {
       const helpersName = `helpers_${step.payload._suffix}`;

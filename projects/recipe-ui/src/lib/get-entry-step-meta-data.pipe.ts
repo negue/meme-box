@@ -13,16 +13,16 @@ export class GetEntryStepMetaDataPipe implements PipeTransform {
   }
 
   async transform(value: RecipeEntry, parentEntry: RecipeEntry): Promise<RecipeCommandInfo|null> {
-    if (value.entryType !== 'step') {
+    if (value.entryType !== 'command') {
       return  Promise.resolve(null)
     }
 
-    const blueprintRegistryEntry = RecipeCommandRegistry[value.stepType];
+    const recipeCommandDefinition = RecipeCommandRegistry[value.commandBlockType];
 
-    const entryLabel = await blueprintRegistryEntry.commandEntryLabelAsync(this.appQueries, value.payload, parentEntry);
+    const entryLabel = await recipeCommandDefinition.commandEntryLabelAsync(this.appQueries, value.payload, parentEntry);
 
     return {
-      stepType: value.stepType,
+      stepType: value.commandBlockType,
       label: entryLabel,
     };
   }

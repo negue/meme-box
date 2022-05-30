@@ -418,13 +418,13 @@
             </mat-tab-group>
           </ng-template>
 
-            <app-blueprint-entry blueprintContext #recipeContext="blueprintContext"
-                                 [class.hidden]="selectedRecipeTabIndex !== 0"
-                                 [recipe]="actionToEdit.recipe"
-                                 (stateUpdated$)="actionToEdit.recipe = $event"
-                                 [asBlock]="true" [isRoot]="true"
-                                 [editMode]="true">
-            </app-blueprint-entry>
+          <app-recipe-block recipeContext #recipeContext="recipeContext"
+                            [class.hidden]="selectedRecipeTabIndex !== 0"
+                            [recipe]="actionToEdit.recipe"
+                            (stateUpdated$)="actionToEdit.recipe = $event"
+                            [asBlock]="true" [isRoot]="true"
+                            [editMode]="true">
+          </app-recipe-block>
 
           <ng-container *ngIf="selectedRecipeTabIndex !== 0">
             <pre [highlight]="toScriptCode(recipeContext.recipe)"

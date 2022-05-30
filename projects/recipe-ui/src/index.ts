@@ -1,2 +1,2 @@
-export * from './lib/logic-step-ui.module';
-export * from './lib/blueprint-entry/blueprint-entry.component';
+export * from './lib/recipe-ui.module';
+export * from './lib/recipe-block/recipe-block.component';

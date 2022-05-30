@@ -9,7 +9,7 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "parserOptions": {
-        "project": ["projects/logic-step-ui/tsconfig.*?.json"]
+        "project": ["projects/recipe-ui/tsconfig.*?.json"]
       },
       "rules": {
 
