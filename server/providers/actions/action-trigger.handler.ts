@@ -1,15 +1,5 @@
 import {Service, UseOpts} from "@tsed/di";
-import {
-  Action,
-  ACTIONS,
-  ActionStateEnum,
-  ActionType,
-  Dictionary,
-  MetaTriggerTypes,
-  Screen,
-  TriggerAction,
-  TriggerActionOrigin
-} from "@memebox/contracts";
+import {Action, ACTIONS, ActionStateEnum, ActionType, Dictionary, Screen, TriggerAction} from "@memebox/contracts";
 import {Persistence} from "../../persistence";
 import {NamedLogger} from "../named-logger";
 import {Inject} from "@tsed/common";
@@ -18,9 +8,7 @@ import {MemeboxWebsocket} from "../websockets/memebox.websocket";
 
 import {ActionQueueEventBus} from "./action-queue-event.bus";
 import {ScriptHandler} from "./scripts/script.handler";
-import {timeoutAsync} from "./scripts/apis/sleep.api";
 import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
-import {uuid} from "@gewd/utils";
 import {ActionQueue} from "./action-queue";
 import {ActionActiveState} from "./action-active-state";
 
@@ -68,9 +56,6 @@ export class ActionTriggerHandler {
     const mediaConfig = this._allMediasMap[payloadObs.id];
 
     switch (mediaConfig.type) {
-      case ActionType.Meta:
-        await this.triggerMeta(mediaConfig, payloadObs);
-        break;
       case ActionType.Script:
         await this._scriptHandler.handleScript(mediaConfig, payloadObs);
         break;
@@ -134,92 +119,6 @@ export class ActionTriggerHandler {
         this._memeboxWebSocket.sendDataToScreen(screen.id, `${ACTIONS.UPDATE_MEDIA}=${JSON.stringify(newMessageObj)}`);
       }
     }
-  }
-
-  private async triggerMeta(mediaConfig: Action, payloadObs: TriggerAction): Promise<void> {
-    // Get all Tags
-    const assignedTags = mediaConfig.tags || [];
-
-    if (assignedTags.length === 0) {
-      this.actionStateEventBus.updateActionState({
-        mediaId: mediaConfig.id,
-        state: ActionStateEnum.Done,
-        overrides: null
-      });
-
-      return;
-    }
-
-    this.actionStateEventBus.updateActionState({
-      mediaId: mediaConfig.id,
-      state: ActionStateEnum.Active,
-      overrides: payloadObs.overrides
-    });
-
-    // Get all clips assigned with these tags
-    const allClips = this._allMediasList.filter(
-      clip => clip.id !== mediaConfig.id && clip.tags && clip.tags.some(tagId => assignedTags.includes(tagId))
-    );
-
-    // per metaType
-    switch (mediaConfig.metaType) {
-      case MetaTriggerTypes.Random: {
-        // random 0..1
-        const randomIndex = Math.floor(Math.random() * allClips.length);
-
-        const clipToTrigger = allClips[randomIndex];
-
-        await this._actionQueue.triggerAndWaitUntilDone({
-          id: clipToTrigger.id,
-          uniqueId: uuid(),
-          origin: TriggerActionOrigin.Meta,
-          originId: mediaConfig.id,
-          originUniqueId: payloadObs.uniqueId
-        });
-
-        break;
-      }
-      case MetaTriggerTypes.All: {
-        const allPromises: Promise<void>[] = [];
-
-        allClips.forEach(clipToTrigger => {
-          allPromises.push(
-            this._actionQueue.triggerAndWaitUntilDone({
-              id: clipToTrigger.id,
-              uniqueId: uuid(),
-              origin: TriggerActionOrigin.Meta,
-              originId: mediaConfig.id,
-              originUniqueId: payloadObs.uniqueId
-            })
-          );
-        });
-
-        await Promise.all(allPromises);
-
-        break;
-      }
-      case MetaTriggerTypes.AllDelay: {
-
-        for (const clipToTrigger of allClips) {
-          await this._actionQueue.triggerAndWaitUntilDone({
-            id: clipToTrigger.id,
-            uniqueId: uuid(),
-            origin: TriggerActionOrigin.Meta,
-            originId: mediaConfig.id,
-            originUniqueId: payloadObs.uniqueId
-          });
-          await timeoutAsync(mediaConfig.metaDelay)
-        }
-
-        break;
-      }
-    }
-
-    this.actionStateEventBus.updateActionState({
-      mediaId: mediaConfig.id,
-      state: ActionStateEnum.Done,
-      overrides: null
-    });
   }
 
   private getData() {

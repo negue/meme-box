@@ -37,9 +37,7 @@ Click on `Add new media`
 4. `Visible screen time` is required for specific types for audio / video it is optional
 > this is used to know when to hide a media clip again
 
-5. `Assign a new tag` is only needed for the `Meta`-Type (link to meta features)
-
-6. if you already have a screen you can select the screen right here, so you don't have to do the part at `3. Add a screen` 
+5. if you already have a screen you can select the screen right here, so you don't have to do the part at `3. Add a screen` 
 
 > link to all media types / options
 

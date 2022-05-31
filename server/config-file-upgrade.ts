@@ -9,6 +9,7 @@ import {convertMetaActionsToRecipe} from "./migrations/meta_to_recipe";
  * Action.metaType => should be removed
  * Action.metaDelay => should be removed
  * ActionType.Meta => should be removed
+ * ACTION_TYPE_INFORMATION.Meta => should be removed
  */
 
 // This is the CONFIG-Version, not the App Version

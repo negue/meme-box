@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output, TrackByFunction } from '@angular/core';
-import { ACTION_TYPE_INFORMATION_ARRAY } from "@memebox/contracts";
+import {Component, EventEmitter, Input, Output, TrackByFunction} from '@angular/core';
+import {ACTION_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
-import { isItemTheSame } from "./is-selected.pipe";
+import {isItemTheSame} from "./is-selected.pipe";
 
 export const enum FilterTypes {
   ActionTypes = 'ACTION_TYPE',
@@ -24,7 +24,7 @@ export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(ACTION_TYPE_INFORMATION_
 
     return {
       label: informations.translationKey,
-      value: +informations.mediaType,
+      value: +informations.actionType,
       icon: informations.icon,
       type:FilterTypes.ActionTypes,
       sortOrder: informations.sortOrder,

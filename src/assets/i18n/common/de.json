@@ -4,7 +4,6 @@
     "video": "Video",
     "audio": "Audio",
     "iframe": "iFrame",
-    "widget": "Widget",
-    "meta": "Meta"
+    "widget": "Widget"
   }
 }

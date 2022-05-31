@@ -139,7 +139,7 @@ export class ScriptEditComponent implements OnInit {
 
       // todo get a variable name from the action name
 
-      const isAction = [ActionType.Script, ActionType.Meta].includes(selectedAction.type);
+      const isAction = [ActionType.Script, ActionType.Recipe].includes(selectedAction.type);
 
     const codeToAdd = `const myActionVar = memebox.get${isAction ? 'Action' : 'Media'}('${actionId}');\n`;
 

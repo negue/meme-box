@@ -3,18 +3,20 @@ import {Action, ActionType} from "@memebox/contracts";
 
 // TODO refactor all those per action type specific "stuff"
 
+const TRIGGER_ACTIONS =  [
+  ActionType.Script,
+  ActionType.PermanentScript,
+  ActionType.Recipe,
+  ActionType.Audio,
+];
+
 @Pipe({
   name: 'actionPreviewLabel'
 })
 export class ActionPreviewLabelPipe implements PipeTransform {
 
   transform(value: Action): string {
-    return [
-      ActionType.Script,
-      ActionType.PermanentScript,
-      ActionType.Meta,
-      ActionType.Audio,
-    ].includes(value.type)
+    return TRIGGER_ACTIONS.includes(value.type)
       ? 'Trigger'
       : 'Preview';
   }
@@ -27,12 +29,7 @@ export class ActionPreviewLabelPipe implements PipeTransform {
 export class ActionPreviewVariablesTooltipPipe implements PipeTransform {
 
   transform(value: Action): string {
-    return [
-      ActionType.Script,
-      ActionType.PermanentScript,
-      ActionType.Meta,
-      ActionType.Audio,
-    ].includes(value.type)
+    return TRIGGER_ACTIONS.includes(value.type)
       ? 'Trigger with custom variables'
       : 'Preview with custom variables';
   }

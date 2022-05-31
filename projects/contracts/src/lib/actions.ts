@@ -1,5 +1,5 @@
-import { Dictionary, ScreenMediaOverridableProperties } from "./types";
-import { AllTwitchEvents } from "./twitch.connector.types";
+import {Dictionary, ScreenMediaOverridableProperties} from "./types";
+import {AllTwitchEvents} from "./twitch.connector.types";
 
 // TODO refactor / rename to more understandable names
 
@@ -28,7 +28,7 @@ export enum TriggerActionOrigin {
   StreamDeck, // currently also Unknown
   TwitchEvent,
   Timer,
-  Meta,
+  Meta, // TODO CHECK META
   Scripts
 }
 

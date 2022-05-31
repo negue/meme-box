@@ -27,7 +27,7 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field *ngIf="!actionToEdit?.id && ACTION_CONFIG_FLAGS[form.value.type].hasVisibleDuration"
+        <mat-form-field *ngIf="!actionToEdit?.id && ACTION_CONFIG_FLAGS[form.value.type].isVisibleAction"
                         style="width: 30%">
           <mat-label>to this Screen:</mat-label>
           <mat-select [(value)]="selectedScreenId">
@@ -44,8 +44,8 @@
         <ng-container *ngIf="!isEditMode">
           <div *transloco="let t; read: 'common'" class="action-buttons">
 
-            <button (click)="updateMediaType(button.type)"
-                    *ngFor="let button of mediaTypeList"
+            <button (click)="updateActionType(button.type)"
+                    *ngFor="let button of actionTypeList"
                     [color]="form.value.type === button.type ? 'primary' : 'accent'"
                     mat-raised-button
             >
@@ -113,7 +113,7 @@
               </div>
             </div>
 
-            <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].hasVisibleDuration"
+            <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].isVisibleAction"
                  class="form-field-row">
               <mat-form-field>
                 <mat-label> {{ ACTION_CONFIG_FLAGS[form.value.type].hasRequiredPlayLength
@@ -181,67 +181,6 @@
               </mat-form-field>
             </div>
 
-            <div *ngIf="form.value.type === ActionType.Meta" class="form-field-row">
-              <mat-form-field>
-                <mat-label>Meta Type</mat-label>
-                <mat-select formControlName="metaType"
-                            required
-                            value="0">
-                  <mat-option [value]="0">Random</mat-option>
-                  <mat-option [value]="1">All</mat-option>
-                  <mat-option [value]="2">All with Delay</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-
-            <div *ngIf="form.value.type === ActionType.Meta" class="form-field-row">
-              <mat-form-field class="example-chip-list">
-                <mat-label>Assign a new tag...</mat-label>
-                <mat-chip-list #chipList aria-label="Tag selection">
-                  <mat-chip
-                    (removed)="removeTag(tag)"
-                    *ngFor="let tag of currentTags$ | async"
-                    [removable]="true"
-                    [selectable]="false">
-                    {{tag.name}}
-                    <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-                  </mat-chip>
-                  <input
-                    #tagInput
-                    (blur)="enterNewTag({input: tagInput, value: tagInput.value})"
-                    (matChipInputTokenEnd)="enterNewTag($event)"
-                    [formControl]="tagFormCtrl"
-                    [matAutocomplete]="tagAutoComplete"
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
-                </mat-chip-list>
-                <mat-autocomplete #tagAutoComplete="matAutocomplete" (optionSelected)="selectedNewTag($event)">
-                  <mat-option *ngFor="let tag of filteredTags$ | async"
-                              [value]="tag">
-                    {{tag.name}}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-
-            </div>
-
-            <div *ngIf="form.value.type === ActionType.Meta && form.value.metaType === 2" class="form-field-row">
-              <mat-form-field>
-                <mat-label>Delay between clip-trigger (ms)</mat-label>
-                <input autocomplete="off"
-                       formControlName="metaDelay"
-                       matInput
-                       required
-                       type="number"
-                />
-                <span matSuffix>ms</span>
-
-                <mat-error *ngIf="form.controls['playLength'].hasError('required')">
-
-                </mat-error>
-              </mat-form-field>
-            </div>
-
             <ng-container *ngIf="[ActionType.Widget, ActionType.Script, ActionType.PermanentScript].includes(form.value.type)" >
               <h3>Override Variables:</h3>
 
@@ -294,16 +233,6 @@
                        #fileSelection accept="text/markdown"
                        (change)="onFileInputChanged($event)">
               </div>
-            </div>
-
-
-            <!-- Meta => AppClipType or list all assign actions by tags -->
-            <div *ngSwitchCase="ActionType.Meta">
-              <h3>Assigned Actions by Tags</h3>
-              <app-compact-action-card *ngFor="let assignedClip of taggedActions$ | async"
-                                       [action]="assignedClip">
-
-              </app-compact-action-card>
             </div>
 
             <div *ngSwitchCase="ActionType.Widget" class="custom-html-holder">
@@ -468,7 +397,7 @@
           If this action should be visible on the mobile view.
         </app-hint-panel>
 
-        <div *ngIf="form.value.type !== ActionType.Meta" class="form-field-row">
+        <div class="form-field-row">
           <!-- extract both Tag Assignment Components -->
           <mat-form-field class="example-chip-list">
             <mat-label>Assign a new tag...</mat-label>
@@ -497,13 +426,6 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-
-          <app-hint-panel [addBottomPadding]="true" style="margin-top: 1rem">
-            These tags are currently used for the Meta Action.
-            <br/>
-            <br/>
-            So that you can select which Actions should be "linked" to the Meta Action.
-          </app-hint-panel>
         </div>
 
         <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].canSelectQueue" class="form-field-row">

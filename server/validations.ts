@@ -7,7 +7,6 @@ export const MediaTypesWithoutPath = [
   ActionType.Widget,
   ActionType.WidgetTemplate,
   ActionType.Script,
-  ActionType.Meta,
   ActionType.PermanentScript,
   ActionType.Recipe
 ]

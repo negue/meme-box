@@ -91,7 +91,7 @@ Misc:
   <tr>
     <td>
 
-[`Trigger multiple / random Media`][URL_META_CLIPS]
+[`Trigger multiple / random Media`][URL_RECIPE]
 </td>
   </tr>
    <tr>
@@ -147,12 +147,12 @@ Misc:
 
 `Advanced`:
 
-- [`Trigger multiple / randoms`][URL_META_CLIPS]
+- [`Trigger multiple / randoms`][URL_RECIPE]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 - [`Scripts`][URL_SCRIPTS]
 - [`Widgets`][URL_WIDGETS]
 
-[URL_META_CLIPS]: tutorials/meta_media.md
+[URL_RECIPE]: tutorials/recipe.md
 [URL_SCRIPTS]: tutorials/scripts.md
 [URL_WIDGETS]: tutorials/widgets.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_media_advanced_settings.md

@@ -96,6 +96,15 @@ export function convertMetaActionsToRecipe (
 
           recipeContext.entries[createdCommand.id] = createdCommand;
           rootEntryList.entries.push(createdCommand.id);
+
+          if (awaited) {
+            const awaitedCommand = generateRecipeEntryCommandCall('sleepMs',{
+              ms: metaAction.metaDelay
+            });
+
+            recipeContext.entries[awaitedCommand.id] = awaitedCommand;
+            rootEntryList.entries.push(awaitedCommand.id);
+          }
         }
 
         break;

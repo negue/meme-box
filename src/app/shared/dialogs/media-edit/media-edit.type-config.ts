@@ -4,7 +4,7 @@ interface ActionEditConfig {
   hasTypeSettings: boolean;
   canSelectQueue: boolean;
   showImportExportPanel?: boolean;
-  hasVisibleDuration: boolean; // maybe rename "isVisibleAction"
+  isVisibleAction: boolean;
   hasPathSelection: boolean;
   hasRequiredPlayLength?: boolean;
 }
@@ -14,26 +14,26 @@ export const ACTION_CONFIG_FLAGS: Record<string, ActionEditConfig> = {
   [ActionType.Picture]: {
     hasTypeSettings: true,
     canSelectQueue: true,
-    hasVisibleDuration: true,
+    isVisibleAction: true,
     hasPathSelection: true,
     hasRequiredPlayLength: true,
   },
   [ActionType.Video]: {
     hasTypeSettings: true,
     canSelectQueue: true,
-    hasVisibleDuration: true,
+    isVisibleAction: true,
     hasPathSelection: true,
   },
   [ActionType.Audio]: {
     hasTypeSettings: true,
     canSelectQueue: true,
-    hasVisibleDuration: true,
+    isVisibleAction: true,
     hasPathSelection: true,
   },
   [ActionType.IFrame]: {
     hasTypeSettings: true,
     canSelectQueue: true,
-    hasVisibleDuration: true,
+    isVisibleAction: true,
     hasPathSelection: true,
     hasRequiredPlayLength: true
   },
@@ -41,7 +41,7 @@ export const ACTION_CONFIG_FLAGS: Record<string, ActionEditConfig> = {
     hasTypeSettings: true,
     canSelectQueue: true,
     showImportExportPanel: true,
-    hasVisibleDuration: true,
+    isVisibleAction: true,
     hasPathSelection: false,
     hasRequiredPlayLength: true,
   },
@@ -49,34 +49,34 @@ export const ACTION_CONFIG_FLAGS: Record<string, ActionEditConfig> = {
     hasTypeSettings: true,
     canSelectQueue: true,
     showImportExportPanel: true,
-    hasVisibleDuration: false,
+    isVisibleAction: false,
     hasPathSelection: false,
   },
   [ActionType.PermanentScript]: {
     hasTypeSettings: true,
     canSelectQueue: false,
     showImportExportPanel: true,
-    hasVisibleDuration: false,
+    isVisibleAction: false,
     hasPathSelection: false,
   },
   [ActionType.WidgetTemplate]: {
     hasTypeSettings: true,
     canSelectQueue: false,
     showImportExportPanel: true,
-    hasVisibleDuration: false,
+    isVisibleAction: false,
     hasPathSelection: false,
   },
-  [ActionType.Meta]: {
+  [ActionType.Meta]: {   // TODO CHECK META
     hasTypeSettings: true,
     canSelectQueue: true,
-    hasVisibleDuration: false,
+    isVisibleAction: false,
     hasPathSelection: false,
   },
   [ActionType.Recipe]: {
     hasTypeSettings: false,  // currently using the space of the other column to fill up, todo refactor
     canSelectQueue: true,
     hasPathSelection: false,
-    hasVisibleDuration: false,
+    isVisibleAction: false,
     showImportExportPanel: true,
   }
 } as const;
