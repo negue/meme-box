@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Action, ScreenViewEntry} from "@memebox/contracts";
-import {combineLatest, Observable} from "rxjs";
-import {filter, map, tap} from "rxjs/operators";
-import {AppQueries, EXPRESS_BASE, NetworkInterfacesService} from "@memebox/app-state";
-import {Clipboard} from "@angular/cdk/clipboard";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {sortActions} from "@memebox/utils";
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Action, ScreenViewEntry } from "@memebox/contracts";
+import { combineLatest, Observable } from "rxjs";
+import { filter, map, tap } from "rxjs/operators";
+import { AppQueries, EXPRESS_BASE, NetworkInterfacesService } from "@memebox/app-state";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { sortActions } from "@memebox/utils";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
@@ -51,25 +51,25 @@ export class ScreenInfoComponent implements OnInit {
   );
 
   @Output()
-  public onEdit = new EventEmitter();
+  public readonly onEdit = new EventEmitter();
 
   @Output()
-  public onGetUrl = new EventEmitter();
+  public readonly onGetUrl = new EventEmitter();
 
   @Output()
-  public onOpenArrangeDialog = new EventEmitter();
+  public readonly onOpenArrangeDialog = new EventEmitter();
 
   @Output()
-  public onPreview = new EventEmitter<string>()
+  public readonly onPreview = new EventEmitter<string>()
 
   @Output()
-  public onDelete = new EventEmitter();
+  public readonly onDelete = new EventEmitter();
 
   @Output()
-  public onEditScreenClipOptions = new EventEmitter<Action>();
+  public readonly onEditScreenClipOptions = new EventEmitter<Action>();
 
   @Output()
-  public onReload = new EventEmitter();
+  public readonly onReload = new EventEmitter();
 
   private _info: ScreenViewEntry;
 

@@ -1,11 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-config-card',
   templateUrl: './config-card.component.html',
   styleUrls: ['./config-card.component.scss']
 })
-export class ConfigCardComponent implements OnInit {
+export class ConfigCardComponent {
 
   @Input()
   public title : string;
@@ -15,10 +15,4 @@ export class ConfigCardComponent implements OnInit {
 
   @Input()
   public titlePadding = true;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

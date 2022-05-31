@@ -1,0 +1,30 @@
+{
+  "extends": "../../.eslintrc-angular-specific.json",
+  "ignorePatterns": [
+    "!**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "./projects/recipe-core/tsconfig.lib.json",
+          "./projects/recipe-core/tsconfig.spec.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+      ],
+      "rules": {
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "rules": {}
+    }
+  ]
+}

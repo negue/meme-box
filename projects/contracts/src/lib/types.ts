@@ -1,9 +1,9 @@
-import {ChatUserstate} from "tmi.js";
-import {ActionType} from "./media.types";
-import {ActionOverridableProperties, TriggerAction} from "./actions";
-import {AllTwitchEvents} from "./twitch.connector.types";
-import {DefaultImage} from "./twitch-data.types";
-import {RecipeContext} from "@memebox/logic-step-core";
+import { ChatUserstate } from "tmi.js";
+import { ActionType } from "./media.types";
+import { ActionOverridableProperties, TriggerAction } from "./actions";
+import { AllTwitchEvents } from "./twitch.connector.types";
+import { DefaultImage } from "./twitch-data.types";
+import { RecipeContext } from "@memebox/recipe-core";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 

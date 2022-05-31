@@ -535,21 +535,21 @@
         }
       }
     },
-    "logic-step-ui": {
+    "recipe-ui": {
       "projectType": "library",
-      "root": "projects/logic-step-ui",
-      "sourceRoot": "projects/logic-step-ui/src",
+      "root": "projects/recipe-ui",
+      "sourceRoot": "projects/recipe-ui/src",
       "prefix": "memebox",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {
-            "tsConfig": "projects/logic-step-ui/tsconfig.lib.json",
-            "project": "projects/logic-step-ui/ng-package.json"
+            "tsConfig": "projects/recipe-ui/tsconfig.lib.json",
+            "project": "projects/recipe-ui/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/logic-step-ui/tsconfig.lib.prod.json"
+              "tsConfig": "projects/recipe-ui/tsconfig.lib.prod.json"
             }
           }
         },
@@ -557,36 +557,36 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "projects/logic-step-ui/src/**/*.ts",
-              "projects/logic-step-ui/src/**/*.html"
+              "projects/recipe-ui/src/**/*.ts",
+              "projects/recipe-ui/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/logic-step-ui"],
+          "outputs": ["coverage/projects/recipe-ui"],
           "options": {
-            "jestConfig": "projects/logic-step-ui/jest.config.js",
+            "jestConfig": "projects/recipe-ui/jest.config.js",
             "passWithNoTests": true
           }
         }
       }
     },
-    "logic-step-core": {
+    "recipe-core": {
       "projectType": "library",
-      "root": "projects/logic-step-core",
-      "sourceRoot": "projects/logic-step-core/src",
+      "root": "projects/recipe-core",
+      "sourceRoot": "projects/recipe-core/src",
       "prefix": "memebox",
       "architect": {
         "build": {
           "builder": "@nrwl/angular:ng-packagr-lite",
           "options": {
-            "tsConfig": "projects/logic-step-core/tsconfig.lib.json",
-            "project": "projects/logic-step-core/ng-package.json"
+            "tsConfig": "projects/recipe-core/tsconfig.lib.json",
+            "project": "projects/recipe-core/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/logic-step-core/tsconfig.lib.prod.json"
+              "tsConfig": "projects/recipe-core/tsconfig.lib.prod.json"
             }
           }
         },
@@ -594,16 +594,16 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": [
-              "projects/logic-step-core/src/**/*.ts",
-              "projects/logic-step-core/src/**/*.html"
+              "projects/recipe-core/src/**/*.ts",
+              "projects/recipe-core/src/**/*.html"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/logic-step-core"],
+          "outputs": ["coverage/projects/recipe-core"],
           "options": {
-            "jestConfig": "projects/logic-step-core/jest.config.js",
+            "jestConfig": "projects/recipe-core/jest.config.js",
             "passWithNoTests": true
           }
         }

@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {createRecipeContext, generateCodeByBlueprint, RecipeContext} from "../../../../projects/logic-step-core/src";
-import {AppService} from "../../../../projects/app-state/src/lib/state";
+import { Component, OnInit } from '@angular/core';
+import { createRecipeContext, generateCodeByRecipe, RecipeContext } from "../../../../projects/recipe-core/src";
+import { AppService } from "../../../../projects/app-state/src/lib/state";
 
 @Component({
   selector: 'app-test',
@@ -8,7 +8,7 @@ import {AppService} from "../../../../projects/app-state/src/lib/state";
   styleUrls: ['./test.component.scss']
 })
 export class TestComponent implements OnInit {
-  public blueprint: RecipeContext = createRecipeContext();
+  public recipe: RecipeContext = createRecipeContext();
 
   constructor(
     private appService: AppService
@@ -18,7 +18,7 @@ export class TestComponent implements OnInit {
     this.appService.loadState();
   }
 
-  toScriptCode (blueprint: RecipeContext): string  {
-    return generateCodeByBlueprint(blueprint);
+  toScriptCode (recipeContext: RecipeContext): string  {
+    return generateCodeByRecipe(recipeContext);
   }
 }

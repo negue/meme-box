@@ -9,9 +9,9 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {Action, PositionEnum, Screen, ScreenMedia} from '@memebox/contracts';
-import {NgxMoveableComponent} from 'ngx-moveable';
-import {parseTransformValues} from "@memebox/utils";
+import { Action, PositionEnum, Screen, ScreenMedia } from '@memebox/contracts';
+import { NgxMoveableComponent } from 'ngx-moveable';
+import { parseTransformValues } from "@memebox/utils";
 
 export interface TranslatedPosition {
   x: string;
@@ -61,17 +61,17 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   public warpEnabled: boolean;
 
   @Output()
-  public elementClicked = new EventEmitter();
+  public readonly elementClicked = new EventEmitter();
 
   @Output()
-  public elementCreated = new EventEmitter();
+  public readonly elementCreated = new EventEmitter();
 
 
   @Output()
-  public inputApplied = new EventEmitter();
+  public readonly inputApplied = new EventEmitter();
 
   @Output()
-  public elementChanged = new EventEmitter();
+  public readonly elementChanged = new EventEmitter();
 
   @ViewChild('moveableInstance')
   public moveableInstance: NgxMoveableComponent;

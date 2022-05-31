@@ -8,7 +8,7 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
   Action,
   ACTION_TYPE_INFORMATION,
@@ -18,8 +18,8 @@ import {
   MetaTriggerTypes,
   Tag
 } from "@memebox/contracts";
-import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
+import { AppQueries, AppService, SnackbarService } from "@memebox/app-state";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -31,11 +31,11 @@ import {
   take,
   takeUntil
 } from "rxjs/operators";
-import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent} from "@angular/material/chips";
-import {DialogService} from "../dialog.service";
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { MatChipInputEvent } from "@angular/material/chips";
+import { DialogService } from "../dialog.service";
 import {
   actionDataToScriptConfig,
   actionDataToWidgetContent,
@@ -53,11 +53,11 @@ import {
   ScriptConfig,
   toMarkdown
 } from "@memebox/utils";
-import {Clipboard} from "@angular/cdk/clipboard";
-import {DialogData} from "../dialog.contract";
-import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
-import {downloadFile} from "@gewd/utils";
-import {createRecipeContext, generateCodeByBlueprint, RecipeContext} from "@memebox/logic-step-core";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { DialogData } from "../dialog.contract";
+import { ACTION_CONFIG_FLAGS } from "./media-edit.type-config";
+import { downloadFile } from "@gewd/utils";
+import { createRecipeContext, generateCodeByRecipe, RecipeContext } from "@memebox/recipe-core";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 const META_DELAY_DEFAULT = 750;
@@ -303,7 +303,7 @@ export class MediaEditComponent
     });
   }
 
-  fillUiRelatedDataBasedOnAction() {
+  fillUiRelatedDataBasedOnAction(): void {
     this.form.reset(this.actionToEdit);
 
     this.availableTags$.pipe(
@@ -591,8 +591,8 @@ export class MediaEditComponent
 
   }
 
-  toScriptCode (blueprint: RecipeContext): string  {
-    return generateCodeByBlueprint(blueprint);
+  toScriptCode (recipeContext: RecipeContext): string  {
+    return generateCodeByRecipe(recipeContext);
   }
 
   // region Import / Export Methods

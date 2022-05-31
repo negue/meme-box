@@ -16,7 +16,7 @@ import {
   TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
-import {Observable, Subject} from "rxjs";
+import { Observable, Subject } from "rxjs";
 import * as path from "path";
 import {
   deleteInArray,
@@ -25,16 +25,16 @@ import {
   sortActions,
   updateItemInDictionary
 } from "@memebox/utils";
-import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {operations} from '@memebox/shared-state';
-import {debounceTime} from "rxjs/operators";
-import {LOGGER, newLogger} from "./logger.utils";
-import {registerProvider} from "@tsed/di";
-import {PERSISTENCE_DI} from "./providers/contracts";
-import {CLI_OPTIONS} from "./utils/cli-options";
+import { createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH } from "./path.utils";
+import { operations } from '@memebox/shared-state';
+import { debounceTime } from "rxjs/operators";
+import { LOGGER, newLogger } from "./logger.utils";
+import { registerProvider } from "@tsed/di";
+import { PERSISTENCE_DI } from "./providers/contracts";
+import { CLI_OPTIONS } from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
-import {uuid} from '@gewd/utils';
-import {SavePreviewFile} from "./persistence.functions";
+import { uuid } from '@gewd/utils';
+import { saveFile, SavePreviewFile } from "./persistence.functions";
 
 // TODO Extract more state operations to shared library and from app
 
@@ -636,29 +636,12 @@ export class Persistence {
   }
 }
 
-// TODO change to promise / async
-// todo extract ?
-function saveFile(filePath: string, data: any, stringify = false) {
-  const getDirOfPath = path.dirname(filePath);
-
-  createDirIfNotExists(getDirOfPath);
-
-  fs.writeFileSync(filePath, stringify
-    ? JSON.stringify(data, null, '  ')
-    : data /*, err => {
-    if (err) {
-      console.error(`Error on Saving File: ${filePath}`, err);
-    }
-  }*/);
-}
-
 // Once its a bit refactored, this should be used
 export const PERSISTENCE: {
   instance: Persistence;
 } = {
   instance: null
 }
-
 
 export const PersistenceInstance = new Persistence(
   path.join(NEW_CONFIG_PATH, 'settings', 'settings.json')

@@ -1,7 +1,7 @@
-import {Action, Dictionary} from "@memebox/contracts";
-import {replaceVariablesInString} from "./utils";
-import {ActionVariableConfig} from "@memebox/action-variables";
-import {getVariableMapOfAction, getVariablesConfigListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
+import { Action, Dictionary } from "@memebox/contracts";
+import { replaceVariablesInString } from "./utils";
+import { ActionVariableConfig } from "@memebox/action-variables";
+import { getVariableMapOfAction, getVariablesConfigListOfAction, SCRIPT_VARIABLES_KEY } from "./variable.utils";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
@@ -19,6 +19,43 @@ export interface DynamicIframeContent {
     subscribeToTwitchEvent?: boolean;
   }
 }
+
+function getVariableValueOrFallback (config: ActionVariableConfig,
+                                     valueBag: Dictionary<any>,
+                                     justReturnIt = false) {
+  const valueOfBag = valueBag[config.name];
+  const valueToReturn = typeof valueOfBag === 'undefined'
+    ? config.fallback
+    : valueOfBag;
+
+  if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
+    return valueToReturn;
+  }
+
+  if (config.type === 'textarea') {
+    return "`" + valueToReturn + "`";
+  }
+
+  // string
+  return `"${valueToReturn}"`;
+}
+
+function getJsCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
+  return variables
+    .filter(config => !!config.fallback)
+    .map(config => {
+    return `const ${config.name} = ${getVariableValueOrFallback(config, valueBag)};`;
+  }).join(' ');
+}
+
+
+function getCssCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
+  return variables
+    .filter(config => !!config.fallback && config.type !== "textarea" && config.type !== "boolean")
+    .map(config => { return `--${config.name}: ${getVariableValueOrFallback(config, valueBag, true)};`;
+  }).join(' ');
+}
+
 
 export function dynamicIframe (iframe: HTMLIFrameElement,
                                content: DynamicIframeContent): void  {
@@ -150,43 +187,6 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
     }`;
   }
 }
-
-function getVariableValueOrFallback (config: ActionVariableConfig,
-                                     valueBag: Dictionary<any>,
-                                     justReturnIt = false) {
-  const valueOfBag = valueBag[config.name];
-  const valueToReturn = typeof valueOfBag === 'undefined'
-    ? config.fallback
-    : valueOfBag;
-
-  if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
-    return valueToReturn;
-  }
-
-  if (config.type === 'textarea') {
-    return "`" + valueToReturn + "`";
-  }
-
-  // string
-  return `"${valueToReturn}"`;
-}
-
-function getJsCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
-  return variables
-    .filter(config => !!config.fallback)
-    .map(config => {
-    return `const ${config.name} = ${getVariableValueOrFallback(config, valueBag)};`;
-  }).join(' ');
-}
-
-
-function getCssCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
-  return variables
-    .filter(config => !!config.fallback && config.type !== "textarea" && config.type !== "boolean")
-    .map(config => { return `--${config.name}: ${getVariableValueOrFallback(config, valueBag, true)};`;
-  }).join(' ');
-}
-
 
 const DYNAMIC_IFRAME_HTML_KEY = 'html';
 const DYNAMIC_IFRAME_CSS_KEY = 'css';

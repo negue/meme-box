@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TimedAction, TwitchTypesArray} from '@memebox/contracts';
-import {AppQueries, AppService} from '@memebox/app-state';
-import {map} from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TimedAction, TwitchTypesArray } from '@memebox/contracts';
+import { AppQueries, AppService } from '@memebox/app-state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-timed-info',
@@ -27,10 +27,10 @@ export class TimedEventInfoComponent implements OnInit {
   );
 
   @Output()
-  onDelete = new EventEmitter<any>();
+  public readonly onDelete = new EventEmitter<any>();
 
   @Output()
-  onEdit = new EventEmitter<any>();
+  public readonly onEdit = new EventEmitter<any>();
 
   constructor(private appQueries: AppQueries,
               private appService: AppService) {

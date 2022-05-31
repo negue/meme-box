@@ -1,5 +1,5 @@
 {
-  "mediaType": {
+  "actionType": {
     "image": "Image",
     "video": "Video",
     "audio": "Audio",
@@ -9,6 +9,6 @@
     "meta": "Meta",
     "script": "Script",
     "permanent_script": "Permanent Script",
-    "blueprint": "Blueprint"
+    "recipe": "Recipe"
   }
 }

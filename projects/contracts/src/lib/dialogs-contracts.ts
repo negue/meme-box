@@ -8,5 +8,5 @@ export enum UnassignedFilterEnum {
   Screens,
   Twitch,
   Timers,
-  BlueprintStepArgument
+  RecipeCommandArgument
 }

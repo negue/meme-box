@@ -11,7 +11,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { DynamicIframeModule } from "../shared/components/dynamic-iframe/dynamic-iframe.module";
 import { CustomFormControlModule } from "@gewd/mat-utils/custom-form-control";
 import { ScreenArrangeModule } from "../shared/dialogs/screen-arrange/screen-arrange.module";
-import { LogicStepUiModule } from "../../../projects/logic-step-ui/src";
+import { RecipeUiModule } from "../../../projects/recipe-ui/src";
 import { DirectivesModule } from "../shared/directives/directives.module";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 
@@ -38,7 +38,7 @@ const routes: Routes = [
     MatIconModule,
     DynamicIframeModule,
     ScreenArrangeModule,
-    LogicStepUiModule,
+    RecipeUiModule,
     DirectivesModule,
     MatCheckboxModule
   ]

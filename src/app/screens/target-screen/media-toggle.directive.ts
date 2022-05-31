@@ -53,7 +53,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
   public screenId: string;
 
   @Output()
-  public mediaStateChanged = new EventEmitter<MediaState>();
+  public readonly mediaStateChanged = new EventEmitter<MediaState>();
 
   public isVisible$ = new BehaviorSubject<boolean>(false);
 
