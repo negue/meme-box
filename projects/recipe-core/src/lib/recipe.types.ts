@@ -1,7 +1,7 @@
-import { uuid } from "@gewd/utils";
-import { TriggerActionOverrides } from "@memebox/contracts";
-import { AppQueries } from "@memebox/app-state";
-import { RecipeStepConfigArgument } from "./generateCodeByRecipe";
+import {uuid} from "@gewd/utils";
+import {TriggerActionOverrides} from "@memebox/contracts";
+import {AppQueries} from "@memebox/app-state";
+import {RecipeStepConfigArgument} from "./generateCodeByRecipe";
 
 export interface RecipeSubCommandInfo {
   name: string; // property to save the subSteps
@@ -52,6 +52,8 @@ export interface RecipeContext {
   entries: {[entryId: string]: RecipeEntry}
 }
 
+export const RecipeRootCommandBlockId = 'recipeRoot';
+
 export function createRecipeContext (): RecipeContext {
   const rootId = uuid();
 
@@ -64,7 +66,7 @@ export function createRecipeContext (): RecipeContext {
         awaited: false,
         subCommandBlocks: [
           {
-            labelId: 'recipeRoot',
+            labelId: RecipeRootCommandBlockId,
             entries: []
           }
         ]

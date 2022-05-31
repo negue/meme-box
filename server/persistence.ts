@@ -3,7 +3,6 @@ import {
   Action,
   ChangedInfo,
   Config,
-  ConfigV0,
   createInitialState,
   ObsConfig,
   PositionEnum,
@@ -16,7 +15,7 @@ import {
   TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
-import { Observable, Subject } from "rxjs";
+import {Observable, Subject} from "rxjs";
 import * as path from "path";
 import {
   deleteInArray,
@@ -25,16 +24,17 @@ import {
   sortActions,
   updateItemInDictionary
 } from "@memebox/utils";
-import { createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH } from "./path.utils";
-import { operations } from '@memebox/shared-state';
-import { debounceTime } from "rxjs/operators";
-import { LOGGER, newLogger } from "./logger.utils";
-import { registerProvider } from "@tsed/di";
-import { PERSISTENCE_DI } from "./providers/contracts";
-import { CLI_OPTIONS } from "./utils/cli-options";
+import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
+import {operations} from '@memebox/shared-state';
+import {debounceTime} from "rxjs/operators";
+import {LOGGER, newLogger} from "./logger.utils";
+import {registerProvider} from "@tsed/di";
+import {PERSISTENCE_DI} from "./providers/contracts";
+import {CLI_OPTIONS} from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
-import { uuid } from '@gewd/utils';
-import { saveFile, SavePreviewFile } from "./persistence.functions";
+import {uuid} from '@gewd/utils';
+import {saveFile, SavePreviewFile} from "./persistence.functions";
+import {upgradeConfigFile} from './config-file-upgrade';
 
 // TODO Extract more state operations to shared library and from app
 
@@ -47,9 +47,6 @@ export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
 export class Persistence {
 
   public configLoaded$ = new Subject();
-
-  // This is the CONFIG-Version, not the App Version
-  private version = 2;
 
   private updated$ = new Subject<ChangedInfo>();
   private _hardRefresh$ = new Subject();
@@ -80,7 +77,7 @@ export class Persistence {
       }
       // execute upgrade , changing names or other stuff
 
-      this.data = Object.assign({}, createInitialState(), this.upgradeConfigFile(dataFromFile as any));
+      this.data = Object.assign({}, createInitialState(), upgradeConfigFile(dataFromFile as any));
       this.updated$.next({
         dataType: 'everything',
         changeType: 'changed'
@@ -116,40 +113,7 @@ export class Persistence {
    *
    * @param configFromFile
    */
-  public upgradeConfigFile(configFromFile: SettingsState): SettingsState {
 
-    if (!configFromFile.version) {
-      // new twitch config state
-      const configV0 = configFromFile.config as ConfigV0;
-
-      if (configV0) {
-        configFromFile.config.twitch = {
-          channel: configV0.twitchChannel,
-          token: '',
-          enableLog: configV0.twitchLog,
-          bot: {
-            enabled: false,
-            response: '',
-            command: '!command'
-          }
-        };
-
-        delete configV0.twitchLog;
-        delete configV0.twitchChannel;
-      }
-    }
-
-    if (configFromFile.version < 2) {
-      // extract the preview base64 images out to their own files
-      for (const action of Object.values(configFromFile.clips)) {
-        SavePreviewFile(action);
-      }
-    }
-
-    configFromFile.version = this.version;
-
-    return configFromFile;
-  }
 
   public dataUpdated$ () : Observable<ChangedInfo> {
     return this.updated$.asObservable();

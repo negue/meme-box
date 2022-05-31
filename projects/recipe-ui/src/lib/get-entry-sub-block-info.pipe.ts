@@ -1,8 +1,14 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { RecipeCommandRegistry, RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo } from "@memebox/recipe-core";
-import { from, Observable, of } from "rxjs";
-import { AppQueries } from "@memebox/app-state";
-import { RecipeContextDirective } from "./recipe-context.directive";
+import {Pipe, PipeTransform} from '@angular/core';
+import {
+  RecipeCommandRegistry,
+  RecipeEntry,
+  RecipeEntryCommandCall,
+  RecipeRootCommandBlockId,
+  RecipeSubCommandInfo
+} from "@memebox/recipe-core";
+import {from, Observable, of} from "rxjs";
+import {AppQueries} from "@memebox/app-state";
+import {RecipeContextDirective} from "./recipe-context.directive";
 
 @Pipe({
   name: 'getEntrySubBlockInfoArray$'
@@ -24,7 +30,7 @@ export class GetEntrySubBlockInfoArray$Pipe implements PipeTransform {
       return of([
         {
           name: 'entries',
-          labelId: 'recipeRoot',
+          labelId: RecipeRootCommandBlockId,
           label: 'Recipe Commands',
           entries: []
         }
