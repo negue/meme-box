@@ -7,6 +7,7 @@ import {
 import {map, take} from "rxjs/operators";
 import {generateRandomCharacters} from "./utils";
 import {combineLatest} from "rxjs";
+import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
 
 function createMemeboxApiVariable(
   actionPayload: RecipeCommandConfigActionPayload
@@ -56,7 +57,15 @@ export function registerMemeboxCommandBlocks (
         map(actionInfo => actionInfo?.name ?? 'unknown action'),
         take(1)
       ).toPromise();
-    }
+    },
+    entryIcon: (queries, payload) => {
+      const actionPayload = payload.action as RecipeCommandConfigActionPayload;
+
+      return queries.getActionById$(actionPayload.actionId).pipe(
+        map(action => ACTION_TYPE_INFORMATION[action.type].icon),
+        take(1)
+      ).toPromise();
+    },
   };
 
   registry["triggerActionWhile"] = {

@@ -13,6 +13,7 @@ export interface RecipeSubCommandInfo {
 export interface RecipeCommandInfo {
   stepType: string; // unique name of this step
   label: string;
+  icon: string;
 }
 
 // at some point custom controls/ui for each stepInfo could be shown
@@ -94,6 +95,7 @@ export interface RecipeCommandDefinition {
   pickerLabel: string;
   commandEntryLabelAsync: (queries: AppQueries, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => Promise<string>;
   subCommandBlockLabelAsync?: (queries: AppQueries, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
+  entryIcon?: (queries: AppQueries,  payload: RecipeEntryCommandPayload) => Promise<string>;
   commandGroup: string;
   configArguments: RecipeStepConfigArgument[]; // each argument name will be applied to the payload as prop
 

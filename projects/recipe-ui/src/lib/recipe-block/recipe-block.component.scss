@@ -86,7 +86,7 @@
 .entry-actions {
   position: absolute;
   right: 0;
-  top: -0.5rem;
+  top: -0.25rem;
 }
 
 .step-grab {
@@ -103,4 +103,16 @@
   }
 
   cursor: grab;
+}
+
+.label-with-icon {
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    height: 1rem;
+    width: 1rem;
+
+    margin-right: 0.5rem;
+  }
 }

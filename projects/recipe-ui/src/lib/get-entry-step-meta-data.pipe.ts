@@ -1,6 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { RecipeCommandInfo, RecipeCommandRegistry, RecipeEntry } from "@memebox/recipe-core";
-import { AppQueries } from "@memebox/app-state";
+import {Pipe, PipeTransform} from '@angular/core';
+import {RecipeCommandInfo, RecipeCommandRegistry, RecipeEntry} from "@memebox/recipe-core";
+import {AppQueries} from "@memebox/app-state";
 
 @Pipe({
   name: 'getEntryStepMetaData$'
@@ -19,11 +19,15 @@ export class GetEntryStepMetaDataPipe implements PipeTransform {
 
     const recipeCommandDefinition = RecipeCommandRegistry[value.commandBlockType];
 
-    const entryLabel = await recipeCommandDefinition.commandEntryLabelAsync(this.appQueries, value.payload, parentEntry);
+    const [entryLabel, icon] = await Promise.all([
+      recipeCommandDefinition.commandEntryLabelAsync(this.appQueries, value.payload, parentEntry),
+      recipeCommandDefinition.entryIcon?.(this.appQueries, value.payload) ?? Promise.resolve('')
+    ]);
 
     return {
       stepType: value.commandBlockType,
       label: entryLabel,
+      icon
     };
   }
 

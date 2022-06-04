@@ -1,7 +1,10 @@
 <ng-container *ngIf="entry?.entryType === 'command' && entry | getEntryStepMetaData$: parent | async as stepMetadata">
 
-  {{ stepMetadata.label }}
+  <div class="label-with-icon">
+    <mat-icon *ngIf="stepMetadata.icon" [svgIcon]="stepMetadata.icon"></mat-icon>
 
+    {{ stepMetadata.label }}
+  </div>
 
   <div *ngIf="editMode" class="entry-actions">
   <button mat-icon-button
