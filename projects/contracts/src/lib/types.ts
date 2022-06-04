@@ -1,8 +1,9 @@
 import {ChatUserstate} from "tmi.js";
 import {ActionType} from "./media.types";
-import {TriggerAction} from "./actions";
+import {ActionOverridableProperties, TriggerAction} from "./actions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {DefaultImage} from "./twitch-data.types";
+import {RecipeContext} from "@memebox/recipe-core";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -22,22 +23,20 @@ export interface HasTargetScreenId {
 // TODO replace by Record<TKey, TValue>
 export interface Dictionary<T> extends Record<string, T> { }
 
+// TODO CHECK META
 export enum MetaTriggerTypes {
   Random,
   All,
   AllDelay
 }
 
-export interface ActionOverridableProperies {
-  // Empty for now
-}
 
 export interface HasExtendedData {
   // used for Widgets and/or variables / -config
-  extended?: Dictionary<string>;
+  extended?: Dictionary<unknown>;
 }
 
-export interface Action extends HasId, ActionOverridableProperies, HasExtendedData {
+export interface Action extends HasId, ActionOverridableProperties, HasExtendedData {
   name: string;
   previewUrl?: string;
   hasPreview?: boolean;
@@ -51,9 +50,15 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
   type: ActionType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"
-                    // the Meta Type will use that to trigger all actions of that tagId
 
+  /**
+   * @deprecated will be removed in a different version
+   */
   metaType?: MetaTriggerTypes;
+
+  /**
+   * @deprecated will be removed in a different version
+   */
   metaDelay?: number; // in ms
 
   showOnMobile?: boolean;
@@ -62,6 +67,8 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
 
   fromTemplate?: string; // GUID / Clip.Id of the Template
   description?: string;
+
+  recipe?: RecipeContext;
 }
 
 export interface Screen extends HasId {

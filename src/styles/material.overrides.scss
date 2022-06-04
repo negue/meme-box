@@ -134,3 +134,10 @@ $custom-typography: mat-typography-config(
 .form-field-row {
   margin-top: 0 !important;
 }
+
+.mat-icon-button {
+  .mat-button-wrapper {
+    height: 44px;
+    display: block;
+  }
+}

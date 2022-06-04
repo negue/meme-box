@@ -7,7 +7,7 @@ export function getVariablesListOfAction(action: Action): ActionVariableConfig[]
     return [];
   }
 
-  const parsedJson = JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] ?? '[]');
+  const parsedJson = JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] as string ?? '[]');
 
   return parsedJson as ActionVariableConfig[];
 }

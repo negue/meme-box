@@ -28,7 +28,7 @@ export class MediaOverviewComponent implements OnDestroy{
 
   public searchText$ = new BehaviorSubject<string>('');
 
-  public mediaList$: Observable<Action[]> = filterClips$(
+  public actionList$: Observable<Action[]> = filterClips$(
     this.query.state$,
     this.filteredItems$,
     this.searchText$
@@ -81,7 +81,7 @@ export class MediaOverviewComponent implements OnDestroy{
     this.showDialog(null);
   }
 
-  fillWithDummyData() {
+  fillWithDummyData(): void  {
     this.configService.fillDummyData();
   }
 
@@ -119,19 +119,19 @@ export class MediaOverviewComponent implements OnDestroy{
     });
   }
 
-  openHelpOverview() {
+  openHelpOverview(): void  {
     this._dialog.showHelpOverview();
   }
 
-  toggleViewModes() {
+  toggleViewModes(): void  {
     this._uiService.toggleCurrentUiMode();
   }
 
-  onDuplicate(itemId: string) {
+  onDuplicate(itemId: string): void  {
     this.service.duplicateAction(itemId);
   }
 
-  addNewActionByType(mediGroup: ActionTypeGroup) {
+  addNewActionByType(mediGroup: ActionTypeGroup): void  {
 
     this._dialog.showMediaEditDialog({
       actionToEdit: null,
@@ -141,11 +141,11 @@ export class MediaOverviewComponent implements OnDestroy{
     });
   }
 
-  onTriggerWithVariables(item: Action) {
+  onTriggerWithVariables(item: Action): void  {
     this._dialog.showTriggerActionVariables(item);
   }
 
-  onToggleActive(action: Action) {
+  onToggleActive(action: Action): void  {
     this.service.addOrUpdateAction({
       ...action,
       isActive: !action.isActive

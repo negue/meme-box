@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
@@ -12,7 +12,7 @@ import {DialogService} from "../dialog.service";
   templateUrl: './markdown.component.html',
   styleUrls: ['./markdown.component.scss']
 })
-export class MarkdownComponent implements OnInit {
+export class MarkdownComponent {
 
   markdownFile$: Observable<string>;
 
@@ -26,9 +26,6 @@ export class MarkdownComponent implements OnInit {
     this.markdownFile$ = http.get(`./assets/tutorials/${data.githubName}`, {
       responseType: 'text'
     });
-  }
-
-  ngOnInit(): void {
   }
 
   openMarkdownOnGitHub(): void  {

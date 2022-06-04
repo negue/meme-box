@@ -19,6 +19,14 @@ import { TwitchApi } from "./apis/twitch.api";
 import { TwitchDataProvider } from "../../twitch/twitch.data-provider";
 import { setGlobalVMScope } from "./global.context";
 import { TwitchQueueEventBus } from "../../twitch/twitch-queue-event.bus";
+import { actionDataToScriptConfig, ScriptConfig } from "@memebox/utils";
+import { generateCodeByRecipe } from "@memebox/recipe-core";
+
+const ActionTypesToResetScriptContext = [
+  ActionType.Script,
+  ActionType.PermanentScript,
+  ActionType.Recipe
+];
 
 @Service()
 export class ScriptHandler implements ActionStoreAdapter {
@@ -51,7 +59,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     _persistence.dataUpdated$().subscribe((changedInfo) => {
       if (
         changedInfo.dataType == 'action'
-        && [ActionType.Script, ActionType.PermanentScript].includes(changedInfo.actionType)
+        && ActionTypesToResetScriptContext.includes(changedInfo.actionType)
       ) {
         this.refreshCompiledScriptsAndStartPermanents(changedInfo.id);
       }
@@ -92,8 +100,35 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // endregion ActionStoreAdapter
 
-  public async handleScript (script: Action, payloadObs: TriggerAction) {
+  public async handleRecipe(script: Action, payloadObs: TriggerAction) {
+    const generatedScript = generateCodeByRecipe(script.recipe);
+
+    const scriptConfig: ScriptConfig = {
+      bootstrapScript: '',
+      variablesConfig: [],
+      executionScript: generatedScript,
+      settings: {
+
+      }
+    };
+
+    return this.handleGenericScript(script, scriptConfig, payloadObs);
+  }
+
+  public handleScript (script: Action, payloadObs: TriggerAction) {
     this.logger.info('Handle Script!!');
+
+    const scriptConfig = actionDataToScriptConfig(script);
+
+    return this.handleGenericScript(script, scriptConfig, payloadObs);
+  }
+
+  private async handleGenericScript(
+    script: Action,
+    scriptConfig: ScriptConfig,
+    payloadObs: TriggerAction
+  ) {
+    // todo rename logs per target type script/recipe
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
@@ -113,6 +148,7 @@ export class ScriptHandler implements ActionStoreAdapter {
         this._vm,
         this,
         script,
+        scriptConfig,
         this.memeboxApiFactory.getApiFor(script.id, script.type),
         this.logger,
         obsApi,

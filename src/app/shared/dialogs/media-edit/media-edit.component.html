@@ -27,7 +27,7 @@
           </mat-error>
         </mat-form-field>
 
-        <mat-form-field *ngIf="!actionToEdit?.id && ACTION_CONFIG_FLAGS[form.value.type].hasVisibleDuration"
+        <mat-form-field *ngIf="!actionToEdit?.id && ACTION_CONFIG_FLAGS[form.value.type].isVisibleAction"
                         style="width: 30%">
           <mat-label>to this Screen:</mat-label>
           <mat-select [(value)]="selectedScreenId">
@@ -39,13 +39,13 @@
         </mat-form-field>
       </div>
 
-      <lib-step [enabled]="!isEditMode" [subText]="form.value.type | mediaEnumToLabel | async"
+      <lib-step [enabled]="!isEditMode" [subText]="form.value.type | actionEnumToLabelAsync | async"
                 label="Action-Type">
         <ng-container *ngIf="!isEditMode">
           <div *transloco="let t; read: 'common'" class="action-buttons">
 
-            <button (click)="updateMediaType(button.type)"
-                    *ngFor="let button of mediaTypeList"
+            <button (click)="updateActionType(button.type)"
+                    *ngFor="let button of actionTypeList"
                     [color]="form.value.type === button.type ? 'primary' : 'accent'"
                     mat-raised-button
             >
@@ -56,7 +56,7 @@
         </ng-container>
       </lib-step>
 
-      <lib-step [label]="(form.value.type | mediaEnumToLabel | async) + ' Settings'">
+      <lib-step [label]="(form.value.type | actionEnumToLabelAsync | async) + ' Settings'">
         <div class="two-columns">
           <div [class.hidden]="!ACTION_CONFIG_FLAGS[form.value.type].hasTypeSettings" class="column">
             <mat-form-field *ngIf="false">
@@ -113,7 +113,7 @@
               </div>
             </div>
 
-            <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].hasVisibleDuration"
+            <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].isVisibleAction"
                  class="form-field-row">
               <mat-form-field>
                 <mat-label> {{ ACTION_CONFIG_FLAGS[form.value.type].hasRequiredPlayLength
@@ -181,67 +181,6 @@
               </mat-form-field>
             </div>
 
-            <div *ngIf="form.value.type === ActionType.Meta" class="form-field-row">
-              <mat-form-field>
-                <mat-label>Meta Type</mat-label>
-                <mat-select formControlName="metaType"
-                            required
-                            value="0">
-                  <mat-option [value]="0">Random</mat-option>
-                  <mat-option [value]="1">All</mat-option>
-                  <mat-option [value]="2">All with Delay</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-
-            <div *ngIf="form.value.type === ActionType.Meta" class="form-field-row">
-              <mat-form-field class="example-chip-list">
-                <mat-label>Assign a new tag...</mat-label>
-                <mat-chip-list #chipList aria-label="Tag selection">
-                  <mat-chip
-                    (removed)="removeTag(tag)"
-                    *ngFor="let tag of currentTags$ | async"
-                    [removable]="true"
-                    [selectable]="false">
-                    {{tag.name}}
-                    <mat-icon matChipRemove svgIcon="cancel"></mat-icon>
-                  </mat-chip>
-                  <input
-                    #tagInput
-                    (blur)="enterNewTag({input: tagInput, value: tagInput.value})"
-                    (matChipInputTokenEnd)="enterNewTag($event)"
-                    [formControl]="tagFormCtrl"
-                    [matAutocomplete]="tagAutoComplete"
-                    [matChipInputFor]="chipList"
-                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
-                </mat-chip-list>
-                <mat-autocomplete #tagAutoComplete="matAutocomplete" (optionSelected)="selectedNewTag($event)">
-                  <mat-option *ngFor="let tag of filteredTags$ | async"
-                              [value]="tag">
-                    {{tag.name}}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-
-            </div>
-
-            <div *ngIf="form.value.type === ActionType.Meta && form.value.metaType === 2" class="form-field-row">
-              <mat-form-field>
-                <mat-label>Delay between clip-trigger (ms)</mat-label>
-                <input autocomplete="off"
-                       formControlName="metaDelay"
-                       matInput
-                       required
-                       type="number"
-                />
-                <span matSuffix>ms</span>
-
-                <mat-error *ngIf="form.controls['playLength'].hasError('required')">
-
-                </mat-error>
-              </mat-form-field>
-            </div>
-
             <ng-container *ngIf="[ActionType.Widget, ActionType.Script, ActionType.PermanentScript].includes(form.value.type)" >
               <h3>Override Variables:</h3>
 
@@ -294,16 +233,6 @@
                        #fileSelection accept="text/markdown"
                        (change)="onFileInputChanged($event)">
               </div>
-            </div>
-
-
-            <!-- Meta => AppClipType or list all assign actions by tags -->
-            <div *ngSwitchCase="ActionType.Meta">
-              <h3>Assigned Actions by Tags</h3>
-              <app-compact-action-card *ngFor="let assignedClip of taggedActions$ | async"
-                                       [action]="assignedClip">
-
-              </app-compact-action-card>
             </div>
 
             <div *ngSwitchCase="ActionType.Widget" class="custom-html-holder">
@@ -402,13 +331,39 @@
                 <audio [src]="mediaPathInput.value | mediaPathToUrl"
                        [volume]="form.value.volumeSetting / 100"
                        controls crossorigin="anonymous">
-                  Your browser does not support the audio tag.
-                  <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
-                </audio>
-              </div>
-            </div>
-            <!-- All others => AppClipType -->
-            <gewd-auto-scale *ngSwitchDefault [height]="500"
+              Your browser does not support the audio tag.
+              <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+            </audio>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="ActionType.Recipe" >
+          <ng-template dynamicPortalSource="importExportPanelLeft">
+            <mat-tab-group style="height: 50px"
+                           mat-stretch-tabs
+                           (selectedIndexChange)="selectedRecipeTabIndex = $event">
+              <mat-tab label="Recipe" ></mat-tab>
+              <mat-tab label="Generated Script-Code"></mat-tab>
+            </mat-tab-group>
+          </ng-template>
+
+          <app-recipe-block recipeContext #recipeContext="recipeContext"
+                            [class.hidden]="selectedRecipeTabIndex !== 0"
+                            [recipe]="actionToEdit.recipe"
+                            (stateUpdated$)="actionToEdit.recipe = $event"
+                            [asBlock]="true" [isRoot]="true"
+                            [editMode]="true">
+          </app-recipe-block>
+
+          <ng-container *ngIf="selectedRecipeTabIndex !== 0">
+            <pre [highlight]="toScriptCode(recipeContext.recipe)"
+                 lang="js" class="pre-wrap-break"></pre>
+
+          </ng-container>
+        </div>
+
+        <!-- All others => AppClipType -->
+        <gewd-auto-scale *ngSwitchDefault [height]="500"
                              class="preview-box"
                              width="100%">
               <app-action-preview [action]="form.value"
@@ -442,7 +397,7 @@
           If this action should be visible on the mobile view.
         </app-hint-panel>
 
-        <div *ngIf="form.value.type !== ActionType.Meta" class="form-field-row">
+        <div class="form-field-row">
           <!-- extract both Tag Assignment Components -->
           <mat-form-field class="example-chip-list">
             <mat-label>Assign a new tag...</mat-label>
@@ -471,13 +426,6 @@
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>
-
-          <app-hint-panel [addBottomPadding]="true" style="margin-top: 1rem">
-            These tags are currently used for the Meta Action.
-            <br/>
-            <br/>
-            So that you can select which Actions should be "linked" to the Meta Action.
-          </app-hint-panel>
         </div>
 
         <div *ngIf="ACTION_CONFIG_FLAGS[form.value.type].canSelectQueue" class="form-field-row">

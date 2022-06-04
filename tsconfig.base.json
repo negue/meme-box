@@ -28,7 +28,9 @@
       "@memebox/state-components": ["projects/state-components/src/projects"],
       "@memebox/ui-components": ["projects/ui-components/src/projects"],
       "@memebox/utils": ["projects/utils/src/public-api"],
-      "@memebox/version": ["src/version_info.json"]
+      "@memebox/version": ["src/version_info.json"],
+      "@memebox/recipe-ui": ["projects/recipe-ui/src/index.ts"],
+      "@memebox/recipe-core": ["projects/recipe-core/src/index.ts"]
     }
   },
   "exclude": ["node_modules"]

@@ -1,5 +1,5 @@
 import {uuid} from "@gewd/utils";
-import {ActionOverridableProperties, TriggerActionOverrides, TriggerClipOrigin} from "@memebox/contracts";
+import {ActionOverridableProperties, TriggerActionOrigin, TriggerActionOverrides} from "@memebox/contracts";
 import {MemeboxApi} from "./memebox.api";
 import {timeoutAsync} from "./sleep.api";
 
@@ -23,7 +23,7 @@ export class ActionApi {
     this.memeboxApi.actionTriggerEventBus.queueAction({
       id: this.actionId,
       uniqueId: uuid(),
-      origin: TriggerClipOrigin.Scripts,
+      origin: TriggerActionOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,
       overrides
@@ -37,7 +37,7 @@ export class ActionApi {
     this.memeboxApi.actionTriggerEventBus.updateActionProps({
       id: this.actionId,
       uniqueId: uuid(),
-      origin: TriggerClipOrigin.Scripts,
+      origin: TriggerActionOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,
       overrides: {

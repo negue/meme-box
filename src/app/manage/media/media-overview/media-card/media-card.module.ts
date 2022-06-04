@@ -4,7 +4,7 @@ import {MediaCardComponent} from "./media-card.component";
 import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
 import {AutoScaleModule} from "@gewd/components/auto-scale";
-import {CheckboxChipModule, PipesModule} from "@memebox/ui-components";
+import {CheckboxChipModule, UiComponentsPipesModule} from "@memebox/ui-components";
 import {ActionPreviewModule, ClipTypeModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -26,7 +26,7 @@ import {DirectivesModule} from "../../../../shared/directives/directives.module"
     MatCardModule,
     MatButtonModule,
     AutoScaleModule,
-    PipesModule,
+    UiComponentsPipesModule,
     ClipTypeModule,
     MatIconModule,
     MatTooltipModule,

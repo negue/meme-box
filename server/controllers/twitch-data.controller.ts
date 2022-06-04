@@ -77,7 +77,7 @@ export class TwitchDataController {
 
     const channelRewards  = channelRewardsResult.data;
 
-    return channelRewards.filter(cr => cr.is_enabled);
+    return channelRewards?.filter(cr => cr.is_enabled) ?? [];
   }
 
 }

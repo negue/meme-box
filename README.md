@@ -91,7 +91,7 @@ Misc:
   <tr>
     <td>
 
-[`Trigger multiple / random Media`][URL_META_CLIPS]
+[`Trigger multiple / random Media`][URL_RECIPE]
 </td>
   </tr>
    <tr>
@@ -147,12 +147,12 @@ Misc:
 
 `Advanced`:
 
-- [`Trigger multiple / randoms`][URL_META_CLIPS]
+- [`Trigger multiple / randoms`][URL_RECIPE]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 - [`Scripts`][URL_SCRIPTS]
 - [`Widgets`][URL_WIDGETS]
 
-[URL_META_CLIPS]: tutorials/meta_media.md
+[URL_RECIPE]: tutorials/recipe.md
 [URL_SCRIPTS]: tutorials/scripts.md
 [URL_WIDGETS]: tutorials/widgets.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_media_advanced_settings.md
@@ -174,7 +174,7 @@ See finished and upcoming changes in:
 * [ ] OBS Websockets
   * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
 * [ ] Overview of local media files not existing anymore
-* [ ] Replace all selected Trigger Action with an inline Blueprint #439 (name pending) 
+* [ ] Replace all selected Trigger Action with an inline Recipes #439
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)

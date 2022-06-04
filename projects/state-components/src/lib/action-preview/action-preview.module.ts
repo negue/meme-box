@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ActionPreviewComponent} from './action-preview.component';
-import {PipesModule} from "@memebox/ui-components";
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 import {ClipTypeModule} from "../clip-type/clip-type.module";
 
 
@@ -12,7 +12,7 @@ import {ClipTypeModule} from "../clip-type/clip-type.module";
   ],
   imports: [
     CommonModule,
-    PipesModule,
+    UiComponentsPipesModule,
     ClipTypeModule
   ]
 })

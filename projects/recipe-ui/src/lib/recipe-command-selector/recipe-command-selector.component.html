@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Select a Command Block to add</h2>
+<mat-dialog-content class="mat-typography">
+
+  <div *ngFor="let groupInfo of possibleCommandBlocks">
+    <h3>{{groupInfo.label}}</h3>
+
+    <div class="two-columns wrap">
+      <div class="column-50 flex"
+           *ngFor="let block of groupInfo.blocks"
+      >
+        <button class="flex-inline"  (click)="selectCommandBlock(block)"
+                mat-icon-button color="primary">
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
+
+        <div class="column">
+          {{block.pickerLabel}}
+        </div>
+      </div>
+
+    </div>
+
+    <br/>
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <app-open-feedback-button feedbackTarget="Step Selection Dialog"></app-open-feedback-button>
+
+  </div>
+  <div class="column" align="end" >
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</mat-dialog-actions>

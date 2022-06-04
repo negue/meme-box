@@ -11,7 +11,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {PipesModule} from "@memebox/ui-components";
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 import {TranslocoModule} from "@ngneat/transloco";
 import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";
 
@@ -30,7 +30,7 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
     MatButtonModule,
     MatIconModule,
     MatDialogModule,
-    PipesModule,
+    UiComponentsPipesModule,
     TranslocoModule,
     OpenFeedbackButtonModule
   ]

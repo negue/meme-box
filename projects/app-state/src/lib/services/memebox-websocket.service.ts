@@ -5,8 +5,8 @@ import {
   ActionStateEnum,
   ChangedInfo,
   TriggerAction,
-  TriggerActionOverrides,
-  TriggerClipOrigin
+  TriggerActionOrigin,
+  TriggerActionOverrides
 } from "@memebox/contracts";
 import { BehaviorSubject, Subject } from "rxjs";
 import { SnackbarService } from "./snackbar.service";
@@ -52,15 +52,15 @@ export class MemeboxWebsocketService {
     setTimeout(() => this.connect(), 150);
   }
 
-  public sendI_Am_OBS(guid: string) {
+  public sendI_Am_OBS(guid: string): void  {
     this.sendToTheSocket(`${ACTIONS.I_AM_OBS}=${guid}`);
   }
 
-  public sendI_Am_MANAGE() {
+  public sendI_Am_MANAGE(): void  {
     this.sendToTheSocket(ACTIONS.I_AM_MANAGE);
   }
 
-  public sendWidgetRegistration(mediaId: string, widgetInstance: string, register: boolean) {
+  public sendWidgetRegistration(mediaId: string, widgetInstance: string, register: boolean): void  {
 
     const action = register ? ACTIONS.REGISTER_WIDGET_INSTANCE : ACTIONS.UNREGISTER_WIDGET_INSTANCE;
 
@@ -69,7 +69,7 @@ export class MemeboxWebsocketService {
     this.sendToTheSocket(`${action}=${payload}`);
   }
 
-  public updateMediaState(mediaId: string, screenId: string, showing: boolean) {
+  public updateMediaState(mediaId: string, screenId: string, showing: boolean): void  {
     const triggerObj: ActionActiveStatePayload = {
       mediaId,
       screenId,
@@ -82,7 +82,7 @@ export class MemeboxWebsocketService {
 
   public triggerClipOnScreen(clipId: string,
                              screenId?: string | undefined,
-                             overrides?: TriggerActionOverrides) {
+                             overrides?: TriggerActionOverrides): void  {
     const triggerObj: TriggerAction = {
       id: clipId,
       uniqueId: uuid(),
@@ -90,7 +90,7 @@ export class MemeboxWebsocketService {
       repeatX: 0,  // todo after streamdeck ?
       repeatSecond: 0,
 
-      origin: TriggerClipOrigin.AppPreview,
+      origin: TriggerActionOrigin.AppPreview,
       overrides
     }
 
@@ -98,7 +98,7 @@ export class MemeboxWebsocketService {
     this.snackbar.normal(`Triggered clip.`);
   }
 
-  public triggerReloadScreen(screenId: string | null) {
+  public triggerReloadScreen(screenId: string | null): void  {
     this.sendToTheSocket(`${ACTIONS.RELOAD_SCREEN}=${screenId}`);
   }
 
@@ -205,7 +205,7 @@ export class MemeboxWebsocketService {
     };
   }
 
-  stopReconnects() {
+  stopReconnects(): void  {
     this.allowReconnections = false;
   }
 
@@ -217,7 +217,7 @@ export class MemeboxWebsocketService {
     ).toPromise();
   }
 
-  sendToTheSocket(data: string) {
+  sendToTheSocket(data: string): void  {
     this.ws?.send(data);
   }
 }

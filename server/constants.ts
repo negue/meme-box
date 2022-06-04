@@ -42,8 +42,8 @@ export const MARKDOWN_FILES: MarkdownDialogPayload[] = [
     showHeader: false
   },
   {
-    name: 'Action Type: Meta',
-    githubName: 'meta_media.md',
+    name: 'Action Type: Recipe',
+    githubName: 'recipe.md',
     showHeader: false
   },
   SCRIPT_TUTORIAL,

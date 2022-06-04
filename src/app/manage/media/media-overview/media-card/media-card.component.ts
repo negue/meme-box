@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output} from "@angular/core";
-import {Action, ActionType, Screen, Tag} from "@memebox/contracts";
-import {ActivityQueries} from "@memebox/app-state";
-import {NgChanges} from "../../../../../../projects/ui-components/src/lib/typed-ng-changes";
-import {actionCanBeTriggeredWithVariables, actionHasVariables} from "@memebox/utils";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from "@angular/core";
+import { Action, ActionType, Screen, Tag } from "@memebox/contracts";
+import { ActivityQueries } from "@memebox/app-state";
+import { NgChanges } from "../../../../../../projects/ui-components/src/lib/typed-ng-changes";
+import { actionCanBeTriggeredWithVariables, actionHasVariables } from "@memebox/utils";
 
 @Component({
   selector: "app-media-card",
@@ -21,23 +21,22 @@ export class MediaCardComponent implements OnInit, OnChanges {
   tags: Tag[];
 
   @Output()
-  onPreview = new EventEmitter();
+  public readonly onPreview = new EventEmitter();
 
   @Output()
-  onEdit = new EventEmitter();
+  public readonly onEdit = new EventEmitter();
 
   @Output()
-  onDelete = new EventEmitter();
+  public readonly onDelete = new EventEmitter();
 
   @Output()
-  onDuplicate = new EventEmitter();
+  public readonly onDuplicate = new EventEmitter();
 
   @Output()
-  onToggleActive = new EventEmitter();
-
+  public readonly onToggleActive = new EventEmitter();
 
   @Output()
-  onOpenTriggerVariables = new EventEmitter();
+  public readonly onOpenTriggerVariables = new EventEmitter();
 
   menuIsOpened = false;
 

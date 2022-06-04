@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ConfigMediaPathComponent} from "../../media/media-overview/config-media-path/config-media-path.component";
 import {Observable} from "rxjs";
 import {Config} from "@memebox/contracts";
@@ -23,7 +23,7 @@ interface LanguageEntry {
   styleUrls: ['./settings-overview.component.scss'],
   providers: [ ]
 })
-export class SettingsOverviewComponent implements OnInit {
+export class SettingsOverviewComponent {
   public config$: Observable<Partial<Config>> = this.query.config$;
   public offlineMode$ = this.query.inOfflineMode$;
 
@@ -50,9 +50,6 @@ export class SettingsOverviewComponent implements OnInit {
               private translocoService: TranslocoService,
               private selectedLangService: TranslocoSelectedLangService) {
 
-  }
-
-  ngOnInit(): void {
   }
 
   openMediaFolderDialog(): void {

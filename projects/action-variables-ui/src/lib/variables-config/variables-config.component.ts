@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ActionVariableConfig} from "@memebox/action-variables";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ActionVariableConfig } from "@memebox/action-variables";
 
 @Component({
   selector: 'app-variables-config',
   templateUrl: './variables-config.component.html',
   styleUrls: ['./variables-config.component.scss']
 })
-export class VariablesConfigComponent implements OnInit {
+export class VariablesConfigComponent {
 
   @Input()
   public variablesList: ActionVariableConfig[] = [];
@@ -15,16 +15,11 @@ export class VariablesConfigComponent implements OnInit {
   public isWidgetVariableList = false;
 
   @Output()
-  public onAddNewVariable = new EventEmitter();
+  public readonly onAddNewVariable = new EventEmitter();
 
   @Output()
-  public onEditVariable = new EventEmitter<ActionVariableConfig>();
+  public readonly onEditVariable = new EventEmitter<ActionVariableConfig>();
 
   @Output()
-  public onDeleteVariable = new EventEmitter<ActionVariableConfig>();
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  public readonly onDeleteVariable = new EventEmitter<ActionVariableConfig>();
 }

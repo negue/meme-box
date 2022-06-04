@@ -54,17 +54,17 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   unsavedChangesIds: string[];
 
   @Output()
-  changeCurrSelectedClip = new EventEmitter<CombinedActionContext | null>();
+  public readonly changeCurrSelectedClip = new EventEmitter<CombinedActionContext | null>();
 
   @Output()
-  userChangeElement = new EventEmitter<string>();
+  public readonly userChangeElement = new EventEmitter<string>();
 
   // Outputs the ids of the saved medias
   @Output()
-  changesSaved = new EventEmitter<string | string[]>();
+  public readonly changesSaved = new EventEmitter<string | string[]>();
 
   @Output()
-  mediaReset = new EventEmitter<string>();
+  public readonly mediaReset = new EventEmitter<string>();
 
   actionsExpanded = false;
 
@@ -130,13 +130,9 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   triggerChangedetection(): void {
     const component = this.combinedClipToComponent.get(this.currentSelectedClip);
 
-    console.info('trigger cd', {
-      component, clip: this.currentSelectedClip
-    });
-
     if (component) {
       component.settings = this.currentSelectedClip.screenMediaConfig;
-      component.ngOnChanges({});
+      component.ngOnChanges({}); // skipcq: JS-0573
     }
 
     this._cd.detectChanges();

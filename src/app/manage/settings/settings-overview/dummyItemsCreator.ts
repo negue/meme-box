@@ -8,7 +8,7 @@ const allTypes = [
   ActionType.Video,
   ActionType.Widget,
   ActionType.IFrame,
-  ActionType.Meta,
+  ActionType.Recipe,
 ]
 
 export async function addMoreItems (service: AppService): Promise<void> {

@@ -69,7 +69,6 @@ export class ScriptEditComponent implements OnInit {
       ...payload
     };
     this.variablesList = Object.values(this.workingValue.variablesConfig);
-    console.info(this.workingValue);
   }
 
   save(): void {
@@ -92,7 +91,6 @@ export class ScriptEditComponent implements OnInit {
     }
 
     this.workingValue.variablesConfig = this.variablesList;
-    console.info('SAVING WITH', this.workingValue);
 
     this.dialogRef.close(this.workingValue);
   }
@@ -119,9 +117,7 @@ export class ScriptEditComponent implements OnInit {
   }
 
   async addActionAtCursor(codemirrorComponent: CodemirrorComponent) {
-    // console.info({ editorState });
-
-    const actionId = await this.dialogService.showClipSelectionDialog({
+    const actionId = await this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
       dialogTitle: 'Action',
       showMetaItems: true
@@ -139,7 +135,7 @@ export class ScriptEditComponent implements OnInit {
 
       // todo get a variable name from the action name
 
-      const isAction = [ActionType.Script, ActionType.Meta].includes(selectedAction.type);
+      const isAction = [ActionType.Script, ActionType.Recipe].includes(selectedAction.type);
 
     const codeToAdd = `const myActionVar = memebox.get${isAction ? 'Action' : 'Media'}('${actionId}');\n`;
 

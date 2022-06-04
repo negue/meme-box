@@ -4,7 +4,7 @@ import {TargetScreenComponent} from "./target-screen.component";
 import {MediaToggleDirective} from "./media-toggle.directive";
 import {MediaTypeClassPipe} from "./media-type-class.pipe";
 import {MatIconModule} from "@angular/material/icon";
-import {PipesModule} from "../../../../projects/ui-components/src/lib/pipes/pipes.module";
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 import {DynamicIframeModule} from "../../shared/components/dynamic-iframe/dynamic-iframe.module";
 import {WidgetPipesModule} from "../../shared/widget-pipes/widget-pipes.module";
 
@@ -17,7 +17,7 @@ import {WidgetPipesModule} from "../../shared/widget-pipes/widget-pipes.module";
   imports: [
     CommonModule,
     MatIconModule,
-    PipesModule,
+    UiComponentsPipesModule,
     DynamicIframeModule,
     WidgetPipesModule,
   ],

@@ -14,7 +14,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {AnimationPreviewComponent} from './animation-preview/animation-preview.component';
 import {PreventAnimationOnFirstViewDirective} from './prevent-animation-on-first-view.directive';
-import {HintPanelModule, PipesModule} from "@memebox/ui-components";
+import {HintPanelModule, UiComponentsPipesModule} from "@memebox/ui-components";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {AnimationLabelPipe} from './animation-label.pipe';
@@ -38,7 +38,7 @@ import {OpenActionSettingsButtonModule} from "../../components/open-action-setti
     MatInputModule,
     MatButtonModule,
     MatExpansionModule,
-    PipesModule,
+    UiComponentsPipesModule,
     MatButtonToggleModule,
     CodemirrorModule,
     HintPanelModule,

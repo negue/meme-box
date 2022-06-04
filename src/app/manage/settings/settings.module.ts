@@ -17,7 +17,7 @@ import {VersionCardModule} from "../../shared/components/config-cards/version-ca
 import {CustomPortSettingModule} from "../../shared/components/config-cards/custom-port-setting/custom-port-setting.module";
 import {ConnectionsListModule} from "../../shared/components/config-cards/connections-list/connections-list.module";
 import {ConfigCardModule} from "../../shared/components/config-cards/config-card/config-card.module";
-import {PipesModule} from "@memebox/ui-components";
+import {UiComponentsPipesModule} from "@memebox/ui-components";
 
 const routes: Routes = [
   {
@@ -44,7 +44,7 @@ const routes: Routes = [
     CustomPortSettingModule,
     ConnectionsListModule,
     ConfigCardModule,
-    PipesModule
+    UiComponentsPipesModule
   ]
 })
 export class SettingsModule {

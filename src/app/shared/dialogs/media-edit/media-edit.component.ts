@@ -15,7 +15,6 @@ import {
   ACTION_TYPE_INFORMATION_ARRAY,
   ActionType,
   FileInfo,
-  MetaTriggerTypes,
   Tag
 } from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
@@ -41,8 +40,10 @@ import {
   actionDataToWidgetContent,
   applyDynamicIframeContentToClipData,
   applyScriptConfigToAction,
+  convertMarkdownStructureToRecipe,
   convertMarkdownStructureToScript,
   convertMarkdownStructureToWidget,
+  convertRecipeToMarkdownStructure,
   convertScriptToMarkdownStructure,
   convertWidgetToMarkdownStructure,
   DynamicIframeContent,
@@ -55,20 +56,18 @@ import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
 import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
 import {downloadFile} from "@gewd/utils";
+import {createRecipeContext, generateCodeByRecipe, RecipeContext} from "@memebox/recipe-core";
 
 const DEFAULT_PLAY_LENGTH = 2500;
-const META_DELAY_DEFAULT = 750;
 
 const ACTION_DEFAULT_PROPERTIES: Partial<Action> = {
   tags: [],
   type: ActionType.Picture,
-  name: 'Media Filename',
+  name: 'New Action',
   volumeSetting: 10,
   gainSetting: 0,
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
-  metaDelay: META_DELAY_DEFAULT,
-  metaType: MetaTriggerTypes.Random,
 
   showOnMobile: true,
 
@@ -114,9 +113,6 @@ export class MediaEditComponent
     path: "",
     previewUrl: "",
 
-    metaType: 0,
-    metaDelay: 0,
-
     fromTemplate: "",
     queueName: "",
     description: ""
@@ -136,12 +132,12 @@ export class MediaEditComponent
   ACTION_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
   ACTION_CONFIG_FLAGS = ACTION_CONFIG_FLAGS;
 
-  mediaTypeList: MediaTypeButton[] = ACTION_TYPE_INFORMATION_ARRAY
+  actionTypeList: MediaTypeButton[] = ACTION_TYPE_INFORMATION_ARRAY
     .map((value) => {
       return {
         icon: value.icon,
         name: value.translationKey,
-        type: +value.mediaType
+        type: +value.actionType
       }
     });
 
@@ -149,6 +145,8 @@ export class MediaEditComponent
   availableScreens$ = this.appQuery.screensList$;
   selectedScreenId = '';
   showOnMobile = true;
+
+  selectedRecipeTabIndex = 0;
 
   // region Tag specific
 
@@ -213,7 +211,7 @@ export class MediaEditComponent
     private dialogService: DialogService,
     private cd: ChangeDetectorRef,
     private clipboard: Clipboard,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
   ) {
     const defaultValues = Object.assign({}, ACTION_DEFAULT_PROPERTIES, this.data?.defaults ?? {});
     this.setNewActionEditData(this.data?.actionToEdit, defaultValues);
@@ -269,6 +267,15 @@ export class MediaEditComponent
         } else {
           this.form.controls['path'].clearValidators();
         }
+
+        if (prev === ActionType.Recipe) {
+          this.actionToEdit.recipe = undefined;
+        }
+
+        if (next === ActionType.Recipe) {
+          this.actionToEdit.recipe = createRecipeContext();
+        }
+
       });
 
     this.filteredTags$ = combineLatest([
@@ -289,7 +296,7 @@ export class MediaEditComponent
     });
   }
 
-  fillUiRelatedDataBasedOnAction() {
+  fillUiRelatedDataBasedOnAction(): void {
     this.form.reset(this.actionToEdit);
 
     this.availableTags$.pipe(
@@ -303,24 +310,25 @@ export class MediaEditComponent
     }
 
     this.triggerHTMLRefresh();
+
+
+    if (this.actionToEdit?.type === ActionType.Recipe
+      && !this.actionToEdit.recipe ) {
+      this.actionToEdit.recipe = createRecipeContext();
+    }
   }
 
   async save() {
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
-      console.info(this.form);
-
-      for (const [ctrlName, ctrl] of Object.entries(this.form.controls)) {
-        console.info(ctrlName, ctrl.valid);
-      }
 
       return;
     }
 
     const { value } = this.form;
 
-    const valueAsClip: Action = {
+    const valueAsAction: Action = {
       ...this.actionToEdit, // base props that are not in the form
       ...value
     };
@@ -333,15 +341,15 @@ export class MediaEditComponent
       }
     }
 
-    valueAsClip.tags = tagsToAssign.map(tag => tag.id)
+    valueAsAction.tags = tagsToAssign.map(tag => tag.id)
 
-    valueAsClip.showOnMobile = this.showOnMobile;
+    valueAsAction.showOnMobile = this.showOnMobile;
 
-    await this.appService.addOrUpdateAction(valueAsClip);
+    await this.appService.addOrUpdateAction(valueAsAction);
 
-    if (this.selectedScreenId && valueAsClip.type !== ActionType.Meta) {
+    if (this.selectedScreenId && ACTION_CONFIG_FLAGS[valueAsAction.type].isVisibleAction) {
       this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
-        id: valueAsClip.id,
+        id: valueAsAction.id,
       });
     }
 
@@ -363,7 +371,7 @@ export class MediaEditComponent
     this.cd.markForCheck();
   }
 
-  updateMediaType(value: ActionType): void {
+  updateActionType(value: ActionType): void {
     this.actionToEdit.type = value;
     this.form.patchValue({ type: value });
   }
@@ -520,14 +528,14 @@ export class MediaEditComponent
     }
   }
 
-  copyIdToClipboard() {
+  copyIdToClipboard(): void  {
     if (this.clipboard.copy(this.actionToEdit.id)) {
       this.snackbar.normal("The Action ID was copied to the clipboard");
     }
   }
 
   // todo extract
-  makeScreenshot(videoElement: HTMLVideoElement) {
+  makeScreenshot(videoElement: HTMLVideoElement): void  {
     videoElement.controls = false;
 
     const WANTED_WIDTH = 320;
@@ -576,6 +584,10 @@ export class MediaEditComponent
 
   }
 
+  toScriptCode (recipeContext: RecipeContext): string  {
+    return generateCodeByRecipe(recipeContext);
+  }
+
   // region Import / Export Methods
 
   onFileInputChanged($event: Event): void {
@@ -617,11 +629,26 @@ export class MediaEditComponent
           this.setNewActionEditData(actionToImport);
           this.fillUiRelatedDataBasedOnAction();
 
-        } else {
+        } else if (this.isScript()) {
           const actionToImport = convertMarkdownStructureToScript(parseMarkdownStructure, this.actionToEdit.type);
 
           this.setNewActionEditData(actionToImport);
           this.fillUiRelatedDataBasedOnAction();
+        } else if (this.isRecipe()) {
+          const actionToImport = convertMarkdownStructureToRecipe(parseMarkdownStructure, this.actionToEdit.type);
+
+          console.info({
+            actionToImport
+          });
+
+          this.setNewActionEditData(actionToImport);
+          this.fillUiRelatedDataBasedOnAction();
+
+          console.info({
+            currentAction: this.actionToEdit
+          });
+
+          this.cd.detectChanges();
         }
       }
     }
@@ -632,8 +659,10 @@ export class MediaEditComponent
 
     if (this.isScript()) {
       mdStructure = convertScriptToMarkdownStructure(this.actionToEdit);
-    } else {
+    } else if (this.isWidget()) {
       mdStructure = convertWidgetToMarkdownStructure(this.actionToEdit);
+    } else if (this.isRecipe()) {
+      mdStructure = convertRecipeToMarkdownStructure(this.actionToEdit);
     }
 
     const createdMarkdownString = toMarkdown(mdStructure);
@@ -664,7 +693,14 @@ export class MediaEditComponent
     return [ActionType.Script, ActionType.PermanentScript].includes(this.currentActionType());
   }
 
-  private setNewActionEditData (newActionData: Partial<Action>, defaultValues = ACTION_DEFAULT_PROPERTIES) {
+  private isRecipe() {
+    return [ActionType.Recipe].includes(this.currentActionType());
+  }
+
+  private setNewActionEditData (
+    newActionData: Partial<Action>,
+    defaultValues = ACTION_DEFAULT_PROPERTIES
+  ) {
     this.actionToEdit = Object.assign({}, defaultValues, {
       ...newActionData,
       extended: {

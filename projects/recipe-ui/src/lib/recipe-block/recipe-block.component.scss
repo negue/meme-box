@@ -1,0 +1,118 @@
+:host {
+  width: 100%;
+
+  &.block {
+    display: block;
+  }
+}
+
+.entry-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.25rem 0.25rem 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.entry-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.sub-group {
+  margin-left: 1rem;
+  display: inline-block;
+}
+
+.awaited-icon {
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+
+.edit-icon, .delete-icon {
+  opacity: 0.2;
+
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+
+.step-entry {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  border: 1px transparent;
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+  min-height: 2rem;
+
+  &:hover {
+    background: #00000022;
+
+    .entry-actions {
+      .edit-icon, .delete-icon {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+
+.entry-actions {
+  position: absolute;
+  right: 0;
+  top: -0.25rem;
+}
+
+.step-grab {
+  padding: 0;
+  margin-top: 0.25rem;
+  margin-right: 0.25rem;
+  height: 18px;
+  width: 18px;
+  white-space: nowrap;
+
+  &.group {
+    position: absolute;
+    top: 3rem;
+  }
+
+  cursor: grab;
+}
+
+.label-with-icon {
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    height: 1rem;
+    width: 1rem;
+
+    margin-right: 0.5rem;
+  }
+}

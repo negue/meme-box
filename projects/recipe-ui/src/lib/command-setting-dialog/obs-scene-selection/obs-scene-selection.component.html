@@ -1,0 +1,14 @@
+<mat-form-field>
+  <mat-label>Select Scene</mat-label>
+  <input
+    matInput
+    [formControl]="sceneFormControl"
+    [matAutocomplete]="sceneAutocomplete">
+  <mat-autocomplete #sceneAutocomplete="matAutocomplete"
+                    (optionSelected)="sceneSelected.next($event.option.value)">
+    <mat-option *ngFor="let scene of filteredSceneList$ | async"
+                [value]="scene.name">
+      {{scene.name}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

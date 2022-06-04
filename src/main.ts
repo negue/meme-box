@@ -1,11 +1,9 @@
-import { ApplicationRef, enableProdMode } from '@angular/core';
+import {ApplicationRef, enableProdMode} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 import {AppModule} from './app/app.module';
 import {AppConfig} from '@memebox/app/env';
-import { enableDebugTools } from "@angular/platform-browser";
-
-console.warn('MAIN.TS - AppConfig', AppConfig);
+import {enableDebugTools} from "@angular/platform-browser";
 
 if (AppConfig.production) {
   enableProdMode();

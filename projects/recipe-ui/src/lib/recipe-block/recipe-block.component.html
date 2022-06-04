@@ -1,0 +1,56 @@
+<ng-container *ngIf="entry?.entryType === 'command' && entry | getEntryStepMetaData$: parent | async as stepMetadata">
+
+  <div class="label-with-icon">
+    <mat-icon *ngIf="stepMetadata.icon" [svgIcon]="stepMetadata.icon"></mat-icon>
+
+    {{ stepMetadata.label }}
+  </div>
+
+  <div *ngIf="editMode" class="entry-actions">
+  <button mat-icon-button
+          [color]="entry.awaited ? 'primary' : 'warn'"
+          class="awaited-icon"
+           (click)="toggleAwaited(entry)">
+     <mat-icon [svgIcon]="entry.awaited ? 'hourglass_top' : 'hourglass_disabled'"></mat-icon>
+    </button>
+
+    <button mat-icon-button color="accent" class="edit-icon"
+           (click)="editStepConfig(entry, parent)">
+     <mat-icon svgIcon="playlist_edit"></mat-icon>
+    </button>
+    <button mat-icon-button color="warn" class="delete-icon"
+           (click)="removeStep(entry, parent)">
+      <mat-icon svgIcon="playlist_remove"></mat-icon>
+    </button>
+  </div>
+
+
+</ng-container>
+
+
+<div cdkDropList class="entry-list"
+     *ngFor="let subStepInfo of entry | getEntrySubBlockInfoArray$ | async"
+     (cdkDropListDropped)="stepRearranged($event, subStepInfo)">
+
+  <span>{{subStepInfo.label}}</span>
+  <div *ngFor="let subStep of context.getSubEntries$(entry.id, subStepInfo.labelId) | async"
+       [cdkDragDisabled]="!editMode"
+       cdkDrag [cdkDragData]="subStep"
+       class="step-entry">
+    <mat-icon svgIcon="drag_indicator" class="step-grab"
+              *ngIf="editMode"
+              cdkDragHandle></mat-icon>
+
+    <app-recipe-block [entry]="subStep"
+                      [parent]="entry"
+                      [editMode]="editMode">
+    </app-recipe-block>
+</div>
+
+   <button mat-icon-button color="primary" *ngIf="editMode"
+           (click)="addStep(entry, subStepInfo)">
+     <mat-icon svgIcon="playlist_add"></mat-icon>
+   </button>
+</div>
+
+

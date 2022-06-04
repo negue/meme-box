@@ -1,5 +1,5 @@
-import {ActionTypeGroup, GroupByMediaTypePipe} from './group-by-media-type.pipe';
-import {Action, ActionType} from '@memebox/contracts';
+import { ActionTypeGroup, GroupByMediaTypePipe } from './group-by-media-type.pipe';
+import { Action, ActionType } from '@memebox/contracts';
 
 describe('GroupByMediaTypePipe', () => {
   it('outputs to correct groups', () => {
@@ -22,15 +22,15 @@ describe('GroupByMediaTypePipe', () => {
 
     expect(pipe.transform(clips as Action[])).toEqual([
       {
-        groupName: 'mediaType.image',
+        groupName: 'actionType.audio',
+        mediaType: 1,
+        medias: [clips[0], clips[1]]
+      },
+      {
+        groupName: 'actionType.image',
         mediaType: 0,
         medias: [clips[2]]
       },
-      {
-        groupName: 'mediaType.audio',
-        mediaType: 1,
-        medias: [clips[0], clips[1]]
-      }
     ] as ActionTypeGroup[]);
   });
 

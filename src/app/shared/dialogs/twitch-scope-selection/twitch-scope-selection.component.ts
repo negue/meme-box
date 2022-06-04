@@ -4,7 +4,6 @@ import {
   Component,
   ElementRef,
   Inject,
-  OnInit,
   TrackByFunction,
   ViewChild
 } from '@angular/core';
@@ -18,7 +17,7 @@ import {DEFAULT_TWITCH_SCOPES} from "@memebox/contracts";
   styleUrls: ['./twitch-scope-selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TwitchScopeSelectionComponent implements OnInit {
+export class TwitchScopeSelectionComponent {
 
   defaultScopes = DEFAULT_TWITCH_SCOPES;
 
@@ -35,10 +34,6 @@ export class TwitchScopeSelectionComponent implements OnInit {
       ]
     };
   }
-
-  ngOnInit(): void {
-  }
-
 
   addScope(): void {
     this.data.scopes.push('');

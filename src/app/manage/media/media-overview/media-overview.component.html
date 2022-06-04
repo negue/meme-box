@@ -5,7 +5,7 @@
             (searchChanged)="searchText$.next($event)"
 ></app-filter>
 
-<div class="mo__content-container" *ngIf="mediaList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
+<div class="mo__content-container" *ngIf="actionList$ | async as mediaList" [ngSwitch]="uiMode$ | async">
   <app-card-overview *ngSwitchCase="OVERVIEW_MODES.pro">
 
       <app-overview-add-item label="Add new media"

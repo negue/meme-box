@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Action, ScreenViewEntry} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {filter, map, tap} from "rxjs/operators";
 import {AppQueries, EXPRESS_BASE, NetworkInterfacesService} from "@memebox/app-state";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {sortClips} from "@memebox/utils";
+import {sortActions} from "@memebox/utils";
 
 function createLocalOrProductionUrlBase() {
   const port = location.port;
@@ -23,7 +23,7 @@ function createLocalOrProductionUrlBase() {
   templateUrl: './screen-info.component.html',
   styleUrls: ['./screen-info.component.scss']
 })
-export class ScreenInfoComponent implements OnInit {
+export class ScreenInfoComponent {
 
   @Input()
   public screenId: string;
@@ -45,31 +45,31 @@ export class ScreenInfoComponent implements OnInit {
     this.info$,
     this.appQueries.actionList$
   ]).pipe(
-    map(([screen, clipList]) => sortClips(
+    map(([screen, clipList]) => sortActions(
       clipList.filter(clip => !!screen.clips[clip.id])
     ))
   );
 
   @Output()
-  public onEdit = new EventEmitter();
+  public readonly onEdit = new EventEmitter();
 
   @Output()
-  public onGetUrl = new EventEmitter();
+  public readonly onGetUrl = new EventEmitter();
 
   @Output()
-  public onOpenArrangeDialog = new EventEmitter();
+  public readonly onOpenArrangeDialog = new EventEmitter();
 
   @Output()
-  public onPreview = new EventEmitter<string>()
+  public readonly onPreview = new EventEmitter<string>()
 
   @Output()
-  public onDelete = new EventEmitter();
+  public readonly onDelete = new EventEmitter();
 
   @Output()
-  public onEditScreenClipOptions = new EventEmitter<Action>();
+  public readonly onEditScreenClipOptions = new EventEmitter<Action>();
 
   @Output()
-  public onReload = new EventEmitter();
+  public readonly onReload = new EventEmitter();
 
   private _info: ScreenViewEntry;
 
@@ -77,9 +77,6 @@ export class ScreenInfoComponent implements OnInit {
               private clipboard: Clipboard,
               private _snackBar: MatSnackBar,
               public networkInterfaceService: NetworkInterfacesService) {
-  }
-
-  ngOnInit(): void {
   }
 
 }

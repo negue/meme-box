@@ -18,7 +18,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {AutoScaleModule} from '@gewd/components/auto-scale';
 import {DragResizeMediaModule} from './drag-resize-media/drag-resize-media.module';
 import {TargetScreenModule} from '../../../screens/target-screen/target-screen.module';
-import {PipesModule} from '@memebox/ui-components';
+import {UiComponentsPipesModule} from '@memebox/ui-components';
 import {ScreenArrangeSidebarModule} from './screen-arrange-sidebar/screen-arrange-sidebar.module';
 import {ScreenArrangePreviewModule} from './screen-arrange-preview/screen-arrange-preview.module';
 import {ScreenPreviewModule} from './screen-preview/screen-preview.module';
@@ -48,7 +48,7 @@ import {A11yModule} from '@angular/cdk/a11y';
     ActionPreviewModule,
     DragResizeMediaModule,
     TargetScreenModule,
-    PipesModule,
+    UiComponentsPipesModule,
     ScreenArrangeSidebarModule,
     ScreenArrangePreviewModule,
     ScreenPreviewModule,

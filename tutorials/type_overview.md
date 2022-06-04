@@ -56,16 +56,7 @@ Or import / export these Widgets.
 > Note: This Type needs to have fixed value of `Visible screen time`.
 
 
-### Meta
-
-
-Meta Types are used to combine others, like Image and Audio, or triggered a random Clip of the tagged Items.
-
-Example of:
-- [Combine Audio and Image](./meta_media.md)
-- [Trigger one random Clip](./meta_media.md)
-- [Trigger all items with a delay](./meta_media.md)
-
+### [Recipe](./recipe.md)
 
 ### [Scripts](./scripts.md)
 

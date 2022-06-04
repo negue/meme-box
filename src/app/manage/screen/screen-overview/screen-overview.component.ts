@@ -37,11 +37,11 @@ export class ScreenOverviewComponent {
   ) {
   }
 
-  showDialog(screen: Partial<Screen>) {
+  showDialog(screen: Partial<Screen>): void  {
     this._dialog.showScreenEditDialog(screen)
   }
 
-  addNewItem() {
+  addNewItem(): void  {
     this.showDialog({});
   }
 
@@ -58,7 +58,7 @@ export class ScreenOverviewComponent {
   }
 
   showAssignmentDialog(screen: Partial<Screen>) {
-    return this._dialog.showClipSelectionDialog({
+    return this._dialog.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Multiple,
       screenId: screen.id,
 
@@ -69,11 +69,11 @@ export class ScreenOverviewComponent {
     });
   }
 
-  deleteAssigned(obsInfo: Screen, clipId: string) {
+  deleteAssigned(obsInfo: Screen, clipId: string): void  {
     this.service.deleteScreenClip(obsInfo.id, clipId);
   }
 
-  onClipOptions(item: Action, screen: Screen) {
+  onClipOptions(item: Action, screen: Screen): void  {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,
@@ -93,16 +93,16 @@ export class ScreenOverviewComponent {
 
   }
 
-  onReload(screen: Screen) {
+  onReload(screen: Screen): void  {
     this.webSocket.triggerReloadScreen(screen.id);
     this.snackbar.normal(`Screen: ${screen.name} reloaded`);
   }
 
-  openHelpOverview() {
+  openHelpOverview(): void  {
     this._dialog.showHelpOverview();
   }
 
-  onGetUrl(screen: Screen) {
+  onGetUrl(screen: Screen): void  {
     this._dialog.open(ScreenUrlDialogComponent,{
       autoFocus: false,
       data: screen,

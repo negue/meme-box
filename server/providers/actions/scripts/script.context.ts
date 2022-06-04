@@ -1,4 +1,4 @@
-import {actionDataToScriptConfig, getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
+import {getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
 import {VM, VMScript} from "vm2";
 import {ActionStoreAdapter, ActionStoreApi} from "@memebox/shared-state";
 import {Action, ActionType, Dictionary, TriggerAction} from "@memebox/contracts";
@@ -43,7 +43,7 @@ type ExecutionScript = (
 ) => Promise<void>;
 
 export class ScriptContext implements CanDispose {
-  scriptConfig: ScriptConfig;
+
 
   // API Properties
   store: ActionStoreApi;
@@ -64,13 +64,12 @@ export class ScriptContext implements CanDispose {
     private _vm: VM,
     storeAdapter: ActionStoreAdapter,
     public script: Action,
+    private scriptConfig: ScriptConfig,
     public memeboxApi: MemeboxApi,
     baseLogger: NamedLogger,
     public obsApi: ObsApi,
     public twitchApi: TwitchApi
   ) {
-    this.scriptConfig = actionDataToScriptConfig(script);
-
     const isPermanentScript = this.script.type === ActionType.PermanentScript;
 
     // TODO error$ subject for logger or other stuff
@@ -92,7 +91,7 @@ export class ScriptContext implements CanDispose {
     this.eventBus = new EventBusApi();
   }
 
-  public compile() {
+  public compile(): void  {
     try {
       this.compiledBootstrapScript = new VMScript(`
           async function bootstrap(
@@ -152,7 +151,6 @@ export class ScriptContext implements CanDispose {
       payloadObs?.overrides?.action?.variables
     );
 
-
     if (!this.scriptToCall) {
       await Promise.all([
         this.bootstrap(variables),
@@ -161,7 +159,6 @@ export class ScriptContext implements CanDispose {
 
       this.scriptToCall = this._vm.run(this.compiledExecutionScript);
     }
-
 
     // these are the available APIs / variables that can be used inside
     const scriptArguments: ExecutionScriptPayload = {

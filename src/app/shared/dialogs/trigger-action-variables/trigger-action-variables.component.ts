@@ -12,7 +12,7 @@ import {MemeboxApiService, MemeboxWebsocketService} from "@memebox/app-state";
 })
 export class TriggerActionVariablesComponent implements OnInit {
   public variablesConfig?: ActionVariableConfig[];
-  public variables?: Dictionary<any>;
+  public variables?: Dictionary<unknown>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Action,

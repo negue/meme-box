@@ -1,0 +1,200 @@
+<h2 mat-dialog-title class="title-wrapper">
+  Config "{{data.commandBlockName}}"
+</h2>
+
+<mat-dialog-content>
+
+  <ng-container *ngIf="actionDictionary$ | async as actionDictionary">
+
+    <div *ngFor="let config of data.configArguments">
+      <strong>{{config.label}}:</strong>
+
+      <div [ngSwitch]="config.type">
+        <ng-container *ngSwitchCase="'number'">
+          <app-action-variable-input [variableType]="$any('number')" [label]="config.label"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'text'">
+          <app-action-variable-input [variableType]="$any('text')" [label]="config.label"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'textarea'">
+          <app-action-variable-input [variableType]="$any('textarea')" [label]="config.label"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'boolean'">
+          <app-action-variable-input [variableType]="$any('boolean')"
+                                     label="Enabled"
+                                     [value]="payload[config.name]"
+                                     (valueChanged)="payload[config.name] = $event">
+          </app-action-variable-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'action'">
+          <div class="two-columns">
+            <div class="column column-padding">
+              <app-action-selection
+                [selectedActionId]="getActionPayload(config.name)?.actionId"
+                [recipeContext]="data.recipeContext"
+                (selectedActionId$)="onSelectedAction(config.name, $event)">
+
+              </app-action-selection>
+            </div>
+
+            <div class="column" *ngIf="getActionPayload(config.name) as actionPayload;">
+              <div class="example-container" *ngIf="actionDictionary[actionPayload.actionId] | showScreenSelection">
+                <mat-form-field appearance="fill">
+                  <mat-label>Target Screen</mat-label>
+                  <mat-select [(value)]="actionPayload.screenId">
+                    <mat-option [value]="''">All</mat-option>
+                    <mat-option *ngFor="let screen of actionDictionary[actionPayload.actionId] | actionScreenList$ | async"
+                                [value]="screen.id">
+                      {{ screen.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <ng-container
+                *ngIf="actionDictionary[actionPayload.actionId] | actionVariableConfig as actionVariableConfigs">
+                <div *ngIf="actionVariableConfigs.length">
+                  Variables: <br>
+                  <app-action-variables-assignments [variablesConfig]="actionVariableConfigs"
+                                                    [data]="actionPayload.overrides.action.variables"
+                                                    (dataChanged)="actionPayload.overrides.action.variables = $event;">
+
+                  </app-action-variables-assignments>
+                </div>
+              </ng-container>
+
+            <div class="position-inputs" *ngIf="isMedia(actionDictionary[actionPayload.actionId])">
+              Position Options: <br>
+              <mat-form-field>
+                <mat-label>Left (px, %, rem, em)</mat-label>
+                <input autocomplete="off" matNativeControl
+                       matInput [(ngModel)]="actionPayload.overrides.screenMedia.left"
+                       type="text">
+              </mat-form-field>
+
+
+              <mat-form-field>
+                <mat-label>Right (px, %, rem, em)</mat-label>
+                <input autocomplete="off" matNativeControl
+                       matInput [(ngModel)]="actionPayload.overrides.screenMedia.right"
+                       type="text">
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Top (px, %, rem, em)</mat-label>
+                <input autocomplete="off" matNativeControl
+                       matInput [(ngModel)]="actionPayload.overrides.screenMedia.top"
+                       type="text">
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Bottom (px, %, rem, em)</mat-label>
+                <input autocomplete="off" matNativeControl
+                       matInput [(ngModel)]="actionPayload.overrides.screenMedia.bottom"
+                       type="text">
+              </mat-form-field>
+
+            </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'actionList'">
+          <ng-container *ngIf="getActionListPayload(config.name) as actionList">
+            <div *ngFor="let actionEntry of actionList">
+              <div class="two-columns">
+                <div class="column">
+                  <button mat-raised-button (click)="selectAction(config.name)">
+                    <ng-container *ngIf="actionEntry; else notSelected">
+                      <app-action-preview [action]="actionDictionary[actionEntry.actionId]"
+                                          height="100px" width="200px"></app-action-preview>
+                      {{ actionDictionary[actionEntry.actionId]?.name }}
+                    </ng-container>
+
+                    <ng-template #notSelected>
+                      Choose action to trigger
+                    </ng-template>
+                  </button>
+                </div>
+
+                <ng-container *ngIf="actionEntry">
+                  <ng-container
+                    *ngIf="actionDictionary[actionEntry.actionId] | actionVariableConfig as actionVariableConfigs">
+                    <div class="column" *ngIf="actionVariableConfigs.length">
+                      Variables: <br>
+                      <app-action-variables-assignments [variablesConfig]="actionVariableConfigs"
+                                                        [data]="actionEntry.overrides.action.variables"
+                                                        (dataChanged)="actionEntry.overrides.action.variables = $event;">
+
+                      </app-action-variables-assignments>
+                    </div>
+                  </ng-container>
+                </ng-container>
+
+
+
+              </div>
+              <button (click)="removeActionEntry(actionList, actionEntry)">remove action</button>
+
+            </div>
+            <button (click)="addActionEntry(actionList)">add action</button>
+
+            <!-- TODO Improve ActionList UI -->
+          </ng-container>
+
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'obs:scene'">
+          <app-obs-scene-selection [selectedScene]="payload[config.name]"
+                                   (sceneSelected)="payload[config.name] = $event"></app-obs-scene-selection>
+        </ng-container>
+        <ng-container *ngSwitchCase="'obs:filter'">
+          <app-obs-filter-selection [payload]="payload[config.name]"
+                                   (payloadChanged)="payload[config.name] = $event"></app-obs-filter-selection>
+        </ng-container>
+        <ng-container *ngSwitchCase="'actionOverrides'">
+
+          <ng-container *ngIf="getActionOverridesPayload(config.name) as combinedAction;">
+            <ng-container
+              *ngIf="actionDictionary[combinedAction.action.actionId] | actionVariableConfig as actionVariableConfigs">
+              <div class="column" *ngIf="actionVariableConfigs.length">
+                Variables: <br>
+                <app-action-variables-assignments [variablesConfig]="actionVariableConfigs"
+                                                  [data]="combinedAction.configPayload.action.variables"
+                                                  (dataChanged)="combinedAction.configPayload.action.variables = $event;">
+
+                </app-action-variables-assignments>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          Default Switch Case NEED TO DO: {{config.type}}
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="two-columns">
+  <div class="column">
+    <app-open-feedback-button feedbackTarget="Recipe Command Config"></app-open-feedback-button>
+  </div>
+  <div class="column" align="end">
+    <button mat-button [mat-dialog-close]="null">Cancel</button>
+    <button (click)="save()"
+            color="accent"
+            mat-raised-button>Save
+    </button>
+  </div>
+</mat-dialog-actions>

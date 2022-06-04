@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-animation-preview',
@@ -17,8 +17,6 @@ export class AnimationPreviewComponent implements OnInit, OnChanges {
   public animationDuration = 777;
 
   public animationToShow = '';
-
-  constructor() { }
 
   ngOnInit(): void {
     this.selectNewAnimation();

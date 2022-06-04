@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {API_BASE, AppQueries, MemeboxWebsocketService} from "@memebox/app-state";
 import {HttpClient} from "@angular/common/http";
 import {combineLatest, Observable} from "rxjs";
-import {ENDPOINTS, TriggerActionDashboardEntry, TriggerClipOrigin} from "@memebox/contracts";
+import {ENDPOINTS, TriggerActionDashboardEntry, TriggerActionOrigin} from "@memebox/contracts";
 import {filter, map, startWith, switchMap} from "rxjs/operators";
 import {takeLatestItems} from "@memebox/utils";
 
@@ -45,7 +45,7 @@ export class LatestActionsComponent {
       map(([latest20, actionMap]) => {
         for (const latest20Element of latest20) {
           latest20Element.actionName = actionMap[latest20Element.id]?.name ?? 'Unknown';
-          latest20Element.originTypeName = TriggerClipOrigin[latest20Element.origin];
+          latest20Element.originTypeName = TriggerActionOrigin[latest20Element.origin];
         }
 
         return latest20;
