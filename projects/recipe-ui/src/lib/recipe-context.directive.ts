@@ -1,5 +1,5 @@
-import { Directive, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { filterNil, Store, StoreConfig } from "@datorama/akita";
+import {Directive, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {filterNil, Store, StoreConfig} from "@datorama/akita";
 import {
   RecipeContext,
   RecipeEntry,
@@ -7,10 +7,10 @@ import {
   RecipeEntryCommandPayload,
   RecipeSubCommandInfo
 } from "@memebox/recipe-core";
-import { Observable } from "rxjs";
-import { produce } from "immer";
-import { skip } from "rxjs/operators";
-import { arraymove } from "@memebox/utils";
+import {Observable} from "rxjs";
+import {produce} from "immer";
+import {skip} from "rxjs/operators";
+import {arraymove} from "@memebox/utils";
 
 function addEntryToPath (
   state: RecipeContext,
@@ -90,12 +90,12 @@ export class RecipeContextDirective
   }
 
   public moveStep(prevPos: number, newPos: number,
-                   parent: RecipeEntry,
-                   parentSubStep: string): void {
+                  parent: RecipeEntry,
+                  parentSubStepLabelId: string): void {
     this.update(state => {
       const foundEntry = this.findEntry(state, parent);
 
-      const stepsArrayToMove = foundEntry?.subCommandBlocks.find(s => s.labelId === parentSubStep)?.entries ?? [];
+      const stepsArrayToMove = foundEntry?.subCommandBlocks.find(s => s.labelId === parentSubStepLabelId)?.entries ?? [];
 
       arraymove(stepsArrayToMove, prevPos, newPos);
     });

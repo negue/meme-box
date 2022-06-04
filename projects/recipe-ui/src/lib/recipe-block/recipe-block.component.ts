@@ -1,12 +1,12 @@
-import { ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo } from "@memebox/recipe-core";
-import { CdkDragDrop } from "@angular/cdk/drag-drop";
-import { RecipeContextDirective } from "../recipe-context.directive";
-import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
-import { RecipeCommandSelectorComponent } from "../recipe-command-selector/recipe-command-selector.component";
-import { takeUntil } from "rxjs/operators";
-import { Subject } from "rxjs";
-import { RecipeCommandCreatorService } from "../recipe-command-creator.service";
+import {ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
+import {RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo} from "@memebox/recipe-core";
+import {CdkDragDrop} from "@angular/cdk/drag-drop";
+import {RecipeContextDirective} from "../recipe-context.directive";
+import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
+import {RecipeCommandSelectorComponent} from "../recipe-command-selector/recipe-command-selector.component";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
+import {RecipeCommandCreatorService} from "../recipe-command-creator.service";
 
 @Component({
   selector: 'app-recipe-block',
@@ -60,7 +60,7 @@ export class RecipeBlockComponent
 
     this.context.moveStep(
       oldPos, newPos,
-      this.entry, subStepInfo.name
+      this.entry, subStepInfo.labelId
     );
   }
 
