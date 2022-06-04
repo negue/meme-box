@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivityQueries, AppQueries, AppService} from "@memebox/app-state";
 import {filter, map} from "rxjs/operators";
 import {ACTION_TYPE_INFORMATION, ActionStateEnum, ActionType} from "@memebox/contracts";
@@ -22,7 +22,7 @@ function actionStateEnumToString (activity: ActionStateEnum) {
   templateUrl: './activity-state.component.html',
   styleUrls: ['./activity-state.component.scss']
 })
-export class ActivityStateComponent implements OnInit {
+export class ActivityStateComponent {
 
   actions$ = combineLatest([
     this.activityState.state$,
@@ -74,9 +74,6 @@ export class ActivityStateComponent implements OnInit {
     public appService: AppService,
   ) {
     appService.loadState();
-  }
-
-  ngOnInit(): void {
   }
 
 }

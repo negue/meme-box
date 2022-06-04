@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TwitchEventTypes, TwitchTrigger, TwitchTypesArray } from '@memebox/contracts';
-import { AppQueries, AppService } from '@memebox/app-state';
-import { map } from 'rxjs/operators';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {TwitchEventTypes, TwitchTrigger, TwitchTypesArray} from '@memebox/contracts';
+import {AppQueries, AppService} from '@memebox/app-state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-twitch-info',
   templateUrl: './twitch-event-info.component.html',
   styleUrls: ['./twitch-event-info.component.scss']
 })
-export class TwitchEventInfoComponent implements OnInit {
+export class TwitchEventInfoComponent {
   twitchEvents = TwitchTypesArray;
   @Input()
   item: TwitchTrigger;
@@ -40,9 +40,6 @@ export class TwitchEventInfoComponent implements OnInit {
 
   constructor(private appQueries: AppQueries,
               private appService: AppService) {
-  }
-
-  ngOnInit(): void {
   }
 
   onActiveChanged(): void  {

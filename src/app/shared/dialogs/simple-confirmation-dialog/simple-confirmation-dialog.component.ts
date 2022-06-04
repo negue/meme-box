@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 
 export interface ConfirmationsPayload {
@@ -17,7 +17,7 @@ export interface ConfirmationsPayload {
   templateUrl: './simple-confirmation-dialog.component.html',
   styleUrls: ['./simple-confirmation-dialog.component.css']
 })
-export class SimpleConfirmationDialogComponent implements OnInit {
+export class SimpleConfirmationDialogComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ConfirmationsPayload) {
    data.content = data.content?.trim() ?? '';
@@ -27,8 +27,4 @@ export class SimpleConfirmationDialogComponent implements OnInit {
       data.noButton = 'No';
     }
   }
-
-  ngOnInit(): void {
-  }
-
 }

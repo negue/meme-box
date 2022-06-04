@@ -1,14 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { TimedAction, TwitchTypesArray } from '@memebox/contracts';
-import { AppQueries, AppService } from '@memebox/app-state';
-import { map } from 'rxjs/operators';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {TimedAction, TwitchTypesArray} from '@memebox/contracts';
+import {AppQueries, AppService} from '@memebox/app-state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-timed-info',
   templateUrl: './timed-event-info.component.html',
   styleUrls: ['./timed-event-info.component.scss']
 })
-export class TimedEventInfoComponent implements OnInit {
+export class TimedEventInfoComponent {
   twitchEvents = TwitchTypesArray;
   @Input()
   item: TimedAction;
@@ -34,9 +34,6 @@ export class TimedEventInfoComponent implements OnInit {
 
   constructor(private appQueries: AppQueries,
               private appService: AppService) {
-  }
-
-  ngOnInit(): void {
   }
 
   onActiveChanged(): void  {

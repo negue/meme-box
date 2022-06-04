@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {
   listAllEntriesOfTypes,
   RecipeCommandConfigActionListPayload,
@@ -25,7 +25,7 @@ const DEFAULT_ENTRY_IN_SELECTION = '____DEFAULT____';
   templateUrl: './action-selection.component.html',
   styleUrls: ['./action-selection.component.scss']
 })
-export class ActionSelectionComponent implements OnInit {
+export class ActionSelectionComponent {
 
   private readonly recipeContext$ = new BehaviorSubject<RecipeContext|null>(null);
 
@@ -110,9 +110,6 @@ export class ActionSelectionComponent implements OnInit {
     private appQuery: AppQueries,
     private dialogService: DialogService,
   ) { }
-
-  ngOnInit(): void {
-  }
 
   async onSelectionChanged(newActionId: string|null) {
     if (newActionId) {

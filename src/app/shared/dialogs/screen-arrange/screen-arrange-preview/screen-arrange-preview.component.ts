@@ -10,11 +10,11 @@ import {
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import { CombinedActionContext, PositionEnum, Screen } from '@memebox/contracts';
-import { DragResizeMediaComponent } from '../drag-resize-media/drag-resize-media.component';
-import { AppService } from '../../../../../../projects/app-state/src/lib/state/app.service';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { AutoScaleComponent } from '@gewd/components/auto-scale';
+import {CombinedActionContext, PositionEnum, Screen} from '@memebox/contracts';
+import {DragResizeMediaComponent} from '../drag-resize-media/drag-resize-media.component';
+import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
+import {FormBuilder, FormControl} from '@angular/forms';
+import {AutoScaleComponent} from '@gewd/components/auto-scale';
 
 enum GlobalArrangeOptions {
   Drag,
@@ -130,13 +130,9 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   triggerChangedetection(): void {
     const component = this.combinedClipToComponent.get(this.currentSelectedClip);
 
-    console.info('trigger cd', {
-      component, clip: this.currentSelectedClip
-    });
-
     if (component) {
       component.settings = this.currentSelectedClip.screenMediaConfig;
-      component.ngOnChanges({});
+      component.ngOnChanges({}); // skipcq: JS-0573
     }
 
     this._cd.detectChanges();

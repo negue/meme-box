@@ -1,4 +1,4 @@
-import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {Component, TrackByFunction} from '@angular/core';
 import {ENDPOINTS, HasId, TimedAction, TwitchTrigger} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest, Observable} from "rxjs";
 import {API_BASE, AppQueries, AppService} from "@memebox/app-state";
@@ -13,7 +13,7 @@ import {convertTwitchEventConfigToTwitchEvent} from "./events-overview.functions
   templateUrl: './events-overview.component.html',
   styleUrls: ['./events-overview.component.scss']
 })
-export class EventsOverviewComponent implements OnInit {
+export class EventsOverviewComponent {
 
   public searchText = '';
   public searchText$ = new BehaviorSubject<string>('');
@@ -78,9 +78,6 @@ export class EventsOverviewComponent implements OnInit {
               private appService: AppService,
               private dialogService: DialogService,
               private http: HttpClient) {
-  }
-
-  ngOnInit(): void {
   }
 
   createNewTwitchCommand(): void  {

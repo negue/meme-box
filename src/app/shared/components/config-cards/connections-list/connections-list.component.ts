@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {DialogService} from "../../../dialogs/dialog.service";
 import {combineLatest, Observable} from "rxjs";
 import {AppQueries, AppService, ConnectionStateService} from "@memebox/app-state";
@@ -26,7 +26,7 @@ interface ConnectionEntry {
     // TRANSLOCO_CONFIG_SCOPE
   ]
 })
-export class ConnectionsListComponent implements OnInit {
+export class ConnectionsListComponent {
   public config$ = this.appQuery.config$;
 
 
@@ -99,8 +99,4 @@ export class ConnectionsListComponent implements OnInit {
               private configService: ConfigService,
               private connectionStateService: ConnectionStateService
               ) { }
-
-  ngOnInit(): void {
-  }
-
 }

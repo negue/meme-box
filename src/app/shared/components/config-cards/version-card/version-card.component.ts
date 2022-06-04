@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import VERSION_JSON from '../../../../../version_info.json';
 import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
 import {MatCheckboxChange} from "@angular/material/checkbox";
-import {Config} from "@memebox/contracts";
 import {map} from "rxjs/operators";
 import {RELEASE_PAGE} from "../../../../../../server/constants";
 import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
@@ -33,11 +32,7 @@ export class VersionCardComponent implements OnInit {
   constructor(private appQuery: AppQueries,
               private configService: ConfigService) { }
 
-  ngOnInit(): void {
-  }
-
-  onVersionCheckChanged($event: MatCheckboxChange,
-                        config: Partial<Config>): void  {
+  onVersionCheckChanged($event: MatCheckboxChange): void  {
 
     this.configService.updateConfig({
       enableVersionCheck: $event.checked

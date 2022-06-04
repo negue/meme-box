@@ -83,14 +83,11 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       ...value
     };
 
-    console.info(newTimedValue);
     await this.appService.addOrUpdateTimedEvent(newTimedValue);
 
     // todo refactor "better way?" to trigger those snackbars
 
     this.dialogRef.close();
-
-
   }
 
   ngOnInit(): void {
@@ -113,8 +110,6 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     });
 
     if (clipId) {
-      console.info({clipId});
-
       this.form.patchValue({
         clipId
       });

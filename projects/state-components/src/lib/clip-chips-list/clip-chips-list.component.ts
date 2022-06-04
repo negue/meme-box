@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Action, Screen, Tag} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
@@ -9,7 +9,7 @@ import {AppQueries} from "@memebox/app-state";
   templateUrl: './clip-chips-list.component.html',
   styleUrls: ['./clip-chips-list.component.scss']
 })
-export class ClipChipsListComponent implements OnInit {
+export class ClipChipsListComponent {
 
   @Input()
   public listTags = false;
@@ -33,8 +33,4 @@ export class ClipChipsListComponent implements OnInit {
 
 
   constructor(private appQueries: AppQueries) { }
-
-  ngOnInit(): void {
-  }
-
 }

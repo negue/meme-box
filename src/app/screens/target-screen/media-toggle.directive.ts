@@ -11,20 +11,13 @@ import {
   Renderer2,
   SimpleChanges
 } from '@angular/core';
-import {
-  Action,
-  ActionType,
-  CombinedActionContext,
-  Dictionary,
-  PositionEnum,
-  VisibilityEnum
-} from "@memebox/contracts";
-import { BehaviorSubject, combineLatest, Subject } from "rxjs";
-import { mergeCombinedClipWithOverrides, TargetScreenComponent } from "./target-screen.component";
-import { delay, map, skip, take, takeUntil } from "rxjs/operators";
-import { DynamicIframeComponent } from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
-import { AppQueries, MemeboxWebsocketService } from "@memebox/app-state";
-import { getWidgetFromActionInfo } from "@memebox/utils";
+import {Action, ActionType, CombinedActionContext, Dictionary, PositionEnum, VisibilityEnum} from "@memebox/contracts";
+import {BehaviorSubject, combineLatest, Subject} from "rxjs";
+import {mergeCombinedClipWithOverrides, TargetScreenComponent} from "./target-screen.component";
+import {delay, map, skip, take, takeUntil} from "rxjs/operators";
+import {DynamicIframeComponent} from "../../shared/components/dynamic-iframe/dynamic-iframe.component";
+import {AppQueries, MemeboxWebsocketService} from "@memebox/app-state";
+import {getWidgetFromActionInfo} from "@memebox/utils";
 
 export enum MediaState {
   HIDDEN,
@@ -334,7 +327,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
 
     this.element.nativeElement.style.setProperty('--clip-background', backgroundColor);
     this.element.nativeElement.style.setProperty('--clip-setting-img-fit', screenMediaConfig.imgFit);
-    this.element.nativeElement.style.setProperty('z-index', ''+screenMediaConfig.zIndex);
+    this.element.nativeElement.style.setProperty('z-index', `${screenMediaConfig.zIndex}`);
 
     if (screenMediaConfig.position !== PositionEnum.FullScreen) {
       this.element.nativeElement.style.setProperty('--clip-setting-height', screenMediaConfig.height);
@@ -418,7 +411,7 @@ export class MediaToggleDirective implements OnChanges, OnInit, OnDestroy {
     if (control instanceof HTMLImageElement) {
       // reset if its a gif
       if (this.currentActionContext.action.path.includes('.gif')) {
-        control.src = '';
+        control.src = ''; // skipcq: JS-W1032 otherwise the gif isnt resetting
         control.src = this.currentActionContext.action.path;
       }
     }
