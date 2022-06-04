@@ -37,18 +37,9 @@
         </ng-container>
         <ng-container *ngSwitchCase="'action'">
           <div class="two-columns">
-            <div class="column">
-              <button mat-raised-button (click)="selectAction(config.name)">
-                <ng-container *ngIf="getActionPayload(config.name) as actionPayload; else notSelected">
-                  <app-action-preview [action]="actionDictionary[actionPayload.actionId]"
-                                      height="100px" width="200px"></app-action-preview>
-                  {{ actionDictionary[actionPayload.actionId]?.name }}
-                </ng-container>
-
-                <ng-template #notSelected>
-                  Choose action to trigger
-                </ng-template>
-              </button>
+            <div class="column column-padding">
+              <app-action-selection [recipeContext]="data.recipeContext"
+              (selectedActionId$)="onSelectedAction(config.name, $event)"></app-action-selection>
             </div>
 
             <div class="column" *ngIf="getActionPayload(config.name) as actionPayload;">
@@ -152,6 +143,8 @@
 
             </div>
             <button (click)="addActionEntry(actionList)">add action</button>
+
+            <!-- TODO Improve ActionList UI -->
           </ng-container>
 
         </ng-container>

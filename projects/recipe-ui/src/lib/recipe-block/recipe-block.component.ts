@@ -102,7 +102,7 @@ export class RecipeBlockComponent
       return;
     }
 
-    const newPayload = await this.stepCreator.editStepData(entry);
+    const newPayload = await this.stepCreator.editStepData(entry, this.context.recipe!);
 
     if (newPayload) {
       this.context.changePayload(entry, newPayload);

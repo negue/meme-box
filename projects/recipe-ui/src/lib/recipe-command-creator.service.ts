@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   generateRecipeEntryCommandCall,
   RecipeCommandDefinition,
@@ -8,8 +8,8 @@ import {
   RecipeEntryCommandCall,
   RecipeEntryCommandPayload
 } from "@memebox/recipe-core";
-import { DialogService } from "../../../../src/app/shared/dialogs/dialog.service";
-import type { CommandSettingDialogPayload } from "./command-setting-dialog/step-setting-dialog.component";
+import {DialogService} from "../../../../src/app/shared/dialogs/dialog.service";
+import type {CommandSettingDialogPayload} from "./command-setting-dialog/step-setting-dialog.component";
 
 @Injectable({
   providedIn: 'any'
@@ -19,13 +19,16 @@ export class RecipeCommandCreatorService {
     private dialogService: DialogService,
   ) { }
 
-  async generateCommandData (parentStep: RecipeEntry, stepType: string): Promise<RecipeEntryCommandCall|void> {
+  async generateCommandData (parentStep: RecipeEntry,
+                             stepType: string,
+                             context: RecipeContext): Promise<RecipeEntryCommandCall|void> {
 
     const recipeCommandDefinition = RecipeCommandRegistry[stepType];
 
     if (recipeCommandDefinition.configArguments.length !== 0) {
       const dialogResult = await this._loadAndOpenSettingDialog({
-        configArguments: recipeCommandDefinition.configArguments
+        configArguments: recipeCommandDefinition.configArguments,
+        recipeContext: context
       });
 
       if (!dialogResult) {
@@ -46,7 +49,7 @@ export class RecipeCommandCreatorService {
     }
   }
 
-  async editStepData (currentStep: RecipeEntry): Promise<RecipeEntryCommandPayload|void> {
+  async editStepData (currentStep: RecipeEntry, context: RecipeContext): Promise<RecipeEntryCommandPayload|void> {
     if (currentStep.entryType !== 'command'){
       return;
     }
@@ -59,7 +62,8 @@ export class RecipeCommandCreatorService {
 
     const dialogResult = await this._loadAndOpenSettingDialog({
       configArguments: recipeCommandDefinition.configArguments,
-      currentStepData: currentStep.payload
+      currentStepData: currentStep.payload,
+      recipeContext: context
     });
 
     return dialogResult;

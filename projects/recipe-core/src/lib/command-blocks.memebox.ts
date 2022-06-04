@@ -60,12 +60,12 @@ export function registerMemeboxCommandBlocks (
   };
 
   registry["triggerActionWhile"] = {
-    pickerLabel: "Trigger Action and keep it visible while doing other Command Block",
+    pickerLabel: "Keep Triggered Action active, while",
     commandGroup: "memebox",
     configArguments: [
       {
         name: "action",
-        label: "Action to trigger",
+        label: "Action to trigger, keep active",
         type: "action"
       }
     ],
@@ -101,7 +101,7 @@ export function registerMemeboxCommandBlocks (
     }
   };
   registry["triggerActionWhileReset"] = {
-    pickerLabel: "Reset the 'triggerActionWhileAction' (todo label)",
+    pickerLabel: "Reset changed properties of the 'Keep Triggered Action active, while'",
     commandGroup: "memebox",
     configArguments: [],
     extendCommandBlock: (step, parentStep) => {
@@ -128,7 +128,7 @@ export function registerMemeboxCommandBlocks (
     configArguments: [
       {
         name: "actions",
-        label: "Actions",
+        label: "Possible Actions to be triggered, randomly",
         type: "actionList"
       }
     ],

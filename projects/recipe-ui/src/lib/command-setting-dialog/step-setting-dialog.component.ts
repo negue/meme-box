@@ -1,27 +1,23 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   RecipeCommandConfigActionListPayload,
   RecipeCommandConfigActionPayload,
+  RecipeContext,
   RecipeEntryCommandPayload,
   RecipeStepConfigArgument
 } from "@memebox/recipe-core";
-import {
-  Action,
-  ClipAssigningMode,
-  Dictionary,
-  TriggerActionOverrides,
-  UnassignedFilterEnum
-} from "@memebox/contracts";
-import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
-import { Observable } from "rxjs";
-import { AppQueries } from "@memebox/app-state";
+import {Action, ClipAssigningMode, Dictionary, TriggerActionOverrides, UnassignedFilterEnum} from "@memebox/contracts";
+import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
+import {Observable} from "rxjs";
+import {AppQueries} from "@memebox/app-state";
 import cloneDeep from "lodash/cloneDeep";
-import { isVisibleMedia } from "@memebox/shared-state";
+import {isVisibleMedia} from "@memebox/shared-state";
 
 export interface CommandSettingDialogPayload {
   configArguments: RecipeStepConfigArgument[];
   currentStepData?: RecipeEntryCommandPayload;
+  recipeContext: RecipeContext;
 }
 
 @Component({
@@ -63,27 +59,18 @@ export class StepSettingDialogComponent {
     }
   }
 
-  async selectAction(configName: string) {
-    let actionPayload = this.payload[configName] as any as RecipeCommandConfigActionPayload;
+  onSelectedAction(configName: string, newActionId: string) {
+    const actionPayload = this._getOrPreparePayloadForAction(configName);
 
-    if (!actionPayload) {
-      this.payload[configName] = actionPayload = {
-        overrides: {
-          action: {
-            variables: {}
-          },
-          screenMedia: {
-
-          }
-        }
-      } as RecipeCommandConfigActionPayload;
+    if (newActionId) {
+      actionPayload.actionId = newActionId;
     }
+  }
 
+  async selectAction(configName: string) {
     const actionId = await this._selectAction();
 
-    if (actionId) {
-      actionPayload.actionId = actionId;
-    }
+    this.onSelectedAction(configName, actionId);
   }
 
   async selectActionListEntry(actionPayload: RecipeCommandConfigActionPayload) {
@@ -161,9 +148,29 @@ export class StepSettingDialogComponent {
     });
   }
 
+  private _getOrPreparePayloadForAction (configName: string): RecipeCommandConfigActionPayload {
+    let actionPayload = this.payload[configName] as any as RecipeCommandConfigActionPayload;
+
+    if (!actionPayload) {
+      this.payload[configName] = actionPayload = {
+        overrides: {
+          action: {
+            variables: {}
+          },
+          screenMedia: {
+
+          }
+        }
+      } as RecipeCommandConfigActionPayload;
+    }
+
+    return actionPayload;
+  }
+
   removeActionEntry(actionList: RecipeCommandConfigActionPayload[], actionEntry: RecipeCommandConfigActionPayload): void  {
     const indexOf = actionList.indexOf(actionEntry);
 
     actionList.splice(indexOf, 1);
   }
+
 }

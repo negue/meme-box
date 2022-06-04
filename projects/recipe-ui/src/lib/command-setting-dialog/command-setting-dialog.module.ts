@@ -1,22 +1,25 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { CommandSettingDialogPayload, StepSettingDialogComponent } from './step-setting-dialog.component';
-import { DialogContract } from "../../../../../src/app/shared/dialogs/dialog.contract";
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
-import { MatDialogRef } from "@angular/material/dialog/dialog-ref";
-import { MatButtonModule } from "@angular/material/button";
-import { ActionPreviewModule, StateBasedPipesModule } from "@memebox/state-components";
-import { ActionVariableInputModule, ActionVariablesAssignmentsModule } from "@memebox/action-variables/ui";
-import { ActionVariableConfigPipe } from './action-variable-config.pipe';
-import { OpenFeedbackButtonModule } from "../../../../../src/app/shared/components/open-feedback-button/open-feedback-button.module";
-import { ObsSceneSelectionComponent } from './obs-scene-selection/obs-scene-selection.component';
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatInputModule } from "@angular/material/input";
-import { MatAutocompleteModule } from "@angular/material/autocomplete";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ObsFilterSelectionComponent } from './obs-filter-selection/obs-filter-selection.component';
-import { UiComponentsPipesModule } from "@memebox/ui-components";
-import { MatSelectModule } from "@angular/material/select";
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {CommandSettingDialogPayload, StepSettingDialogComponent} from './step-setting-dialog.component';
+import {DialogContract} from "../../../../../src/app/shared/dialogs/dialog.contract";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {MatButtonModule} from "@angular/material/button";
+import {ActionPreviewModule, ClipTypeModule, StateBasedPipesModule} from "@memebox/state-components";
+import {ActionVariableInputModule, ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
+import {ActionVariableConfigPipe} from './action-variable-config.pipe';
+import {
+  OpenFeedbackButtonModule
+} from "../../../../../src/app/shared/components/open-feedback-button/open-feedback-button.module";
+import {ObsSceneSelectionComponent} from './obs-scene-selection/obs-scene-selection.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {ObsFilterSelectionComponent} from './obs-filter-selection/obs-filter-selection.component';
+import {UiComponentsPipesModule} from "@memebox/ui-components";
+import {MatSelectModule} from "@angular/material/select";
+import {ActionSelectionComponent} from './action-selection/action-selection.component';
 
 // todo extract this module to its own internal library ^
 
@@ -25,7 +28,8 @@ import { MatSelectModule } from "@angular/material/select";
     StepSettingDialogComponent,
     ActionVariableConfigPipe,
     ObsSceneSelectionComponent,
-    ObsFilterSelectionComponent
+    ObsFilterSelectionComponent,
+    ActionSelectionComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +46,8 @@ import { MatSelectModule } from "@angular/material/select";
     ReactiveFormsModule,
     UiComponentsPipesModule,
     StateBasedPipesModule,
-    MatSelectModule
+    MatSelectModule,
+    ClipTypeModule
   ]
 })
 export class CommandSettingDialogModule implements DialogContract<CommandSettingDialogPayload> {

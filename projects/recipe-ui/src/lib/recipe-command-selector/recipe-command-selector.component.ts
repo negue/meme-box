@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {
   RecipeCommandBlockGroups,
   RecipeCommandDefinition,
@@ -7,10 +7,10 @@ import {
   RecipeEntry,
   RecipeSubCommandInfo
 } from "@memebox/recipe-core";
-import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { AppQueries } from "@memebox/app-state";
-import { RecipeCommandCreatorService } from "../recipe-command-creator.service";
+import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {AppQueries} from "@memebox/app-state";
+import {RecipeCommandCreatorService} from "../recipe-command-creator.service";
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
 
@@ -66,7 +66,11 @@ export class RecipeCommandSelectorComponent implements OnInit {
       return;
     }
 
-    const createdStep = await this.stepCreator.generateCommandData(this.data.entry, step.commandType);
+    const createdStep = await this.stepCreator.generateCommandData(
+      this.data.entry,
+      step.commandType,
+      this.data.context
+    );
 
     if (createdStep) {
        this.dialogRef.close(createdStep);
