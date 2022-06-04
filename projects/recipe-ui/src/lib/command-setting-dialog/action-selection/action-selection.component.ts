@@ -36,7 +36,9 @@ export class ActionSelectionComponent implements OnInit {
 
   @Input()
   public set selectedActionId(value: string) {
-    this.selectionActionIdUi$.next(value);
+    if (value) {
+      this.selectionActionIdUi$.next(value);
+    }
   }
 
   @Input()

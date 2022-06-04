@@ -28,7 +28,8 @@ export class RecipeCommandCreatorService {
     if (recipeCommandDefinition.configArguments.length !== 0) {
       const dialogResult = await this._loadAndOpenSettingDialog({
         configArguments: recipeCommandDefinition.configArguments,
-        recipeContext: context
+        recipeContext: context,
+        commandBlockName: recipeCommandDefinition.pickerLabel,
       });
 
       if (!dialogResult) {
@@ -63,6 +64,7 @@ export class RecipeCommandCreatorService {
     const dialogResult = await this._loadAndOpenSettingDialog({
       configArguments: recipeCommandDefinition.configArguments,
       currentStepData: currentStep.payload,
+      commandBlockName: recipeCommandDefinition.pickerLabel,
       recipeContext: context
     });
 

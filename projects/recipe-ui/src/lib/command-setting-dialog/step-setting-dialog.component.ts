@@ -17,6 +17,7 @@ import {isVisibleMedia} from "@memebox/shared-state";
 export interface CommandSettingDialogPayload {
   configArguments: RecipeStepConfigArgument[];
   currentStepData?: RecipeEntryCommandPayload;
+  commandBlockName: string;
   recipeContext: RecipeContext;
 }
 

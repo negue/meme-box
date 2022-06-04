@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="title-wrapper">
-  Config Command
+  Config "{{data.commandBlockName}}"
 </h2>
 
 <mat-dialog-content>
@@ -7,7 +7,7 @@
   <ng-container *ngIf="actionDictionary$ | async as actionDictionary">
 
     <div *ngFor="let config of data.configArguments">
-      <strong>{{config.label}}:</strong> <br/>
+      <strong>{{config.label}}:</strong>
 
       <div [ngSwitch]="config.type">
         <ng-container *ngSwitchCase="'number'">
