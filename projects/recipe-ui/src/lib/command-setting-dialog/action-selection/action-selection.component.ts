@@ -116,13 +116,12 @@ export class ActionSelectionComponent implements OnInit {
     if (newActionId) {
       this.selectedActionId$.next(newActionId);
     } else {
-      console.info('before selecting from dialog');
       await this.selectActionFromDialog();
     }
   }
 
   async selectActionFromDialog() {
-    const actionId = await this._selectAction();
+    const actionId = await this._selectAction(this.selectionActionIdUi$.value ?? '');
 
     if (actionId) {
       this.selectionActionIdUi$.next(actionId);

@@ -38,8 +38,12 @@
         <ng-container *ngSwitchCase="'action'">
           <div class="two-columns">
             <div class="column column-padding">
-              <app-action-selection [recipeContext]="data.recipeContext"
-              (selectedActionId$)="onSelectedAction(config.name, $event)"></app-action-selection>
+              <app-action-selection
+                [selectedActionId]="getActionPayload(config.name)?.actionId"
+                [recipeContext]="data.recipeContext"
+                (selectedActionId$)="onSelectedAction(config.name, $event)">
+
+              </app-action-selection>
             </div>
 
             <div class="column" *ngIf="getActionPayload(config.name) as actionPayload;">

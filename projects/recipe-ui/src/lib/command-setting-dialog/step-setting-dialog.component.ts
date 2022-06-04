@@ -38,25 +38,7 @@ export class StepSettingDialogComponent {
     private dialogService: DialogService,
     private appQuery: AppQueries,
   ) {
-    if (data.currentStepData) {
-      this.payload = cloneDeep(data.currentStepData);
-    } else {
-      for (const config of data.configArguments) {
-        switch (config.type) {
-          case 'actionList': {
-            this.payload[config.name] = [];
-            break;
-          }
-          case 'boolean': {
-            this.payload[config.name] = false;
-            break;
-          }
-        }
-
-        if (config.type === 'actionList') {
-        }
-      }
-    }
+   this._prepareCurrentPayload();
   }
 
   onSelectedAction(configName: string, newActionId: string) {
@@ -136,6 +118,12 @@ export class StepSettingDialogComponent {
     }
   }
 
+  removeActionEntry(actionList: RecipeCommandConfigActionPayload[], actionEntry: RecipeCommandConfigActionPayload): void  {
+    const indexOf = actionList.indexOf(actionEntry);
+
+    actionList.splice(indexOf, 1);
+  }
+
   private _selectAction (actionId?: string | undefined): Promise<string> {
     return this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
@@ -153,24 +141,47 @@ export class StepSettingDialogComponent {
 
     if (!actionPayload) {
       this.payload[configName] = actionPayload = {
-        overrides: {
-          action: {
-            variables: {}
-          },
-          screenMedia: {
 
-          }
-        }
       } as RecipeCommandConfigActionPayload;
     }
+
+    actionPayload.overrides = Object.assign( {
+      action: {
+        variables: {}
+      },
+      screenMedia: {
+
+      }
+    }, actionPayload.overrides);
 
     return actionPayload;
   }
 
-  removeActionEntry(actionList: RecipeCommandConfigActionPayload[], actionEntry: RecipeCommandConfigActionPayload): void  {
-    const indexOf = actionList.indexOf(actionEntry);
+  private _prepareCurrentPayload() {
+    if (this.data.currentStepData) {
+      this.payload = cloneDeep(this.data.currentStepData);
+    }
 
-    actionList.splice(indexOf, 1);
+    for (const config of this.data.configArguments) {
+      switch (config.type) {
+        case 'actionList': {
+          if (!this.payload[config.name]) {
+            this.payload[config.name] = [];
+          }
+          break;
+        }
+        case 'boolean': {
+          if (!this.payload[config.name]) {
+            this.payload[config.name] = false;
+          }
+          break;
+        }
+        case 'action': {
+          this._getOrPreparePayloadForAction(config.name);
+          break;
+        }
+      }
+    }
   }
 
 }
