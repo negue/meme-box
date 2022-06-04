@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import VERSION_JSON from '../../../../../version_info.json';
-import {AppQueries} from "../../../../../../projects/app-state/src/lib/state/app.queries";
+import {AppQueries} from "@memebox/app-state";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {map} from "rxjs/operators";
+// TODO constants / path imports
 import {RELEASE_PAGE} from "../../../../../../server/constants";
 import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
@@ -12,7 +13,7 @@ import {ConfigService} from "../../../../../../projects/app-state/src/lib/servic
   templateUrl: './version-card.component.html',
   styleUrls: ['./version-card.component.scss']
 })
-export class VersionCardComponent implements OnInit {
+export class VersionCardComponent {
 
   VERSION_JSON = VERSION_JSON;
 
