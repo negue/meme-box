@@ -6,9 +6,10 @@ import {
   RecipeEntryCommandCall,
   RecipeEntryCommandPayload
 } from "./recipe.types";
-import { uuid } from "@gewd/utils";
-import { registerMemeboxCommandBlocks } from "./command-blocks.memebox";
-import { registerObsCommandBlocks } from "./command-blocks.obs";
+import {uuid} from "@gewd/utils";
+import {registerMemeboxCommandBlocks} from "./command-blocks.memebox";
+import {registerObsCommandBlocks} from "./command-blocks.obs";
+import {registerTwitchCommandBlocks} from "./command-blocks.twitch";
 
 export interface RecipeStepConfigArgument {
   name: string;
@@ -128,3 +129,4 @@ export function generateRecipeEntryCommandCall (
 
 registerMemeboxCommandBlocks(RecipeCommandRegistry, generateCodeByStep);
 registerObsCommandBlocks(RecipeCommandRegistry);
+registerTwitchCommandBlocks(RecipeCommandRegistry);

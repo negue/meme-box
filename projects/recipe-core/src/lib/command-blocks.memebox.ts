@@ -118,8 +118,8 @@ export function registerMemeboxCommandBlocks (
     },
     allowedToBeAdded: (step) => {
       // todo find a way to have that in multi level scopes available
-
-      return step.entryType === 'command' && step.commandBlockType === 'triggerActionWhile';
+      return false;
+      // return step.entryType === 'command' && step.commandBlockType === 'triggerActionWhile';
     },
     toScriptCode: (step) => {
       const helpersName = `helpers_${step.payload._suffix}`;
