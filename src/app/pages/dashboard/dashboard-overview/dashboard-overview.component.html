@@ -31,6 +31,10 @@
               Screen: W{{screenInOBS.screenData.width}}/H{{screenInOBS.screenData.height}} <br/>
               OBS: W{{screenInOBS.obsData.sourceSettings['width']}}/H{{screenInOBS.obsData.sourceSettings['height']}} <br/>
             </div>
+
+            <div [class.warning]="screenInOBS.warnFPS || !screenInOBS.fps">
+              FPS: <i *ngIf="!screenInOBS.fps">unknown</i> {{screenInOBS.fps}}
+            </div>
           </td>
           <td>
             <div>

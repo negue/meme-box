@@ -3,7 +3,7 @@ import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/servic
 import {AppConfig} from "@memebox/app/env";
 import {ENDPOINTS, ObsBrowserSourceData, Screen, StateOfAService, WEBSOCKET_PATHS} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
-import {map} from "rxjs/operators";
+import {debounceTime, map} from "rxjs/operators";
 import {ActivityQueries, AppQueries, MemeboxApiService, ObsService, SnackbarService} from "@memebox/app-state";
 import {fromPromise} from "rxjs/internal-compatibility";
 
@@ -17,6 +17,8 @@ interface ScreenInOBS {
   correctResolution: boolean;
   obsData: ObsBrowserSourceData;
   statusString: string;
+  warnFPS: boolean;
+  fps: string;
 }
 
 @Component({
@@ -53,6 +55,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
       this.appQuery.screensList$,
       activityState.state$
     ]).pipe(
+      debounceTime(150),
       map(([obsBrowserSources, allScreens, activityState]) => {
         return obsBrowserSources.map(browserSource => {
           const url = browserSource.sourceSettings['url'] + '';
@@ -64,6 +67,9 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
           const correctResolution = foundScreen.width === browserSource.sourceSettings['width']
           && foundScreen.height === browserSource.sourceSettings['height'];
+
+          const fps = browserSource.sourceSettings["fps"];
+          const warnFPS = Number(fps) < 60;
 
           const correctPort = url.includes(AppConfig.port + '');
 
@@ -77,6 +83,8 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
             statusString = 'Browser Source is not connected to Memebox (try refreshing)';
           } else if (!correctResolution) {
             statusString = 'The Browser Source in OBS has a different resolution';
+          } else if (!warnFPS) {
+            statusString = `The Browser Source FPS Setting might be too slow. (${fps})`;
           } else {
             statusString = 'Ok!'
           }
@@ -87,7 +95,9 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
             correctResolution,
             connected,
             obsData: browserSource,
-            statusString
+            statusString,
+            warnFPS,
+            fps
           } as ScreenInOBS;
         }).filter(bs => !!bs);
       })
