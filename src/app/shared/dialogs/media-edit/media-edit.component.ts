@@ -708,6 +708,8 @@ export class MediaEditComponent
       }
     }) as Action;
 
+    this.localMediaFormCtrl.setValue(this.actionToEdit.path);
+
     if (this.actionToEdit.type === ActionType.Widget) {
       this.currentHtmlConfig = actionDataToWidgetContent(this.actionToEdit);
       this.executeHTMLRefresh();
