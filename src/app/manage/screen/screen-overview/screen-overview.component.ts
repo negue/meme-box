@@ -2,7 +2,14 @@ import {Component, TrackByFunction} from '@angular/core';
 import {Action, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map, take} from "rxjs/operators";
-import {ActivityQueries, AppQueries, AppService, MemeboxWebsocketService, SnackbarService} from "@memebox/app-state";
+import {
+  ActivityQueries,
+  AppQueries,
+  AppService,
+  MemeboxWebsocketService,
+  ObsService,
+  SnackbarService
+} from "@memebox/app-state";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import orderBy from 'lodash/orderBy';
 import {ScreenUrlDialogComponent} from "./screen-url-dialog/screen-url-dialog.component";
@@ -33,7 +40,8 @@ export class ScreenOverviewComponent {
     public service: AppService,
     public activityState: ActivityQueries,
     private webSocket: MemeboxWebsocketService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private memeboxObsApi: ObsService,
   ) {
   }
 
@@ -94,7 +102,7 @@ export class ScreenOverviewComponent {
   }
 
   onReload(screen: Screen): void  {
-    this.webSocket.triggerReloadScreen(screen.id);
+    this.memeboxObsApi.triggerReloadScreen(screen.id);
     this.snackbar.normal(`Screen: ${screen.name} reloaded`);
   }
 

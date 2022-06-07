@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken } from '@angular/core';
+import {Inject, Injectable, InjectionToken} from '@angular/core';
 import {
   ActionActiveStatePayload,
   ACTIONS,
@@ -8,10 +8,10 @@ import {
   TriggerActionOrigin,
   TriggerActionOverrides
 } from "@memebox/contracts";
-import { BehaviorSubject, Subject } from "rxjs";
-import { SnackbarService } from "./snackbar.service";
-import { filter, mapTo, take } from "rxjs/operators";
-import { uuid } from "@gewd/utils";
+import {BehaviorSubject, Subject} from "rxjs";
+import {SnackbarService} from "./snackbar.service";
+import {filter, mapTo, take} from "rxjs/operators";
+import {uuid} from "@gewd/utils";
 
 export enum ConnectionStateEnum {
   NONE,
@@ -96,10 +96,6 @@ export class MemeboxWebsocketService {
 
     this.sendToTheSocket(`${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(triggerObj)}`);
     this.snackbar.normal(`Triggered clip.`);
-  }
-
-  public triggerReloadScreen(screenId: string | null): void  {
-    this.sendToTheSocket(`${ACTIONS.RELOAD_SCREEN}=${screenId}`);
   }
 
 

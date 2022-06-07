@@ -4,7 +4,7 @@ import {AppConfig} from "@memebox/app/env";
 import {ENDPOINTS, ObsBrowserSourceData, Screen, StateOfAService, WEBSOCKET_PATHS} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {ActivityQueries, AppQueries, MemeboxApiService} from "@memebox/app-state";
+import {ActivityQueries, AppQueries, MemeboxApiService, ObsService, SnackbarService} from "@memebox/app-state";
 import {fromPromise} from "rxjs/internal-compatibility";
 
 
@@ -17,7 +17,6 @@ interface ScreenInOBS {
   correctResolution: boolean;
   obsData: ObsBrowserSourceData;
   statusString: string;
-  showRefreshButton: boolean;
 }
 
 @Component({
@@ -39,8 +38,10 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
 
   constructor(
     private memeboxApi: MemeboxApiService,
+    private memeboxObsApi: ObsService,
     private appQuery: AppQueries,
     private activityState: ActivityQueries,
+    private snackbar: SnackbarService,
   ) {
     this.connectionState$ = this.connectionStateWS.onMessage$.asObservable().pipe(
       map(str => Object.values(JSON.parse(str))),
@@ -69,13 +70,11 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
           const connected = activityState.screenState[foundScreen.id];
 
           let statusString = '';
-          let showRefreshButton = false;
 
           if (!correctPort) {
             statusString = 'Not using the Memebox-Port';
           } else if (!connected) {
             statusString = 'Browser Source is not connected to Memebox (try refreshing)';
-            showRefreshButton = true;
           } else if (!correctResolution) {
             statusString = 'The Browser Source in OBS has a different resolution';
           } else {
@@ -88,8 +87,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
             correctResolution,
             connected,
             obsData: browserSource,
-            statusString,
-            showRefreshButton
+            statusString
           } as ScreenInOBS;
         }).filter(bs => !!bs);
       })
@@ -113,6 +111,7 @@ export class DashboardOverviewComponent implements OnInit, OnDestroy {
   }
 
   triggerObsReload(screenInOBS: ScreenInOBS) {
-    this.memeboxApi.post(`${ENDPOINTS.OBS_DATA.PREFIX}${ENDPOINTS.OBS_DATA.REFRESH_BROWSER_SOURCE}/${screenInOBS.obsData.sourceName}`, null, null);
+    this.memeboxObsApi.triggerReloadObsScreen(screenInOBS.obsData.sourceName);
+    this.snackbar.normal(`Screen: ${screenInOBS.screenData.name} reloaded`);
   }
 }
