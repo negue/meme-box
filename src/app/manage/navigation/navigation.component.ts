@@ -58,7 +58,7 @@ export class NavigationComponent implements OnInit {
     }, 15000)
   }
 
-  openMobileViewDialog() {
+  openMobileViewDialog(): void  {
     console.info('open qr');
     this.dialogService.open(QrcodeDialogComponent, {
 

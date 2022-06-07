@@ -32,7 +32,7 @@ export class WebsocketHandler {
     this.onMessage$.next(event.data);
   }
 
-  public connect() {
+  public connect(): void  {
     if (this.isConnected) {
       console.warn('already isConnected!');
       return;
@@ -96,7 +96,7 @@ export class WebsocketHandler {
     };
   }
 
-  stopReconnects() {
+  stopReconnects(): void  {
     this.ws?.close();
     this.allowReconnections = false;
   }

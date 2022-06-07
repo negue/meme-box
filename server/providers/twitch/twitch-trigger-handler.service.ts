@@ -1,17 +1,18 @@
-import {Injectable, ProviderScope, ProviderType} from "@tsed/di";
-import {TwitchConnector} from "./twitch.connector";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
-import {Persistence} from "../../persistence";
-import {Action, AllTwitchEvents, Dictionary, TriggerClipOrigin, TwitchTriggerCommand} from "@memebox/contracts";
-import {TwitchLogger} from "./twitch.logger";
-import {isAllowedToTrigger} from "./twitch.utils";
-import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
-import {ExampleTwitchCommandsSubject} from "../../shared";
-import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
-import {uuid} from "@gewd/utils";
-import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
+import { Injectable, ProviderScope, ProviderType } from "@tsed/di";
+import { TwitchConnector } from "./twitch.connector";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "../contracts";
+import { Persistence } from "../../persistence";
+import { Action, AllTwitchEvents, Dictionary, TriggerActionOrigin, TwitchTriggerCommand } from "@memebox/contracts";
+import { TwitchLogger } from "./twitch.logger";
+import { isAllowedToTrigger } from "./twitch.utils";
+import { getCommandsOfTwitchEvent, getLevelOfTags } from "./twitch.functions";
+import { ExampleTwitchCommandsSubject } from "../../shared";
+import { ActionQueueEventBus } from "../actions/action-queue-event.bus";
+import { uuid } from "@gewd/utils";
+import { TwitchQueueEventBus } from "./twitch-queue-event.bus";
 
+// skipcq: JS-0579
 @Injectable({
   type: ProviderType.SERVICE,
   scope: ProviderScope.SINGLETON
@@ -55,7 +56,7 @@ export class TwitchTriggerHandler {
     });
   }
 
-  handle(trigger: TwitchTriggerCommand) {
+  handle(trigger: TwitchTriggerCommand): void  {
     if (!trigger.command) {
       return;
     }
@@ -102,7 +103,7 @@ export class TwitchTriggerHandler {
       id: trigger.command.clipId,
       uniqueId: uuid(),
       targetScreen: trigger.command.screenId,
-      origin: TriggerClipOrigin.TwitchEvent,
+      origin: TriggerActionOrigin.TwitchEvent,
       originId: trigger.command.id,
 
       byTwitch: trigger.twitchEvent,

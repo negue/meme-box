@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Action, ActionType, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
+import {Action, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {filter, map} from "rxjs/operators";
@@ -43,16 +43,6 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     filter(selectedAction => !!selectedAction)
   );
 
-  showScreenSelection$ = this.selectedAction$.pipe(
-    map(action => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(action.type) )
-  );
-
-  screenList$ = combineLatest([
-    this.selectedAction$,
-    this.appQuery.screensList$
-  ]).pipe(
-    map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
-  );
 
 
   private _destroy$ = new Subject();
@@ -93,14 +83,11 @@ export class TimedEditComponent implements OnInit, OnDestroy {
       ...value
     };
 
-    console.info(newTimedValue);
     await this.appService.addOrUpdateTimedEvent(newTimedValue);
 
     // todo refactor "better way?" to trigger those snackbars
 
     this.dialogRef.close();
-
-
   }
 
   ngOnInit(): void {
@@ -113,7 +100,7 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   }
 
   async selectEventClip() {
-    const clipId = await this.dialogService.showClipSelectionDialog({
+    const clipId = await this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
       dialogTitle: 'Timer',
@@ -123,8 +110,6 @@ export class TimedEditComponent implements OnInit, OnDestroy {
     });
 
     if (clipId) {
-      console.info({clipId});
-
       this.form.patchValue({
         clipId
       });

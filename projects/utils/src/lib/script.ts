@@ -1,6 +1,6 @@
 import {Action, Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig, convertExtendedToTypeValues} from "@memebox/action-variables";
-import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
+import {getVariablesConfigListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
 
 export interface ScriptConfig {
   executionScript: string;
@@ -13,39 +13,39 @@ const SCRIPT_EXECUTION_KEY = '_executionScript';
 const SCRIPT_BOOTSTRAP_KEY = '_bootstrapScript';
 const SCRIPT_SETTINGS_KEY = '_settings';
 
-export function actionDataToScriptConfig (action: Partial<Action>) {
+export function actionDataToScriptConfig (action: Partial<Action>): ScriptConfig|null {
   if (!action?.extended) {
     return null;
   }
 
   const dynamicContent: ScriptConfig = {
-    executionScript: action.extended[SCRIPT_EXECUTION_KEY] ?? '',
-    bootstrapScript: action.extended[SCRIPT_BOOTSTRAP_KEY] ?? '',
+    executionScript: action.extended[SCRIPT_EXECUTION_KEY] as string ?? '',
+    bootstrapScript: action.extended[SCRIPT_BOOTSTRAP_KEY] as string ?? '',
   };
 
-  dynamicContent.variablesConfig = getVariablesListOfAction(action);
+  dynamicContent.variablesConfig = getVariablesConfigListOfAction(action);
 
   // todo add a settings type
-  const settings: any = JSON.parse(action.extended[SCRIPT_SETTINGS_KEY] ?? '{}');
+  const settings: any = JSON.parse(action.extended[SCRIPT_SETTINGS_KEY] as string ?? '{}');
   dynamicContent.settings = settings;
 
   return dynamicContent;
 }
 
 
-export function applyScriptConfigToClipData (
+export function applyScriptConfigToAction (
   scriptConfig: ScriptConfig,
-  targetClip: Partial<Action>
-) {
-  if (!targetClip.extended) {
-    targetClip.extended = {};
+  targetAction: Partial<Action>
+): void  {
+  if (!targetAction.extended) {
+    targetAction.extended = {};
   }
 
-  targetClip.extended[SCRIPT_EXECUTION_KEY] = scriptConfig.executionScript;
-  targetClip.extended[SCRIPT_BOOTSTRAP_KEY] = scriptConfig.bootstrapScript;
+  targetAction.extended[SCRIPT_EXECUTION_KEY] = scriptConfig.executionScript;
+  targetAction.extended[SCRIPT_BOOTSTRAP_KEY] = scriptConfig.bootstrapScript;
 
-  targetClip.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(scriptConfig.variablesConfig);
-  targetClip.extended[SCRIPT_SETTINGS_KEY] = JSON.stringify(scriptConfig.settings);
+  targetAction.extended[SCRIPT_VARIABLES_KEY] = JSON.stringify(scriptConfig.variablesConfig);
+  targetAction.extended[SCRIPT_SETTINGS_KEY] = JSON.stringify(scriptConfig.settings);
 }
 
 export const NOT_ALLOWED_SCRIPT_VARIABLE_NAMES = [

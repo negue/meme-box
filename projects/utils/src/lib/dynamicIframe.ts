@@ -1,7 +1,7 @@
-import {Action, Dictionary} from "@memebox/contracts";
-import {replaceVariablesInString} from "./utils";
-import {ActionVariableConfig} from "@memebox/action-variables";
-import {getVariablesListOfAction, SCRIPT_VARIABLES_KEY} from "./variable.utils";
+import { Action, Dictionary } from "@memebox/contracts";
+import { replaceVariablesInString } from "./utils";
+import { ActionVariableConfig } from "@memebox/action-variables";
+import { getVariableMapOfAction, getVariablesConfigListOfAction, SCRIPT_VARIABLES_KEY } from "./variable.utils";
 
 export interface HtmlExternalFile {
   type: 'css'|'script';
@@ -14,14 +14,51 @@ export interface DynamicIframeContent {
   js?: string;
   libraries?: HtmlExternalFile[];
   variablesConfig?: ActionVariableConfig[];
-  variables?: Dictionary<any>;
+  variables?: Dictionary<unknown>;
   settings?: {
     subscribeToTwitchEvent?: boolean;
   }
 }
 
+function getVariableValueOrFallback (config: ActionVariableConfig,
+                                     valueBag: Dictionary<any>,
+                                     justReturnIt = false) {
+  const valueOfBag = valueBag[config.name];
+  const valueToReturn = typeof valueOfBag === 'undefined'
+    ? config.fallback
+    : valueOfBag;
+
+  if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
+    return valueToReturn;
+  }
+
+  if (config.type === 'textarea') {
+    return "`" + valueToReturn + "`";
+  }
+
+  // string
+  return `"${valueToReturn}"`;
+}
+
+function getJsCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
+  return variables
+    .filter(config => !!config.fallback)
+    .map(config => {
+    return `const ${config.name} = ${getVariableValueOrFallback(config, valueBag)};`;
+  }).join(' ');
+}
+
+
+function getCssCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
+  return variables
+    .filter(config => !!config.fallback && config.type !== "textarea" && config.type !== "boolean")
+    .map(config => { return `--${config.name}: ${getVariableValueOrFallback(config, valueBag, true)};`;
+  }).join(' ');
+}
+
+
 export function dynamicIframe (iframe: HTMLIFrameElement,
-                               content: DynamicIframeContent) {
+                               content: DynamicIframeContent): void  {
 
   const iframeDocument = iframe.contentDocument;
 
@@ -151,43 +188,6 @@ export function dynamicIframe (iframe: HTMLIFrameElement,
   }
 }
 
-function getVariableValueOrFallback (config: ActionVariableConfig,
-                                     valueBag: Dictionary<any>,
-                                     justReturnIt: boolean = false) {
-  const valueOfBag = valueBag[config.name];
-  const valueToReturn = typeof valueOfBag === 'undefined'
-    ? config.fallback
-    : valueOfBag;
-
-  if (config.type === 'number' || config.type === 'boolean' || justReturnIt) {
-    return valueToReturn;
-  }
-
-  if (config.type === 'textarea') {
-    return "`" + valueToReturn + "`";
-  }
-
-  // string
-  return `"${valueToReturn}"`;
-}
-
-function getJsCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
-  return variables
-    .filter(config => !!config.fallback)
-    .map(config => {
-    return `const ${config.name} = ${getVariableValueOrFallback(config, valueBag)};`;
-  }).join(' ');
-}
-
-
-function getCssCustomVariables(variables: ActionVariableConfig[], valueBag: Dictionary<any>) {
-  return variables
-    .filter(config => !!config.fallback && config.type !== "textarea" && config.type !== "boolean")
-    .map(config => { return `--${config.name}: ${getVariableValueOrFallback(config, valueBag, true)};`;
-  }).join(' ');
-}
-
-
 const DYNAMIC_IFRAME_HTML_KEY = 'html';
 const DYNAMIC_IFRAME_CSS_KEY = 'css';
 const DYNAMIC_IFRAME_JS_KEY = 'js';
@@ -201,29 +201,60 @@ export function actionDataToWidgetContent (action: Partial<Action>): DynamicIfra
   }
 
   const dynamicContent: DynamicIframeContent = {
-    html: action.extended[DYNAMIC_IFRAME_HTML_KEY] ?? '',
-    css: action.extended[DYNAMIC_IFRAME_CSS_KEY] ?? '',
-    js: action.extended[DYNAMIC_IFRAME_JS_KEY] ?? ''
+    html: action.extended[DYNAMIC_IFRAME_HTML_KEY] as string ?? '',
+    css: action.extended[DYNAMIC_IFRAME_CSS_KEY] as string ?? '',
+    js: action.extended[DYNAMIC_IFRAME_JS_KEY] as string ?? ''
   };
 
   // External Files are saved as JSON
-  const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] ?? '[]');
+  const externalFiles: HtmlExternalFile[] = JSON.parse(action.extended[DYNAMIC_IFRAME_EXTERNAL_KEY] as string ?? '[]');
   dynamicContent.libraries = externalFiles;
 
-  dynamicContent.variablesConfig = getVariablesListOfAction(action);
+  dynamicContent.variablesConfig = getVariablesConfigListOfAction(action);
+  dynamicContent.variables = getVariableMapOfAction(action);
 
   // todo add a settings type
-  const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] ?? '{}');
+  const settings: any = JSON.parse(action.extended[DYNAMIC_IFRAME_SETTINGS_KEY] as string ?? '{}');
   dynamicContent.settings = settings;
 
   return dynamicContent;
 }
 
+export function getWidgetFromActionInfo(action: Partial<Action>,
+                                        actionMap: Dictionary<Action>,
+                                        variableOverrides: Dictionary<unknown>) {
+
+  let config: DynamicIframeContent;
+
+  if (action.fromTemplate) {
+    const widgetTemplate = actionMap[action.fromTemplate];
+
+    config = {
+      ...actionDataToWidgetContent(widgetTemplate),
+      variables: {
+        ...action.extended,
+        ...variableOverrides
+      }
+    };
+  } else {
+    const configFromWidgetContent = actionDataToWidgetContent(action);
+
+    config = {
+      ...configFromWidgetContent,
+      variables: {
+        ...configFromWidgetContent?.variables ?? {},
+        ...variableOverrides
+      }
+    };
+  }
+
+  return config;
+}
 
 export function applyDynamicIframeContentToClipData (
   iframeContent: DynamicIframeContent,
   targetClip: Partial<Action>
-) {
+): void  {
   if (!targetClip.extended) {
     targetClip.extended = {};
   }

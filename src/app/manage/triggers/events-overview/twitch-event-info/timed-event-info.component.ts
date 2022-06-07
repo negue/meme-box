@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {TimedAction, TwitchTypesArray} from '@memebox/contracts';
 import {AppQueries, AppService} from '@memebox/app-state';
 import {map} from 'rxjs/operators';
@@ -8,7 +8,7 @@ import {map} from 'rxjs/operators';
   templateUrl: './timed-event-info.component.html',
   styleUrls: ['./timed-event-info.component.scss']
 })
-export class TimedEventInfoComponent implements OnInit {
+export class TimedEventInfoComponent {
   twitchEvents = TwitchTypesArray;
   @Input()
   item: TimedAction;
@@ -27,19 +27,16 @@ export class TimedEventInfoComponent implements OnInit {
   );
 
   @Output()
-  onDelete = new EventEmitter<any>();
+  public readonly onDelete = new EventEmitter<any>();
 
   @Output()
-  onEdit = new EventEmitter<any>();
+  public readonly onEdit = new EventEmitter<any>();
 
   constructor(private appQueries: AppQueries,
               private appService: AppService) {
   }
 
-  ngOnInit(): void {
-  }
-
-  onActiveChanged() {
+  onActiveChanged(): void  {
     this.appService.toggleTimedClipActiveState(this.item.id);
   }
 }

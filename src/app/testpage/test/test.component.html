@@ -1,1 +1,21 @@
-<app-screen-clip-config></app-screen-clip-config>
+<mat-checkbox #editModeCheckbox>Edit Mode</mat-checkbox>
+
+<app-recipe-block recipeContext
+                  [recipe]="recipe"
+                  [asBlock]="true"
+                  [isRoot]="true"
+                  [editMode]="editModeCheckbox.checked"
+
+                  #recipeContextTemplate="recipeContext">
+</app-recipe-block>
+
+
+
+<pre [highlight]="toScriptCode(recipeContextTemplate.stateUpdated$ | async)"
+     lang="js" class="pre-wrap-break"></pre>
+
+
+
+<pre [highlight]="recipeContextTemplate.stateUpdated$ | async | json"
+     lang="json" class="pre-wrap-break"></pre>
+

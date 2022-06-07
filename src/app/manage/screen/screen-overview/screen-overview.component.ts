@@ -2,7 +2,7 @@ import {Component, TrackByFunction} from '@angular/core';
 import {Action, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map, take} from "rxjs/operators";
-import {AppQueries, AppService, MemeboxWebsocketService, SnackbarService} from "@memebox/app-state";
+import {ActivityQueries, AppQueries, AppService, MemeboxWebsocketService, SnackbarService} from "@memebox/app-state";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import orderBy from 'lodash/orderBy';
 import {ScreenUrlDialogComponent} from "./screen-url-dialog/screen-url-dialog.component";
@@ -31,16 +31,17 @@ export class ScreenOverviewComponent {
     private _dialog: DialogService,
     private _queries: AppQueries,
     public service: AppService,
+    public activityState: ActivityQueries,
     private webSocket: MemeboxWebsocketService,
     private snackbar: SnackbarService
   ) {
   }
 
-  showDialog(screen: Partial<Screen>) {
+  showDialog(screen: Partial<Screen>): void  {
     this._dialog.showScreenEditDialog(screen)
   }
 
-  addNewItem() {
+  addNewItem(): void  {
     this.showDialog({});
   }
 
@@ -57,7 +58,7 @@ export class ScreenOverviewComponent {
   }
 
   showAssignmentDialog(screen: Partial<Screen>) {
-    return this._dialog.showClipSelectionDialog({
+    return this._dialog.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Multiple,
       screenId: screen.id,
 
@@ -68,11 +69,11 @@ export class ScreenOverviewComponent {
     });
   }
 
-  deleteAssigned(obsInfo: Screen, clipId: string) {
+  deleteAssigned(obsInfo: Screen, clipId: string): void  {
     this.service.deleteScreenClip(obsInfo.id, clipId);
   }
 
-  onClipOptions(item: Action, screen: Screen) {
+  onClipOptions(item: Action, screen: Screen): void  {
     this._dialog.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,
@@ -92,16 +93,16 @@ export class ScreenOverviewComponent {
 
   }
 
-  onReload(screen: Screen) {
+  onReload(screen: Screen): void  {
     this.webSocket.triggerReloadScreen(screen.id);
     this.snackbar.normal(`Screen: ${screen.name} reloaded`);
   }
 
-  openHelpOverview() {
+  openHelpOverview(): void  {
     this._dialog.showHelpOverview();
   }
 
-  onGetUrl(screen: Screen) {
+  onGetUrl(screen: Screen): void  {
     this._dialog.open(ScreenUrlDialogComponent,{
       autoFocus: false,
       data: screen,

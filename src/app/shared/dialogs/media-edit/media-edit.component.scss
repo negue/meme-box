@@ -1,11 +1,11 @@
 :host {
   display: block;
 
-  ::ng-deep {
-    .mat-form-field {
-      display: block !important;
-    }
+  .mat-form-field {
+    display: block !important;
+  }
 
+  ::ng-deep {
     .step-content {
       margin: 0.5rem;
     }
@@ -24,6 +24,7 @@
 form {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 img {
@@ -71,15 +72,6 @@ img {
   display: none;
 }
 
-.two-columns {
-  display: flex;
-  flex-direction: row;
-
-  @media screen and (max-width: 920px) {
-    flex-direction: column;
-  }
-}
-
 .column {
   flex: 1;
 
@@ -111,6 +103,7 @@ img {
 
 .dialog-content {
   max-height: 76vh;
+  height: 76vh;
 }
 
 .action_id{
@@ -163,3 +156,10 @@ align-self: center;
   }
 }
 
+.import-export-panel {
+  text-align: right;
+}
+
+lib-stepper-content {
+  height: 100%;
+}

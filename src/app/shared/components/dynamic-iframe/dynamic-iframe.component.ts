@@ -10,16 +10,16 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {dynamicIframe, DynamicIframeContent} from "@memebox/utils";
-import {WebsocketHandler} from "../../../../../projects/app-state/src/lib/services/websocket.handler";
-import {AppConfig} from "@memebox/app/env";
-import {BehaviorSubject, Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
-import {WidgetApi} from "./widget-api";
-import {TriggerAction, WEBSOCKET_PATHS} from "@memebox/contracts";
-import {AppService, MemeboxWebsocketService} from "@memebox/app-state";
-import {guid} from "@datorama/akita";
-import {WidgetStoreRemoteAdapter} from "./widget-store-remote-adapter.service";
+import { dynamicIframe, DynamicIframeContent } from "@memebox/utils";
+import { WebsocketHandler } from "../../../../../projects/app-state/src/lib/services/websocket.handler";
+import { AppConfig } from "@memebox/app/env";
+import { BehaviorSubject, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { WidgetApi } from "./widget-api";
+import { TriggerAction, WEBSOCKET_PATHS } from "@memebox/contracts";
+import { AppService, MemeboxWebsocketService } from "@memebox/app-state";
+import { guid } from "@datorama/akita";
+import { WidgetStoreRemoteAdapter } from "./widget-store-remote-adapter.service";
 
 @Component({
   selector: 'app-dynamic-iframe',
@@ -43,7 +43,7 @@ export class DynamicIframeComponent implements OnInit, OnChanges, OnDestroy {
   content: DynamicIframeContent;
 
   @Output()
-  iframeLoaded = new EventEmitter();
+  public readonly iframeLoaded = new EventEmitter();
 
   errorSubject$ = new BehaviorSubject<string>('');
 

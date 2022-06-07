@@ -7,6 +7,7 @@ import {ActionActivityUpdatesWebsocket} from "./action-activity-updates.websocke
 import {ConnectionsStateWebsocket} from "./connections-state.websocket";
 import {ConnectionsStateHub} from "../connections-state.hub";
 import {ErrorStateWebsocket} from "./error-state.websocket";
+import {ScreenActivityWebsocket} from "./screen-activity.websocket";
 
 // This is just to have all Services created on startup
 
@@ -19,13 +20,15 @@ export class WebsocketBootstrap {
     actionActivityWebsocket: ActionActivityUpdatesWebsocket,
     connectionsStateWebsocket: ConnectionsStateWebsocket,
     errorStateWebsocket: ErrorStateWebsocket,
+    screenStateWebSocket: ScreenActivityWebsocket,
     private connectionStateHub: ConnectionsStateHub,
   ) {
     const ALL_OTHER_WEBSOCKET_SERVERS = [
       twitchEventWebsocket,
       actionActivityWebsocket,
       connectionsStateWebsocket,
-      errorStateWebsocket
+      errorStateWebsocket,
+      screenStateWebSocket
     ];
 
     httpServer.on('upgrade', function upgrade (request, socket, head) {

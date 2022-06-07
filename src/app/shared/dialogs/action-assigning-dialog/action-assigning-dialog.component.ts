@@ -17,7 +17,7 @@ export interface ActionAssigningDialogOptions {
 
   dialogTitle: string;
 
-  showMetaItems: boolean;
+  showMetaItems: boolean;  // TODO CHECK META
 
   showOnlyUnassignedFilter?: boolean;
   unassignedFilterType?: UnassignedFilterEnum;
@@ -57,7 +57,7 @@ export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
           return true;
         }
 
-
+        // TODO CHECK META
         if (!this.data.showMetaItems) {
           ignoreMediaTypes.push(ActionType.Meta);
         }
@@ -171,7 +171,7 @@ export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  clickToSelect(clip: Action) {
+  clickToSelect(clip: Action): void  {
     if (this.data.mode === ClipAssigningMode.Multiple) {
 
       const isSelected = this.checkedMap[clip.id] || false;

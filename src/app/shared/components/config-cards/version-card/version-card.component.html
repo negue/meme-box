@@ -15,7 +15,7 @@
 <div>
   <ng-container *ngIf="config$ | async as config">
   <mat-checkbox [checked]="config?.enableVersionCheck"
-                (change)="onVersionCheckChanged($event, config)">
+                (change)="onVersionCheckChanged($event)">
     Enable Version Update Check
   </mat-checkbox>
   </ng-container>

@@ -9,7 +9,6 @@ export class ActionActivityUpdatesWebsocket extends AbstractWebsocketHandler {
 
 
   constructor(
-    // @UseOpts({name: 'WS.Twitch'}) public logger: NamedLogger,
     private activityEventBus: ActionActiveStateEventBus
   ) {
     super(WEBSOCKET_PATHS.ACTION_ACTIVITY);

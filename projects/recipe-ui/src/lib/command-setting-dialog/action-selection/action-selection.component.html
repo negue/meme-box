@@ -1,0 +1,28 @@
+<mat-form-field *ngIf="shouldSelectionListBeVisible$|async">
+  <mat-label>Select already used Action</mat-label>
+  <mat-select [value]="selectionActionIdUi$|async"
+            (valueChange)="onSelectionChanged($event)"
+            >
+  <mat-option *ngFor="let entry of alreadyUsedActionList$|async"
+              [value]="entry.id" class="mat-option-icon">
+    <app-clip-type [type]="entry.type"></app-clip-type>
+
+     {{entry.name}}
+  </mat-option>
+  <mat-option [value]="null">Choose other Actions</mat-option>
+</mat-select>
+</mat-form-field>
+
+<button *ngIf="(shouldSelectionListBeVisible$ | async) === false"
+        mat-raised-button
+        (click)="selectActionFromDialog()">
+  <ng-container *ngIf="selectedActionInfo$ | async as actionPayload; else notSelected">
+    <app-action-preview [action]="actionPayload"
+                        height="100px" width="200px"></app-action-preview>
+    {{ actionPayload?.name }}
+  </ng-container>
+
+  <ng-template #notSelected>
+    Choose action to trigger
+  </ng-template>
+</button>

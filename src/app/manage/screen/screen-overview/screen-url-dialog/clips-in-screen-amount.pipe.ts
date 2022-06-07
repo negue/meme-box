@@ -3,7 +3,7 @@ import {Screen} from "@memebox/contracts";
 
 @Pipe({
   name: 'clipsInScreenAmount',
-  pure: false
+  pure: true
 })
 export class ClipsInScreenAmountPipe implements PipeTransform {
 

@@ -1,0 +1,13 @@
+.column-50 {
+  padding: 0.5rem;
+  border: 1px transparent solid;
+  border-radius: 1rem;
+
+  button {
+    margin-right: 0.5rem;
+  }
+}
+
+.column-50:hover {
+  background: #00000022;
+}

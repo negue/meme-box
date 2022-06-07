@@ -12,7 +12,7 @@ import {ClipChipsListModule, ClipTypeModule} from '@memebox/state-components';
 import {MatListModule} from '@angular/material/list';
 import {ConfigMediaPathModule} from './media-overview/config-media-path/config-media-path.module';
 import {MatChipsModule} from '@angular/material/chips';
-import {PipesModule} from '@memebox/ui-components';
+import {UiComponentsPipesModule} from '@memebox/ui-components';
 import {CardOverviewModule} from '../../shared/components/card-overview/card-overview.module';
 import {FilterModule} from '../../shared/components/filter/filter.module';
 import {DynamicIframeModule} from '../../shared/components/dynamic-iframe/dynamic-iframe.module';
@@ -35,7 +35,7 @@ const routes: Routes = [
   declarations: [MediaOverviewComponent, MediaInfoComponent, GroupByMediaTypePipe],
   exports: [MediaOverviewComponent, MediaInfoComponent],
   imports: [
-    PipesModule,
+    UiComponentsPipesModule,
     CommonModule,
     RouterModule.forChild(routes),
     MatCardModule,

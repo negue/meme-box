@@ -1,0 +1,34 @@
+<div class="two-columns">
+  <div class="column">
+    <mat-form-field>
+      <mat-label>Select Source</mat-label>
+      <input
+        matInput
+        [formControl]="sourceFormControl"
+        [matAutocomplete]="sourceAutocomplete">
+      <mat-autocomplete #sourceAutocomplete="matAutocomplete"
+                        (optionSelected)="selectedSourceSubject.next($event.option.value)">
+        <mat-option *ngFor="let source of filteredSourceList$ | async"
+                    [value]="source">
+          {{source}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="column">
+    <mat-form-field>
+      <mat-label>Select Filter</mat-label>
+      <input
+        matInput
+        [formControl]="filterFormControl"
+        [matAutocomplete]="filterAutocomplete">
+      <mat-autocomplete #filterAutocomplete="matAutocomplete"
+                        (optionSelected)="selectedFilterSubject.next($event.option.value)">
+        <mat-option *ngFor="let filterEntry of filteredFilterList$ | async"
+                    [value]="filterEntry.name">
+          {{filterEntry.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</div>

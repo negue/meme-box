@@ -1,8 +1,9 @@
 import {ChatUserstate} from "tmi.js";
 import {ActionType} from "./media.types";
-import {TriggerAction} from "./actions";
+import {ActionOverridableProperties, TriggerAction} from "./actions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {DefaultImage} from "./twitch-data.types";
+import {RecipeContext} from "@memebox/recipe-core";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -22,22 +23,20 @@ export interface HasTargetScreenId {
 // TODO replace by Record<TKey, TValue>
 export interface Dictionary<T> extends Record<string, T> { }
 
+// TODO CHECK META
 export enum MetaTriggerTypes {
   Random,
   All,
   AllDelay
 }
 
-export interface ActionOverridableProperies {
-  // Empty for now
-}
 
 export interface HasExtendedData {
   // used for Widgets and/or variables / -config
-  extended?: Dictionary<string>;
+  extended?: Dictionary<unknown>;
 }
 
-export interface Action extends HasId, ActionOverridableProperies, HasExtendedData {
+export interface Action extends HasId, ActionOverridableProperties, HasExtendedData {
   name: string;
   previewUrl?: string;
   hasPreview?: boolean;
@@ -51,9 +50,15 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
   type: ActionType;
 
   tags?: string[];  // All normal Media-Types can use that to be "tagged"
-                    // the Meta Type will use that to trigger all actions of that tagId
 
+  /**
+   * @deprecated will be removed in a different version
+   */
   metaType?: MetaTriggerTypes;
+
+  /**
+   * @deprecated will be removed in a different version
+   */
   metaDelay?: number; // in ms
 
   showOnMobile?: boolean;
@@ -62,6 +67,8 @@ export interface Action extends HasId, ActionOverridableProperies, HasExtendedDa
 
   fromTemplate?: string; // GUID / Clip.Id of the Template
   description?: string;
+
+  recipe?: RecipeContext;
 }
 
 export interface Screen extends HasId {
@@ -69,7 +76,7 @@ export interface Screen extends HasId {
   /**
    * Key: clip.id == screenClip.id
    */
-  clips: Dictionary<ScreenClip>;
+  clips: Dictionary<ScreenMedia>;
   customCss?: string;
 
   height: number;
@@ -129,7 +136,7 @@ export interface ScreenMediaOverridableProperties {
   customCss?: string;
 }
 
-export interface ScreenClip extends HasId, ScreenMediaOverridableProperties {
+export interface ScreenMedia extends HasId, ScreenMediaOverridableProperties {
   hideAfter?: HideAfterType;
   hideAfterValue?: any;
 
@@ -315,10 +322,10 @@ export interface FileResult {
   fileType: ActionType
 }
 
-export interface CombinedClip {
-  clip: Action;
-  clipSetting: ScreenClip;
-  originalClipSetting?: ScreenClip;
+export interface CombinedActionContext {
+  action: Action;
+  screenMediaConfig: ScreenMedia;
+  originalClipSetting?: ScreenMedia;
   triggerPayload?: TriggerAction;
   backgroundColor?: string;
 }
@@ -337,4 +344,55 @@ export interface ChangedInfo {
     |'settings'|'twitch-events'|'timers'|'twitch-setting';
   actionType?: ActionType;
   changeType: 'added'|'changed'|'removed';
+}
+
+export type ScreenState = Record<string, boolean>;
+
+export interface ScreenActiveStatePayload {
+  screenId?: string;
+  state: boolean;
+}
+
+// TODO cleanup / split up types
+
+
+export interface RegisterServicePayload {
+  name: string;
+  color?: string;
+}
+
+export interface StatePayload {
+  label: string;
+  description?: string;
+  backgroundColor?: string;
+  color?: string;
+}
+
+export interface StateOfAService extends RegisterServicePayload {
+  state: StatePayload;
+}
+
+export interface ConnectionState {
+  [id: string]: StateOfAService
+}
+
+export interface ObsBrowserSourceData {
+  messageId: string;
+  status: "ok";
+  sourceName: string;
+  sourceType: string;
+  sourceSettings: Record<string, unknown>;
+}
+
+export interface ObsSourceEntry {
+  name: string;
+  typeId: string;
+  type: string;
+}
+
+export interface ObsSourceFilterEntry {
+  enabled: boolean;
+  type: string;
+  name: string;
+  settings: Record<string, unknown>;
 }

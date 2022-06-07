@@ -1,5 +1,5 @@
 import {uuid} from "@gewd/utils";
-import {Dictionary, TimedAction, TriggerClipOrigin} from "@memebox/contracts";
+import {Dictionary, TimedAction, TriggerActionOrigin} from "@memebox/contracts";
 import {PersistenceInstance} from "./persistence";
 import {triggerMediaClipById} from "./websocket-server";
 import Timeout = NodeJS.Timeout;
@@ -9,7 +9,7 @@ import Timeout = NodeJS.Timeout;
 export class TimedHandler {
   private intervalDictionary: Dictionary<Timeout> = {};
 
-  startTimers(timerId?: string) {
+  startTimers(timerId?: string): void  {
     const timedClips = PersistenceInstance.listTimedEvents();
 
     if (timerId) {
@@ -25,7 +25,7 @@ export class TimedHandler {
     }
   }
 
-  startTimerIfActive (timer: TimedAction) {
+  startTimerIfActive (timer: TimedAction): void  {
     if (!timer || !timer.active) {
       return;
     }
@@ -35,7 +35,7 @@ export class TimedHandler {
         id: timer.clipId,
         uniqueId: uuid(),
         targetScreen: timer.screenId,
-        origin: TriggerClipOrigin.Timer,
+        origin: TriggerActionOrigin.Timer,
         originId: timer.id,
 
         overrides: {
@@ -47,7 +47,7 @@ export class TimedHandler {
     }, timer.everyXms);
   }
 
-  refreshTimers(timerId?: string) {
+  refreshTimers(timerId?: string): void  {
     // easiest way
     this.stopTimers(timerId);
     this.startTimers(timerId);
@@ -55,7 +55,7 @@ export class TimedHandler {
     // todo more fine-tuned approach, only reset the changed timers
   }
 
-  stopTimers(timerId?: string) {
+  stopTimers(timerId?: string): void  {
     if (timerId) {
       const timerInterval = this.intervalDictionary[timerId];
       clearInterval(timerInterval);

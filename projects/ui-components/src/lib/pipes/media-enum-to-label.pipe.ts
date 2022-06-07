@@ -4,9 +4,9 @@ import {TranslocoService} from "@ngneat/transloco";
 import {take} from "rxjs/operators";
 
 @Pipe({
-  name: 'mediaEnumToLabel'
+  name: 'actionEnumToLabelAsync'
 })
-export class MediaEnumToLabel implements PipeTransform {
+export class ActionEnumToLabelPipe implements PipeTransform {
 
     constructor(
       private transloco: TranslocoService

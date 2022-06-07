@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { Action, PositionEnum, Screen, ScreenClip } from '@memebox/contracts';
+import { Action, PositionEnum, Screen, ScreenMedia } from '@memebox/contracts';
 import { NgxMoveableComponent } from 'ngx-moveable';
 import { parseTransformValues } from "@memebox/utils";
 
@@ -40,7 +40,7 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   public clip: Action;
 
   @Input()
-  public settings: ScreenClip;
+  public settings: ScreenMedia;
 
   @Input()
   public sizeType: 'px'|'%';
@@ -61,17 +61,17 @@ export class DragResizeMediaComponent implements OnInit, OnChanges {
   public warpEnabled: boolean;
 
   @Output()
-  public elementClicked = new EventEmitter();
+  public readonly elementClicked = new EventEmitter();
 
   @Output()
-  public elementCreated = new EventEmitter();
+  public readonly elementCreated = new EventEmitter();
 
 
   @Output()
-  public inputApplied = new EventEmitter();
+  public readonly inputApplied = new EventEmitter();
 
   @Output()
-  public elementChanged = new EventEmitter();
+  public readonly elementChanged = new EventEmitter();
 
   @ViewChild('moveableInstance')
   public moveableInstance: NgxMoveableComponent;

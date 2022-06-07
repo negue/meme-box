@@ -21,15 +21,23 @@ import { TranslocoModule } from "@ngneat/transloco";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { CodemirrorModule } from "@gewd/components/codemirror";
 import { ClipboardModule } from "@angular/cdk/clipboard";
-import { HintPanelModule, PipesModule, StepperContentModule } from "@memebox/ui-components";
+import { HintPanelModule, StepperContentModule, UiComponentsPipesModule } from "@memebox/ui-components";
 import { ActionVariablesAssignmentsModule } from "@memebox/action-variables/ui";
 import { OpenFeedbackButtonModule } from "../../components/open-feedback-button/open-feedback-button.module";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { DirectivesModule } from "../../directives/directives.module";
+import { ScriptReadonlyViewComponent } from './script-readonly-view/script-readonly-view.component';
+import { DynamicPortalModule } from "@gewd/ng-utils/dynamic-portal";
+import { RecipeUiModule } from "@memebox/recipe-ui";
+import { DialogsModule } from "../dialogs.module";
+import { MatTabsModule } from "@angular/material/tabs";
+
 
 @NgModule({
   declarations: [
-    MediaEditComponent
+    MediaEditComponent,
+    ScriptReadonlyViewComponent
   ],
   imports: [
     CommonModule,
@@ -52,14 +60,21 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     MatExpansionModule,
     CodemirrorModule,
     ClipboardModule,
-    PipesModule,
+    UiComponentsPipesModule,
     ClipTypeModule,
     ActionVariablesAssignmentsModule,
     StepperContentModule,
     HintPanelModule,
     OpenFeedbackButtonModule,
     MatButtonToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    DirectivesModule,
+    DynamicPortalModule,
+
+    DirectivesModule,
+    RecipeUiModule,
+    DialogsModule,
+    MatTabsModule
   ],
   providers: [],
 })

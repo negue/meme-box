@@ -2,6 +2,7 @@ import {Observable} from "rxjs";
 import * as WebSocket from "ws";
 import {take} from "rxjs/operators";
 import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
+import {timeoutAsync} from "../actions/scripts/apis/sleep.api";
 
 export abstract class AbstractSimpleObservableWebSocketService
   extends AbstractWebsocketHandler {
@@ -22,7 +23,18 @@ export abstract class AbstractSimpleObservableWebSocketService
       take(1)
     ).toPromise();
 
-    if (!this.shouldSentDefaultValue(observableData) || ws.readyState !== ws.OPEN) {
+    if (!this.shouldSentDefaultValue(observableData)) {
+      return;
+    }
+
+    let counter = 0;
+
+    while (ws.readyState !== ws.OPEN && counter <= 20) {
+      await timeoutAsync(250);
+      counter++;
+    }
+
+    if (ws.readyState !== ws.OPEN) {
       return;
     }
 

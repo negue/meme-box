@@ -7,5 +7,6 @@ export enum ClipAssigningMode {
 export enum UnassignedFilterEnum {
   Screens,
   Twitch,
-  Timers
+  Timers,
+  RecipeCommandArgument
 }

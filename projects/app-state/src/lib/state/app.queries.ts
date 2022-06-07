@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import {Query} from "@datorama/akita";
-import {AppState} from "@memebox/contracts";
-import {AppStore} from "./app.store";
+import { Injectable } from "@angular/core";
+import { Query } from "@datorama/akita";
+import { AppState } from "@memebox/contracts";
+import { AppStore } from "./app.store";
 
 @Injectable({
   providedIn: "root"
@@ -38,5 +38,9 @@ export class AppQueries extends Query<AppState> {
 
   constructor(protected store: AppStore) {
     super(store);
+  }
+
+  getActionById$(actionId: string) {
+    return this.select(state => state.clips[actionId]);
   }
 }

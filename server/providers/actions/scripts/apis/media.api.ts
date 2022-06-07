@@ -1,29 +1,20 @@
-import {ActionApi} from "./action.api";
+import { ActionApi } from "./action.api";
 import {
   ScreenMediaOverridableProperties,
+  TriggerActionOrigin,
   TriggerActionOverrides,
-  TriggerClipOrigin,
   VisibilityEnum
 } from "@memebox/contracts";
-import {timeoutAsync} from "./sleep.api";
+import { timeoutAsync } from "./sleep.api";
 import merge from "lodash/merge";
-import {MemeboxApi} from "./memebox.api";
-import {uuid} from "@gewd/utils";
+import { uuid } from "@gewd/utils";
 
 export class MediaApi extends ActionApi {
-  constructor(
-    memeboxApi: MemeboxApi,
-    actionId: string,
-    screenId?: string | undefined
-  ) {
-    super(memeboxApi, actionId, screenId);
-  }
-
   updateScreenOptions(overrides: ScreenMediaOverridableProperties, timeoutInMs = 50): Promise<void> {
     this.memeboxApi.actionTriggerEventBus.updateActionProps({
       id: this.actionId,
       uniqueId: uuid(),
-      origin: TriggerClipOrigin.Scripts,
+      origin: TriggerActionOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,
       overrides: {
@@ -41,6 +32,10 @@ export class MediaApi extends ActionApi {
         resetAfterDone: (delayAfterTriggered: number) => void,
       }
   ) => Promise<void>, overrides?: TriggerActionOverrides | undefined) {
+    if (!this.screenId) {
+      throw new Error("triggerWhile needs to know the target screen id");
+    }
+
     // if there is one already running
     await this.memeboxApi.actionActiveState.waitUntilDoneAsync(this.actionId, this.screenId);
 
@@ -53,7 +48,7 @@ export class MediaApi extends ActionApi {
     this.memeboxApi.actionTriggerEventBus.queueAction({
       id: this.actionId,
       uniqueId: uuid(),
-      origin: TriggerClipOrigin.Scripts,
+      origin: TriggerActionOrigin.Scripts,
       originId: this.memeboxApi.scriptId,
       targetScreen: this.screenId,
       overrides: newOverrides,

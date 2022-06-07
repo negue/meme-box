@@ -9,7 +9,11 @@ export enum ActionType {
 
   PermanentScript = 98,
   WidgetTemplate = 99,
-  Meta = 100
+  /**
+   * @deprecated will be removed in a different version
+   */
+  Meta = 100,
+  Recipe = 101,
 }
 
 export interface ActionTypeInformations {
@@ -18,7 +22,8 @@ export interface ActionTypeInformations {
   className: string;
   icon: string;
   sortOrder: number;
-  mediaType: ActionType;
+  actionType: ActionType;
+  isEnabled: boolean;
 }
 
 export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations> = {
@@ -30,82 +35,104 @@ export const ACTION_TYPE_INFORMATION: Record<ActionType, ActionTypeInformations>
     sortOrder: -1
   }*/ undefined,
   [ActionType.Picture]: {
-    translationKey: "mediaType.image",
+    translationKey: "actionType.image",
     labelFallback: "Image",
     className: "image",
     icon: "insert_photo",
     sortOrder: 2,
-    mediaType: ActionType.Picture
+    actionType: ActionType.Picture,
+    isEnabled: true,
   },
   [ActionType.Video]: {
-    translationKey: "mediaType.video",
+    translationKey: "actionType.video",
     labelFallback: "Video",
     className: "video",
     icon: "videocam",
     sortOrder: 3,
-    mediaType: ActionType.Video
+    actionType: ActionType.Video,
+    isEnabled: true,
   },
   [ActionType.Audio]: {
-    translationKey: "mediaType.audio",
+    translationKey: "actionType.audio",
     labelFallback: "Audio",
     className: "audio",
     icon: "audiotrack",
     sortOrder: 1,
-    mediaType: ActionType.Audio
+    actionType: ActionType.Audio,
+    isEnabled: true,
   },
   [ActionType.IFrame]: {
-    translationKey: "mediaType.iframe",
+    translationKey: "actionType.iframe",
     labelFallback: "iFrame", // IFrame , iframe
     className: "iframe",
     icon: "public",
     sortOrder: 4,
-    mediaType: ActionType.IFrame
+    actionType: ActionType.IFrame,
+    isEnabled: true,
   },
   [ActionType.Widget]: {
-    translationKey: "mediaType.widget",
+    translationKey: "actionType.widget",
     labelFallback: "Widget", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code",
     sortOrder: 5,
-    mediaType: ActionType.Widget
+    actionType: ActionType.Widget,
+    isEnabled: true,
   },
   [ActionType.Script]: {
-    translationKey: "mediaType.script",
+    translationKey: "actionType.script",
     labelFallback: "Script", // todo rename the property, add a "translationKey" to it
     className: "",
     icon: "code",
     sortOrder: 7,
-    mediaType: ActionType.Script
+    actionType: ActionType.Script,
+    isEnabled: true,
   },
   [ActionType.PermanentScript]: {
-    translationKey: "mediaType.permanent_script",
+    translationKey: "actionType.permanent_script",
     labelFallback: "Permanent Script", // todo rename the property, add a "translationKey" to it
     className: "",
     icon: "code",
     sortOrder: 8,
-    mediaType: ActionType.PermanentScript
+    actionType: ActionType.PermanentScript,
+    isEnabled: true,
   },
   [ActionType.WidgetTemplate]: {
-    translationKey: "mediaType.widgetTemplate",
+    translationKey: "actionType.widgetTemplate",
     labelFallback: "Widget Template", // todo rename the property, add a "translationKey" to it
     className: "html",
     icon: "code", // new icon?
     sortOrder: 6,
-    mediaType: ActionType.WidgetTemplate
+    actionType: ActionType.WidgetTemplate,
+    isEnabled: true,
   },
   [ActionType.Meta]: {
-    translationKey: "mediaType.meta",
+    translationKey: "actionType.meta",
     icon: "art_track",
     labelFallback: "Meta",
     className: "", // not visible in target-screen-component
     sortOrder: 100,
-    mediaType: ActionType.Meta
-  }
+    actionType: ActionType.Meta,
+    isEnabled: false,
+  },
+  [ActionType.Recipe]: {
+    translationKey: "actionType.recipe",
+    icon: "playlist_play",
+    labelFallback: "Recipe",
+    className: "", // not visible in target-screen-component
+    sortOrder: 101,
+    actionType: ActionType.Recipe,
+    isEnabled: true,
+}
 } as const;
 
 export const ACTION_TYPE_INFORMATION_ARRAY = Object.values(ACTION_TYPE_INFORMATION)
-  .filter(value => !!value);
+  .filter(value => !!value && value.isEnabled);
 
-export function getSortOrderByType(mediaType: ActionType) {
+export function getSortOrderByType(mediaType: ActionType): number  {
   return ACTION_TYPE_INFORMATION[mediaType]?.sortOrder;
+}
+
+export function isEnabled(actionType: ActionType) {
+  return ACTION_TYPE_INFORMATION[actionType]?.isEnabled ?? false;
 }

@@ -1,5 +1,5 @@
 // TODO how to translate with variables?
-import {Action, ActionType} from "@memebox/contracts";
+import {Action, ActionType, Dictionary} from "@memebox/contracts";
 import {ActionVariableConfig} from "@memebox/action-variables";
 
 
@@ -27,7 +27,7 @@ export const ACTION_TYPES_WITH_VARIABLES: ActionType[] = [
   ActionType.Script, ActionType.PermanentScript
 ];
 
-export function actionHasVariables (action: Action) {
+export function actionHasVariables (action: Action): boolean  {
   return ACTION_TYPES_WITH_VARIABLES.includes(action.type)
     && !!action.extended?.[SCRIPT_VARIABLES_KEY]
     && action.extended[SCRIPT_VARIABLES_KEY] !== '[]';
@@ -38,10 +38,26 @@ export const ACTION_TYPES_WITH_TRIGGERABLE_VARIABLES: ActionType[] = [
   ActionType.Script
 ];
 
-export function actionCanBeTriggeredWithVariables (action: Action) {
+export function actionCanBeTriggeredWithVariables (action: Action): boolean  {
   return ACTION_TYPES_WITH_TRIGGERABLE_VARIABLES.includes(action.type) && actionHasVariables(action);
 }
 
-export function getVariablesListOfAction (action: Partial<Action>): ActionVariableConfig[] {
- return JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] ?? '[]');
+export function getVariablesConfigListOfAction (action: Partial<Action>): ActionVariableConfig[] {
+ return JSON.parse(action.extended?.[SCRIPT_VARIABLES_KEY] as string ?? '[]');
+}
+
+export function getVariableMapOfAction(action: Partial<Action>): Dictionary<unknown> {
+  const variableConfig = getVariablesConfigListOfAction(action);
+
+  const result: Dictionary<unknown> = {};
+
+  if (!action.extended) {
+    return result;
+  }
+
+  for (const actionVariableConfig of variableConfig) {
+    result[actionVariableConfig.name] = action.extended[actionVariableConfig.name];
+  }
+
+  return result;
 }

@@ -8,11 +8,11 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatCardModule} from "@angular/material/card";
 import {TranslocoModule} from "@ngneat/transloco";
 import {OpenFeedbackButtonModule} from "../../shared/components/open-feedback-button/open-feedback-button.module";
-import {HighlightDirective} from './highlight.directive';
 import {LatestTwitchEventsComponent} from './latest-twitch-events/latest-twitch-events.component';
 import {LatestActionsComponent} from './latest-actions/latest-actions.component';
 import {GuardTypePipe} from "./type-guard.pipe";
 import {MatTabsModule} from "@angular/material/tabs";
+import {DirectivesModule} from "../../shared/directives/directives.module";
 
 const routes: Routes = [
   {
@@ -25,7 +25,6 @@ const routes: Routes = [
   declarations: [
     DashboardOverviewComponent,
     GuardTypePipe,
-    HighlightDirective,
     LatestTwitchEventsComponent,
     LatestActionsComponent
   ],
@@ -38,7 +37,8 @@ const routes: Routes = [
     MatCardModule,
     TranslocoModule,
     OpenFeedbackButtonModule,
-    MatTabsModule
+    MatTabsModule,
+    DirectivesModule
   ]
 })
 export class DashboardModule { }

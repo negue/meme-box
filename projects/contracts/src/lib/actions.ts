@@ -22,13 +22,13 @@ export const ACTIONS = {
   UNREGISTER_WIDGET_INSTANCE: 'UNREGISTER_WIDGET_INSTANCE',
 }
 
-export enum TriggerClipOrigin {
+export enum TriggerActionOrigin {
   Unknown,
   AppPreview,
   StreamDeck, // currently also Unknown
   TwitchEvent,
   Timer,
-  Meta,
+  Meta, // TODO CHECK META
   Scripts
 }
 
@@ -43,7 +43,7 @@ export interface InternalActionTriggerBase {
   targetScreen?: string;
 
   fromWebsocket?: boolean;
-  origin?: TriggerClipOrigin;
+  origin?: TriggerActionOrigin;
   originId?: string;
   originUniqueId?: string;
 }
@@ -74,11 +74,16 @@ export interface TriggerActionOverrides {
 
    *
    */
-
   action?: ActionOverridableProperties;
 
   screenMedia?: ScreenMediaOverridableProperties
+}
 
+export interface SimpleTriggerAction {
+  actionId: string;
+  screenId?: string;
+
+  overrides: TriggerActionOverrides;
 }
 
 export interface TriggerAction extends InternalActionTriggerBase {
@@ -116,4 +121,5 @@ export interface ActionActiveStatePayload {
   mediaId: string;
   screenId?: string;
   state: ActionStateEnum;
+  overrides: TriggerActionOverrides|null;
 }

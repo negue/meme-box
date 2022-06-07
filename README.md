@@ -91,7 +91,7 @@ Misc:
   <tr>
     <td>
 
-[`Trigger multiple / random Media`][URL_META_CLIPS]
+[`Trigger multiple / random Media`][URL_RECIPE]
 </td>
   </tr>
    <tr>
@@ -143,18 +143,16 @@ Misc:
 >
 > To see the updated `Getting Started` / Tutorials from the released version - [click here!](https://github.com/negue/meme-box/tree/release#getting-started)
 
-[`1. Installation`](./tutorials/installation.md)
+[`Installation and Getting Started`](https://github.com/meme-box/memebox-101/blob/main/00/README.md)
 
-[`2. Getting Started`](./tutorials/getting_started.md)
+`Advanced`:
 
-`3. Advanced`:
-
-- [`Trigger multiple / randoms`][URL_META_CLIPS]
+- [`Trigger multiple / randoms`][URL_RECIPE]
 - [`Screen / Media Settings`][URL_ADVANCED_SETTINGS]
 - [`Scripts`][URL_SCRIPTS]
 - [`Widgets`][URL_WIDGETS]
 
-[URL_META_CLIPS]: tutorials/meta_media.md
+[URL_RECIPE]: tutorials/recipe.md
 [URL_SCRIPTS]: tutorials/scripts.md
 [URL_WIDGETS]: tutorials/widgets.md
 [URL_ADVANCED_SETTINGS]: ./tutorials/screen_media_advanced_settings.md
@@ -174,14 +172,13 @@ See finished and upcoming changes in:
   * [ ] Changeable by Trigger Variables
   * [ ] Can be placed like in the Arrange View
 * [ ] OBS Websockets
-  * [ ] "Action Type": `OBS Command`
   * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
 * [ ] Overview of local media files not existing anymore
+* [ ] Replace all selected Trigger Action with an inline Recipes #439
 
 ### Future, if you want to help open a PR :)
 * [ ] Change media options by triggered variables (e.g. different style, or something)
 * [ ] Stats per commands / media / or something last cheerer and so on
-* [ ] Visual Scripting, if anyone has a good webcomponents for that - open an issue
 * [ ] more to be added :)
 
 ## How to help / contribute?
@@ -208,7 +205,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="http://www.twitch.tv/littleheroesspark"><img src="https://avatars0.githubusercontent.com/u/1301564?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aaron Rackley</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=ageddesi" title="Code">💻</a></td>
     <td align="center"><a href="http://twitch.tv/whitep4nth3r"><img src="https://avatars0.githubusercontent.com/u/52798353?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Salma @whitep4nth3r</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=whitep4nth3r" title="Code">💻</a> <a href="#ideas-whitep4nth3r" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-whitep4nth3r" title="Design">🎨</a></td>
-    <td align="center"><a href="https://twitch.tv/gacbl"><img src="https://avatars0.githubusercontent.com/u/2153382?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Igor Ilic</b></sub></a><br /><a href="https://github.com/negue/meme-box/issues?q=author%3Agigili" title="Bug reports">🐛</a> <a href="#ideas-gigili" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/negue/meme-box/commits?author=gigili" title="Code">💻</a></td>
+    <td align="center"><a href="https://twitch.tv/gacbl"><img src="https://avatars0.githubusercontent.com/u/2153382?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Igor Ilic</b></sub></a><br /><a href="https://github.com/negue/meme-box/issues?q=author%3Agigili" title="Bug reports">🐛</a> <a href="#ideas-gigili" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/negue/meme-box/commits?author=gigili" title="Code">💻</a> <a href="https://github.com/negue/meme-box/commits?author=gigili" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/CrypticEngima"><img src="https://avatars0.githubusercontent.com/u/30286773?v=4?s=100" width="100px;" alt=""/><br /><sub><b>CrypticEngima</b></sub></a><br /><a href="#design-CrypticEngima" title="Design">🎨</a></td>
     <td align="center"><a href="https://github.com/owehmer"><img src="https://avatars.githubusercontent.com/u/45573843?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Oliver</b></sub></a><br /><a href="https://github.com/negue/meme-box/issues?q=author%3Aowehmer" title="Bug reports">🐛</a> <a href="https://github.com/negue/meme-box/commits?author=owehmer" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/jonathanbucci"><img src="https://avatars.githubusercontent.com/u/29556823?v=4?s=100" width="100px;" alt=""/><br /><sub><b>jonathanbucci</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=jonathanbucci" title="Documentation">📖</a></td>

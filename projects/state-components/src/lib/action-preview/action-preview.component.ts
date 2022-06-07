@@ -1,12 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Action, ActionType, ScreenClip} from "@memebox/contracts";
+import { Component, Input } from '@angular/core';
+import { Action, ActionType, ScreenMedia } from "@memebox/contracts";
 
 @Component({
   selector: 'app-action-preview',
   templateUrl: './action-preview.component.html',
   styleUrls: ['./action-preview.component.scss']
 })
-export class ActionPreviewComponent implements OnInit {
+export class ActionPreviewComponent {
 
   @Input()
   public iconSize: string;
@@ -22,18 +22,13 @@ export class ActionPreviewComponent implements OnInit {
   public action: Action;
 
   @Input()
-  public setting: ScreenClip;
+  public setting: ScreenMedia;
 
   @Input()
   public showIframe = true;
 
   @Input()
   public useOldPathEndpoint = false;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
   get MediaType() {
     return ActionType;

@@ -19,11 +19,11 @@ export class ActionQueueEventBus {
   }
 
 
-  public queueAction(triggerClip: TriggerAction) {
+  public queueAction(triggerClip: TriggerAction): void  {
     this._allTriggerEvents$.next(triggerClip);
   }
 
-  public updateActionProps(triggerClip: TriggerAction) {
+  public updateActionProps(triggerClip: TriggerAction): void  {
     this._allUpdateEvents$.next(triggerClip);
   }
 }

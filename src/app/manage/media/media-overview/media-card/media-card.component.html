@@ -1,4 +1,4 @@
-<mat-card [class.media-active]="activityState.isActive$(action.id) | async"
+<mat-card [class.is-active-dot]="activityState.isActionActive$(action.id) | async"
           class="mat-elevation-z1"
           hover-class="mat-elevation-z5">
   <mat-card-header class="card__header">

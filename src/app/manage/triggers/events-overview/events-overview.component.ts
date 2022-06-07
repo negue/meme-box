@@ -1,4 +1,4 @@
-import {Component, OnInit, TrackByFunction} from '@angular/core';
+import {Component, TrackByFunction} from '@angular/core';
 import {ENDPOINTS, HasId, TimedAction, TwitchTrigger} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest, Observable} from "rxjs";
 import {API_BASE, AppQueries, AppService} from "@memebox/app-state";
@@ -13,7 +13,7 @@ import {convertTwitchEventConfigToTwitchEvent} from "./events-overview.functions
   templateUrl: './events-overview.component.html',
   styleUrls: ['./events-overview.component.scss']
 })
-export class EventsOverviewComponent implements OnInit {
+export class EventsOverviewComponent {
 
   public searchText = '';
   public searchText$ = new BehaviorSubject<string>('');
@@ -80,33 +80,30 @@ export class EventsOverviewComponent implements OnInit {
               private http: HttpClient) {
   }
 
-  ngOnInit(): void {
-  }
-
-  createNewTwitchCommand() {
+  createNewTwitchCommand(): void  {
     this.dialogService.showTwitchEditDialog(null);
   }
-  createNewTimer() {
+  createNewTimer(): void  {
     this.dialogService.showTimedEditDialog(null);
   }
 
-  deleteTwitchEvent(id: string) {
+  deleteTwitchEvent(id: string): void  {
     this.appService.deleteTwitchEvent(id);
   }
 
-  editTwitchEvent(twitchEventItem: TwitchTrigger) {
+  editTwitchEvent(twitchEventItem: TwitchTrigger): void  {
     this.dialogService.showTwitchEditDialog( twitchEventItem);
   }
 
-  deleteTimedEvent(id: string) {
+  deleteTimedEvent(id: string): void  {
     this.appService.deleteTimedEvent(id);
   }
 
-  editTimedEvent(twitchEventItem: TimedAction) {
+  editTimedEvent(twitchEventItem: TimedAction): void  {
     this.dialogService.showTimedEditDialog( twitchEventItem);
   }
 
-  previewEvent(item: TwitchTrigger) {
+  previewEvent(item: TwitchTrigger): void  {
     const badges = {};
 
     for(const role of item.roles ) {
@@ -119,11 +116,11 @@ export class EventsOverviewComponent implements OnInit {
       .toPromise();
   }
 
-  openTwitchConfigs() {
+  openTwitchConfigs(): void  {
     this.dialogService.openTwitchConnectionConfig();
   }
 
-  updateSearchField(value: string) {
+  updateSearchField(value: string): void  {
     this.searchText = value;
     this.searchText$.next(value);
   }

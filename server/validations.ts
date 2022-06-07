@@ -1,13 +1,14 @@
 import {body, validationResult} from "express-validator";
 import {ActionType} from "@memebox/contracts";
 
-// TODO refactor those MediaType Checks
+// TODO refactor those ActionType Checks
+// extract or merge with ACTION_CONFIG_FLAGS
 export const MediaTypesWithoutPath = [
   ActionType.Widget,
   ActionType.WidgetTemplate,
   ActionType.Script,
-  ActionType.Meta,
-  ActionType.PermanentScript
+  ActionType.PermanentScript,
+  ActionType.Recipe
 ]
 
 export const clipValidations = [
@@ -74,7 +75,7 @@ export function validOrLeave(req, res, next) {
 
 
 // no ".."
-export function allowedFileUrl(pathToFile: string) {
+export function allowedFileUrl(pathToFile: string): boolean  {
   return !pathToFile.includes('..');  // more to add?
 }
 

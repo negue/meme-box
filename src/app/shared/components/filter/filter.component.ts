@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, TrackByFunction} from '@angular/core';
+import {Component, EventEmitter, Input, Output, TrackByFunction} from '@angular/core';
 import {ACTION_TYPE_INFORMATION_ARRAY} from "@memebox/contracts";
 import orderBy from 'lodash/orderBy';
 import {isItemTheSame} from "./is-selected.pipe";
@@ -24,7 +24,7 @@ export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(ACTION_TYPE_INFORMATION_
 
     return {
       label: informations.translationKey,
-      value: +informations.mediaType,
+      value: +informations.actionType,
       icon: informations.icon,
       type:FilterTypes.ActionTypes,
       sortOrder: informations.sortOrder,
@@ -37,7 +37,7 @@ export const TYPE_FILTER_ITEMS: IFilterItem[] = orderBy(ACTION_TYPE_INFORMATION_
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss']
 })
-export class FilterComponent implements OnInit {
+export class FilterComponent {
   @Input()
   public items: IFilterItem[] = [];
 
@@ -56,13 +56,7 @@ export class FilterComponent implements OnInit {
     return item.type+item.value;
   };
 
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  toggleFilter(item: IFilterItem) {
+  toggleFilter(item: IFilterItem): void  {
     if (this.selectedArray.some(isItemTheSame(item))) {
       const indexOfItem = this.selectedArray.findIndex(isItemTheSame(item));
 
@@ -74,14 +68,14 @@ export class FilterComponent implements OnInit {
     this.selected.emit(this.selectedArray);
   }
 
-  clearFilter($event: MouseEvent) {
+  clearFilter($event: MouseEvent): void  {
     $event.stopPropagation();
 
     this.selectedArray.splice(0, this.selectedArray.length);
     this.selected.emit(this.selectedArray);
   }
 
-  updateSearchField(value: string) {
+  updateSearchField(value: string): void  {
     this.searchText = value;
     this.searchChanged.next(value);
   }

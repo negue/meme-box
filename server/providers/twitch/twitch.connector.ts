@@ -157,7 +157,7 @@ export class TwitchConnector {
     return this._currentTwitchConfig;
   }
 
-  public disconnect() {
+  public disconnect(): void  {
     this.tmiReadOnlyClient?.disconnect();
     this.tmiMainClient?.disconnect();
     this.tmiBotClient?.disconnect();

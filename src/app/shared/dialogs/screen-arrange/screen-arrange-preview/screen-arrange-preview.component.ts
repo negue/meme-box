@@ -10,7 +10,7 @@ import {
   TrackByFunction,
   ViewChild
 } from '@angular/core';
-import {CombinedClip, PositionEnum, Screen} from '@memebox/contracts';
+import {CombinedActionContext, PositionEnum, Screen} from '@memebox/contracts';
 import {DragResizeMediaComponent} from '../drag-resize-media/drag-resize-media.component';
 import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
 import {FormBuilder, FormControl} from '@angular/forms';
@@ -31,7 +31,7 @@ enum GlobalArrangeOptions {
 })
 export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   @Input()
-  set currentSelectedClip(val: CombinedClip | null) {
+  set currentSelectedClip(val: CombinedActionContext | null) {
     this._currentSelectedClip = val;
 
     // Force view update in another CD cycle
@@ -40,12 +40,12 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  get currentSelectedClip(): CombinedClip | null {
+  get currentSelectedClip(): CombinedActionContext | null {
     return this._currentSelectedClip;
   }
 
   @Input()
-  visibleItems: CombinedClip[];
+  visibleItems: CombinedActionContext[];
 
   @Input()
   screen: Screen;
@@ -54,24 +54,24 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   unsavedChangesIds: string[];
 
   @Output()
-  changeCurrSelectedClip = new EventEmitter<CombinedClip | null>();
+  public readonly changeCurrSelectedClip = new EventEmitter<CombinedActionContext | null>();
 
   @Output()
-  userChangeElement = new EventEmitter<string>();
+  public readonly userChangeElement = new EventEmitter<string>();
 
   // Outputs the ids of the saved medias
   @Output()
-  changesSaved = new EventEmitter<string | string[]>();
+  public readonly changesSaved = new EventEmitter<string | string[]>();
 
   @Output()
-  mediaReset = new EventEmitter<string>();
+  public readonly mediaReset = new EventEmitter<string>();
 
   actionsExpanded = false;
 
-  trackByClip: TrackByFunction<CombinedClip> = (index, item) => item.clip.id;
+  trackByClip: TrackByFunction<CombinedActionContext> = (index, item) => item.action.id;
 
   get isDragEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.position;
+    return !this.currentSelectedClip?.screenMediaConfig?.arrangeLock?.position;
   }
 
   get isDragSet(): boolean {
@@ -79,7 +79,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   get isResizeEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.size;
+    return !this.currentSelectedClip?.screenMediaConfig?.arrangeLock?.size;
   }
 
   get isResizeSet(): boolean {
@@ -87,7 +87,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   get isRotateEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform;
+    return !this.currentSelectedClip?.screenMediaConfig?.arrangeLock?.transform;
   }
 
   get isRotateSet(): boolean {
@@ -95,7 +95,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   get isWarpEnabled(): boolean {
-    return !this.currentSelectedClip?.clipSetting?.arrangeLock?.transform;
+    return !this.currentSelectedClip?.screenMediaConfig?.arrangeLock?.transform;
   }
 
   get isWarpSet(): boolean {
@@ -113,10 +113,10 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
 
   sizeSelection: 'px' | '%' = 'px';
 
-  private combinedClipToComponent = new WeakMap<CombinedClip, DragResizeMediaComponent>();
+  private combinedClipToComponent = new WeakMap<CombinedActionContext, DragResizeMediaComponent>();
 
   private previouslyClickedComponent: DragResizeMediaComponent | null = null;
-  private _currentSelectedClip: CombinedClip | null = null;
+  private _currentSelectedClip: CombinedActionContext | null = null;
 
   @ViewChild(AutoScaleComponent)
   private _gewdAutoScale: AutoScaleComponent;
@@ -130,20 +130,16 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   triggerChangedetection(): void {
     const component = this.combinedClipToComponent.get(this.currentSelectedClip);
 
-    console.info('trigger cd', {
-      component, clip: this.currentSelectedClip
-    });
-
     if (component) {
-      component.settings = this.currentSelectedClip.clipSetting;
-      component.ngOnChanges({});
+      component.settings = this.currentSelectedClip.screenMediaConfig;
+      component.ngOnChanges({}); // skipcq: JS-0573
     }
 
     this._cd.detectChanges();
   }
 
   userChangedElement(): void {
-    this.userChangeElement.emit(this.currentSelectedClip.clip.id);
+    this.userChangeElement.emit(this.currentSelectedClip.action.id);
   }
 
   sizeOptionChanged(newValue: 'px' | '%'): void {
@@ -159,14 +155,14 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const oldPosition = this.currentSelectedClip.clipSetting.position;
+    const oldPosition = this.currentSelectedClip.screenMediaConfig.position;
 
-    this.currentSelectedClip.clipSetting.position = newPosition;
+    this.currentSelectedClip.screenMediaConfig.position = newPosition;
 
     if (oldPosition === PositionEnum.FullScreen) {
-      if (!this.currentSelectedClip.clipSetting.height || !this.currentSelectedClip.clipSetting.width) {
-        this.currentSelectedClip.clipSetting.height = '30%';
-        this.currentSelectedClip.clipSetting.width = '40%';
+      if (!this.currentSelectedClip.screenMediaConfig.height || !this.currentSelectedClip.screenMediaConfig.width) {
+        this.currentSelectedClip.screenMediaConfig.height = '30%';
+        this.currentSelectedClip.screenMediaConfig.width = '40%';
       }
     }
 
@@ -174,7 +170,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
     this.triggerChangedetection();
   }
 
-  elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedClip): void {
+  elementCreated(dragResizeMediaComponent: DragResizeMediaComponent, pair: CombinedActionContext): void {
     this.combinedClipToComponent.set(pair, dragResizeMediaComponent);
   }
 
@@ -188,48 +184,48 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   applySingleChanges(): void {
-    this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.clipSetting);
-    this.changesSaved.emit(this.currentSelectedClip.clip.id);
+    this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.screenMediaConfig);
+    this.changesSaved.emit(this.currentSelectedClip.action.id);
   }
 
   async applyAllchanges() {
     // only change the ones that have been changed
     const onlyChanged = this.visibleItems
-      .filter(item => this.unsavedChangesIds.includes(item.clip.id))
-      .map(combined => combined.clipSetting);
+      .filter(item => this.unsavedChangesIds.includes(item.action.id))
+      .map(combined => combined.screenMediaConfig);
 
     // update in bulk
 
     await this.appService.addOrUpdateScreenActionInBulk(this.screen.id, onlyChanged);
 
-    this.changesSaved.emit(this.visibleItems.map(i => i.clip.id));
+    this.changesSaved.emit(this.visibleItems.map(i => i.action.id));
   }
 
   reset(): void {
-    const { clipSetting, clip } = this.currentSelectedClip;
+    const { screenMediaConfig, action } = this.currentSelectedClip;
 
-    clipSetting.transform = null;
-    clipSetting.width = '50%';
-    clipSetting.height = '50%';
+    screenMediaConfig.transform = null;
+    screenMediaConfig.width = '50%';
+    screenMediaConfig.height = '50%';
 
-    if (clipSetting.position === PositionEnum.Absolute) {
-      clipSetting.top = '10%';
-      clipSetting.left = '10%';
-      clipSetting.right = null;
-      clipSetting.bottom = null;
+    if (screenMediaConfig.position === PositionEnum.Absolute) {
+      screenMediaConfig.top = '10%';
+      screenMediaConfig.left = '10%';
+      screenMediaConfig.right = null;
+      screenMediaConfig.bottom = null;
     }
 
-    if (clipSetting.position === PositionEnum.Centered) {
-      clipSetting.top = null;
-      clipSetting.left = null;
+    if (screenMediaConfig.position === PositionEnum.Centered) {
+      screenMediaConfig.top = null;
+      screenMediaConfig.left = null;
     }
 
-    this.appService.addOrUpdateScreenClip(this.screen.id, clipSetting);
-    this.mediaReset.emit(clip.id);
+    this.appService.addOrUpdateScreenClip(this.screen.id, screenMediaConfig);
+    this.mediaReset.emit(action.id);
   }
 
   elementClicked(dragResizeMediaComponent: DragResizeMediaComponent,
-                 pair: CombinedClip): void {
+                 pair: CombinedActionContext): void {
     this.resetTheResizeBorder();
 
     this.changeCurrSelectedClip.emit(pair);

@@ -1,4 +1,4 @@
-import {PositionEnum, Screen, ScreenClip, SettingsState, VisibilityEnum} from "@memebox/contracts";
+import {PositionEnum, Screen, ScreenMedia, SettingsState, VisibilityEnum} from "@memebox/contracts";
 import {updateItemInDictionary} from "@memebox/utils";
 import {uuid} from "@gewd/utils";
 
@@ -15,7 +15,7 @@ function createInitialScreenObj(): Screen {
   };
 }
 
-function createInitialScreenClipObj(): ScreenClip {
+function createInitialScreenClipObj(): ScreenMedia {
   return {
     visibility: VisibilityEnum.Play,
     position: PositionEnum.FullScreen,
@@ -26,7 +26,7 @@ function createInitialScreenClipObj(): ScreenClip {
 
 // region Screen Operations
 
-export function addScreen(state: SettingsState, screen: Partial<Screen>) {
+export function addScreen(state: SettingsState, screen: Partial<Screen>): void  {
   screen.id = uuid();
   state.screen[screen.id] = Object.assign(createInitialScreenObj(), screen);
 }
@@ -35,11 +35,11 @@ export function addScreen(state: SettingsState, screen: Partial<Screen>) {
 
 // region Assigned Visible Media / Actions on Screen Operations
 
-export function fillDefaultsScreenClip (screenClip: Partial<ScreenClip>) {
+export function fillDefaultsScreenClip (screenClip: Partial<ScreenMedia>) {
   return Object.assign(createInitialScreenClipObj(), screenClip);
 }
 
-export function addOrUpdateScreenClip(state: SettingsState, screenId: string, screenClip: Partial<ScreenClip>) {
+export function addOrUpdateScreenClip(state: SettingsState, screenId: string, screenClip: Partial<ScreenMedia>): void  {
   const newScreenClipObj = fillDefaultsScreenClip(screenClip);
 
   updateItemInDictionary(state.screen[screenId].clips, newScreenClipObj);

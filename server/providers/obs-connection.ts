@@ -1,19 +1,33 @@
-import {Service, UseOpts} from "@tsed/di";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "./contracts";
-import {Persistence} from "../persistence";
+import { Service, UseOpts } from "@tsed/di";
+import { Inject } from "@tsed/common";
+import { PERSISTENCE_DI } from "./contracts";
+import { Persistence } from "../persistence";
 import OBSWebSocket from "obs-websocket-js";
-import {NamedLogger} from "./named-logger";
-import {timeoutAsync} from "./actions/scripts/apis/sleep.api";
-import {ObsConfig} from "@memebox/contracts";
-import {ConnectionsStateHub, UpdateStateFunc} from "./connections-state.hub";
+import { NamedLogger } from "./named-logger";
+import { timeoutAsync } from "./actions/scripts/apis/sleep.api";
+import { ObsConfig } from "@memebox/contracts";
+import { ConnectionsStateHub, UpdateStateFunc } from "./connections-state.hub";
+import { fromEventPattern, Subject } from "rxjs";
+
+export function onWsEvent$(ws: OBSWebSocket, type: string) {
+  return fromEventPattern(
+    // @ts-expect-error because the .raw.on needs a specific union type
+    handler => ws.on(type, handler),
+    handler => ws.off(type, handler)
+  );
+}
 
 @Service()
 export class ObsConnection {
   private obsConfig: ObsConfig;
-  private obsConfigExists: boolean;
-  private obsConnection: OBSWebSocket;
+  private obsConnection = new OBSWebSocket();
   private obsConnectionState: UpdateStateFunc;
+  private isConnected = false;
+
+  public readonly obsConfigExists: boolean;
+
+  public onConnected$ = new Subject();
+  public isConnectedAsync = this.onConnected$.asObservable().toPromise();
 
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
@@ -27,10 +41,17 @@ export class ObsConnection {
 
     this.obsConfigExists = !!this.obsConfig?.hostname;
 
-    this.obsConnection = new OBSWebSocket();
+    this.obsConnection.on('ConnectionOpened', () => {
+      this.isConnected = true;
+      this.onConnected$.next();
+
+      this.obsConnection.once('ConnectionClosed', () => {
+        this.isConnected = false;
+      })
+    });
 
     this._persistence.dataUpdated$().subscribe(
-      value => {
+      async value => {
         if (value.dataType === "settings") {
           if (this.isObsConnected()) {
             this.logger.error(`Can't change the OBS while is already connected. You need to restart.`);
@@ -54,7 +75,7 @@ export class ObsConnection {
             label: 'New Configuration Received',
           });
 
-          this.connectIfNot();
+          await this.connectIfNot();
         }
       }
     )
@@ -69,7 +90,15 @@ export class ObsConnection {
     return this.obsConnection
   }
 
+  private tryReconnectingIsRunning = false;
+
   async tryConnecting() {
+    if (this.tryReconnectingIsRunning) {
+      return await this.isConnectedAsync;
+    }
+
+    this.tryReconnectingIsRunning = true;
+
     let lastError;
     for (let i = 0; i<5;i++) {
       try {
@@ -88,6 +117,7 @@ export class ObsConnection {
       }
     }
 
+    this.tryReconnectingIsRunning = false;
     this.logger.error(lastError, 'Could not connect to OBS');
   }
 
@@ -101,11 +131,19 @@ export class ObsConnection {
     return obsConnection;
   }
 
+  private connectionPromise: Promise<unknown>;
+
   async connectIfNot () {
+    if (this.connectionPromise) {
+      await this.connectionPromise;
+    }
+
     const isConnected = this.isObsConnected();
 
     if (!isConnected) {
-     await this.createConnectionPromise();
+      this.connectionPromise = this.createConnectionPromise();
+
+      await this.connectionPromise;
 
       this.obsConnectionState({
         label: 'Connected'
@@ -114,7 +152,7 @@ export class ObsConnection {
   }
 
   private isObsConnected () {
-    return this.obsConnection["_connected"];
+    return this.isConnected;
   }
 
   private async createConnectionPromise() {
@@ -140,3 +178,4 @@ export class ObsConnection {
     });
   }
 }
+

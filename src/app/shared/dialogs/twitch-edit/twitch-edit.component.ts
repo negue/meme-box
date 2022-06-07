@@ -4,7 +4,6 @@ import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
   Action,
-  ActionType,
   ClipAssigningMode,
   Dictionary,
   TwitchEventFields,
@@ -123,7 +122,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   twitchNotAuthenticated$ = this.appQuery.config$.pipe(
     map(config => !config.twitch?.token)
   );
-  channelPoints$ = this.appService.channelPoints$();
+  channelPointsAsync = this.appService.channelPointsAsync();
 
   twitchEvents = TwitchTypesArray;
   TWITCH_LEVELS = TWITCH_LEVELS;
@@ -142,18 +141,6 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   ]).pipe(
     filter(([mediaMap, selectedMediaId]) => !!mediaMap && !!selectedMediaId),
     map(([mediaMap, selectedMediaId]) => mediaMap[selectedMediaId])
-  );
-
-  showScreenSelection$ = this.selectedAction$.pipe(
-    filter(action => !!action),
-    map(media => ![ActionType.Script, ActionType.Meta, ActionType.WidgetTemplate].includes(media.type) )
-  );
-
-  screenList$ = combineLatest([
-    this.selectedAction$,
-    this.appQuery.screensList$
-  ]).pipe(
-    map(([media, screenList]) => screenList.filter(screen => !!screen.clips[media.id]))
   );
 
   showWarningClipSelection = false;
@@ -240,9 +227,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     }
 
     if (newTwitchValue.event === TwitchEventTypes.channelPoints) {
-      const allChannelPoints = await this.channelPoints$.pipe(
-        take(1)
-      ).toPromise();
+      const allChannelPoints = await this.appService.channelPointsAsync();
 
       const selectedChannelPointData = allChannelPoints.find(c => c.id === newTwitchValue.channelPointId);
 
@@ -306,7 +291,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   }
 
   async selectEventClip() {
-    const clipId = await this.dialogService.showClipSelectionDialog({
+    const clipId = await this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
       selectedItemId: this.form.value.clipId,
       dialogTitle: this.data.name || 'Twitch Event',
@@ -337,7 +322,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  enterNewAlias($event: MatChipInputEvent) {
+  enterNewAlias($event: MatChipInputEvent): void  {
     const input = $event.input;
     const value = $event.value;
 
@@ -357,7 +342,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
     this.currentAliases$.next(currentAliases);
   }
 
-  removeAlias(alias: string) {
+  removeAlias(alias: string): void  {
     const currentAliases = this.currentAliases$.value;
 
     const index = currentAliases.indexOf(alias);

@@ -1,5 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DomSanitizer} from "@angular/platform-browser";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Action, Screen, Tag} from "@memebox/contracts";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
@@ -10,7 +9,7 @@ import {AppQueries} from "@memebox/app-state";
   templateUrl: './media-info.component.html',
   styleUrls: ['./media-info.component.scss']
 })
-export class MediaInfoComponent implements OnInit {
+export class MediaInfoComponent {
 
   @Input()
   public info: Action;
@@ -30,22 +29,17 @@ export class MediaInfoComponent implements OnInit {
   );
 
   @Output()
-  public onPreview = new EventEmitter();
+  public readonly onPreview = new EventEmitter();
 
   @Output()
-  public onEdit = new EventEmitter();
+  public readonly onEdit = new EventEmitter();
 
   @Output()
-  public onDelete = new EventEmitter();
+  public readonly onDelete = new EventEmitter();
 
   @Output()
-  public onEditScreenClipOptions = new EventEmitter<Screen>();
+  public readonly onEditScreenClipOptions = new EventEmitter<Screen>();
 
-  constructor(public domSanitizer: DomSanitizer,
-              private appQueries: AppQueries) {
+  constructor(private appQueries: AppQueries) {
   }
-
-  ngOnInit(): void {
-  }
-
 }

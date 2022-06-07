@@ -2,9 +2,6 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "",
-  "cli": {
-    "defaultCollection": "@nrwl/angular"
-  },
   "projects": {
     "action-variables": {
       "projectType": "library",
@@ -103,9 +100,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "projects/app-state/**/*.ts"
-            ]
+            "lintFilePatterns": ["projects/app-state/**/*.ts"]
           }
         }
       }
@@ -315,7 +310,11 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "cache": true,
-            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html", "!src/**/*.spec.ts"]
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html",
+              "!src/**/*.spec.ts"
+            ]
           }
         },
         "cypress-run": {
@@ -377,7 +376,7 @@
               "optimization": true,
               "extractLicenses": true,
               "inspect": false,
-              "fileReplacements": [ ]
+              "fileReplacements": []
             }
           }
         },
@@ -531,26 +530,106 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
+            "lintFilePatterns": ["projects/utils/**/*.ts"]
+          }
+        }
+      }
+    },
+    "recipe-ui": {
+      "projectType": "library",
+      "root": "projects/recipe-ui",
+      "sourceRoot": "projects/recipe-ui/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/recipe-ui/tsconfig.lib.json",
+            "project": "projects/recipe-ui/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/recipe-ui/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
             "lintFilePatterns": [
-              "projects/utils/**/*.ts"
+              "projects/recipe-ui/src/**/*.ts",
+              "projects/recipe-ui/src/**/*.html"
             ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/recipe-ui"],
+          "options": {
+            "jestConfig": "projects/recipe-ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "recipe-core": {
+      "projectType": "library",
+      "root": "projects/recipe-core",
+      "sourceRoot": "projects/recipe-core/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/recipe-core/tsconfig.lib.json",
+            "project": "projects/recipe-core/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/recipe-core/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/recipe-core/src/**/*.ts",
+              "projects/recipe-core/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/recipe-core"],
+          "options": {
+            "jestConfig": "projects/recipe-core/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }
     }
   },
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
   "schematics": {
-    "@schematics/angular:component": {
-      "style": "scss"
-    },
-    "@nrwl/angular:library": {
+    "@nrwl/angular:application": {
       "style": "scss",
       "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:library": {
+      "linter": "eslint",
       "unitTestRunner": "jest",
+      "buildable": true,
+      "style": "scss",
       "strict": true
     },
-    "@nrwl/angular:component": {
-      "style": "scss"
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "style": "scss",
+      "skipTests": true
     }
   }
 }

@@ -5,51 +5,49 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "test",
-          "lint",
-          "package",
-          "prepare"
-        ]
+        "cacheableOperations": ["build", "test", "lint", "package", "prepare"]
       }
     }
   },
   "targetDependencies": {
-    "prepare": [
-      {
-        "target": "prepare",
-        "projects": "dependencies"
-      }
-    ],
-    "package": [
-      {
-        "target": "package",
-        "projects": "dependencies"
-      }
-    ]
+    "prepare": [{ "target": "prepare", "projects": "dependencies" }],
+    "package": [{ "target": "package", "projects": "dependencies" }]
   },
-  "affected": {
-    "defaultBase": "develop"
-  },
-  "workspaceLayout": {
-    "libsDir": "projects",
-    "appsDir": "projects"
-  },
-  "cli": {
-    "analytics": false,
-    "defaultCollection": "@nrwl/angular"
-  },
+  "affected": { "defaultBase": "develop" },
+  "workspaceLayout": { "libsDir": "projects", "appsDir": "projects" },
+  "cli": { "analytics": false, "defaultCollection": "@nrwl/angular" },
   "generators": {
     "@schematics/angular:component": {
       "prefix": "app",
       "style": "scss",
       "skipTests": true
     },
-    "@schematics/angular:directive": {
-      "prefix": "app",
-      "skipTests": true
+    "@schematics/angular:directive": { "prefix": "app", "skipTests": true },
+    "@nrwl/angular:application": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "buildable": true,
+      "style": "scss",
+      "strict": true
     }
   },
-  "defaultProject": "memebox-app"
+  "defaultProject": "memebox-app",
+  "projects": {
+    "action-variables": { "tags": [] },
+    "action-variables-ui": { "tags": [] },
+    "app-state": { "tags": [] },
+    "contracts": { "tags": [] },
+    "memebox-app": { "tags": [] },
+    "server": { "tags": [] },
+    "shared-state": { "tags": [] },
+    "state-components": { "tags": [] },
+    "ui-components": { "tags": [] },
+    "utils": { "tags": [] },
+    "recipe-core": { "tags": [] },
+    "recipe-ui": { "tags": [] }
+  }
 }

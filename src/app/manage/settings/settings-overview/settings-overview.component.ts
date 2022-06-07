@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ConfigMediaPathComponent} from "../../media/media-overview/config-media-path/config-media-path.component";
 import {Observable} from "rxjs";
 import {Config} from "@memebox/contracts";
@@ -23,7 +23,7 @@ interface LanguageEntry {
   styleUrls: ['./settings-overview.component.scss'],
   providers: [ ]
 })
-export class SettingsOverviewComponent implements OnInit {
+export class SettingsOverviewComponent {
   public config$: Observable<Partial<Config>> = this.query.config$;
   public offlineMode$ = this.query.inOfflineMode$;
 
@@ -52,9 +52,6 @@ export class SettingsOverviewComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-  }
-
   openMediaFolderDialog(): void {
     this._dialog.open(ConfigMediaPathComponent, {
       data: {}
@@ -65,23 +62,23 @@ export class SettingsOverviewComponent implements OnInit {
     this.configService.openMediaFolder();
   }
 
-  reload() {
+  reload(): void  {
     location.reload();
   }
 
-  openConfigFolder() {
+  openConfigFolder(): void  {
     this.configService.openConfigFolder();
   }
 
-  downloadStreamdeckPlugin() {
+  downloadStreamdeckPlugin(): void  {
     openStreamdeckPluginUrl();
   }
 
-  addMoreDummyItems () {
+  addMoreDummyItems (): void  {
     dummyItemsCreatorLazy().then(value => value.addMoreItems(this.service));
   }
 
-  selectNewLanguage($event: LanguageEntry) {
+  selectNewLanguage($event: LanguageEntry): void  {
     this.selectedLangService.setSelectedLang($event.id)
   }
 }

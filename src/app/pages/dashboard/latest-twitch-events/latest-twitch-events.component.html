@@ -28,7 +28,7 @@
 
                     <b>{{cheer.payload.bits}}</b> - {{cheer.payload.message}}
 
-                    <br/> by{{ cheer.payload.userstate["display-name"] }}
+                    <br/> by {{ cheer.payload.userstate["display-name"] }}
                   </ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="'subscription'">
@@ -54,7 +54,7 @@
                 </ng-container>
                <ng-container *ngSwitchCase="'raid'">
                   <ng-container *ngIf="twitchEvent | guardType: isRaid as raid">
-                    <b>{{ raid.payload.channel }} raided with {{raid.payload.viewers}}</b>
+                    <b>{{ raid.payload.username }} raided with {{raid.payload.viewers}}</b>
                   </ng-container>
                 </ng-container>
                 <ng-container *ngSwitchDefault>

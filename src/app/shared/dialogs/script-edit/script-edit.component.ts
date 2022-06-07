@@ -3,7 +3,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {isDynamicIframeVariableValid, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES, ScriptConfig} from "@memebox/utils";
 import {CustomScriptDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
-import {downloadFile} from "@gewd/utils";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
 import {DialogService} from "../dialog.service";
 import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
@@ -70,7 +69,6 @@ export class ScriptEditComponent implements OnInit {
       ...payload
     };
     this.variablesList = Object.values(this.workingValue.variablesConfig);
-    console.info(this.workingValue);
   }
 
   save(): void {
@@ -93,7 +91,6 @@ export class ScriptEditComponent implements OnInit {
     }
 
     this.workingValue.variablesConfig = this.variablesList;
-    console.info('SAVING WITH', this.workingValue);
 
     this.dialogRef.close(this.workingValue);
   }
@@ -115,49 +112,12 @@ export class ScriptEditComponent implements OnInit {
     this.variablesList.splice(foundIndex, 1);
   }
 
-  // todo extract to common utils function
-
-  onFileInputChanged($event: Event): void {
-    const target = $event.target as HTMLInputElement;
-    const files = target.files;
-
-    const file = files[0];
-
-    console.info({$event, file});
-
-    // setting up the reader
-    const reader = new FileReader();
-    reader.readAsText(file,'UTF-8');
-
-    // here we tell the reader what to do when it's done reading...
-    reader.onload = readerEvent => {
-      const content = readerEvent.target.result; // this is the content!
-
-      if (typeof content === 'string' ) {
-        const importedPayload: ScriptConfig = JSON.parse(content);
-
-        this.setWorkingValues(importedPayload);
-      }
-    }
-  }
-
-  exportScript(): void {
-    const jsonData = JSON.stringify(this.workingValue);
-    const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
-
-    console.info({jsonData, dataStr});
-
-    downloadFile(this.data.name+'-script.json',dataStr);
-  }
-
   openTutorialMarkdown(): void {
     this.dialogService.showMarkdownFile(SCRIPT_TUTORIAL);
   }
 
   async addActionAtCursor(codemirrorComponent: CodemirrorComponent) {
-    // console.info({ editorState });
-
-    const actionId = await this.dialogService.showClipSelectionDialog({
+    const actionId = await this.dialogService.showActionSelectionDialogAsync({
       mode: ClipAssigningMode.Single,
       dialogTitle: 'Action',
       showMetaItems: true
@@ -175,11 +135,13 @@ export class ScriptEditComponent implements OnInit {
 
       // todo get a variable name from the action name
 
-      const isAction = [ActionType.Script, ActionType.Meta].includes(selectedAction.type);
+      const isAction = [ActionType.Script, ActionType.Recipe].includes(selectedAction.type);
 
     const codeToAdd = `const myActionVar = memebox.get${isAction ? 'Action' : 'Media'}('${actionId}');\n`;
 
-    const selection = codemirrorComponent.selectedRange;
+    const selection = codemirrorComponent.selectedRange ?? {
+      from: 0
+    };
 
     codemirrorComponent.insertText(
       selection.from, selection.from,

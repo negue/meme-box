@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
@@ -12,7 +12,7 @@ import {DialogService} from "../dialog.service";
   templateUrl: './markdown.component.html',
   styleUrls: ['./markdown.component.scss']
 })
-export class MarkdownComponent implements OnInit {
+export class MarkdownComponent {
 
   markdownFile$: Observable<string>;
 
@@ -28,14 +28,11 @@ export class MarkdownComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
-
-  openMarkdownOnGitHub() {
+  openMarkdownOnGitHub(): void  {
     window.open(TUTORIALS_GITHUB_PAGE + '/' + this.data.githubName, '_blank');
   }
 
-  handleLinkClick($event: MarkdownLinkClicked) {
+  handleLinkClick($event: MarkdownLinkClicked): void  {
     $event.event.preventDefault();
 
     const linkAttributes = $event.link.attributes;

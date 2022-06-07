@@ -15,7 +15,6 @@ import {
   ACTION_TYPE_INFORMATION_ARRAY,
   ActionType,
   FileInfo,
-  MetaTriggerTypes,
   Tag
 } from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
@@ -40,32 +39,35 @@ import {
   actionDataToScriptConfig,
   actionDataToWidgetContent,
   applyDynamicIframeContentToClipData,
-  applyScriptConfigToClipData,
+  applyScriptConfigToAction,
+  convertMarkdownStructureToRecipe,
+  convertMarkdownStructureToScript,
+  convertMarkdownStructureToWidget,
+  convertRecipeToMarkdownStructure,
+  convertScriptToMarkdownStructure,
+  convertWidgetToMarkdownStructure,
   DynamicIframeContent,
-  ScriptConfig
+  fromMarkdown,
+  MarkdownStructure,
+  ScriptConfig,
+  toMarkdown
 } from "@memebox/utils";
 import {Clipboard} from "@angular/cdk/clipboard";
 import {DialogData} from "../dialog.contract";
-import {
-  MEDIA_EDIT_CONFIG,
-  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH,
-  MEDIA_TYPES_WITHOUT_PATH,
-  MEDIA_TYPES_WITHOUT_PLAYTIME
-} from "./media-edit.type-config";
+import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
+import {downloadFile} from "@gewd/utils";
+import {createRecipeContext, generateCodeByRecipe, RecipeContext} from "@memebox/recipe-core";
 
 const DEFAULT_PLAY_LENGTH = 2500;
-const META_DELAY_DEFAULT = 750;
 
-const INITIAL_CLIP: Partial<Action> = {
+const ACTION_DEFAULT_PROPERTIES: Partial<Action> = {
   tags: [],
   type: ActionType.Picture,
-  name: 'Media Filename',
+  name: 'New Action',
   volumeSetting: 10,
   gainSetting: 0,
   playLength: DEFAULT_PLAY_LENGTH,
   clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
-  metaDelay: META_DELAY_DEFAULT,
-  metaType: MetaTriggerTypes.Random,
 
   showOnMobile: true,
 
@@ -111,15 +113,12 @@ export class MediaEditComponent
     path: "",
     previewUrl: "",
 
-    metaType: 0,
-    metaDelay: 0,
-
     fromTemplate: "",
     queueName: "",
     description: ""
   });
 
-  currentMediaType$ = new BehaviorSubject(INITIAL_CLIP.type);
+  currentMediaType$ = new BehaviorSubject(ACTION_DEFAULT_PROPERTIES.type);
 
   availableMediaFiles$ = combineLatest([
     this.appQuery.currentMediaFile$.pipe(filter((files) => !!files)),
@@ -130,18 +129,15 @@ export class MediaEditComponent
     })
   );
 
-  MEDIA_TYPES_WITHOUT_PATH = MEDIA_TYPES_WITHOUT_PATH;
-  MEDIA_TYPES_WITHOUT_PLAYTIME = MEDIA_TYPES_WITHOUT_PLAYTIME;
-  MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH = MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH;
-  MEDIA_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
-  MEDIA_EDIT_CONFIG = MEDIA_EDIT_CONFIG;
+  ACTION_TYPE_INFORMATION = ACTION_TYPE_INFORMATION;
+  ACTION_CONFIG_FLAGS = ACTION_CONFIG_FLAGS;
 
-  mediaTypeList: MediaTypeButton[] = ACTION_TYPE_INFORMATION_ARRAY
+  actionTypeList: MediaTypeButton[] = ACTION_TYPE_INFORMATION_ARRAY
     .map((value) => {
       return {
         icon: value.icon,
         name: value.translationKey,
-        type: +value.mediaType
+        type: +value.actionType
       }
     });
 
@@ -149,6 +145,8 @@ export class MediaEditComponent
   availableScreens$ = this.appQuery.screensList$;
   selectedScreenId = '';
   showOnMobile = true;
+
+  selectedRecipeTabIndex = 0;
 
   // region Tag specific
 
@@ -189,8 +187,7 @@ export class MediaEditComponent
     shareReplay(1)
   );
 
-
-separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeysCodes: number[] = [ENTER, COMMA];
   tagFormCtrl = new FormControl();  // needed in form?!
   localMediaFormCtrl = new FormControl();  // needed in form?!
   mediaPathTypeFormCtrl = new FormControl();  // needed in form?!
@@ -214,40 +211,25 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     private dialogService: DialogService,
     private cd: ChangeDetectorRef,
     private clipboard: Clipboard,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
   ) {
-    const defaultValues = Object.assign({}, INITIAL_CLIP, this.data?.defaults ?? {});
-
-    this.actionToEdit = Object.assign({}, defaultValues, {
-      ...this.data?.actionToEdit,
-      extended: {
-        ...this.data?.actionToEdit?.extended
-      }
-    }) as Action;
+    const defaultValues = Object.assign({}, ACTION_DEFAULT_PROPERTIES, this.data?.defaults ?? {});
+    this.setNewActionEditData(this.data?.actionToEdit, defaultValues);
 
     this.isEditMode = !!this.data?.actionToEdit;
-
-
-    if (this.actionToEdit.type === ActionType.Widget) {
-      this.currentHtmlConfig = actionDataToWidgetContent(this.actionToEdit);
-      this.executeHTMLRefresh();
-    }
-
-    if ([ActionType.Script, ActionType.PermanentScript].includes(this.actionToEdit.type)) {
-      this.currentScript = actionDataToScriptConfig(this.actionToEdit);
-    }
 
     this.showOnMobile = this.actionToEdit.showOnMobile;
 
     this.currentMediaType$.next(this.actionToEdit.type);
   }
 
-  get MediaType() {
+  get ActionType() {
     return ActionType;
   }
 
   ngOnInit(): void {
-    this.form.reset(this.actionToEdit);
+    this.fillUiRelatedDataBasedOnAction();
+
     this.appService.listFiles();
 
     this.form.valueChanges
@@ -272,30 +254,29 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
           });
         }
 
-        if (MEDIA_TYPES_WITH_REQUIRED_PLAYLENGTH.includes(next)) {
+        if (ACTION_CONFIG_FLAGS[next].hasRequiredPlayLength) {
           this.form.patchValue({
             playLength: DEFAULT_PLAY_LENGTH
           });
         }
 
-        if (MEDIA_TYPES_WITHOUT_PATH.includes(prev)) {
-          console.info('adding validators');
+        if (ACTION_CONFIG_FLAGS[next].hasPathSelection) {
           this.form.controls['path'].setValidators([
             Validators.required,
           ]);
-        }
-
-        if (MEDIA_TYPES_WITHOUT_PATH.includes(next)){
-          console.info('clearing validators');
+        } else {
           this.form.controls['path'].clearValidators();
         }
-      });
 
-    this.availableTags$.pipe(
-      take(1)
-    ).subscribe(allTags => {
-      this.currentTags$.next(allTags.filter(tag => this.actionToEdit.tags.includes(tag.id)));
-    });
+        if (prev === ActionType.Recipe) {
+          this.actionToEdit.recipe = undefined;
+        }
+
+        if (next === ActionType.Recipe) {
+          this.actionToEdit.recipe = createRecipeContext();
+        }
+
+      });
 
     this.filteredTags$ = combineLatest([
       this.tagFormCtrl.valueChanges.pipe(
@@ -313,10 +294,27 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     ).subscribe( () => {
       this.executeHTMLRefresh();
     });
+  }
 
+  fillUiRelatedDataBasedOnAction(): void {
+    this.form.reset(this.actionToEdit);
+
+    this.availableTags$.pipe(
+      take(1)
+    ).subscribe(allTags => {
+      this.currentTags$.next(allTags.filter(tag => this.actionToEdit.tags.includes(tag.id)));
+    });
 
     if (this.actionToEdit.fromTemplate) {
       this.onTemplateChanged(this.actionToEdit.fromTemplate);
+    }
+
+    this.triggerHTMLRefresh();
+
+
+    if (this.actionToEdit?.type === ActionType.Recipe
+      && !this.actionToEdit.recipe ) {
+      this.actionToEdit.recipe = createRecipeContext();
     }
   }
 
@@ -324,18 +322,13 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     if (!this.form.valid) {
       // highlight hack
       this.form.markAllAsTouched();
-      console.info(this.form);
-
-      for (const [ctrlName, ctrl] of Object.entries(this.form.controls)) {
-        console.info(ctrlName, ctrl.valid);
-      }
 
       return;
     }
 
     const { value } = this.form;
 
-    const valueAsClip: Action = {
+    const valueAsAction: Action = {
       ...this.actionToEdit, // base props that are not in the form
       ...value
     };
@@ -348,15 +341,15 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
       }
     }
 
-    valueAsClip.tags = tagsToAssign.map(tag => tag.id)
+    valueAsAction.tags = tagsToAssign.map(tag => tag.id)
 
-    valueAsClip.showOnMobile = this.showOnMobile;
+    valueAsAction.showOnMobile = this.showOnMobile;
 
-    await this.appService.addOrUpdateAction(valueAsClip);
+    await this.appService.addOrUpdateAction(valueAsAction);
 
-    if (this.selectedScreenId && valueAsClip.type !== ActionType.Meta) {
+    if (this.selectedScreenId && ACTION_CONFIG_FLAGS[valueAsAction.type].isVisibleAction) {
       this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
-        id: valueAsClip.id,
+        id: valueAsAction.id,
       });
     }
 
@@ -378,7 +371,7 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     this.cd.markForCheck();
   }
 
-  updateMediaType(value: ActionType): void {
+  updateActionType(value: ActionType): void {
     this.actionToEdit.type = value;
     this.form.patchValue({ type: value });
   }
@@ -488,6 +481,11 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
   }
 
   executeHTMLRefresh (): void {
+    if (!this.isWidget()) {
+      console.warn('NOPE');
+      return;
+    }
+
     const currentExtendedValues = this.actionToEdit.extended;
 
     const updatedHtmlDataset: DynamicIframeContent  = {
@@ -523,20 +521,21 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
     });
 
     if (dialogResult) {
-      applyScriptConfigToClipData(dialogResult, this.actionToEdit);
+      applyScriptConfigToAction(dialogResult, this.actionToEdit);
 
       this.currentScript = dialogResult;
       this.cd.detectChanges();
     }
   }
 
-  copyIdToClipboard() {
+  copyIdToClipboard(): void  {
     if (this.clipboard.copy(this.actionToEdit.id)) {
       this.snackbar.normal("The Action ID was copied to the clipboard");
     }
   }
 
-  makeScreenshot(videoElement: HTMLVideoElement) {
+  // todo extract
+  makeScreenshot(videoElement: HTMLVideoElement): void  {
     videoElement.controls = false;
 
     const WANTED_WIDTH = 320;
@@ -584,4 +583,140 @@ separatorKeysCodes: number[] = [ENTER, COMMA];
 
 
   }
+
+  toScriptCode (recipeContext: RecipeContext): string  {
+    return generateCodeByRecipe(recipeContext);
+  }
+
+  // region Import / Export Methods
+
+  onFileInputChanged($event: Event): void {
+    if (!ACTION_CONFIG_FLAGS[this.actionToEdit.type].showImportExportPanel) {
+      return;
+    }
+
+    const target = $event.target as HTMLInputElement;
+    const files = target.files;
+
+    const file = files[0];
+
+    // setting up the reader
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+
+    // here we tell the reader what to do when it's done reading...
+    reader.onload = readerEvent => {
+      const content = readerEvent.target.result; // this is the content!
+
+      if (typeof content === 'string') {
+        const parseMarkdownStructure = fromMarkdown(content);
+
+        const currentlyWidgetIsh = this.isWidget();
+        const importedMarkdownIsWidgetIsh = this.isWidget(parseMarkdownStructure.metadata.type as ActionType);
+
+        if ((currentlyWidgetIsh && !importedMarkdownIsWidgetIsh)
+          || parseMarkdownStructure.metadata.type !== this.actionToEdit.type) {
+          const typeLabel = ACTION_TYPE_INFORMATION[this.actionToEdit.type].labelFallback;
+
+          this.snackbar.sorry(`Expected file to be of type: ${typeLabel}`);
+
+          return;
+        }
+
+        if (currentlyWidgetIsh) {
+          const actionToImport = convertMarkdownStructureToWidget(parseMarkdownStructure, this.actionToEdit.type);
+
+          this.setNewActionEditData(actionToImport);
+          this.fillUiRelatedDataBasedOnAction();
+
+        } else if (this.isScript()) {
+          const actionToImport = convertMarkdownStructureToScript(parseMarkdownStructure, this.actionToEdit.type);
+
+          this.setNewActionEditData(actionToImport);
+          this.fillUiRelatedDataBasedOnAction();
+        } else if (this.isRecipe()) {
+          const actionToImport = convertMarkdownStructureToRecipe(parseMarkdownStructure, this.actionToEdit.type);
+
+          console.info({
+            actionToImport
+          });
+
+          this.setNewActionEditData(actionToImport);
+          this.fillUiRelatedDataBasedOnAction();
+
+          console.info({
+            currentAction: this.actionToEdit
+          });
+
+          this.cd.detectChanges();
+        }
+      }
+    }
+  }
+
+  exportAction(): void {
+    let mdStructure: MarkdownStructure;
+
+    if (this.isScript()) {
+      mdStructure = convertScriptToMarkdownStructure(this.actionToEdit);
+    } else if (this.isWidget()) {
+      mdStructure = convertWidgetToMarkdownStructure(this.actionToEdit);
+    } else if (this.isRecipe()) {
+      mdStructure = convertRecipeToMarkdownStructure(this.actionToEdit);
+    }
+
+    const createdMarkdownString = toMarkdown(mdStructure);
+
+    const dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(createdMarkdownString);
+
+    const suffix = ACTION_TYPE_INFORMATION[this.actionToEdit.type].labelFallback;
+
+    downloadFile(`${this.actionToEdit.name}-${suffix}.md`,dataStr);
+  }
+
+
+  // endregion Import / Export Methods
+
+  // region Helper Methods
+
+  private currentActionType (): ActionType {
+    return this.actionToEdit.type;
+  }
+
+  private isWidget(actionTypeToCheck?: ActionType) {
+    return [ActionType.Widget, ActionType.WidgetTemplate].includes(
+      actionTypeToCheck ?? this.currentActionType()
+    );
+  }
+
+  private isScript() {
+    return [ActionType.Script, ActionType.PermanentScript].includes(this.currentActionType());
+  }
+
+  private isRecipe() {
+    return [ActionType.Recipe].includes(this.currentActionType());
+  }
+
+  private setNewActionEditData (
+    newActionData: Partial<Action>,
+    defaultValues = ACTION_DEFAULT_PROPERTIES
+  ) {
+    this.actionToEdit = Object.assign({}, defaultValues, {
+      ...newActionData,
+      extended: {
+        ...newActionData?.extended
+      }
+    }) as Action;
+
+    if (this.actionToEdit.type === ActionType.Widget) {
+      this.currentHtmlConfig = actionDataToWidgetContent(this.actionToEdit);
+      this.executeHTMLRefresh();
+    }
+
+    if ([ActionType.Script, ActionType.PermanentScript].includes(this.actionToEdit.type)) {
+      this.currentScript = actionDataToScriptConfig(this.actionToEdit);
+    }
+  }
+
+  // endregion Helper Methods
 }

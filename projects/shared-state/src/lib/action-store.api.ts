@@ -1,7 +1,7 @@
 import {BehaviorSubject, Subject, Subscription} from "rxjs";
 import {debounceTime, skip} from "rxjs/operators";
 
-export type ActionStore = Record<string, string|number|object>;
+export type ActionStore = Record<string, string|number|object|boolean>;
 
 export interface ActionStoreAdapter {
   getCurrentData(mediaId: string): Promise<ActionStore>;
@@ -56,7 +56,7 @@ export class ActionStoreApi {
     return defaultValue;
   }
 
-  public setString(key: string, value: unknown) {
+  public setString(key: string, value: unknown): void  {
     if (typeof value !== 'string') {
       this._errorSubject$.next(`The "${key}" value needs to be a string`);
       return;
@@ -78,7 +78,7 @@ export class ActionStoreApi {
     return defaultValue;
   }
 
-  public setNumber(key: string, value: unknown) {
+  public setNumber(key: string, value: unknown): void  {
     if (typeof value !== 'number') {
       this._errorSubject$.next(`The "${key}" value needs to be a number`);
       return;
@@ -99,7 +99,7 @@ export class ActionStoreApi {
     return defaultValue;
   }
 
-  public setObject(key: string, value: unknown) {
+  public setObject(key: string, value: unknown): void  {
     if (typeof value !== 'object') {
       this._errorSubject$.next(`The "${key}" value needs to be an object`);
       return;
@@ -110,7 +110,28 @@ export class ActionStoreApi {
     this.updateObservable();
   }
 
-  dispose() {
+  public getBool(key: string, defaultValue: boolean): boolean {
+    const value = this._state[key];
+
+    if (typeof value === 'boolean') {
+      return value ?? defaultValue;
+    }
+
+    return defaultValue;
+  }
+
+  public setBool(key: string, value: unknown): void  {
+    if (typeof value !== 'boolean') {
+      this._errorSubject$.next(`The "${key}" value needs to be a boolean`);
+      return;
+    }
+
+    this._state[key] = value;
+
+    this.updateObservable();
+  }
+
+  dispose(): void  {
     this._state$$.unsubscribe();
   }
 

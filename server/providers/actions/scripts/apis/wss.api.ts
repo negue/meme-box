@@ -34,7 +34,7 @@ export class RealWebSocketServer extends WebSocketServerApi {
     return client;
   }
 
-  dispose() {
+  dispose(): void  {
     for (const createdServer of this.createdServers) {
       createdServer.close();
     }
@@ -50,7 +50,7 @@ export class DummyWebSocketServer extends WebSocketServerApi {
     throw new Error('WebSocketServer can be only created inside a permanent script.')
   }
 
-  dispose() {
+  dispose(): void  {
   }
 
   connect(address: string, options?: WebSocket.ClientOptions): WebSocket {

@@ -1,9 +1,10 @@
-import {Injectable, UseOpts} from "@tsed/di";
-import {MemeboxWebsocket} from "./websockets/memebox.websocket";
-import {ACTIONS, ActionStateEnum} from "@memebox/contracts";
-import {NamedLogger} from "./named-logger";
-import {ActionActiveStateEventBus} from "./actions/action-active-state-event.bus";
+import { Injectable, UseOpts } from "@tsed/di";
+import { MemeboxWebsocket } from "./websockets/memebox.websocket";
+import { ACTIONS, ActionStateEnum } from "@memebox/contracts";
+import { NamedLogger } from "./named-logger";
+import { ActionActiveStateEventBus } from "./actions/action-active-state-event.bus";
 
+// skipcq: JS-0579
 @Injectable()
 export class WidgetConnectionState {
   private connectedSocketMap = new Map<string, WebSocket>();
@@ -60,14 +61,15 @@ export class WidgetConnectionState {
     });
   }
 
-  public isTheMainInstance(mediaId: string, instanceId: string) {
+  public isTheMainInstance(mediaId: string, instanceId: string): boolean  {
     return this.connectionState[mediaId]?.mainId === instanceId;
   }
 
   private unregisterWidgetConnection (mediaId: string, instanceId: string)  {
     this.actionActiveState.updateActionState({
       mediaId,
-      state: ActionStateEnum.Unset
+      state: ActionStateEnum.Unset,
+      overrides: null
     });
 
     if (this.connectionState[mediaId]) {

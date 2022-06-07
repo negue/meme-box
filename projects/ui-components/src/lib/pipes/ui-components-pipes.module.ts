@@ -15,8 +15,13 @@ import {ShowOnlyLastCharactersPipe} from "./show-only-last-characters.pipe";
 import {FontColorContrastPipe} from "./font-color-contrast.pipe";
 import {ActionPreviewLabelPipe, ActionPreviewVariablesTooltipPipe} from "./action-preview-label.pipe";
 import {ActionCanPreviewPipe} from "./action-can-preview.pipe";
-import {MediaEnumToLabel} from "./media-enum-to-label.pipe";
+import {ActionEnumToLabelPipe} from "./media-enum-to-label.pipe";
 import {ActionHasTriggerableVariablesPipe} from "./action-has-triggerable-variables.pipe";
+import {TrimLinesPipe} from "./trim-lines.pipe";
+import {ShowScreenSelectionPipe} from "./show-screen-selection.pipe";
+
+// TODO Split up pipes into their own modules
+// or wait until Angular 14 for module-spam
 
 const PIPES = [
   SafePipe,
@@ -28,7 +33,9 @@ const PIPES = [
   ShowOnlyLastCharactersPipe, FontColorContrastPipe,
   ActionPreviewLabelPipe, ActionCanPreviewPipe,
   ActionPreviewVariablesTooltipPipe,
-  MediaEnumToLabel, ActionHasTriggerableVariablesPipe
+  ActionEnumToLabelPipe, ActionHasTriggerableVariablesPipe,
+  TrimLinesPipe,
+  ShowScreenSelectionPipe
 ];
 
 @NgModule({
@@ -36,4 +43,4 @@ const PIPES = [
   declarations: PIPES,
   exports: [...PIPES],
 })
-export class PipesModule {}
+export class UiComponentsPipesModule {}

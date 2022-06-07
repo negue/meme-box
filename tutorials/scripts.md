@@ -32,7 +32,7 @@ Script Examples can be found [here](https://github.com/negue/meme-box/tree/devel
 |*both*| `process` | Check [`Process API`](#process-api) below |
 |*both*| `rxjs` | `rxjs.*` and `rxjs.operators` https://rxjs.dev/guide/operators |
 |`Execution Script`| `bootstrap` | It holds all values of your `Bootstrap Script` |
-|`Execution Script`| `triggerPayload` | It has the current information of the action trigger |
+|`Execution Script`| `triggerPayload` | Check [`Trigger payload`](#trigger-payload) below. It has the current information of the action trigger. |
 |**only Permanent Scripts**| `wss` | Create your custom websocket server - Check [`WSS API`](#wss-api) below |
 
 ### Sleep API
@@ -302,3 +302,59 @@ If you need to start a bunch of apps for example or only one on an action then y
 ```js
 process.spawn(`C:\\WINDOWS\\system32\\notepad.exe`);
 ```
+
+### Trigger payload
+
+The `triggerPayload` variable holds all the data about what/who triggered the script.
+An example of the data returned when the script is triggered by a chat message command:
+
+```json
+{
+  "id": "db4cc5f3-2e7e-400c-a2db-bcf20398a434",
+  "uniqueId": "5f4f1a08-2320-4414-af78-fb694e4105fe",
+  "targetScreen": "",
+  "origin": 3,
+  "originId": "a4d2776d-e27a-4cb8-b86b-273a070c09f1",
+  "byTwitch": {
+    "timestamp": "2022-05-20T22:54:17.885Z",
+    "payload": {
+      "channel": "#gacbl",
+      "self": false,
+      "message": "!cnt",
+      "userstate": {
+        "badge-info": { "subscriber": "19" },
+        "badges": { "broadcaster": "1", "subscriber": "3012", "glhf-pledge": "1" },
+        "client-nonce": "42820cad6af02ef7fb567eb1644d4f9a",
+        "color": "#1E90FF",
+        "display-name": "GacBL",
+        "emotes": null,
+        "first-msg": false,
+        "flags": null,
+        "id": "cd998b3b-0495-485b-9226-e66c49225cdf",
+        "mod": false,
+        "room-id": "120572949",
+        "subscriber": true,
+        "tmi-sent-ts": "1653087364485",
+        "turbo": false,
+        "user-id": "120572949",
+        "user-type": null,
+        "emotes-raw": null,
+        "badge-info-raw": "subscriber/19",
+        "badges-raw": "broadcaster/1,subscriber/3012,glhf-pledge/1",
+        "username": "gacbl",
+        "message-type": "chat"
+      }
+    },
+    "type": "message"
+  },
+  "overrides": { 
+    "action": { 
+      "variables": { 
+        "label": "Sample counter:"
+      }
+    }
+  }
+}
+```
+
+For mor information about what is stored in the `triggerPayload` variable you can always use the [`logger` API](#logger-api) to see all the data it holds.

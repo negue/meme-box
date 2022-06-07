@@ -5,15 +5,17 @@ import {
   ENDPOINTS,
   HasId,
   TriggerAction,
-  TriggerActionDashboardEntry
+  TriggerActionDashboardEntry,
+  TriggerActionOverrides
 } from "@memebox/contracts";
 import {Persistence} from "../persistence";
 import {PERSISTENCE_DI} from "../providers/contracts";
-import {actionCanBeTriggeredWithVariables, getVariablesListOfAction, takeLatestItems} from "@memebox/utils";
+import {actionCanBeTriggeredWithVariables, getVariablesConfigListOfAction, takeLatestItems} from "@memebox/utils";
 import {ActionVariableConfig} from "@memebox/action-variables";
 import {ActionQueueEventBus} from "../providers/actions/action-queue-event.bus";
 import {Optional} from "@tsed/schema";
 import {map} from "rxjs/operators";
+import {ActionVariableState} from "../providers/actions/action-variable-state";
 
 export interface SimpleActionInformation extends HasId {
   name: string;
@@ -31,7 +33,8 @@ export class ActionController {
 
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-    private _actionEventBus: ActionQueueEventBus
+    private _actionEventBus: ActionQueueEventBus,
+    private _actionVariableState: ActionVariableState
   ) {
     _actionEventBus.AllQueuedActions$.pipe(
       map(originalAction => ({...originalAction, timestamp: new Date()}) as TriggerActionDashboardEntry),
@@ -52,7 +55,7 @@ export class ActionController {
         const hasVariables = actionCanBeTriggeredWithVariables(a);
         const variableList: ActionVariableConfig[] =
           hasVariables
-            ? getVariablesListOfAction(a)
+            ? getVariablesConfigListOfAction(a)
             : [];
 
         return {
@@ -74,12 +77,19 @@ export class ActionController {
     return this.latest20Actions;
   }
 
+  @Get(`${ENDPOINTS.ACTION.LAST_OVERRIDES}:actionId`)
+  getLastActionOverrides(
+     @PathParams("actionId") actionId: string,
+  ): TriggerActionOverrides {
+    return this._actionVariableState.getLastActionOverrides(actionId);
+  }
+
   @Post(`${ENDPOINTS.ACTION.TRIGGER_ACTION}:actionId`)
   triggerAction(
     @PathParams("actionId") actionId: string,
 
     @Optional() @BodyParams() triggerAction: TriggerAction
-  ) {
+  ): void  {
     const actionToTrigger: TriggerAction = {
       id: actionId,
       ...triggerAction

@@ -111,3 +111,22 @@ gewd-codemirror {
 div[align=end] {
   text-align: right;
 }
+
+.is-active-dot:after {
+  background-color: #00bf92;
+  border: 2px solid;
+  border-radius: 11px;
+  content: attr(data-count);
+  color: #fff;
+  display: block;
+  font-size: 10px;
+  font-family: helvetica;
+  height: 9px;
+  line-height: 8px;
+  min-width: 9px;
+  padding: 4px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+}

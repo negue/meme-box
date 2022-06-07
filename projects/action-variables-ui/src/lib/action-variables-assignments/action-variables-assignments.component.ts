@@ -1,33 +1,28 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Dictionary} from "@memebox/contracts";
-import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
-import {MatCheckboxChange} from "@angular/material/checkbox";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Dictionary } from "@memebox/contracts";
+import { ActionVariableConfig, ActionVariableTypes } from "@memebox/action-variables";
+import { MatCheckboxChange } from "@angular/material/checkbox";
 
 @Component({
   selector: 'app-action-variables-assignments',
   templateUrl: './action-variables-assignments.component.html',
   styleUrls: ['./action-variables-assignments.component.scss']
 })
-export class ActionVariablesAssignmentsComponent implements OnInit {
+export class ActionVariablesAssignmentsComponent {
 
   @Input()
-  public data: Dictionary<string> = {};
+  public data: Dictionary<unknown> = {};
 
   @Input()
   public fallbackData: Dictionary<string> = {};
 
   @Output()
-  public dataChanged = new EventEmitter<Dictionary<string>>();
+  public readonly dataChanged = new EventEmitter<Dictionary<unknown>>();
 
   @Input()
   public variablesConfig: ActionVariableConfig[];
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown) {
+  variableChanged(name: string, valueType: ActionVariableTypes, $event: unknown): void  {
     const newDataObject = {
       ...this.data
     };
@@ -41,7 +36,7 @@ export class ActionVariablesAssignmentsComponent implements OnInit {
       default: {
 
         newDataObject[name] = typeof $event !== 'undefined'
-          ? $event+''
+          ? `${$event}`
           : undefined;
       }
     }
@@ -50,7 +45,7 @@ export class ActionVariablesAssignmentsComponent implements OnInit {
     this.dataChanged.next(newDataObject);
   }
 
-  unsetValue($event: MatCheckboxChange, variable: ActionVariableConfig) {
+  unsetValue($event: MatCheckboxChange, variable: ActionVariableConfig): void  {
     if ($event.checked) {
       return;
     }

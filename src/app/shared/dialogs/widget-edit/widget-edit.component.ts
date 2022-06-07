@@ -5,7 +5,6 @@ import {BehaviorSubject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
 import type {CustomHtmlDialogPayload} from "../dialog.contract";
 import {MatCheckbox} from "@angular/material/checkbox";
-import {downloadFile} from "@gewd/utils";
 import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
 import {WIDGET_TUTORIAL} from "../../../../../server/constants";
@@ -125,38 +124,6 @@ export class WidgetEditComponent implements OnInit {
     this.variablesList.splice(foundIndex, 1);
 
     this.markForCheck();
-  }
-
-  onFileInputChanged($event: Event): void {
-    const target = $event.target as HTMLInputElement;
-    const files = target.files;
-
-    const file = files[0];
-
-    console.info({$event, file});
-
-    // setting up the reader
-    const reader = new FileReader();
-    reader.readAsText(file,'UTF-8');
-
-    // here we tell the reader what to do when it's done reading...
-    reader.onload = readerEvent => {
-      const content = readerEvent.target.result; // this is the content!
-
-      if (typeof content === 'string' ) {
-        const importedPayload: DynamicIframeContent = JSON.parse(content);
-
-        this.setWorkingValues(importedPayload);
-      }
-    }
-  }
-
-  exportWidget(): void {
-    const jsonData = JSON.stringify(this.workingValue);
-    const dataStr = "data:application/json;charset=utf-8," + encodeURIComponent(jsonData);
-
-    console.info({jsonData, dataStr});
-    downloadFile(this.data.name+'-widget.json',dataStr);
   }
 
   openTutorialMarkdown(): void  {
