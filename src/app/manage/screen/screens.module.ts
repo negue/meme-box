@@ -20,6 +20,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NetworkUrlViewModule} from "../../shared/components/network-url-view/network-url-view.module";
 import {SelectedScreenAmountPipe} from "./screen-overview/screen-url-dialog/selected-screen-amount.pipe";
 import {ClipsInScreenAmountPipe} from "./screen-overview/screen-url-dialog/clips-in-screen-amount.pipe";
+import {OpenFeedbackButtonModule} from "../../shared/components/open-feedback-button/open-feedback-button.module";
 
 const routes: Routes = [
   {
@@ -55,7 +56,8 @@ const routes: Routes = [
     CardOverviewModule,
     MatTooltipModule,
     MatCheckboxModule,
-    NetworkUrlViewModule
+    NetworkUrlViewModule,
+    OpenFeedbackButtonModule
   ]
 })
 export class ScreensModule {
