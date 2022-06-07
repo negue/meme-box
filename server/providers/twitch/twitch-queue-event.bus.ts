@@ -1,14 +1,14 @@
 import {Service} from "@tsed/di";
 import {Subject} from "rxjs";
-import {TwitchEvent} from "@memebox/contracts";
+import {AllTwitchEvents} from "@memebox/contracts";
 
 @Service()
 export class TwitchQueueEventBus {
-  private _allTriggerEvents$ = new Subject<TwitchEvent>();
+  private _allTriggerEvents$ = new Subject<AllTwitchEvents>();
 
   public AllQueuedEvents$ = this._allTriggerEvents$.asObservable();
 
-  public queueEvent(triggerClip: TwitchEvent): void  {
+  public queueEvent(triggerClip: AllTwitchEvents): void  {
     this._allTriggerEvents$.next(triggerClip);
   }
 }

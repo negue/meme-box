@@ -68,8 +68,10 @@ export function registerMemeboxCommandBlocks (
     },
   };
 
+  const keepTriggeredActionActiveWhileLabel = 'Keep Triggered Action active, while';
+
   registry["triggerActionWhile"] = {
-    pickerLabel: "Keep Triggered Action active, while",
+    pickerLabel: keepTriggeredActionActiveWhileLabel,
     commandGroup: "memebox",
     configArguments: [
       {
@@ -78,6 +80,19 @@ export function registerMemeboxCommandBlocks (
         type: "action"
       }
     ],
+    subCommandBlockLabelAsync: (queries, commandBlock, labelId) =>  {
+      const actionPayload = commandBlock.entryType === "command"
+        && commandBlock.payload.action as RecipeCommandConfigActionPayload;
+
+      if (!actionPayload) {
+        return Promise.resolve('Unknown Action');
+      }
+
+      return queries.getActionById$(actionPayload.actionId).pipe(
+        map(action => `Keep Triggered Action ${action.name} active, while these commands are running: `),
+        take(1)
+      ).toPromise();
+    },
     extendCommandBlock: (step) => {
       step.payload = {
         ...step.payload,
@@ -110,7 +125,7 @@ export function registerMemeboxCommandBlocks (
     }
   };
   registry["triggerActionWhileReset"] = {
-    pickerLabel: "Reset changed properties of the 'Keep Triggered Action active, while'",
+    pickerLabel: `Reset changed properties of the '${keepTriggeredActionActiveWhileLabel}'`,
     commandGroup: "memebox",
     configArguments: [],
     extendCommandBlock: (step, parentStep) => {
