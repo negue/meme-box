@@ -63,7 +63,7 @@ export class ActionSelectionComponent {
         if (foundCommand.commandBlockType === 'triggerRandom') {
           const payload = foundCommand.payload['actions'] as RecipeCommandConfigActionListPayload;
 
-          for (const recipeCommandConfigActionPayload of payload) {
+          for (const recipeCommandConfigActionPayload of (payload.selectedActions ?? [])) {
             allFoundActions.add(recipeCommandConfigActionPayload.actionId);
           }
 

@@ -95,7 +95,7 @@ export class StepSettingDialogComponent {
     return isVisibleMedia(action.type);
   }
 
-
+  // todo extract as a pipe to save up function cpu calls
   getActionListPayload(configName: string): RecipeCommandConfigActionListPayload  {
     return this.payload[configName] as any as RecipeCommandConfigActionListPayload;
   }

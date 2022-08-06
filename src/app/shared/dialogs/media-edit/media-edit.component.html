@@ -355,8 +355,8 @@
                             [editMode]="true">
           </app-recipe-block>
 
-          <ng-container *ngIf="selectedRecipeTabIndex !== 0">
-            <pre [highlight]="toScriptCode(recipeContext.recipe)"
+          <ng-container *ngIf="selectedRecipeTabIndex !== 0 && recipeContext.userData !== null">
+            <pre [highlight]="toScriptCode(recipeContext.recipe, recipeContext.userData)"
                  lang="js" class="pre-wrap-break"></pre>
 
           </ng-container>

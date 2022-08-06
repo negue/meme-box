@@ -10,6 +10,7 @@ import {uuid} from "@gewd/utils";
 import {registerMemeboxCommandBlocks} from "./command-blocks.memebox";
 import {registerObsCommandBlocks} from "./command-blocks.obs";
 import {registerTwitchCommandBlocks} from "./command-blocks.twitch";
+import {UserDataState} from "@memebox/contracts";
 
 export interface RecipeStepConfigArgument {
   name: string;
@@ -70,7 +71,7 @@ export const RecipeCommandRegistry: RecipeCommandBlockRegistry = {
 };
 
 
-function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
+function generateCodeByStepAsync (step: RecipeEntry, context: RecipeContext, userData: UserDataState): string {
   const result: string[] = [];
 
   for (const subStepInfo of step.subCommandBlocks) {
@@ -88,7 +89,9 @@ function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
           result.push('await ');
         }
 
-        result.push(entryDefinition.toScriptCode(subEntry, context).trim());
+        const createdStepCode = entryDefinition.toScriptCode(subEntry, context, userData);
+
+        result.push(createdStepCode.trim());
 
         // result.push(`logger.log('Post: ${subEntry.commandType}');`);
       } else {
@@ -102,13 +105,13 @@ function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
 }
 
 export function generateCodeByRecipe(
-  recipeContext: RecipeContext
+  recipeContext: RecipeContext, userData: UserDataState
 ): string  {
   const result: string[] = [];
 
   const rootEntry = recipeContext.entries[recipeContext.rootEntry];
 
-  result.push(generateCodeByStep(rootEntry, recipeContext));
+  result.push(generateCodeByStepAsync(rootEntry, recipeContext, userData));
 
   return result.join('\r\n');
 }
@@ -127,6 +130,6 @@ export function generateRecipeEntryCommandCall (
   };
 }
 
-registerMemeboxCommandBlocks(RecipeCommandRegistry, generateCodeByStep);
+registerMemeboxCommandBlocks(RecipeCommandRegistry, generateCodeByStepAsync);
 registerObsCommandBlocks(RecipeCommandRegistry);
 registerTwitchCommandBlocks(RecipeCommandRegistry);

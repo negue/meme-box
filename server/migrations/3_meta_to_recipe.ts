@@ -37,11 +37,13 @@ export function createTriggerRandomActionCommand(
 
   const recipeEntryCommandCall = generateRecipeEntryCommandCall('triggerRandom',
     {
-      actions: [
-        ...actionIdListToTrigger.map(id => ({
-          actionId: id
-        }))
-      ] as RecipeCommandConfigActionListPayload
+      actions: {
+        selectedActions: [
+          ...actionIdListToTrigger.map(id => ({
+            actionId: id
+          }))
+        ]
+      } as RecipeCommandConfigActionListPayload
     });
 
   if (recipeCommandDefinition.extendCommandBlock) {

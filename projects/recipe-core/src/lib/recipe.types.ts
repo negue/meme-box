@@ -1,5 +1,5 @@
 import {uuid} from "@gewd/utils";
-import {TriggerActionOverrides} from "@memebox/contracts";
+import {TriggerActionOverrides, UserDataState} from "@memebox/contracts";
 import {AppQueries} from "@memebox/app-state";
 import {RecipeStepConfigArgument} from "./generateCodeByRecipe";
 
@@ -82,13 +82,17 @@ export interface RecipeCommandConfigActionPayload {
   overrides: TriggerActionOverrides;
 }
 
-export type RecipeCommandConfigActionListPayload = RecipeCommandConfigActionPayload[];
+export interface RecipeCommandConfigActionListPayload {
+  actionsByTag?: string;
+  selectedActions: RecipeCommandConfigActionPayload[];
+}
 
 export interface RecipeCommandConfigObsSetFilterStatePayload {
   sourceName: string;
   filterName: string;
 }
 
+// TODO have a different Interface for queries / AppQueries
 
 // Registry Types
 export interface RecipeCommandDefinition {
@@ -101,7 +105,7 @@ export interface RecipeCommandDefinition {
 
   extendCommandBlock?: (step: RecipeEntryCommandCall, parentStep: RecipeEntry) => void;
   allowedToBeAdded?: (step: RecipeEntry, context: RecipeContext) => boolean;
-  toScriptCode: (step: RecipeEntryCommandCall, context: RecipeContext) => string;
+  toScriptCode: (step: RecipeEntryCommandCall, context: RecipeContext, userData: UserDataState) => string;
   awaitCodeHandledInternally?: boolean;
   commandType?: string;
 }
@@ -115,4 +119,4 @@ export interface RecipeCommandBlockRegistry {
   [stepType: string]: RecipeCommandDefinition
 }
 
-export type generateCodeByStep = (step: RecipeEntry, context: RecipeContext) => string;
+export type generateCodeByStep = (step: RecipeEntry, context: RecipeContext, userData: UserDataState) => string;

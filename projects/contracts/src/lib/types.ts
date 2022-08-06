@@ -225,6 +225,12 @@ export interface Tag extends HasId {
   color: string;
 }
 
+export interface UserDataState {
+  actions: Dictionary<Action>;
+  screen: Dictionary<Screen>;
+  tags: Dictionary<Tag>;
+}
+
 /**
  * Settings.json - State
  *
@@ -395,4 +401,13 @@ export interface ObsSourceFilterEntry {
   type: string;
   name: string;
   settings: Record<string, unknown>;
+}
+
+
+export function getUserDataState (settings: SettingsState): UserDataState {
+  return {
+    actions: settings.clips,
+    screen: settings.screen,
+    tags: settings.tags
+  }
 }

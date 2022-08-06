@@ -104,14 +104,14 @@ export function registerMemeboxCommandBlocks (
         entries: []
       });
     },
-    toScriptCode: (step, context) => {
+    toScriptCode: (step, context, userData) => {
       const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
 
       const actionOverrides = actionPayload.overrides;
 
       return `${createMemeboxApiVariable(actionPayload)}
                      .triggerWhile(async (helpers_${step.payload._suffix}) => {
-                        ${generateCodeByStep(step, context)}
+                        ${generateCodeByStep(step, context, userData)}
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
@@ -157,16 +157,33 @@ export function registerMemeboxCommandBlocks (
       }
     ],
     awaitCodeHandledInternally: true,
-    toScriptCode: (step) => {
+    toScriptCode: (step, context, userData) => {
       const awaitCode = step.awaited ? 'await ': '';
+
+      const actionsToChooseFrom: RecipeCommandConfigActionPayload[] = [];
+
+      const actionListPayload = (step.payload.actions as RecipeCommandConfigActionListPayload);
+
+      if (actionListPayload.selectedActions) {
+        actionsToChooseFrom.push(...actionListPayload.selectedActions);
+      } else {
+        // by tags
+        const allActions = Object.values(userData.actions);
+        const allActionsOfATag = allActions.filter(a => a.tags?.includes(actionListPayload.actionsByTag ?? ''));
+
+        actionsToChooseFrom.push(...allActionsOfATag.map(a => {
+          return {
+            actionId: a.id,
+            overrides: {}
+          }
+        }));
+      }
 
       return `
         ${awaitCode} (() => {
-        const actionsToChooseFrom = [${
-        (step.payload.actions as RecipeCommandConfigActionListPayload)
-          .map(action => JSON.stringify(action))
-          .join(',')
-      }];
+        const actionsToChooseFrom = [${actionsToChooseFrom
+        .map(action => JSON.stringify(action))
+        .join(',')}];
 
         return memebox.triggerRandom(actionsToChooseFrom);
         })();

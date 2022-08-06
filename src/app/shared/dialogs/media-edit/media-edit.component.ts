@@ -15,7 +15,8 @@ import {
   ACTION_TYPE_INFORMATION_ARRAY,
   ActionType,
   FileInfo,
-  Tag
+  Tag,
+  UserDataState
 } from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
@@ -584,8 +585,8 @@ export class MediaEditComponent
 
   }
 
-  toScriptCode (recipeContext: RecipeContext): string  {
-    return generateCodeByRecipe(recipeContext);
+  toScriptCode (recipeContext: RecipeContext, userData: UserDataState): string  {
+    return generateCodeByRecipe(recipeContext, userData);
   }
 
   // region Import / Export Methods
