@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OpenActionSettingsButtonComponent} from './open-action-settings-button.component';
 import {MatButtonModule} from "@angular/material/button";
-import {ClipTypeModule} from "@memebox/state-components";
+import {ActionTypeIconModule} from "@memebox/state-components";
 
 
 @NgModule({
@@ -15,7 +15,7 @@ import {ClipTypeModule} from "@memebox/state-components";
   imports: [
     CommonModule,
     MatButtonModule,
-    ClipTypeModule
+    ActionTypeIconModule
   ]
 })
 export class OpenActionSettingsButtonModule { }

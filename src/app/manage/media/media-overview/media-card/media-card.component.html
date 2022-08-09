@@ -47,11 +47,11 @@
            [alt]="action.name" />
 
       <ng-template #noPictureTemplate>
-        <app-clip-type [type]="ACTION_TYPE.Picture"
+        <app-action-type [type]="ACTION_TYPE.Picture"
                        iconSize="12rem"
                        class="mediaInfo__preview__img">
 
-        </app-clip-type>
+        </app-action-type>
       </ng-template>
     </ng-container>
 
@@ -62,9 +62,9 @@
     </ng-container>
 
     <ng-container *ngSwitchDefault>
-      <app-clip-type [type]="action.type"
+      <app-action-type [type]="action.type"
                      iconSize="12rem"
-                     class="mediaInfo__preview__img"></app-clip-type>
+                     class="mediaInfo__preview__img"></app-action-type>
     </ng-container>
   </div>
 

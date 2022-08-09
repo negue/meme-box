@@ -5,7 +5,7 @@ import {DialogContract} from "../../../../../src/app/shared/dialogs/dialog.contr
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {MatButtonModule} from "@angular/material/button";
-import {ActionPreviewModule, ClipTypeModule, StateBasedPipesModule} from "@memebox/state-components";
+import {ActionPreviewModule, ActionTypeIconModule, StateBasedPipesModule} from "@memebox/state-components";
 import {ActionVariableInputModule, ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {ActionVariableConfigPipe} from './action-variable-config.pipe';
 import {
@@ -47,7 +47,7 @@ import {ActionSelectionComponent} from './action-selection/action-selection.comp
     UiComponentsPipesModule,
     StateBasedPipesModule,
     MatSelectModule,
-    ClipTypeModule
+    ActionTypeIconModule
   ]
 })
 export class CommandSettingDialogModule implements DialogContract<CommandSettingDialogPayload> {

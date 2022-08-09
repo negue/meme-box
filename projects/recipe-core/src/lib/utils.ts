@@ -1,4 +1,10 @@
-import {RecipeContext, RecipeEntryCommandCall} from "./recipe.types";
+import {
+  RecipeCommandConfigActionListPayload,
+  RecipeCommandConfigActionPayload,
+  RecipeContext,
+  RecipeEntryCommandCall
+} from "./recipe.types";
+import {UserDataState} from "@memebox/contracts";
 
 const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const charactersLength = characters.length;
@@ -33,3 +39,32 @@ export function* listAllEntriesOfTypes(
   }
 }
 
+export function listActionsOfActionListPayload (
+  actionListPayload: RecipeCommandConfigActionListPayload,
+  userData: UserDataState
+) {
+  const actionsToChooseFrom: RecipeCommandConfigActionPayload[] = [];
+
+  if (actionListPayload.selectedActions) {
+    actionsToChooseFrom.push(...actionListPayload.selectedActions);
+  } else {
+    const allActionsOfATag = listActionsByTag(userData, actionListPayload.actionsByTag ?? '');
+
+    actionsToChooseFrom.push(...allActionsOfATag.map(a => {
+      return {
+        actionId: a.id,
+        overrides: {}
+      }
+    }));
+  }
+
+  return actionsToChooseFrom;
+}
+
+export function listActionsByTag(userData: UserDataState, tag: string) {
+  // by tags
+  const allActions = Object.values(userData.actions);
+  const allActionsOfATag = allActions.filter(a => a.tags?.includes(tag));
+
+  return allActionsOfATag;
+}

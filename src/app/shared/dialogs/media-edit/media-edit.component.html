@@ -315,7 +315,7 @@
                        crossorigin="anonymous"
                        height="240" width="320">
                   Your browser does not support the video tag.
-                  <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+                  <app-action-type [type]="actionToEdit?.type"></app-action-type>
                 </video>
 
                 <button (click)="makeScreenshot(videoElement)"
@@ -332,7 +332,7 @@
                        [volume]="form.value.volumeSetting / 100"
                        controls crossorigin="anonymous">
               Your browser does not support the audio tag.
-              <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+              <app-action-type [type]="actionToEdit?.type"></app-action-type>
             </audio>
           </div>
         </div>

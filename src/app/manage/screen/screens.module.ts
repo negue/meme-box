@@ -11,7 +11,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ScreenOverviewComponent} from "./screen-overview/screen-overview.component";
 import {ScreenInfoComponent} from "./screen-overview/screen-info/screen-info.component";
-import {ClipTypeModule} from "@memebox/state-components";
+import {ActionTypeIconModule} from "@memebox/state-components";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {ScreensArrayToUrlPipe} from './screen-overview/screen-url-dialog/screens-array-to-url.pipe';
@@ -52,7 +52,7 @@ const routes: Routes = [
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    ClipTypeModule,
+    ActionTypeIconModule,
     CardOverviewModule,
     MatTooltipModule,
     MatCheckboxModule,

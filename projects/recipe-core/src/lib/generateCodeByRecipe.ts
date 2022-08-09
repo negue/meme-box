@@ -52,6 +52,7 @@ export const RecipeCommandRegistry: RecipeCommandBlockRegistry = {
     commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.seconds} seconds`);
     },
+    entryIcon: () => 'hourglass_top'
   },
   "sleepMs": {
     pickerLabel: "Wait for Milliseconds",
@@ -67,6 +68,7 @@ export const RecipeCommandRegistry: RecipeCommandBlockRegistry = {
     commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.ms}ms`);
     },
+    entryIcon: () => 'hourglass_top'
   }
 };
 

@@ -53,7 +53,7 @@
               [class.media-active]="activityState.isActionActive$(action.id) | async">
 
       <div>
-      <app-clip-type [type]="action.type"></app-clip-type>
+      <app-action-type [type]="action.type"></app-action-type>
         <ng-container *ngIf="action | actionHasTriggerableVariables">
         <br/>
        <button mat-icon-button class="variable-trigger-button"

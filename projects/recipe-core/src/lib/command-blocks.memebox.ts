@@ -5,8 +5,7 @@ import {
   RecipeCommandConfigActionPayload
 } from "./recipe.types";
 import {map, take} from "rxjs/operators";
-import {generateRandomCharacters} from "./utils";
-import {combineLatest} from "rxjs";
+import {generateRandomCharacters, listActionsOfActionListPayload} from "./utils";
 import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
 
 function createMemeboxApiVariable(
@@ -160,24 +159,10 @@ export function registerMemeboxCommandBlocks (
     toScriptCode: (step, context, userData) => {
       const awaitCode = step.awaited ? 'await ': '';
 
-      const actionsToChooseFrom: RecipeCommandConfigActionPayload[] = [];
-
-      const actionListPayload = (step.payload.actions as RecipeCommandConfigActionListPayload);
-
-      if (actionListPayload.selectedActions) {
-        actionsToChooseFrom.push(...actionListPayload.selectedActions);
-      } else {
-        // by tags
-        const allActions = Object.values(userData.actions);
-        const allActionsOfATag = allActions.filter(a => a.tags?.includes(actionListPayload.actionsByTag ?? ''));
-
-        actionsToChooseFrom.push(...allActionsOfATag.map(a => {
-          return {
-            actionId: a.id,
-            overrides: {}
-          }
-        }));
-      }
+      const actionsToChooseFrom = listActionsOfActionListPayload(
+        step.payload.actions as RecipeCommandConfigActionListPayload,
+        userData
+      );
 
       return `
         ${awaitCode} (() => {
@@ -189,21 +174,14 @@ export function registerMemeboxCommandBlocks (
         })();
       `;
     },
-    commandEntryLabelAsync: async (queries, payload) => {
-      const actionPayload = payload.actions as RecipeCommandConfigActionPayload[];
+    commandEntryLabelAsync: (queries, payload) => {
+      const actionListPayload = (payload.actions as RecipeCommandConfigActionListPayload);
 
-      const namesOfActions = await combineLatest(
-        actionPayload.map(a => queries.getActionById$(a.actionId).pipe(
-          map(actionInfo => actionInfo?.name ?? 'unknown action'),
-          take(1)
-        ))
-      )
-        .pipe(
-          map(allNames => allNames.join(','))
-        )
-        .toPromise();
+      if (actionListPayload.actionsByTag) {
+        return `trigger any action with the tag: ${actionListPayload.actionsByTag}`;
+      }
 
-      return 'trigger random: '+ namesOfActions;
+      return `trigger any of the following: ${actionListPayload.selectedActions.length}`;
     },
   };
 

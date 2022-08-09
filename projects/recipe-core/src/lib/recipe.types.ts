@@ -1,5 +1,5 @@
 import {uuid} from "@gewd/utils";
-import {TriggerActionOverrides, UserDataState} from "@memebox/contracts";
+import {ActionType, TriggerActionOverrides, UserDataState} from "@memebox/contracts";
 import {AppQueries} from "@memebox/app-state";
 import {RecipeStepConfigArgument} from "./generateCodeByRecipe";
 
@@ -33,7 +33,7 @@ export interface RecipeEntryCommandPayload {
 
 export interface RecipeEntryCommandCall extends RecipeEntryBase {
   entryType: 'command';
-  commandBlockType: string; // connection to RecipeCommandInfo
+  commandBlockType: string; // connection to RecipeCommandRegistry
   payload: RecipeEntryCommandPayload;
 }
 
@@ -79,6 +79,10 @@ export function createRecipeContext (): RecipeContext {
 export interface RecipeCommandConfigActionPayload {
   actionId: string;
   screenId?: string;
+  uiMetadata?: { // Only filled and used for the Recipe UI
+    actionName: string;
+    actionType: ActionType;
+  };
   overrides: TriggerActionOverrides;
 }
 
@@ -97,9 +101,9 @@ export interface RecipeCommandConfigObsSetFilterStatePayload {
 // Registry Types
 export interface RecipeCommandDefinition {
   pickerLabel: string;
-  commandEntryLabelAsync: (queries: AppQueries, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => Promise<string>;
+  commandEntryLabelAsync: (queries: AppQueries, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => string|Promise<string>;
   subCommandBlockLabelAsync?: (queries: AppQueries, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
-  entryIcon?: (queries: AppQueries,  payload: RecipeEntryCommandPayload) => Promise<string>;
+  entryIcon?: (queries: AppQueries,  payload: RecipeEntryCommandPayload) => string|Promise<string>;
   commandGroup: string;
   configArguments: RecipeStepConfigArgument[]; // each argument name will be applied to the payload as prop
 
