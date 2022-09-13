@@ -101,6 +101,7 @@ export class MediaEditComponent
   implements OnInit, OnDestroy,  DialogData<MediaEditDialogPayload>
 {
   public isEditMode = false;
+  public selectedFirstTabIndex = 0;
   public actionToEdit: Action;
 
   public form = new FormBuilder().group({
@@ -164,23 +165,6 @@ export class MediaEditComponent
 
   currentScript: ScriptConfig = null;
 
-  // Get all actions that have the assigned tags
-  taggedActions$ = combineLatest([
-    this.currentTags$,
-    this.appQuery.actionList$
-  ]).pipe(
-    map(([currentTags, allClips]) => {
-      if (currentTags.length === 0) {
-        return [];
-      }
-
-      const currentTagsSet = new Set(currentTags.map(t => t.id));
-
-      return allClips.filter(c => c.id !== this.actionToEdit.id && c.tags?.some(t => currentTagsSet.has(t)));
-    })
-  )
-
-
   widgetTemplates$ = this.appQuery.actionList$.pipe(
     map(( allMedias) => {
       return allMedias.filter(c => c.type === ActionType.WidgetTemplate);
@@ -218,6 +202,10 @@ export class MediaEditComponent
     this.setNewActionEditData(this.data?.actionToEdit, defaultValues);
 
     this.isEditMode = !!this.data?.actionToEdit;
+
+    if (this.isEditMode || this.data?.defaults?.type) {
+      this.selectedFirstTabIndex = 1;
+    }
 
     this.showOnMobile = this.actionToEdit.showOnMobile;
 
