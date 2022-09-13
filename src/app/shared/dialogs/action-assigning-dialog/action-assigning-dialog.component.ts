@@ -166,12 +166,16 @@ export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
   }
 
   clickToSelect(clip: Action): void  {
+    if (this.data.mode === ActionAssigningMode.Single) {
+      this.checkedMap = {
+        [clip.id]: true
+      };
+
+      this.dialogRef.close(clip.id);
+      return;
+    }
 
     this.checkedMap[clip.id] = !this.checkedMap[clip.id];
-
-    if (this.data.mode === ActionAssigningMode.Single) {
-      this.dialogRef.close(clip.id);
-    }
   }
 
   ngOnDestroy(): void {
