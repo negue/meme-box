@@ -50,11 +50,11 @@ import {TRANSLOCO_TWITCH_SCOPE} from "../../../transloco/transloco.scopes";
     TRANSLOCO_TWITCH_SCOPE
   ],
 })
-export class TwitchEditModule implements DialogContract<TwitchTrigger> {
+export class TwitchEditModule implements DialogContract<TwitchTrigger, TwitchEditComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: TwitchTrigger): MatDialogRef<any> {
+  public openDialog (payload: TwitchTrigger): MatDialogRef<TwitchEditComponent> {
     const dialogRef = this.dialog.open(TwitchEditComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',

@@ -131,7 +131,7 @@ export class ScreenClipOptionsComponent implements OnInit {
       arrangeLock: this.lockOptions
     };
 
-    await this.appService.addOrUpdateScreenClip(this.data.screenId, newScreenClipValue);
+    await this.appService.addOrUpdateScreenMedia(this.data.screenId, newScreenClipValue);
 
     // todo refactor "better way?" to trigger those snackbars
     this.snackBar.normal(`Screen / Media Assignment updated`);

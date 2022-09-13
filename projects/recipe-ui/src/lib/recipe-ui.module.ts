@@ -7,8 +7,6 @@ import {MatSelectModule} from "@angular/material/select";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {MatTabsModule} from "@angular/material/tabs";
 import {RecipeBlockComponent} from './recipe-block/recipe-block.component';
-import {GetEntrySubBlockInfoArrayPipe} from './pipes/get-entry-sub-block-info.pipe';
-import {GetEntryStepMetaDataPipe} from './pipes/get-entry-step-meta-data.pipe';
 import {RecipeContextDirective} from './recipe-context.directive';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {RecipeCommandSelectorComponent} from './recipe-command-selector/recipe-command-selector.component';
@@ -21,16 +19,8 @@ import {MatListModule} from "@angular/material/list";
 import {DialogsModule} from "../../../../src/app/shared/dialogs/dialogs.module";
 import {RecipeCommandCreatorService} from "./recipe-command-creator.service";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {GetEntryStepActionListPipe} from "./pipes/get-entry-step-action-list.pipe";
-import {IsCommandEntryPipe} from "./pipes/isCommandEntry.pipe";
 import {ActionTypeIconModule} from "@memebox/state-components";
-
-const PIPES = [
-  GetEntryStepActionListPipe,
-  GetEntryStepMetaDataPipe,
-  GetEntrySubBlockInfoArrayPipe,
-  IsCommandEntryPipe
-]
+import {RecipePipesModule} from "./pipes/recipe-pipes.module";
 
 @NgModule({
   imports: [
@@ -41,13 +31,12 @@ const PIPES = [
     OpenFeedbackButtonModule, MatIconModule,
     MatDialogModule, MatListModule,
     DialogsModule, MatTooltipModule,
-    ActionTypeIconModule
+    ActionTypeIconModule, RecipePipesModule
   ],
   declarations: [
     RecipeBlockComponent,
     RecipeContextDirective,
-    RecipeCommandSelectorComponent,
-    ...PIPES
+    RecipeCommandSelectorComponent
   ],
   providers: [
     RecipeCommandCreatorService

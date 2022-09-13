@@ -11,6 +11,7 @@ import {UiComponentsPipesModule} from '@memebox/ui-components';
 import {MatRippleModule} from '@angular/material/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatListModule} from '@angular/material/list';
+import {ScreenActionAssignmentModule} from "../../../screenActionAssignment.service";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {MatListModule} from '@angular/material/list';
     UiComponentsPipesModule,
     MatRippleModule,
     ReactiveFormsModule,
-    MatListModule
+    MatListModule,
+    ScreenActionAssignmentModule
   ]
 })
 export class ScreenArrangeSidebarModule {

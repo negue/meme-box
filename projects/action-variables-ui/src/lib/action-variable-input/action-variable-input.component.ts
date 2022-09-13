@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
-import { ClipAssigningMode } from "@memebox/contracts";
-import { BehaviorSubject, combineLatest } from "rxjs";
-import { AppQueries } from "@memebox/app-state";
-import { map } from "rxjs/operators";
-import { ActionVariableTypes } from "@memebox/action-variables";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
+import {ActionAssigningMode} from "@memebox/contracts";
+import {BehaviorSubject, combineLatest} from "rxjs";
+import {AppQueries} from "@memebox/app-state";
+import {map} from "rxjs/operators";
+import {ActionVariableTypes} from "@memebox/action-variables";
 
 @Component({
   selector: 'app-action-variable-input',
@@ -59,9 +59,9 @@ export class ActionVariableInputComponent implements OnInit, OnChanges {
   }
 
   async selectSingleMedia() {
-    const actionId = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
-      selectedItemId: this.visibleActionIdList$.value[0] ?? null,
+    const [actionId] = await this.dialogService.showActionSelectionDialogAsync({
+      mode: ActionAssigningMode.Single,
+      selectedActionIdList: this.visibleActionIdList$.value,
       dialogTitle: 'Action Variable',
       showMetaItems: true,
 

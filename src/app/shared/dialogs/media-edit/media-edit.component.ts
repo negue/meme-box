@@ -349,7 +349,7 @@ export class MediaEditComponent
     await this.appService.addOrUpdateAction(valueAsAction);
 
     if (this.selectedScreenId && ACTION_CONFIG_FLAGS[valueAsAction.type].isVisibleAction) {
-      this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
+      this.appService.addOrUpdateScreenMedia(this.selectedScreenId, {
         id: valueAsAction.id,
       });
     }

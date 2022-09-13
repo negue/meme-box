@@ -35,10 +35,10 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
     OpenFeedbackButtonModule
   ]
 })
-export class TwitchConnectionEditModule implements DialogContract<void> {
+export class TwitchConnectionEditModule implements DialogContract<void, TwitchConnectionEditComponent> {
   constructor(private dialog: MatDialog) { }
 
-  openDialog(): MatDialogRef<any> {
+  openDialog(): MatDialogRef<TwitchConnectionEditComponent> {
     const dialogRef = this.dialog.open(TwitchConnectionEditComponent, {
 
     });

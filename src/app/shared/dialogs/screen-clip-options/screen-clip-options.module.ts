@@ -18,7 +18,9 @@ import {HintPanelModule, UiComponentsPipesModule} from "@memebox/ui-components";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {CodemirrorModule} from "@gewd/components/codemirror";
 import {AnimationLabelPipe} from './animation-label.pipe';
-import {OpenActionSettingsButtonModule} from "../../components/open-action-settings-button/open-action-settings-button.module";
+import {
+  OpenActionSettingsButtonModule
+} from "../../components/open-action-settings-button/open-action-settings-button.module";
 
 @NgModule({
   declarations: [
@@ -46,11 +48,11 @@ import {OpenActionSettingsButtonModule} from "../../components/open-action-setti
   ],
   providers: [],
 })
-export class ScreenClipOptionsModule implements DialogContract<ScreenClipOptionsPayload> {
+export class ScreenClipOptionsModule implements DialogContract<ScreenClipOptionsPayload, ScreenClipOptionsComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: ScreenClipOptionsPayload): MatDialogRef<any> {
+  public openDialog (payload: ScreenClipOptionsPayload): MatDialogRef<ScreenClipOptionsComponent> {
     const dialogRef = this.dialog.open(ScreenClipOptionsComponent, {
       data: payload,
       width: 'calc(min(1100px, 96%))',

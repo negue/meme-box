@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Action, ClipAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
+import {Action, ActionAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
 import {AppQueries, AppService, SnackbarService} from '@memebox/app-state';
 import {DialogService} from "../dialog.service";
 import {filter, map} from "rxjs/operators";
@@ -100,20 +100,20 @@ export class TimedEditComponent implements OnInit, OnDestroy {
   }
 
   async selectEventClip() {
-    const clipId = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
-      selectedItemId: this.form.value.clipId,
+      const [selectedId] = await this.dialogService.showActionSelectionDialogAsync({
+        mode: ActionAssigningMode.Single,
+        selectedActionIdList: [this.form.value.clipId],
       dialogTitle: 'Timer',
       showMetaItems: true,
       showOnlyUnassignedFilter: true,
       unassignedFilterType: UnassignedFilterEnum.Timers
     });
 
-    if (clipId) {
+    if (selectedId) {
       this.form.patchValue({
-        clipId
+        clipId: selectedId
       });
-      this.selectedActionId$.next(clipId);
+      this.selectedActionId$.next(selectedId);
     }
   }
 

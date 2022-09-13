@@ -27,7 +27,7 @@ import {FormsModule} from "@angular/forms";
   ],
   providers: [],
 })
-export class TwitchScopeSelectionDialogModule implements DialogContract<TwitchScopeSelectionPayload> {
+export class TwitchScopeSelectionDialogModule implements DialogContract<TwitchScopeSelectionPayload, TwitchScopeSelectionComponent> {
   constructor(private dialog: MatDialog) {
   }
 

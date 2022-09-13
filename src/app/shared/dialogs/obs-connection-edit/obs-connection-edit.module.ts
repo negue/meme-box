@@ -23,10 +23,10 @@ import {MatButtonModule} from "@angular/material/button";
     MatDialogModule
   ]
 })
-export class ObsConnectionEditModule implements DialogContract<void> {
+export class ObsConnectionEditModule implements DialogContract<void, ObsConnectionEditComponent> {
   constructor(private dialog: MatDialog) { }
 
-  openDialog(): MatDialogRef<any> {
+  openDialog(): MatDialogRef<ObsConnectionEditComponent> {
     const dialogRef = this.dialog.open(ObsConnectionEditComponent, {
 
     });

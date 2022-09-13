@@ -56,11 +56,11 @@ import {A11yModule} from '@angular/cdk/a11y';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ScreenArrangeModule implements DialogContract<Screen> {
+export class ScreenArrangeModule implements DialogContract<Screen, ScreenArrangeComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: Screen): MatDialogRef<any> {
+  public openDialog (payload: Screen): MatDialogRef<ScreenArrangeComponent> {
     const dialogRef = this.dialog.open(ScreenArrangeComponent, {
       data: payload,
       autoFocus: false,

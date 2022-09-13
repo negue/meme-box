@@ -39,11 +39,11 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
   ],
   providers: [],
 })
-export class TimedEditModule implements DialogContract<TimedAction> {
+export class TimedEditModule implements DialogContract<TimedAction, TimedEditComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: TimedAction): MatDialogRef<any> {
+  public openDialog (payload: TimedAction): MatDialogRef<TimedEditComponent> {
     const dialogRef = this.dialog.open(TimedEditComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',

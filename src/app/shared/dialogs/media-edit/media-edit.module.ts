@@ -78,11 +78,11 @@ import {MatTabsModule} from "@angular/material/tabs";
   ],
   providers: [],
 })
-export class MediaEditModule implements DialogContract<MediaEditDialogPayload> {
+export class MediaEditModule implements DialogContract<MediaEditDialogPayload, MediaEditComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: MediaEditDialogPayload): MatDialogRef<any> {
+  public openDialog (payload: MediaEditDialogPayload): MatDialogRef<MediaEditComponent> {
     const dialogRef = this.dialog.open(MediaEditComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',

@@ -21,6 +21,7 @@ import {NetworkUrlViewModule} from "../../shared/components/network-url-view/net
 import {SelectedScreenAmountPipe} from "./screen-overview/screen-url-dialog/selected-screen-amount.pipe";
 import {ClipsInScreenAmountPipe} from "./screen-overview/screen-url-dialog/clips-in-screen-amount.pipe";
 import {OpenFeedbackButtonModule} from "../../shared/components/open-feedback-button/open-feedback-button.module";
+import {ScreenActionAssignmentModule} from "../../shared/screenActionAssignment.service";
 
 const routes: Routes = [
   {
@@ -57,7 +58,8 @@ const routes: Routes = [
     MatTooltipModule,
     MatCheckboxModule,
     NetworkUrlViewModule,
-    OpenFeedbackButtonModule
+    OpenFeedbackButtonModule,
+    ScreenActionAssignmentModule
   ]
 })
 export class ScreensModule {

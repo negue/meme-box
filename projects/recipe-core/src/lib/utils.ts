@@ -45,9 +45,7 @@ export function listActionsOfActionListPayload (
 ) {
   const actionsToChooseFrom: RecipeCommandConfigActionPayload[] = [];
 
-  if (actionListPayload.selectedActions) {
-    actionsToChooseFrom.push(...actionListPayload.selectedActions);
-  } else {
+  if (!!actionListPayload.actionsByTag) {
     const allActionsOfATag = listActionsByTag(userData, actionListPayload.actionsByTag ?? '');
 
     actionsToChooseFrom.push(...allActionsOfATag.map(a => {
@@ -56,6 +54,8 @@ export function listActionsOfActionListPayload (
         overrides: {}
       }
     }));
+  } else {
+    actionsToChooseFrom.push(...actionListPayload.selectedActions);
   }
 
   return actionsToChooseFrom;

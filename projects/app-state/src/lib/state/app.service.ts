@@ -234,7 +234,7 @@ export class AppService {
     this.snackbar.normal('Media saved!');
   }
 
-  public async addOrUpdateScreenClip(screenId: string, screenClip: Partial<ScreenMedia>) {
+  public async addOrUpdateScreenMedia(screenId: string, screenClip: Partial<ScreenMedia>) {
     screenClip = fillDefaultsScreenClip(screenClip);
 
     // add the action to api & await
@@ -248,6 +248,47 @@ export class AppService {
     });
 
     this.snackbar.normal(`Media ${wasAlreadyAdded ? 'Settings updated' : 'added to screen'}!`);
+  }
+  public async addOrUpdateAssignedScreenMediaInBulk(
+    screenId: string,
+    addedScreenMediaIdList: string[],
+    deletedScreenMediaIdList: string[],
+  ) {
+    // TODO create Endpoint to update this completely in the backend
+
+    for (const mediaId of deletedScreenMediaIdList) {
+      // send the api call
+      await this.memeboxApi.delete(`${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${mediaId}`);
+    }
+
+    const addedScreenMedia: ScreenMedia[] = [];
+
+    for (const mediaId of addedScreenMediaIdList) {
+      const screenMedia: ScreenMedia = {
+        id: mediaId,
+        visibility: VisibilityEnum.Play
+      };
+      // add the action to api & await
+      await this.memeboxApi.put(
+        `${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${mediaId}`,
+        screenMedia
+      );
+      addedScreenMedia.push(screenMedia);
+    }
+
+    // add to the state
+    this.appStore.update(state => {
+      for (const mediaId of deletedScreenMediaIdList) {
+        delete state.screen[screenId].clips[mediaId];
+      }
+
+      for (const media of addedScreenMedia) {
+        addOrUpdateScreenClip(state, screenId, media);
+      }
+    });
+
+    // todo rename those snackbars
+    this.snackbar.normal(`Updated assigned Screen Items`);
   }
 
   // TODO rename action and screenclip settings
@@ -268,7 +309,7 @@ export class AppService {
     this.snackbar.normal(`Screen Media Settings updated!`);
   }
 
-  public async deleteScreenClip(screenId: string, id: string) {
+  public async deleteScreenMedia(screenId: string, id: string) {
     // send the api call
     await this.memeboxApi.delete(`${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${id}`);
 
