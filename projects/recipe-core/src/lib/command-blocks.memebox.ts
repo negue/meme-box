@@ -174,11 +174,17 @@ export function registerMemeboxCommandBlocks (
         })();
       `;
     },
-    commandEntryLabelAsync: (queries, payload) => {
+    commandEntryLabelAsync: async (queries, payload) => {
       const actionListPayload = (payload.actions as RecipeCommandConfigActionListPayload);
 
       if (actionListPayload.actionsByTag) {
-        return `trigger any action with the tag: ${actionListPayload.actionsByTag}`;
+        const tags = await queries.tagList$.pipe(
+          take(1)
+        ).toPromise();
+        const tagName = tags.find(t => t.id === actionListPayload.actionsByTag)?.name
+          ?? `\r\nUnknown Tag: ${actionListPayload.actionsByTag}`;
+
+        return `trigger any action with the tag: ${tagName}`;
       }
 
       return `trigger any of the following: ${actionListPayload.selectedActions.length}`;

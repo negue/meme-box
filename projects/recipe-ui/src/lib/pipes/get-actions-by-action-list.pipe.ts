@@ -7,6 +7,8 @@ import {
 import {AppQueries} from "@memebox/app-state";
 import {ActionType, getUserDataState} from "@memebox/contracts";
 import {take} from 'rxjs/operators';
+import {getVariablesListOfAction} from "@memebox/action-variables";
+import {orderBy} from "lodash";
 
 @Pipe({
   name: 'getActionsByActionList$',
@@ -35,16 +37,23 @@ export class GetActionsByActionListPipe implements PipeTransform {
 
       const actionInfo = userDataState.actions[actionId];
 
+      const actionType = actionInfo?.type ?? ActionType.Invalid;
+
+      const hasVariables = !payload.actionsByTag && [ActionType.Widget, ActionType.Script].includes(actionType)
+        ? getVariablesListOfAction(actionInfo)?.length !== 0
+        : false;
+
       actionsWithName.push({
         ...recipeCommandConfigActionPayload,
         uiMetadata: {
           actionName: actionInfo?.name ?? 'Unknown Action: '+actionId,
-          actionType: actionInfo?.type ?? ActionType.Invalid
+          actionType,
+          hasVariables
         }
       })
     }
 
-    return actionsWithName
+    return orderBy(actionsWithName, ['uiMetadata.hasVariables', 'asc']);
   }
 
 }

@@ -82,6 +82,7 @@ export interface RecipeCommandConfigActionPayload {
   uiMetadata?: { // Only filled and used for the Recipe UI
     actionName: string;
     actionType: ActionType;
+    hasVariables: boolean;
   };
   overrides: TriggerActionOverrides;
 }

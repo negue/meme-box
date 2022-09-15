@@ -157,12 +157,6 @@ export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
     for (const actionId of this.data.selectedActionIdList) {
       this.checkedMap[actionId] = true;
     }
-
-
-    if (this.data.mode === ActionAssigningMode.Multiple) {
-
-    } else {
-    }
   }
 
   clickToSelect(clip: Action): void  {

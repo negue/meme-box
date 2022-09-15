@@ -1,0 +1,73 @@
+<mat-form-field appearance="fill" class="type-of-selection">
+  <mat-label>Type of List</mat-label>
+  <mat-select #actionListTypeSelect
+              [value]="configPayload?.actionsByTag ? 'byTag' : 'manually'"
+  (valueChange)="typeOfListChanged($event)">
+    <mat-option value="byTag">by Tag</mat-option>
+    <mat-option value="manually">manually selected</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field appearance="fill" *ngIf="actionListTypeSelect.value === 'byTag'">
+  <mat-label>Select Tag</mat-label>
+  <mat-select [value]="configPayload?.actionsByTag"
+  (valueChange)="onTagSelected($event)">
+    <mat-option [value]="tag.id" *ngFor="let tag of tagList$ | async">{{tag.name}}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div style="display: inline-block" *ngIf="actionListTypeSelect.value === 'manually' && configPayload | getActionsByActionList$ | async as actionList">
+  <div *ngIf="actionList.length !== 0">
+    Actions Selected: {{actionList.length}}
+  </div>
+
+  <button mat-raised-button color="primary"
+          (click)="updateSelectedActions(actionList)"
+          *ngIf="actionListTypeSelect.value !== 'byTag'">Select Actions</button>
+
+</div>
+
+
+<ng-container *ngIf="configPayload | getActionsByActionList$ | async as actionList">
+  <div class="two-columns">
+
+  <ng-container *ngFor="let actionEntry of actionList">
+    <ng-container *ngIf="actionEntry.uiMetadata.hasVariables">
+      <div class="flex-break"></div>
+    </ng-container>
+
+
+    <mat-card class="column column-50"
+              [class.column-30]="actionEntry.uiMetadata.hasVariables">
+      <mat-card-header class="card__header">
+        <mat-card-title>{{ actionDictionary[actionEntry.actionId]?.name }}</mat-card-title>
+
+        <button mat-icon-button class="remove-icon"
+                matTooltip="Remove" *ngIf="actionListTypeSelect.value !== 'byTag'"
+                (click)="removeActionEntry(actionList, actionEntry)">
+          <mat-icon svgIcon="delete"></mat-icon>
+        </button>
+      </mat-card-header>
+
+      <app-action-preview [action]="actionDictionary[actionEntry.actionId]"
+                          height="100px" width="200px"></app-action-preview>
+    </mat-card>
+
+    <ng-container *ngIf="actionEntry && actionDictionary[actionEntry.actionId] | actionVariableConfig as actionVariableConfigs">
+      <mat-card class="column column-70"
+                *ngIf="actionVariableConfigs.length">
+        <div>
+          Variables: <br>
+          <app-action-variables-assignments [variablesConfig]="actionVariableConfigs"
+                                            [data]="actionEntry.overrides.action.variables"
+                                            (dataChanged)="actionEntry.overrides.action.variables = $event;">
+
+          </app-action-variables-assignments>
+        </div>
+      </mat-card>
+    </ng-container>
+
+
+  </ng-container>
+</div>
+</ng-container>

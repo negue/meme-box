@@ -55,7 +55,9 @@ export function listActionsOfActionListPayload (
       }
     }));
   } else {
-    actionsToChooseFrom.push(...actionListPayload.selectedActions);
+    const actionsToIterate = actionListPayload.selectedActions ?? [];
+
+    actionsToChooseFrom.push(...actionsToIterate);
   }
 
   return actionsToChooseFrom;

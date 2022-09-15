@@ -15,7 +15,7 @@ import {UserDataState} from "@memebox/contracts";
 export interface RecipeStepConfigArgument {
   name: string;
   label: string;
-  type: string;
+  type: string; // todo change to the enum
 }
 
 export const RecipeCommandBlockGroups: Record<string, RecipeCommandSelectionGroup> = {
