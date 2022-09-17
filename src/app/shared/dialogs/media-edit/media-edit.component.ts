@@ -67,8 +67,8 @@ const ACTION_DEFAULT_PROPERTIES: Partial<Action> = {
   name: 'New Action',
   volumeSetting: 10,
   gainSetting: 0,
-  playLength: DEFAULT_PLAY_LENGTH,
-  clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
+  playLength: undefined,
+  clipLength: undefined, // TODO once its possible to get the data from the clip itself
 
   showOnMobile: true,
 
