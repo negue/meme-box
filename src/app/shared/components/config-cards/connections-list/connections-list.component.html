@@ -3,7 +3,7 @@
   <mat-list>
     <ng-container *ngFor="let entries of groupedConnections$ | async | mykeyvalue: originalOrder; let last = last">
       <div mat-subheader>{{entries.key}}</div>
-      <mat-list-item *ngFor="let connectionEntry of entries.value">
+      <mat-list-item *ngFor="let connectionEntry of entries.value" class="hover-connection">
         <div mat-line>{{connectionEntry.connectedAccount}}</div>
         <div mat-line>
           <ng-container *ngIf="connectionEntry.isConfigured; else notConfigured">
