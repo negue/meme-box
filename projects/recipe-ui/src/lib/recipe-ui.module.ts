@@ -21,6 +21,7 @@ import {RecipeCommandCreatorService} from "./recipe-command-creator.service";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {ActionTypeIconModule} from "@memebox/state-components";
 import {RecipePipesModule} from "./pipes/recipe-pipes.module";
+import {MatRippleModule} from "@angular/material/core";
 
 @NgModule({
   imports: [
@@ -31,7 +32,7 @@ import {RecipePipesModule} from "./pipes/recipe-pipes.module";
     OpenFeedbackButtonModule, MatIconModule,
     MatDialogModule, MatListModule,
     DialogsModule, MatTooltipModule,
-    ActionTypeIconModule, RecipePipesModule
+    ActionTypeIconModule, RecipePipesModule, MatRippleModule
   ],
   declarations: [
     RecipeBlockComponent,
