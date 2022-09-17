@@ -9,8 +9,10 @@ import {
 } from "@memebox/recipe-core";
 import {Observable} from "rxjs";
 import {produce} from "immer";
-import {skip} from "rxjs/operators";
+import {skip, take} from "rxjs/operators";
 import {arraymove} from "@memebox/utils";
+import {getUserDataState, UserDataState} from "@memebox/contracts";
+import {AppQueries} from "@memebox/app-state";
 
 function addEntryToPath (
   state: RecipeContext,
@@ -31,6 +33,8 @@ export class RecipeContextDirective
   extends Store<RecipeContext>
   implements OnInit, OnChanges
 {
+  public userData: UserDataState| null = null;
+
   @Input()
   public recipe: RecipeContext | null = null;
 
@@ -53,6 +57,7 @@ export class RecipeContextDirective
       );
 
   constructor (
+    private appQueries: AppQueries
   ) {
     super({
       rootEntry: '',
@@ -60,12 +65,18 @@ export class RecipeContextDirective
     });
   }
 
-  ngOnInit (): void {
+  async ngOnInit (): Promise<void> {
     if (this.recipe) {
       this.update({
         ...this.recipe
       });
     }
+
+    const currentState = await this.appQueries.state$.pipe(
+      take(1)
+    ).toPromise();
+
+    this.userData = getUserDataState(currentState);
   }
 
 

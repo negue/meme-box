@@ -7,7 +7,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatRippleModule} from "@angular/material/core";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSelectModule} from "@angular/material/select";
-import {ClipTypeModule} from "@memebox/state-components";
+import {ActionTypeIconModule} from "@memebox/state-components";
 import {MatIconModule} from "@angular/material/icon";
 import {DirectivesModule} from "../shared/directives/directives.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -33,7 +33,7 @@ const routes: Routes = [
     MatCardModule,
     MatRippleModule,
     MatToolbarModule,
-    ClipTypeModule,
+    ActionTypeIconModule,
     MatIconModule,
     MatSelectModule,
     DirectivesModule,

@@ -8,11 +8,11 @@
             (click)="onPreview(visibleItem)">
     <mat-card-header>
       <div mat-card-avatar>
-        <app-clip-type [type]="visibleItem.action.type"
+        <app-action-type [type]="visibleItem.action.type"
                        iconSize="36px"
                        mat-list-icon>
 
-        </app-clip-type>
+        </app-action-type>
       </div>
       <mat-card-title>{{visibleItem.action.name}}</mat-card-title>
       <mat-card-subtitle>

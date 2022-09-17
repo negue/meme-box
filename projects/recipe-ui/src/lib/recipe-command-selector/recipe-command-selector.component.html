@@ -5,13 +5,13 @@
     <h3>{{groupInfo.label}}</h3>
 
     <div class="two-columns wrap">
-      <div class="column-50 flex"
+      <div class="column-50 flex command-block-entry"
            *ngFor="let block of groupInfo.blocks"
+           (click)="selectCommandBlock(block)"
+           mat-ripple
       >
-        <button class="flex-inline"  (click)="selectCommandBlock(block)"
-                mat-icon-button color="primary">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
+        <mat-icon color="primary" svgIcon="add"></mat-icon>
+
 
         <div class="column">
           {{block.pickerLabel}}

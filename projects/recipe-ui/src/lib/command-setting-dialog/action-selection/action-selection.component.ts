@@ -9,7 +9,7 @@ import {BehaviorSubject, combineLatest} from "rxjs";
 import {AppQueries} from "@memebox/app-state";
 import {filter, map, startWith, withLatestFrom} from "rxjs/operators";
 import {isNonNull} from "@gewd/utils/ts";
-import {ActionType, ClipAssigningMode, UnassignedFilterEnum} from "@memebox/contracts";
+import {ActionAssigningMode, ActionType, UnassignedFilterEnum} from "@memebox/contracts";
 import {DialogService} from "../../../../../../src/app/shared/dialogs/dialog.service";
 
 interface ActionIdName {
@@ -18,7 +18,6 @@ interface ActionIdName {
   type: ActionType;
 }
 
-const DEFAULT_ENTRY_IN_SELECTION = '____DEFAULT____';
 
 @Component({
   selector: 'app-action-selection',
@@ -29,7 +28,7 @@ export class ActionSelectionComponent {
 
   private readonly recipeContext$ = new BehaviorSubject<RecipeContext|null>(null);
 
-  public selectionActionIdUi$ = new BehaviorSubject<string|null|undefined>(DEFAULT_ENTRY_IN_SELECTION);
+  public selectionActionIdUi$ = new BehaviorSubject<string|null|undefined>(null);
 
   @Output()
   public readonly selectedActionId$ = new EventEmitter<string>();
@@ -63,7 +62,7 @@ export class ActionSelectionComponent {
         if (foundCommand.commandBlockType === 'triggerRandom') {
           const payload = foundCommand.payload['actions'] as RecipeCommandConfigActionListPayload;
 
-          for (const recipeCommandConfigActionPayload of payload) {
+          for (const recipeCommandConfigActionPayload of (payload.selectedActions ?? [])) {
             allFoundActions.add(recipeCommandConfigActionPayload.actionId);
           }
 
@@ -92,8 +91,8 @@ export class ActionSelectionComponent {
     this.alreadyUsedActionList$
   ]).pipe(
     map(([selectedAction, itemsInTheList]) => {
-      if (selectedAction === DEFAULT_ENTRY_IN_SELECTION) {
-        return true;
+      if (itemsInTheList.length === 0) {
+        return false;
       }
 
       return itemsInTheList.map(i => i.id).includes(selectedAction ?? '');
@@ -129,16 +128,18 @@ export class ActionSelectionComponent {
   }
 
 
-  private _selectAction (actionId?: string | undefined): Promise<string> {
-    return this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
-      selectedItemId: actionId,
+  private async _selectAction (actionId?: string | undefined): Promise<string> {
+    const [selectedId] = await this.dialogService.showActionSelectionDialogAsync({
+      mode: ActionAssigningMode.Single,
+      selectedActionIdList: actionId ? [actionId]: [],
       dialogTitle: 'Config Argument',
       showMetaItems: true,
 
       unassignedFilterType: UnassignedFilterEnum.RecipeCommandArgument,
       // showOnlyUnassignedFilter: true
     });
+
+    return selectedId;
   }
 
 }

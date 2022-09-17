@@ -46,11 +46,11 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
   exports: [
   ]
 })
-export class ScriptEditModule implements DialogContract<CustomScriptDialogPayload> {
+export class ScriptEditModule implements DialogContract<CustomScriptDialogPayload, ScriptEditComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: CustomScriptDialogPayload): MatDialogRef<any> {
+  public openDialog (payload: CustomScriptDialogPayload): MatDialogRef<ScriptEditComponent> {
     const dialogRef = this.dialog.open(ScriptEditComponent, {
       data: payload,
       minWidth: '100vw',

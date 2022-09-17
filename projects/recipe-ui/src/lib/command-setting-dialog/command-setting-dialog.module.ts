@@ -5,7 +5,7 @@ import {DialogContract} from "../../../../../src/app/shared/dialogs/dialog.contr
 import {MatDialog, MatDialogModule} from "@angular/material/dialog";
 import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {MatButtonModule} from "@angular/material/button";
-import {ActionPreviewModule, ClipTypeModule, StateBasedPipesModule} from "@memebox/state-components";
+import {ActionPreviewModule, ActionTypeIconModule, StateBasedPipesModule} from "@memebox/state-components";
 import {ActionVariableInputModule, ActionVariablesAssignmentsModule} from "@memebox/action-variables/ui";
 import {ActionVariableConfigPipe} from './action-variable-config.pipe';
 import {
@@ -20,6 +20,11 @@ import {ObsFilterSelectionComponent} from './obs-filter-selection/obs-filter-sel
 import {UiComponentsPipesModule} from "@memebox/ui-components";
 import {MatSelectModule} from "@angular/material/select";
 import {ActionSelectionComponent} from './action-selection/action-selection.component';
+import {ActionListSettingsComponent} from './action-list-settings/action-list-settings.component';
+import {RecipePipesModule} from "../pipes/recipe-pipes.module";
+import {MatCardModule} from "@angular/material/card";
+import {MatIconModule} from "@angular/material/icon";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 // todo extract this module to its own internal library ^
 
@@ -29,7 +34,8 @@ import {ActionSelectionComponent} from './action-selection/action-selection.comp
     ActionVariableConfigPipe,
     ObsSceneSelectionComponent,
     ObsFilterSelectionComponent,
-    ActionSelectionComponent
+    ActionSelectionComponent,
+    ActionListSettingsComponent
   ],
   imports: [
     CommonModule,
@@ -47,14 +53,18 @@ import {ActionSelectionComponent} from './action-selection/action-selection.comp
     UiComponentsPipesModule,
     StateBasedPipesModule,
     MatSelectModule,
-    ClipTypeModule
+    ActionTypeIconModule,
+    RecipePipesModule,
+    MatCardModule,
+    MatIconModule,
+    MatTooltipModule
   ]
 })
-export class CommandSettingDialogModule implements DialogContract<CommandSettingDialogPayload> {
+export class CommandSettingDialogModule implements DialogContract<CommandSettingDialogPayload, StepSettingDialogComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: CommandSettingDialogPayload): MatDialogRef<any> {
+  public openDialog (payload: CommandSettingDialogPayload): MatDialogRef<StepSettingDialogComponent> {
     const dialogRef = this.dialog.open(StepSettingDialogComponent, {
       data: payload,
       autoFocus: false,

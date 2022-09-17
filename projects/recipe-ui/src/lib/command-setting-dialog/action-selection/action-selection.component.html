@@ -5,7 +5,7 @@
             >
   <mat-option *ngFor="let entry of alreadyUsedActionList$|async"
               [value]="entry.id" class="mat-option-icon">
-    <app-clip-type [type]="entry.type"></app-clip-type>
+    <app-action-type [type]="entry.type"></app-action-type>
 
      {{entry.name}}
   </mat-option>

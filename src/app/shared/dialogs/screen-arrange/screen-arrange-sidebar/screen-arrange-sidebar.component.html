@@ -42,9 +42,9 @@
                      (mousedown)="preventEvent($event)"
     >
       <div mat-list-avatar class="clip-avatar">
-        <app-clip-type [type]="visibleItem.action.type"
+        <app-action-type [type]="visibleItem.action.type"
                        iconSize="40px">
-        </app-clip-type>
+        </app-action-type>
 
         <mat-icon *ngIf="unsavedChangesIds.includes(visibleItem.action.id)"
                   class="clip-modified-icon"

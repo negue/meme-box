@@ -4,7 +4,7 @@ import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
   Action,
-  ClipAssigningMode,
+  ActionAssigningMode,
   Dictionary,
   TwitchEventFields,
   TwitchEventTypes,
@@ -291,9 +291,10 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   }
 
   async selectEventClip() {
-    const clipId = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
-      selectedItemId: this.form.value.clipId,
+      const [clipId] = await this.dialogService.showActionSelectionDialogAsync({
+        mode: ActionAssigningMode.Single,
+        selectedActionIdList:  [this.form.value.clipId],
+
       dialogTitle: this.data.name || 'Twitch Event',
       showMetaItems: true,
 

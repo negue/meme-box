@@ -1,5 +1,5 @@
 
-export enum ClipAssigningMode {
+export enum ActionAssigningMode {
   Multiple,
   Single
 }

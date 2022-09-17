@@ -1,26 +1,26 @@
-import { Service, UseOpts } from "@tsed/di";
-import { VM } from "vm2";
-import { Action, ActionStateEnum, ActionType, TriggerAction } from "@memebox/contracts";
-import { NamedLogger } from "../../named-logger";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "../../contracts";
-import { Persistence } from "../../../persistence";
-import { ActionQueueEventBus } from "../action-queue-event.bus";
-import { ActionActiveState } from "../action-active-state";
-import { ActionActiveStateEventBus } from "../action-active-state-event.bus";
-import { ActionStore, ActionStoreAdapter } from "@memebox/shared-state";
-import { ScriptContext } from "./script.context";
-import { ActionPersistentStateHandler } from "../action-persistent-state.handler";
-import { MemeboxApiFactory } from "./apis/memebox.api";
-import { ObsConnection } from "../../obs-connection";
-import { ObsApi } from "./apis/obs.api";
-import { TwitchConnector } from "../../twitch/twitch.connector";
-import { TwitchApi } from "./apis/twitch.api";
-import { TwitchDataProvider } from "../../twitch/twitch.data-provider";
-import { setGlobalVMScope } from "./global.context";
-import { TwitchQueueEventBus } from "../../twitch/twitch-queue-event.bus";
-import { actionDataToScriptConfig, ScriptConfig } from "@memebox/utils";
-import { generateCodeByRecipe } from "@memebox/recipe-core";
+import {Service, UseOpts} from "@tsed/di";
+import {VM} from "vm2";
+import {Action, ActionStateEnum, ActionType, getUserDataState, TriggerAction} from "@memebox/contracts";
+import {NamedLogger} from "../../named-logger";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "../../contracts";
+import {Persistence} from "../../../persistence";
+import {ActionQueueEventBus} from "../action-queue-event.bus";
+import {ActionActiveState} from "../action-active-state";
+import {ActionActiveStateEventBus} from "../action-active-state-event.bus";
+import {ActionStore, ActionStoreAdapter} from "@memebox/shared-state";
+import {ScriptContext} from "./script.context";
+import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
+import {MemeboxApiFactory} from "./apis/memebox.api";
+import {ObsConnection} from "../../obs-connection";
+import {ObsApi} from "./apis/obs.api";
+import {TwitchConnector} from "../../twitch/twitch.connector";
+import {TwitchApi} from "./apis/twitch.api";
+import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
+import {setGlobalVMScope} from "./global.context";
+import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
+import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
+import {generateCodeByRecipe} from "@memebox/recipe-core";
 
 const ActionTypesToResetScriptContext = [
   ActionType.Script,
@@ -100,8 +100,8 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // endregion ActionStoreAdapter
 
-  public async handleRecipe(script: Action, payloadObs: TriggerAction) {
-    const generatedScript = generateCodeByRecipe(script.recipe);
+  public handleRecipe(script: Action, payloadObs: TriggerAction) {
+    const generatedScript = generateCodeByRecipe(script.recipe, getUserDataState(this._persistence.fullState()));
 
     const scriptConfig: ScriptConfig = {
       bootstrapScript: '',
@@ -158,7 +158,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       try {
         scriptHoldingData.compile();
       } catch (err) {
-        this.logger.error(err.message, 'Script: '+script.name);
+        this.logger.error(err.message, `Script: ${script.name}`);
         return;
       }
       this._compiledScripts.set(script.id, scriptHoldingData);

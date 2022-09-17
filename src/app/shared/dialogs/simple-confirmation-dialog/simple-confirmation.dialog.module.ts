@@ -18,11 +18,11 @@ import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
   ],
   providers: [],
 })
-export class SimpleConfirmationDialogModule implements DialogContract<ConfirmationsPayload> {
+export class SimpleConfirmationDialogModule implements DialogContract<ConfirmationsPayload, SimpleConfirmationDialogComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: ConfirmationsPayload): MatDialogRef<any> {
+  public openDialog (payload: ConfirmationsPayload): MatDialogRef<SimpleConfirmationDialogComponent> {
     const dialogRef = this.dialog.open(SimpleConfirmationDialogComponent, {
       data: payload,
       disableClose: payload.escapeToAbortNotAllowed

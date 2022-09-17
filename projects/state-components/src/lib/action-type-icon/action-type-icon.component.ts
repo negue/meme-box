@@ -2,11 +2,11 @@ import {Component, HostBinding, Input} from '@angular/core';
 import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
 
 @Component({
-  selector: 'app-clip-type',
-  templateUrl: './clip-type.component.html',
-  styleUrls: ['./clip-type.component.scss']
+  selector: 'app-action-type',
+  templateUrl: './action-type-icon.component.html',
+  styleUrls: ['./action-type-icon.component.scss']
 })
-export class ClipTypeComponent {
+export class ActionTypeIconComponent {
 
   public MediaInfoDictionary = ACTION_TYPE_INFORMATION;
 

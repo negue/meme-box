@@ -457,7 +457,7 @@ export class Persistence {
     }
 
     this.saveData({
-      dataType: 'settings',
+      dataType: 'obs-settings',
       changeType: 'changed'
     });
   }

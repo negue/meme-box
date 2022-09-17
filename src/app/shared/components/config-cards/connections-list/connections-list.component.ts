@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {DialogService} from "../../../dialogs/dialog.service";
 import {combineLatest, Observable} from "rxjs";
-import {AppQueries, AppService, ConnectionStateService} from "@memebox/app-state";
+import {AppQueries, AppService, ConfigService, ConnectionStateService} from "@memebox/app-state";
 import {switchMap} from "rxjs/operators";
-import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
+import {TwitchAuthInformation} from "@memebox/contracts";
 
 interface ConnectionEntry {
   isConfigured: boolean;
@@ -51,20 +51,18 @@ export class ConnectionsListComponent {
         'Twitch':  [
           {
             isConfigured: isTwitchConfigured,
-            connectedAccount: 'Main Account: ' + (mainTwitchAuthInfo?.authResult?.reason ??
-               config.twitch.channel),
+            connectedAccount: `Main Account: ${mainTwitchAuthInfo?.authResult?.reason ??
+            config.twitch.channel}`,
             hasAuthToken: !!config.twitch.token,
-            isValid: mainTwitchAuthInfo?.authResult?.valid,
-            validUntil: new Date(mainTwitchAuthInfo?.authResult?.expires_in_date).toLocaleString(),
+           ...this.generateConnectionMetaInfos(mainTwitchAuthInfo),
             openConfig: () => this.dialogService.openTwitchConnectionConfig()
           },
           {
             isConfigured: !!config.twitch.bot?.auth?.name,
-            connectedAccount:  'Bot Account: '+ (botTwitchAuthInfo?.authResult?.reason ??
-             config.twitch.bot?.auth?.name),
+            connectedAccount:  `Bot Account: ${botTwitchAuthInfo?.authResult?.reason ??
+            config.twitch.bot?.auth?.name}`,
             hasAuthToken: !!config.twitch.bot?.auth?.name,
-            isValid: botTwitchAuthInfo?.authResult?.valid,
-            validUntil: new Date(botTwitchAuthInfo?.authResult?.expires_in_date).toLocaleString(),
+            ...this.generateConnectionMetaInfos(botTwitchAuthInfo),
             openConfig: () => this.dialogService.openTwitchConnectionConfig()
           }
         ],
@@ -99,4 +97,13 @@ export class ConnectionsListComponent {
               private configService: ConfigService,
               private connectionStateService: ConnectionStateService
               ) { }
+
+  private generateConnectionMetaInfos (authInformation: TwitchAuthInformation): Partial<ConnectionEntry> {
+    return {
+      isValid: authInformation?.authResult?.valid,
+      validUntil: authInformation?.authResult?.valid
+        ? new Date(authInformation?.authResult?.expires_in_date).toLocaleString()
+        : undefined,
+    }
+  }
 }

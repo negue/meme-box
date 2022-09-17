@@ -6,7 +6,7 @@ import {MatCheckbox} from "@angular/material/checkbox";
 import {jsCodemirror} from "../../../core/codemirror.extensions";
 import {DialogService} from "../dialog.service";
 import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
-import {Action, ActionType, ClipAssigningMode} from "@memebox/contracts";
+import {Action, ActionAssigningMode, ActionType} from "@memebox/contracts";
 import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
 import {BehaviorSubject, Observable} from "rxjs";
 import {
@@ -117,8 +117,9 @@ export class ScriptEditComponent implements OnInit {
   }
 
   async addActionAtCursor(codemirrorComponent: CodemirrorComponent) {
-    const actionId = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
+      const [actionId] = await this.dialogService.showActionSelectionDialogAsync({
+        mode: ActionAssigningMode.Single,
+        selectedActionIdList: [],
       dialogTitle: 'Action',
       showMetaItems: true
     });

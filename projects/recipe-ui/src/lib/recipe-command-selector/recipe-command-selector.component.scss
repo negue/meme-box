@@ -8,6 +8,12 @@
   }
 }
 
-.column-50:hover {
-  background: #00000022;
+.command-block-entry {
+  cursor: pointer;
+
+  &:hover {
+
+    background: #00000022;
+  }
 }
+

@@ -20,11 +20,11 @@ import {Action} from "@memebox/contracts";
   ],
   providers: [],
 })
-export class TriggerActionVariablesDialogModule implements DialogContract<Action> {
+export class TriggerActionVariablesDialogModule implements DialogContract<Action, TriggerActionVariablesComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: Action): MatDialogRef<any> {
+  public openDialog (payload: Action): MatDialogRef<TriggerActionVariablesComponent> {
     const dialogRef = this.dialog.open(TriggerActionVariablesComponent, {
       data: payload,
       width: 'calc(min(1000px, 96%))',

@@ -5,7 +5,7 @@
 
       <app-action-shortcut-toolbar [action]="info"></app-action-shortcut-toolbar>
 
-      <app-clip-type [type]="info.type"></app-clip-type>
+      <app-action-type [type]="info.type"></app-action-type>
     </span>
   </div>
   <mat-card-content>
@@ -20,12 +20,12 @@
 
 
 
-      <app-clip-type *ngIf="info.type !== 0"
+      <app-action-type *ngIf="info.type !== 0"
                      [type]="info.type"
                      iconSize="12rem"
                      class="mediaInfo__preview__img">
 
-      </app-clip-type>
+      </app-action-type>
 
       <div *ngIf="info.type === 3 && (info.previewUrl || info.path) && false">
         <iframe [src]="info.path | safeurl"></iframe>

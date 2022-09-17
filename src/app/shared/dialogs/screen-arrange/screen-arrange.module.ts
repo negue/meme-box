@@ -13,7 +13,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatRippleModule} from '@angular/material/core';
-import {ActionPreviewModule, ClipTypeModule} from '@memebox/state-components';
+import {ActionPreviewModule, ActionTypeIconModule} from '@memebox/state-components';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {AutoScaleModule} from '@gewd/components/auto-scale';
 import {DragResizeMediaModule} from './drag-resize-media/drag-resize-media.module';
@@ -42,7 +42,7 @@ import {A11yModule} from '@angular/cdk/a11y';
     ReactiveFormsModule,
     MatCardModule,
     MatRippleModule,
-    ClipTypeModule,
+    ActionTypeIconModule,
     MatCheckboxModule,
     AutoScaleModule,
     ActionPreviewModule,
@@ -56,11 +56,11 @@ import {A11yModule} from '@angular/cdk/a11y';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class ScreenArrangeModule implements DialogContract<Screen> {
+export class ScreenArrangeModule implements DialogContract<Screen, ScreenArrangeComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: Screen): MatDialogRef<any> {
+  public openDialog (payload: Screen): MatDialogRef<ScreenArrangeComponent> {
     const dialogRef = this.dialog.open(ScreenArrangeComponent, {
       data: payload,
       autoFocus: false,

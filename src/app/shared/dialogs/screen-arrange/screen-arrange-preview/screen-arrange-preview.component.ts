@@ -184,7 +184,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   }
 
   applySingleChanges(): void {
-    this.appService.addOrUpdateScreenClip(this.screen.id, this.currentSelectedClip.screenMediaConfig);
+    this.appService.addOrUpdateScreenMedia(this.screen.id, this.currentSelectedClip.screenMediaConfig);
     this.changesSaved.emit(this.currentSelectedClip.action.id);
   }
 
@@ -220,7 +220,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
       screenMediaConfig.left = null;
     }
 
-    this.appService.addOrUpdateScreenClip(this.screen.id, screenMediaConfig);
+    this.appService.addOrUpdateScreenMedia(this.screen.id, screenMediaConfig);
     this.mediaReset.emit(action.id);
   }
 

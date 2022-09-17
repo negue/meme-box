@@ -2,8 +2,8 @@ import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {DynamicIframeContent, ScriptConfig} from "@memebox/utils";
 import {ActionType} from "@memebox/contracts";
 
-export interface DialogContract<TPayload> {
-  openDialog(payload: TPayload): MatDialogRef<any>;
+export interface DialogContract<TPayload, TComponentType> {
+  openDialog(payload: TPayload): MatDialogRef<TComponentType>;
 }
 
 export interface DialogData<TPayload> {

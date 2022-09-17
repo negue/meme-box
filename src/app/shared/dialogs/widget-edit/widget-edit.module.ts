@@ -41,7 +41,7 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
   ],
   providers: [],
 })
-export class WidgetEditModule implements DialogContract<CustomHtmlDialogPayload> {
+export class WidgetEditModule implements DialogContract<CustomHtmlDialogPayload, WidgetEditComponent> {
   constructor(private dialog: MatDialog) {
   }
 

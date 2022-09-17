@@ -1,19 +1,18 @@
 import {Component, Inject, OnDestroy, OnInit, TrackByFunction} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Action, ActionType, ClipAssigningMode, Dictionary, Screen, UnassignedFilterEnum} from "@memebox/contracts";
+import {Action, ActionAssigningMode, ActionType, Dictionary, UnassignedFilterEnum} from "@memebox/contracts";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {map, takeUntil, withLatestFrom} from "rxjs/operators";
+import {map, withLatestFrom} from "rxjs/operators";
 import {FilterTypes, IFilterItem} from "../../components/filter/filter.component";
 import {createCombinedFilterItems$, filterClips$} from "../../components/filter/filter.methods";
-import {AppQueries, AppService} from "@memebox/app-state";
+import {AppQueries} from "@memebox/app-state";
 
 
 export interface ActionAssigningDialogOptions {
-  mode: ClipAssigningMode;
-  // Multiple, current screen
-  screenId?: string;
+  mode: ActionAssigningMode;
+
   // Single, current selected item
-  selectedItemId?: string;
+  selectedActionIdList: string[];
 
   dialogTitle: string;
 
@@ -140,54 +139,37 @@ export class ActionAssigningDialogComponent implements OnInit, OnDestroy {
     })
   );
 
-  screen$: Observable<Screen> = this.appQueries.screenMap$.pipe(
-    map(screenMap => screenMap[this.data.screenId])
-  );
-
   trackByAction: TrackByFunction<Action> = (index, item) => item.id;
 
   private destroy$ = new Subject();
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: ActionAssigningDialogOptions,
               public dialogRef: MatDialogRef<ActionAssigningDialogComponent>,
-              private appQueries: AppQueries,
-              private appService: AppService) {
+              private appQueries: AppQueries) {
   }
 
   ngOnInit(): void {
-    if (this.data.mode === ClipAssigningMode.Multiple) {
-      this.screen$.pipe(
-        takeUntil(this.destroy$),
-      ).subscribe((screen) => {
-        this.checkedMap = {};
 
-        Object.keys(screen.clips).forEach(clipId => {
-          this.checkedMap[clipId] = true;
-        });
-      });
-    } else {
-      this.checkedMap = {};
-      this.checkedMap[this.data.selectedItemId] = true;
+    this.checkedMap = {};
+
+    this.data.selectedActionIdList = this.data.selectedActionIdList.filter(id => !!id);
+
+    for (const actionId of this.data.selectedActionIdList) {
+      this.checkedMap[actionId] = true;
     }
   }
 
   clickToSelect(clip: Action): void  {
-    if (this.data.mode === ClipAssigningMode.Multiple) {
+    if (this.data.mode === ActionAssigningMode.Single) {
+      this.checkedMap = {
+        [clip.id]: true
+      };
 
-      const isSelected = this.checkedMap[clip.id] || false;
-
-
-      if (!isSelected) {
-        this.appService.addOrUpdateScreenClip(this.data.screenId, {
-          id: clip.id,
-        });
-      } else {
-        this.appService.deleteScreenClip(this.data.screenId, clip.id);
-      }
-    }
-    else {
       this.dialogRef.close(clip.id);
+      return;
     }
+
+    this.checkedMap[clip.id] = !this.checkedMap[clip.id];
   }
 
   ngOnDestroy(): void {

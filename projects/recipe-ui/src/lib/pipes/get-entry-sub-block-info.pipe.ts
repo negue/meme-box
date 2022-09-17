@@ -8,12 +8,12 @@ import {
 } from "@memebox/recipe-core";
 import {from, Observable, of} from "rxjs";
 import {AppQueries} from "@memebox/app-state";
-import {RecipeContextDirective} from "./recipe-context.directive";
+import {RecipeContextDirective} from "../recipe-context.directive";
 
 @Pipe({
   name: 'getEntrySubBlockInfoArray$'
 })
-export class GetEntrySubBlockInfoArray$Pipe implements PipeTransform {
+export class GetEntrySubBlockInfoArrayPipe implements PipeTransform {
 
   constructor (
     private context: RecipeContextDirective,

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {createRecipeContext, generateCodeByRecipe, RecipeContext} from "@memebox/recipe-core";
+import {createRecipeContext, RecipeContext} from "@memebox/recipe-core";
 import {AppService} from "@memebox/app-state";
 
 @Component({
@@ -16,9 +16,5 @@ export class TestComponent implements OnInit {
 
   ngOnInit(): void {
     this.appService.loadState();
-  }
-
-  toScriptCode (recipeContext: RecipeContext): string  {
-    return generateCodeByRecipe(recipeContext);
   }
 }

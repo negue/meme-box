@@ -1,13 +1,13 @@
-import { Service, UseOpts } from "@tsed/di";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "./contracts";
-import { Persistence } from "../persistence";
+import {Service, UseOpts} from "@tsed/di";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "./contracts";
+import {Persistence} from "../persistence";
 import OBSWebSocket from "obs-websocket-js";
-import { NamedLogger } from "./named-logger";
-import { timeoutAsync } from "./actions/scripts/apis/sleep.api";
-import { ObsConfig } from "@memebox/contracts";
-import { ConnectionsStateHub, UpdateStateFunc } from "./connections-state.hub";
-import { fromEventPattern, Subject } from "rxjs";
+import {NamedLogger} from "./named-logger";
+import {timeoutAsync} from "./actions/scripts/apis/sleep.api";
+import {ObsConfig} from "@memebox/contracts";
+import {ConnectionsStateHub, UpdateStateFunc} from "./connections-state.hub";
+import {fromEventPattern, Subject} from "rxjs";
 
 export function onWsEvent$(ws: OBSWebSocket, type: string) {
   return fromEventPattern(
@@ -52,31 +52,32 @@ export class ObsConnection {
 
     this._persistence.dataUpdated$().subscribe(
       async value => {
-        if (value.dataType === "settings") {
-          if (this.isObsConnected()) {
-            this.logger.error(`Can't change the OBS while is already connected. You need to restart.`);
-
-            return;
-          }
-
-          const previousConfig = this.obsConfig;
-          const newConfig = _persistence.getConfig(false).obs;
-
-          if (
-            previousConfig.hostname == newConfig.hostname
-          && previousConfig.password == newConfig.password
-          ) {
-            return;
-          }
-
-          this.obsConfig = newConfig;
-
-          this.obsConnectionState({
-            label: 'New Configuration Received',
-          });
-
-          await this.connectIfNot();
+        if (value.dataType !== "obs-settings") {
+          return;
         }
+
+        if (this.isObsConnected()) {
+          this.logger.error(`Can't change the OBS while is already connected. You need to restart.`);
+
+          return;
+        }
+
+        const previousConfig = this.obsConfig;
+        const newConfig = _persistence.getConfig(false).obs;
+
+        if (
+          previousConfig.hostname == newConfig.hostname
+          && previousConfig.password == newConfig.password
+        ) {
+          return;
+        }
+
+        this.obsConfig = newConfig;
+        this.obsConnectionState({
+          label: 'New Configuration Received'
+        });
+
+        await this.connectIfNot();
       }
     )
   }

@@ -1,18 +1,18 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ClipTypeComponent} from './clip-type.component';
+import {ActionTypeIconComponent} from './action-type-icon.component';
 import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
-  declarations: [ClipTypeComponent],
+  declarations: [ActionTypeIconComponent],
   exports: [
-    ClipTypeComponent
+    ActionTypeIconComponent
   ],
   imports: [
     CommonModule,
     MatIconModule
   ]
 })
-export class ClipTypeModule {
+export class ActionTypeIconModule {
 }
