@@ -25,7 +25,7 @@
 
 * [x] Recipe "Trigger random action" - now shows the Actions in a vertical list instead of comma separated 
 * [x] Action Settings: Added a hint why a screen time is needed or can stay empty
-* [ ] When the Twitch Token is close to be invalid, show a warning in console
+* [x] When the Twitch Token is close to be invalid, show a warning in console
 
 ### Quality of Life
 

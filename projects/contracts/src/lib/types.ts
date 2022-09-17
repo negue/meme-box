@@ -272,6 +272,9 @@ export interface Config {
 
 export interface TwitchConfig {
   channel: string;
+  /**
+   * @deprecated might need to be deleted
+   */
   enableLog?: boolean;
   bot?: TwitchBotConfig;
   token: string|null;
