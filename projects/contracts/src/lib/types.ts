@@ -350,7 +350,7 @@ export interface ChangedInfo {
   id?: string;
   targetScreenId?: string;
   dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
-    |'settings'|'twitch-events'|'timers'|'twitch-setting';
+    |'settings'|'twitch-events'|'timers'|'twitch-setting'|'obs-settings';
   actionType?: ActionType;
   changeType: 'added'|'changed'|'removed';
 }

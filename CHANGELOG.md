@@ -2,17 +2,18 @@
 
 ### Feature
 
-- [ ] Show Errors in the Dashboard - incl. a way to create a GitHub Issue from that
-- [ ] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
-- [ ] Ability to re-authenticate even when you are not in the normal ports
-- [ ] Recipe: more Twitch Command Blocks: Announce, Clear Chat, Start Commercial, Create Stream Marker, Slow Mode, Chat Settings
-- [ ] Recipe: more Obs Command Blocks: TBD
-- [ ] if easy/fast todo: Support for new OBS-websocket(.js) v5
+* [ ] Show Errors in the Dashboard - incl. a way to create a GitHub Issue from that
+* [ ] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
+* [ ] Ability to re-authenticate even when you are not in the normal ports
+* [ ] Twitch Auth: Improve custom scopes handling
+* [ ] Recipe: more Twitch Command Blocks: Announce, Clear Chat, Start Commercial, Create Stream Marker, Slow Mode, Chat Settings
+* [ ] Recipe: more Obs Command Blocks: TBD
+* [ ] if easy/fast todo: Support for new OBS-websocket(.js) v5
 
-### Changes
+### Misc
 
-- [ ] Added a Twitch Raid Script Example
-- [ ] Recipe Example: Panic Button
+* [ ] Added a Twitch Raid Script Example
+* [ ] Recipe Example: Panic Button
 
 ## 2022.1-beta2
 
@@ -32,8 +33,7 @@
 * [x] When creating a new action, the dialog will jump already into the Action Settings
 * [x] Added a few Tooltips in the Recipe Dialog
 * [x] Recipe new Command Block full entry is now a button
-* [ ] When you authenticate it'll be automatically saved
-* [ ] When authentication and already having some custom scopes - these should be applied automagically
+* [x] When you authenticate it'll be automatically saved
 
 ## 2022.1-beta1
 

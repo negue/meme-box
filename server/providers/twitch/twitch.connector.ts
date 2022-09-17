@@ -165,7 +165,7 @@ export class TwitchConnector {
 
   private async tryTokenValidation() {
     for (const availableConnectionType of this.availableConnectionTypes()) {
-      this.logger.info('Checking Auth Token Validation for: Twitch-' + availableConnectionType);
+      this.logger.info(`Checking Auth Token Validation for: ${availableConnectionType}-Twitch`);
 
       if (availableConnectionType === 'MAIN') {
         const twitchAuthResult = await this.twitchAuth.getTwitchAuthAsync();

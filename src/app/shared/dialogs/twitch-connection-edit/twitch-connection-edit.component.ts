@@ -70,7 +70,7 @@ export class TwitchConnectionEditComponent implements OnInit {
               private appService: AppService,
               private configService: ConfigService,
               private dialogService: DialogService,
-              private dialogRef: MatDialogRef<any>,) {
+              private dialogRef: MatDialogRef<any>) {
 
   }
 
@@ -117,7 +117,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     this._destroy$.complete();
   }
 
-  async save() {
+  async save(closeDialog = true, onlyCheckAccountForm = false) {
     if (!this.mainAccountForm.valid) {
       // highlight hack
       this.mainAccountForm.markAllAsTouched();
@@ -128,7 +128,7 @@ export class TwitchConnectionEditComponent implements OnInit {
       return;
     }
 
-    if (!this.additionalForm.valid) {
+    if (!onlyCheckAccountForm && !this.additionalForm.valid) {
       // highlight hack
       this.additionalForm.markAllAsTouched();
 
@@ -157,7 +157,9 @@ export class TwitchConnectionEditComponent implements OnInit {
       }
     });
 
-    this.dialogRef.close();
+    if (closeDialog) {
+      this.dialogRef.close();
+    }
   }
 
   onCheckboxChanged($event: MatCheckboxChange, config: Partial<Config>): void {
@@ -240,6 +242,8 @@ export class TwitchConnectionEditComponent implements OnInit {
         botToken: result.accessToken,
       });
     }
+
+    this.save(false, true);
   }
 
   async deleteMainAuth (): Promise<void> {
