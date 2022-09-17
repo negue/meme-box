@@ -100,7 +100,7 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // endregion ActionStoreAdapter
 
-  public async handleRecipe(script: Action, payloadObs: TriggerAction) {
+  public handleRecipe(script: Action, payloadObs: TriggerAction) {
     const generatedScript = generateCodeByRecipe(script.recipe, getUserDataState(this._persistence.fullState()));
 
     const scriptConfig: ScriptConfig = {
@@ -158,7 +158,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       try {
         scriptHoldingData.compile();
       } catch (err) {
-        this.logger.error(err.message, 'Script: '+script.name);
+        this.logger.error(err.message, `Script: ${script.name}`);
         return;
       }
       this._compiledScripts.set(script.id, scriptHoldingData);

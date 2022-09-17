@@ -90,20 +90,19 @@ export class TwitchConnector {
 
           this._twitchBotEnabled = twitchConfig.bot?.enabled && !!twitchConfig.bot.auth;
 
-          if (!!config.twitch?.channel) {
-            this.logger.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
-
-            this.disconnect();
-
-            this._currentTwitchConfig = twitchConfig;
-
-            this.tryTokenValidation();
-
-            this.tmiReadOnlyClient = tmi.Client(this.createBaseTmiConfig());
-
-            this.connectAndListenTMI();
-            this.connectAndListenPubSub();
+          if (!config.twitch?.channel) {
+            return;
           }
+
+          this.logger.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
+          this.disconnect();
+
+          this._currentTwitchConfig = twitchConfig;
+          this.tryTokenValidation();
+
+          this.tmiReadOnlyClient = tmi.Client(this.createBaseTmiConfig());
+          this.connectAndListenTMI();
+          this.connectAndListenPubSub();
         }
       });
   }

@@ -51,16 +51,16 @@ export class ConnectionsListComponent {
         'Twitch':  [
           {
             isConfigured: isTwitchConfigured,
-            connectedAccount: 'Main Account: ' + (mainTwitchAuthInfo?.authResult?.reason ??
-               config.twitch.channel),
+            connectedAccount: `Main Account: ${mainTwitchAuthInfo?.authResult?.reason ??
+            config.twitch.channel}`,
             hasAuthToken: !!config.twitch.token,
            ...this.generateConnectionMetaInfos(mainTwitchAuthInfo),
             openConfig: () => this.dialogService.openTwitchConnectionConfig()
           },
           {
             isConfigured: !!config.twitch.bot?.auth?.name,
-            connectedAccount:  'Bot Account: '+ (botTwitchAuthInfo?.authResult?.reason ??
-             config.twitch.bot?.auth?.name),
+            connectedAccount:  `Bot Account: ${botTwitchAuthInfo?.authResult?.reason ??
+            config.twitch.bot?.auth?.name}`,
             hasAuthToken: !!config.twitch.bot?.auth?.name,
             ...this.generateConnectionMetaInfos(botTwitchAuthInfo),
             openConfig: () => this.dialogService.openTwitchConnectionConfig()

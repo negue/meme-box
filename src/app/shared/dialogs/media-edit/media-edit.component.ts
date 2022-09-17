@@ -656,7 +656,7 @@ export class MediaEditComponent
 
     const createdMarkdownString = toMarkdown(mdStructure);
 
-    const dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(createdMarkdownString);
+    const dataStr = `data:text/markdown;charset=utf-8,${encodeURIComponent(createdMarkdownString)}`;
 
     const suffix = ACTION_TYPE_INFORMATION[this.actionToEdit.type].labelFallback;
 

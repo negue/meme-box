@@ -18,7 +18,7 @@ export class GetEntryStepActionListPipe implements PipeTransform {
   ) {
   }
 
-  async transform(value: RecipeEntry): Promise<RecipeCommandConfigActionPayload[]|null> {
+  transform(value: RecipeEntry): Promise<RecipeCommandConfigActionPayload[]|null> {
     if (value.entryType !== 'command') {
       return  Promise.resolve(null)
     }
