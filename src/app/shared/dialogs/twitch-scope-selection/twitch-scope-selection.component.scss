@@ -10,7 +10,11 @@ mat-dialog-actions {
   flex: 1;
 }
 
-gewd-markdown {
-  display: block;
-  min-height: 360px;
+.scope-row {
+  display: flex;
+  align-items: center;
+
+  mat-form-field {
+    flex: 1;
+  }
 }
