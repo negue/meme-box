@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatSnackBarConfig} from "@angular/material/snack-bar/snack-bar-config";
 import merge from 'lodash/merge';
+import {take} from 'rxjs/operators';
 
 const EMOTES = [
   '🎉', '🙌','😎', '🤩',
@@ -59,9 +60,26 @@ export class SnackbarService {
     this.matSnackBar.open(`${emote} ${text} ${emote}`, options.action, options.config);
   }
 
-  sorry(text: string, options: SnackbarOptions = null) {
+  sorry(text: string, options: SnackbarOptions|null = null) {
     options = merge(DEFAULT_ERROR_OPTIONS, options);
 
-    this.matSnackBar.open(text, options.action, options.config);
+   this.matSnackBar.open(text, options.action, options.config);
+  }
+
+  sorryWithAction(text: string, options: SnackbarOptions|null = null): Promise<boolean> {
+    options = merge(DEFAULT_ERROR_OPTIONS, options);
+
+    const snackbarRef = this.matSnackBar.open(text, options.action, options.config);
+
+    return new Promise<boolean>((resolve) => {
+
+      snackbarRef.onAction().pipe(
+        take(1)
+      ).subscribe(() => resolve(true));
+
+      snackbarRef.afterDismissed().pipe(
+        take(1)
+      ).subscribe((value) => resolve(false));
+    });
   }
 }

@@ -414,7 +414,7 @@ export class AppService {
     return this.addOrUpdateTimedEvent(newTimedEventObject);
   }
 
-  public postErrorToServer(error: Error) {
+  public async postErrorToServer(error: Error) {
     console.error('logged error', error);
 
     // testing what is broken on the preview
@@ -429,7 +429,11 @@ export class AppService {
       url: location.href
     };
 
-    this.memeboxApi.postReturnString(ENDPOINTS.ERROR, logPayload, '');
+    try {
+     await this.memeboxApi.postReturnString(ENDPOINTS.ERROR, logPayload, '');
+    } catch (e) {
+      console.error('Couldnt send the error to Memebox')
+    }
   }
 
   public duplicateAction(actionId: string) {

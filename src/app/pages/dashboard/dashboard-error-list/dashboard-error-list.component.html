@@ -1,0 +1,26 @@
+<div *ngIf="latestErrors$ | async as latestErrors">
+  <ng-container *ngIf="latestErrors.length === 0">
+    <i>No Errors in this session yet.</i>
+  </ng-container>
+
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let error of latestErrors">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <span class="event_label">
+            {{error.errorMessage}}
+          </span>
+        </mat-panel-title>
+        <mat-panel-description>
+          <button mat-raised-button color="primary" (click)="reportError(error)">
+            Create an Issue on GitHub
+          </button>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      Context: {{error.context}} <br />
+      <pre [highlight]="error | json" lang="json" class="pre-wrap-break"></pre>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

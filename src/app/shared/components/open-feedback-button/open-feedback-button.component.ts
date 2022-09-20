@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import {GithubService} from "@memebox/app-state";
 
 @Component({
   selector: 'app-open-feedback-button',
@@ -10,26 +11,20 @@ export class OpenFeedbackButtonComponent {
   @Input()
   public feedbackTarget = '';
 
+  constructor(
+    private _githubService: GithubService
+  ) {
+  }
+
   openFeedback(): void {
     const body = `Please extend the title with a short version of your feedback/suggestion`
 
-    this.openGithubTarget('Feedback for', body,
-      'https://github.com/negue/meme-box/discussions/new?category=feedback&');
+    this._githubService.openNewFeedback('Feedback for: '+this.feedbackTarget, body);
   }
 
   openBugReport() {
     const body = `Please extend the title with a short version of your issue`
 
-    this.openGithubTarget('Issue in', body,
-      'https://github.com/negue/meme-box/issues/new?');
-  }
-
-  private openGithubTarget(titlePrefix: string,
-                           body: string,
-                           githubTargetUrl: string) {
-    const title = `${titlePrefix}: ${this.feedbackTarget}`;
-    const urlToOpen = `${githubTargetUrl}title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-
-    window.open(urlToOpen, '_blank');
+    this._githubService.openNewBug('Issue in: '+this.feedbackTarget, body);
   }
 }

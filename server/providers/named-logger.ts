@@ -4,13 +4,9 @@ import {Injectable} from "@tsed/di";
 import {LOG_PATH} from "../path.utils";
 import {BehaviorSubject} from "rxjs";
 import {CLI_OPTIONS} from "../utils/cli-options";
+import {ErrorWithContext} from "@memebox/contracts";
 
 // TODO add all other methods
-
-export interface ErrorWithContext {
-  error: Error | unknown;
-  context: string;
-}
 
 // skipcq: JS-0579
 @Injectable()
@@ -54,14 +50,21 @@ export class NamedLogger {
   }
 
   error(error: Error|unknown, context?: string): void  {
-    NamedLogger.NewestError$.next({
-      error,
-      context
-    });
+    if (isNormalError(error)) {
+      NamedLogger.NewestError$.next({
+        errorMessage: error?.message,
+        errorStack: error?.stack,
+        context
+      });
+    }
 
     this.logger.error(error, context ?? '');
   }
 
+}
+
+function isNormalError(error: any): error is Error{
+  return typeof error === 'object' && error.message;
 }
 
 export function addDefaultLoggerAppenders (logger: Logger): void  {
