@@ -175,8 +175,8 @@ export class TwitchConnectionEditComponent implements OnInit {
     });
   }
 
-  async tryAuthentication(type: string, withCustomScope = false) {
-    if (withCustomScope) {
+  async tryAuthentication(type: string, showCustomScopeConfig = false) {
+    if (showCustomScopeConfig) {
       const newScopes = await this.dialogService.openTwitchScopeSelection({
         scopes: this._customScopes
       });
@@ -216,9 +216,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     }
 
     const scopesForThisToken = [...DEFAULT_TWITCH_SCOPES];
-    if (withCustomScope) {
-      scopesForThisToken.push(...this._customScopes);
-    }
+    scopesForThisToken.push(...this._customScopes);
 
     const oauthHandler = new TwitchOAuthHandler(
       TWITCH_CLIENT_ID, scopesForThisToken.join('+'), currentUrl, true

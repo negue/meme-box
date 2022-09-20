@@ -8,6 +8,7 @@ import {SnackbarService} from "./services/snackbar.service";
 import {AppQueries} from "./state";
 import {AppService} from "./state/app.service";
 import {ConfigService} from "./services/config.service";
+import {ErrorsService, GithubService} from "./services";
 
 @NgModule({
   imports: [
@@ -22,7 +23,9 @@ import {ConfigService} from "./services/config.service";
 
     AppQueries,
     AppService,
-    ConfigService
+    ConfigService,
+    GithubService,
+    ErrorsService
   ]
 })
 export class ServicesModule {

@@ -13,6 +13,7 @@ import {LatestActionsComponent} from './latest-actions/latest-actions.component'
 import {GuardTypePipe} from "./type-guard.pipe";
 import {MatTabsModule} from "@angular/material/tabs";
 import {DirectivesModule} from "../../shared/directives/directives.module";
+import {DashboardErrorListComponent} from './dashboard-error-list/dashboard-error-list.component';
 
 const routes: Routes = [
   {
@@ -26,7 +27,8 @@ const routes: Routes = [
     DashboardOverviewComponent,
     GuardTypePipe,
     LatestTwitchEventsComponent,
-    LatestActionsComponent
+    LatestActionsComponent,
+    DashboardErrorListComponent
   ],
   imports: [
     CommonModule,

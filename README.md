@@ -167,19 +167,7 @@ See finished and upcoming changes in:
 - [CHANGELOG.md](CHANGELOG.md)
 - [`Milestone 2022.1`](https://github.com/negue/meme-box/milestone/5)
 
-### 2022.2
-* [ ] Labels on or around the Media, each with their own Position / Animation
-  * [ ] Changeable by Trigger Variables
-  * [ ] Can be placed like in the Arrange View
-* [ ] OBS Websockets
-  * [ ] Screen Arrange View gets the current OBS-Scene as Background to move stuff around
-* [ ] Overview of local media files not existing anymore
-* [ ] Replace all selected Trigger Action with an inline Recipes #439
-
-### Future, if you want to help open a PR :)
-* [ ] Change media options by triggered variables (e.g. different style, or something)
-* [ ] Stats per commands / media / or something last cheerer and so on
-* [ ] more to be added :)
+### [Future Version](ROADMAP.md)
 
 ## How to help / contribute?
 * Improve Docs / Translations

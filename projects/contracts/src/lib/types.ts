@@ -414,3 +414,9 @@ export function getUserDataState (settings: SettingsState): UserDataState {
     tags: settings.tags
   }
 }
+
+export interface ErrorWithContext {
+  errorMessage: string;
+  errorStack: string;
+  context: string;
+}

@@ -4,11 +4,10 @@ import {HotkeysService} from "@ngneat/hotkeys";
 import {DialogService} from "../../shared/dialogs/dialog.service";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
 import {NotesComponent} from "./notes/notes.component";
-import {WebsocketHandler} from "../../../../projects/app-state/src/lib/services/websocket.handler";
-import {AppConfig} from "@memebox/app/env";
-import {WEBSOCKET_PATHS} from "@memebox/contracts";
 import {Subject} from "rxjs";
 import {filter, take, takeUntil} from "rxjs/operators";
+import {Router} from "@angular/router";
+import {ErrorsService} from "../../../../projects/app-state/src/lib/services/errors.service";
 
 @Component({
   selector: 'app-main-page',
@@ -18,11 +17,6 @@ import {filter, take, takeUntil} from "rxjs/operators";
 export class MainPageComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject();
 
-  private errorWS = new WebsocketHandler(
-    AppConfig.wsBase + WEBSOCKET_PATHS.ERRORS,
-    3000
-  );
-
   public buttonVisible = true;
 
   constructor(private appService: AppService,
@@ -31,7 +25,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               private _bottomSheet: MatBottomSheet,
               private _snackbarService: SnackbarService,
-              private _memeboxWebsocket: MemeboxWebsocketService) {
+              private _memeboxWebsocket: MemeboxWebsocketService,
+              private router: Router,
+              private _errorService: ErrorsService) {
 
   }
 
@@ -42,14 +38,23 @@ export class MainPageComponent implements OnInit, OnDestroy {
         this.dialogService.showHelpOverview();
       });
 
-    this.errorWS.onMessage$.pipe(
+    this._errorService.latestErrorList$.pipe(
       takeUntil(this._destroy$)
-    ).subscribe(newestError => {
-      this._snackbarService.sorry(newestError, {
+    ).subscribe(async (errorList) => {
+      if (errorList.length === 0) {
+        return;
+      }
+
+      const actionPressed = await this._snackbarService.sorryWithAction("An error occured, please check the Dasbhoard", {
         config: {
           duration: 10000
-        }
+        },
+        action: 'Switch'
       });
+
+      if (actionPressed) {
+        this.router.navigate(['/manage/dashboard']);
+      }
     });
 
     this.appQuery.state$
@@ -68,7 +73,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
         }
       } );
 
-    this.errorWS.connect();
+    this._errorService.listenToBackendsErrors();
 
     await this._memeboxWebsocket.isReady();
     this._memeboxWebsocket.sendI_Am_MANAGE();
@@ -87,6 +92,5 @@ export class MainPageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
-    this.errorWS.stopReconnects();
   }
 }
