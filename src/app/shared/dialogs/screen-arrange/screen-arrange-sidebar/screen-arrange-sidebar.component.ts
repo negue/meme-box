@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ClipAssigningMode, CombinedActionContext, Screen, UnassignedFilterEnum } from '@memebox/contracts';
-import { FormControl } from '@angular/forms';
-import { DialogService } from '../../dialog.service';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {CombinedActionContext, Screen} from '@memebox/contracts';
+import {FormControl} from '@angular/forms';
+import {DialogService} from '../../dialog.service';
+import {ScreenActionAssignmentService} from "../../../screenActionAssignment.service";
 
 @Component({
   selector: 'app-screen-arrange-sidebar',
@@ -31,7 +32,8 @@ export class ScreenArrangeSidebarComponent {
   @Output()
   public readonly changeCurrSelectedClip = new EventEmitter<CombinedActionContext | null>();
 
-  constructor(private dialogs: DialogService) {
+  constructor(private dialogs: DialogService,
+              private screenActionAssignmenService: ScreenActionAssignmentService) {
   }
 
   assignMedia(): void {
@@ -63,14 +65,6 @@ export class ScreenArrangeSidebarComponent {
   }
 
   private showAssignmentDialog(screen: Partial<Screen>) {
-    this.dialogs.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Multiple,
-      screenId: screen.id,
-
-      dialogTitle: screen.name,
-      showMetaItems: false,
-      showOnlyUnassignedFilter: true,
-      unassignedFilterType: UnassignedFilterEnum.Screens
-    });
+    this.screenActionAssignmenService.showAssignmentDialog(screen);
   }
 }

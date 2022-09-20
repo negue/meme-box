@@ -9,15 +9,20 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {PersistenceActionsComponent} from './persistence-actions/persistence-actions.component';
-import {ImportMediaFilesDialogComponent} from './persistence-actions/import-media-files-dialog/import-media-files-dialog.component';
+import {
+  ImportMediaFilesDialogComponent
+} from './persistence-actions/import-media-files-dialog/import-media-files-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {VersionCardModule} from "../../shared/components/config-cards/version-card/version-card.module";
-import {CustomPortSettingModule} from "../../shared/components/config-cards/custom-port-setting/custom-port-setting.module";
+import {
+  CustomPortSettingModule
+} from "../../shared/components/config-cards/custom-port-setting/custom-port-setting.module";
 import {ConnectionsListModule} from "../../shared/components/config-cards/connections-list/connections-list.module";
 import {ConfigCardModule} from "../../shared/components/config-cards/config-card/config-card.module";
 import {UiComponentsPipesModule} from "@memebox/ui-components";
+import {OpenFeedbackButtonModule} from "../../shared/components/open-feedback-button/open-feedback-button.module";
 
 const routes: Routes = [
   {
@@ -44,7 +49,8 @@ const routes: Routes = [
     CustomPortSettingModule,
     ConnectionsListModule,
     ConfigCardModule,
-    UiComponentsPipesModule
+    UiComponentsPipesModule,
+    OpenFeedbackButtonModule
   ]
 })
 export class SettingsModule {

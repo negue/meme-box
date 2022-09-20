@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ActionPreviewComponent} from './action-preview.component';
 import {UiComponentsPipesModule} from "@memebox/ui-components";
-import {ClipTypeModule} from "../clip-type/clip-type.module";
+import {ActionTypeIconModule} from "../action-type-icon/action-type-icon.module";
 
 
 @NgModule({
@@ -13,7 +13,7 @@ import {ClipTypeModule} from "../clip-type/clip-type.module";
   imports: [
     CommonModule,
     UiComponentsPipesModule,
-    ClipTypeModule
+    ActionTypeIconModule
   ]
 })
 export class ActionPreviewModule { }

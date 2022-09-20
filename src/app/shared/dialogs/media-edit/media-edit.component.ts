@@ -15,7 +15,8 @@ import {
   ACTION_TYPE_INFORMATION_ARRAY,
   ActionType,
   FileInfo,
-  Tag
+  Tag,
+  UserDataState
 } from "@memebox/contracts";
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
@@ -66,8 +67,8 @@ const ACTION_DEFAULT_PROPERTIES: Partial<Action> = {
   name: 'New Action',
   volumeSetting: 10,
   gainSetting: 0,
-  playLength: DEFAULT_PLAY_LENGTH,
-  clipLength: DEFAULT_PLAY_LENGTH, // TODO once its possible to get the data from the clip itself
+  playLength: undefined,
+  clipLength: undefined, // TODO once its possible to get the data from the clip itself
 
   showOnMobile: true,
 
@@ -100,6 +101,7 @@ export class MediaEditComponent
   implements OnInit, OnDestroy,  DialogData<MediaEditDialogPayload>
 {
   public isEditMode = false;
+  public selectedFirstTabIndex = 0;
   public actionToEdit: Action;
 
   public form = new FormBuilder().group({
@@ -163,23 +165,6 @@ export class MediaEditComponent
 
   currentScript: ScriptConfig = null;
 
-  // Get all actions that have the assigned tags
-  taggedActions$ = combineLatest([
-    this.currentTags$,
-    this.appQuery.actionList$
-  ]).pipe(
-    map(([currentTags, allClips]) => {
-      if (currentTags.length === 0) {
-        return [];
-      }
-
-      const currentTagsSet = new Set(currentTags.map(t => t.id));
-
-      return allClips.filter(c => c.id !== this.actionToEdit.id && c.tags?.some(t => currentTagsSet.has(t)));
-    })
-  )
-
-
   widgetTemplates$ = this.appQuery.actionList$.pipe(
     map(( allMedias) => {
       return allMedias.filter(c => c.type === ActionType.WidgetTemplate);
@@ -217,6 +202,10 @@ export class MediaEditComponent
     this.setNewActionEditData(this.data?.actionToEdit, defaultValues);
 
     this.isEditMode = !!this.data?.actionToEdit;
+
+    if (this.isEditMode || this.data?.defaults?.type) {
+      this.selectedFirstTabIndex = 1;
+    }
 
     this.showOnMobile = this.actionToEdit.showOnMobile;
 
@@ -348,7 +337,7 @@ export class MediaEditComponent
     await this.appService.addOrUpdateAction(valueAsAction);
 
     if (this.selectedScreenId && ACTION_CONFIG_FLAGS[valueAsAction.type].isVisibleAction) {
-      this.appService.addOrUpdateScreenClip(this.selectedScreenId, {
+      this.appService.addOrUpdateScreenMedia(this.selectedScreenId, {
         id: valueAsAction.id,
       });
     }
@@ -584,8 +573,8 @@ export class MediaEditComponent
 
   }
 
-  toScriptCode (recipeContext: RecipeContext): string  {
-    return generateCodeByRecipe(recipeContext);
+  toScriptCode (recipeContext: RecipeContext, userData: UserDataState): string  {
+    return generateCodeByRecipe(recipeContext, userData);
   }
 
   // region Import / Export Methods
@@ -667,7 +656,7 @@ export class MediaEditComponent
 
     const createdMarkdownString = toMarkdown(mdStructure);
 
-    const dataStr = "data:text/markdown;charset=utf-8," + encodeURIComponent(createdMarkdownString);
+    const dataStr = `data:text/markdown;charset=utf-8,${encodeURIComponent(createdMarkdownString)}`;
 
     const suffix = ACTION_TYPE_INFORMATION[this.actionToEdit.type].labelFallback;
 
@@ -707,6 +696,8 @@ export class MediaEditComponent
         ...newActionData?.extended
       }
     }) as Action;
+
+    this.localMediaFormCtrl.setValue(this.actionToEdit.path);
 
     if (this.actionToEdit.type === ActionType.Widget) {
       this.currentHtmlConfig = actionDataToWidgetContent(this.actionToEdit);

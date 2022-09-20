@@ -10,11 +10,12 @@ import {uuid} from "@gewd/utils";
 import {registerMemeboxCommandBlocks} from "./command-blocks.memebox";
 import {registerObsCommandBlocks} from "./command-blocks.obs";
 import {registerTwitchCommandBlocks} from "./command-blocks.twitch";
+import {UserDataState} from "@memebox/contracts";
 
 export interface RecipeStepConfigArgument {
   name: string;
   label: string;
-  type: string;
+  type: string; // todo change to the enum
 }
 
 export const RecipeCommandBlockGroups: Record<string, RecipeCommandSelectionGroup> = {
@@ -51,6 +52,7 @@ export const RecipeCommandRegistry: RecipeCommandBlockRegistry = {
     commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.seconds} seconds`);
     },
+    entryIcon: () => 'hourglass_top'
   },
   "sleepMs": {
     pickerLabel: "Wait for Milliseconds",
@@ -66,11 +68,12 @@ export const RecipeCommandRegistry: RecipeCommandBlockRegistry = {
     commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`sleep: ${payload.ms}ms`);
     },
+    entryIcon: () => 'hourglass_top'
   }
 };
 
 
-function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
+function generateCodeByStepAsync (step: RecipeEntry, context: RecipeContext, userData: UserDataState): string {
   const result: string[] = [];
 
   for (const subStepInfo of step.subCommandBlocks) {
@@ -88,7 +91,9 @@ function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
           result.push('await ');
         }
 
-        result.push(entryDefinition.toScriptCode(subEntry, context).trim());
+        const createdStepCode = entryDefinition.toScriptCode(subEntry, context, userData);
+
+        result.push(createdStepCode.trim());
 
         // result.push(`logger.log('Post: ${subEntry.commandType}');`);
       } else {
@@ -102,13 +107,13 @@ function generateCodeByStep (step: RecipeEntry, context: RecipeContext) {
 }
 
 export function generateCodeByRecipe(
-  recipeContext: RecipeContext
+  recipeContext: RecipeContext, userData: UserDataState
 ): string  {
   const result: string[] = [];
 
   const rootEntry = recipeContext.entries[recipeContext.rootEntry];
 
-  result.push(generateCodeByStep(rootEntry, recipeContext));
+  result.push(generateCodeByStepAsync(rootEntry, recipeContext, userData));
 
   return result.join('\r\n');
 }
@@ -127,6 +132,6 @@ export function generateRecipeEntryCommandCall (
   };
 }
 
-registerMemeboxCommandBlocks(RecipeCommandRegistry, generateCodeByStep);
+registerMemeboxCommandBlocks(RecipeCommandRegistry, generateCodeByStepAsync);
 registerObsCommandBlocks(RecipeCommandRegistry);
 registerTwitchCommandBlocks(RecipeCommandRegistry);

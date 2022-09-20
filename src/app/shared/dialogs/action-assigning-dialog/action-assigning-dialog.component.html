@@ -16,10 +16,10 @@
     >
       <figure>
         <figcaption class="mediaList__header">
-          <app-clip-type [type]="action.type"
+          <app-action-type [type]="action.type"
                          class="mediaList__icon"
                          matListIcon>
-          </app-clip-type>
+          </app-action-type>
 
           <span class="mediaList__header__name">{{action.name}}</span>
         </figcaption>
@@ -48,6 +48,6 @@
     <app-open-feedback-button feedbackTarget="Choose Action Dialog"></app-open-feedback-button>
   </div>
   <div class="column" align="end" >
-    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button mat-dialog-close="close">Close</button>
   </div>
 </mat-dialog-actions>

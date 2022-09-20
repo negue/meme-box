@@ -2,7 +2,9 @@ import * as tmi from 'tmi.js';
 import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
 import {debounceTime, startWith} from 'rxjs/operators';
 import {
+  ChangedInfo,
   TWITCH_BOT_RESPONSE_CONSTS,
+  TwitchAuthResult,
   TwitchBanEvent,
   TwitchChannelPointRedemptionEvent,
   TwitchChatMessage,
@@ -66,45 +68,39 @@ export class TwitchConnector {
       name: 'TMI PubSub Connection'
     });
 
-
-    // TODO better way to find out the config has changed
-    let currentConfigJsonString = "";
-
     _persistence.dataUpdated$()
       .pipe(
         debounceTime(600),
-        startWith(true)
+        startWith({dataType: 'twitch-setting'} as ChangedInfo)
       )
-      .subscribe(() => {
-        const config = _persistence.getConfig(false);
-        const jsonOfConfig = JSON.stringify(config.twitch);
-
-        const twitchConfig = config.twitch;
-
-        if (!twitchConfig) {
+      .subscribe((changedInfo) => {
+        if (!['twitch-events', 'twitch-setting'].includes(changedInfo.dataType)) {
           return;
         }
 
-        this.log({
-          message: 'Data Updated got the new events'
-        });
-
         this.twitchSettings = _persistence.listTwitchEvents();
-        this._twitchBotEnabled = twitchConfig.bot?.enabled && !!twitchConfig.bot.auth;
 
-        if (currentConfigJsonString !== jsonOfConfig
-          && !!config.twitch?.channel
-        ) {
-          currentConfigJsonString = jsonOfConfig;
+        if (changedInfo.dataType === 'twitch-setting') {
+          const config = _persistence.getConfig(false);
+          const twitchConfig = config.twitch;
 
-          this.log(`Creating the TwitchHandler for: ${config.twitch.channel}`);
+          this.logger.info({
+            message: 'Twitch Settings changed, reconnecting'
+          });
 
+          this._twitchBotEnabled = twitchConfig.bot?.enabled && !!twitchConfig.bot.auth;
+
+          if (!config.twitch?.channel) {
+            return;
+          }
+
+          this.logger.info(`Creating the TwitchHandler for: ${config.twitch.channel}`);
           this.disconnect();
 
           this._currentTwitchConfig = twitchConfig;
+          this.tryTokenValidation();
 
           this.tmiReadOnlyClient = tmi.Client(this.createBaseTmiConfig());
-
           this.connectAndListenTMI();
           this.connectAndListenPubSub();
         }
@@ -166,6 +162,46 @@ export class TwitchConnector {
     this.tmiBotClient = null;
   }
 
+  private async tryTokenValidation() {
+    for (const availableConnectionType of this.availableConnectionTypes()) {
+      this.logger.info(`Checking Auth Token Validation for: ${availableConnectionType}-Twitch`);
+
+      if (availableConnectionType === 'MAIN') {
+        const twitchAuthResult = await this.twitchAuth.getTwitchAuthAsync();
+
+        if (twitchAuthResult) {
+          this.logTwitchAuthResult(twitchAuthResult, availableConnectionType);
+        }
+      }
+
+      if (availableConnectionType === 'BOT') {
+        const twitchAuthResult = await this.twitchAuth.getBotAuthAsync();
+
+        if (twitchAuthResult) {
+
+          this.logTwitchAuthResult(twitchAuthResult, availableConnectionType);
+        }
+      }
+    }
+  }
+
+  private logTwitchAuthResult (twitchAuthResult: TwitchAuthResult,
+                               twitchConnectionType: TwitchConnectionType) {
+    if( twitchAuthResult.valid ) {
+      const dateToFormat = new Date(twitchAuthResult.expires_in_date);
+      const dateIn2Weeks = new Date();
+      dateIn2Weeks.setDate(dateIn2Weeks.getDate()+14);
+
+      this.logger.info(`${twitchConnectionType}-Twitch Auth is valid: ${dateToFormat.toISOString()}`);
+
+      if (dateToFormat < dateIn2Weeks) {
+        this.logger.warn(`There are less than 2 Weeks left for the Twitch Token - You need to re-authenticate.`);
+      }
+    } else {
+      this.logger.error(`${twitchConnectionType}-Twitch Auth is invalid! ${twitchAuthResult.reason}`);
+    }
+  }
+
   private createBaseTmiConfig (): Options {
     const tmiConfig: Options = {
       options: {
@@ -223,19 +259,14 @@ export class TwitchConnector {
           label: 'Connecting'
         });
         await this.tmiReadOnlyClient.connect();
-        this.log({
-          message: 'Connected to Twitch!'
-        });
+        this.logger.info('Connected to Twitch Read-Only!');
 
         this.tmiReadOnlyState({
           label: 'Connected'
         });
         break;
       } catch (ex) {
-        this.error({
-          ex,
-          message: `Error trying to connect to twitch - ${ex.message}`
-        });
+        this.logger.error(ex, `Error trying to connect to twitch - ${ex.message}`);
 
         this.tmiReadOnlyState({
           label: "Can't connect to Twitch",
@@ -487,18 +518,6 @@ export class TwitchConnector {
     const tmiWrite = await this.getTmiWriteInstance();
     await tmiWrite.ping().catch(() => tmiWrite.connect());
     tmiWrite.say(this._currentTwitchConfig.channel, botResponse)
-      .catch(ex => this.error(ex));
-  }
-
-  private log(data: any) {
-    if (this._currentTwitchConfig?.enableLog) {
-      this.logger.info(data);
-    }
-  }
-
-  private error(data: any) {
-    if (this._currentTwitchConfig?.enableLog) {
-      this.logger.error(data);
-    }
+      .catch(ex => this.logger.error(ex));
   }
 }

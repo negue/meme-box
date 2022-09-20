@@ -22,7 +22,7 @@ import {ConfigMediaPathModule} from "../../../manage/media/media-overview/config
   ],
   providers: [],
 })
-export class GettingStartedModule implements DialogContract<any> {
+export class GettingStartedModule implements DialogContract<void, GettingStartedComponent> {
   constructor(private dialog: MatDialog) {
   }
 

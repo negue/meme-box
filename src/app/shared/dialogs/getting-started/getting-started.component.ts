@@ -9,7 +9,9 @@ import {Action, Screen} from "@memebox/contracts";
 import {map} from "rxjs/operators";
 import {AppQueries, NetworkInterfacesService} from "@memebox/app-state";
 import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
-import {ConfigMediaPathComponent} from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
+import {
+  ConfigMediaPathComponent
+} from "../../../manage/media/media-overview/config-media-path/config-media-path.component";
 import {openStreamdeckPluginUrl} from "../../utils";
 import {QrcodeDialogComponent} from "../../../manage/qrcode-dialog/qrcode-dialog.component";
 
@@ -20,7 +22,7 @@ import {QrcodeDialogComponent} from "../../../manage/qrcode-dialog/qrcode-dialog
   styleUrls: ['./getting-started.component.scss']
 })
 export class GettingStartedComponent
-  implements OnInit, OnDestroy, DialogData<any> {
+  implements OnInit, OnDestroy, DialogData<void> {
 
   private dialogDivElement: HTMLDivElement = null;
 

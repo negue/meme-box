@@ -113,14 +113,25 @@ export class DialogService {
     );
   }
 
-  // todo more data on promise resolve
-  async showActionSelectionDialogAsync(payload: ActionAssigningDialogOptions) {
+  async showActionSelectionDialogAsync(payload: ActionAssigningDialogOptions): Promise<string[]> {
     const dialogRef = await this.loadAndOpen(
       import('./action-assigning-dialog/action-assigning-dialog.module'),
       payload
     );
 
-    return dialogRef.afterClosed().toPromise();
+    const componentInstance = dialogRef.componentInstance;
+
+    const dialogResult = await dialogRef.afterClosed().toPromise();
+
+    if (!dialogResult) {
+      return [];
+    }
+
+    const filteredActions = Object.entries(componentInstance.checkedMap)
+      .filter(([, value]) => value === true)
+      .map(([key]) => key);
+
+    return filteredActions;
   }
 
   showHelpOverview(): void  {
@@ -167,17 +178,17 @@ export class DialogService {
     );
   }
 
-  async loadAndOpen<TPayload, TDialogModule extends DialogContract<TPayload>>(
+  async loadAndOpen<TPayload, TDialogComponent>(
     // typesafety for module lazy loads :), it has to use the same TPayload you pass
-    lazyDialogImport: Promise<{[moduleExport: string]: Type<TDialogModule>}>,
+    lazyDialogImport: Promise<{[moduleExport: string]: Type<DialogContract<TPayload, TDialogComponent>>}>,
     payload: TPayload
-  ): Promise<MatDialogRef<any>> {
+  ): Promise<MatDialogRef<TDialogComponent>> {
     const imported = await lazyDialogImport;
     const keys = Object.keys(imported);
 
     // get the first object of the imported js-module
     const theModule = imported[keys[0]];
-    const factory = await this.compiler.compileModuleAsync<TDialogModule>(theModule);
+    const factory = await this.compiler.compileModuleAsync(theModule);
 
     const factoryInstance = factory.create(this.injector);
 

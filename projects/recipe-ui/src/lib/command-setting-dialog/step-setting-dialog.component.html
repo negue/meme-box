@@ -109,48 +109,12 @@
         </ng-container>
 
         <ng-container *ngSwitchCase="'actionList'">
-          <ng-container *ngIf="getActionListPayload(config.name) as actionList">
-            <div *ngFor="let actionEntry of actionList">
-              <div class="two-columns">
-                <div class="column">
-                  <button mat-raised-button (click)="selectAction(config.name)">
-                    <ng-container *ngIf="actionEntry; else notSelected">
-                      <app-action-preview [action]="actionDictionary[actionEntry.actionId]"
-                                          height="100px" width="200px"></app-action-preview>
-                      {{ actionDictionary[actionEntry.actionId]?.name }}
-                    </ng-container>
+          <app-action-list-settings [actionDictionary]="actionDictionary"
+            [configPayload]="getActionListPayload(config.name)"
+                                    (payloadUpdated)="payload[config.name] = $event"
+          >
 
-                    <ng-template #notSelected>
-                      Choose action to trigger
-                    </ng-template>
-                  </button>
-                </div>
-
-                <ng-container *ngIf="actionEntry">
-                  <ng-container
-                    *ngIf="actionDictionary[actionEntry.actionId] | actionVariableConfig as actionVariableConfigs">
-                    <div class="column" *ngIf="actionVariableConfigs.length">
-                      Variables: <br>
-                      <app-action-variables-assignments [variablesConfig]="actionVariableConfigs"
-                                                        [data]="actionEntry.overrides.action.variables"
-                                                        (dataChanged)="actionEntry.overrides.action.variables = $event;">
-
-                      </app-action-variables-assignments>
-                    </div>
-                  </ng-container>
-                </ng-container>
-
-
-
-              </div>
-              <button (click)="removeActionEntry(actionList, actionEntry)">remove action</button>
-
-            </div>
-            <button (click)="addActionEntry(actionList)">add action</button>
-
-            <!-- TODO Improve ActionList UI -->
-          </ng-container>
-
+          </app-action-list-settings>
         </ng-container>
 
         <ng-container *ngSwitchCase="'obs:scene'">
@@ -190,7 +154,7 @@
   <div class="column">
     <app-open-feedback-button feedbackTarget="Recipe Command Config"></app-open-feedback-button>
   </div>
-  <div class="column" align="end">
+  <div class="column nowrap" align="end">
     <button mat-button [mat-dialog-close]="null">Cancel</button>
     <button (click)="save()"
             color="accent"

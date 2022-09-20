@@ -27,11 +27,17 @@
 }
 
 .connections-table {
-   td {
+  width: 100%;
+
+  td {
     padding: 0.5rem;
   }
 
   tr:first-of-type td {
     padding-top: 0;
   }
+}
+
+.warning {
+  color: yellow;
 }

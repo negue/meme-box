@@ -54,7 +54,7 @@ export async function addMoreItems (service: AppService): Promise<void> {
     await service.addOrUpdateScreen(newScreen);
 
     for (const media of allMedias) {
-      await service.addOrUpdateScreenClip(newScreen.id, {
+      await service.addOrUpdateScreenMedia(newScreen.id, {
         id: media.id,
       });
 

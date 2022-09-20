@@ -6,6 +6,7 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {QRCodeModule} from "angular2-qrcode";
 import {NetworkUrlViewModule} from "../../shared/components/network-url-view/network-url-view.module";
+import {OpenFeedbackButtonModule} from "../../shared/components/open-feedback-button/open-feedback-button.module";
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import {NetworkUrlViewModule} from "../../shared/components/network-url-view/net
     MatDialogModule,
     MatButtonModule,
     QRCodeModule,
-    NetworkUrlViewModule
+    NetworkUrlViewModule,
+    OpenFeedbackButtonModule
   ]
 })
 export class QrcodeDialogModule { }

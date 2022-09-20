@@ -11,7 +11,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ScreenOverviewComponent} from "./screen-overview/screen-overview.component";
 import {ScreenInfoComponent} from "./screen-overview/screen-info/screen-info.component";
-import {ClipTypeModule} from "@memebox/state-components";
+import {ActionTypeIconModule} from "@memebox/state-components";
 import {CardOverviewModule} from "../../shared/components/card-overview/card-overview.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {ScreensArrayToUrlPipe} from './screen-overview/screen-url-dialog/screens-array-to-url.pipe';
@@ -20,6 +20,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NetworkUrlViewModule} from "../../shared/components/network-url-view/network-url-view.module";
 import {SelectedScreenAmountPipe} from "./screen-overview/screen-url-dialog/selected-screen-amount.pipe";
 import {ClipsInScreenAmountPipe} from "./screen-overview/screen-url-dialog/clips-in-screen-amount.pipe";
+import {OpenFeedbackButtonModule} from "../../shared/components/open-feedback-button/open-feedback-button.module";
+import {ScreenActionAssignmentModule} from "../../shared/screenActionAssignment.service";
 
 const routes: Routes = [
   {
@@ -51,11 +53,13 @@ const routes: Routes = [
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    ClipTypeModule,
+    ActionTypeIconModule,
     CardOverviewModule,
     MatTooltipModule,
     MatCheckboxModule,
-    NetworkUrlViewModule
+    NetworkUrlViewModule,
+    OpenFeedbackButtonModule,
+    ScreenActionAssignmentModule
   ]
 })
 export class ScreensModule {

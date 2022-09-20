@@ -1,12 +1,12 @@
-import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { DialogContract } from "../dialog.contract";
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
-import { MatDialogRef } from "@angular/material/dialog/dialog-ref";
+import {NgModule} from "@angular/core";
+import {CommonModule} from "@angular/common";
+import {DialogContract} from "../dialog.contract";
+import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 // TODO move and why from server constants? :D
-import { MatButtonModule } from "@angular/material/button";
-import { HelpOverviewComponent } from "./help-overview.component";
-import { MatListModule } from "@angular/material/list";
+import {MatButtonModule} from "@angular/material/button";
+import {HelpOverviewComponent} from "./help-overview.component";
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
@@ -20,7 +20,7 @@ import { MatListModule } from "@angular/material/list";
   ],
   providers: [],
 })
-export class HelpOverviewDialogModule implements DialogContract<void> {
+export class HelpOverviewDialogModule implements DialogContract<void, HelpOverviewComponent> {
   constructor(private dialog: MatDialog) {
   }
 

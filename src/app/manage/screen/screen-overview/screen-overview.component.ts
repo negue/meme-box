@@ -1,11 +1,19 @@
 import {Component, TrackByFunction} from '@angular/core';
-import {Action, ClipAssigningMode, HasId, Screen, UnassignedFilterEnum} from "@memebox/contracts";
+import {Action, HasId, Screen} from "@memebox/contracts";
 import {Observable} from "rxjs";
 import {map, take} from "rxjs/operators";
-import {ActivityQueries, AppQueries, AppService, MemeboxWebsocketService, SnackbarService} from "@memebox/app-state";
+import {
+  ActivityQueries,
+  AppQueries,
+  AppService,
+  MemeboxWebsocketService,
+  ObsService,
+  SnackbarService
+} from "@memebox/app-state";
 import {DialogService} from "../../../shared/dialogs/dialog.service";
 import orderBy from 'lodash/orderBy';
 import {ScreenUrlDialogComponent} from "./screen-url-dialog/screen-url-dialog.component";
+import {ScreenActionAssignmentService} from "../../../shared/screenActionAssignment.service";
 
 // todo use @gewd npm package
 function timeout(ms) {
@@ -28,17 +36,19 @@ export class ScreenOverviewComponent {
   }
 
   constructor(
-    private _dialog: DialogService,
+    private _dialogService: DialogService,
+    private _screenAssignmentService: ScreenActionAssignmentService,
     private _queries: AppQueries,
     public service: AppService,
     public activityState: ActivityQueries,
     private webSocket: MemeboxWebsocketService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private memeboxObsApi: ObsService,
   ) {
   }
 
   showDialog(screen: Partial<Screen>): void  {
-    this._dialog.showScreenEditDialog(screen)
+    this._dialogService.showScreenEditDialog(screen)
   }
 
   addNewItem(): void  {
@@ -46,7 +56,7 @@ export class ScreenOverviewComponent {
   }
 
   async delete(obsInfo: Screen) {
-    const confirmationResult = await this._dialog.showConfirmationDialog(
+    const confirmationResult = await this._dialogService.showConfirmationDialog(
       {
         title: 'Are you sure you want to delete this screen?'
       }
@@ -58,23 +68,15 @@ export class ScreenOverviewComponent {
   }
 
   showAssignmentDialog(screen: Partial<Screen>) {
-    return this._dialog.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Multiple,
-      screenId: screen.id,
-
-      dialogTitle: screen.name,
-      showMetaItems: false,
-      showOnlyUnassignedFilter: true,
-      unassignedFilterType: UnassignedFilterEnum.Screens
-    });
+    return this._screenAssignmentService.showAssignmentDialog(screen);
   }
 
   deleteAssigned(obsInfo: Screen, clipId: string): void  {
-    this.service.deleteScreenClip(obsInfo.id, clipId);
+    this.service.deleteScreenMedia(obsInfo.id, clipId);
   }
 
   onClipOptions(item: Action, screen: Screen): void  {
-    this._dialog.showScreenClipOptionsDialog({
+    this._dialogService.showScreenClipOptionsDialog({
       clipId: item.id,
       screenId: screen.id,
       name: item.name
@@ -94,16 +96,16 @@ export class ScreenOverviewComponent {
   }
 
   onReload(screen: Screen): void  {
-    this.webSocket.triggerReloadScreen(screen.id);
+    this.memeboxObsApi.triggerReloadScreen(screen.id);
     this.snackbar.normal(`Screen: ${screen.name} reloaded`);
   }
 
   openHelpOverview(): void  {
-    this._dialog.showHelpOverview();
+    this._dialogService.showHelpOverview();
   }
 
   onGetUrl(screen: Screen): void  {
-    this._dialog.open(ScreenUrlDialogComponent,{
+    this._dialogService.open(ScreenUrlDialogComponent,{
       autoFocus: false,
       data: screen,
       maxWidth: '96vw',
@@ -125,6 +127,6 @@ export class ScreenOverviewComponent {
       }
     }
 
-    this._dialog.arrangeMediaInScreen(screen);
+    this._dialogService.arrangeMediaInScreen(screen);
   }
 }

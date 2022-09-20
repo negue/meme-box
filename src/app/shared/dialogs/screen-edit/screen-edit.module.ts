@@ -30,11 +30,11 @@ import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/op
   ],
   providers: [],
 })
-export class ScreenEditModule implements DialogContract<Screen> {
+export class ScreenEditModule implements DialogContract<Screen, ScreenEditComponent> {
   constructor(private dialog: MatDialog) {
   }
 
-  public openDialog (payload: Screen): MatDialogRef<any> {
+  public openDialog (payload: Screen): MatDialogRef<ScreenEditComponent> {
     const dialogRef = this.dialog.open(ScreenEditComponent, {
       data: payload,
       width: '60%'

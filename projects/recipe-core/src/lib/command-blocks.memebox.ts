@@ -5,8 +5,7 @@ import {
   RecipeCommandConfigActionPayload
 } from "./recipe.types";
 import {map, take} from "rxjs/operators";
-import {generateRandomCharacters} from "./utils";
-import {combineLatest} from "rxjs";
+import {generateRandomCharacters, listActionsOfActionListPayload} from "./utils";
 import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
 
 function createMemeboxApiVariable(
@@ -68,8 +67,10 @@ export function registerMemeboxCommandBlocks (
     },
   };
 
+  const keepTriggeredActionActiveWhileLabel = 'Keep Triggered Action active, while';
+
   registry["triggerActionWhile"] = {
-    pickerLabel: "Keep Triggered Action active, while",
+    pickerLabel: keepTriggeredActionActiveWhileLabel,
     commandGroup: "memebox",
     configArguments: [
       {
@@ -78,6 +79,19 @@ export function registerMemeboxCommandBlocks (
         type: "action"
       }
     ],
+    subCommandBlockLabelAsync: (queries, commandBlock, labelId) =>  {
+      const actionPayload = commandBlock.entryType === "command"
+        && commandBlock.payload.action as RecipeCommandConfigActionPayload;
+
+      if (!actionPayload) {
+        return Promise.resolve('Unknown Action');
+      }
+
+      return queries.getActionById$(actionPayload.actionId).pipe(
+        map(action => `Keep Triggered Action ${action.name} active, while these commands are running: `),
+        take(1)
+      ).toPromise();
+    },
     extendCommandBlock: (step) => {
       step.payload = {
         ...step.payload,
@@ -89,14 +103,14 @@ export function registerMemeboxCommandBlocks (
         entries: []
       });
     },
-    toScriptCode: (step, context) => {
+    toScriptCode: (step, context, userData) => {
       const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
 
       const actionOverrides = actionPayload.overrides;
 
       return `${createMemeboxApiVariable(actionPayload)}
                      .triggerWhile(async (helpers_${step.payload._suffix}) => {
-                        ${generateCodeByStep(step, context)}
+                        ${generateCodeByStep(step, context, userData)}
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
@@ -110,7 +124,7 @@ export function registerMemeboxCommandBlocks (
     }
   };
   registry["triggerActionWhileReset"] = {
-    pickerLabel: "Reset changed properties of the 'Keep Triggered Action active, while'",
+    pickerLabel: `Reset changed properties of the '${keepTriggeredActionActiveWhileLabel}'`,
     commandGroup: "memebox",
     configArguments: [],
     extendCommandBlock: (step, parentStep) => {
@@ -142,36 +156,38 @@ export function registerMemeboxCommandBlocks (
       }
     ],
     awaitCodeHandledInternally: true,
-    toScriptCode: (step) => {
+    toScriptCode: (step, context, userData) => {
       const awaitCode = step.awaited ? 'await ': '';
+
+      const actionsToChooseFrom = listActionsOfActionListPayload(
+        step.payload.actions as RecipeCommandConfigActionListPayload,
+        userData
+      );
 
       return `
         ${awaitCode} (() => {
-        const actionsToChooseFrom = [${
-        (step.payload.actions as RecipeCommandConfigActionListPayload)
-          .map(action => JSON.stringify(action))
-          .join(',')
-      }];
+        const actionsToChooseFrom = [${actionsToChooseFrom
+        .map(action => JSON.stringify(action))
+        .join(',')}];
 
         return memebox.triggerRandom(actionsToChooseFrom);
         })();
       `;
     },
     commandEntryLabelAsync: async (queries, payload) => {
-      const actionPayload = payload.actions as RecipeCommandConfigActionPayload[];
+      const actionListPayload = (payload.actions as RecipeCommandConfigActionListPayload);
 
-      const namesOfActions = await combineLatest(
-        actionPayload.map(a => queries.getActionById$(a.actionId).pipe(
-          map(actionInfo => actionInfo?.name ?? 'unknown action'),
+      if (actionListPayload.actionsByTag) {
+        const tags = await queries.tagList$.pipe(
           take(1)
-        ))
-      )
-        .pipe(
-          map(allNames => allNames.join(','))
-        )
-        .toPromise();
+        ).toPromise();
+        const tagName = tags.find(t => t.id === actionListPayload.actionsByTag)?.name
+          ?? `\r\nUnknown Tag: ${actionListPayload.actionsByTag}`;
 
-      return 'trigger random: '+ namesOfActions;
+        return `trigger any action with the tag: ${tagName}`;
+      }
+
+      return `trigger any of the following: ${actionListPayload.selectedActions.length}`;
     },
   };
 

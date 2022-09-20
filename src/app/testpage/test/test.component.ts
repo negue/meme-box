@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { createRecipeContext, generateCodeByRecipe, RecipeContext } from "../../../../projects/recipe-core/src";
-import { AppService } from "../../../../projects/app-state/src/lib/state";
+import {Component, OnInit} from '@angular/core';
+import {createRecipeContext, RecipeContext} from "@memebox/recipe-core";
+import {AppService} from "@memebox/app-state";
 
 @Component({
   selector: 'app-test',
@@ -16,9 +16,5 @@ export class TestComponent implements OnInit {
 
   ngOnInit(): void {
     this.appService.loadState();
-  }
-
-  toScriptCode (recipeContext: RecipeContext): string  {
-    return generateCodeByRecipe(recipeContext);
   }
 }

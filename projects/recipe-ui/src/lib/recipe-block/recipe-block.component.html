@@ -1,4 +1,4 @@
-<ng-container *ngIf="entry?.entryType === 'command' && entry | getEntryStepMetaData$: parent | async as stepMetadata">
+<ng-container *ngIf="(entry | isCommandEntryPipe) && entry | getEntryStepMetaData$: parent | async as stepMetadata">
 
   <div class="label-with-icon">
     <mat-icon *ngIf="stepMetadata.icon" [svgIcon]="stepMetadata.icon"></mat-icon>
@@ -9,21 +9,32 @@
   <div *ngIf="editMode" class="entry-actions">
   <button mat-icon-button
           [color]="entry.awaited ? 'primary' : 'warn'"
+          [matTooltip]="entry.awaited ? 'Is awaited' : 'Don\'t wait'"
           class="awaited-icon"
            (click)="toggleAwaited(entry)">
      <mat-icon [svgIcon]="entry.awaited ? 'hourglass_top' : 'hourglass_disabled'"></mat-icon>
     </button>
 
     <button mat-icon-button color="accent" class="edit-icon"
+            matTooltip="Configure"
            (click)="editStepConfig(entry, parent)">
      <mat-icon svgIcon="playlist_edit"></mat-icon>
     </button>
     <button mat-icon-button color="warn" class="delete-icon"
+            matTooltip="Remove"
            (click)="removeStep(entry, parent)">
       <mat-icon svgIcon="playlist_remove"></mat-icon>
     </button>
   </div>
 
+  <div *ngIf="(entry | isCommandEntryPipe) && entry?.commandBlockType === 'triggerRandom'">
+    <div *ngFor="let action of entry | getEntryStepActionList$ | async"
+    class="actionlist-action">
+      <app-action-type [type]="action.uiMetadata.actionType"></app-action-type>
+
+      {{action.uiMetadata.actionName}}
+    </div>
+  </div>
 
 </ng-container>
 
@@ -48,6 +59,7 @@
 </div>
 
    <button mat-icon-button color="primary" *ngIf="editMode"
+           matTooltip="Add Block"
            (click)="addStep(entry, subStepInfo)">
      <mat-icon svgIcon="playlist_add"></mat-icon>
    </button>

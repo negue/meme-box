@@ -12,7 +12,7 @@
 <mat-dialog-content class="mat-typography dialog-content">
   <form [formGroup]="form">
 
-    <lib-stepper-content [selectedIndex]="isEditMode ? 1 : 0" style="min-height: 600px">
+    <lib-stepper-content [selectedIndex]="selectedFirstTabIndex" style="min-height: 600px">
       <div class="action_name_header flex_row" stepperHeader>
         <mat-form-field style="flex: 1">
           <mat-label>Name</mat-label>
@@ -126,6 +126,11 @@
                        type="number"
                 />
                 <span matSuffix>ms</span>
+                <mat-hint>
+                  {{ ACTION_CONFIG_FLAGS[form.value.type].hasRequiredPlayLength
+                  ? ACTION_TYPE_INFORMATION[form.value.type].labelFallback + ' needs to have a "Screen Time"'
+                  : 'This can stay empty if you want that to be played full length'}}
+                </mat-hint>
               </mat-form-field>
 
               <app-hint-panel [addBottomPadding]="true" style="margin-top: 0.5rem">
@@ -315,7 +320,7 @@
                        crossorigin="anonymous"
                        height="240" width="320">
                   Your browser does not support the video tag.
-                  <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+                  <app-action-type [type]="actionToEdit?.type"></app-action-type>
                 </video>
 
                 <button (click)="makeScreenshot(videoElement)"
@@ -332,7 +337,7 @@
                        [volume]="form.value.volumeSetting / 100"
                        controls crossorigin="anonymous">
               Your browser does not support the audio tag.
-              <app-clip-type [type]="actionToEdit?.type"></app-clip-type>
+              <app-action-type [type]="actionToEdit?.type"></app-action-type>
             </audio>
           </div>
         </div>
@@ -355,8 +360,8 @@
                             [editMode]="true">
           </app-recipe-block>
 
-          <ng-container *ngIf="selectedRecipeTabIndex !== 0">
-            <pre [highlight]="toScriptCode(recipeContext.recipe)"
+          <ng-container *ngIf="selectedRecipeTabIndex !== 0 && recipeContext.userData !== null">
+            <pre [highlight]="toScriptCode(recipeContext.recipe, recipeContext.userData)"
                  lang="js" class="pre-wrap-break"></pre>
 
           </ng-container>
@@ -460,7 +465,7 @@
 
 <mat-dialog-actions class="two-columns">
   <div class="column">
-    <app-open-feedback-button feedbackTarget="Action Edit Dialog"></app-open-feedback-button>
+    <app-open-feedback-button [feedbackTarget]="'Action Edit Dialog - ' + ACTION_TYPE_INFORMATION[actionToEdit?.type]?.labelFallback"></app-open-feedback-button>
   </div>
   <div align="end" class="column">
     <button mat-button mat-dialog-close>Cancel</button>

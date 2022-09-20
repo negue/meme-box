@@ -7,7 +7,13 @@ import {
   RecipeEntryCommandPayload,
   RecipeStepConfigArgument
 } from "@memebox/recipe-core";
-import {Action, ClipAssigningMode, Dictionary, TriggerActionOverrides, UnassignedFilterEnum} from "@memebox/contracts";
+import {
+  Action,
+  ActionAssigningMode,
+  Dictionary,
+  TriggerActionOverrides,
+  UnassignedFilterEnum
+} from "@memebox/contracts";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {Observable} from "rxjs";
 import {AppQueries} from "@memebox/app-state";
@@ -95,7 +101,7 @@ export class StepSettingDialogComponent {
     return isVisibleMedia(action.type);
   }
 
-
+  // todo extract as a pipe to save up function cpu calls
   getActionListPayload(configName: string): RecipeCommandConfigActionListPayload  {
     return this.payload[configName] as any as RecipeCommandConfigActionListPayload;
   }
@@ -125,16 +131,18 @@ export class StepSettingDialogComponent {
     actionList.splice(indexOf, 1);
   }
 
-  private _selectAction (actionId?: string | undefined): Promise<string> {
-    return this.dialogService.showActionSelectionDialogAsync({
-      mode: ClipAssigningMode.Single,
-      selectedItemId: actionId,
+  private async _selectAction (actionId?: string | undefined): Promise<string> {
+    const [selectedId] = await this.dialogService.showActionSelectionDialogAsync({
+      mode: ActionAssigningMode.Single,
+      selectedActionIdList: actionId ? [actionId]: [],
       dialogTitle: 'Config Argument',
       showMetaItems: true,
 
       unassignedFilterType: UnassignedFilterEnum.RecipeCommandArgument,
       // showOnlyUnassignedFilter: true
     });
+
+    return selectedId;
   }
 
   private _getOrPreparePayloadForAction (configName: string): RecipeCommandConfigActionPayload {
@@ -167,7 +175,9 @@ export class StepSettingDialogComponent {
       switch (config.type) {
         case 'actionList': {
           if (!this.payload[config.name]) {
-            this.payload[config.name] = [];
+            this.payload[config.name] = {
+
+            } as RecipeCommandConfigActionListPayload;
           }
           break;
         }
