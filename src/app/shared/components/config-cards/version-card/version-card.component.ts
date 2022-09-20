@@ -1,11 +1,10 @@
 import {Component} from '@angular/core';
 import VERSION_JSON from '../../../../../version_info.json';
-import {AppQueries} from "@memebox/app-state";
+import {AppQueries, ConfigService} from "@memebox/app-state";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {map} from "rxjs/operators";
 // TODO constants / path imports
 import {RELEASE_PAGE} from "../../../../../../server/constants";
-import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
 
 @Component({

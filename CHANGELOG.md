@@ -2,10 +2,11 @@
 
 ### Feature
 
-* [ ] Show Errors in the Dashboard - incl. a way to create a GitHub Issue from that
-* [ ] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
+* [x] Show Errors in the Dashboard - incl. a way to create a GitHub Issue from that
 * [ ] Ability to re-authenticate even when you are not in the normal ports
+* [ ] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
 * [ ] Twitch Auth: Improve custom scopes handling
+
 * [ ] Recipe: more Twitch Command Blocks: Announce, Clear Chat, Start Commercial, Create Stream Marker, Slow Mode, Chat Settings
 * [ ] Recipe: more Obs Command Blocks: TBD
 * [ ] if easy/fast todo: Support for new OBS-websocket(.js) v5
