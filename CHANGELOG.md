@@ -10,8 +10,6 @@
 * [ ] Recipe: more Obs Command Blocks: TBD
 * [ ] if easy/fast todo: Support for new OBS-websocket(.js) v5
 
-
-
 ## 2022.1-beta2
 
 ### Feature
