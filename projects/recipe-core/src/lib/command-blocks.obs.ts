@@ -1,5 +1,13 @@
 import {RecipeCommandBlockRegistry, RecipeCommandConfigObsSetFilterStatePayload} from "./recipe.types";
 
+/*
+ *
+ * Set Volume: SetVolume
+ *
+ * Mute Source: SetMute
+ *
+ */
+
 export function registerObsCommandBlocks (
   registry: RecipeCommandBlockRegistry
 ): void {
@@ -27,6 +35,36 @@ export function registerObsCommandBlocks (
     }
   };
 
+  const obsSetSourceVisibilityType = "obs:setSourceVisibility";
+
+  registry[obsSetSourceVisibilityType] = {
+    pickerLabel: "Set Source Visibility",
+    commandGroup: "obs",
+    configArguments: [
+      {
+        name: "sourceName",
+        label: "Source to change the visibility",
+        type: "obs:source"
+      },
+      {
+        name: "visible",
+        label: "Visible",
+        type: "boolean"
+      }
+
+    ],
+    toScriptCode: (step) => {
+      const scenePayload = step.payload.sourceName as string;
+
+      return `obs.setSourceVisibility('${scenePayload}', ${step.payload.visible});`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      const sourceName = payload.sourceName as string;
+
+      return Promise.resolve(`OBS: ${payload.visible ? 'show' : 'hide'} [${sourceName}] Source`);
+    }
+  };
+
   const obsSetFilterState = "obs:setFilterState";
 
   registry[obsSetFilterState] = {
@@ -40,7 +78,7 @@ export function registerObsCommandBlocks (
       },
       {
         name: "enabled",
-        label: "Set filter state",
+        label: "Enabled",
         type: "boolean"
       }
     ],
@@ -55,14 +93,14 @@ export function registerObsCommandBlocks (
       const filterPayload = payload.filter as RecipeCommandConfigObsSetFilterStatePayload;
       const enabled = payload.enabled as boolean;
 
-      return Promise.resolve(`OBS: setting Filter: ${filterPayload.filterName} to ${enabled}`);
+      return Promise.resolve(`OBS: ${enabled ? 'enable' : 'disable'}  [${filterPayload.filterName}] Filter`);
     }
   };
 
   const obsSendRaw = "obs:sendRaw";
 
   registry[obsSendRaw] = {
-    pickerLabel: "Send Raw Request",
+    pickerLabel: "Send Raw Request (OBS WS v4)",
     commandGroup: "obs",
     configArguments: [
       {

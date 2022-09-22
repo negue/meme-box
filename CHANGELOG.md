@@ -2,14 +2,22 @@
 
 ### Feature
 
-* [x] Show Errors in the Dashboard - incl. a way to create a GitHub Issue from that
-* [x] Twitch Auth: Improve custom scopes handling (if any were already configured, these will be always applied)
 * [ ] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
 * [ ] Ability to re-authenticate even when you are not in the normal ports
 * [ ] Recipe: more Obs Command Blocks: TBD
 
+## 2022.1-beta-4
 
-## 2022.1-beta2
+### Feature
+* [x] Recipe: new OBS Command Block "Set Source Visibility"
+
+## 2022.1-beta-3
+
+### Feature
+* [x] Show Errors in the Dashboard - incl. a way to create a GitHub Issue from that
+* [x] Twitch Auth: Improve custom scopes handling (if any were already configured, these will be always applied)
+
+## 2022.1-beta-2
 
 ### Feature
 
@@ -29,7 +37,7 @@
 * [x] Recipe new Command Block full entry is now a button
 * [x] When you authenticate it'll be automatically saved
 
-## 2022.1-beta1
+## 2022.1-beta-1
 
 ### Breaking Changes
 
