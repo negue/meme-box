@@ -3,12 +3,12 @@
 ### Feature
 
 * [ ] Ability to re-authenticate even when you are not in the normal ports
-* [ ] Recipe: more Obs Command Blocks: TBD
 
 ## 2022.1-beta-4
 
 ### Feature
 * [x] Recipe: new OBS Command Block "Set Source Visibility"
+* [x] Recipe: new OBS Command Block "Set Source Mute"
 * [x] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
 
 ## 2022.1-beta-3

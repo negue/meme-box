@@ -153,4 +153,28 @@ export class ObsApi extends DisposableBase {
       visible: isVisible
     } as any);
   }
+
+  public async setSourceVolume(
+    source: string,
+    volume: number
+  ): Promise<void> {
+    await this.obsConnectionService.connectIfNot();
+
+    await this.raw.send('SetVolume', {
+      source,
+      volume
+    });
+  }
+
+  public async setSourceMute(
+    source: string,
+    mute: boolean
+  ): Promise<void> {
+    await this.obsConnectionService.connectIfNot();
+
+    await this.raw.send('SetMute', {
+      source,
+      mute
+    });
+  }
 }

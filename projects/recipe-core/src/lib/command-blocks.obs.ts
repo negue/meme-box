@@ -11,9 +11,7 @@ import {RecipeCommandBlockRegistry, RecipeCommandConfigObsSetFilterStatePayload}
 export function registerObsCommandBlocks (
   registry: RecipeCommandBlockRegistry
 ): void {
-  const obsSwitchSceneType = "obs:switchScene";
-
-  registry[obsSwitchSceneType] = {
+  registry["obs:switchScene"] = {
     pickerLabel: "Switch Scene",
     commandGroup: "obs",
     configArguments: [
@@ -35,9 +33,8 @@ export function registerObsCommandBlocks (
     }
   };
 
-  const obsSetSourceVisibilityType = "obs:setSourceVisibility";
 
-  registry[obsSetSourceVisibilityType] = {
+  registry["obs:setSourceVisibility"] = {
     pickerLabel: "Set Source Visibility",
     commandGroup: "obs",
     configArguments: [
@@ -62,6 +59,34 @@ export function registerObsCommandBlocks (
       const sourceName = payload.sourceName as string;
 
       return Promise.resolve(`OBS: ${payload.visible ? 'show' : 'hide'} [${sourceName}] Source`);
+    }
+  };
+
+
+  registry["obs:setSourceMute"] = {
+    pickerLabel: "Set Source Mute",
+    commandGroup: "obs",
+    configArguments: [
+      {
+        name: "sourceName",
+        label: "Source to mute",
+        type: "obs:source"
+      },
+      {
+        name: "muted",
+        label: "Muted",
+        type: "boolean"
+      }
+    ],
+    toScriptCode: (step) => {
+      const scenePayload = step.payload.sourceName as string;
+
+      return `obs.setSourceMute('${scenePayload}', ${step.payload.muted});`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      const sourceName = payload.sourceName as string;
+
+      return Promise.resolve(`OBS: ${payload.muted ? 'mute' : 'unmute'} [${sourceName}] Source`);
     }
   };
 

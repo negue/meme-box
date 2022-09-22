@@ -12,6 +12,8 @@ This list might be changed in future, depending on the amount of work that needs
 * [ ] Replace all selected Trigger Action with an inline Recipes #439
 * [ ] Recipe: more Twitch Command Blocks: Announce, Clear Chat, Start Commercial, Create Stream Marker, Slow Mode, Chat Settings
   * [ ] Dependency: Twitch Scope System - for Scripts and Command Block Checks
+* [ ] Recipe: Obs Command Block: Set Volume
+  * [ ] Dependency: Command Block Settings for Numbers with a Range Config
 
 ### Misc
 
