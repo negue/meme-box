@@ -25,6 +25,7 @@ import {RecipePipesModule} from "../pipes/recipe-pipes.module";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {ObsSourceSelectionComponent} from "./obs-source-selection/obs-source-selection.component";
 
 // todo extract this module to its own internal library ^
 
@@ -35,7 +36,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     ObsSceneSelectionComponent,
     ObsFilterSelectionComponent,
     ActionSelectionComponent,
-    ActionListSettingsComponent
+    ActionListSettingsComponent,
+    ObsSourceSelectionComponent
   ],
   imports: [
     CommonModule,

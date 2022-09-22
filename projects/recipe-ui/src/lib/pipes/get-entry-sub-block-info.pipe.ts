@@ -31,7 +31,7 @@ export class GetEntrySubBlockInfoArrayPipe implements PipeTransform {
         {
           name: 'entries',
           labelId: RecipeRootCommandBlockId,
-          label: 'Recipe Commands',
+          label: 'Command Blocks',
           entries: []
         }
       ]);

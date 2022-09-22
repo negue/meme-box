@@ -11,6 +11,10 @@
 .command-block-entry {
   cursor: pointer;
 
+  mat-icon{
+    margin-right: 0.25rem;
+  }
+
   &:hover {
 
     background: #00000022;
