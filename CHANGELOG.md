@@ -2,7 +2,6 @@
 
 ### Feature
 
-* [ ] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
 * [ ] Ability to re-authenticate even when you are not in the normal ports
 * [ ] Recipe: more Obs Command Blocks: TBD
 
@@ -10,6 +9,7 @@
 
 ### Feature
 * [x] Recipe: new OBS Command Block "Set Source Visibility"
+* [x] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
 
 ## 2022.1-beta-3
 

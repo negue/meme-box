@@ -1,5 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppQueries, AppService, MemeboxWebsocketService, SnackbarService} from "@memebox/app-state";
+import {
+  AppQueries,
+  AppService,
+  ConfigService,
+  ConnectionStateService,
+  ErrorsService,
+  MemeboxWebsocketService,
+  SnackbarService
+} from "@memebox/app-state";
 import {HotkeysService} from "@ngneat/hotkeys";
 import {DialogService} from "../../shared/dialogs/dialog.service";
 import {MatBottomSheet} from "@angular/material/bottom-sheet";
@@ -7,7 +15,6 @@ import {NotesComponent} from "./notes/notes.component";
 import {Subject} from "rxjs";
 import {filter, take, takeUntil} from "rxjs/operators";
 import {Router} from "@angular/router";
-import {ErrorsService} from "../../../../projects/app-state/src/lib/services/errors.service";
 
 @Component({
   selector: 'app-main-page',
@@ -26,6 +33,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
               private _bottomSheet: MatBottomSheet,
               private _snackbarService: SnackbarService,
               private _memeboxWebsocket: MemeboxWebsocketService,
+
+              private configService: ConfigService,
+              private connectionStateService: ConnectionStateService,
               private router: Router,
               private _errorService: ErrorsService) {
 
@@ -38,6 +48,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
         this.dialogService.showHelpOverview();
       });
 
+    // Shows a Snackbar, when there was an error
     this._errorService.latestErrorList$.pipe(
       takeUntil(this._destroy$)
     ).subscribe(async (errorList) => {
@@ -74,9 +85,60 @@ export class MainPageComponent implements OnInit, OnDestroy {
       } );
 
     this._errorService.listenToBackendsErrors();
+    this.checkTwitchAuthAndShowErrorIfSoonInvalid();
 
     await this._memeboxWebsocket.isReady();
     this._memeboxWebsocket.sendI_Am_MANAGE();
+  }
+
+  async checkTwitchAuthAndShowErrorIfSoonInvalid() {
+    await this.connectionStateService.isOffline$().pipe(
+      filter(isOffline => !isOffline),
+      take(1)
+    ).toPromise();
+
+    const twitchAuthResults = await this.configService.loadTwitchAuthInformations();
+
+    for (const twitchAuthResult of twitchAuthResults) {
+      if (!twitchAuthResult.authResult) {
+        // don't do anything
+        continue;
+      }
+
+      if (!twitchAuthResult.authResult.valid) {
+        const confirm = await this.dialogService.showConfirmationDialog({
+          title: 'Your Twitch Auth is invalid',
+          content: twitchAuthResult.authResult.reason,
+          overrideButtons: true,
+          yesButton: 'Switch to Config'
+        });
+
+        if (confirm) {
+          this.dialogService.openTwitchConnectionConfig();
+          return;
+        }
+
+        continue;
+      }
+
+      const dateToFormat = new Date(twitchAuthResult.authResult.expires_in_date);
+      const dateIn2Weeks = new Date();
+      dateIn2Weeks.setDate(dateIn2Weeks.getDate()+14);
+
+      if (dateToFormat < dateIn2Weeks) {
+        const confirm = await this.dialogService.showConfirmationDialog({
+          title: 'Your Twitch Auth is soon invalid',
+          content: 'Valid until: '+dateToFormat.toLocaleString(),
+          overrideButtons: true,
+          yesButton: 'Switch to Config'
+        });
+
+        if (confirm) {
+          this.dialogService.openTwitchConnectionConfig();
+          return;
+        }
+      }
+    }
   }
 
   async openNotes() {
