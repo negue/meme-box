@@ -6,10 +6,7 @@
 * [x] Twitch Auth: Improve custom scopes handling (if any were already configured, these will be always applied)
 * [ ] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
 * [ ] Ability to re-authenticate even when you are not in the normal ports
-
 * [ ] Recipe: more Obs Command Blocks: TBD
-* [ ] if easy/fast todo: Support for new OBS-websocket(.js) v5
-
 
 
 ## 2022.1-beta2
