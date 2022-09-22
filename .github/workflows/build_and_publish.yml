@@ -85,13 +85,6 @@ jobs:
           name: angular-dist
           path: dist
 
-      - name: Modify package.json version for electron
-        uses: maxgfr/github-change-json@main
-        with:
-          key: 'version'
-          value: '${{ github.event.inputs.tag-name }}'
-          path: package.json
-
       - run: npm run electron:build:only
 
       - name: Create Release
@@ -191,13 +184,6 @@ jobs:
           name: angular-dist
           path: dist
 
-      - name: Modify package.json version for electron
-        uses: maxgfr/github-change-json@main
-        with:
-          key: 'version'
-          value: '${{ github.event.inputs.tag-name }}'
-          path: package.json
-
       - run: npm run electron:build:only
 
       - name: Upload Release Asset Windows Electron
@@ -247,13 +233,6 @@ jobs:
         with:
           name: angular-dist
           path: dist
-
-      - name: Modify package.json version for electron
-        uses: maxgfr/github-change-json@main
-        with:
-          key: 'version'
-          value: '${{ github.event.inputs.tag-name }}'
-          path: package.json
 
       - run: npm run electron:build:only
 
