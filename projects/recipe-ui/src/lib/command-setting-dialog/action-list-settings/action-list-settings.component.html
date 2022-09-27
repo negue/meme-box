@@ -42,11 +42,21 @@
       <mat-card-header class="card__header">
         <mat-card-title>{{ actionDictionary[actionEntry.actionId]?.name }}</mat-card-title>
 
-        <button mat-icon-button class="remove-icon"
-                matTooltip="Remove" *ngIf="actionListTypeSelect.value !== 'byTag'"
-                (click)="removeActionEntry(actionList, actionEntry)">
-          <mat-icon svgIcon="delete"></mat-icon>
-        </button>
+
+        <div class="icon-list">
+          <button mat-icon-button
+                  matTooltip="edit Action"
+                  color="accent"
+                  (click)="openActionEditDialog(actionDictionary[actionEntry.actionId])">
+            <mat-icon svgIcon="settings"></mat-icon>
+          </button>
+          <button mat-icon-button
+                  matTooltip="Remove" *ngIf="actionListTypeSelect.value !== 'byTag'"
+                  color="warn"
+                  (click)="removeActionEntry(actionList, actionEntry)">
+            <mat-icon svgIcon="delete"></mat-icon>
+          </button>
+        </div>
       </mat-card-header>
 
       <app-action-preview [action]="actionDictionary[actionEntry.actionId]"

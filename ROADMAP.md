@@ -14,6 +14,7 @@ This list might be changed in future, depending on the amount of work that needs
   * [ ] Dependency: Twitch Scope System - for Scripts and Command Block Checks
 * [ ] Recipe: Obs Command Block: Set Volume
   * [ ] Dependency: Command Block Settings for Numbers with a Range Config
+* [ ] Ability to re-authenticate even when you are not in the normal ports
 
 ### Misc
 

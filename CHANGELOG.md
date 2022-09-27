@@ -1,8 +1,12 @@
-## 2022.1 to be released
+## 2022.1-rc1 to be released
 
-### Feature
+### Quality of Life
 
-* [ ] Ability to re-authenticate even when you are not in the normal ports
+* [x] Recipe: Action List Config - now has a button to open up the Action Settings
+
+### Fixes
+
+* [x] Trigger random using a queue on recipe and each item - could end up in not triggering a second time
 
 ## 2022.1-beta-4
 
