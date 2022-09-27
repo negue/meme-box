@@ -24,34 +24,36 @@ export class ActionQueue {
 
     const actionConfig = fullState.clips[triggerAction.id];
 
-    if (actionConfig.queueName) {
-      if (isVisibleMedia(actionConfig.type)) {
-        const currentState = this.actionState.getActiveStateEntry(triggerAction.id, triggerAction.targetScreen);
-        const mediaInScreenConfig = fullState.screen[triggerAction.targetScreen]?.clips[triggerAction.id];
-
-        const visibilityOfOverrides =currentState?.currentOverrides?.screenMedia?.visibility;
-        const visibilityOfMedia = mediaInScreenConfig?.visibility;
-
-        const currentVisibilityConfig = visibilityOfOverrides ?? visibilityOfMedia;
-
-        if (currentState?.state === ActionStateEnum.Active && currentVisibilityConfig === VisibilityEnum.Toggle) {
-          await this.executeTriggerWithoutQueueAndWait(triggerAction);
-          return;
-        }
-      }
-
-      const subject = this.createOrGetQueueSubject(actionConfig.queueName);
-      subject.next(triggerAction);
-
-      await this._queueDone$.pipe(
-        filter(uniqueDone => uniqueDone === triggerAction.uniqueId),
-        take(1),
-      ).toPromise();
-    } else {
+    if (!actionConfig.queueName) {
       // no queue needed, "just do it"
-
       await this.executeTriggerWithoutQueueAndWait(triggerAction);
+      return;
     }
+
+    // Special: handle already visible / toggled media
+    if (isVisibleMedia(actionConfig.type)) {
+      const currentState = this.actionState.getActiveStateEntry(triggerAction.id, triggerAction.targetScreen);
+      const mediaInScreenConfig = fullState.screen[triggerAction.targetScreen]?.clips[triggerAction.id];
+
+      const visibilityOfOverrides = currentState?.currentOverrides?.screenMedia?.visibility;
+      const visibilityOfMedia = mediaInScreenConfig?.visibility;
+
+      const currentVisibilityConfig = visibilityOfOverrides ?? visibilityOfMedia;
+
+      if (currentState?.state === ActionStateEnum.Active && currentVisibilityConfig === VisibilityEnum.Toggle) {
+        await this.executeTriggerWithoutQueueAndWait(triggerAction);
+        return;
+      }
+    }
+
+    const subject = this.createOrGetQueueSubject(actionConfig.queueName);
+
+    subject.next(triggerAction);
+
+    await this._queueDone$.pipe(
+      filter(uniqueDone => uniqueDone === triggerAction.uniqueId),
+      take(1)
+    ).toPromise();
   }
 
   private createOrGetQueueSubject (queueName: string) {
