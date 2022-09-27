@@ -3,6 +3,7 @@ import {ActivityQueries, AppQueries, AppService} from "@memebox/app-state";
 import {filter, map} from "rxjs/operators";
 import {ACTION_TYPE_INFORMATION, ActionStateEnum, ActionType} from "@memebox/contracts";
 import {combineLatest} from "rxjs";
+import {ActionStateEntry} from "@memebox/shared-state";
 
 function actionStateEnumToString (activity: ActionStateEnum) {
   switch (activity) {
@@ -31,23 +32,23 @@ export class ActivityStateComponent {
     )
   ]).pipe(
     map(([activityState, actionMap]) => {
-      const actionKeys = Object.keys(activityState);
+      const actionKeys = Object.keys(activityState.actionState ?? {});
 
       return actionKeys.map(actionId => {
-        const statesOfAction = activityState[actionId];
+        const statesOfAction: Record<string, ActionStateEntry> = activityState.actionState[actionId];
         const keysOfStates = Object.keys(statesOfAction);
 
         let activityOfAction = '';
 
         if (keysOfStates.includes(actionId)) {
-          activityOfAction =  actionStateEnumToString(statesOfAction[actionId])
+          activityOfAction =  actionStateEnumToString(statesOfAction[actionId].state)
         }
 
         const stateInScreen = keysOfStates.filter(key => key !== actionId)
           .map(key => {
             return {
               screenId: key,
-              state:  actionStateEnumToString(statesOfAction[key])
+              state:  actionStateEnumToString(statesOfAction[key].state)
             }
           });
 
