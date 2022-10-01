@@ -16,11 +16,21 @@ A complete management app for [`image / audio / video / iframe / widgets`](/tuto
 |--|--|
 |![memebox example setup gif](./assets/memebox_example_mobile_view.gif)|![memebox example twitch trigger gif](./assets/memebox_example_twitch.gif)|
 
+## Installation
 
-## Download
+### Pre-built binaries
 
 [Download latest release!](https://github.com/negue/meme-box/releases) (currently a bit ouf of date, new release soon) - [latest nightly Builds](https://github.com/negue/meme-box-nightly/releases)
 
+### From AUR
+
+If you're an Arch Linux user, you can install directly from the [AUR](https://aur.archlinux.org), using one of the [AUR helpers](https://wiki.archlinux.org/title/AUR_helpers).
+
+For example, with `paru`:
+
+```sh
+paru -S memebox
+```
 
 ## Working Features
 
@@ -174,10 +184,10 @@ See finished and upcoming changes in:
 * Find bugs
 * Suggestions to make `things` (UI, Text, Docs etc) more understandable
 * Help fix bugs / improve features
-  * [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue) 
+  * [Good First Issues](https://github.com/negue/meme-box/labels/good%20first%20issue)
   * [Open for Contribution](https://github.com/negue/meme-box/labels/open%20for%20contribution)
   * [Developers Sanity](https://github.com/negue/meme-box/labels/developers%20sanity)
-  * or all other Issue, in case I missed to label them: https://github.com/negue/meme-box/issues 
+  * or all other Issue, in case I missed to label them: https://github.com/negue/meme-box/issues
 * Star it :)
 
 [`Getting started with Development`](README_DEV.md)
