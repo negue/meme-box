@@ -24,45 +24,7 @@ A complete management app for [`image / audio / video / iframe / widgets`](/tuto
 
 ### From source
 
-First, clone the repo into a local folder and use `npm` to install all required dependencies. Depending on what part of the application you want to build (standalone CLI tool, or Electron application), you might need to switch to a specific Node.js version first.
-
-```sh
-git clone https://github.com/negue/meme-box.git # or git@github.com:negue/meme-box
-cd meme-box
-```
-
-#### Headless CLI binary
-
-If you want to build the _headless_ CLI variant, you currently have to use specifically Node.js **v12.16.2**. Otherwise, the latest version or LTS version should be sufficient. For example, using [nvm](https://github.com/nvm-sh/nvm):
-
-
-```sh
-# Only needed if you want to build the headless variant!
-nvm install 12.16.2
-```
-
-Then, build the binary with the following commands (for Windows in this example):
-
-```sh
-npm install --legacy-peer-deps
-npm run build:prepare
-npm run build:windows # or build:macos / build:linux
-```
-
-On macOS, use `npm build:macos`, on Linux, use `npm build:linux` instead, as the last build step.
-
-Afterwards, the standalone binary can be found in the `release/out/` folder.
-
-#### Full application (Electron based)
-
-If you want to build the complete Electron application, which includes the user interface bundled as a regular application, execute the following commands:
-
-```sh
-npm install --legacy-peer-deps
-npm run electron:build
-```
-
-The built application can be found in the `release-electron/` folder, specific to your current operating system.
+If you would like to build MemeBox from source, have a look at our dedicated [BUILD.md](BUILD.md).
 
 ### From AUR
 
