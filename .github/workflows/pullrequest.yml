@@ -22,10 +22,10 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
       - run: npm install --legacy-peer-deps
       - name: Run Affected Lint
         shell: bash
@@ -35,6 +35,7 @@ jobs:
       - name: Run Cypress tests 🧪
         uses: cypress-io/github-action@v2
         with:
+          install-command: npm ci --legacy-peer-deps
           command: npm run test:cypress
 
   build_executables:
@@ -52,14 +53,14 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run build:prepare
-      - run: npm run build:nexe -- -o release/out/memebox
+      - run: npm run build:pkg -- -o release/out/memebox
 
       - run: release/out/memebox --cli-test-mode=true  --config=./release/config
 

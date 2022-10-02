@@ -46,10 +46,10 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
       - name: Declare some variables
         id: vars
         shell: bash
@@ -75,7 +75,7 @@ jobs:
           name: version_info
           path: './src/version_info.json'
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run build:prepare
       - run: npm run build:all
 
@@ -171,12 +171,12 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
 
       - name: Download Angular Output from build
         uses: actions/download-artifact@v2
@@ -221,12 +221,12 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
 
       - name: Download Angular Output from build
         uses: actions/download-artifact@v2
