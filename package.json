@@ -36,10 +36,10 @@
     "build:prepare:folder": "cpy ncc/index.js release --rename=memebox.js && cpy node_modules/vm2/lib/{fixasync,sandbox,contextify}.js release",
     "build:prepare": "npm run build:prod && npm run build:prepare:withoutapp",
     "build:prepare:withoutapp": "npm run build:server && npm run build:prepare:folder",
-    "build:nexe": "npx nexe -i release/memebox.js -r dist -r release/{*.js,!memebox.js} --verbose",
-    "build:windows": "npm run build:nexe -- -t windows-x64 -o release/out/memebox.exe",
-    "build:linux": "npm run build:nexe -- -t linux-x64 -o release/out/memebox-linux",
-    "build:macos": "npm run build:nexe -- -t mac-x64 -o release/out/memebox-macos",
+    "build:pkg": "npx pkg .",
+    "build:windows": "npm run build:pkg -- -t win-x64 -o release/out/memebox.exe",
+    "build:linux": "npm run build:pkg -- -t linux-x64 -o release/out/memebox-linux",
+    "build:macos": "npm run build:pkg -- -t macos-x64 -o release/out/memebox-macos",
     "build:all": "npm run build:windows && npm run build:linux && npm run build:macos",
     "build:with-electron": "npm run electron:serve-tsc && npm run build",
     "electron:serve-tsc:watch": "ttsc -p tsconfig-electron.json -w -outDir out-electron",
@@ -203,5 +203,14 @@
   "browser": {
     "path": false,
     "fs": false
+  },
+  "bin": "release/memebox.js",
+  "pkg": {
+    "scripts": "release/*.js",
+    "assets": [
+      "release/*.js",
+      "dist/**/*"
+    ],
+    "outputPath": "release/pkg"
   }
 }
