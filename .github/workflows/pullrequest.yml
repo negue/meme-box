@@ -35,6 +35,7 @@ jobs:
       - name: Run Cypress tests 🧪
         uses: cypress-io/github-action@v2
         with:
+          install-command: npm ci --legacy-peer-deps
           command: npm run test:cypress
 
   build_executables:
