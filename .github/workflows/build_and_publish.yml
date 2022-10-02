@@ -75,7 +75,7 @@ jobs:
           name: version_info
           path: './src/version_info.json'
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run build:prepare
       - run: npm run build:all
 
@@ -176,7 +176,7 @@ jobs:
         with:
           node-version: 16
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
 
       - name: Download Angular Output from build
         uses: actions/download-artifact@v2
@@ -226,7 +226,7 @@ jobs:
         with:
           node-version: 16
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
 
       - name: Download Angular Output from build
         uses: actions/download-artifact@v2

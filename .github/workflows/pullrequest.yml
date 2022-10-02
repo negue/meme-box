@@ -57,7 +57,7 @@ jobs:
         with:
           node-version: 16
 
-      - run: npm install
+      - run: npm install --legacy-peer-deps
       - run: npm run build:prepare
       - run: npm run build:pkg -- -o release/out/memebox
 
