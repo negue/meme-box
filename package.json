@@ -7,6 +7,7 @@
   },
   "keywords": [],
   "main": "out-electron/index.js",
+  "bin": "release/memebox.js",
   "private": true,
   "scripts": {
     "postinstall": "electron-builder install-app-deps && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
@@ -204,13 +205,11 @@
     "path": false,
     "fs": false
   },
-  "bin": "release/memebox.js",
   "pkg": {
-    "scripts": "release/*.js",
     "assets": [
-      "release/*.js",
-      "dist/**/*"
+      "dist/**/*",
+      "release/{*.js,!memebox.js}"
     ],
-    "outputPath": "release/pkg"
+    "outputPath": "release/out"
   }
 }
