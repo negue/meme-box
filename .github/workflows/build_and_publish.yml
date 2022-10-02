@@ -46,10 +46,10 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
       - name: Declare some variables
         id: vars
         shell: bash
@@ -171,10 +171,10 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
 
       - run: npm install
 
@@ -221,10 +221,10 @@ jobs:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package.json') }}
-      - name: Use Node.js 12.16.2
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.16.2
+          node-version: 16
 
       - run: npm install
 
