@@ -37,7 +37,7 @@
     "build:prepare:folder": "cpy ncc/index.js release --rename=memebox.js && cpy node_modules/vm2/lib/{fixasync,sandbox,contextify}.js release",
     "build:prepare": "npm run build:prod && npm run build:prepare:withoutapp",
     "build:prepare:withoutapp": "npm run build:server && npm run build:prepare:folder",
-    "build:pkg": "npx pkg .",
+    "build:pkg": "npx pkg@5.8.0 .",
     "build:windows": "npm run build:pkg -- -t win-x64 -o release/out/memebox.exe",
     "build:linux": "npm run build:pkg -- -t linux-x64 -o release/out/memebox-linux",
     "build:macos": "npm run build:pkg -- -t macos-x64 -o release/out/memebox-macos",
