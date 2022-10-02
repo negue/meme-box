@@ -1,8 +1,8 @@
-import { ObsConnection, onWsEvent$ } from "../../../obs-connection";
+import {ObsConnection, onWsEvent$} from "../../../obs-connection";
 import type OBSWebSocket from "obs-websocket-js";
-import { DisposableBase } from "./disposableBase";
-import { takeUntil } from "rxjs/operators";
-import { ObsBrowserSourceData } from "@memebox/contracts";
+import {DisposableBase} from "./disposableBase";
+import {takeUntil} from "rxjs/operators";
+import {ObsBrowserSourceData} from "@memebox/contracts";
 
 export class ObsFilterApi {
   constructor(
@@ -137,6 +137,44 @@ export class ObsApi extends DisposableBase {
 
     await this.raw.send('SetCurrentScene', {
       ['scene-name']: sceneName
+    });
+  }
+
+  public async setSourceVisibility(
+    sourceName: string,
+    isVisible: boolean
+  ): Promise<void> {
+    await this.obsConnectionService.connectIfNot();
+
+    await this.raw.send('SetSceneItemProperties', {
+      item: {
+        name: sourceName
+      },
+      visible: isVisible
+    } as any);
+  }
+
+  public async setSourceVolume(
+    source: string,
+    volume: number
+  ): Promise<void> {
+    await this.obsConnectionService.connectIfNot();
+
+    await this.raw.send('SetVolume', {
+      source,
+      volume
+    });
+  }
+
+  public async setSourceMute(
+    source: string,
+    mute: boolean
+  ): Promise<void> {
+    await this.obsConnectionService.connectIfNot();
+
+    await this.raw.send('SetMute', {
+      source,
+      mute
     });
   }
 }

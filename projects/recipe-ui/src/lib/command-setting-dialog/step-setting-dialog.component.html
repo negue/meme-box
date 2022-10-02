@@ -30,7 +30,7 @@
         </ng-container>
         <ng-container *ngSwitchCase="'boolean'">
           <app-action-variable-input [variableType]="$any('boolean')"
-                                     label="Enabled"
+                                     [label]="config.label"
                                      [value]="payload[config.name]"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
@@ -120,6 +120,10 @@
         <ng-container *ngSwitchCase="'obs:scene'">
           <app-obs-scene-selection [selectedScene]="payload[config.name]"
                                    (sceneSelected)="payload[config.name] = $event"></app-obs-scene-selection>
+        </ng-container>
+        <ng-container *ngSwitchCase="'obs:source'">
+          <app-obs-source-selection [payload]="payload[config.name]"
+                                    (payloadChanged)="payload[config.name] = $event"></app-obs-source-selection>
         </ng-container>
         <ng-container *ngSwitchCase="'obs:filter'">
           <app-obs-filter-selection [payload]="payload[config.name]"

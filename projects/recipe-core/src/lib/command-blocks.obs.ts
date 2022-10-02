@@ -1,11 +1,17 @@
 import {RecipeCommandBlockRegistry, RecipeCommandConfigObsSetFilterStatePayload} from "./recipe.types";
 
+/*
+ *
+ * Set Volume: SetVolume
+ *
+ * Mute Source: SetMute
+ *
+ */
+
 export function registerObsCommandBlocks (
   registry: RecipeCommandBlockRegistry
 ): void {
-  const obsSwitchSceneType = "obs:switchScene";
-
-  registry[obsSwitchSceneType] = {
+  registry["obs:switchScene"] = {
     pickerLabel: "Switch Scene",
     commandGroup: "obs",
     configArguments: [
@@ -27,6 +33,63 @@ export function registerObsCommandBlocks (
     }
   };
 
+
+  registry["obs:setSourceVisibility"] = {
+    pickerLabel: "Set Source Visibility",
+    commandGroup: "obs",
+    configArguments: [
+      {
+        name: "sourceName",
+        label: "Source to change the visibility",
+        type: "obs:source"
+      },
+      {
+        name: "visible",
+        label: "Visible",
+        type: "boolean"
+      }
+
+    ],
+    toScriptCode: (step) => {
+      const scenePayload = step.payload.sourceName as string;
+
+      return `obs.setSourceVisibility('${scenePayload}', ${step.payload.visible});`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      const sourceName = payload.sourceName as string;
+
+      return Promise.resolve(`OBS: ${payload.visible ? 'show' : 'hide'} [${sourceName}] Source`);
+    }
+  };
+
+
+  registry["obs:setSourceMute"] = {
+    pickerLabel: "Set Source Mute",
+    commandGroup: "obs",
+    configArguments: [
+      {
+        name: "sourceName",
+        label: "Source to mute",
+        type: "obs:source"
+      },
+      {
+        name: "muted",
+        label: "Muted",
+        type: "boolean"
+      }
+    ],
+    toScriptCode: (step) => {
+      const scenePayload = step.payload.sourceName as string;
+
+      return `obs.setSourceMute('${scenePayload}', ${step.payload.muted});`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      const sourceName = payload.sourceName as string;
+
+      return Promise.resolve(`OBS: ${payload.muted ? 'mute' : 'unmute'} [${sourceName}] Source`);
+    }
+  };
+
   const obsSetFilterState = "obs:setFilterState";
 
   registry[obsSetFilterState] = {
@@ -40,7 +103,7 @@ export function registerObsCommandBlocks (
       },
       {
         name: "enabled",
-        label: "Set filter state",
+        label: "Enabled",
         type: "boolean"
       }
     ],
@@ -55,14 +118,14 @@ export function registerObsCommandBlocks (
       const filterPayload = payload.filter as RecipeCommandConfigObsSetFilterStatePayload;
       const enabled = payload.enabled as boolean;
 
-      return Promise.resolve(`OBS: setting Filter: ${filterPayload.filterName} to ${enabled}`);
+      return Promise.resolve(`OBS: ${enabled ? 'enable' : 'disable'}  [${filterPayload.filterName}] Filter`);
     }
   };
 
   const obsSendRaw = "obs:sendRaw";
 
   registry[obsSendRaw] = {
-    pickerLabel: "Send Raw Request",
+    pickerLabel: "Send Raw Request (OBS WS v4)",
     commandGroup: "obs",
     configArguments: [
       {

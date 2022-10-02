@@ -39,16 +39,22 @@
 
 .mediaList__option {
   margin-bottom: 1rem;
+  min-height: 5rem;
   cursor: pointer;
-  padding: 0;
   transition: padding 0.1s ease-in-out;
   border-radius: 1rem;
+  padding: 0.25rem;
+  border: 0.25rem solid transparent;
+
+  &:hover {
+    border-color: #005958;
+  }
 }
 
 .mediaList__option--selected {
   background-color: #3F4855;
   padding: 0.75rem;
-  border: 0.25rem solid #00d8d6;
+  border-color: #00d8d6;
 }
 
 .mediaList__img {
