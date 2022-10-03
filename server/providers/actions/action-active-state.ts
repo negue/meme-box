@@ -82,7 +82,7 @@ export class ActionActiveState {
     return this._state$
       .pipe(
         filter(( state) => {
-          return isActionCurrently(state, ActionStateEnum.Active, actionId, screenId ?? actionId);
+          return isActionCurrently(state, ActionStateEnum.Active, actionId, screenId);
         }),
         map(_ => {}),
         take(1)
@@ -98,7 +98,7 @@ export class ActionActiveState {
     return this._state$
     .pipe(
       filter(( state) => {
-        const done = isActionCurrently(state, ActionStateEnum.Done, actionId, screenId ?? actionId);
+        const done = isActionCurrently(state, ActionStateEnum.Done, actionId, screenId);
 
         return done;
       }),

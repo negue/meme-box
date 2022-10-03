@@ -1,0 +1,18 @@
+<div class="two-columns">
+  <div class="column">
+    <mat-form-field>
+      <mat-label>Select Source</mat-label>
+      <input
+        matInput
+        [formControl]="sourceFormControl"
+        [matAutocomplete]="sourceAutocomplete">
+      <mat-autocomplete #sourceAutocomplete="matAutocomplete"
+                        (optionSelected)="payloadChanged.next($event.option.value)">
+        <mat-option *ngFor="let source of filteredSourceList$ | async"
+                    [value]="source">
+          {{source}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</div>

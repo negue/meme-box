@@ -1,6 +1,8 @@
 This list might be changed in future, depending on the amount of work that needs to be done for these Features.
 
-### 2022.2 and later
+### 2022.2 and later (in no particular order)
+* [ ] Twitch Extension
+* [ ] Support for new OBS-websocket(.js) v5
 * [ ] Labels on or around the Media, each with their own Position / Animation
   * [ ] Changeable by Trigger Variables
   * [ ] Can be placed like in the Arrange View
@@ -10,6 +12,9 @@ This list might be changed in future, depending on the amount of work that needs
 * [ ] Replace all selected Trigger Action with an inline Recipes #439
 * [ ] Recipe: more Twitch Command Blocks: Announce, Clear Chat, Start Commercial, Create Stream Marker, Slow Mode, Chat Settings
   * [ ] Dependency: Twitch Scope System - for Scripts and Command Block Checks
+* [ ] Recipe: Obs Command Block: Set Volume
+  * [ ] Dependency: Command Block Settings for Numbers with a Range Config
+* [ ] Ability to re-authenticate even when you are not in the normal ports
 
 ### Misc
 

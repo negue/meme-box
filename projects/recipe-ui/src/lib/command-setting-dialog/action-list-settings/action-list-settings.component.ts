@@ -80,6 +80,12 @@ export class ActionListSettingsComponent {
     actionList.splice(indexOf, 1);
   }
 
+  openActionEditDialog (action: Action) {
+    this.dialogService.showMediaEditDialog({
+      actionToEdit: action
+    });
+  }
+
   onTagSelected($event: string) {
     this.updateConfigPayload({
       actionsByTag: $event

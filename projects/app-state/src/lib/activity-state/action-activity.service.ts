@@ -17,7 +17,16 @@ export class ActionActivityService {
     // Load State once
     this.memeboxApi.get<ActionStateEntries>(`${ENDPOINTS.ACTION_ACTIVITY.PREFIX}${ENDPOINTS.ACTION_ACTIVITY.CURRENT}`)
       .then( actionStateInitialValue => {
-        this.activityStore.update(() => actionStateInitialValue);
+        this.activityStore.update((currentState) =>
+        {
+          return {
+            actionState: {
+              ...currentState.actionState,
+              ...actionStateInitialValue,
+            },
+            screenState: currentState.screenState
+          }
+        });
       });
 
     const actionStateWSHandler = new WebsocketHandler(
