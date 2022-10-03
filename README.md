@@ -7,7 +7,7 @@
 </p>
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A complete management app for [`image / audio / video / iframe / widgets`](/tutorials/type_overview.md) "media" to be used inside OBS. Or trigger other custom actions.
@@ -218,6 +218,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center"><a href="https://brandonroberts.dev"><img src="https://avatars.githubusercontent.com/u/42211?v=4?s=100" width="100px;" alt="Brandon"/><br /><sub><b>Brandon</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=brandonroberts" title="Code">💻</a></td>
       <td align="center"><a href="https://www.linkedin.com/in/chirag-mahawar/"><img src="https://avatars.githubusercontent.com/u/34866279?v=4?s=100" width="100px;" alt="Chirag Mahawar"/><br /><sub><b>Chirag Mahawar</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=chiragmahawar7" title="Code">💻</a></td>
       <td align="center"><a href="https://varunkhalate.me/"><img src="https://avatars.githubusercontent.com/u/68511458?v=4?s=100" width="100px;" alt="Varun Khalate"/><br /><sub><b>Varun Khalate</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=khalatevarun" title="Code">💻</a></td>
+      <td align="center"><a href="https://home.dnaka91.rocks"><img src="https://avatars.githubusercontent.com/u/36804488?v=4?s=100" width="100px;" alt="Dominik Nakamura"/><br /><sub><b>Dominik Nakamura</b></sub></a><br /><a href="https://github.com/negue/meme-box/commits?author=dnaka91" title="Code">💻</a> <a href="https://github.com/negue/meme-box/commits?author=dnaka91" title="Documentation">📖</a> <a href="#platform-dnaka91" title="Packaging/porting to new platform">📦</a></td>
     </tr>
   </tbody>
   <tfoot>
