@@ -17,6 +17,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Cache multiple paths
+        id: cache-package
         uses: actions/cache@v2
         with:
           path: |
@@ -27,6 +28,7 @@ jobs:
         with:
           node-version: 16
       - run: npm install --legacy-peer-deps
+        if: steps.cache-package.outputs.cache-hit != 'true'
       - name: Run Affected Lint
         shell: bash
         run: npm run affected:lint -- --base=origin/$TARGET_BRANCH
@@ -48,6 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Cache multiple paths
+        id: cache-package
         uses: actions/cache@v2
         with:
           path: |
@@ -59,6 +62,7 @@ jobs:
           node-version: 16
 
       - run: npm install --legacy-peer-deps
+        if: steps.cache-package.outputs.cache-hit != 'true'
       - run: npm run build:prepare
       - run: npm run build:pkg -- -o release/out/memebox
 
