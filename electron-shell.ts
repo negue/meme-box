@@ -1,4 +1,5 @@
 import * as electron from 'electron';
+import * as os from 'os';
 import {app, BrowserWindow, dialog, ipcMain, Menu, MessageBoxSyncOptions, nativeImage, shell, Tray} from 'electron';
 import * as path from 'path';
 import {join} from 'path';
@@ -32,6 +33,49 @@ const openExternalLinksInOSBrowser = (event, url) => {
   }
 };
 
+/**
+ * Adds the source image in several layers of scaling to the target image as "presentation", which
+ * define the same image at different scaling factors.
+ *
+ * The base size defines the standard size at 1.0 scale.
+ */
+const addPresentationIcons = (
+  target: electron.NativeImage,
+  source: electron.NativeImage,
+  baseSize: number,
+): void => {
+  [1, 1.25, 1.5, 2, 3].forEach(scale => {
+    target.addRepresentation({
+      scaleFactor: scale,
+      width: baseSize * scale,
+      height: baseSize * scale,
+      buffer: source.resize({ width: baseSize * scale, height: baseSize * scale }).toBitmap(),
+    });
+  });
+};
+
+/**
+ * Create the tray icon for the OSs tray area. The shape of the image is different, depending on the
+ * platform, like different coloring and different base sizes.
+ */
+const createTrayIcon = (appRootPath: string): electron.NativeImage => {
+  const trayIconPath = join(appRootPath, 'assets/icons/icon-128x128.png');
+  const trayIcon = nativeImage.createFromPath(trayIconPath);
+  const scaledIcon = nativeImage.createEmpty();
+
+  switch (os.platform()) {
+    case 'darwin':
+      addPresentationIcons(scaledIcon, trayIcon, 16);
+      scaledIcon.setTemplateImage(true);
+    case 'win32':
+      addPresentationIcons(scaledIcon, trayIcon, 16);
+    default: // Linux, OpenBSD, FreeBSD and everything else
+      addPresentationIcons(scaledIcon, trayIcon, 32);
+  }
+
+  return scaledIcon;
+};
+
 var initPath = path.join(NEW_CONFIG_PATH, "init.json");
 var data = { bounds: { width: 800, height: 600 }};
 try {
@@ -42,6 +86,11 @@ catch(e) {
 
 let alreadyAllowedToBeHidden = false;
 let tray;
+
+/**
+ * Create the application's tray icon in the system menu bar, setting up the platform dependent icon
+ * as well as menu items and further tray information.
+ */
 function createTray () {
   function toggle () {
     if (win !== null) {
@@ -53,21 +102,9 @@ function createTray () {
 
 
   const appRootPath = getAppRootPath();
+  const trayIcon = createTrayIcon(appRootPath);
 
-  const trayIconPath = join(appRootPath, 'assets/icons/icon-128x128.png');
-  const trayIcon = nativeImage.createFromPath(trayIconPath);
-  const trayIconScaled = nativeImage.createEmpty();
-
-  for (let i = 1; i <= 3; i++) {
-    trayIconScaled.addRepresentation({
-      scaleFactor: i,
-      width: 32 * i,
-      height: 32 * i,
-      buffer: trayIcon.resize({ width: 32 * i, height: 32 * i }).toBitmap(),
-    });
-  }
-
-  tray = new Tray(trayIconScaled);
+  tray = new Tray(trayIcon);
 
   let template = [{
     label: 'Toggle',
