@@ -104,12 +104,8 @@ function createWindow(): BrowserWindow {
       nodeIntegration: false,
       // protect against prototype pollution
       contextIsolation: true,
-      // turn off remote
-      enableRemoteModule: false,
       // Preload script
       preload: path.join(electronPath, 'preload.js'),
-
-      nativeWindowOpen: true
     },
   });
 
@@ -187,9 +183,6 @@ function createWindow(): BrowserWindow {
 
 
 try {
-
-  app.allowRendererProcessReuse = true;
-
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
