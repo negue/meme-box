@@ -54,14 +54,20 @@ function createTray () {
 
   const appRootPath = getAppRootPath();
 
-  const trayIcon = join(appRootPath, 'assets/icons/favicon.256x256.png');
-  const trayIconNativeImage = nativeImage.createFromPath(
-    trayIcon
-  );
+  const trayIconPath = join(appRootPath, 'assets/icons/icon-128x128.png');
+  const trayIcon = nativeImage.createFromPath(trayIconPath);
+  const trayIconScaled = nativeImage.createEmpty();
 
-  const resized = trayIconNativeImage.resize({ width: 16, height: 16 });
+  for (let i = 1; i <= 3; i++) {
+    trayIconScaled.addRepresentation({
+      scaleFactor: i,
+      width: 32 * i,
+      height: 32 * i,
+      buffer: trayIcon.resize({ width: 32 * i, height: 32 * i }).toBitmap(),
+    });
+  }
 
-  tray = new Tray(resized);
+  tray = new Tray(trayIconScaled);
 
   let template = [{
     label: 'Toggle',
