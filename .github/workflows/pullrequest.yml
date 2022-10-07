@@ -2,16 +2,14 @@ name: Pull-Request CI
 
 on:
   pull_request:
-    branches: [ release, develop ]
+    branches: [release, develop]
 env:
   BEFORE_SHA: ${{ github.event.before }}
   TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
 
 jobs:
   build_test:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
         with:
@@ -42,11 +40,9 @@ jobs:
 
   build_executables:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-latest ]
-
+        os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
       - name: Cache multiple paths
@@ -60,16 +56,12 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-
       - run: npm install --legacy-peer-deps
         if: steps.cache-package.outputs.cache-hit != 'true'
       - run: npm run build:prepare
       - run: npm run build:pkg -- -o release/out/memebox
-
       - run: release/out/memebox --cli-test-mode=true  --config=./release/config
-
       - run: npm run electron:build:only
-
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.os }}_output
@@ -79,3 +71,57 @@ jobs:
             !release/config/**
             !release-electron/*-unpacked/**
             !release-electron/mac/**
+
+  build_tauri:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Cache multiple paths
+        id: cache-package
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
+      - name: Use Node.js 16
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: npm install --legacy-peer-deps
+        if: steps.cache-package.outputs.cache-hit != 'true'
+      - name: Setup Rust
+        run: rustup install stable
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          working-directory: src-tauri
+      - name: Install WebKit dependencies
+        if: ${{ runner.os == 'Linux' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libwebkit2gtk-4.0-dev
+      - name: Build base app
+        run: npm run build:prepare
+      - name: Build sidecar (Linux)
+        if: ${{ runner.os == 'Linux' }}
+        run: npm run build:linux
+      - name: Build sidecar (macOS)
+        if: ${{ runner.os == 'macOS' }}
+        run: npm run build:macos
+      - name: Build sidecar (Windows)
+        if: ${{ runner.os == 'Windows' }}
+        run: npm run build:windows
+      - name: Build Tauri app
+        run: npm run tauri:build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: tauri-${{ matrix.os }}
+          path: |
+            src-tauri/target/release/bundle/dmg/memebox*.dmg
+            src-tauri/target/release/bundle/appimage/memebox*.AppImage
+            src-tauri/target/release/bundle/deb/memebox*.deb
+            src-tauri/target/release/bundle/msi/memebox*.msi
