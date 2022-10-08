@@ -20,7 +20,8 @@ jobs:
         with:
           path: |
             **/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package.json') }}
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ hashFiles('package.json') }}-1
       - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
