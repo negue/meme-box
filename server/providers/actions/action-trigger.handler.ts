@@ -1,5 +1,15 @@
 import {Service, UseOpts} from "@tsed/di";
-import {Action, ACTIONS, ActionStateEnum, ActionType, Dictionary, Screen, TriggerAction} from "@memebox/contracts";
+import {
+  Action,
+  ACTION_TYPE_INFORMATION,
+  ACTIONS,
+  ActionStateEnum,
+  ActionType,
+  Dictionary,
+  Screen,
+  TriggerAction,
+  TriggerActionOrigin
+} from "@memebox/contracts";
 import {Persistence} from "../../persistence";
 import {NamedLogger} from "../named-logger";
 import {Inject} from "@tsed/common";
@@ -15,8 +25,7 @@ import {ActionActiveState} from "./action-active-state";
 @Service()
 export class ActionTriggerHandler {
   private _allScreens: Screen[] = [];
-  private _allMediasMap: Dictionary<Action> = {};
-  private _allMediasList: Action[] = [];
+  private _allActionsMap: Dictionary<Action> = {};
 
   private _actionQueue = new ActionQueue(
     this._persistence,
@@ -50,30 +59,30 @@ export class ActionTriggerHandler {
     this.getData();
   }
 
-  async triggerActionById(payloadObs: TriggerAction) {
-    this.logger.info(`Clip triggered: ${payloadObs.id} - Target: ${payloadObs.targetScreen ?? 'Any'} - Origin: ${payloadObs.origin}`, payloadObs);
+  async triggerActionById(triggerPayload: TriggerAction) {
+   this.logTriggerInformation(triggerPayload);
 
-    const mediaConfig = this._allMediasMap[payloadObs.id];
+    const mediaConfig = this._allActionsMap[triggerPayload.id];
 
     switch (mediaConfig.type) {
       case ActionType.Script:
-        await this._scriptHandler.handleScript(mediaConfig, payloadObs);
+        await this._scriptHandler.handleScript(mediaConfig, triggerPayload);
         break;
       case ActionType.Recipe:
-        await this._scriptHandler.handleRecipe(mediaConfig, payloadObs);
+        await this._scriptHandler.handleRecipe(mediaConfig, triggerPayload);
         break;
       default: {
-        if (payloadObs.targetScreen) {
-          this.triggerActionOnScreen(payloadObs);
+        if (triggerPayload.targetScreen) {
+          this.triggerActionOnScreen(triggerPayload);
           return;
         }
 
         // No Meta Type
         // Trigger the action on all assign screens
         for (const screen of this._allScreens) {
-          if (screen.clips[payloadObs.id]) {
+          if (screen.clips[triggerPayload.id]) {
             const newMessageObj: TriggerAction = {
-              ...payloadObs,
+              ...triggerPayload,
               targetScreen: screen.id
             };
 
@@ -83,7 +92,7 @@ export class ActionTriggerHandler {
       }
     }
 
-    return payloadObs;
+    return triggerPayload;
   }
 
   triggerActionOnScreen (payload: TriggerAction): void  {
@@ -121,9 +130,24 @@ export class ActionTriggerHandler {
     }
   }
 
+  private logTriggerInformation(triggerPayload: TriggerAction) {
+    const actionInfo = this._allActionsMap[triggerPayload.id];
+
+    const screenName = triggerPayload.targetScreen
+      ? this._allScreens.find(s => s.id === triggerPayload.targetScreen)?.name ?? '[Unknown] '+triggerPayload.targetScreen
+      : 'any';
+
+    const originLabel = triggerPayload.origin
+      ? TriggerActionOrigin[triggerPayload.origin]
+      : '[Unknown] ' +triggerPayload.origin;
+
+    const typeName = ACTION_TYPE_INFORMATION[actionInfo.type]?.labelFallback ?? '[Unknown]';
+
+    this.logger.info(`${typeName} triggered: "${actionInfo.name}" - Target-Screen: ${screenName} - Origin: ${originLabel}`, triggerPayload);
+  }
+
   private getData() {
     this._allScreens = this._persistence.listScreens();
-    this._allMediasMap = this._persistence.fullState().clips;
-    this._allMediasList = Object.values(this._allMediasMap);
+    this._allActionsMap = this._persistence.fullState().clips;
   }
 }

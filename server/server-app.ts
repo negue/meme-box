@@ -17,6 +17,8 @@ import {CLI_OPTIONS} from "./utils/cli-options";
 
 // TODO use config values?
 
+LOGGER.info('Version: '+currentVersionJson.VERSION_TAG, '-', currentVersionJson.COMMIT);
+
 const CONFIG_IS_LOADED$ = PersistenceInstance.configLoaded$.pipe(
   take(1)
 ).toPromise();
