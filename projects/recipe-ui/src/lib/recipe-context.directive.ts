@@ -164,4 +164,10 @@ export class RecipeContextDirective
       }
     });
   }
+
+  changeEntry(entry: RecipeEntryCommandCall): void{
+    this.update(state => {
+      state.entries[entry.id] = entry;
+    })
+}
 }

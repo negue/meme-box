@@ -18,13 +18,15 @@ export interface RecipeCommandInfo {
 
 // at some point custom controls/ui for each stepInfo could be shown
 
+export interface RecipeSubCommandBlock {
+  labelId: string;
+  entries: string[]  // entryId
+}
+
 export interface RecipeEntryBase {
   id: string;
   awaited?: boolean;
-  subCommandBlocks: {
-    labelId: string;
-    entries: string[]  // entryId
-  }[];
+  subCommandBlocks: RecipeSubCommandBlock[];
 }
 
 export interface RecipeEntryCommandPayload {
@@ -112,6 +114,7 @@ export interface RecipeCommandDefinition {
   allowedToBeAdded?: (step: RecipeEntry, context: RecipeContext) => boolean;
   toScriptCode: (step: RecipeEntryCommandCall, context: RecipeContext, userData: UserDataState) => string;
   awaitCodeHandledInternally?: boolean;
+  extendCommandBlockOnEdit?: boolean;
   commandType?: string;
 }
 
@@ -123,5 +126,8 @@ export interface RecipeCommandSelectionGroup {
 export interface RecipeCommandBlockRegistry {
   [stepType: string]: RecipeCommandDefinition
 }
-
-export type generateCodeByStep = (step: RecipeEntry, context: RecipeContext, userData: UserDataState) => string;
+export interface generatedCodeBySubCommandBlock {
+  subCommand: RecipeSubCommandBlock;
+  generatedScript: string;
+}
+export type generateCodeByStep = (step: RecipeEntry, context: RecipeContext, userData: UserDataState) => generatedCodeBySubCommandBlock[];
