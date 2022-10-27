@@ -1,76 +1,10 @@
-import {
-  RecipeCommandBlockRegistry,
-  RecipeCommandSelectionGroup,
-  RecipeContext,
-  RecipeEntry,
-  RecipeEntryCommandCall,
-  RecipeEntryCommandPayload
-} from "./recipe.types";
+import {RecipeContext, RecipeEntry, RecipeEntryCommandCall, RecipeEntryCommandPayload} from "./recipe.types";
 import {uuid} from "@gewd/utils";
 import {registerMemeboxCommandBlocks} from "./command-blocks.memebox";
 import {registerObsCommandBlocks} from "./command-blocks.obs";
 import {registerTwitchCommandBlocks} from "./command-blocks.twitch";
 import {UserDataState} from "@memebox/contracts";
-
-export interface RecipeStepConfigArgument {
-  name: string;
-  label: string;
-  type: string; // todo change to the enum
-}
-
-export const RecipeCommandBlockGroups: Record<string, RecipeCommandSelectionGroup> = {
-  generic: {
-    label: "Generic",
-    order: 1
-  },
-  memebox: {
-    label: "Memebox",
-    order: 2
-  },
-  twitch: {
-    label: "Twitch",
-    order: 3
-  },
-  obs: {
-    label: "OBS",
-    order: 4
-  }
-};
-
-export const RecipeCommandRegistry: RecipeCommandBlockRegistry = {
-  "sleepSeconds": {
-    pickerLabel: "Wait for Seconds",
-    commandGroup: "generic",
-    configArguments: [
-      {
-        name: "seconds",
-        label: "Seconds",
-        type: "number"
-      }
-    ],
-    toScriptCode: (step, context) => `sleep.secondsAsync(${step.payload.seconds});`,
-    commandEntryLabelAsync: (queries, payload, parentStep) => {
-      return Promise.resolve(`sleep: ${payload.seconds} seconds`);
-    },
-    entryIcon: () => 'hourglass_top'
-  },
-  "sleepMs": {
-    pickerLabel: "Wait for Milliseconds",
-    commandGroup: "generic",
-    configArguments: [
-      {
-        name: "ms",
-        label: "Milliseconds",
-        type: "number"
-      }
-    ],
-    toScriptCode: (step, context) => `sleep.msAsync(${step.payload.ms});`,
-    commandEntryLabelAsync: (queries, payload, parentStep) => {
-      return Promise.resolve(`sleep: ${payload.ms}ms`);
-    },
-    entryIcon: () => 'hourglass_top'
-  }
-};
+import {RecipeCommandRegistry} from "./recipeCommandRegistry";
 
 
 function generateCodeByStepAsync (step: RecipeEntry, context: RecipeContext, userData: UserDataState): string {

@@ -5,7 +5,8 @@ import {
   RecipeCommandConfigActionPayload,
   RecipeContext,
   RecipeEntryCommandPayload,
-  RecipeStepConfigArgument
+  RecipeStepConfigArguments,
+  RecipeStepConfigArgumentValidations
 } from "@memebox/recipe-core";
 import {
   Action,
@@ -16,12 +17,12 @@ import {
 } from "@memebox/contracts";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {Observable} from "rxjs";
-import {AppQueries} from "@memebox/app-state";
+import {AppQueries, SnackbarService} from "@memebox/app-state";
 import cloneDeep from "lodash/cloneDeep";
 import {isVisibleMedia} from "@memebox/shared-state";
 
 export interface CommandSettingDialogPayload {
-  configArguments: RecipeStepConfigArgument[];
+  configArguments: RecipeStepConfigArguments[];
   currentStepData?: RecipeEntryCommandPayload;
   commandBlockName: string;
   recipeContext: RecipeContext;
@@ -44,6 +45,7 @@ export class StepSettingDialogComponent {
     private dialogRef: MatDialogRef<any>,
     private dialogService: DialogService,
     private appQuery: AppQueries,
+    private snackbarService: SnackbarService
   ) {
    this._prepareCurrentPayload();
   }
@@ -107,6 +109,18 @@ export class StepSettingDialogComponent {
   }
 
   save(): void  {
+    for (const configArgument of this.data.configArguments) {
+      if (RecipeStepConfigArgumentValidations[configArgument.type]){
+        if (!RecipeStepConfigArgumentValidations[configArgument.type](
+          configArgument, this.payload[configArgument.name]
+        )){
+          this.snackbarService.sorry(`"${configArgument.label}" is invalid`);
+          // todo mark those inputs as invalid with a hint or something
+          return;
+        }
+      }
+    }
+
     this.dialogRef.close(this.payload);
   }
 

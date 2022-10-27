@@ -50,8 +50,8 @@
               <div class="example-container" *ngIf="actionDictionary[actionPayload.actionId] | showScreenSelection">
                 <mat-form-field appearance="fill">
                   <mat-label>Target Screen</mat-label>
-                  <mat-select [(value)]="actionPayload.screenId">
-                    <mat-option [value]="''">All</mat-option>
+                  <mat-select [(value)]="actionPayload.screenId" required>
+                    <mat-option [value]="''" *ngIf="config.flags.allowAllScreens">All</mat-option>
                     <mat-option *ngFor="let screen of actionDictionary[actionPayload.actionId] | actionScreenList$ | async"
                                 [value]="screen.id">
                       {{ screen.name }}
