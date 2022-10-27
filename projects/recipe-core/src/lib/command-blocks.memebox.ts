@@ -135,7 +135,7 @@ export function registerMemeboxCommandBlocks(
 
       return `${createMemeboxApiVariable(actionPayload)}
                      .triggerWhile(async (helpers_${step.payload._suffix}) => {
-                        ${generateCodeByStep(step, context, userData)}
+                        ${generateCodeByStep(step, context, userData)[0].generatedScript}
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
