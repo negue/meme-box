@@ -1,7 +1,7 @@
 import {uuid} from "@gewd/utils";
 import {ActionType, TriggerActionOverrides, UserDataState} from "@memebox/contracts";
 import {AppQueries} from "@memebox/app-state";
-import {RecipeStepConfigArgument} from "./generateCodeByRecipe";
+import {RecipeStepConfigArguments} from "./recipeStepConfigArgument";
 
 export interface RecipeSubCommandInfo {
   name: string; // property to save the subSteps
@@ -106,7 +106,7 @@ export interface RecipeCommandDefinition {
   subCommandBlockLabelAsync?: (queries: AppQueries, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
   entryIcon?: (queries: AppQueries,  payload: RecipeEntryCommandPayload) => string|Promise<string>;
   commandGroup: string;
-  configArguments: RecipeStepConfigArgument[]; // each argument name will be applied to the payload as prop
+  configArguments: RecipeStepConfigArguments[]; // each argument name will be applied to the payload as prop
 
   extendCommandBlock?: (step: RecipeEntryCommandCall, parentStep: RecipeEntry) => void;
   allowedToBeAdded?: (step: RecipeEntry, context: RecipeContext) => boolean;
