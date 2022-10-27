@@ -4,7 +4,7 @@
 
 export * from './lib/types';
 export * from './lib/types.outdated';
-export * from './lib/media.types';
+export * from './lib/action.types';
 export * from './lib/createInitialState';
 export * from './lib/constants';
 export * from './lib/actions';

@@ -13,7 +13,7 @@ export function newLogger(label: string) {
 
 export const LOGGER = newLogger('MemeBox');
 
-LOGGER.info('##########  Started  ##########');
+LOGGER.info('##########  Started Log  ##########');
 
 function logAndExit (type: string) {
   process.on(type as any, (err: Error) => {

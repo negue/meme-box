@@ -1,6 +1,13 @@
 import {Service, UseOpts} from "@tsed/di";
 import {VM} from "vm2";
-import {Action, ActionStateEnum, ActionType, getUserDataState, TriggerAction} from "@memebox/contracts";
+import {
+  Action,
+  ACTION_TYPE_INFORMATION,
+  ActionStateEnum,
+  ActionType,
+  getUserDataState,
+  TriggerAction
+} from "@memebox/contracts";
 import {NamedLogger} from "../../named-logger";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../../contracts";
@@ -116,8 +123,6 @@ export class ScriptHandler implements ActionStoreAdapter {
   }
 
   public handleScript (script: Action, payloadObs: TriggerAction) {
-    this.logger.info('Handle Script!!');
-
     const scriptConfig = actionDataToScriptConfig(script);
 
     return this.handleGenericScript(script, scriptConfig, payloadObs);
@@ -128,7 +133,7 @@ export class ScriptHandler implements ActionStoreAdapter {
     scriptConfig: ScriptConfig,
     payloadObs: TriggerAction
   ) {
-    // todo rename logs per target type script/recipe
+    this.logScript(script,`is starting.`);
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
@@ -158,7 +163,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       try {
         scriptHoldingData.compile();
       } catch (err) {
-        this.logger.error(err.message, `Script: ${script.name}`);
+        this.logScript(script,``, err);
         return;
       }
       this._compiledScripts.set(script.id, scriptHoldingData);
@@ -167,14 +172,14 @@ export class ScriptHandler implements ActionStoreAdapter {
     try {
       await scriptHoldingData.execute(payloadObs);
     } catch (err) {
-      this.logger.error(err, `Failed to run script for "${script.name}" [${script.id}]`);
+      this.logScript(script, `Failed to run [${script.id}]`, err);
     }
 
     const scriptRunningType = script.type === ActionType.PermanentScript
       ? 'is running'
       : 'is done';
 
-    this.logger.info(`Script "${script.name}" ${scriptRunningType}.`);
+    this.logScript(script,`${scriptRunningType}.`);
 
     this.actionStateEventBus.updateActionState({
       mediaId: script.id,
@@ -213,11 +218,21 @@ export class ScriptHandler implements ActionStoreAdapter {
     cachedCompiledScript.dispose();
 
     if (cachedCompiledScript.script.type === ActionType.PermanentScript) {
-      this.logger.info(`Script: "${cachedCompiledScript.script.name}" stopped.`);
+      this.logScript(cachedCompiledScript.script,`stopped.`);
     } else {
-      this.logger.info(`Script Cache: "${cachedCompiledScript.script.name}" cleared.`);
+      this.logScript(cachedCompiledScript.script,`Cache cleared.`);
     }
 
     this._compiledScripts.delete(scriptId);
   }
+
+  private logScript(action: Action, logMessage: string, error?: unknown){
+    const scriptType = ACTION_TYPE_INFORMATION[action.type]?.labelFallback ?? '[Unknown]';
+
+    if (error){
+      this.logger.error(error, `${scriptType} "${action.name}": ${logMessage}`)
+    }
+    this.logger.info(`${scriptType} "${action.name}": ${logMessage}`)
+  }
+
 }

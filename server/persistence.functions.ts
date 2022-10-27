@@ -1,7 +1,6 @@
-import { createDirIfNotExists, MEDIA_SCREENSHOT_PATH, safeResolve } from "./path.utils";
-import { Action } from "../projects/contracts/src/lib/types";
-import { ActionType } from "../projects/contracts/src/lib/media.types";
-import fs, { writeFileSync } from "fs";
+import {createDirIfNotExists, MEDIA_SCREENSHOT_PATH, safeResolve} from "./path.utils";
+import {Action, ActionType} from "@memebox/contracts";
+import fs, {writeFileSync} from "fs";
 import path from "path";
 
 export const GetPreviewFilePath = (actionId: string) => safeResolve(MEDIA_SCREENSHOT_PATH, actionId+'.jpg');

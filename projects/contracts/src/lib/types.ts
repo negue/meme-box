@@ -1,5 +1,5 @@
 import {ChatUserstate} from "tmi.js";
-import {ActionType} from "./media.types";
+import {ActionType} from "./action.types";
 import {ActionOverridableProperties, TriggerAction} from "./actions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {DefaultImage} from "./twitch-data.types";
