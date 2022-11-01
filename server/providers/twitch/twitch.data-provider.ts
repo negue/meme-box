@@ -12,6 +12,8 @@ export interface TwitchHelixResult<TResult> {
   message?: string;
 }
 
+// TODO Refactor Boilerplate
+
 @Service()
 export class TwitchDataProvider {
 
@@ -89,6 +91,40 @@ export class TwitchDataProvider {
 
     return result;
   }
+
+  async deleteHelixDataAsync<TResult>(
+    endpoint: string
+  ): Promise<TwitchHelixResult<TResult>> {
+    const twitchAuth = await this.getMainTwitchAuthAsync();
+
+    if (twitchAuth === null) {
+      return {
+        ok: false,
+        message: 'Not authorized.'
+      };
+    }
+    const apiURL = `https://api.twitch.tv/helix/${endpoint}`;
+
+    const request = await fetch(apiURL, {
+      headers: {
+        "Client-ID": twitchAuth.clientId,
+        "Authorization": `Bearer ${twitchAuth.token}`,
+        'Content-Type': 'application/json'
+      },
+      method: 'DELETE'
+    });
+
+    if (request.status === 204) {
+      return {};
+    }
+
+    const result = request.body.readable
+      ? await request.json()
+      : {};
+
+    return result;
+  }
+
 
   async patchHelixDataAsync<TResult>(
     endpoint: string,

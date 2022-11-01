@@ -1,11 +1,6 @@
 import {RecipeCommandBlockRegistry} from "./recipe.types";
 
 /*
- * Announcements: moderator:manage:announcements
- * https://dev.twitch.tv/docs/api/reference#send-chat-announcement
- *
- * Clear chat: moderator:manage:chat_messages
- * https://dev.twitch.tv/docs/api/reference#delete-chat-messages
  *
  * Start Commercial: channel:edit:commercial
  * https://dev.twitch.tv/docs/api/reference#start-commercial
@@ -46,6 +41,7 @@ export function registerTwitchCommandBlocks (
     }
   };
 
+  // https://dev.twitch.tv/docs/api/reference#send-chat-announcement
   registry['twitch:sendAnnouncement'] = {
     pickerLabel: "Send a Chat Announcement",
     commandGroup: "twitch",
@@ -96,6 +92,19 @@ export function registerTwitchCommandBlocks (
       const color = payload.color as string;
 
       return Promise.resolve(`Twitch: ${color} Announcement: ${textToSay}`);
+    }
+  };
+
+  // https://dev.twitch.tv/docs/api/reference#delete-chat-messages
+  registry['twitch:clearChat'] = {
+    pickerLabel: "Clear Chat",
+    commandGroup: "twitch",
+    configArguments: [],
+    toScriptCode: () => {
+      return `twitch.clearChat();`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      return Promise.resolve(`Twitch: Clear Chat`);
     }
   };
 }

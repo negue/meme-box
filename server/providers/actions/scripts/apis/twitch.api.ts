@@ -62,4 +62,12 @@ export class TwitchApi extends DisposableBase {
       }
     )
   }
+
+  public async clearChat (){
+    const broadcasterId = await this.getBroadcasterIdAsync();
+
+    return this.dataProvider.deleteHelixDataAsync(
+      `moderation/chat?broadcaster_id=${broadcasterId}&moderator_id=${broadcasterId}`
+    )
+  }
 }
