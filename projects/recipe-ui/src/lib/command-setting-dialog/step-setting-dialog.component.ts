@@ -181,6 +181,8 @@ export class StepSettingDialogComponent {
   }
 
   private _prepareCurrentPayload() {
+    // todo move these defaults to the command block registry
+
     if (this.data.currentStepData) {
       this.payload = cloneDeep(this.data.currentStepData);
     }
@@ -193,6 +195,13 @@ export class StepSettingDialogComponent {
 
             } as RecipeCommandConfigActionListPayload;
           }
+          break;
+        }
+        case 'selectionStatic': {
+          if (!this.payload[config.name]) {
+            this.payload[config.name] = config.defaultSelected;
+          }
+
           break;
         }
         case 'boolean': {

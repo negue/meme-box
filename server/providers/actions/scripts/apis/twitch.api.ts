@@ -50,4 +50,16 @@ export class TwitchApi extends DisposableBase {
   public patchHelixDataAsync(endpointAndQuery: string, bodyData: unknown) {
     return this.dataProvider.patchHelixDataAsync(endpointAndQuery, bodyData);
   }
+
+  public async sendAnnouncement(message: string, color?: string){
+    const broadcasterId = await this.getBroadcasterIdAsync();
+
+    return this.postHelixDataAsync(
+      `chat/announcements?broadcaster_id=${broadcasterId}&moderator_id=${broadcasterId}`,
+      {
+        message,
+        color
+      }
+    )
+  }
 }

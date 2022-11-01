@@ -21,6 +21,12 @@ export interface RecipeStepConfigNumberArgument extends RecipeStepConfigArgument
   type: 'number';
 }
 
+export interface RecipeStepConfigStaticSelectionArgument extends RecipeStepConfigArgument {
+  type: 'selectionStatic';
+  entries: {id: string, label: string}[];
+  defaultSelected: string;
+}
+
 export interface RecipeStepConfigActionArgument extends RecipeStepConfigArgument {
   type: 'action';
   flags: {
@@ -46,6 +52,7 @@ export interface RecipeStepConfigObsFilterArgument extends RecipeStepConfigArgum
 export type RecipeStepConfigArguments =
   RecipeStepConfigBooleanArgument |RecipeStepConfigTextArgument|
   RecipeStepConfigTextareaArgument|RecipeStepConfigNumberArgument|
+  RecipeStepConfigStaticSelectionArgument|
   RecipeStepConfigActionArgument|RecipeStepConfigActionListArgument|
 RecipeStepConfigObsSceneArgument|RecipeStepConfigObsSourceArgument|
   RecipeStepConfigObsFilterArgument

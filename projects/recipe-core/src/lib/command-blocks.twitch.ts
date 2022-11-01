@@ -45,4 +45,57 @@ export function registerTwitchCommandBlocks (
       return Promise.resolve('Twitch: Say: '+ textToSay);
     }
   };
+
+  registry['twitch:sendAnnouncement'] = {
+    pickerLabel: "Send a Chat Announcement",
+    commandGroup: "twitch",
+    configArguments: [
+      {
+        name: "text",
+        label: "Announcement to send",
+        type: "textarea"
+      },
+      {
+        name: "color",
+        label: "Color of this announcement",
+        type: "selectionStatic",
+        defaultSelected: 'primary',
+        entries: [
+          {
+            id: 'primary',
+            label: 'Primary',
+
+          },
+          {
+            id: 'blue',
+            label: 'Blue',
+          },
+          {
+            id: 'green',
+            label: 'Green',
+          },
+          {
+            id: 'orange',
+            label: 'Orange',
+          },
+          {
+            id: 'purple',
+            label: 'Purple',
+          }
+        ]
+      }
+    ],
+    toScriptCode: (step) => {
+      const textToSay = step.payload.text as string;
+      const color = step.payload.color as string;
+
+      return `twitch.sendAnnouncement('${textToSay}','${color}');`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      const textToSay = payload.text as string;
+      const color = payload.color as string;
+
+      return Promise.resolve(`Twitch: ${color} Announcement: ${textToSay}`);
+    }
+  };
 }

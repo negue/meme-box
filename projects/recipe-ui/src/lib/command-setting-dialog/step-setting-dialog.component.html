@@ -35,6 +35,14 @@
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
         </ng-container>
+        <ng-container *ngSwitchCase="'selectionStatic'">
+          <mat-select [(value)]="payload[config.name]" required>
+            <mat-option *ngFor="let entry of config.entries"
+                        [value]="entry.id">
+              {{ entry.label }}
+            </mat-option>
+          </mat-select>
+        </ng-container>
         <ng-container *ngSwitchCase="'action'">
           <div class="two-columns">
             <div class="column column-padding">
