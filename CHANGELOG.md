@@ -1,83 +1,91 @@
-## 2022.1-rc1 to be released
+## 2022.1.1
 
-### Quality of Life
+### New Command Block "Random Command Group"
+This creates a Command Block, which can have multiple sub groups inside, and only one of them will be triggered in random.
+![image](https://user-images.githubusercontent.com/842273/198378625-3c51362a-3aa7-45d8-8c1d-5ae6594c2976.png)
 
-* [x] Recipe: Action List Config - now has a button to open up the Action Settings
+### More Twitch Command Blocks:
+![image](https://user-images.githubusercontent.com/842273/199818943-d900b320-a21e-4ded-a6a7-4f535c752e54.png)
 
-### Fixes
+- Announce in Chat
+![image](https://user-images.githubusercontent.com/842273/199819527-339c67a8-0dec-42e6-acba-7bc4e3b823b7.png)
 
-* [x] Trigger random using a queue on recipe and each item - could end up in not triggering a second time
+- Clear Chat
+- Create Marker
+- Start Commercial
+- Change Chat Settings (Slow Mode, Follower Only and so on)
+  
+![image](https://user-images.githubusercontent.com/842273/199821977-8a695bd4-43b9-4813-925e-cc8687ed1935.png)
 
-## 2022.1-beta-4
+### Misc
+* Improve various logs
+* Improvements/validate recipe config arguments
+* Fixed Filter Search #534
 
-### Feature
-* [x] Recipe: new OBS Command Block "Set Source Visibility"
-* [x] Recipe: new OBS Command Block "Set Source Mute"
-* [x] Tell the Streamer with warnings / dialogs that the Token will expire in X Days
+**Full Changelog**: https://github.com/negue/meme-box/compare/2022.1...2022.1.1
 
-## 2022.1-beta-3
+## 🎉  2022.1
 
-### Feature
-* [x] Show Errors in the Dashboard - incl. a way to create a GitHub Issue from that
-* [x] Twitch Auth: Improve custom scopes handling (if any were already configured, these will be always applied)
-
-## 2022.1-beta-2
-
-### Feature
-
-* [x] Recipe "Trigger random action" - now you can select actions based on a Tag
-* [x] Recipe "Trigger random action" - now you can select multiple actions at the same time
-
-### Changes
-
-* [x] Recipe "Trigger random action" - now shows the Actions in a vertical list instead of comma separated 
-* [x] Action Settings: Added a hint why a screen time is needed or can stay empty
-* [x] When the Twitch Token is close to be invalid, show a warning in console
-
-### Quality of Life
-
-* [x] When creating a new action, the dialog will jump already into the Action Settings
-* [x] Added a few Tooltips in the Recipe Dialog
-* [x] Recipe new Command Block full entry is now a button
-* [x] When you authenticate it'll be automatically saved
-
-## 2022.1-beta-1
+19 Months later, I present you the new Version
 
 ### Breaking Changes
 
 * [x] The Headless Mode will not open the browser on start anymore, use `--open=true` for that
 * [x] Changed the default port from `4444` to `6363`
 
-### Features
+### What's Changed / Features
 
-* [x] Custom Port Setting inside Meme-Box (commandline option `--port` would still override it)
-* [x] Started with the Translation Process - Open PRs if you want to help!
-* [x] Improved Widgets (previously named `HTML`)
+*TLDR;* A-LOT-HAZ-CHANGED
+
+* [x] The Action Overview was redesigned by @owehmer (you can still switch to the old one)
+* [x] The Arrange View was redesigned by @owehmer
+* [x] Improved `Widgets` (previously named `HTML`)
   * [x] API for Twitch or Events that its shown and so on
   * [x] Templates
   * [x] Widget-Variables
   * [x] Import / Export Widgets
   * [x] Persistence of the Widget State across Screens
-* [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
-* [x] "Action Type": `Scripts` for more advanced features
-  * [x] Wait once a triggered action (inside the script) is done to trigger other stuff
-  * [x] Use custom variables like in the Widget-Variables for easier configs
-* [x] "Action Type": `Permanent Scripts` to react on twitch or obs events which custom logic
+* [x] `Media` is now renamed to `Actions` (unless those are visible on a Screen)
+* [x] `Meta` is now replaced by `Recipe`
+* [x] Overhaul of the Action Creation Dialog(s)
+* [x] Custom Port Setting inside Meme-Box (commandline option `--port` would still override it)
 * [x] Timers / Twitch Events can now select the Target Screen
 * [x] Twitch Events can override Widget/Scripts Variables
-* [x] Add new twitch events to the trigger section
-  * [x] All the sub events were added
-  * [x] Ban event
-* [x] Actions now have a description to see for example what a script does
-* [x] Actions can be searched by keywords (including script sources)
+* [x] More Twitch-Events able to be used as trigger 
 * [x] Actions can be (preview) triggered with custom variable values
-* [x] Status Dashboard
-  * [x] of connections / states
-  * [x] latest twitch events to retrigger
-* [x] Triggers can be searched now
-* [x] Twitch Message Event can now have aliases
 * [x] Media Actions can now have a volume gain (if its too quiet)
 * [x] Streamdeck Plugin: Ability to change the global connection settings (different PC than localhost/port)
+* [x] Action Settings: Added a hint why a screen time is needed or can stay empty
+* [x] Twitch Auth: Improve custom scopes handling (if any were already configured, these will be always applied)
+* [x] Manage View: Tell the Streamer with warnings / dialogs that the Token will expire in X Days
+* [x] `Scripts` for more advanced features
+![image](https://user-images.githubusercontent.com/842273/194373312-2edadc77-b6fb-4206-a9bc-d98ebeee6982.png)
+  * [x] Wait once a triggered action (inside the script) is done to trigger other stuff
+  * [x] Use custom variables like in the Widget-Variables for easier configs
+* [x] `Permanent Scripts` to react on twitch or obs events which custom logic
+* [x] `Recipe`, UI based "Scripting" / `Command Blocks` to create more dynamic .. "anything" 
+![image](https://user-images.githubusercontent.com/842273/194373741-86705771-988d-4692-b829-95b7bab56d42.png)
+  * [x] Custom logic or chain of actions that can be awaited
+  * [x] Also supports Twitch/Obs Command Blocks
+  * [x] Internally built upon the Script functionality
+* [x] Electron: You can now hide the windows to the Tray-Icon. :tada:
+
+### Quality of Life
+
+* [x] When you authenticate it'll be automatically saved
+* [x] Actions now have a description to see for example what a script does
+* [x] Actions can be searched by keywords (including script sources)
+* [x] Triggers can be searched now
+* [x] Twitch Message Event can now have aliases
+![image](https://user-images.githubusercontent.com/842273/194373027-5ffa0a1e-990d-40a1-b474-d380a63c5659.png)
+* [x] Status Dashboard
+![image](https://user-images.githubusercontent.com/842273/194372462-eadd6f7d-6767-4c34-a4d3-7ea5ed4faf92.png)
+  * [x] of connections / states
+  * [x] latest twitch events to retrigger
+* [x] Show Errors in the Dashboard 
+  * [x] incl. a way to create a GitHub Issue from that
+* [x] Notes Panel that is visbile across all pages
+![image](https://user-images.githubusercontent.com/842273/194374793-ceb28157-d660-4f19-90cf-ecddb873f9d6.png)
 
 ### Fixes
 
@@ -88,16 +96,25 @@
 * [x] Arrange View: Selected media still visible after assign media was clicked - #276
 * [x] Arrange View: Changing a media from position full screen to fixed - didn't added a size border- #253
 * [x] Arrange View: Moving Items out of screen-area - #250
-* [x] Media Creation: The Image Preview wasn't resizing on change - #238
-* [x] Media Creation: Visible screen time - minus values were possible - #239
+* [x] Action Creation: The Image Preview wasn't resizing on change - #238
+* [x] Action Creation: Visible screen time - minus values were possible - #239
 
-### Changes
+### Misc
 
-* [x] The Media Overview was redesigned by `@owehmer` (you can still switch to the old one)
-* [x] The Arrange View was redesigned by `@owehmer`
-* [x] "HTML" is now renamed to "Widgets"
-* [x] "Media" is now renamed to "Actions"
-* [x] Overhaul of the Media Creation Dialog(s)
+* [x] Most pages / dialogs now have a bug report / feedback Button
+![image](https://user-images.githubusercontent.com/842273/194374597-106369b5-3d0b-4b7a-a9d6-a6aa7674cafd.png)
+
+If you find any issues use the bug report / feedback buttons OR respond to this Discussion.
+
+## New Contributors
+* @owehmer made their first contribution in https://github.com/negue/meme-box/pull/244
+* @divshacker made their first contribution in https://github.com/negue/meme-box/pull/339
+* @brandonroberts made their first contribution in https://github.com/negue/meme-box/pull/348
+* @chiragmahawar7 made their first contribution in https://github.com/negue/meme-box/pull/350
+* @khalatevarun made their first contribution in https://github.com/negue/meme-box/pull/520
+* @dnaka91 made their first contribution in https://github.com/negue/meme-box/pull/509
+
+**Full Changelog**: https://github.com/negue/meme-box/compare/2021.2.1...2022.1
 
 
 ## 2021.2.1
