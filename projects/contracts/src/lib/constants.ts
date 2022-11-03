@@ -149,13 +149,13 @@ export const DEFAULT_TWITCH_SCOPES: TwitchScopeMetadata[] = [
       'Start Commercial'
     ]
   },
-  {
+  /*{
     // https://dev.twitch.tv/docs/api/reference#start-a-raid
     scope: 'channel:manage:raids',
     features: [
       'Start a raid'
     ]
-  },
+  },*/
   {
     // https://dev.twitch.tv/docs/api/reference#create-stream-marker
     scope: 'channel:manage:broadcast',

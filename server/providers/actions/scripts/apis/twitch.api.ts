@@ -68,6 +68,41 @@ export class TwitchApi extends DisposableBase {
 
     return this.dataProvider.deleteHelixDataAsync(
       `moderation/chat?broadcaster_id=${broadcasterId}&moderator_id=${broadcasterId}`
-    )
+    );
   }
+
+  // https://dev.twitch.tv/docs/api/reference#start-commercial
+  public async startCommercial (length: 30| 60|90| 120|  150|  180){
+    const broadcaster_id = await this.getBroadcasterIdAsync();
+
+    return this.dataProvider.postHelixDataAsync(
+      `channels/commercial`, {
+        broadcaster_id,
+        length
+      }
+    );
+  }
+
+  // https://dev.twitch.tv/docs/api/reference#create-stream-marker
+  public async createMarker (){
+    return this.dataProvider.postHelixDataAsync(
+      `streams/markers`, {}
+    );
+  }
+
+  // https://dev.twitch.tv/docs/api/reference#update-chat-settings
+  public async updateChatSettings (chatSettings: {
+    emote_mode?: boolean,
+    follower_mode?: boolean,
+    slow_mode?: boolean,
+    subscriber_mode?: boolean,
+    unique_chat_mode?: boolean
+  }){
+    const broadcasterId = await this.getBroadcasterIdAsync();
+
+    return this.dataProvider.patchHelixDataAsync(
+      `chat/settings?broadcaster_id=${broadcasterId}&moderator_id=${broadcasterId}`, chatSettings
+    );
+  }
+
 }
