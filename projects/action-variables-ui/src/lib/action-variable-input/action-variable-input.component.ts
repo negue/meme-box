@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, HostBinding, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {ActionAssigningMode} from "@memebox/contracts";
 import {BehaviorSubject, combineLatest} from "rxjs";
@@ -21,6 +21,13 @@ export class ActionVariableInputComponent implements OnInit, OnChanges {
 
   @Input()
   public value: unknown;
+
+  @Input()
+  public boldLabel: boolean;
+
+  @Input()
+  @HostBinding('class.full-width')
+  public fullWidth: boolean;
 
   @Output()
   public readonly valueChanged = new EventEmitter<unknown>();

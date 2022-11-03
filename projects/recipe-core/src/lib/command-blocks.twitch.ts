@@ -17,7 +17,7 @@ export function registerTwitchCommandBlocks (
     configArguments: [
       {
         name: "text",
-        label: "Message to say",
+        label: "Message to write",
         type: "textarea"
       }
     ],
@@ -29,8 +29,9 @@ export function registerTwitchCommandBlocks (
     commandEntryLabelAsync: (queries, payload) => {
       const textToSay = payload.text as string;
 
-      return Promise.resolve('Twitch: Say: '+ textToSay);
-    }
+      return Promise.resolve('Write in Chat: '+ textToSay);
+    },
+    entryIcon: () => 'twitch',
   };
 
   // https://dev.twitch.tv/docs/api/reference#send-chat-announcement
@@ -83,8 +84,9 @@ export function registerTwitchCommandBlocks (
       const textToSay = payload.text as string;
       const color = payload.color as string;
 
-      return Promise.resolve(`Twitch: ${color} Announcement: ${textToSay}`);
-    }
+      return Promise.resolve(`${color} Announcement: ${textToSay}`);
+    },
+    entryIcon: () => 'twitch',
   };
 
   // https://dev.twitch.tv/docs/api/reference#delete-chat-messages
@@ -96,8 +98,9 @@ export function registerTwitchCommandBlocks (
       return `twitch.clearChat();`;
     },
     commandEntryLabelAsync: (queries, payload) => {
-      return Promise.resolve(`Twitch: Clear Chat`);
-    }
+      return Promise.resolve(`Clear Chat`);
+    },
+    entryIcon: () => 'twitch',
   };
 
 
@@ -145,8 +148,9 @@ export function registerTwitchCommandBlocks (
     },
     commandEntryLabelAsync: (queries, payload) => {
       const length = payload.length as string;
-      return Promise.resolve(`Twitch: Start Commercial for ${length} Seconds`);
-    }
+      return Promise.resolve(`Start Commercial for ${length} Seconds`);
+    },
+    entryIcon: () => 'twitch',
   };
 
   // https://dev.twitch.tv/docs/api/reference#create-stream-marker
@@ -158,8 +162,9 @@ export function registerTwitchCommandBlocks (
       return `twitch.createMarker();`;
     },
     commandEntryLabelAsync: (queries, payload) => {
-      return Promise.resolve(`Twitch: Create Marker`);
-    }
+      return Promise.resolve(`Create Marker`);
+    },
+    entryIcon: () => 'twitch',
   };
 
   // https://dev.twitch.tv/docs/api/reference#update-chat-settings
@@ -193,7 +198,8 @@ export function registerTwitchCommandBlocks (
       return `twitch.updateChatSettings(${JSON.stringify(step.payload)});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
-      return Promise.resolve(`Twitch: Update Chat Settings`);
-    }
+      return Promise.resolve(`Update Chat Settings`);
+    },
+    entryIcon: () => 'twitch',
   };
 }

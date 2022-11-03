@@ -58,20 +58,6 @@ export class StepSettingDialogComponent {
     }
   }
 
-  async selectAction(configName: string) {
-    const actionId = await this._selectAction();
-
-    this.onSelectedAction(configName, actionId);
-  }
-
-  async selectActionListEntry(actionPayload: RecipeCommandConfigActionPayload) {
-    const actionId = await this._selectAction();
-
-    if (actionId) {
-      actionPayload.actionId = actionId;
-    }
-  }
-
   getActionPayloadOfConfigList() {
     const findActionConfig = this.data.configArguments.find(c => c.type === 'action');
 
@@ -122,27 +108,6 @@ export class StepSettingDialogComponent {
     }
 
     this.dialogRef.close(this.payload);
-  }
-
-  async addActionEntry(actionList: RecipeCommandConfigActionPayload[]) {
-    const actionId = await this._selectAction();
-
-    if (actionId) {
-      actionList.push({
-        actionId,
-        overrides: {
-          action: {
-            variables: {}
-          }
-        }
-      })
-    }
-  }
-
-  removeActionEntry(actionList: RecipeCommandConfigActionPayload[], actionEntry: RecipeCommandConfigActionPayload): void  {
-    const indexOf = actionList.indexOf(actionEntry);
-
-    actionList.splice(indexOf, 1);
   }
 
   private async _selectAction (actionId?: string | undefined): Promise<string> {

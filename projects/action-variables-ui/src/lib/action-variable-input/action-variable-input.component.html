@@ -27,7 +27,8 @@
   <ng-container *ngSwitchCase="'boolean'">
     <mat-slide-toggle [checked]="!!value"
                       (change)="value = $event.checked; valueChanged.emit($event.checked)">
-      {{label}}
+      <strong *ngIf="boldLabel">{{label}}</strong>
+      <ng-container *ngIf="!boldLabel">{{label}}</ng-container>
     </mat-slide-toggle>
   </ng-container>
 
