@@ -17,4 +17,15 @@ mat-dialog-actions {
   mat-form-field {
     flex: 1;
   }
+
+
+}
+
+.scope-row-needed {
+  mat-icon {
+    height: 1rem;
+    width: 1rem;
+    line-height: 1rem;
+    margin-right: 0.5rem;
+  }
 }

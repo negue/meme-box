@@ -26,6 +26,7 @@ import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {ObsSourceSelectionComponent} from "./obs-source-selection/obs-source-selection.component";
+import {ShouldShowSettingLabelAbovePipe} from './should-show-setting-label-above.pipe';
 
 // todo extract this module to its own internal library ^
 
@@ -37,7 +38,8 @@ import {ObsSourceSelectionComponent} from "./obs-source-selection/obs-source-sel
     ObsFilterSelectionComponent,
     ActionSelectionComponent,
     ActionListSettingsComponent,
-    ObsSourceSelectionComponent
+    ObsSourceSelectionComponent,
+    ShouldShowSettingLabelAbovePipe
   ],
   imports: [
     CommonModule,

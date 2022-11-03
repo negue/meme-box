@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {TwitchScopeSelectionPayload, TwitchScopeSelectionResult} from "../dialog.contract";
-import {DEFAULT_TWITCH_SCOPES} from "@memebox/contracts";
+import {DEFAULT_TWITCH_SCOPE_LIST, DEFAULT_TWITCH_SCOPES} from "@memebox/contracts";
 
 @Component({
   selector: 'app-twitch-scope-selection',
@@ -47,7 +47,7 @@ export class TwitchScopeSelectionComponent {
 
   chooseScopes(): void  {
     this.dialogRef.close({
-      defaultScopes: DEFAULT_TWITCH_SCOPES,
+      defaultScopes: DEFAULT_TWITCH_SCOPE_LIST,
        custom: this.data.scopes
     } as TwitchScopeSelectionResult);
   }

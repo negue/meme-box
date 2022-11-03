@@ -29,8 +29,8 @@
 
   <div *ngIf="(entry | isCommandEntryPipe) && entry?.commandBlockType === 'triggerRandom'">
     <div *ngFor="let action of entry | getEntryStepActionList$ | async"
-    class="actionlist-action">
-      <app-action-type [type]="action.uiMetadata.actionType"></app-action-type>
+         class="actionlist-action">
+      <app-action-type [type]="action.uiMetadata.actionType" iconSize="1rem"></app-action-type>
 
       {{action.uiMetadata.actionName}}
     </div>

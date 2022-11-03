@@ -58,20 +58,6 @@ export class StepSettingDialogComponent {
     }
   }
 
-  async selectAction(configName: string) {
-    const actionId = await this._selectAction();
-
-    this.onSelectedAction(configName, actionId);
-  }
-
-  async selectActionListEntry(actionPayload: RecipeCommandConfigActionPayload) {
-    const actionId = await this._selectAction();
-
-    if (actionId) {
-      actionPayload.actionId = actionId;
-    }
-  }
-
   getActionPayloadOfConfigList() {
     const findActionConfig = this.data.configArguments.find(c => c.type === 'action');
 
@@ -124,27 +110,6 @@ export class StepSettingDialogComponent {
     this.dialogRef.close(this.payload);
   }
 
-  async addActionEntry(actionList: RecipeCommandConfigActionPayload[]) {
-    const actionId = await this._selectAction();
-
-    if (actionId) {
-      actionList.push({
-        actionId,
-        overrides: {
-          action: {
-            variables: {}
-          }
-        }
-      })
-    }
-  }
-
-  removeActionEntry(actionList: RecipeCommandConfigActionPayload[], actionEntry: RecipeCommandConfigActionPayload): void  {
-    const indexOf = actionList.indexOf(actionEntry);
-
-    actionList.splice(indexOf, 1);
-  }
-
   private async _selectAction (actionId?: string | undefined): Promise<string> {
     const [selectedId] = await this.dialogService.showActionSelectionDialogAsync({
       mode: ActionAssigningMode.Single,
@@ -181,6 +146,8 @@ export class StepSettingDialogComponent {
   }
 
   private _prepareCurrentPayload() {
+    // todo move these defaults to the command block registry
+
     if (this.data.currentStepData) {
       this.payload = cloneDeep(this.data.currentStepData);
     }
@@ -193,6 +160,13 @@ export class StepSettingDialogComponent {
 
             } as RecipeCommandConfigActionListPayload;
           }
+          break;
+        }
+        case 'selectionStatic': {
+          if (!this.payload[config.name]) {
+            this.payload[config.name] = config.defaultSelected;
+          }
+
           break;
         }
         case 'boolean': {

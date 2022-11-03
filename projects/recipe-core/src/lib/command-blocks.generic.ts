@@ -17,7 +17,7 @@ export function registerGenericCommandBlocks(
     ],
     toScriptCode: (step, context) => `sleep.secondsAsync(${step.payload.seconds});`,
     commandEntryLabelAsync: (queries, payload, parentStep) => {
-      return Promise.resolve(`sleep: ${payload.seconds} seconds`);
+      return Promise.resolve(`wait ${payload.seconds} seconds`);
     },
     entryIcon: () => 'hourglass_top'
   };
@@ -35,7 +35,7 @@ export function registerGenericCommandBlocks(
     ],
     toScriptCode: (step, context) => `sleep.msAsync(${step.payload.ms});`,
     commandEntryLabelAsync: (queries, payload, parentStep) => {
-      return Promise.resolve(`sleep: ${payload.ms}ms`);
+      return Promise.resolve(`wait ${payload.ms}ms`);
     },
     entryIcon: () => 'hourglass_top'
   };

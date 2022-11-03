@@ -1,17 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder} from '@ngneat/reactive-forms';
 import {Subject} from "rxjs";
-import {AppQueries, AppService} from "@memebox/app-state";
+import {AppQueries, AppService, ConfigService} from "@memebox/app-state";
 import {filter, take} from "rxjs/operators";
 import {MatCheckboxChange} from "@angular/material/checkbox";
 import {
   Config,
-  DEFAULT_TWITCH_SCOPES,
+  DEFAULT_TWITCH_SCOPE_LIST,
   TWITCH_BOT_RESPONSE_CONSTS,
   TWITCH_CLIENT_ID,
   TwitchAuthInformation
 } from "@memebox/contracts";
-import {ConfigService} from "../../../../../projects/app-state/src/lib/services/config.service";
 import {TwitchOAuthHandler} from "./twitch.oauth";
 import {MatDialogRef} from "@angular/material/dialog";
 import {DialogService} from "../dialog.service";
@@ -215,7 +214,7 @@ export class TwitchConnectionEditComponent implements OnInit {
       return;
     }
 
-    const scopesForThisToken = [...DEFAULT_TWITCH_SCOPES];
+    const scopesForThisToken = [...DEFAULT_TWITCH_SCOPE_LIST];
     scopesForThisToken.push(...this._customScopes);
 
     const oauthHandler = new TwitchOAuthHandler(

@@ -7,33 +7,49 @@
   <ng-container *ngIf="actionDictionary$ | async as actionDictionary">
 
     <div *ngFor="let config of data.configArguments">
-      <strong>{{config.label}}:</strong>
+      <strong *ngIf=" config.type | shouldShowSettingLabelAbove">{{config.label}}:</strong>
 
       <div [ngSwitch]="config.type">
         <ng-container *ngSwitchCase="'number'">
           <app-action-variable-input [variableType]="$any('number')" [label]="config.label"
                                      [value]="payload[config.name]"
+                                     [fullWidth]="true"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
         </ng-container>
         <ng-container *ngSwitchCase="'text'">
           <app-action-variable-input [variableType]="$any('text')" [label]="config.label"
                                      [value]="payload[config.name]"
+                                     [fullWidth]="true"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
         </ng-container>
         <ng-container *ngSwitchCase="'textarea'">
           <app-action-variable-input [variableType]="$any('textarea')" [label]="config.label"
                                      [value]="payload[config.name]"
+                                     [fullWidth]="true"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
         </ng-container>
         <ng-container *ngSwitchCase="'boolean'">
           <app-action-variable-input [variableType]="$any('boolean')"
                                      [label]="config.label"
+                                     [fullWidth]="true"
+                                     [boldLabel]="true"
                                      [value]="payload[config.name]"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
+        </ng-container>
+        <ng-container *ngSwitchCase="'selectionStatic'">
+          <mat-form-field style="width: 100%"  >
+            <mat-label>{{config.label}}</mat-label>
+            <mat-select [(value)]="payload[config.name]" required>
+              <mat-option *ngFor="let entry of config.entries"
+                          [value]="entry.id">
+                {{ entry.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </ng-container>
         <ng-container *ngSwitchCase="'action'">
           <div class="two-columns">
@@ -48,7 +64,7 @@
 
             <div class="column" *ngIf="getActionPayload(config.name) as actionPayload;">
               <div class="example-container" *ngIf="actionDictionary[actionPayload.actionId] | showScreenSelection">
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" style="width: 100%;">
                   <mat-label>Target Screen</mat-label>
                   <mat-select [(value)]="actionPayload.screenId" required>
                     <mat-option [value]="''" *ngIf="config.flags.allowAllScreens">All</mat-option>

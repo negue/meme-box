@@ -3,7 +3,7 @@
 <mat-dialog-content class="mat-typography" [scrollTop]="0" #dialogContent>
   In case you need to have more Twitch API scopes for your scripts, you can add those here:
 
-  Please check: <a mat-button color="primary" href="https://dev.twitch.tv/docs/authentication#scopes" target="_blank">https://dev.twitch.tv/docs/authentication#scopes</a>
+  Please check: <a mat-button color="primary" href="https://dev.twitch.tv/docs/authentication/scopes" target="_blank">https://dev.twitch.tv/docs/authentication/scopes</a>
 
   <br/>
   <br/>
@@ -12,10 +12,15 @@
     <div class="column">
 
       <h3>Needed Scopes: </h3>
-  <div *ngFor="let readonlyScope of defaultScopes"
-       class="scope-row">
 
-    {{ readonlyScope }}
+
+  <div *ngFor="let readonlyScope of defaultScopes"
+       class="scope-row scope-row-needed"
+       >
+      <mat-icon svgIcon="help" [matTooltip]="readonlyScope.features.join()"
+                matTooltipPosition="above"
+      ></mat-icon>
+    {{ readonlyScope.scope }}
   </div>
     </div>
 
