@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
-import {RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo} from "@memebox/recipe-core";
+import {RecipeCommandRegistry, RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo} from "@memebox/recipe-core";
 import {CdkDragDrop} from "@angular/cdk/drag-drop";
 import {RecipeContextDirective} from "../recipe-context.directive";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
@@ -105,7 +105,22 @@ export class RecipeBlockComponent
     const newPayload = await this.stepCreator.editStepData(entry, this.context.recipe!);
 
     if (newPayload) {
-      this.context.changePayload(entry, newPayload);
+      if (RecipeCommandRegistry[entry.commandBlockType].extendCommandBlockOnEdit) {
+        const newEntry = {
+          ...entry,
+          payload:newPayload,
+          subCommandBlocks: [...entry.subCommandBlocks]
+        };
+
+        RecipeCommandRegistry[entry.commandBlockType]?.extendCommandBlock?.(newEntry, parent)
+
+        this.context.changeEntry(newEntry);
+      }
+      else {
+
+        this.context.changePayload(entry, newPayload);
+      }
+
     }
   }
 }

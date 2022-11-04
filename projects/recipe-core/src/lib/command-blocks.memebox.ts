@@ -7,6 +7,7 @@ import {
 import {map, take} from "rxjs/operators";
 import {generateRandomCharacters, listActionsOfActionListPayload} from "./utils";
 import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
+import {AppQueries} from "@memebox/app-state";
 
 function createMemeboxApiVariable(
   actionPayload: RecipeCommandConfigActionPayload
@@ -27,10 +28,32 @@ function createMemeboxApiVariable(
   return actionApiVariable;
 }
 
-export function registerMemeboxCommandBlocks (
+async function getActionLabel(
+  queries: AppQueries,
+  actionPayload: RecipeCommandConfigActionPayload,
+  prefix = ''
+): Promise<string> {
+  const actionName = await queries.getActionById$(actionPayload.actionId).pipe(
+    map(actionInfo => actionInfo?.name ?? 'unknown action'),
+    take(1)
+  ).toPromise();
+
+  const screenIdExist = !!actionPayload.screenId;
+
+  const screenName = screenIdExist
+    ? await queries.screenMap$.pipe(
+        map(screenMap => screenMap[actionPayload.screenId!].name),
+        take(1)
+      ).toPromise()
+    : 'All Screens';
+
+  return `${prefix} [${actionName}] on [${screenName}]`.trim();
+}
+
+export function registerMemeboxCommandBlocks(
   registry: RecipeCommandBlockRegistry,
   generateCodeByStep: generateCodeByStep
-): void  {
+): void {
   registry["triggerAction"] = {
     pickerLabel: "Trigger Action",
     commandGroup: "memebox",
@@ -38,7 +61,10 @@ export function registerMemeboxCommandBlocks (
       {
         name: "action",
         label: "Action to trigger",
-        type: "action"
+        type: "action",
+        flags: {
+          allowAllScreens: true
+        }
       }
     ],
     toScriptCode: (step) => {
@@ -52,10 +78,7 @@ export function registerMemeboxCommandBlocks (
     commandEntryLabelAsync: (queries, payload) => {
       const actionPayload = payload.action as RecipeCommandConfigActionPayload;
 
-      return queries.getActionById$(actionPayload.actionId).pipe(
-        map(actionInfo => actionInfo?.name ?? 'unknown action'),
-        take(1)
-      ).toPromise();
+      return getActionLabel(queries, actionPayload);
     },
     entryIcon: (queries, payload) => {
       const actionPayload = payload.action as RecipeCommandConfigActionPayload;
@@ -64,7 +87,7 @@ export function registerMemeboxCommandBlocks (
         map(action => ACTION_TYPE_INFORMATION[action.type].icon),
         take(1)
       ).toPromise();
-    },
+    }
   };
 
   const keepTriggeredActionActiveWhileLabel = 'Keep Triggered Action active, while';
@@ -76,10 +99,13 @@ export function registerMemeboxCommandBlocks (
       {
         name: "action",
         label: "Action to trigger, keep active",
-        type: "action"
+        type: "action",
+        flags: {
+          allowAllScreens: false
+        }
       }
     ],
-    subCommandBlockLabelAsync: (queries, commandBlock, labelId) =>  {
+    subCommandBlockLabelAsync: async (queries, commandBlock, labelId) => {
       const actionPayload = commandBlock.entryType === "command"
         && commandBlock.payload.action as RecipeCommandConfigActionPayload;
 
@@ -87,10 +113,9 @@ export function registerMemeboxCommandBlocks (
         return Promise.resolve('Unknown Action');
       }
 
-      return queries.getActionById$(actionPayload.actionId).pipe(
-        map(action => `Keep Triggered Action ${action.name} active, while these commands are running: `),
-        take(1)
-      ).toPromise();
+      const actionLabel = await getActionLabel(queries, actionPayload, 'Keep Triggered Action');
+
+      return actionLabel+' active, while these commands are running:';
     },
     extendCommandBlock: (step) => {
       step.payload = {
@@ -98,7 +123,7 @@ export function registerMemeboxCommandBlocks (
         _suffix: generateRandomCharacters(5)
       };
 
-      step.subCommandBlocks.push( {
+      step.subCommandBlocks.push({
         labelId: "keepVisibleWhile",
         entries: []
       });
@@ -110,15 +135,20 @@ export function registerMemeboxCommandBlocks (
 
       return `${createMemeboxApiVariable(actionPayload)}
                      .triggerWhile(async (helpers_${step.payload._suffix}) => {
-                        ${generateCodeByStep(step, context, userData)}
+                        ${generateCodeByStep(step, context, userData)[0].generatedScript}
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
       const actionPayload = payload.action as RecipeCommandConfigActionPayload;
 
+      return getActionLabel(queries, actionPayload);
+    },
+    entryIcon: (queries, payload) => {
+      const actionPayload = payload.action as RecipeCommandConfigActionPayload;
+
       return queries.getActionById$(actionPayload.actionId).pipe(
-        map(actionInfo => actionInfo?.name ?? 'unknown action'),
+        map(action => ACTION_TYPE_INFORMATION[action.type].icon),
         take(1)
       ).toPromise();
     }
@@ -142,7 +172,7 @@ export function registerMemeboxCommandBlocks (
     },
     commandEntryLabelAsync: () => {
       return Promise.resolve('reset');
-    },
+    }
   };
 
   registry["triggerRandom"] = {
@@ -157,7 +187,7 @@ export function registerMemeboxCommandBlocks (
     ],
     awaitCodeHandledInternally: true,
     toScriptCode: (step, context, userData) => {
-      const awaitCode = step.awaited ? 'await ': '';
+      const awaitCode = step.awaited ? 'await ' : '';
 
       const actionsToChooseFrom = listActionsOfActionListPayload(
         step.payload.actions as RecipeCommandConfigActionListPayload,
@@ -184,11 +214,11 @@ export function registerMemeboxCommandBlocks (
         const tagName = tags.find(t => t.id === actionListPayload.actionsByTag)?.name
           ?? `\r\nUnknown Tag: ${actionListPayload.actionsByTag}`;
 
-        return `trigger any action with the tag: ${tagName}`;
+        return `trigger any action with the tag: [${tagName}]`;
       }
 
       return `trigger any of the following: ${actionListPayload.selectedActions.length}`;
-    },
+    }
   };
 
 
@@ -199,8 +229,11 @@ export function registerMemeboxCommandBlocks (
       {
         name: "action",
         label: "Action to update properties",
-        type: "action"
-      },
+        type: "action",
+        flags: {
+          allowAllScreens: true
+        }
+      }
       /*  {
           name: "overrides",
           label: "Properties to update",
@@ -212,7 +245,7 @@ export function registerMemeboxCommandBlocks (
       const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
       const overrides = actionPayload.overrides;
 
-      const awaitCode = step.awaited ? 'await ': '';
+      const awaitCode = step.awaited ? 'await ' : '';
 
       const updateVariables = overrides.action?.variables
         ? `promisesArray.push(action.updateVariables(${JSON.stringify(overrides.action)}));`
@@ -239,10 +272,7 @@ ${awaitCode} (() => {
     commandEntryLabelAsync: (queries, payload) => {
       const actionPayload = payload.action as RecipeCommandConfigActionPayload;
 
-      return queries.getActionById$(actionPayload.actionId).pipe(
-        map(actionInfo =>  'Update Properties of: ' + actionInfo?.name ?? 'unknown action'),
-        take(1)
-      ).toPromise();
+      return getActionLabel(queries, actionPayload, 'Update Properties of:');
     }
   };
 }

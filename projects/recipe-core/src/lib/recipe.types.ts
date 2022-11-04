@@ -1,7 +1,7 @@
 import {uuid} from "@gewd/utils";
 import {ActionType, TriggerActionOverrides, UserDataState} from "@memebox/contracts";
 import {AppQueries} from "@memebox/app-state";
-import {RecipeStepConfigArgument} from "./generateCodeByRecipe";
+import {RecipeStepConfigArguments} from "./recipeStepConfigArgument";
 
 export interface RecipeSubCommandInfo {
   name: string; // property to save the subSteps
@@ -18,13 +18,15 @@ export interface RecipeCommandInfo {
 
 // at some point custom controls/ui for each stepInfo could be shown
 
+export interface RecipeSubCommandBlock {
+  labelId: string;
+  entries: string[]  // entryId
+}
+
 export interface RecipeEntryBase {
   id: string;
   awaited?: boolean;
-  subCommandBlocks: {
-    labelId: string;
-    entries: string[]  // entryId
-  }[];
+  subCommandBlocks: RecipeSubCommandBlock[];
 }
 
 export interface RecipeEntryCommandPayload {
@@ -106,12 +108,13 @@ export interface RecipeCommandDefinition {
   subCommandBlockLabelAsync?: (queries: AppQueries, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
   entryIcon?: (queries: AppQueries,  payload: RecipeEntryCommandPayload) => string|Promise<string>;
   commandGroup: string;
-  configArguments: RecipeStepConfigArgument[]; // each argument name will be applied to the payload as prop
+  configArguments: RecipeStepConfigArguments[]; // each argument name will be applied to the payload as prop
 
   extendCommandBlock?: (step: RecipeEntryCommandCall, parentStep: RecipeEntry) => void;
   allowedToBeAdded?: (step: RecipeEntry, context: RecipeContext) => boolean;
   toScriptCode: (step: RecipeEntryCommandCall, context: RecipeContext, userData: UserDataState) => string;
   awaitCodeHandledInternally?: boolean;
+  extendCommandBlockOnEdit?: boolean;
   commandType?: string;
 }
 
@@ -123,5 +126,8 @@ export interface RecipeCommandSelectionGroup {
 export interface RecipeCommandBlockRegistry {
   [stepType: string]: RecipeCommandDefinition
 }
-
-export type generateCodeByStep = (step: RecipeEntry, context: RecipeContext, userData: UserDataState) => string;
+export interface generatedCodeBySubCommandBlock {
+  subCommand: RecipeSubCommandBlock;
+  generatedScript: string;
+}
+export type generateCodeByStep = (step: RecipeEntry, context: RecipeContext, userData: UserDataState) => generatedCodeBySubCommandBlock[];

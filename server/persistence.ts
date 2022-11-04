@@ -612,7 +612,14 @@ export const PersistenceInstance = new Persistence(
 );
 
 // todo refactor it to a new place when the new logger is being used
-LOGGER.info({CLI_OPTIONS, LOG_PATH, NEW_CONFIG_PATH});
+LOGGER.info('Config Path:'+ NEW_CONFIG_PATH);
+LOGGER.info('Log Path:'+ LOG_PATH);
+
+Object.entries(CLI_OPTIONS).forEach(([optionKey, optionValue]) => {
+  if (optionValue){
+    LOGGER.info(optionKey,': ',optionValue);
+  }
+})
 
 PERSISTENCE.instance = PersistenceInstance;
 
