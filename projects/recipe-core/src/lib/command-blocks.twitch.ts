@@ -1,4 +1,5 @@
 import {RecipeCommandBlockRegistry} from "./recipe.types";
+import {TwitchAnnouncementColors} from "@memebox/contracts";
 
 /* Command Block Ideas
  *
@@ -50,26 +51,10 @@ export function registerTwitchCommandBlocks (
         type: "selectionStatic",
         defaultSelected: 'primary',
         entries: [
+          ...TwitchAnnouncementColors,
           {
-            id: 'primary',
-            label: 'Primary',
-
-          },
-          {
-            id: 'blue',
-            label: 'Blue',
-          },
-          {
-            id: 'green',
-            label: 'Green',
-          },
-          {
-            id: 'orange',
-            label: 'Orange',
-          },
-          {
-            id: 'purple',
-            label: 'Purple',
+            id: 'random',
+            label: 'Random Color'
           }
         ]
       }
