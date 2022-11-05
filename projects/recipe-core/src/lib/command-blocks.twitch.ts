@@ -1,5 +1,6 @@
 import {RecipeCommandBlockRegistry} from "./recipe.types";
 import {TwitchAnnouncementColors} from "@memebox/contracts";
+import {RecipeStepConfigArguments} from "./recipeStepConfigArgument";
 
 /* Command Block Ideas
  *
@@ -152,32 +153,36 @@ export function registerTwitchCommandBlocks (
     entryIcon: () => 'twitch',
   };
 
+  const chatSettingsArray:RecipeStepConfigArguments[] = [
+    {
+      name: "emote_mode",
+      label: "Emote Mode",
+      type: "boolean"
+    },   {
+      name: "follower_mode",
+      label: "Follower Mode",
+      type: "boolean"
+    },   {
+      name: "slow_mode",
+      label: "Slow Mode",
+      type: "boolean"
+    },   {
+      name: "subscriber_mode",
+      label: "Subscriber Mode",
+      type: "boolean"
+    },   {
+      name: "unique_chat_mode",
+      label: "Unique Chatter Mode",
+      type: "boolean"
+    },
+  ];
+
   // https://dev.twitch.tv/docs/api/reference#update-chat-settings
   registry['twitch:changeChatSettings'] = {
     pickerLabel: "Change Chat Settings",
     commandGroup: "twitch",
     configArguments: [
-      {
-        name: "emote_mode",
-        label: "Emote Mode",
-        type: "boolean"
-      },   {
-        name: "follower_mode",
-        label: "Follower Mode",
-        type: "boolean"
-      },   {
-        name: "slow_mode",
-        label: "Slow Mode",
-        type: "boolean"
-      },   {
-        name: "subscriber_mode",
-        label: "Subscriber Mode",
-        type: "boolean"
-      },   {
-        name: "unique_chat_mode",
-        label: "Unique Chatter Mode",
-        type: "boolean"
-      },
+      ...chatSettingsArray
     ],
     toScriptCode: (step) => {
       return `twitch.updateChatSettings(${JSON.stringify(step.payload)});`;
@@ -187,4 +192,29 @@ export function registerTwitchCommandBlocks (
     },
     entryIcon: () => 'twitch',
   };
+
+  chatSettingsArray.forEach(chatSetting => {
+    const label =`Change [${chatSetting.label}]`;
+
+    registry['twitch:changeChatSettings_'+chatSetting.name] = {
+      pickerLabel: label,
+      commandGroup: "twitch",
+      configArguments: [
+        {
+          name: chatSetting.name,
+          type: 'boolean',
+          label: 'Mode Active'
+        }
+      ],
+      toScriptCode: (step) => {
+        return `twitch.updateChatSettings(${JSON.stringify(step.payload)});`;
+      },
+      commandEntryLabelAsync: (queries, payload) => {
+        const value = payload[chatSetting.name];
+
+        return Promise.resolve(`${value? 'Activate':'Deactivate'} [${chatSetting.label}]`);
+      },
+      entryIcon: () => 'twitch',
+    };
+  })
 }
