@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - run: npm install --legacy-peer-deps
+      - run: npm install
         if: steps.cache-package.outputs.cache-hit != 'true'
       - name: Run Affected Lint
         shell: bash
@@ -57,7 +57,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - run: npm install --legacy-peer-deps
+      - run: npm install
         if: steps.cache-package.outputs.cache-hit != 'true'
       - run: npm run build:prepare
       - run: npm run build:pkg -- -o release/out/memebox
@@ -92,7 +92,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - run: npm install --legacy-peer-deps
+      - run: npm install
         if: steps.cache-package.outputs.cache-hit != 'true'
       - name: Setup Rust
         run: rustup install stable
