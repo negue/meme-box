@@ -8,13 +8,7 @@ import {
   RecipeStepConfigArguments,
   RecipeStepConfigArgumentValidations
 } from "@memebox/recipe-core";
-import {
-  Action,
-  ActionAssigningMode,
-  Dictionary,
-  TriggerActionOverrides,
-  UnassignedFilterEnum
-} from "@memebox/contracts";
+import {Action, Dictionary, TriggerActionOverrides} from "@memebox/contracts";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {Observable} from "rxjs";
 import {AppQueries, SnackbarService} from "@memebox/app-state";
@@ -110,20 +104,6 @@ export class StepSettingDialogComponent {
     this.dialogRef.close(this.payload);
   }
 
-  private async _selectAction (actionId?: string | undefined): Promise<string> {
-    const [selectedId] = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ActionAssigningMode.Single,
-      selectedActionIdList: actionId ? [actionId]: [],
-      dialogTitle: 'Config Argument',
-      showMetaItems: true,
-
-      unassignedFilterType: UnassignedFilterEnum.RecipeCommandArgument,
-      // showOnlyUnassignedFilter: true
-    });
-
-    return selectedId;
-  }
-
   private _getOrPreparePayloadForAction (configName: string): RecipeCommandConfigActionPayload {
     let actionPayload = this.payload[configName] as any as RecipeCommandConfigActionPayload;
 
@@ -154,6 +134,15 @@ export class StepSettingDialogComponent {
 
     for (const config of this.data.configArguments) {
       switch (config.type) {
+        case 'action': {
+          if (!this.payload[config.name]) {
+            this.payload[config.name] = {
+              screenId: ''
+            } as RecipeCommandConfigActionPayload;
+          }
+
+          break;
+        }
         case 'actionList': {
           if (!this.payload[config.name]) {
             this.payload[config.name] = {

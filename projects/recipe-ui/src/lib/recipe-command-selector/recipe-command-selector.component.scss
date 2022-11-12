@@ -2,11 +2,24 @@
   padding: 0.5rem;
   border: 1px transparent solid;
   border-radius: 1rem;
+  flex: 0 0 50%;
 
   button {
     margin-right: 0.5rem;
   }
 }
+
+.column-30 {
+  padding: 0.5rem;
+  border: 1px transparent solid;
+  border-radius: 1rem;
+  flex: 0 0 33%;
+
+  button {
+    margin-right: 0.5rem;
+  }
+}
+
 
 .command-block-entry {
   cursor: pointer;
@@ -21,3 +34,27 @@
   }
 }
 
+.search-panel {
+  display: flex;
+  justify-content: end;
+}
+
+.filterRow__searchInput {
+  margin-top: -1.5rem;
+  margin-bottom: -1rem;
+  margin-right: 1rem;
+  width: 170px;
+}
+
+.filterRow__searchInput__reset {
+  color: rgba(var(--palette-warn-500), 1);
+  height: 1rem !important;
+  width: 1rem !important;
+
+  top: 0.5rem;
+}
+
+mat-dialog-content {
+  width: 1100px;
+  height: 580px;
+}

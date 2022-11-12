@@ -54,3 +54,26 @@ export interface TwitchAuthInformation {
   type: 'main'|'bot',
   authResult: TwitchAuthResult;
 }
+
+export const TwitchAnnouncementColors = [
+  {
+    id: 'primary',
+    label: 'Primary',
+  },
+  {
+    id: 'blue',
+    label: 'Blue',
+  },
+  {
+    id: 'green',
+    label: 'Green',
+  },
+  {
+    id: 'orange',
+    label: 'Orange',
+  },
+  {
+    id: 'purple',
+    label: 'Purple',
+  }
+];

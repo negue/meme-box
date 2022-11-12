@@ -1,11 +1,35 @@
-<h2 mat-dialog-title>Select a Command Block to add</h2>
+<div>
+  <div class="two-columns">
+    <h2 class="column">Select a Command Block to add</h2>
+    <div class="column search-panel" >
+      <mat-form-field appearance="standard"
+                      class="filterRow__searchInput"
+                      (click)="$event.stopPropagation()">
+        <input type="search" matInput
+               (click)="$event.stopPropagation()"
+               (keyup)="updateSearchField(searchInput.value)"
+               autocomplete="off"
+               placeholder="Search ..."
+               #searchInput>
+
+        <button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
+                class="filterRow__searchInput__reset"
+                (click)="updateSearchField(''); searchInput.value = ''">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
+
+
+</div>
 <mat-dialog-content class="mat-typography">
 
-  <div *ngFor="let groupInfo of possibleCommandBlocks">
+  <div *ngFor="let groupInfo of possibleCommandBlocks$ | async">
     <h3>{{groupInfo.label}}</h3>
 
     <div class="two-columns wrap">
-      <div class="column-50 flex command-block-entry"
+      <div class="column-30 flex command-block-entry"
            *ngFor="let block of groupInfo.blocks"
            (click)="selectCommandBlock(block)"
            mat-ripple

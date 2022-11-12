@@ -74,6 +74,10 @@
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+
+                <mat-error *ngIf="(actionDictionary[actionPayload.actionId] | actionScreenList$ | async).length === 0">
+                  The selected Media is not added to any Screen.
+                </mat-error>
               </div>
 
               <ng-container

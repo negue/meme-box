@@ -1,9 +1,10 @@
 import {TwitchConnector} from "../../../twitch/twitch.connector";
 import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
-import {ActionType, TwitchConnectionType} from "@memebox/contracts";
+import {ActionType, TwitchAnnouncementColors, TwitchConnectionType} from "@memebox/contracts";
 import {TwitchDataProvider} from "../../../twitch/twitch.data-provider";
 import {TwitchQueueEventBus} from "../../../twitch/twitch-queue-event.bus";
+import {randomElement} from "@memebox/utils";
 
 export class TwitchApi extends DisposableBase {
 
@@ -53,6 +54,10 @@ export class TwitchApi extends DisposableBase {
 
   public async sendAnnouncement(message: string, color?: string){
     const broadcasterId = await this.getBroadcasterIdAsync();
+
+    if (color === 'random'){
+      color = randomElement(TwitchAnnouncementColors).id;
+    }
 
     return this.postHelixDataAsync(
       `chat/announcements?broadcaster_id=${broadcasterId}&moderator_id=${broadcasterId}`,
