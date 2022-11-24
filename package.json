@@ -93,7 +93,7 @@
     "@storybook/addon-essentials": "6.5.13",
     "@storybook/addon-links": "6.5.13",
     "@storybook/angular": "6.5.13",
-    "@tauri-apps/cli": "1.1.1",
+    "@tauri-apps/cli": "1.2.2",
     "@tsed/common": "6.43.4",
     "@tsed/core": "6.43.4",
     "@tsed/di": "6.43.4",
