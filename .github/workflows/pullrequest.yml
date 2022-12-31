@@ -99,7 +99,7 @@ jobs:
       - name: Setup Rust cache
         uses: Swatinem/rust-cache@v2
         with:
-          working-directory: src-tauri
+          workspaces: src-tauri
       - name: Install WebKit dependencies
         if: ${{ runner.os == 'Linux' }}
         run: |
