@@ -1,12 +1,12 @@
-import {Service, UseOpts} from "@tsed/di";
-import {NamedLogger} from "../named-logger";
+import { Service, UseOpts } from "@tsed/di";
+import { NamedLogger } from "../named-logger";
 import * as WebSocket from "ws";
-import {ActionActiveStatePayload, ACTIONS, Dictionary, TriggerAction} from "@memebox/contracts";
-import {Subject} from "rxjs";
-import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
-import {ActionActiveStateEventBus} from "../actions/action-active-state-event.bus";
-import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
-import {ScreenActiveStateEventBus} from "../screens/screen-active-state-event.bus";
+import { ActionActiveStatePayload, ACTIONS, Dictionary, TriggerAction } from "@memebox/contracts";
+import { Subject } from "rxjs";
+import { ActionQueueEventBus } from "../actions/action-queue-event.bus";
+import { ActionActiveStateEventBus } from "../actions/action-active-state-event.bus";
+import { AbstractWebsocketHandler } from "./abstract-websocket-handler";
+import { ScreenActiveStateEventBus } from "../screens/screen-active-state-event.bus";
 
 // UNTIL everything in the backend is refactored to TSED, we need some global instance
 export let CURRENT_MEMEBOX_WEBSOCKET: MemeboxWebsocket;
@@ -28,6 +28,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
   ) {
     super('');
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     CURRENT_MEMEBOX_WEBSOCKET = this;
   }
 
