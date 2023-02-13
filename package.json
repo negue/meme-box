@@ -191,7 +191,6 @@
     "lodash": "4.17.21",
     "marked": "4.2.2",
     "morphdom": "2.6.1",
-    "neo-observable-input": "1.0.0",
     "ngx-moveable": "0.24.3",
     "obs-websocket-js": "4.0.3",
     "open": "8.4.0",
