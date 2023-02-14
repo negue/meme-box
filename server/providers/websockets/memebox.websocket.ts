@@ -28,6 +28,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
   ) {
     super('');
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     CURRENT_MEMEBOX_WEBSOCKET = this;
   }
 
