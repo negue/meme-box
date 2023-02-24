@@ -15,6 +15,7 @@ export class ActionQueueEventBus {
   public AllUpdateEvents$ = this._allUpdateEvents$.asObservable();
 
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     CURRENT_MEMEBOX_ACTION_QUEUE_EVENT_BUS = this;
   }
 

@@ -57,7 +57,9 @@
     "docs:json": "compodoc -p ./tsconfig.base.json -e json -d .",
     "storybook": "npm run docs:json && start-storybook -p 6006",
     "build-storybook": "npm run docs:json && build-storybook",
-    "affected:lint": "nx affected:lint"
+    "affected:lint": "nx affected:lint",
+    "tauri": "tauri",
+    "tauri:build": "node scripts/move-binary.js && tauri build"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "11.1.1",
@@ -91,6 +93,7 @@
     "@storybook/addon-essentials": "6.5.13",
     "@storybook/addon-links": "6.5.13",
     "@storybook/angular": "6.5.13",
+    "@tauri-apps/cli": "1.2.3",
     "@tsed/common": "6.43.4",
     "@tsed/core": "6.43.4",
     "@tsed/di": "6.43.4",
@@ -126,6 +129,7 @@
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
+    "execa": "5.1.1",
     "jest": "27.5.1",
     "jest-preset-angular": "10.1.0",
     "mock-socket": "9.1.5",
