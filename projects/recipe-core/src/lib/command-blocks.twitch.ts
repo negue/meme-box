@@ -45,4 +45,26 @@ export function registerTwitchCommandBlocks (
       return Promise.resolve('Twitch: Say: '+ textToSay);
     }
   };
+
+  registry['twitch:shoutout'] = {
+    pickerLabel: "Shoutout a User",
+    commandGroup: "twitch",
+    configArguments: [
+      {
+        name: "username",
+        label: "Username to Shoutout",
+        type: "text"
+      }
+    ],
+    toScriptCode: (step) => {
+      const username = step.payload.username as string;
+
+      return `twitch.shoutout('${username}');`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      const username = payload.username as string;
+
+      return Promise.resolve('Twitch: Shoutout: '+ username);
+    }
+  };
 }
