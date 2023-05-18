@@ -25,18 +25,10 @@ cd meme-box
 
 ## Headless CLI binary
 
-If you want to build the _headless_ CLI variant, you currently have to use specifically Node.js **v12.16.2**. Otherwise, the latest version or LTS version should be sufficient. For example, using [nvm](https://github.com/nvm-sh/nvm):
-
-
-```sh
-# Only needed if you want to build the headless variant!
-nvm install 12.16.2
-```
-
-Then, build the binary with the following commands (for Windows in this example):
+If you want to build the _headless_ CLI variant use the following commands (for Windows in this example):
 
 ```sh
-npm install --legacy-peer-deps
+npm install
 npm run build:prepare
 npm run build:windows # or build:macos / build:linux
 ```
@@ -50,7 +42,7 @@ Afterwards, the standalone binary can be found in the `release/out/` folder.
 If you want to build the complete Electron application, which includes the user interface bundled as a regular application, execute the following commands:
 
 ```sh
-npm install --legacy-peer-deps
+npm install
 npm run electron:build
 ```
 

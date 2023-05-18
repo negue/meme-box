@@ -2,7 +2,8 @@ version = 1
 
 exclude_patterns = [
     "cypress/**",
-    "memebox-streamdeck/**"
+    "memebox-streamdeck/**",
+    "scripts/**",
 ]
 
 [[analyzers]]

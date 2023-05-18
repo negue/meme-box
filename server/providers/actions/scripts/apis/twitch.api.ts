@@ -34,14 +34,32 @@ export class TwitchApi extends DisposableBase {
     tmiInstance.say(settings.channel, message);
   }
 
+  public async shoutout(username: string) : Promise<void> {
+    const userId = await this.getUserIdByName(username);
+
+    const broadcasterId = await this.getBroadcasterIdAsync();
+
+    await this.postHelixDataAsync('chat/shoutouts',{
+      from_broadcaster_id: broadcasterId,
+      to_broadcaster_id: userId,
+      moderator_id: broadcasterId
+    });
+  }
+
+  public async getUserIdByName(username:string) : Promise<string> {
+    const userResult = await this.getHelixDataAsync<{ id:string }[]>(`users?login=${username}`);
+
+    return userResult.data[0].id;
+  }
+
   public async getBroadcasterIdAsync(): Promise<string> {
     const mainAuth =  await this.dataProvider.getMainTwitchAuthAsync();
 
     return mainAuth?.userId;
   }
 
-  public getHelixDataAsync(endpointAndQuery: string) {
-    return this.dataProvider.getHelixDataAsync(endpointAndQuery);
+  public getHelixDataAsync<TResult>(endpointAndQuery: string) {
+    return this.dataProvider.getHelixDataAsync<TResult>(endpointAndQuery);
   }
 
   public postHelixDataAsync(endpointAndQuery: string, bodyData: unknown) {

@@ -85,7 +85,7 @@ export class TwitchDataProvider {
       return {};
     }
 
-    const result = request.body.readable
+    const result = request.body.bodyUsed
       ? await request.json()
       : {};
 

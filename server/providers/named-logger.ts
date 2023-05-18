@@ -44,7 +44,7 @@ export class NamedLogger {
       // pattern: '.yyyy-MM-dd',
       layout:{
         type: "json",
-        separator: ","
+        separator: ""
       }
     })
   }
@@ -72,7 +72,7 @@ export function addDefaultLoggerAppenders (logger: Logger): void  {
 
   const jsonLayout = {
     type: "json",
-    separator: ","
+    separator: ""
   };
 
   logger.appenders
@@ -91,18 +91,12 @@ export function addDefaultLoggerAppenders (logger: Logger): void  {
       // pattern not working so we added DateFormat ourselves
       filename: `${LOG_PATH}/memebox_tsed.${TODAY_LOG_SUFFIX}.log`,
       // pattern: '.yyyy-MM-dd',
-      layout: {
-        type: "json",
-        separator: ","
-      }
+      layout: jsonLayout
     })
     .set("ERROR_FILE", {
       type: "file",
       levels: ["fatal", "error"],
       filename: `${LOG_PATH}/errors.log`,
-      layout: {
-        type: "json",
-        separator: ","
-      }
+      layout: jsonLayout
     });
 }
