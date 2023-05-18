@@ -67,13 +67,13 @@ export function mapFileInformations (
 const versions = process.versions;
 export const isInElectron = !!versions['electron'];
 
-
 export function getAppRootPath () {
   const baseDir = dirname(process.execPath);
 
   const defaultAppOutPutDir = join(baseDir, '/dist');
+  const isBundled = isInElectron || !!versions['pkg'];
 
-  let appRootPath = isInElectron
+  let appRootPath = isBundled
     ? join(__dirname, '/../dist')
     : defaultAppOutPutDir;
 
@@ -83,7 +83,7 @@ export function getAppRootPath () {
     return appRootPath;
   }
 
-  if (!appRootPathExists && isInElectron) {
+  if (!appRootPathExists && isBundled) {
     const nodeModulesPos = baseDir.indexOf('node_modules');
 
     // serving electron without a built/copied app yet

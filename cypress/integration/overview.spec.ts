@@ -1,4 +1,4 @@
-import {visitAndSpyConsole} from "../utils/utils";
+import { visitAndSpyConsole } from "../utils/utils";
 
 describe('Offline Mode', () => {
   it('shows "offline mode"', () => {

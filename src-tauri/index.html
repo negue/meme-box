@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Box</title>
+
+    <style>
+      body {
+        color: rgb(255, 255, 255);
+        background-color: rgb(47, 54, 64);
+        font-family: Barlow, sans-serif;
+        font-size: 48px;
+        margin: 0;
+        padding: 0;
+      }
+
+      div {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div>Starting up...</div>
+    <script>
+      window.__TAURI__.event.listen('ready', (event) => {
+        window.location.href = `http://localhost:${event.payload}`
+      })
+    </script>
+  </body>
+</html>

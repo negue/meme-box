@@ -81,11 +81,12 @@ export class TwitchDataProvider {
       body: JSON.stringify(body)
     });
 
+
     if (request.status === 204) {
       return {};
     }
 
-    const result = request.body.readable
+    const result = request.bodyUsed
       ? await request.json()
       : {};
 

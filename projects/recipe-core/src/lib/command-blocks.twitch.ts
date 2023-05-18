@@ -36,6 +36,28 @@ export function registerTwitchCommandBlocks (
     entryIcon: () => 'twitch',
   };
 
+  registry['twitch:shoutout'] = {
+    pickerLabel: "Shoutout a User",
+    commandGroup: "twitch",
+    configArguments: [
+      {
+        name: "username",
+        label: "Username to Shoutout",
+        type: "text"
+      }
+    ],
+    toScriptCode: (step) => {
+      const username = step.payload.username as string;
+
+      return `twitch.shoutout('${username}');`;
+    },
+    commandEntryLabelAsync: (queries, payload) => {
+      const username = payload.username as string;
+
+      return Promise.resolve('Twitch: Shoutout: '+ username);
+    }
+  };
+
   // https://dev.twitch.tv/docs/api/reference#send-chat-announcement
   registry['twitch:sendAnnouncement'] = {
     pickerLabel: "Send a Chat Announcement",
