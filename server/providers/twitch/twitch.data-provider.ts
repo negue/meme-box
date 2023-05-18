@@ -77,7 +77,9 @@ export class TwitchDataProvider {
       },
       method: 'POST',
       body: JSON.stringify(body)
-    }).then( r => r.body.readable ? r.json() : {} );
+    }).then( r => {
+      return r.bodyUsed ? r.json() : {}
+    } );
 
     return result;
   }

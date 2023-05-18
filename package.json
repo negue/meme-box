@@ -144,7 +144,7 @@
     "webdriver-manager": "12.1.8"
   },
   "engines": {
-    "node": ">=10.13.0"
+    "node": "16"
   },
   "dependencies": {
     "@angular/animations": "11.2.14",
