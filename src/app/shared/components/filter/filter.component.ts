@@ -75,8 +75,16 @@ export class FilterComponent {
     this.selected.emit(this.selectedArray);
   }
 
-  updateSearchField(value: string): void  {
+  updateSearchField(value: string, $event: KeyboardEvent|null): void  {
     this.searchText = value;
     this.searchChanged.next(value);
+  }
+
+  preventSpaceBubble($event: KeyboardEvent) {
+    if ($event.code === 'Space') {
+      $event.stopPropagation();
+    }
+
+    this.updateSearchField(this.searchText+' ', null);
   }
 }

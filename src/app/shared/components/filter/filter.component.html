@@ -38,14 +38,15 @@
                       (click)="$event.stopPropagation()">
         <input type="search" matInput
                (click)="$event.stopPropagation()"
-               (keyup)="updateSearchField(searchInput.value)"
+               (keydown)="preventSpaceBubble($event)"
+               (keyup)="updateSearchField(searchInput.value, $event)"
                autocomplete="off"
                placeholder="Search Actions"
                #searchInput>
 
         <button *ngIf="searchText" matSuffix mat-icon-button aria-label="Clear"
                 class="filterRow__searchInput__reset"
-                (click)="updateSearchField(''); searchInput.value = ''">
+                (click)="updateSearchField('', null); searchInput.value = ''">
           <mat-icon svgIcon="close"></mat-icon>
         </button>
       </mat-form-field>

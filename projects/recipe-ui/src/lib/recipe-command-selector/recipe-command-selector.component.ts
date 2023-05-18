@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {
   RecipeCommandBlockGroups,
   RecipeCommandDefinition,
@@ -13,6 +13,8 @@ import {AppQueries} from "@memebox/app-state";
 import {RecipeCommandCreatorService} from "../recipe-command-creator.service";
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
+import {BehaviorSubject} from "rxjs";
+import {debounceTime, map, startWith} from "rxjs/operators";
 
 interface RecipeCommandBlockGroup extends RecipeCommandSelectionGroup {
   blocks: RecipeCommandDefinition[];
@@ -39,8 +41,35 @@ function groupByCommandBlocksType(
   templateUrl: './recipe-command-selector.component.html',
   styleUrls: ['./recipe-command-selector.component.scss']
 })
-export class RecipeCommandSelectorComponent implements OnInit {
-  public possibleCommandBlocks: RecipeCommandBlockGroup[] = [];
+export class RecipeCommandSelectorComponent  {
+  private possibleCommandBlocks: RecipeCommandBlockGroup[] =
+    groupByCommandBlocksType(
+      this.stepCreator.getPossibleCommands(this.data.entry, this.data.context)
+    );
+
+  public searchText = '';
+
+  public readonly searchChanged$ = new BehaviorSubject<string>('');
+  public readonly possibleCommandBlocks$ = this.searchChanged$.pipe(
+    debounceTime(300),
+    map(searchTerm => {
+      if (searchTerm.length === 0) {
+        return this.possibleCommandBlocks;
+      }
+
+      searchTerm = searchTerm.toLowerCase().trim();
+
+      return this.possibleCommandBlocks
+        .map(g => {
+          return {
+            ...g,
+            blocks: g.blocks.filter(b => b.pickerLabel.toLowerCase().includes(searchTerm))
+          }
+        })
+        .filter(g => g.blocks.length !== 0);
+    }),
+    startWith(this.possibleCommandBlocks)
+  );
 
   constructor(
     private dialogService: DialogService,
@@ -54,11 +83,9 @@ export class RecipeCommandSelectorComponent implements OnInit {
     private stepCreator: RecipeCommandCreatorService
   ) { }
 
-  ngOnInit(): void {
-    this.possibleCommandBlocks =
-      groupByCommandBlocksType(
-        this.stepCreator.getPossibleCommands(this.data.entry, this.data.context)
-      );
+  updateSearchField(value: string): void  {
+    this.searchText = value;
+    this.searchChanged$.next(value);
   }
 
   async selectCommandBlock(step: RecipeCommandDefinition) {

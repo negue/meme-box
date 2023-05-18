@@ -8,13 +8,7 @@ import {
   RecipeStepConfigArguments,
   RecipeStepConfigArgumentValidations
 } from "@memebox/recipe-core";
-import {
-  Action,
-  ActionAssigningMode,
-  Dictionary,
-  TriggerActionOverrides,
-  UnassignedFilterEnum
-} from "@memebox/contracts";
+import {Action, Dictionary, TriggerActionOverrides} from "@memebox/contracts";
 import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
 import {Observable} from "rxjs";
 import {AppQueries, SnackbarService} from "@memebox/app-state";
@@ -55,20 +49,6 @@ export class StepSettingDialogComponent {
 
     if (newActionId) {
       actionPayload.actionId = newActionId;
-    }
-  }
-
-  async selectAction(configName: string) {
-    const actionId = await this._selectAction();
-
-    this.onSelectedAction(configName, actionId);
-  }
-
-  async selectActionListEntry(actionPayload: RecipeCommandConfigActionPayload) {
-    const actionId = await this._selectAction();
-
-    if (actionId) {
-      actionPayload.actionId = actionId;
     }
   }
 
@@ -124,41 +104,6 @@ export class StepSettingDialogComponent {
     this.dialogRef.close(this.payload);
   }
 
-  async addActionEntry(actionList: RecipeCommandConfigActionPayload[]) {
-    const actionId = await this._selectAction();
-
-    if (actionId) {
-      actionList.push({
-        actionId,
-        overrides: {
-          action: {
-            variables: {}
-          }
-        }
-      })
-    }
-  }
-
-  removeActionEntry(actionList: RecipeCommandConfigActionPayload[], actionEntry: RecipeCommandConfigActionPayload): void  {
-    const indexOf = actionList.indexOf(actionEntry);
-
-    actionList.splice(indexOf, 1);
-  }
-
-  private async _selectAction (actionId?: string | undefined): Promise<string> {
-    const [selectedId] = await this.dialogService.showActionSelectionDialogAsync({
-      mode: ActionAssigningMode.Single,
-      selectedActionIdList: actionId ? [actionId]: [],
-      dialogTitle: 'Config Argument',
-      showMetaItems: true,
-
-      unassignedFilterType: UnassignedFilterEnum.RecipeCommandArgument,
-      // showOnlyUnassignedFilter: true
-    });
-
-    return selectedId;
-  }
-
   private _getOrPreparePayloadForAction (configName: string): RecipeCommandConfigActionPayload {
     let actionPayload = this.payload[configName] as any as RecipeCommandConfigActionPayload;
 
@@ -181,18 +126,36 @@ export class StepSettingDialogComponent {
   }
 
   private _prepareCurrentPayload() {
+    // todo move these defaults to the command block registry
+
     if (this.data.currentStepData) {
       this.payload = cloneDeep(this.data.currentStepData);
     }
 
     for (const config of this.data.configArguments) {
       switch (config.type) {
+        case 'action': {
+          if (!this.payload[config.name]) {
+            this.payload[config.name] = {
+              screenId: ''
+            } as RecipeCommandConfigActionPayload;
+          }
+
+          break;
+        }
         case 'actionList': {
           if (!this.payload[config.name]) {
             this.payload[config.name] = {
 
             } as RecipeCommandConfigActionListPayload;
           }
+          break;
+        }
+        case 'selectionStatic': {
+          if (!this.payload[config.name]) {
+            this.payload[config.name] = config.defaultSelected;
+          }
+
           break;
         }
         case 'boolean': {
