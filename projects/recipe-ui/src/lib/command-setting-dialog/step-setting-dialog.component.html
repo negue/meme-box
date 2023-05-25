@@ -5,7 +5,8 @@
 <mat-dialog-content>
 
   <ng-container *ngIf="actionDictionary$ | async as actionDictionary">
-
+    <div class="two-columns">
+      <div class="column">
     <div *ngFor="let config of data.configArguments">
       <strong *ngIf=" config.type | shouldShowSettingLabelAbove">{{config.label}}:</strong>
 
@@ -23,6 +24,9 @@
                                      [fullWidth]="true"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
+
+          <button mat-raised-button *ngIf="config | shouldShowVariablesPanel"
+                  (click)="toggleVariablesPanel()">Variables</button>
         </ng-container>
         <ng-container *ngSwitchCase="'textarea'">
           <app-action-variable-input [variableType]="$any('textarea')" [label]="config.label"
@@ -30,6 +34,8 @@
                                      [fullWidth]="true"
                                      (valueChanged)="payload[config.name] = $event">
           </app-action-variable-input>
+          <button mat-raised-button *ngIf="config | shouldShowVariablesPanel"
+                  (click)="toggleVariablesPanel()">Variables</button>
         </ng-container>
         <ng-container *ngSwitchCase="'boolean'">
           <app-action-variable-input [variableType]="$any('boolean')"
@@ -168,6 +174,12 @@
         <ng-container *ngSwitchDefault>
           Default Switch Case NEED TO DO: {{config.type}}
         </ng-container>
+      </div>
+    </div>
+      </div>
+
+      <div class="column" *ngIf="showVariablesPanel">
+        <app-command-variables-example-list></app-command-variables-example-list>
       </div>
     </div>
   </ng-container>

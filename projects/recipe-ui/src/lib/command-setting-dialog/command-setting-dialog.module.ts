@@ -27,6 +27,10 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {ObsSourceSelectionComponent} from "./obs-source-selection/obs-source-selection.component";
 import {ShouldShowSettingLabelAbovePipe} from './should-show-setting-label-above.pipe';
+import {ShouldShowVariablesPanelPipe} from "./should-show-variables-panel.pipe";
+import {
+  CommandVariablesExampleListComponent
+} from './command-variables-example-list/command-variables-example-list.component';
 
 // todo extract this module to its own internal library ^
 
@@ -39,7 +43,9 @@ import {ShouldShowSettingLabelAbovePipe} from './should-show-setting-label-above
     ActionSelectionComponent,
     ActionListSettingsComponent,
     ObsSourceSelectionComponent,
-    ShouldShowSettingLabelAbovePipe
+    ShouldShowSettingLabelAbovePipe,
+    ShouldShowVariablesPanelPipe,
+    CommandVariablesExampleListComponent
   ],
   imports: [
     CommonModule,

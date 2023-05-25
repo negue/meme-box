@@ -21,10 +21,8 @@ export function registerObsCommandBlocks (
         type: "obs:scene"
       }
     ],
-    toScriptCode: (step) => {
-      const scenePayload = step.payload.scene as string;
-
-      return `obs.switchToScene('${scenePayload}');`;
+    toScriptCode: ({step, commandBlock}) => {
+      return `obs.switchToScene(${commandBlock.argument('scene')});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
       const scenePayload = payload.scene as string;
@@ -50,10 +48,8 @@ export function registerObsCommandBlocks (
       }
 
     ],
-    toScriptCode: (step) => {
-      const scenePayload = step.payload.sourceName as string;
-
-      return `obs.setSourceVisibility('${scenePayload}', ${step.payload.visible});`;
+    toScriptCode: ({step, commandBlock}) => {
+      return `obs.setSourceVisibility(${commandBlock.argument('scene')}, ${step.payload.visible});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
       const sourceName = payload.sourceName as string;
@@ -78,10 +74,8 @@ export function registerObsCommandBlocks (
         type: "boolean"
       }
     ],
-    toScriptCode: (step) => {
-      const scenePayload = step.payload.sourceName as string;
-
-      return `obs.setSourceMute('${scenePayload}', ${step.payload.muted});`;
+    toScriptCode: ({step, commandBlock}) => {
+      return `obs.setSourceMute(${commandBlock.argument('sourceName')}, ${step.payload.muted});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
       const sourceName = payload.sourceName as string;
@@ -107,7 +101,7 @@ export function registerObsCommandBlocks (
         type: "boolean"
       }
     ],
-    toScriptCode: (step) => {
+    toScriptCode: ({step}) => {
       const filterPayload = step.payload.filter as RecipeCommandConfigObsSetFilterStatePayload;
       const enabled = step.payload.enabled as boolean;
 
@@ -131,15 +125,21 @@ export function registerObsCommandBlocks (
       {
         name: "command",
         label: "Command",
-        type: "text"
+        type: "text",
+        flags: {
+          canUseVariables: false,
+        }
       },
       {
         name: "obsPayload",
         label: "Payload",
-        type: "textarea"
+        type: "textarea",
+        flags: {
+          canUseVariables: false,
+        }
       }
     ],
-    toScriptCode: (step) => {
+    toScriptCode: ({step}) => {
       const obsCommand = step.payload.command as string;
       const obsPayload = step.payload.obsPayload as string;
 

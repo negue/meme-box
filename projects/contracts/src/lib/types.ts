@@ -36,6 +36,10 @@ export interface HasExtendedData {
   extended?: Dictionary<unknown>;
 }
 
+// TODO split Action into a union of each subtype
+// - with that only properties that are used for type X
+// - are known in each sub type
+
 export interface Action extends HasId, ActionOverridableProperties, HasExtendedData {
   name: string;
   previewUrl?: string;

@@ -20,12 +20,16 @@ export function generateRandomCharacters(length: number): string  {
 export function* listAllEntriesOfTypes(
   recipeContext: RecipeContext,
   currentCommandToCheck: string,
-  commandTypeList: string[]
+  commandTypeList?: string[]
 ): IterableIterator<RecipeEntryCommandCall> {
   const entry = recipeContext.entries[currentCommandToCheck];
 
   if (entry.entryType === 'command') {
-    if (commandTypeList.includes(entry.commandBlockType)) {
+    if (commandTypeList) {
+      if ( commandTypeList.includes(entry.commandBlockType)) {
+        yield entry;
+      }
+    } else {
       yield entry;
     }
   }

@@ -11,10 +11,16 @@ export interface RecipeStepConfigBooleanArgument extends RecipeStepConfigArgumen
 
 export interface RecipeStepConfigTextArgument extends RecipeStepConfigArgument {
   type: 'text';
+  flags: {
+    canUseVariables: boolean;
+  }
 }
 
 export interface RecipeStepConfigTextareaArgument extends RecipeStepConfigArgument {
   type: 'textarea';
+  flags: {
+    canUseVariables: boolean;
+  }
 }
 
 export interface RecipeStepConfigNumberArgument extends RecipeStepConfigArgument {

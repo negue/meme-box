@@ -67,7 +67,7 @@ export function registerMemeboxCommandBlocks(
         }
       }
     ],
-    toScriptCode: (step) => {
+    toScriptCode: ({step}) => {
       const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
 
       const actionOverrides = actionPayload.overrides;
@@ -128,14 +128,14 @@ export function registerMemeboxCommandBlocks(
         entries: []
       });
     },
-    toScriptCode: (step, context, userData) => {
+    toScriptCode: ({step, context, userData}) => {
       const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
 
       const actionOverrides = actionPayload.overrides;
 
       return `${createMemeboxApiVariable(actionPayload)}
                      .triggerWhile(async (helpers_${step.payload._suffix}) => {
-                        ${generateCodeByStep(step, context, userData)[0].generatedScript}
+                        ${generateCodeByStep({step, context, userData})[0].generatedScript}
                       }
                       ${actionOverrides ? ',' + JSON.stringify(actionOverrides) : ''});`;
     },
@@ -165,7 +165,7 @@ export function registerMemeboxCommandBlocks(
       return false;
       // return step.entryType === 'command' && step.commandBlockType === 'triggerActionWhile';
     },
-    toScriptCode: (step) => {
+    toScriptCode: ({step}) => {
       const helpersName = `helpers_${step.payload._suffix}`;
 
       return `${helpersName}.reset();`
@@ -186,7 +186,7 @@ export function registerMemeboxCommandBlocks(
       }
     ],
     awaitCodeHandledInternally: true,
-    toScriptCode: (step, context, userData) => {
+    toScriptCode: ({step, context, userData}) => {
       const awaitCode = step.awaited ? 'await ' : '';
 
       const actionsToChooseFrom = listActionsOfActionListPayload(
@@ -241,7 +241,7 @@ export function registerMemeboxCommandBlocks(
         }*/
     ],
     awaitCodeHandledInternally: true,
-    toScriptCode: (step) => {
+    toScriptCode: ({step}) => {
       const actionPayload = step.payload.action as RecipeCommandConfigActionPayload;
       const overrides = actionPayload.overrides;
 

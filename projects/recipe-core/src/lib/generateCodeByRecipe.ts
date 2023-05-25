@@ -1,7 +1,7 @@
 import {
+  GenerateCodeByStepPayload,
   generatedCodeBySubCommandBlock,
   RecipeContext,
-  RecipeEntry,
   RecipeEntryCommandCall,
   RecipeEntryCommandPayload
 } from "./recipe.types";
@@ -14,7 +14,7 @@ import {RecipeCommandRegistry} from "./recipeCommandRegistry";
 import {registerGenericCommandBlocks} from "./command-blocks.generic";
 
 
-function generateCodeByStepAsync (step: RecipeEntry, context: RecipeContext, userData: UserDataState): generatedCodeBySubCommandBlock[] {
+function generateCodeByStepAsync ({step, context, userData}: GenerateCodeByStepPayload): generatedCodeBySubCommandBlock[] {
   const result: generatedCodeBySubCommandBlock[] = [];
 
   for (const subStepInfo of step.subCommandBlocks) {
@@ -30,11 +30,30 @@ function generateCodeByStepAsync (step: RecipeEntry, context: RecipeContext, use
 
         // result.push(`logger.log('Pre: ${subEntry.commandType}');`);
 
+        scriptCode.push(`// ${subEntry.id} - ${JSON.stringify(subEntry)}`)
+
         if (!entryDefinition.awaitCodeHandledInternally && subEntry.awaited) {
           scriptCode.push('await ');
         }
 
-        const createdStepCode = entryDefinition.toScriptCode(subEntry, context, userData);
+        // todo "Mark Scripts / Recipes to know which source they might be triggered from"
+        //   => inline recipe in twitch triggers which sets the context inside for example trigger variables
+        // todo fill up commandBlockData
+        // todo think of way to use other commadn block results in the current one
+        // commandBlockData should cache if there is no dynamic data to speed up things
+
+        const createdStepCode = entryDefinition.toScriptCode({
+          step: subEntry,
+          context,
+          commandBlock: {
+            argument(name) {
+              // todo check of config if name exist
+              // also check that on the UI during edit
+              return `await commandBlockData['${subEntry.id}']['${name}']()`
+            }
+          },
+          userData
+        });
 
         scriptCode.push(createdStepCode.trim());
 
@@ -59,7 +78,7 @@ export function generateCodeByRecipe(
 ): string  {
   const rootEntry = recipeContext.entries[recipeContext.rootEntry];
 
-  return generateCodeByStepAsync(rootEntry, recipeContext, userData)
+  return generateCodeByStepAsync({step: rootEntry, context: recipeContext, userData})
     .map(g => g.generatedScript)
     .join('\r\n');
 }
