@@ -30,17 +30,14 @@ function generateCodeByStepAsync ({step, context, userData}: GenerateCodeByStepP
 
         // result.push(`logger.log('Pre: ${subEntry.commandType}');`);
 
-        scriptCode.push(`// ${subEntry.id} - ${JSON.stringify(subEntry)}`)
-
         if (!entryDefinition.awaitCodeHandledInternally && subEntry.awaited) {
           scriptCode.push('await ');
         }
 
         // todo "Mark Scripts / Recipes to know which source they might be triggered from"
         //   => inline recipe in twitch triggers which sets the context inside for example trigger variables
-        // todo fill up commandBlockData
         // todo think of way to use other commadn block results in the current one
-        // commandBlockData should cache if there is no dynamic data to speed up things
+        // todo commandBlockData should cache if there is no dynamic data to speed up things
 
         const createdStepCode = entryDefinition.toScriptCode({
           step: subEntry,

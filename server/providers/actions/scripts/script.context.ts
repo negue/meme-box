@@ -183,43 +183,50 @@ export class ScriptContext implements CanDispose {
       commandBlockData: {}
     };
 
-    if (this.script.type === ActionType.Recipe && this.script.recipe) {
-      for (const recipeCommand of listAllEntriesOfTypes(
-        this.script.recipe, this.script.recipe.rootEntry
-      )) {
-        const commandConfig = RecipeCommandRegistry[recipeCommand.commandBlockType];
-
-        for (const configArgument of commandConfig.configArguments) {
-          const configArgumentValue = recipeCommand.payload[configArgument.name].toString();
-          scriptArguments.commandBlockData[recipeCommand.id] ??= {};
-
-          if (configArgumentValue.includes('${{')) {
-            scriptArguments.commandBlockData[recipeCommand.id][configArgument.name] = async () => {
-              let replacedValue = configArgumentValue;
-              this.logger.log(`Config ${configArgument.name} Argument RAW: ${configArgumentValue}`);
-              for (const matchAllElement of configArgumentValue.matchAll(JSONATA_REGEX)) {
-                // todo cache jsonataQuery
-                const jsonataQuery = matchAllElement[1].trim();
-                const jsonataExpression = jsonata(jsonataQuery);
-                replacedValue = replacedValue.replaceAll(matchAllElement[0], await jsonataExpression.evaluate(triggerActionPayload))
-              }
-
-              this.logger.log(`Config ${configArgument.name} Argument Replaced: ${replacedValue}`);
-              return replacedValue;
-            };
-          } else {
-            scriptArguments.commandBlockData[recipeCommand.id][configArgument.name] = () => {
-              return Promise.resolve(recipeCommand.payload[configArgument.name]);
-            };
-          }
-        }
-
-        recipeCommand.entryType
-
-      }
-    }
+    this.attacheRecipeCommandArguments(scriptArguments);
 
     await this.scriptToCall(scriptArguments);
+  }
+
+  private attacheRecipeCommandArguments(scriptArguments: ExecutionScriptPayload) {
+    if (this.script.type !== ActionType.Recipe) {
+      return;
+    }
+
+    if (!this.script.recipe) {
+      return;
+    }
+
+    for (const recipeCommand of listAllEntriesOfTypes(
+      this.script.recipe, this.script.recipe.rootEntry
+    )) {
+      const commandConfig = RecipeCommandRegistry[recipeCommand.commandBlockType];
+
+      for (const configArgument of commandConfig.configArguments) {
+        const configArgumentValue = recipeCommand.payload[configArgument.name].toString();
+        scriptArguments.commandBlockData[recipeCommand.id] ??= {};
+
+        if (configArgumentValue.includes('${{')) {
+          scriptArguments.commandBlockData[recipeCommand.id][configArgument.name] = async () => {
+            let replacedValue = configArgumentValue;
+            this.logger.log(`Config ${configArgument.name} Argument RAW: ${configArgumentValue}`);
+            for (const matchAllElement of configArgumentValue.matchAll(JSONATA_REGEX)) {
+              // todo cache jsonataQuery
+              const jsonataQuery = matchAllElement[1].trim();
+              const jsonataExpression = jsonata(jsonataQuery);
+              replacedValue = replacedValue.replaceAll(matchAllElement[0], await jsonataExpression.evaluate(triggerActionPayload))
+            }
+
+            this.logger.log(`Config ${configArgument.name} Argument Replaced: ${replacedValue}`);
+            return replacedValue;
+          };
+        } else {
+          scriptArguments.commandBlockData[recipeCommand.id][configArgument.name] = () => {
+            return Promise.resolve(recipeCommand.payload[configArgument.name]);
+          };
+        }
+      }
+    }
   }
 
   public dispose(): void {
