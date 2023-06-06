@@ -1,10 +1,9 @@
 import {BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
 import {Persistence, PersistenceInstance} from "../persistence";
-import {AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
+import {AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger} from "@memebox/contracts";
 import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
 import {twitchPostValidator, twitchPutValidator, validOrLeave} from "../validations";
-import {ExampleTwitchCommandsSubject} from "../shared";
 import {TwitchQueueEventBus} from "../providers/twitch/twitch-queue-event.bus";
 import {takeLatestItems} from "@memebox/utils";
 import {filter} from "rxjs/operators";
@@ -60,13 +59,6 @@ export class TwitchEventsController {
     @PathParams("eventId") eventId: string
   ): void {
     PersistenceInstance.deleteTwitchEvent(eventId);
-  }
-
-  @Post(ENDPOINTS.TWITCH_EVENTS.TRIGGER_CONFIG_EXAMPLE)
-  triggerConfigExample(
-    @BodyParams() triggerCommand: TwitchTriggerCommand
-  ): void {
-    ExampleTwitchCommandsSubject.next(triggerCommand);
   }
 
   @Post(ENDPOINTS.TWITCH_EVENTS.TRIGGER_EVENT)

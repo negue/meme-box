@@ -7,10 +7,9 @@ import {Action, Dictionary, TriggerActionOrigin, TwitchTriggerCommand} from "@me
 import {TwitchLogger} from "./twitch.logger";
 import {isAllowedToTrigger} from "./twitch.utils";
 import {getCommandsOfTwitchEvent, getLevelOfTags} from "./twitch.functions";
-import {ExampleTwitchCommandsSubject} from "../../shared";
 import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
-import {uuid} from "@gewd/utils";
 import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
+import {uuid} from "@gewd/utils";
 
 // skipcq: JS-0579
 @Injectable({
@@ -49,11 +48,6 @@ export class TwitchTriggerHandler {
           this.handle(command);
         }
       })
-
-    // TODO REFACTOR this Subject
-    ExampleTwitchCommandsSubject.subscribe(value => {
-      this.handle(value);
-    });
   }
 
   handle(trigger: TwitchTriggerCommand): void  {
