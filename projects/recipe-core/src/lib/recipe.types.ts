@@ -101,6 +101,22 @@ export interface RecipeCommandConfigObsSetFilterStatePayload {
 
 // TODO have a different Interface for queries / AppQueries
 
+// Refactor to use command block results as variables for the next call
+
+export type GenerateCodeByStepPayload = {
+  step: RecipeEntry;
+  context: RecipeContext;
+  userData: UserDataState;
+}
+
+export type CommandBlockCodeGenerationPayload = GenerateCodeByStepPayload & {
+  step: RecipeEntryCommandCall
+  commandBlock: {
+    argument: (name: string) => string
+  }
+}
+
+
 // Registry Types
 export interface RecipeCommandDefinition {
   pickerLabel: string;
@@ -112,7 +128,7 @@ export interface RecipeCommandDefinition {
 
   extendCommandBlock?: (step: RecipeEntryCommandCall, parentStep: RecipeEntry) => void;
   allowedToBeAdded?: (step: RecipeEntry, context: RecipeContext) => boolean;
-  toScriptCode: (step: RecipeEntryCommandCall, context: RecipeContext, userData: UserDataState) => string;
+  toScriptCode: (codePayload: CommandBlockCodeGenerationPayload) => string;
   awaitCodeHandledInternally?: boolean;
   extendCommandBlockOnEdit?: boolean;
   commandType?: string;
@@ -130,4 +146,7 @@ export interface generatedCodeBySubCommandBlock {
   subCommand: RecipeSubCommandBlock;
   generatedScript: string;
 }
-export type generateCodeByStep = (step: RecipeEntry, context: RecipeContext, userData: UserDataState) => generatedCodeBySubCommandBlock[];
+
+
+
+export type generateCodeByStep = (payload: GenerateCodeByStepPayload) => generatedCodeBySubCommandBlock[];

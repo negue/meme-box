@@ -81,6 +81,7 @@ export class TwitchDataProvider {
       body: JSON.stringify(body)
     });
 
+
     if (request.status === 204) {
       return {};
     }

@@ -31,6 +31,8 @@ export class StepSettingDialogComponent {
 
   public payload: RecipeEntryCommandPayload = {};
 
+  public showVariablesPanel = false;
+
   actionDictionary$: Observable<Dictionary<Action>> = this.appQuery.actionMap$;
 
 
@@ -102,6 +104,10 @@ export class StepSettingDialogComponent {
     }
 
     this.dialogRef.close(this.payload);
+  }
+
+  toggleVariablesPanel (){
+    this.showVariablesPanel = !this.showVariablesPanel;
   }
 
   private _getOrPreparePayloadForAction (configName: string): RecipeCommandConfigActionPayload {

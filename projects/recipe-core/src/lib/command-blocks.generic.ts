@@ -15,7 +15,7 @@ export function registerGenericCommandBlocks(
         type: "number"
       }
     ],
-    toScriptCode: (step, context) => `sleep.secondsAsync(${step.payload.seconds});`,
+    toScriptCode: (codePayload) => `sleep.secondsAsync(${codePayload.commandBlock.argument('seconds')});`,
     commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`wait ${payload.seconds} seconds`);
     },
@@ -33,7 +33,7 @@ export function registerGenericCommandBlocks(
         type: "number"
       }
     ],
-    toScriptCode: (step, context) => `sleep.msAsync(${step.payload.ms});`,
+    toScriptCode: (codePayload) => `sleep.msAsync(${codePayload.commandBlock.argument('ms')});`,
     commandEntryLabelAsync: (queries, payload, parentStep) => {
       return Promise.resolve(`wait ${payload.ms}ms`);
     },
@@ -79,12 +79,12 @@ export function registerGenericCommandBlocks(
       return Promise.resolve('');
     },
     awaitCodeHandledInternally: true,
-    toScriptCode: (step, context, userData) => {
+    toScriptCode: ({step,userData,context}) => {
       const awaitCode = step.awaited ? 'await ' : '';
 
       const functionNames: string[] = [];
 
-      const generatedFunctions = generateCodeByStep(step, context, userData).map(g => {
+      const generatedFunctions = generateCodeByStep({step, context, userData}).map(g => {
 
         const functionName = `randomGroup_${g.subCommand.labelId}`;
 

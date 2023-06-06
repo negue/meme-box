@@ -11,6 +11,9 @@ import {TwitchApi} from "./apis/twitch.api";
 import {CanDispose} from "./apis/disposableBase";
 import {DummyWebSocketServer, RealWebSocketServer, WebSocketServerApi} from "./apis/wss.api";
 import {EventBusApi} from "./apis/eventbus.api";
+import {listAllEntriesOfTypes, RecipeCommandRegistry} from "@memebox/recipe-core";
+import jsonata from "jsonata";
+
 
 class ScriptCompileError extends Error {
   constructor(script: Action,
@@ -31,11 +34,16 @@ interface SharedScriptPayload {
   eventBus: EventBusApi;
 }
 
-const SHARED_API_ARGUMENTS = 'variables, store, memebox, logger, obs, twitch, wss, eventBus';
+const SHARED_API_ARGUMENTS = 'variables, store, memebox, logger, obs, twitch, wss, eventBus, commandBlockData';
+
+const JSONATA_REGEX = /\${{\s*(.*)\s*}}/gm;
 
 interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
   triggerPayload: TriggerAction;
+  commandBlockData: {[key: string]: {
+    [configName: string]: () => Promise<unknown>
+    }}
 }
 
 type ExecutionScript = (
@@ -142,13 +150,13 @@ export class ScriptContext implements CanDispose {
     }
   }
 
-  public async execute(payloadObs: TriggerAction) : Promise<void> {
+  public async execute(triggerActionPayload: TriggerAction) : Promise<void> {
     // TODO apply variable overrides from TriggerClip
 
     const variables = getScriptVariablesOrFallbackValues(
       this.scriptConfig.variablesConfig ?? [],
       this.script.extended,
-      payloadObs?.overrides?.action?.variables
+      triggerActionPayload?.overrides?.action?.variables
     );
 
     if (!this.scriptToCall) {
@@ -164,17 +172,64 @@ export class ScriptContext implements CanDispose {
     const scriptArguments: ExecutionScriptPayload = {
       variables,
       bootstrap: this.bootstrap_variables,
-      triggerPayload: payloadObs,
+      triggerPayload: triggerActionPayload,
       store: this.store,
       memebox: this.memeboxApi,
       logger: this.logger,
       obs: this.obsApi,
       twitch: this.twitchApi,
       wss: this.wss,
-      eventBus: this.eventBus
+      eventBus: this.eventBus,
+      commandBlockData: {}
     };
 
+    this.attacheRecipeCommandArguments(scriptArguments, triggerActionPayload);
+
     await this.scriptToCall(scriptArguments);
+  }
+
+  private attacheRecipeCommandArguments(
+    scriptArguments: ExecutionScriptPayload,
+    triggerActionPayload: TriggerAction
+  ) {
+    if (this.script.type !== ActionType.Recipe) {
+      return;
+    }
+
+    if (!this.script.recipe) {
+      return;
+    }
+
+    for (const recipeCommand of listAllEntriesOfTypes(
+      this.script.recipe, this.script.recipe.rootEntry
+    )) {
+      const commandConfig = RecipeCommandRegistry[recipeCommand.commandBlockType];
+
+      for (const configArgument of commandConfig.configArguments) {
+        const configArgumentValue = recipeCommand.payload[configArgument.name].toString();
+        scriptArguments.commandBlockData[recipeCommand.id] ??= {};
+
+        if (configArgumentValue.includes('${{')) {
+          scriptArguments.commandBlockData[recipeCommand.id][configArgument.name] = async () => {
+            let replacedValue = configArgumentValue;
+            this.logger.log(`Config ${configArgument.name} Argument RAW: ${configArgumentValue}`);
+            for (const matchAllElement of configArgumentValue.matchAll(JSONATA_REGEX)) {
+              // todo cache jsonataQuery
+              const jsonataQuery = matchAllElement[1].trim();
+              const jsonataExpression = jsonata(jsonataQuery);
+              replacedValue = replacedValue.replaceAll(matchAllElement[0], await jsonataExpression.evaluate(triggerActionPayload))
+            }
+
+            this.logger.log(`Config ${configArgument.name} Argument Replaced: ${replacedValue}`);
+            return replacedValue;
+          };
+        } else {
+          scriptArguments.commandBlockData[recipeCommand.id][configArgument.name] = () => {
+            return Promise.resolve(recipeCommand.payload[configArgument.name]);
+          };
+        }
+      }
+    }
   }
 
   public dispose(): void {

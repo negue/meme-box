@@ -1,3 +1,13 @@
+## 2023.1.0
+
+### Shoutout Users by Command Blocks
+(insert screenshot here)
+You can now shoutout a specific person by adding a Shoutout Command .. or
+
+### Parse Trigger Payload as Command Block argument variables (maybe need to rephrase it)
+With the help of a [very powerful json query library: JSONata](https://jsonata.org) it is now possible to parse trigger payloads (twitch message, raid, etc) and use those as variables for Arguments of Command Blocks.
+(insert screenshot here)
+
 ## 2022.1.1
 
 ### New Command Block "Random Command Group"

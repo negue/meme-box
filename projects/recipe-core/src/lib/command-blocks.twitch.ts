@@ -20,13 +20,14 @@ export function registerTwitchCommandBlocks (
       {
         name: "text",
         label: "Message to write",
-        type: "textarea"
+        type: "textarea",
+        flags: {
+          canUseVariables: true,
+        }
       }
     ],
-    toScriptCode: (step) => {
-      const textToSay = step.payload.text as string;
-
-      return `twitch.say('${textToSay}');`;
+    toScriptCode: ({step, commandBlock}) => {
+      return `twitch.say(${commandBlock.argument('text')});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
       const textToSay = payload.text as string;
@@ -43,13 +44,14 @@ export function registerTwitchCommandBlocks (
       {
         name: "username",
         label: "Username to Shoutout",
-        type: "text"
+        type: "text",
+        flags: {
+          canUseVariables: true,
+        }
       }
     ],
-    toScriptCode: (step) => {
-      const username = step.payload.username as string;
-
-      return `twitch.shoutout('${username}');`;
+    toScriptCode: ({step, commandBlock}) => {
+      return `twitch.shoutout(${commandBlock.argument('username')});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
       const username = payload.username as string;
@@ -66,7 +68,10 @@ export function registerTwitchCommandBlocks (
       {
         name: "text",
         label: "Announcement to send",
-        type: "textarea"
+        type: "textarea",
+        flags: {
+          canUseVariables: true,
+        }
       },
       {
         name: "color",
@@ -82,11 +87,10 @@ export function registerTwitchCommandBlocks (
         ]
       }
     ],
-    toScriptCode: (step) => {
-      const textToSay = step.payload.text as string;
+    toScriptCode: ({step, commandBlock}) => {
       const color = step.payload.color as string;
 
-      return `twitch.sendAnnouncement('${textToSay}','${color}');`;
+      return `twitch.sendAnnouncement(${commandBlock.argument('text')},'${color}');`;
     },
     commandEntryLabelAsync: (queries, payload) => {
       const textToSay = payload.text as string;
@@ -150,8 +154,8 @@ export function registerTwitchCommandBlocks (
         ]
       }
     ],
-    toScriptCode: (command) => {
-      const length = command.payload.length as string;
+    toScriptCode: ({step}) => {
+      const length = step.payload.length as string;
       return `twitch.startCommercial(${+length});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
@@ -206,7 +210,7 @@ export function registerTwitchCommandBlocks (
     configArguments: [
       ...chatSettingsArray
     ],
-    toScriptCode: (step) => {
+    toScriptCode: ({step}) => {
       return `twitch.updateChatSettings(${JSON.stringify(step.payload)});`;
     },
     commandEntryLabelAsync: (queries, payload) => {
@@ -228,7 +232,7 @@ export function registerTwitchCommandBlocks (
           label: 'Mode Active'
         }
       ],
-      toScriptCode: (step) => {
+      toScriptCode: ({step}) => {
         return `twitch.updateChatSettings(${JSON.stringify(step.payload)});`;
       },
       commandEntryLabelAsync: (queries, payload) => {
