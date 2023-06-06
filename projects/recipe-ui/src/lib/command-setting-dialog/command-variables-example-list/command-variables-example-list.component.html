@@ -1,7 +1,15 @@
-<div *ngFor="let exampleEntry of examples">
-  <h3>{{ exampleEntry.title}}:</h3>
+Command Variables using <a mat-button color="primary" href="http://docs.jsonata.org/overview.html">the awesome Library: JSONata</a> to get the variable value out of the trigger payload.
 
-  <code>{{exampleEntry.variableExample}}</code>
-  <br>
-  <small>{{exampleEntry.resultingValue}}</small>
-</div>
+<br>
+<br>
+
+  <ng-container *ngFor="let exampleEntry of examples">
+
+        <b>{{ exampleEntry.title}}: <i>Example: {{exampleEntry.resultingValue}}</i></b>
+   <br>
+   <br>
+    <code>{{exampleEntry.variableExample}}</code>
+    <br>
+    <br>
+  </ng-container>
+

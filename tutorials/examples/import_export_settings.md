@@ -1,8 +1,8 @@
 # Import / Export
 
-Currently it is only possible to im-/export Scripts or Widgets.
+Currently it is only possible to im-/export Scripts/Recipes or Widgets.
 
-## Scripts
+## [Scripts](./scripts) / [Recipes](./recipes)
 
 When you edit a script and then open "Edit Script+Config", then you can find those Export / Import Buttons
 
