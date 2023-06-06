@@ -183,12 +183,15 @@ export class ScriptContext implements CanDispose {
       commandBlockData: {}
     };
 
-    this.attacheRecipeCommandArguments(scriptArguments);
+    this.attacheRecipeCommandArguments(scriptArguments, triggerActionPayload);
 
     await this.scriptToCall(scriptArguments);
   }
 
-  private attacheRecipeCommandArguments(scriptArguments: ExecutionScriptPayload) {
+  private attacheRecipeCommandArguments(
+    scriptArguments: ExecutionScriptPayload,
+    triggerActionPayload: TriggerAction
+  ) {
     if (this.script.type !== ActionType.Recipe) {
       return;
     }
