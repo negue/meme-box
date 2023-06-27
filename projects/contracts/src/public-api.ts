@@ -3,8 +3,10 @@
  */
 
 export * from './lib/types';
+export * from './lib/types.state';
 export * from './lib/types.outdated';
 export * from './lib/action.types';
+export * from './lib/trigger.types';
 export * from './lib/createInitialState';
 export * from './lib/constants';
 export * from './lib/actions';

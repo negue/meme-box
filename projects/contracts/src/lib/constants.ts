@@ -1,5 +1,3 @@
-import {TwitchEventTypes} from './types';
-
 // TODO merge App / Server Endpoint CONSTANTS
 
 export const ENDPOINTS = {
@@ -72,18 +70,6 @@ export const ENDPOINTS = {
     PREVIEW: '/preview/'
   },
 }
-
-export const TwitchTypesArray = [
-  // TwitchEventTypes.follow,
-  TwitchEventTypes.bits,
-  TwitchEventTypes.channelPoints,
-  // TwitchEventTypes.host,
-  TwitchEventTypes.message,
-  TwitchEventTypes.raid,
-  TwitchEventTypes.ban,
-  TwitchEventTypes.subscription,
-  TwitchEventTypes.gift
-];
 
 export const WEBSOCKET_PATHS = {
   TWITCH_EVENTS: '/ws/twitch_events',
