@@ -1,14 +1,15 @@
-import { Service } from "@tsed/di";
-import { ActionTriggerHandler } from "./actions/action-trigger.handler";
-import { TwitchBootstrap } from "./twitch/twitch.bootstrap";
-import { WebsocketBootstrap } from "./websockets/websocket.bootstrap";
-import { ScriptHandler } from "./actions/scripts/script.handler";
-import { ObsConnection } from "./obs-connection";
-import { ObsApi } from "./actions/scripts/apis/obs.api";
-import { Persistence } from "../persistence";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "./contracts";
-import { Logger } from "@tsed/logger";
+import {Service} from "@tsed/di";
+import {ActionTriggerHandler} from "./actions/action-trigger.handler";
+import {TwitchBootstrap} from "./twitch/twitch.bootstrap";
+import {WebsocketBootstrap} from "./websockets/websocket.bootstrap";
+import {ScriptHandler} from "./actions/scripts/script.handler";
+import {ObsConnection} from "./obs-connection";
+import {ObsApi} from "./actions/scripts/apis/obs.api";
+import {Persistence} from "../persistence";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "./contracts";
+import {Logger} from "@tsed/logger";
+import {TimedHandler} from "./triggers/timed.handler";
 
 /**
  * This file is used to bootstrap all services that "just" do some work
@@ -22,6 +23,7 @@ export class BootstrapServices {
     _twitchBootstrap: TwitchBootstrap,
     _websocketBootstrap: WebsocketBootstrap,
     _scriptHandler: ScriptHandler,
+    _timedTriggerHandler: TimedHandler,
     private _obsConnection: ObsConnection,
     private _mainLogger: Logger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
@@ -30,6 +32,8 @@ export class BootstrapServices {
        this.connectToObsAndRefreshScreens(),
        "connectToObsAndRefreshScreens"
      );
+
+     _timedTriggerHandler.startTimers();
   }
 
   private async tryCatchAsync(promiseToWait: Promise<unknown>,

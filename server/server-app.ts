@@ -5,7 +5,6 @@ import {debounceTime, startWith, take} from "rxjs/operators";
 import {PersistenceInstance} from "./persistence";
 import {ACTIONS, ChangedInfo} from "@memebox/contracts";
 import {LOGGER} from "./logger.utils";
-import {TimedHandler} from "./timed.handler";
 
 import https from 'https';
 import currentVersionJson from '@memebox/version';
@@ -61,9 +60,6 @@ PersistenceInstance.hardRefresh$()
     sendDataToAllSockets(ACTIONS.UPDATE_DATA);
   });
 
-const timedHandler = new TimedHandler();
-timedHandler.startTimers();
-
 PersistenceInstance.dataUpdated$()
   .pipe(
     debounceTime(600),
@@ -74,12 +70,6 @@ PersistenceInstance.dataUpdated$()
   .subscribe((dataChanged) => {
     // TODO move to a different place?
     sendDataToAllSockets(ACTIONS.UPDATE_DATA+'='+JSON.stringify(dataChanged));
-
-    if (['everything', 'timers'].includes(dataChanged.dataType)) {
-      timedHandler.refreshTimers(dataChanged.id);
-
-      LOGGER.info(`Refreshing TimedHandler`);
-    }
   });
 
 // Check Version & Log it

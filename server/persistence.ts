@@ -10,9 +10,8 @@ import {
   ScreenMedia,
   SettingsState,
   Tag,
-  TimedAction,
+  TriggerConfig,
   TwitchConfig,
-  TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
 import {Observable, Subject} from "rxjs";
@@ -315,95 +314,53 @@ export class Persistence {
 
 
   /*
-   *  Twitch Event Settings
+   *  Trigger Settings
    */
 
-  public addTwitchEvent(twitchEvent: TwitchTrigger): string  {
-    twitchEvent.id = uuid();
-    this.data.twitchEvents[twitchEvent.id] = twitchEvent;
+  public addTrigger(trigger: TriggerConfig): string  {
+    trigger.id = uuid();
+    this.data.triggers[trigger.id] = trigger;
 
     this.saveData({
-      dataType: 'twitch-events',
+      dataType: 'triggers',
       changeType: 'added',
-      id: twitchEvent.id
+      id: trigger.id
     });
 
-    return twitchEvent.id;
+    return trigger.id;
   }
 
-  public updateTwitchEvent(id: string, twitchEvent: TwitchTrigger) {
-    twitchEvent.id = id;
+  public updateTrigger(id: string, trigger: TriggerConfig) {
+    trigger.id = id;
 
-    updateItemInDictionary(this.data.twitchEvents, twitchEvent);
+    updateItemInDictionary(this.data.triggers, trigger);
 
     this.saveData({
-      dataType: 'twitch-events',
+      dataType: 'triggers',
       changeType: 'changed',
-      id: twitchEvent.id
+      id: trigger.id
     });
 
-    return twitchEvent;
+    return trigger;
   }
 
-  public deleteTwitchEvent(id: string): void  {
-    deleteItemInDictionary(this.data.twitchEvents, id);
+  public deleteTrigger(id: string): void  {
+    deleteItemInDictionary(this.data.triggers, id);
 
 
     this.saveData({
-      dataType: 'twitch-events',
+      dataType: 'triggers',
       changeType: 'removed',
       id
     });
   }
 
-  public listTwitchEvents(): TwitchTrigger[] {
-    return Object.values(this.data.twitchEvents);
-  }
+  public listTrigger(triggerTypes?: string[]): TriggerConfig[] {
+    if (triggerTypes) {
+      return Object.values(this.data.triggers).filter(t => triggerTypes.includes(t.type));
+    }
 
-
-  /*
-   *  Timed Actions Settings
-   */
-
-  public addTimedEvent(timedEvent: TimedAction): string  {
-    timedEvent.id = uuid();
-    this.data.timers[timedEvent.id] = timedEvent;
-
-    this.saveData({
-      dataType: 'timers',
-      changeType: 'added',
-      id: timedEvent.id
-    });
-    return timedEvent.id;
-  }
-
-  public updateTimedEvent(id: string, timedEvent: TimedAction) {
-    timedEvent.id = id;
-
-    updateItemInDictionary(this.data.timers, timedEvent);
-
-    this.saveData({
-      dataType: 'timers',
-      changeType: 'changed',
-      id: timedEvent.id
-    });
-
-    return timedEvent;
-  }
-
-  public deleteTimedEvent(id: string): void  {
-    deleteItemInDictionary(this.data.timers, id);
-
-
-    this.saveData({
-      dataType: 'timers',
-      changeType: 'removed',
-      id
-    });
-  }
-
-  public listTimedEvents(): TimedAction[] {
-    return Object.values(this.data.timers);
+    return Object.values(this.data.triggers);
   }
 
   /*
@@ -555,7 +512,7 @@ export class Persistence {
     this.data.clips = {};
     this.data.tags = {};
     this.data.screen = {};
-    this.data.twitchEvents = {};
+    this.data.triggers = {};
 
     this.saveData({
       dataType: 'everything',
