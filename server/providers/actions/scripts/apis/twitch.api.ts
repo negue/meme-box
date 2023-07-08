@@ -1,9 +1,9 @@
-import {TwitchConnector} from "../../../twitch/twitch.connector";
+import {TwitchConnector} from "../../../triggers/twitch-triggers/twitch.connector";
 import {DisposableBase} from "./disposableBase";
 import {takeUntil} from "rxjs/operators";
 import {ActionType, TwitchAnnouncementColors, TwitchConnectionType} from "@memebox/contracts";
 import {TwitchDataProvider} from "../../../twitch/twitch.data-provider";
-import {TwitchQueueEventBus} from "../../../twitch/twitch-queue-event.bus";
+import {TwitchQueueEventBus} from "../../../triggers/twitch-triggers/twitch-queue-event.bus";
 import {randomElement} from "@memebox/utils";
 
 export class TwitchApi extends DisposableBase {

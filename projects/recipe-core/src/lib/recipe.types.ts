@@ -1,7 +1,7 @@
 import {uuid} from "@gewd/utils";
-import {ActionType, TriggerActionOverrides, UserDataState} from "@memebox/contracts";
-import {AppQueries} from "@memebox/app-state";
+import {Action, ActionType, Dictionary, Screen, Tag, TriggerActionOverrides, UserDataState} from "@memebox/contracts";
 import {RecipeStepConfigArguments} from "./recipeStepConfigArgument";
+import {Observable} from "rxjs";
 
 export interface RecipeSubCommandInfo {
   name: string; // property to save the subSteps
@@ -116,13 +116,19 @@ export type CommandBlockCodeGenerationPayload = GenerateCodeByStepPayload & {
   }
 }
 
+export interface RecipeStateQueries{
+  screenMap$: Observable<Dictionary<Screen>>;
+  tagList$: Observable<Tag[]>;
+
+  getActionById$(actionId: string): Observable<Action>;
+}
 
 // Registry Types
 export interface RecipeCommandDefinition {
   pickerLabel: string;
-  commandEntryLabelAsync: (queries: AppQueries, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => string|Promise<string>;
-  subCommandBlockLabelAsync?: (queries: AppQueries, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
-  entryIcon?: (queries: AppQueries,  payload: RecipeEntryCommandPayload) => string|Promise<string>;
+  commandEntryLabelAsync: (queries: RecipeStateQueries, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => string|Promise<string>;
+  subCommandBlockLabelAsync?: (queries: RecipeStateQueries, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
+  entryIcon?: (queries: RecipeStateQueries,  payload: RecipeEntryCommandPayload) => string|Promise<string>;
   commandGroup: string;
   configArguments: RecipeStepConfigArguments[]; // each argument name will be applied to the payload as prop
 

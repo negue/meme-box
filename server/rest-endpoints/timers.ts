@@ -1,8 +1,5 @@
-import {PersistenceInstance} from "../persistence";
-
 import * as express from 'express';
 import {body} from "express-validator";
-import {validOrLeave} from "../validations";
 
 const timerPostValidator = [
   body('clipId').isString(),
@@ -23,7 +20,7 @@ const timerPutValidator = [
  * Twitch Trigger Config API
  */
 export const TIMER_ROUTES = express.Router();
-
+/*
 TIMER_ROUTES
   .get('/', (req, res) => {
     res.send(PersistenceInstance.listTimedEvents());
@@ -44,3 +41,4 @@ TIMER_ROUTES
   res.send(PersistenceInstance.deleteTimedEvent(req.params['eventId']));
 });
 
+*/

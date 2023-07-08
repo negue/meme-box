@@ -2,7 +2,7 @@ import {Service, UseOpts} from "@tsed/di";
 import {NamedLogger} from "../named-logger";
 import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
 import {WEBSOCKET_PATHS} from "@memebox/contracts";
-import {TwitchQueueEventBus} from "../twitch/twitch-queue-event.bus";
+import {TwitchQueueEventBus} from "../triggers/twitch-triggers/twitch-queue-event.bus";
 
 @Service()
 export class TwitchEventsWebsocket extends AbstractWebsocketHandler {

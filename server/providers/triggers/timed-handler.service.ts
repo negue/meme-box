@@ -10,13 +10,15 @@ import {uuid} from "@gewd/utils";
 import Timeout = NodeJS.Timeout;
 
 interface TimerTriggerConfig extends TriggerConfig {
+  type: 'timer.ms';
+
   argumentValues: {
     interval: number
   };
 }
 
 @Service()
-export class TimedHandler {
+export class TimedHandlerService {
   private intervalDictionary: Dictionary<Timeout> = {};
 
   constructor(
@@ -103,8 +105,6 @@ export class TimedHandler {
     // easiest way
     this.stopTimers(timerId);
     this.startTimers(timerId);
-
-    // todo more fine-tuned approach, only reset the changed timers
   }
 
   stopTimers(timerId?: string): void  {

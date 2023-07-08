@@ -1,5 +1,5 @@
 import {ChatUserstate, SubMethods, Userstate} from "tmi.js";
-import {TwitchEventTypes} from "./types";
+import {TwitchEventTypes} from "./trigger-twitch.types";
 
 export interface TwitchEvent {
   type: TwitchEventTypes;

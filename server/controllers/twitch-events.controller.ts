@@ -1,10 +1,9 @@
-import {BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use} from "@tsed/common";
+import {Controller, Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence, PersistenceInstance} from "../persistence";
-import {AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger} from "@memebox/contracts";
+import {Persistence} from "../persistence";
+import {AllTwitchEvents, ENDPOINTS, TwitchEventTypes} from "@memebox/contracts";
 import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
-import {twitchPostValidator, twitchPutValidator, validOrLeave} from "../validations";
-import {TwitchQueueEventBus} from "../providers/twitch/twitch-queue-event.bus";
+import {TwitchQueueEventBus} from "../providers/triggers/twitch-triggers/twitch-queue-event.bus";
 import {takeLatestItems} from "@memebox/utils";
 import {filter} from "rxjs/operators";
 
@@ -27,9 +26,11 @@ export class TwitchEventsController {
     });
   }
 
+  /*
   @Get('/')
   getTwitchEvents(): TwitchTrigger[] {
-    return PersistenceInstance.listTwitchEvents();
+    return [];
+    //return PersistenceInstance.listTrigger();
   }
 
 
@@ -38,7 +39,8 @@ export class TwitchEventsController {
   addTwitchEvent(
     @BodyParams() newTrigger: TwitchTrigger
   ): string {
-    return PersistenceInstance.addTwitchEvent(newTrigger)
+    return '';
+    //return PersistenceInstance.addTwitchEvent(newTrigger)
   }
 
   @Put('/:eventId')
@@ -47,7 +49,7 @@ export class TwitchEventsController {
     @PathParams("eventId") eventId: string,
     @BodyParams() trigger: TwitchTrigger
   ): any {
-    PersistenceInstance.updateTwitchEvent(eventId, trigger)
+    //PersistenceInstance.updateTrigger(eventId, trigger)
 
     return {
       ok: true
@@ -58,7 +60,7 @@ export class TwitchEventsController {
   deleteTwitchEvent(
     @PathParams("eventId") eventId: string
   ): void {
-    PersistenceInstance.deleteTwitchEvent(eventId);
+    //PersistenceInstance.deleteTrigger(eventId);
   }
 
   @Post(ENDPOINTS.TWITCH_EVENTS.TRIGGER_EVENT)
@@ -72,4 +74,6 @@ export class TwitchEventsController {
   getLast20Events(): AllTwitchEvents[] {
     return this.latest20Events;
   }
+
+   */
 }

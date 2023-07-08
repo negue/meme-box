@@ -9,7 +9,8 @@ import {Persistence} from "../persistence";
 import {Inject} from "@tsed/common";
 import {PERSISTENCE_DI} from "./contracts";
 import {Logger} from "@tsed/logger";
-import {TimedHandler} from "./triggers/timed.handler";
+import {TimedHandlerService} from "./triggers/timed-handler.service";
+import {TwitchTriggerHandler} from "./triggers/twitch-triggers/twitch-trigger-handler.service";
 
 /**
  * This file is used to bootstrap all services that "just" do some work
@@ -23,7 +24,8 @@ export class BootstrapServices {
     _twitchBootstrap: TwitchBootstrap,
     _websocketBootstrap: WebsocketBootstrap,
     _scriptHandler: ScriptHandler,
-    _timedTriggerHandler: TimedHandler,
+    _timedTriggerHandler: TimedHandlerService,
+     _twitchHandler: TwitchTriggerHandler,
     private _obsConnection: ObsConnection,
     private _mainLogger: Logger,
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,

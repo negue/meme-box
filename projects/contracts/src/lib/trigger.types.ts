@@ -1,6 +1,4 @@
 import {HasClipId, HasExtendedData, HasId, HasRecipe, HasTargetScreenId} from "./types";
-import {AllTwitchEvents, DefaultImage} from "@memebox/contracts";
-import {ChatUserstate} from "tmi.js";
 
 // Some kind of list of possible trigger types you can use
 // Triggers -> using one of these trigger Types
@@ -92,9 +90,10 @@ export interface TriggerConfig
 {
   type: string;
 
+  active: boolean;
   label: string; // user filled value
 
-  argumentValues: Record<ConfigArguments['type'], unknown>;
+  argumentValues: Record<string, unknown>;
 }
 
 export interface TriggerTypeGroup {
@@ -133,89 +132,10 @@ class TriggerTypeRegistrationClass {
 
 export const TriggerTypeRegistration = new TriggerTypeRegistrationClass();
 
-export interface TwitchTriggerCommand {
-  command?: TwitchTrigger; // Config-Object
-  tags?: ChatUserstate;
-  twitchEvent?: AllTwitchEvents
-}
-
-export interface TwitchTriggerChannelPointData {
-  id: string;
-  image?: null;
-  background_color: string;
-  cost: number;
-  title: string;
-  default_image: DefaultImage;
-}
-export enum TwitchEventTypes {
-  message = 'message',
-  follow = 'follow',
-  bits = 'bits',
-  raid = 'raid',
-  host = 'host',
-  channelPoints = 'channelPoints',
-  ban = 'ban',
-  subscription = "subscription",
-  gift = "gift"
-}
-
-export interface TwitchEventFields {
-  [event:string]: {
-    fields: {
-      minValue?: { enable: boolean, placeholder?: string},
-      maxValue?: { enable: boolean, placeholder?: string},
-      channelPointId?: { enable: boolean }
-    }
-  }
-}
-
 export interface TriggerBase
   extends HasId, HasClipId, HasTargetScreenId, HasExtendedData {
 
 }
 
-// TODO RENAME TimedAction/ Twitch so that those are recognized to be a trigger
-
-export interface TimedAction extends TriggerBase {
-  // id => has nothing to do with clipID
-  everyXms: number;
-  active: boolean;
-}
 
 // TODO split TwitchTrigger as an union type so that not all properties are available everywhere
-
-export interface TwitchTrigger extends Omit<TriggerBase, 'clipId'>, HasRecipe {
-  name: string;
-  // screenId:      string; // TODO
-  event: TwitchEventTypes;
-  contains?: string; // additional settings TODO
-  aliases?: string[];
-
-  active: boolean;
-
-  roles: string[]; // maybe enum
-  minAmount?: number;
-  maxAmount?: number;
-
-  cooldown?: number;
-  canBroadcasterIgnoreCooldown?: boolean;
-
-  channelPointId?: string;
-
-  channelPointData?:TwitchTriggerChannelPointData;
-
-  // !magic
-  // TODO other options per type
-}
-
-export const TwitchTypesArray = [
-  // TwitchEventTypes.follow,
-  TwitchEventTypes.bits,
-  TwitchEventTypes.channelPoints,
-  // TwitchEventTypes.host,
-  TwitchEventTypes.message,
-  TwitchEventTypes.raid,
-  TwitchEventTypes.ban,
-  TwitchEventTypes.subscription,
-  TwitchEventTypes.gift
-];

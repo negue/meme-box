@@ -1,4 +1,16 @@
-import {AllTwitchEvents, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
+import {
+  AllTwitchEvents,
+  TwitchBanTriggerConfig,
+  TwitchChannelPointTriggerConfig,
+  TwitchCheerTriggerConfig,
+  TwitchEventTypes,
+  TwitchGiftSubscriptionTriggerConfig,
+  TwitchMessageTriggerConfig,
+  TwitchRaidTriggerConfig,
+  TwitchSubscriptionTriggerConfig,
+  TwitchTriggerCommand,
+  TypedTwitchTriggerConfigs
+} from "@memebox/contracts";
 import * as tmi from "tmi.js";
 import {CommonUserstate} from "tmi.js";
 
@@ -9,7 +21,7 @@ declare module 'tmi.js' {
 }
 
 export function* getCommandsOfTwitchEvent(
-  twitchSettingsList: TwitchTrigger[],
+  twitchSettingsList: TypedTwitchTriggerConfigs[],
   twitchEvent: AllTwitchEvents
 ): IterableIterator<TwitchTriggerCommand> {
   const onlyActiveConfigs = twitchSettingsList.filter(s => s.active);
@@ -23,13 +35,22 @@ export function* getCommandsOfTwitchEvent(
         twitchEvent
       );
 
-    } break;
+    }
+      break;
     case TwitchEventTypes.bits: {
       yield* returnAllCommandsByType(
         onlyActiveConfigs,
         twitchEvent,
-        (currentTriggerConfig, event) =>
-          checkEventInRange(event.payload.bits, currentTriggerConfig)
+        (currentTriggerConfig, event) => {
+          if (currentTriggerConfig.type !== "twitch.cheer") {
+            return false;
+          }
+
+          return checkEventInRange(event.payload.bits,
+            currentTriggerConfig.argumentValues.min_bits,
+            currentTriggerConfig.argumentValues.max_bits
+          );
+        }
       );
 
       yield* returnAllCommandsByMessage(
@@ -46,7 +67,10 @@ export function* getCommandsOfTwitchEvent(
         onlyActiveConfigs,
         twitchEvent,
         (currentTriggerConfig, event) =>
-          checkEventInRange(event.payload.viewers, currentTriggerConfig)
+          currentTriggerConfig.type === "twitch.raid" &&
+          checkEventInRange(event.payload.viewers,
+            currentTriggerConfig.argumentValues.min_viewer,
+            currentTriggerConfig.argumentValues.max_viewer)
       );
 
       break;
@@ -55,7 +79,9 @@ export function* getCommandsOfTwitchEvent(
       yield* returnAllCommandsByType(
         onlyActiveConfigs,
         twitchEvent,
-        (currentTriggerConfig, event) => event.payload.rewardId === currentTriggerConfig.channelPointId
+        (currentTriggerConfig, event) =>
+          currentTriggerConfig.type === "twitch.channelpoint"
+          && event.payload.rewardId === currentTriggerConfig.argumentValues.channelPointId
       );
 
       yield* returnAllCommandsByMessage(
@@ -81,7 +107,8 @@ export function* getCommandsOfTwitchEvent(
         twitchEvent
       );
 
-    } break;
+    }
+      break;
 
     // otherwise the default will be called
     default: {
@@ -95,51 +122,63 @@ export function* getCommandsOfTwitchEvent(
   }
 }
 
-function checkEventInRange(amount: number, twitchSetting: TwitchTrigger) {
-  const minAmount = twitchSetting.minAmount || 0;
-  const maxAmount = twitchSetting.maxAmount || Infinity;
+function checkEventInRange(amount: number, minAmount?: number, maxAmount?: number) {
+  minAmount ??= 0;
+  maxAmount ??= Infinity;
 
   return amount >= minAmount && amount <= maxAmount;
 }
 
-function* returnAllCommandsByType<TTwitchEvent extends AllTwitchEvents> (
-  twitchSettingsList: TwitchTrigger[],
+type TriggerEventsToTriggerConfigs = {
+  [TwitchEventTypes.message]: TwitchMessageTriggerConfig,
+  [TwitchEventTypes.ban]: TwitchBanTriggerConfig,
+  [TwitchEventTypes.gift]: TwitchGiftSubscriptionTriggerConfig,
+  [TwitchEventTypes.raid]: TwitchRaidTriggerConfig,
+  [TwitchEventTypes.bits]: TwitchCheerTriggerConfig,
+  [TwitchEventTypes.subscription]: TwitchSubscriptionTriggerConfig,
+  [TwitchEventTypes.channelPoints]: TwitchChannelPointTriggerConfig,
+}
+
+function* returnAllCommandsByType<TTwitchEvent extends AllTwitchEvents>(
+  twitchSettingsList: TypedTwitchTriggerConfigs[],
   twitchEvent: TTwitchEvent,
-  condition: (currentTriggerConfig: TwitchTrigger, event: TTwitchEvent) => boolean = () => true
-) : IterableIterator<TwitchTriggerCommand> {
+  condition: (currentTriggerConfig: TypedTwitchTriggerConfigs, event: TTwitchEvent) => boolean = () => true
+): IterableIterator<TwitchTriggerCommand> {
   for (const twitchSetting of twitchSettingsList) {
-    if (twitchEvent.type === twitchSetting.event && condition(twitchSetting, twitchEvent)) {
+    if (condition(twitchSetting, twitchEvent)) {
       yield {
-        command: twitchSetting,
+        config: twitchSetting,
         twitchEvent
       };
     }
   }
 }
 
-function* returnAllCommandsByMessage (
-  twitchSettingsList: TwitchTrigger[],
+function* returnAllCommandsByMessage(
+  twitchSettingsList: TypedTwitchTriggerConfigs[],
   message: string,
   chatUserState: CommonUserstate,
   twitchEvent: AllTwitchEvents
-) : IterableIterator<TwitchTriggerCommand> {
+): IterableIterator<TwitchTriggerCommand> {
   if (!message) {
     return;
   }
 
-  let foundCommand: TwitchTrigger = null;
+  let foundCommand: TwitchMessageTriggerConfig = null;
 
   const toLoweredMessage = message.toLowerCase();
 
   for (const twitchSetting of twitchSettingsList) {
     // check if the Twitch Event Config is triggered by "message"
-    if (twitchSetting.event !== TwitchEventTypes.message) {
+    if (twitchSetting.type !== "twitch.message") {
       continue;
     }
 
+    const {message, aliasList} = twitchSetting.argumentValues;
+
     // TODO improve multiple twitch commands with the same start name
     // TODO maybe with an order and "stop handling after this" ???
-    const aliasesToCheck = [twitchSetting.contains, ...(twitchSetting.aliases ?? [])]
+    const aliasesToCheck = [message, ...(aliasList ?? [])]
       .map(a => a.toLowerCase());
 
     const foundAnyCommandsInMessage = aliasesToCheck.some(alias => toLoweredMessage.includes(alias));
@@ -153,7 +192,7 @@ function* returnAllCommandsByMessage (
         //!partyhard
         // always take the "longer" command
 
-        if (foundCommand.contains.length < twitchSetting.contains.length) {
+        if (foundCommand.argumentValues.message.length < message.length) {
           foundCommand = twitchSetting;
         }
       }
@@ -162,7 +201,7 @@ function* returnAllCommandsByMessage (
 
   if (foundCommand) {
     yield {
-      command: foundCommand,
+      config: foundCommand,
       tags: chatUserState,
       twitchEvent
     };
