@@ -3,7 +3,7 @@ import {AllTwitchEvents, DefaultImage, TriggerConfig} from "@memebox/contracts";
 
 interface SharedTwitchTriggerConfig extends TriggerConfig {
   argumentValues: {
-    cooldown: number,
+    cooldown?: number,
     ignoreBroadcasterCooldown: boolean
   }
 }
@@ -55,8 +55,9 @@ export interface TwitchChannelPointTriggerConfig extends SharedTwitchTriggerConf
   argumentValues: SharedTwitchTriggerConfig['argumentValues'] & {
     channelPointId: string,
   }
-}
 
+  channelPointData?:TwitchTriggerChannelPointData;
+}
 
 export type TypedTwitchTriggerConfigs =
   | TwitchSubscriptionTriggerConfig

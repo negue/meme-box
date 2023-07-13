@@ -5,11 +5,11 @@ import {TwitchEventTypes, TwitchTriggerChannelPointData} from "@memebox/contract
 
 export interface StateV0 extends SettingsState {
   twitchEvents: Dictionary<TwitchTriggerV0>;
-  timers: Dictionary<TimedAction>;
+  timers: Dictionary<TimerActionV0>;
 }
 
 
-export interface TimedAction extends TriggerBase {
+export interface TimerActionV0 extends TriggerBase {
   // id => has nothing to do with clipID
   everyXms: number;
   active: boolean;

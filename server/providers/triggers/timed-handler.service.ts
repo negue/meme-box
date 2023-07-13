@@ -1,4 +1,10 @@
-import {ActionType, Dictionary, TriggerActionOrigin, TriggerConfig, TriggerTypeRegistration} from "@memebox/contracts";
+import {
+  ActionType,
+  Dictionary,
+  TimerTriggerConfig,
+  TriggerActionOrigin,
+  TriggerTypeRegistration
+} from "@memebox/contracts";
 import {Persistence} from "../../persistence";
 import {Service} from "@tsed/di";
 import {Inject} from "@tsed/common";
@@ -9,13 +15,6 @@ import {ScriptHandler} from "../actions/scripts/script.handler";
 import {uuid} from "@gewd/utils";
 import Timeout = NodeJS.Timeout;
 
-interface TimerTriggerConfig extends TriggerConfig {
-  type: 'timer.ms';
-
-  argumentValues: {
-    interval: number
-  };
-}
 
 @Service()
 export class TimedHandlerService {
@@ -66,7 +65,7 @@ export class TimedHandlerService {
   }
 
   startTimers(timerId?: string): void  {
-    const timedClips = this._persistence.listTrigger();
+    const timedClips = this._persistence.listTrigger(['timer.ms']);
 
     if (timerId) {
       const foundTimer = timedClips.find(timer => timer.id === timerId)
