@@ -1,7 +1,7 @@
 import { BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use } from "@tsed/common";
 import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
 import { AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand } from "@memebox/contracts";
-import { TwitchDataProvider } from "../providers/twitch/twitch.data-provider";
+import { TwitchDataProvider } from "@memebox/twitch-api";
 import { twitchPostValidator, twitchPutValidator, validOrLeave } from "../validations";
 import { ExampleTwitchCommandsSubject } from "../shared";
 import { TwitchQueueEventBus } from "../providers/twitch/twitch-queue-event.bus";

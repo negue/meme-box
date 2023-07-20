@@ -1,6 +1,6 @@
 import { Service } from "@tsed/di";
 import fetch from "node-fetch";
-import { TwitchAuthResult } from "@memebox/contracts";
+import { TwitchAuthResult } from "./twitch-data.types";
 import { TwitchAuthInformationProvider } from "./twitch.auth-information";
 import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
 import { Inject } from "@tsed/common";

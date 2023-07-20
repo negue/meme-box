@@ -1,7 +1,7 @@
 import { Controller, Get, Inject, PathParams, QueryParams } from "@tsed/common";
 import { Persistence, PERSISTENCE_DI, TOKEN_EXISTS_MARKER } from "@memebox/server-common";
 import { ChannelPointRedemption, ENDPOINTS, TwitchAuthInformation } from "@memebox/contracts";
-import { TwitchDataProvider } from "../providers/twitch/twitch.data-provider";
+import { TwitchDataProvider } from "@memebox/twitch-api";
 
 @Controller(ENDPOINTS.TWITCH_DATA.PREFIX)
 export class TwitchDataController {

@@ -4,7 +4,6 @@ import { debounceTime, startWith } from 'rxjs/operators';
 import {
   ChangedInfo,
   TWITCH_BOT_RESPONSE_CONSTS,
-  TwitchAuthResult,
   TwitchBanEvent,
   TwitchChannelPointRedemptionEvent,
   TwitchChatMessage,
@@ -27,7 +26,7 @@ import { getLevelOfTags } from "./twitch.functions";
 import { PubSubClient } from '@twurple/pubsub';
 import { StaticAuthProvider } from "@twurple/auth";
 
-import { TwitchAuthInformationProvider } from "./twitch.auth-information";
+import { TwitchAuthInformationProvider, TwitchAuthResult } from "@memebox/twitch-api";
 import { TwitchQueueEventBus } from "./twitch-queue-event.bus";
 import { ConnectionsStateHub, UpdateStateFunc } from "../connections-state.hub";
 

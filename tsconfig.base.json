@@ -51,6 +51,9 @@
       "@memebox/server-common": [
         "projects/server-common/src/index"
       ],
+      "@memebox/twitch-api": [
+        "projects/twitch-api/src/index"
+      ],
       "@memebox/ui-components": [
         "projects/ui-components/src/projects"
       ],

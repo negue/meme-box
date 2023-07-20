@@ -2,7 +2,7 @@ import { Service } from "@tsed/di";
 import fetch from "node-fetch";
 import { Inject } from "@tsed/common";
 import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
-import { TwitchAuthResult } from "@memebox/contracts";
+import { TwitchAuthResult } from "./twitch-data.types";
 
 
 @Service()
@@ -17,7 +17,7 @@ export class TwitchAuthInformationProvider {
     const currentTwitchConfig = this._persistence.getConfig(false).twitch;
 
     if (!currentTwitchConfig?.token) {
-      return null;
+      return Promise.resolve(null);
     }
 
     return TwitchAuthInformationProvider.getTwitchTokenAuthAsync(currentTwitchConfig.token);
@@ -29,7 +29,7 @@ export class TwitchAuthInformationProvider {
     const currentTwitchConfig = fullConfig.twitch?.bot?.auth;
 
     if (!currentTwitchConfig?.token) {
-      return null;
+      return Promise.resolve(null);
     }
 
     return TwitchAuthInformationProvider.getTwitchTokenAuthAsync(currentTwitchConfig.token);

@@ -21,7 +21,7 @@ import { ObsConnection } from "../../obs-connection";
 import { ObsApi } from "./apis/obs.api";
 import { TwitchConnector } from "../../twitch/twitch.connector";
 import { TwitchApi } from "./apis/twitch.api";
-import { TwitchDataProvider } from "../../twitch/twitch.data-provider";
+import { TwitchDataProvider } from "@memebox/twitch-api";
 import { setGlobalVMScope } from "./global.context";
 import { TwitchQueueEventBus } from "../../twitch/twitch-queue-event.bus";
 import { actionDataToScriptConfig, ScriptConfig } from "@memebox/utils";
