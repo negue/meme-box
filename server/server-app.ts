@@ -1,23 +1,21 @@
-import {createExpress} from "./express-server";
-import {sendDataToAllSockets} from "./websocket-server";
-import {DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE} from "./constants";
-import {debounceTime, startWith, take} from "rxjs/operators";
-import {PersistenceInstance} from "./persistence";
-import {ACTIONS, ChangedInfo} from "@memebox/contracts";
-import {LOGGER} from "./logger.utils";
-import {TimedHandler} from "./timed.handler";
+import { createExpress } from "./express-server";
+import { sendDataToAllSockets } from "./websocket-server";
+import { DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE } from "./constants";
+import { debounceTime, startWith, take } from "rxjs/operators";
+import { CLI_OPTIONS, LOGGER, PersistenceInstance } from "@memebox/server-common";
+import { ACTIONS, ChangedInfo } from "@memebox/contracts";
+import { TimedHandler } from "./timed.handler";
 
 import https from 'https';
 import currentVersionJson from '@memebox/version';
-import {STATE_OBJECT} from "./rest-endpoints/state";
-import {Lazy} from "@gewd/markdown/utils";
-import {CLI_OPTIONS} from "./utils/cli-options";
+import { STATE_OBJECT } from "./rest-endpoints/state";
+import { Lazy } from "@gewd/markdown/utils";
 
 // This file creates the "shared" server logic between headless / electron
 
 // TODO use config values?
 
-LOGGER.info('Version: '+currentVersionJson.VERSION_TAG, '-', currentVersionJson.COMMIT);
+LOGGER.info('Version: ' + currentVersionJson.VERSION_TAG, '-', currentVersionJson.COMMIT);
 
 const CONFIG_IS_LOADED$ = PersistenceInstance.configLoaded$.pipe(
   take(1)
@@ -27,7 +25,7 @@ export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value 
   const SAVED_PORT = PersistenceInstance.getConfig()?.customPort;
 
   if (CLI_OPTIONS.PORT) {
-    LOGGER.info(`Using the --port Argument: ${CLI_OPTIONS.PORT}`,  {
+    LOGGER.info(`Using the --port Argument: ${CLI_OPTIONS.PORT}`, {
       port: CLI_OPTIONS.PORT
     });
   } else if (!SAVED_PORT) {
@@ -44,7 +42,7 @@ export const ExpressServerLazy = Lazy.create(() => CONFIG_IS_LOADED$.then(value 
 
   const expressServer = createExpress(NEW_PORT);
   // Also mount the app here
- // server.on('request', expressServer);
+  // server.on('request', expressServer);
 
   return {
     expressServer
@@ -73,7 +71,7 @@ PersistenceInstance.dataUpdated$()
   )
   .subscribe((dataChanged) => {
     // TODO move to a different place?
-    sendDataToAllSockets(ACTIONS.UPDATE_DATA+'='+JSON.stringify(dataChanged));
+    sendDataToAllSockets(ACTIONS.UPDATE_DATA + '=' + JSON.stringify(dataChanged));
 
     if (['everything', 'timers'].includes(dataChanged.dataType)) {
       timedHandler.refreshTimers(dataChanged.id);
@@ -121,8 +119,7 @@ function versionCompare(v1, v2, options = null) {
 
     if (v1parts[i] > v2parts[i]) {
       return 1;
-    }
-    else {
+    } else {
       return -1;
     }
   }
@@ -170,23 +167,23 @@ PersistenceInstance.configLoaded$.pipe(
 });
 
 
-function loadJsonAsync (url: string): Promise<string> {
+function loadJsonAsync(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
 
-  https.get(url, function(res){
-    let body = '';
+    https.get(url, function (res) {
+      let body = '';
 
-    res.on('data', function(chunk){
-      body += chunk;
+      res.on('data', function (chunk) {
+        body += chunk;
+      });
+
+      res.on('end', function () {
+
+        resolve(body);
+      });
+    }).on('error', function (e) {
+      LOGGER.error(e, "Error loading version json");
     });
-
-    res.on('end', function(){
-
-      resolve(body);
-    });
-  }).on('error', function(e){
-    LOGGER.error(e, "Error loading version json");
-  });
 
   });
 }

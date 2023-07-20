@@ -1,13 +1,11 @@
-import {Service, UseOpts} from "@tsed/di";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "./contracts";
-import {Persistence} from "../persistence";
+import { Service, UseOpts } from "@tsed/di";
+import { Inject } from "@tsed/common";
+import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
 import OBSWebSocket from "obs-websocket-js";
-import {NamedLogger} from "./named-logger";
-import {timeoutAsync} from "./actions/scripts/apis/sleep.api";
-import {ObsConfig} from "@memebox/contracts";
-import {ConnectionsStateHub, UpdateStateFunc} from "./connections-state.hub";
-import {fromEventPattern, Subject} from "rxjs";
+import { timeoutAsync } from "./actions/scripts/apis/sleep.api";
+import { ObsConfig } from "@memebox/contracts";
+import { ConnectionsStateHub, UpdateStateFunc } from "./connections-state.hub";
+import { fromEventPattern, Subject } from "rxjs";
 
 export function onWsEvent$(ws: OBSWebSocket, type: string) {
   return fromEventPattern(
@@ -32,7 +30,7 @@ export class ObsConnection {
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     @UseOpts({name: 'ObsConnection'}) public logger: NamedLogger,
-    connectionStateHub: ConnectionsStateHub,
+    connectionStateHub: ConnectionsStateHub
   ) {
     this.obsConnectionState = connectionStateHub.registerService({
       name: 'OBS Connection'
@@ -82,11 +80,12 @@ export class ObsConnection {
     )
   }
 
-  async getCurrentConnection() : Promise<OBSWebSocket> {
+  async getCurrentConnection(): Promise<OBSWebSocket> {
     try {
       await this.connectIfNot();
       // eslint-disable-next-line no-empty
-    } catch (e) { }
+    } catch (e) {
+    }
 
     return this.obsConnection
   }
@@ -101,15 +100,14 @@ export class ObsConnection {
     this.tryReconnectingIsRunning = true;
 
     let lastError;
-    for (let i = 0; i<5;i++) {
+    for (let i = 0; i < 5; i++) {
       try {
         await this.connectIfNot();
         this.logger.info('Connected to OBS');
 
         return;
-      }
-      catch (e) {
-        const timeoutToTryAgain = (i+1) * 3000;
+      } catch (e) {
+        const timeoutToTryAgain = (i + 1) * 3000;
         lastError = e;
 
         this.logger.info(`Could not connect to OBS, retrying in ${timeoutToTryAgain}ms`);
@@ -122,7 +120,7 @@ export class ObsConnection {
     this.logger.error(lastError, 'Could not connect to OBS');
   }
 
-  async newConnection(hostname: string, password?: string) : Promise<OBSWebSocket> {
+  async newConnection(hostname: string, password?: string): Promise<OBSWebSocket> {
     const obsConnection = new OBSWebSocket();
     await this.obsConnection.connect({
       address: hostname,
@@ -134,7 +132,7 @@ export class ObsConnection {
 
   private connectionPromise: Promise<unknown>;
 
-  async connectIfNot () {
+  async connectIfNot() {
     if (this.connectionPromise) {
       await this.connectionPromise;
     }
@@ -152,7 +150,7 @@ export class ObsConnection {
     }
   }
 
-  private isObsConnected () {
+  private isObsConnected() {
     return this.isConnected;
   }
 

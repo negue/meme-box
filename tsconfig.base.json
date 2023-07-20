@@ -13,25 +13,62 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "target": "es2015",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["esnext", "es2017", "es2016", "es2015", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "esnext",
+      "es2017",
+      "es2016",
+      "es2015",
+      "dom"
+    ],
     "paths": {
-      "@memebox/action-variables": ["projects/action-variables/src/projects"],
+      "@memebox/action-variables": [
+        "projects/action-variables/src/projects"
+      ],
       "@memebox/action-variables/ui": [
         "projects/action-variables-ui/src/projects"
       ],
-      "@memebox/app-state": ["projects/app-state/src/projects"],
-      "@memebox/app/env": ["src/environments/environment"],
-      "@memebox/app/env/modules": ["src/environments/modules/modules"],
-      "@memebox/contracts": ["projects/contracts/src/public-api"],
-      "@memebox/shared-state": ["projects/shared-state/src/public-api"],
-      "@memebox/state-components": ["projects/state-components/src/projects"],
-      "@memebox/ui-components": ["projects/ui-components/src/projects"],
-      "@memebox/utils": ["projects/utils/src/public-api"],
-      "@memebox/version": ["src/version_info.json"],
-      "@memebox/recipe-ui": ["projects/recipe-ui/src/index"],
-      "@memebox/recipe-core": ["projects/recipe-core/src/index"]
+      "@memebox/app-state": [
+        "projects/app-state/src/projects"
+      ],
+      "@memebox/app/env": [
+        "src/environments/environment"
+      ],
+      "@memebox/app/env/modules": [
+        "src/environments/modules/modules"
+      ],
+      "@memebox/contracts": [
+        "projects/contracts/src/public-api"
+      ],
+      "@memebox/shared-state": [
+        "projects/shared-state/src/public-api"
+      ],
+      "@memebox/state-components": [
+        "projects/state-components/src/index"
+      ],
+      "@memebox/server-common": [
+        "projects/server-common/src/index"
+      ],
+      "@memebox/ui-components": [
+        "projects/ui-components/src/projects"
+      ],
+      "@memebox/utils": [
+        "projects/utils/src/public-api"
+      ],
+      "@memebox/version": [
+        "src/version_info.json"
+      ],
+      "@memebox/recipe-ui": [
+        "projects/recipe-ui/src/index"
+      ],
+      "@memebox/recipe-core": [
+        "projects/recipe-core/src/index"
+      ]
     }
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
