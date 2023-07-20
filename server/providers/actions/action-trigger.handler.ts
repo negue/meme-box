@@ -1,4 +1,4 @@
-import {Service, UseOpts} from "@tsed/di";
+import { Service, UseOpts } from "@tsed/di";
 import {
   Action,
   ACTION_TYPE_INFORMATION,
@@ -10,17 +10,15 @@ import {
   TriggerAction,
   TriggerActionOrigin
 } from "@memebox/contracts";
-import {Persistence} from "../../persistence";
-import {NamedLogger} from "../named-logger";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
-import {MemeboxWebsocket} from "../websockets/memebox.websocket";
+import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { Inject } from "@tsed/common";
+import { MemeboxWebsocket } from "../websockets/memebox.websocket";
 
-import {ActionQueueEventBus} from "./action-queue-event.bus";
-import {ScriptHandler} from "./scripts/script.handler";
-import {ActionActiveStateEventBus} from "./action-active-state-event.bus";
-import {ActionQueue} from "./action-queue";
-import {ActionActiveState} from "./action-active-state";
+import { ActionQueueEventBus } from "./action-queue-event.bus";
+import { ScriptHandler } from "./scripts/script.handler";
+import { ActionActiveStateEventBus } from "./action-active-state-event.bus";
+import { ActionQueue } from "./action-queue";
+import { ActionActiveState } from "./action-active-state";
 
 @Service()
 export class ActionTriggerHandler {
@@ -60,7 +58,7 @@ export class ActionTriggerHandler {
   }
 
   async triggerActionById(triggerPayload: TriggerAction) {
-   this.logTriggerInformation(triggerPayload);
+    this.logTriggerInformation(triggerPayload);
 
     const mediaConfig = this._allActionsMap[triggerPayload.id];
 
@@ -95,7 +93,7 @@ export class ActionTriggerHandler {
     return triggerPayload;
   }
 
-  triggerActionOnScreen (payload: TriggerAction): void  {
+  triggerActionOnScreen(payload: TriggerAction): void {
     if (!this._memeboxWebSocket.isScreenActive(payload.targetScreen)) {
       return;
     }
@@ -110,7 +108,7 @@ export class ActionTriggerHandler {
     this._memeboxWebSocket.sendDataToScreen(payload.targetScreen, `${ACTIONS.TRIGGER_CLIP}=${JSON.stringify(payload)}`);
   }
 
-  updateMediaEvent(payloadObs: TriggerAction): void  {
+  updateMediaEvent(payloadObs: TriggerAction): void {
     if (payloadObs.targetScreen) {
       this._memeboxWebSocket.sendDataToScreen(payloadObs.targetScreen, `${ACTIONS.UPDATE_MEDIA}=${JSON.stringify(payloadObs)}`);
       return;
@@ -134,12 +132,12 @@ export class ActionTriggerHandler {
     const actionInfo = this._allActionsMap[triggerPayload.id];
 
     const screenName = triggerPayload.targetScreen
-      ? this._allScreens.find(s => s.id === triggerPayload.targetScreen)?.name ?? '[Unknown] '+triggerPayload.targetScreen
+      ? this._allScreens.find(s => s.id === triggerPayload.targetScreen)?.name ?? '[Unknown] ' + triggerPayload.targetScreen
       : 'any';
 
     const originLabel = triggerPayload.origin
       ? TriggerActionOrigin[triggerPayload.origin]
-      : '[Unknown] ' +triggerPayload.origin;
+      : '[Unknown] ' + triggerPayload.origin;
 
     const typeName = ACTION_TYPE_INFORMATION[actionInfo.type]?.labelFallback ?? '[Unknown]';
 

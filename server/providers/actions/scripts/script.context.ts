@@ -1,23 +1,23 @@
-import {getScriptVariablesOrFallbackValues, ScriptConfig} from "@memebox/utils";
-import {VM, VMScript} from "vm2";
-import {ActionStoreAdapter, ActionStoreApi} from "@memebox/shared-state";
-import {Action, ActionType, Dictionary, TriggerAction} from "@memebox/contracts";
-import {Subject} from "rxjs";
-import {MemeboxApi} from "./apis/memebox.api";
-import {NamedLogger} from "../../named-logger";
-import {LoggerApi} from "./apis/logger.api";
-import {ObsApi} from "./apis/obs.api";
-import {TwitchApi} from "./apis/twitch.api";
-import {CanDispose} from "./apis/disposableBase";
-import {DummyWebSocketServer, RealWebSocketServer, WebSocketServerApi} from "./apis/wss.api";
-import {EventBusApi} from "./apis/eventbus.api";
-import {listAllEntriesOfTypes, RecipeCommandRegistry} from "@memebox/recipe-core";
+import { getScriptVariablesOrFallbackValues, ScriptConfig } from "@memebox/utils";
+import { VM, VMScript } from "vm2";
+import { ActionStoreAdapter, ActionStoreApi } from "@memebox/shared-state";
+import { Action, ActionType, Dictionary, TriggerAction } from "@memebox/contracts";
+import { Subject } from "rxjs";
+import { MemeboxApi } from "./apis/memebox.api";
+import { NamedLogger } from "@memebox/server-common";
+import { LoggerApi } from "./apis/logger.api";
+import { ObsApi } from "./apis/obs.api";
+import { TwitchApi } from "./apis/twitch.api";
+import { CanDispose } from "./apis/disposableBase";
+import { DummyWebSocketServer, RealWebSocketServer, WebSocketServerApi } from "./apis/wss.api";
+import { EventBusApi } from "./apis/eventbus.api";
+import { listAllEntriesOfTypes, RecipeCommandRegistry } from "@memebox/recipe-core";
 import jsonata from "jsonata";
 
 
 class ScriptCompileError extends Error {
   constructor(script: Action,
-              public scriptType: 'bootstrap'|'execution',
+              public scriptType: 'bootstrap' | 'execution',
               public baseError: Error) {
     super(`Failed to compile the ${scriptType} Script "${script.name}" [${script.id}]: \n${baseError.message}`);
   }
@@ -41,9 +41,11 @@ const JSONATA_REGEX = /\${{\s*(.*)\s*}}/gm;
 interface ExecutionScriptPayload extends SharedScriptPayload {
   bootstrap: Record<string, unknown>;
   triggerPayload: TriggerAction;
-  commandBlockData: {[key: string]: {
-    [configName: string]: () => Promise<unknown>
-    }}
+  commandBlockData: {
+    [key: string]: {
+      [configName: string]: () => Promise<unknown>
+    }
+  }
 }
 
 type ExecutionScript = (
@@ -99,7 +101,7 @@ export class ScriptContext implements CanDispose {
     this.eventBus = new EventBusApi();
   }
 
-  public compile(): void  {
+  public compile(): void {
     try {
       this.compiledBootstrapScript = new VMScript(`
           async function bootstrap(
@@ -111,7 +113,7 @@ export class ScriptContext implements CanDispose {
           (bootstrap);
         `).compile();
     } catch (err) {
-      throw new ScriptCompileError(this.script,'bootstrap', err);
+      throw new ScriptCompileError(this.script, 'bootstrap', err);
     }
 
     try {
@@ -126,11 +128,11 @@ export class ScriptContext implements CanDispose {
         `).compile();
     } catch (err) {
 
-      throw new ScriptCompileError(this.script,'execution', err);
+      throw new ScriptCompileError(this.script, 'execution', err);
     }
   }
 
-  public async bootstrap(variables: Dictionary<unknown>) : Promise<void> {
+  public async bootstrap(variables: Dictionary<unknown>): Promise<void> {
     if (!this.isBootstrapped) {
       const bootstrapFunc = this._vm.run(this.compiledBootstrapScript);
 
@@ -150,7 +152,7 @@ export class ScriptContext implements CanDispose {
     }
   }
 
-  public async execute(triggerActionPayload: TriggerAction) : Promise<void> {
+  public async execute(triggerActionPayload: TriggerAction): Promise<void> {
     // TODO apply variable overrides from TriggerClip
 
     const variables = getScriptVariablesOrFallbackValues(

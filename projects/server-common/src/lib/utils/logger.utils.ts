@@ -1,4 +1,4 @@
-import {NamedLogger} from "./named-logger";
+import { NamedLogger } from "../named-logger";
 
 
 // TODO move from winston to @tsed/logger for DI injection magic

@@ -1,6 +1,13 @@
-import {PositionEnum, Screen, ScreenMedia, SettingsState, VisibilityEnum} from "@memebox/contracts";
-import {updateItemInDictionary} from "@memebox/utils";
-import {uuid} from "@gewd/utils";
+import {
+  MarkPropertiesRequired,
+  PositionEnum,
+  Screen,
+  ScreenMedia,
+  SettingsState,
+  VisibilityEnum
+} from "@memebox/contracts";
+import { updateItemInDictionary } from "@memebox/utils";
+import { uuid } from "@gewd/utils";
 
 // It needs to be a new object
 // otherwise it would take the clips refernce
@@ -26,7 +33,8 @@ function createInitialScreenClipObj(): ScreenMedia {
 
 // region Screen Operations
 
-export function addScreen(state: SettingsState, screen: Partial<Screen>): void  {
+
+export function addScreen(state: SettingsState, screen: Partial<Screen>): asserts screen is MarkPropertiesRequired<Screen, 'id'> {
   screen.id = uuid();
   state.screen[screen.id] = Object.assign(createInitialScreenObj(), screen);
 }
@@ -35,11 +43,11 @@ export function addScreen(state: SettingsState, screen: Partial<Screen>): void  
 
 // region Assigned Visible Media / Actions on Screen Operations
 
-export function fillDefaultsScreenClip (screenClip: Partial<ScreenMedia>) {
+export function fillDefaultsScreenClip(screenClip: Partial<ScreenMedia>) {
   return Object.assign(createInitialScreenClipObj(), screenClip);
 }
 
-export function addOrUpdateScreenClip(state: SettingsState, screenId: string, screenClip: Partial<ScreenMedia>): void  {
+export function addOrUpdateScreenClip(state: SettingsState, screenId: string, screenClip: Partial<ScreenMedia>): void {
   const newScreenClipObj = fillDefaultsScreenClip(screenClip);
 
   updateItemInDictionary(state.screen[screenId].clips, newScreenClipObj);

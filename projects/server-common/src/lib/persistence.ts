@@ -16,7 +16,7 @@ import {
   TwitchTrigger,
   VisibilityEnum
 } from '@memebox/contracts';
-import {Observable, Subject} from "rxjs";
+import { Observable, Subject } from "rxjs";
 import * as path from "path";
 import {
   deleteInArray,
@@ -25,17 +25,17 @@ import {
   sortActions,
   updateItemInDictionary
 } from "@memebox/utils";
-import {createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH} from "./path.utils";
-import {operations} from '@memebox/shared-state';
-import {debounceTime} from "rxjs/operators";
-import {LOGGER, newLogger} from "./logger.utils";
-import {registerProvider} from "@tsed/di";
-import {PERSISTENCE_DI} from "./contracts";
-import {CLI_OPTIONS} from "./utils/cli-options";
+import { createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH } from "./utils/path.utils";
+import { operations } from '@memebox/shared-state';
+import { debounceTime } from "rxjs/operators";
+import { LOGGER, newLogger } from "./utils/logger.utils";
+import { registerProvider } from "@tsed/di";
+import { PERSISTENCE_DI } from "./contracts";
+import { CLI_OPTIONS } from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
-import {uuid} from '@gewd/utils';
-import {saveFile, SavePreviewFile} from "./persistence.functions";
-import {upgradeConfigFile} from './config-file-upgrade';
+import { uuid } from '@gewd/utils';
+import { saveFile, SavePreviewFile } from "./persistence.functions";
+import { upgradeConfigFile } from './config-file-upgrade';
 
 // TODO Extract more state operations to shared library and from app
 

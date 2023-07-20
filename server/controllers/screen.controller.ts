@@ -1,8 +1,7 @@
-import {BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use} from "@tsed/common";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence} from "../persistence";
-import {Screen, ScreenMedia} from "@memebox/contracts";
-import {screenValidations, validOrLeave} from "../validations";
+import { BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use } from "@tsed/common";
+import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { Screen, ScreenMedia } from "@memebox/contracts";
+import { screenValidations, validOrLeave } from "../validations";
 
 // TODO to ENDPOINTS object
 
@@ -54,7 +53,6 @@ export class ScreenController {
   @Put('/:screenId/clips/bulk')
   updateScreenMediaBulk(
     @PathParams("screenId") screenId: string,
-
     @BodyParams() updateScreenMedia: ScreenMedia[]  // todo rename type
   ): void {
     for (const media of updateScreenMedia) {
@@ -67,7 +65,6 @@ export class ScreenController {
   updateScreenMedia(
     @PathParams("screenId") screenId: string,
     @PathParams("mediaId") mediaId: string,
-
     @BodyParams() updateScreenMedia: ScreenMedia  // todo rename type
   ): ScreenMedia {
     return this._persistence.updateScreenClip(screenId, mediaId, updateScreenMedia);
@@ -76,7 +73,7 @@ export class ScreenController {
   @Delete('/:screenId/clips/:mediaId')
   deleteScreenMedia(
     @PathParams("screenId") screenId: string,
-    @PathParams("mediaId") mediaId: string,
+    @PathParams("mediaId") mediaId: string
   ): void {
     this._persistence.deleteScreenClip(screenId, mediaId);
   }
