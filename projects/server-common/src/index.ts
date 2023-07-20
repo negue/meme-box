@@ -5,3 +5,4 @@ export * from './lib/utils/file-handler';
 export * from './lib/utils/path.utils';
 export * from './lib/utils/logger.utils';
 export * from './lib/utils/cli-options';
+export * from './lib/constants';

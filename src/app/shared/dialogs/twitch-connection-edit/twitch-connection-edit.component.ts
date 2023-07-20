@@ -1,19 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder} from '@ngneat/reactive-forms';
-import {Subject} from "rxjs";
-import {AppQueries, AppService, ConfigService} from "@memebox/app-state";
-import {filter, take} from "rxjs/operators";
-import {MatCheckboxChange} from "@angular/material/checkbox";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@ngneat/reactive-forms';
+import { Subject } from "rxjs";
+import { AppQueries, AppService, ConfigService } from "@memebox/app-state";
+import { filter, take } from "rxjs/operators";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { Config } from "@memebox/contracts";
+import { TwitchOAuthHandler } from "./twitch.oauth";
+import { MatDialogRef } from "@angular/material/dialog";
+import { DialogService } from "../dialog.service";
 import {
-  Config,
   DEFAULT_TWITCH_SCOPE_LIST,
   TWITCH_BOT_RESPONSE_CONSTS,
   TWITCH_CLIENT_ID,
   TwitchAuthInformation
-} from "@memebox/contracts";
-import {TwitchOAuthHandler} from "./twitch.oauth";
-import {MatDialogRef} from "@angular/material/dialog";
-import {DialogService} from "../dialog.service";
+} from "@memebox/twitch-api";
 
 const currentUrl = `${location.origin}`;
 const isValidTwitchAuthUrl = ['localhost:4200', 'localhost:6363'].some(url => currentUrl.includes(url));
@@ -46,7 +46,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     channelName: '',
     authToken: '',
     botName: '',
-    botToken: '',
+    botToken: ''
   });
 
   public additionalForm = new FormBuilder().group<AdditionalForm>({
@@ -77,7 +77,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     this.mainAccountForm.reset({
       channelName: 'my-channel',
       botName: '',
-      botToken: '',
+      botToken: ''
     });
 
     this.additionalForm.reset({
@@ -86,13 +86,13 @@ export class TwitchConnectionEditComponent implements OnInit {
 
     this.appQuery.config$.pipe(
       filter(config => !!config.twitch),
-      take(1),
+      take(1)
     ).subscribe(value => {
       this.mainAccountForm.reset({
         channelName: value.twitch.channel,
         authToken: value.twitch.token,
         botName: value.twitch?.bot?.auth?.name ?? '',
-        botToken: value.twitch?.bot?.auth?.token ?? '',
+        botToken: value.twitch?.bot?.auth?.token ?? ''
       });
 
       this.additionalForm.reset({
@@ -168,7 +168,7 @@ export class TwitchConnectionEditComponent implements OnInit {
   }
 
 
-  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>): void{
+  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>): void {
     this.additionalForm.patchValue({
       bot: $event.checked
     });
@@ -226,24 +226,24 @@ export class TwitchConnectionEditComponent implements OnInit {
     if (type === 'main') {
       if (!this.mainAccountForm.value.channelName) {
         this.mainAccountForm.patchValue({
-          channelName: result.userName,
+          channelName: result.userName
         });
       }
 
       this.mainAccountForm.patchValue({
-        authToken: result.accessToken,
+        authToken: result.accessToken
       });
     } else {
       this.mainAccountForm.patchValue({
         botName: result.userName,
-        botToken: result.accessToken,
+        botToken: result.accessToken
       });
     }
 
     this.save(false, true);
   }
 
-  async deleteMainAuth (): Promise<void> {
+  async deleteMainAuth(): Promise<void> {
     await this.configService.revokeToken('MAIN');
 
     this.mainAccountForm.patchValue({
@@ -253,12 +253,12 @@ export class TwitchConnectionEditComponent implements OnInit {
     this.mainAuthInformation = null;
   }
 
-  async deleteBotAuth (): Promise<void> {
+  async deleteBotAuth(): Promise<void> {
     await this.configService.revokeToken('BOT');
 
     this.mainAccountForm.patchValue({
       botName: null,
-      botToken: null,
+      botToken: null
     });
 
     this.botAuthInformation = null;

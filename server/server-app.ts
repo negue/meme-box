@@ -1,8 +1,15 @@
 import { createExpress } from "./express-server";
 import { sendDataToAllSockets } from "./websocket-server";
-import { DEFAULT_PORT, IS_NIGHTLY, REMOTE_NIGHTLY_VERSION_FILE, REMOTE_RELEASE_VERSION_FILE } from "./constants";
+import {
+  CLI_OPTIONS,
+  DEFAULT_PORT,
+  IS_NIGHTLY,
+  LOGGER,
+  PersistenceInstance,
+  REMOTE_NIGHTLY_VERSION_FILE,
+  REMOTE_RELEASE_VERSION_FILE
+} from "@memebox/server-common";
 import { debounceTime, startWith, take } from "rxjs/operators";
-import { CLI_OPTIONS, LOGGER, PersistenceInstance } from "@memebox/server-common";
 import { ACTIONS, ChangedInfo } from "@memebox/contracts";
 import { TimedHandler } from "./timed.handler";
 

@@ -1,21 +1,13 @@
-import {
-  Config,
-  ENDPOINTS,
-  ObsConfig,
-  Response,
-  TWITCH_CLIENT_ID,
-  TwitchConfig,
-  TwitchConnectionType
-} from "@memebox/contracts";
+import { Config, ENDPOINTS, ObsConfig, Response, TwitchConfig, TwitchConnectionType } from "@memebox/contracts";
 import { allowedFileUrl } from "../validations";
 import { existsSync } from "fs";
 import { sep } from 'path';
 import { BodyParams, Controller, Delete, Get, Inject, PathParams, Put } from "@tsed/common";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
 import fetch from "node-fetch";
 import { URLSearchParams } from 'url';
 import { UseOpts } from "@tsed/di";
-import { NamedLogger } from "../../projects/server-common/src/lib/named-logger";
+import { TWITCH_CLIENT_ID } from "@memebox/twitch-api";
 
 
 // TODO allow config generic put endpoint

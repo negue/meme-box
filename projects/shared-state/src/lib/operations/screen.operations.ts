@@ -43,7 +43,7 @@ export function addScreen(state: SettingsState, screen: Partial<Screen>): assert
 
 // region Assigned Visible Media / Actions on Screen Operations
 
-export function fillDefaultsScreenClip(screenClip: Partial<ScreenMedia>) {
+export function fillDefaultsScreenClip(screenClip: Partial<ScreenMedia>): ScreenMedia {
   return Object.assign(createInitialScreenClipObj(), screenClip);
 }
 

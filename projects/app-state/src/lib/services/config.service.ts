@@ -1,21 +1,15 @@
-import {Injectable} from '@angular/core';
-import {AppStore} from '../state/app.store';
-import {HttpClient} from '@angular/common/http';
-import {
-  Config,
-  ENDPOINTS,
-  ObsConfig,
-  TwitchAuthInformation,
-  TwitchConfig,
-  TwitchConnectionType
-} from '@memebox/contracts';
-import {DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT} from '../../../../../server/constants';
-import {setDummyData} from '../state/app.dummy.data';
-import {MemeboxWebsocketService} from "./memebox-websocket.service";
-import {AppService} from "../state/app.service";
-import {SnackbarService} from "./snackbar.service";
-import {EXPRESS_BASE, MemeboxApiService} from "../state/memeboxApi.service";
-import {ConnectionStateService} from "../state/connection-state.service";
+import { Injectable } from '@angular/core';
+import { AppStore } from '../state/app.store';
+import { HttpClient } from '@angular/common/http';
+import { Config, ENDPOINTS, ObsConfig, TwitchConfig, TwitchConnectionType } from '@memebox/contracts';
+import { DANGER_CLEAN_CONFIG_ENDPOINT, DANGER_IMPORT_ALL_ENDPOINT } from '@memebox/server-common';
+import { setDummyData } from '../state/app.dummy.data';
+import { MemeboxWebsocketService } from "./memebox-websocket.service";
+import { AppService } from "../state/app.service";
+import { SnackbarService } from "./snackbar.service";
+import { EXPRESS_BASE, MemeboxApiService } from "../state/memeboxApi.service";
+import { ConnectionStateService } from "../state/connection-state.service";
+import { TwitchAuthInformation } from "@memebox/twitch-api";
 
 const NOT_POSSIBLE_OFFLINE = 'Not possible in Offline-Mode.';
 
@@ -35,7 +29,7 @@ export class ConfigService {
 
   public async updateConfig(newConfig: Partial<Config>) {
     // update path & await
-    await this.memeboxApi.put( this.configEndpoint(''), newConfig);
+    await this.memeboxApi.put(this.configEndpoint(''), newConfig);
 
     // update state
     this.appStore.update(state => {
@@ -49,7 +43,7 @@ export class ConfigService {
     };
 
     // update path & await
-    await this.memeboxApi.put( this.configEndpoint(ENDPOINTS.CONFIG.CUSTOM_PORT), newConfig);
+    await this.memeboxApi.put(this.configEndpoint(ENDPOINTS.CONFIG.CUSTOM_PORT), newConfig);
 
     // add to the state
     this.appStore.update(state => {
@@ -113,7 +107,6 @@ export class ConfigService {
   }
 
 
-
   public async openMediaFolder() {
     if (this.connectionStateService.isOffline()) {
       this.snackbar.sorry(NOT_POSSIBLE_OFFLINE);
@@ -159,7 +152,7 @@ export class ConfigService {
   }
 
 
-  public loadTwitchAuthInformations(): Promise<TwitchAuthInformation[]|undefined> {
+  public loadTwitchAuthInformations(): Promise<TwitchAuthInformation[] | undefined> {
     return this.memeboxApi.get<TwitchAuthInformation[]>(`${ENDPOINTS.TWITCH_DATA.PREFIX}${ENDPOINTS.TWITCH_DATA.AUTH_INFORMATIONS}`);
   }
 

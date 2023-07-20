@@ -6,12 +6,12 @@ import {
   DANGER_ENDPOINT,
   LOG_ENDPOINT,
   NETWORK_IP_LIST_ENDPOINT,
+  PersistenceInstance,
   STATE_ENDPOINT,
   TAGS_ENDPOINT,
   TIMED_ENDPOINT
-} from './constants';
+} from '@memebox/server-common';
 import { listNetworkInterfaces } from "./network-interfaces";
-import { PersistenceInstance } from "@memebox/server-common";
 
 import { TAG_ROUTES } from "./rest-endpoints/tags";
 import { getAppRootPath, isInElectron } from "./file.utilts";

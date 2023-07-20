@@ -1,10 +1,10 @@
-import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
-import {MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE} from "../../../../../server/constants";
-import {MarkdownLinkClicked} from "@gewd/markdown/module";
-import {DialogService} from "../dialog.service";
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { Observable } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { MARKDOWN_FILES, MarkdownDialogPayload, TUTORIALS_GITHUB_PAGE } from "@memebox/server-common";
+import { MarkdownLinkClicked } from "@gewd/markdown/module";
+import { DialogService } from "../dialog.service";
 
 
 @Component({
@@ -28,11 +28,11 @@ export class MarkdownComponent {
     });
   }
 
-  openMarkdownOnGitHub(): void  {
+  openMarkdownOnGitHub(): void {
     window.open(TUTORIALS_GITHUB_PAGE + '/' + this.data.githubName, '_blank');
   }
 
-  handleLinkClick($event: MarkdownLinkClicked): void  {
+  handleLinkClick($event: MarkdownLinkClicked): void {
     $event.event.preventDefault();
 
     const linkAttributes = $event.link.attributes;

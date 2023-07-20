@@ -349,10 +349,10 @@ export interface CombinedActionContext {
   backgroundColor?: string;
 }
 
-export interface Response {
-  ok: boolean;
-  id?: string;
-}
+export type Response =
+  | { ok: false }
+  | { ok: true, id?: string }
+
 
 export type TwitchConnectionType = "MAIN" | "BOT";
 

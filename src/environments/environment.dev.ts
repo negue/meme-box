@@ -3,7 +3,7 @@
 // `ng build --env=prod` then `index.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-import {DEFAULT_PORT} from "../../server/constants";
+import { DEFAULT_PORT } from "@memebox/server-common";
 
 const splitSearch = location.search
   ?.replace('?', '')

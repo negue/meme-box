@@ -3,7 +3,6 @@ import { ChatUserstate, Options, SubMethods, Userstate } from 'tmi.js';
 import { debounceTime, startWith } from 'rxjs/operators';
 import {
   ChangedInfo,
-  TWITCH_BOT_RESPONSE_CONSTS,
   TwitchBanEvent,
   TwitchChannelPointRedemptionEvent,
   TwitchChatMessage,
@@ -26,7 +25,7 @@ import { getLevelOfTags } from "./twitch.functions";
 import { PubSubClient } from '@twurple/pubsub';
 import { StaticAuthProvider } from "@twurple/auth";
 
-import { TwitchAuthInformationProvider, TwitchAuthResult } from "@memebox/twitch-api";
+import { TWITCH_BOT_RESPONSE_CONSTS, TwitchAuthInformationProvider, TwitchAuthResult } from "@memebox/twitch-api";
 import { TwitchQueueEventBus } from "./twitch-queue-event.bus";
 import { ConnectionsStateHub, UpdateStateFunc } from "../connections-state.hub";
 

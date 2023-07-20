@@ -46,7 +46,7 @@
         "projects/shared-state/src/public-api"
       ],
       "@memebox/state-components": [
-        "projects/state-components/src/index"
+        "projects/state-components/src/projects"
       ],
       "@memebox/server-common": [
         "projects/server-common/src/index"

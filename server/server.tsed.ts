@@ -1,11 +1,10 @@
 import { BeforeInit, BeforeRoutesInit, Configuration, HttpServer, Inject, PlatformApplication } from "@tsed/common";
-import { API_PREFIX } from "./constants";
+import { addDefaultLoggerAppenders, API_PREFIX, CLI_OPTIONS } from "@memebox/server-common";
 import { Env } from "@tsed/core";
 import { Logger } from "@tsed/logger";
 import { BootstrapServices } from "./providers/bootstrap.services";
 import * as fs from "fs";
 import { CONTROLLERS } from "./controllers";
-import { addDefaultLoggerAppenders, CLI_OPTIONS } from "@memebox/server-common";
 import { OnReady } from "@tsed/common/lib/platform/interfaces/OnReady";
 import { ScriptHandler } from "./providers/actions/scripts/script.handler";
 import { Action, ActionType } from "@memebox/contracts";
