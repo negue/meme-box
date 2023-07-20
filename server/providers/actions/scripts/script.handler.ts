@@ -22,11 +22,11 @@ import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 import {MemeboxApiFactory} from "./apis/memebox.api";
 import {ObsConnection} from "../../obs-connection";
 import {ObsApi} from "./apis/obs.api";
-import {TwitchConnector} from "../../triggers/twitch-triggers/twitch.connector";
+import {TwitchConnector} from "../../../../projects/triggers-twitch/src/lib/twitch.connector";
 import {TwitchApi} from "./apis/twitch.api";
 import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
 import {setGlobalVMScope} from "./global.context";
-import {TwitchQueueEventBus} from "../../triggers/twitch-triggers/twitch-queue-event.bus";
+import {TwitchQueueEventBus} from "../../../../projects/triggers-twitch/src/lib/twitch-queue-event.bus";
 import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
 import {generateCodeByRecipe} from "@memebox/recipe-core";
 

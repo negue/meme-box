@@ -8,7 +8,6 @@ export const ENDPOINTS = {
   ERROR: 'error',
   STATE: 'state',
 
-  TIMED_EVENTS: 'timed_events',
   NETWORK_LIST: 'network_ip_list',
 
   OPEN: {
@@ -25,11 +24,12 @@ export const ENDPOINTS = {
     CUSTOM_PORT: '/customPort'
   },
 
-  TWITCH_EVENTS: {
-    PREFIX: 'twitch_events',
+
+  TRIGGER_CONFIGS: {
+    PREFIX: 'trigger_configs',
     TRIGGER_CONFIG_EXAMPLE: '/trigger_config_example',
-    TRIGGER_EVENT: '/trigger_event',
-    LAST_20_EVENTS: '/last_events'
+    TRIGGER_ONE: '/trigger_one',
+    LAST_20_EVENTS: '/last_triggered'
   },
 
   OBS_DATA: {

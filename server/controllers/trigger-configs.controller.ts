@@ -7,9 +7,9 @@ import {TwitchQueueEventBus} from "../providers/triggers/twitch-triggers/twitch-
 import {takeLatestItems} from "@memebox/utils";
 import {filter} from "rxjs/operators";
 
-@Controller(ENDPOINTS.TWITCH_EVENTS.PREFIX)
-export class TwitchEventsController {
-  private latest20Events: AllTwitchEvents[] = [];
+@Controller(ENDPOINTS.TRIGGER_CONFIGS.PREFIX)
+export class TriggerConfigsController {
+  private latest20Events: TriggerConfig[] = [];
 
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,

@@ -1,5 +1,5 @@
 import {Dictionary, ScreenMediaOverridableProperties} from "./types";
-import {AllTwitchEvents} from "./twitch.connector.types";
+import {AllTwitchEvents} from "../../../triggers-twitch-contracts/src/lib/twitch.connector.types";
 
 // TODO refactor / rename to more understandable names
 
