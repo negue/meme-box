@@ -421,6 +421,6 @@ export function getUserDataState (settings: SettingsState): UserDataState {
 
 export interface ErrorWithContext {
   errorMessage: string;
-  errorStack: string;
-  context: string;
+  errorStack?: string;
+  context?: string;
 }

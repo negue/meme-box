@@ -13,3 +13,4 @@ export * from './lib/placeholders';
 export * from './lib/dialogs-contracts';
 export * from './lib/twitch-data.types';
 export * from './lib/twitch.connector.types';
+export * from './lib/ts_magic';
