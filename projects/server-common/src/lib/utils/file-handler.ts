@@ -5,7 +5,7 @@ import {Subject} from "rxjs";
 import {debounceTime} from "rxjs/operators";
 
 export class FileHandler<TFileContent> {
-  private _currentContent: TFileContent;
+  private _currentContent?: TFileContent;
   private _alreadyLoaded = false;
   private _debounceSubject = new Subject<void>();
 
@@ -25,7 +25,7 @@ export class FileHandler<TFileContent> {
 
   public async loadFile(fallbackIfEmpty: TFileContent) : Promise<TFileContent> {
     if (this._alreadyLoaded) {
-      return this._currentContent;
+      return this._currentContent!;
     }
 
     const dir = path.dirname(this.filePath);
@@ -53,7 +53,7 @@ export class FileHandler<TFileContent> {
 
         this._alreadyLoaded = true;
 
-        resolve(this._currentContent);
+        resolve(this._currentContent!);
       });
     });
 

@@ -11,7 +11,7 @@ export function SavePreviewFile(action: Action): void  {
 
     writeFileSync(GetPreviewFilePath(action.id), previewImgBase64, 'base64');
 
-    action.previewUrl = null;
+    action.previewUrl = undefined;
     action.hasPreview = true;
   }
 }
