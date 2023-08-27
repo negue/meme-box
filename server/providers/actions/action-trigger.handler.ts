@@ -10,8 +10,8 @@ import {
   TriggerAction,
   TriggerActionOrigin
 } from "@memebox/contracts";
-import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
-import { Inject } from "@tsed/common";
+import { NamedLogger, Persistence } from "@memebox/server-common";
+
 import { MemeboxWebsocket } from "../websockets/memebox.websocket";
 
 import { ActionQueueEventBus } from "./action-queue-event.bus";
@@ -35,7 +35,7 @@ export class ActionTriggerHandler {
 
   constructor(
     @UseOpts({name: 'ActionTriggerHandler'}) public logger: NamedLogger,
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private actionQueueEventBus: ActionQueueEventBus,
     private _memeboxWebSocket: MemeboxWebsocket,
     private _scriptHandler: ScriptHandler,

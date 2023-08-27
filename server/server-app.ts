@@ -5,7 +5,6 @@ import {
   DEFAULT_PORT,
   IS_NIGHTLY,
   LOGGER,
-  PersistenceInstance,
   REMOTE_NIGHTLY_VERSION_FILE,
   REMOTE_RELEASE_VERSION_FILE
 } from "@memebox/server-common";

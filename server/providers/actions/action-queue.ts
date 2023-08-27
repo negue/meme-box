@@ -1,5 +1,4 @@
-import { Inject } from "@tsed/common";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { Persistence } from "@memebox/server-common";
 import { ActionStateEnum, TriggerAction, VisibilityEnum } from "@memebox/contracts";
 import { Subject } from "rxjs";
 import { concatMap, filter, take } from "rxjs/operators";
@@ -11,7 +10,7 @@ export class ActionQueue {
   private _queueDone$ = new Subject<string>();
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private actionState: ActionActiveState,
     private actionExecuter: (action: TriggerAction) => Promise<void>
   ) {

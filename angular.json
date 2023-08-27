@@ -100,7 +100,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["projects/app-state/**/*.ts"]
+            "lintFilePatterns": [
+              "projects/app-state/**/*.ts"
+            ]
           }
         }
       }
@@ -298,8 +300,12 @@
             "polyfills": "src/polyfills-test.ts",
             "tsConfig": "tsconfig.spec.json",
             "scripts": [],
-            "styles": ["src/styles.scss"],
-            "assets": ["src/assets"],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "assets": [
+              "src/assets"
+            ],
             "customWebpackConfig": {
               "path": "./angular.webpack.cjs",
               "target": "electron-renderer"
@@ -364,7 +370,9 @@
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/projects/server",
             "main": "server/server.ts",
@@ -382,14 +390,20 @@
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["server/**/*.ts"]
+            "lintFilePatterns": [
+              "server/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/server"],
+          "outputs": [
+            "coverage/projects/server"
+          ],
           "options": {
             "jestConfig": "projects/server/jest.config.js",
             "passWithNoTests": true
@@ -530,7 +544,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["projects/utils/**/*.ts"]
+            "lintFilePatterns": [
+              "projects/utils/**/*.ts"
+            ]
           }
         }
       }
@@ -564,7 +580,9 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/recipe-ui"],
+          "outputs": [
+            "coverage/projects/recipe-ui"
+          ],
           "options": {
             "jestConfig": "projects/recipe-ui/jest.config.js",
             "passWithNoTests": true
@@ -601,9 +619,89 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/recipe-core"],
+          "outputs": [
+            "coverage/projects/recipe-core"
+          ],
           "options": {
             "jestConfig": "projects/recipe-core/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "server-common": {
+      "projectType": "library",
+      "root": "projects/server-common",
+      "sourceRoot": "projects/server-common/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/server-common/tsconfig.lib.json",
+            "project": "projects/server-common/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/server-common/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/server-common/src/**/*.ts",
+              "projects/server-common/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/projects/server-common"
+          ],
+          "options": {
+            "jestConfig": "projects/server-common/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "twitch-api": {
+      "projectType": "library",
+      "root": "projects/twitch-api",
+      "sourceRoot": "projects/twitch-api/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/twitch-api/tsconfig.lib.json",
+            "project": "projects/twitch-api/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/twitch-api/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/twitch-api/src/**/*.ts",
+              "projects/twitch-api/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/projects/twitch-api"
+          ],
+          "options": {
+            "jestConfig": "projects/twitch-api/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -630,6 +728,9 @@
       "prefix": "app",
       "style": "scss",
       "skipTests": true
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
     }
   }
 }

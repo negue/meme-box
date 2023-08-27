@@ -17,9 +17,9 @@ import {
   TwitchTriggerCommand
 } from '@memebox/contracts';
 import { Service, UseOpts } from "@tsed/di";
-import { Inject } from "@tsed/common";
+
 import { isAllowedToTrigger } from "./twitch.utils";
-import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { NamedLogger, Persistence } from "@memebox/server-common";
 import { getLevelOfTags } from "./twitch.functions";
 
 import { PubSubClient } from '@twurple/pubsub';
@@ -49,7 +49,7 @@ export class TwitchConnector {
     // currently the twitch config is inside the Persistence,
     // once there is some other "config" layer,
     // then it'll be replaced
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
     private twitchAuth: TwitchAuthInformationProvider,
     private twitchEventBus: TwitchQueueEventBus,

@@ -2,8 +2,8 @@ import { Service } from "@tsed/di";
 import fetch from "node-fetch";
 import { TwitchAuthResult } from "./twitch-data.types";
 import { TwitchAuthInformationProvider } from "./twitch.auth-information";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
-import { Inject } from "@tsed/common";
+import { Persistence } from "@memebox/server-common";
+
 
 export interface TwitchHelixResult<TResult> {
   data?: TResult;
@@ -21,7 +21,7 @@ export class TwitchDataProvider {
 
   constructor(
     private twitchAuth: TwitchAuthInformationProvider,
-    @Inject(PERSISTENCE_DI) persistence: Persistence
+    persistence: Persistence
   ) {
     persistence.dataUpdated$().subscribe(
       changed => {

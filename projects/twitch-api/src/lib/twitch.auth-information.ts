@@ -1,7 +1,6 @@
 import { Service } from "@tsed/di";
 import fetch from "node-fetch";
-import { Inject } from "@tsed/common";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { Persistence } from "@memebox/server-common";
 import { TwitchAuthResult } from "./twitch-data.types";
 
 
@@ -9,7 +8,7 @@ import { TwitchAuthResult } from "./twitch-data.types";
 export class TwitchAuthInformationProvider {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    private _persistence: Persistence
   ) {
   }
 

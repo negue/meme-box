@@ -1,6 +1,5 @@
 import { Service, UseOpts } from "@tsed/di";
-import { Inject } from "@tsed/common";
-import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { NamedLogger, Persistence } from "@memebox/server-common";
 import OBSWebSocket from "obs-websocket-js";
 import { timeoutAsync } from "./actions/scripts/apis/sleep.api";
 import { ObsConfig } from "@memebox/contracts";
@@ -28,7 +27,7 @@ export class ObsConnection {
   public isConnectedAsync = this.onConnected$.asObservable().toPromise();
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     @UseOpts({name: 'ObsConnection'}) public logger: NamedLogger,
     connectionStateHub: ConnectionsStateHub
   ) {

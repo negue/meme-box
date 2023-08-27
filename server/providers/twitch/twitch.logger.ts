@@ -1,6 +1,5 @@
 import { Injectable, ProviderScope, ProviderType, UseOpts } from "@tsed/di";
-import { Inject } from "@tsed/common";
-import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { NamedLogger, Persistence } from "@memebox/server-common";
 import { TwitchQueueEventBus } from "./twitch-queue-event.bus";
 
 // skipcq: JS-0579
@@ -14,7 +13,7 @@ export class TwitchLogger {
   constructor(
     @UseOpts({name: 'TwitchLogger'}) private logger: NamedLogger,
     private twitchEventBus: TwitchQueueEventBus,
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    private _persistence: Persistence
   ) {
 
     if (_persistence.getConfig()?.twitch?.enableLog) {

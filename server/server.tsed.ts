@@ -1,5 +1,5 @@
 import { BeforeInit, BeforeRoutesInit, Configuration, HttpServer, Inject, PlatformApplication } from "@tsed/common";
-import { addDefaultLoggerAppenders, API_PREFIX, CLI_OPTIONS } from "@memebox/server-common";
+import { addDefaultLoggerAppenders, CLI_OPTIONS } from "@memebox/server-common";
 import { Env } from "@tsed/core";
 import { Logger } from "@tsed/logger";
 import { BootstrapServices } from "./providers/bootstrap.services";
@@ -10,12 +10,14 @@ import { ScriptHandler } from "./providers/actions/scripts/script.handler";
 import { Action, ActionType } from "@memebox/contracts";
 import { uuid } from "@gewd/utils";
 import { applyScriptConfigToAction } from "@memebox/utils";
-// import * as bodyParser from "body-parser";
+import { API_PREFIX } from "../projects/server-common/src/lib/constants";
+
 
 export const isProduction = !fs.existsSync('package.json')
   || process.env.NODE_ENV === Env.PROD;
 
 const rootDir = __dirname;
+
 
 @Configuration({
   rootDir,

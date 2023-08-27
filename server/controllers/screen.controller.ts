@@ -1,5 +1,5 @@
-import { BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use } from "@tsed/common";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, Use } from "@tsed/common";
+import { Persistence } from "@memebox/server-common";
 import { Screen, ScreenMedia } from "@memebox/contracts";
 import { screenValidations, validOrLeave } from "../validations";
 
@@ -9,7 +9,7 @@ import { screenValidations, validOrLeave } from "../validations";
 export class ScreenController {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    private _persistence: Persistence
   ) {
   }
 

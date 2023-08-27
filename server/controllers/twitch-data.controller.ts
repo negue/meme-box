@@ -1,5 +1,5 @@
-import { Controller, Get, Inject, PathParams, QueryParams } from "@tsed/common";
-import { Persistence, PERSISTENCE_DI, TOKEN_EXISTS_MARKER } from "@memebox/server-common";
+import { Controller, Get, PathParams, QueryParams } from "@tsed/common";
+import { Persistence, TOKEN_EXISTS_MARKER } from "@memebox/server-common";
 import { ENDPOINTS } from "@memebox/contracts";
 import { ChannelPointRedemption, TwitchAuthInformation, TwitchDataProvider } from "@memebox/twitch-api";
 
@@ -7,7 +7,7 @@ import { ChannelPointRedemption, TwitchAuthInformation, TwitchDataProvider } fro
 export class TwitchDataController {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private _dataProvider: TwitchDataProvider
   ) {
   }

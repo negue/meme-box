@@ -5,8 +5,7 @@ import { WebsocketBootstrap } from "./websockets/websocket.bootstrap";
 import { ScriptHandler } from "./actions/scripts/script.handler";
 import { ObsConnection } from "./obs-connection";
 import { ObsApi } from "./actions/scripts/apis/obs.api";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
-import { Inject } from "@tsed/common";
+import { Persistence } from "@memebox/server-common";
 import { Logger } from "@tsed/logger";
 
 /**
@@ -23,7 +22,7 @@ export class BootstrapServices {
     _scriptHandler: ScriptHandler,
     private _obsConnection: ObsConnection,
     private _mainLogger: Logger,
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    private _persistence: Persistence
   ) {
     this.tryCatchAsync(
       this.connectToObsAndRefreshScreens(),

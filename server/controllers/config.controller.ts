@@ -2,8 +2,8 @@ import { Config, ENDPOINTS, ObsConfig, Response, TwitchConfig, TwitchConnectionT
 import { allowedFileUrl } from "../validations";
 import { existsSync } from "fs";
 import { sep } from 'path';
-import { BodyParams, Controller, Delete, Get, Inject, PathParams, Put } from "@tsed/common";
-import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { BodyParams, Controller, Delete, Get, PathParams, Put } from "@tsed/common";
+import { NamedLogger, Persistence } from "@memebox/server-common";
 import fetch from "node-fetch";
 import { URLSearchParams } from 'url';
 import { UseOpts } from "@tsed/di";
@@ -17,7 +17,7 @@ import { TWITCH_CLIENT_ID } from "@memebox/twitch-api";
 export class ConfigController {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     @UseOpts({name: 'ConfigController'}) public logger: NamedLogger
   ) {
   }

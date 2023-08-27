@@ -1,7 +1,7 @@
 import { Injectable, ProviderScope, ProviderType } from "@tsed/di";
 import { TwitchConnector } from "./twitch.connector";
-import { Inject } from "@tsed/common";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+
+import { Persistence } from "@memebox/server-common";
 import { Action, Dictionary, TriggerActionOrigin, TwitchTriggerCommand } from "@memebox/contracts";
 import { TwitchLogger } from "./twitch.logger";
 import { isAllowedToTrigger } from "./twitch.utils";
@@ -25,7 +25,7 @@ export class TwitchTriggerHandler {
     private _twitchConnector: TwitchConnector,
     private _twitchEventBus: TwitchQueueEventBus,
     private _twitchLogger: TwitchLogger,
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private _mediaTriggerEventBus: ActionQueueEventBus
   ) {
 

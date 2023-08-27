@@ -29,8 +29,7 @@ import { createDirIfNotExists, LOG_PATH, NEW_CONFIG_PATH } from "./utils/path.ut
 import { operations } from '@memebox/shared-state';
 import { debounceTime } from "rxjs/operators";
 import { LOGGER, newLogger } from "./utils/logger.utils";
-import { registerProvider } from "@tsed/di";
-import { PERSISTENCE_DI } from "./contracts";
+import { Injectable } from "@tsed/di";
 import { CLI_OPTIONS } from "./utils/cli-options";
 import cloneDeep from 'lodash/cloneDeep';
 import { uuid } from '@gewd/utils';
@@ -44,7 +43,7 @@ let fileBackupToday = false;
 export const TOKEN_EXISTS_MARKER = 'TOKEN_EXISTS';
 
 // TODO use const string enums instead of uniontype
-
+@Injectable()
 export class Persistence {
 
   public configLoaded$ = new Subject();
@@ -55,7 +54,8 @@ export class Persistence {
 
   private logger = newLogger('Persistence');
 
-  constructor(private filePath: string) {
+  constructor() {
+    const filePath = path.join(NEW_CONFIG_PATH, 'settings', 'settings.json');
     const dir = path.dirname(filePath);
 
     // if the settings folder not exist
@@ -89,8 +89,8 @@ export class Persistence {
       this.logger.info('Settings loaded');
 
       if (!fileBackupToday) {
-        const targetDir = path.dirname(this.filePath);
-        const targetFileName = path.basename(this.filePath);
+        const targetDir = path.dirname(filePath);
+        const targetFileName = path.basename(filePath);
 
         const backupPathFile = `${targetDir}/backups/${targetFileName}.${simpleDateString()}.backup`;
 
@@ -104,7 +104,7 @@ export class Persistence {
       debounceTime(2000)
     ).subscribe(() => {
       this.logger.info('Data saved!');
-      saveFile(this.filePath, this.data, true);
+      saveFile(filePath, this.data, true);
     });
   }
 
@@ -606,10 +606,6 @@ export class Persistence {
   }
 }
 
-export const PersistenceInstance = new Persistence(
-  path.join(NEW_CONFIG_PATH, 'settings', 'settings.json')
-);
-
 // todo refactor it to a new place when the new logger is being used
 LOGGER.info('Config Path:' + NEW_CONFIG_PATH);
 LOGGER.info('Log Path:' + LOG_PATH);
@@ -619,10 +615,3 @@ Object.entries(CLI_OPTIONS).forEach(([optionKey, optionValue]) => {
     LOGGER.info(optionKey, ': ', optionValue);
   }
 })
-
-// TODO Check if possible to use the default @Service()
-// Registry for TsED
-registerProvider({
-  provide: PERSISTENCE_DI,
-  useValue: PersistenceInstance
-});

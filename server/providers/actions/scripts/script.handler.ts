@@ -8,8 +8,8 @@ import {
   getUserDataState,
   TriggerAction
 } from "@memebox/contracts";
-import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
-import { Inject } from "@tsed/common";
+import { NamedLogger, Persistence } from "@memebox/server-common";
+
 import { ActionQueueEventBus } from "../action-queue-event.bus";
 import { ActionActiveState } from "../action-active-state";
 import { ActionActiveStateEventBus } from "../action-active-state-event.bus";
@@ -47,7 +47,7 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   constructor(
     @UseOpts({name: 'ScriptHandler'}) public logger: NamedLogger,
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private actionTriggerEventBus: ActionQueueEventBus,
     private actionStateEventBus: ActionActiveStateEventBus,
     private actionActiveState: ActionActiveState,

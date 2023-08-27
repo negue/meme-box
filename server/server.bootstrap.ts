@@ -1,7 +1,8 @@
-import {$log} from "@tsed/common";
-import {PlatformExpress} from "@tsed/platform-express";
-import {ServerTsED} from "./server.tsed";
-import {ExpressServerLazy} from './server-app';
+import { $log } from "@tsed/common";
+import { PlatformExpress } from "@tsed/platform-express";
+import { ServerTsED } from "./server.tsed";
+import { ExpressServerLazy } from './server-app';
+
 
 export async function bootstrapTsED() {
   try {

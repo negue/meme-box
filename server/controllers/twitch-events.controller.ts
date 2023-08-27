@@ -1,5 +1,5 @@
-import { BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use } from "@tsed/common";
-import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, Use } from "@tsed/common";
+import { Persistence } from "@memebox/server-common";
 import { AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand } from "@memebox/contracts";
 import { TwitchDataProvider } from "@memebox/twitch-api";
 import { twitchPostValidator, twitchPutValidator, validOrLeave } from "../validations";
@@ -13,7 +13,7 @@ export class TwitchEventsController {
   private latest20Events: AllTwitchEvents[] = [];
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private _dataProvider: TwitchDataProvider,
     private _twitchEventBus: TwitchQueueEventBus
   ) {
