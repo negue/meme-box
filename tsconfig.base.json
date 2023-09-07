@@ -24,13 +24,13 @@
       "@memebox/app/env": ["src/environments/environment"],
       "@memebox/app/env/modules": ["src/environments/modules/modules"],
       "@memebox/contracts": ["projects/contracts/src/public-api"],
+      "@memebox/recipe-core": ["projects/recipe-core/src/index"],
+      "@memebox/recipe-ui": ["projects/recipe-ui/src/index"],
       "@memebox/shared-state": ["projects/shared-state/src/public-api"],
       "@memebox/state-components": ["projects/state-components/src/projects"],
       "@memebox/ui-components": ["projects/ui-components/src/projects"],
       "@memebox/utils": ["projects/utils/src/public-api"],
-      "@memebox/version": ["src/version_info.json"],
-      "@memebox/recipe-ui": ["projects/recipe-ui/src/index"],
-      "@memebox/recipe-core": ["projects/recipe-core/src/index"]
+      "@memebox/version": ["src/version_info.json"]
     }
   },
   "exclude": ["node_modules"]

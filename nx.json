@@ -10,19 +10,40 @@
     }
   },
   "targetDependencies": {
-    "prepare": [{ "target": "prepare", "projects": "dependencies" }],
-    "package": [{ "target": "package", "projects": "dependencies" }]
+    "prepare": [
+      {
+        "target": "prepare",
+        "projects": "dependencies"
+      }
+    ],
+    "package": [
+      {
+        "target": "package",
+        "projects": "dependencies"
+      }
+    ]
   },
-  "affected": { "defaultBase": "develop" },
-  "workspaceLayout": { "libsDir": "projects", "appsDir": "projects" },
-  "cli": { "analytics": false, "defaultCollection": "@nrwl/angular" },
+  "affected": {
+    "defaultBase": "develop"
+  },
+  "workspaceLayout": {
+    "libsDir": "projects",
+    "appsDir": "projects"
+  },
+  "cli": {
+    "analytics": false,
+    "defaultCollection": "@nrwl/angular"
+  },
   "generators": {
     "@schematics/angular:component": {
       "prefix": "app",
       "style": "scss",
       "skipTests": true
     },
-    "@schematics/angular:directive": { "prefix": "app", "skipTests": true },
+    "@schematics/angular:directive": {
+      "prefix": "app",
+      "skipTests": true
+    },
     "@nrwl/angular:application": {
       "linter": "eslint",
       "unitTestRunner": "jest"
@@ -35,19 +56,5 @@
       "strict": true
     }
   },
-  "defaultProject": "memebox-app",
-  "projects": {
-    "action-variables": { "tags": [] },
-    "action-variables-ui": { "tags": [] },
-    "app-state": { "tags": [] },
-    "contracts": { "tags": [] },
-    "memebox-app": { "tags": [] },
-    "server": { "tags": [] },
-    "shared-state": { "tags": [] },
-    "state-components": { "tags": [] },
-    "ui-components": { "tags": [] },
-    "utils": { "tags": [] },
-    "recipe-core": { "tags": [] },
-    "recipe-ui": { "tags": [] }
-  }
+  "defaultProject": "memebox-app"
 }
