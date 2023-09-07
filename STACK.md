@@ -18,6 +18,6 @@
 
 # TypeScript
 
-Instead of using the normal TypeScript Compiler, Meme-Box is using `ttypescript` which enables transforms during compilation.
+Instead of using the normal TypeScript Compiler, Meme-Box is using `ts-patch` which enables transforms during compilation.
 
 Currently only `@zerollup/ts-transform-paths` is used. But in future more transform will be added to prevent lots of boilerplate.

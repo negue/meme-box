@@ -6,8 +6,17 @@ import {
 } from "./recipe.types";
 import {map, take} from "rxjs/operators";
 import {generateRandomCharacters, listActionsOfActionListPayload} from "./utils";
-import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
-import {AppQueries} from "@memebox/app-state";
+import {Action, ACTION_TYPE_INFORMATION, AppState, Dictionary, Screen, Tag} from "@memebox/contracts";
+
+import {Query} from "@datorama/akita";
+import {Observable} from "rxjs";
+
+export interface AppQueriesInterface extends Query<AppState> {
+  screenMap$: Observable<Dictionary<Screen>>;
+  tagList$: Observable<Tag[]>;
+  getActionById$(actionId: string): Observable<Action>;
+}
+
 
 function createMemeboxApiVariable(
   actionPayload: RecipeCommandConfigActionPayload
@@ -29,7 +38,7 @@ function createMemeboxApiVariable(
 }
 
 async function getActionLabel(
-  queries: AppQueries,
+  queries: AppQueriesInterface,
   actionPayload: RecipeCommandConfigActionPayload,
   prefix = ''
 ): Promise<string> {
@@ -42,9 +51,9 @@ async function getActionLabel(
 
   const screenName = screenIdExist
     ? await queries.screenMap$.pipe(
-        map(screenMap => screenMap[actionPayload.screenId!].name),
-        take(1)
-      ).toPromise()
+      map(screenMap => screenMap[actionPayload.screenId!].name),
+      take(1)
+    ).toPromise()
     : 'All Screens';
 
   return `${prefix} [${actionName}] on [${screenName}]`.trim();
@@ -115,7 +124,7 @@ export function registerMemeboxCommandBlocks(
 
       const actionLabel = await getActionLabel(queries, actionPayload, 'Keep Triggered Action');
 
-      return actionLabel+' active, while these commands are running:';
+      return actionLabel + ' active, while these commands are running:';
     },
     extendCommandBlock: (step) => {
       step.payload = {

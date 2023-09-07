@@ -13,7 +13,7 @@ import {
 import {CombinedActionContext, PositionEnum, Screen} from '@memebox/contracts';
 import {DragResizeMediaComponent} from '../drag-resize-media/drag-resize-media.component';
 import {AppService} from '../../../../../../projects/app-state/src/lib/state/app.service';
-import {FormBuilder, FormControl} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
 import {AutoScaleComponent} from '@gewd/components/auto-scale';
 
 enum GlobalArrangeOptions {
@@ -105,7 +105,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   readonly GlobalArrangeOptions = GlobalArrangeOptions;
   readonly PositionEnum = PositionEnum;
 
-  globalActionsForm = new FormControl([
+  globalActionsForm = new UntypedFormControl([
     GlobalArrangeOptions.Drag,
     GlobalArrangeOptions.Resize,
     GlobalArrangeOptions.Rotate
@@ -122,7 +122,7 @@ export class ScreenArrangePreviewComponent implements OnInit, OnDestroy {
   private _gewdAutoScale: AutoScaleComponent;
 
   constructor(private _cd: ChangeDetectorRef,
-              private _fb: FormBuilder,
+              private _fb: UntypedFormBuilder,
               private appService: AppService) {
   }
 

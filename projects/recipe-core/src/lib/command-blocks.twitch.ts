@@ -2,6 +2,10 @@ import {RecipeCommandBlockRegistry} from "./recipe.types";
 import {TwitchAnnouncementColors} from "@memebox/contracts";
 import {RecipeStepConfigArguments} from "./recipeStepConfigArgument";
 
+console.info({
+  TwitchAnnouncementColors
+})
+
 /* Command Block Ideas
  *
  * Start a Raid: channel:manage:raids

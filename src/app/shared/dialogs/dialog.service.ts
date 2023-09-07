@@ -1,9 +1,7 @@
 import {Compiler, Injectable, Injector, TemplateRef, Type} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {Action, Screen, TimedAction, TwitchTrigger} from "@memebox/contracts";
 import {ComponentType} from "@angular/cdk/portal";
-import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import type {ConfirmationsPayload} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
 import type {ScreenClipOptionsPayload} from "./screen-clip-options/screen-clip-options.component";
 import type {ActionAssigningDialogOptions} from "./action-assigning-dialog/action-assigning-dialog.component";

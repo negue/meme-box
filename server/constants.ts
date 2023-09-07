@@ -1,12 +1,12 @@
-import {BRANCH} from '@memebox/version';
+import versionJson from '@memebox/version';
 
 export const DEFAULT_PORT = 6363; // T9 for MEME
 
-export const IS_NIGHTLY = BRANCH !== 'release';
+export const IS_NIGHTLY = versionJson.BRANCH !== 'release';
 export const REMOTE_RELEASE_VERSION_FILE = `https://raw.githubusercontent.com/negue/meme-box/release/version_update.json`;
 export const REMOTE_NIGHTLY_VERSION_FILE = `https://raw.githubusercontent.com/negue/meme-box-nightly/main/last_commit.json`;
 export const RELEASE_PAGE = 'https://github.com/negue/meme-box/releases';
-export const TUTORIALS_GITHUB_PAGE = `https://github.com/negue/meme-box/tree/${BRANCH}/tutorials`;
+export const TUTORIALS_GITHUB_PAGE = `https://github.com/negue/meme-box/tree/${versionJson.BRANCH}/tutorials`;
 
 export interface MarkdownDialogPayload {
   name: string;

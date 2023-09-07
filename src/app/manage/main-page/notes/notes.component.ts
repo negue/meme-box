@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {MemeboxWebsocketService} from "@memebox/app-state";
 import {uuid} from "@gewd/utils";
 import {WidgetStoreRemoteAdapter} from "../../../shared/components/dynamic-iframe/widget-store-remote-adapter.service";
@@ -14,7 +14,7 @@ import {debounceTime, takeUntil} from "rxjs/operators";
 export class NotesComponent implements OnInit, OnDestroy {
 
   public notesChanged$ = new Subject<string>();
-  public notesControl = new FormControl();
+  public notesControl = new UntypedFormControl();
   private noteInstance = uuid();
   private destroy$ = new Subject<void>();
 

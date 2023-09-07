@@ -1,10 +1,9 @@
 import {NgModule} from "@angular/core";
 import {ConfirmationsPayload, SimpleConfirmationDialogComponent} from "./simple-confirmation-dialog.component";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatButtonModule} from "@angular/material/button";
 import {CommonModule} from "@angular/common";
 import {DialogContract} from "../dialog.contract";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 
 @NgModule({
   declarations: [

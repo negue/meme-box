@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MemeboxApiService } from "@memebox/app-state";
-import { ENDPOINTS } from "@memebox/contracts";
-import type { Scene } from "obs-websocket-js";
-import { FormControl } from "@angular/forms";
-import { combineLatest, from } from "rxjs";
-import { map, startWith } from "rxjs/operators";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MemeboxApiService} from "@memebox/app-state";
+import {ENDPOINTS} from "@memebox/contracts";
+import type {Scene} from "obs-websocket-js";
+import {UntypedFormControl} from "@angular/forms";
+import {combineLatest, from} from "rxjs";
+import {map, startWith} from "rxjs/operators";
 
 @Component({
   selector: 'app-obs-scene-selection',
@@ -12,7 +12,7 @@ import { map, startWith } from "rxjs/operators";
   styleUrls: ['./obs-scene-selection.component.scss']
 })
 export class ObsSceneSelectionComponent implements OnInit {
-  public sceneFormControl = new FormControl();
+  public sceneFormControl = new UntypedFormControl();
 
 
   @Input()

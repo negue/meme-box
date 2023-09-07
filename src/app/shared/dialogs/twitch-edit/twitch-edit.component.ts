@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {
@@ -103,7 +103,7 @@ const TwitchEventFieldConfig: TwitchEventFields = {
   styleUrls: ['./twitch-edit.component.scss']
 })
 export class TwitchEditComponent implements OnInit, OnDestroy {
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     id: "",
     name: "",
     event: "",
@@ -145,7 +145,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
 
   showWarningClipSelection = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  aliasesFrmControl = new FormControl();
+  aliasesFrmControl = new UntypedFormControl();
   // Current Tags assigned to this clip
   currentAliases$ = new BehaviorSubject<string[]>([]);
 
@@ -324,7 +324,7 @@ export class TwitchEditComponent implements OnInit, OnDestroy {
   }
 
   enterNewAlias($event: MatChipInputEvent): void  {
-    const input = $event.input;
+    const input = $event.chipInput.inputElement;
     const value = $event.value;
 
     const currentAliases = this.currentAliases$.value;

@@ -8,7 +8,7 @@ for (const [key, value] of currentPaths) {
   moduleNameMapper[key] = `<rootDir>/${value}`;
 }
 
-module.exports = {
+export default {
   moduleNameMapper,
   modulePathIgnorePatterns: [
     '<rootDir>/dist/',
@@ -18,5 +18,5 @@ module.exports = {
   ],
   rootDir: __dirname,
   preset: 'jest-preset-angular',
-  setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+  setupFilesAfterEnv: ['<rootDir>/setup-jest.ts']
 };

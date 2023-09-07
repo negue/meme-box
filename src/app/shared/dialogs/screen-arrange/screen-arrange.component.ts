@@ -1,14 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {AppQueries} from '../../../../../projects/app-state/src/lib/state/app.queries';
+import {AppQueries, AppService} from '@memebox/app-state';
 import {map, publishReplay, refCount, startWith} from 'rxjs/operators';
 import {ActionType, CombinedActionContext, Screen} from '@memebox/contracts';
-import {AppService} from '../../../../../projects/app-state/src/lib/state/app.service';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {combineLatest} from 'rxjs';
 import {ScreenArrangePreviewComponent} from './screen-arrange-preview/screen-arrange-preview.component';
-import {MatTabGroup} from '@angular/material/tabs';
-import {MatTabChangeEvent} from '@angular/material/tabs/tab-group';
+import {MatTabChangeEvent, MatTabGroup} from '@angular/material/tabs';
 import {DialogService} from '../dialog.service';
 
 @Component({
@@ -50,7 +48,7 @@ export class ScreenArrangeComponent implements OnInit {
     refCount()
   );
 
-  selectedItems = new FormControl([]);
+  selectedItems = new UntypedFormControl([]);
   selectedIndex = 0;
 
   unsavedChangesIds: string[] = [];

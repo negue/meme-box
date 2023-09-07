@@ -1,27 +1,20 @@
 {
-  "extends": "@nrwl/workspace/presets/npm.json",
+  "extends": "nx/presets/npm.json",
   "npmScope": "memebox",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "test", "lint", "package", "prepare"]
+        "cacheableOperations": [
+          "build",
+          "test",
+          "lint",
+          "package",
+          "prepare"
+        ],
+        "parallel": 3
       }
     }
-  },
-  "targetDependencies": {
-    "prepare": [
-      {
-        "target": "prepare",
-        "projects": "dependencies"
-      }
-    ],
-    "package": [
-      {
-        "target": "package",
-        "projects": "dependencies"
-      }
-    ]
   },
   "affected": {
     "defaultBase": "develop"
@@ -31,8 +24,7 @@
     "appsDir": "projects"
   },
   "cli": {
-    "analytics": false,
-    "defaultCollection": "@nrwl/angular"
+    "analytics": false
   },
   "generators": {
     "@schematics/angular:component": {
@@ -52,9 +44,16 @@
       "linter": "eslint",
       "unitTestRunner": "jest",
       "buildable": true,
-      "style": "scss",
       "strict": true
     }
   },
-  "defaultProject": "memebox-app"
+  "defaultProject": "memebox-app",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    }
+  }
 }

@@ -3,7 +3,7 @@ import {ActionType} from "./action.types";
 import {ActionOverridableProperties, TriggerAction} from "./actions";
 import {AllTwitchEvents} from "./twitch.connector.types";
 import {DefaultImage} from "./twitch-data.types";
-import {RecipeContext} from "@memebox/recipe-core";
+import {RecipeContext} from "./recipe.types";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -39,6 +39,7 @@ export interface HasExtendedData {
 // TODO split Action into a union of each subtype
 // - with that only properties that are used for type X
 // - are known in each sub type
+
 
 export interface Action extends HasId, ActionOverridableProperties, HasExtendedData {
   name: string;

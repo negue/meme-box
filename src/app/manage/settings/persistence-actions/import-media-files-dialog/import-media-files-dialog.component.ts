@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 import {TargetScreenType} from "@memebox/contracts";
 import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
 
@@ -9,7 +9,7 @@ import {ConfigService} from "../../../../../../projects/app-state/src/lib/servic
   styleUrls: ['./import-media-files-dialog.component.scss']
 })
 export class ImportMediaFilesDialogComponent {
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     targetScreenType: TargetScreenType.OneScreen,
   });
 

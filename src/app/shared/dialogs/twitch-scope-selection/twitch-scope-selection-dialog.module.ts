@@ -1,8 +1,7 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {DialogContract, TwitchScopeSelectionPayload} from "../dialog.contract";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {TwitchScopeSelectionComponent} from "./twitch-scope-selection.component";
 import {MatButtonModule} from "@angular/material/button";
 import {OpenFeedbackButtonModule} from "../../components/open-feedback-button/open-feedback-button.module";

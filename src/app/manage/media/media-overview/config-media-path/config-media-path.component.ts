@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {Subject} from "rxjs";
@@ -14,7 +14,7 @@ import {ConfigService} from "../../../../../../projects/app-state/src/lib/servic
 export class ConfigMediaPathComponent implements OnInit, OnDestroy {
 
 
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     path: '',
   });
 

@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "newProjectRoot": "",
   "projects": {
     "action-variables": {
       "projectType": "library",
@@ -102,7 +101,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["projects/app-state/**/*.ts"]
+            "lintFilePatterns": [
+              "projects/app-state/**/*.ts"
+            ]
           }
         }
       },
@@ -193,7 +194,6 @@
               "optimization": false,
               "outputHashing": "all",
               "sourceMap": true,
-              "extractCss": true,
               "namedChunks": false,
               "aot": false,
               "extractLicenses": true,
@@ -210,7 +210,6 @@
               "optimization": false,
               "outputHashing": "all",
               "sourceMap": true,
-              "extractCss": true,
               "namedChunks": false,
               "aot": false,
               "extractLicenses": true,
@@ -227,7 +226,6 @@
               "optimization": false,
               "outputHashing": "all",
               "sourceMap": true,
-              "extractCss": true,
               "namedChunks": true,
               "aot": true,
               "extractLicenses": false,
@@ -244,7 +242,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": true,
               "aot": true,
               "extractLicenses": true,
@@ -302,8 +299,12 @@
             "polyfills": "src/polyfills-test.ts",
             "tsConfig": "tsconfig.spec.json",
             "scripts": [],
-            "styles": ["src/styles.scss"],
-            "assets": ["src/assets"],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "assets": [
+              "src/assets"
+            ],
             "customWebpackConfig": {
               "path": "./angular.webpack.cjs",
               "target": "electron-renderer"
@@ -391,9 +392,11 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/recipe-core"],
+          "outputs": [
+            "coverage/projects/recipe-core"
+          ],
           "options": {
-            "jestConfig": "projects/recipe-core/jest.config.js",
+            "jestConfig": "projects/recipe-core/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -429,9 +432,11 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/recipe-ui"],
+          "outputs": [
+            "coverage/projects/recipe-ui"
+          ],
           "options": {
-            "jestConfig": "projects/recipe-ui/jest.config.js",
+            "jestConfig": "projects/recipe-ui/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -444,13 +449,17 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "builder": "@nrwl/webpack:webpack",
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/projects/server",
             "main": "server/server.ts",
             "tsConfig": "server/tsconfig.server.json",
-            "assets": []
+            "assets": [],
+            "target": "node",
+            "compiler": "tsc"
           },
           "configurations": {
             "production": {
@@ -463,14 +472,20 @@
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["server/**/*.ts"]
+            "lintFilePatterns": [
+              "server/**/*.ts"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/projects/server"],
+          "outputs": [
+            "coverage/projects/server"
+          ],
           "options": {
             "jestConfig": "projects/server/jest.config.js",
             "passWithNoTests": true
@@ -614,7 +629,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["projects/utils/**/*.ts"]
+            "lintFilePatterns": [
+              "projects/utils/**/*.ts"
+            ]
           }
         }
       },

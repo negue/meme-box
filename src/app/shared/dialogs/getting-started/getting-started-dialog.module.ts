@@ -1,8 +1,7 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {DialogContract} from "../dialog.contract";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {GettingStartedComponent} from "./getting-started.component";
 // TODO move and why from server constants? :D
 import {MatButtonModule} from "@angular/material/button";

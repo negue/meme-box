@@ -46,7 +46,7 @@ export class TwitchConnectionEditComponent implements OnInit {
     channelName: '',
     authToken: '',
     botName: '',
-    botToken: '',
+    botToken: ''
   });
 
   public additionalForm = new FormBuilder().group<AdditionalForm>({
@@ -78,21 +78,25 @@ export class TwitchConnectionEditComponent implements OnInit {
       channelName: 'my-channel',
       botName: '',
       botToken: '',
+      authToken: ''
     });
 
     this.additionalForm.reset({
-      botResponse: ''
+      bot: false,
+      log: false,
+      botResponse: '',
+      command: ''
     });
 
     this.appQuery.config$.pipe(
       filter(config => !!config.twitch),
-      take(1),
+      take(1)
     ).subscribe(value => {
       this.mainAccountForm.reset({
         channelName: value.twitch.channel,
         authToken: value.twitch.token,
         botName: value.twitch?.bot?.auth?.name ?? '',
-        botToken: value.twitch?.bot?.auth?.token ?? '',
+        botToken: value.twitch?.bot?.auth?.token ?? ''
       });
 
       this.additionalForm.reset({
@@ -168,7 +172,7 @@ export class TwitchConnectionEditComponent implements OnInit {
   }
 
 
-  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>): void{
+  onBotIntegrationChanged($event: MatCheckboxChange, config: Partial<Config>): void {
     this.additionalForm.patchValue({
       bot: $event.checked
     });
@@ -226,24 +230,24 @@ export class TwitchConnectionEditComponent implements OnInit {
     if (type === 'main') {
       if (!this.mainAccountForm.value.channelName) {
         this.mainAccountForm.patchValue({
-          channelName: result.userName,
+          channelName: result.userName
         });
       }
 
       this.mainAccountForm.patchValue({
-        authToken: result.accessToken,
+        authToken: result.accessToken
       });
     } else {
       this.mainAccountForm.patchValue({
         botName: result.userName,
-        botToken: result.accessToken,
+        botToken: result.accessToken
       });
     }
 
     this.save(false, true);
   }
 
-  async deleteMainAuth (): Promise<void> {
+  async deleteMainAuth(): Promise<void> {
     await this.configService.revokeToken('MAIN');
 
     this.mainAccountForm.patchValue({
@@ -253,12 +257,12 @@ export class TwitchConnectionEditComponent implements OnInit {
     this.mainAuthInformation = null;
   }
 
-  async deleteBotAuth (): Promise<void> {
+  async deleteBotAuth(): Promise<void> {
     await this.configService.revokeToken('BOT');
 
     this.mainAccountForm.patchValue({
       botName: null,
-      botToken: null,
+      botToken: null
     });
 
     this.botAuthInformation = null;

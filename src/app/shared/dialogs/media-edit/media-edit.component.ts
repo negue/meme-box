@@ -18,7 +18,7 @@ import {
   Tag,
   UserDataState
 } from "@memebox/contracts";
-import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormControl, Validators} from "@angular/forms";
 import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
 import {
   debounceTime,
@@ -104,7 +104,7 @@ export class MediaEditComponent
   public selectedFirstTabIndex = 0;
   public actionToEdit: Action;
 
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     id: "",
     name: "",
     type: 0,
@@ -173,9 +173,9 @@ export class MediaEditComponent
   );
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  tagFormCtrl = new FormControl();  // needed in form?!
-  localMediaFormCtrl = new FormControl();  // needed in form?!
-  mediaPathTypeFormCtrl = new FormControl();  // needed in form?!
+  tagFormCtrl = new UntypedFormControl();  // needed in form?!
+  localMediaFormCtrl = new UntypedFormControl();  // needed in form?!
+  mediaPathTypeFormCtrl = new UntypedFormControl();  // needed in form?!
 
   // current "filtered" tags
   filteredTags$: Observable<Tag[]>;

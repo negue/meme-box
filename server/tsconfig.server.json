@@ -5,10 +5,6 @@
     "target": "ES6",
     "module": "CommonJS"
   },
-  "files": [
-    "server.ts"
-  ],
-  "exclude": [
-    "**/*.spec.ts"
-  ]
+  "files": ["server.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
 }

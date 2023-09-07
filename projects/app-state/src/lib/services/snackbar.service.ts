@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatSnackBarConfig} from "@angular/material/snack-bar/snack-bar-config";
+import {MatSnackBar, MatSnackBarConfig} from "@angular/material/snack-bar";
 import merge from 'lodash/merge';
 import {take} from 'rxjs/operators';
 
@@ -50,7 +49,7 @@ export class SnackbarService {
   constructor(private matSnackBar: MatSnackBar) {
   }
 
-  normal(text: string, options: SnackbarOptions = null) {
+  normal(text: string, options: SnackbarOptions|null = null) {
     options = options ?? DEFAULT_OPTIONS;
 
     const emote = typeof options.emote !== 'undefined'

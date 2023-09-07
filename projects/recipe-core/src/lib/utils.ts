@@ -1,10 +1,5 @@
-import {
-  RecipeCommandConfigActionListPayload,
-  RecipeCommandConfigActionPayload,
-  RecipeContext,
-  RecipeEntryCommandCall
-} from "./recipe.types";
-import {UserDataState} from "@memebox/contracts";
+import {RecipeCommandConfigActionListPayload, RecipeCommandConfigActionPayload} from "./recipe.types";
+import {RecipeContext, RecipeEntryCommandCall, UserDataState} from "@memebox/contracts";
 
 const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const charactersLength = characters.length;

@@ -1,7 +1,6 @@
-import { Action, ActionType } from "@memebox/contracts";
-import { mdSection, mdSectionAsTypedObject } from "@memebox/utils";
-import { MarkdownStructure, startNewMarkdownStructure } from "./md-structure";
-import { RecipeContext } from "@memebox/recipe-core";
+import {Action, ActionType, RecipeContext} from "@memebox/contracts";
+import {mdSection, mdSectionAsTypedObject} from "@memebox/utils";
+import {MarkdownStructure, startNewMarkdownStructure} from "./md-structure";
 
 export function convertRecipeToMarkdownStructure(
   action: Action
