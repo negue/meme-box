@@ -162,7 +162,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "cache": true,
         "lintFilePatterns": [

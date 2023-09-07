@@ -6,10 +6,11 @@
   "prefix": "memebox",
   "targets": {
     "build": {
-      "executor": "@nrwl/angular:ng-packagr-lite",
+      "executor": "@nx/angular:ng-packagr-lite",
       "options": {
         "tsConfig": "projects/recipe-ui/tsconfig.lib.json",
-        "project": "projects/recipe-ui/ng-package.json"
+        "project": "projects/recipe-ui/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": true
       },
       "configurations": {
         "production": {
@@ -18,7 +19,7 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
           "projects/recipe-ui/src/**/*.ts",
@@ -27,7 +28,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/projects/recipe-ui"],
       "options": {
         "jestConfig": "projects/recipe-ui/jest.config.ts",
