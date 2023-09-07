@@ -1,0 +1,37 @@
+{
+  "name": "action-variables-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/action-variables-ui/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "tsConfig": "projects/action-variables-ui/tsconfig.lib.json",
+        "project": "projects/action-variables-ui/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/action-variables-ui/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-builders/jest:run",
+      "options": {
+        "tsConfig": "projects/action-variables-ui/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "projects/action-variables-ui/**/*.ts",
+          "projects/action-variables-ui/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

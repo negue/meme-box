@@ -1,0 +1,215 @@
+{
+  "name": "memebox-app",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@angular-builders/custom-webpack:browser",
+      "options": {
+        "outputPath": "dist",
+        "index": "src/index.html",
+        "main": "src/main.ts",
+        "tsConfig": "src/tsconfig.app.json",
+        "polyfills": "src/polyfills.ts",
+        "assets": [
+          "src/assets",
+          {
+            "glob": "prism-@(c|csharp|css-extras|json|typescript|markdown).min.js",
+            "input": "./node_modules/prismjs/components",
+            "output": "/assets/prism/"
+          },
+          {
+            "glob": "prism-plugin-@(inline-color|bracket-match).worker-func.js",
+            "input": "./node_modules/@gewd/components/highlight-editor",
+            "output": "/assets/prism/"
+          },
+          {
+            "glob": "**/*.md",
+            "input": "./tutorials",
+            "output": "/assets/tutorials/"
+          }
+        ],
+        "styles": [
+          "src/styles.scss",
+          "node_modules/prismjs/themes/prism-okaidia.css",
+          "node_modules/prismjs/plugins/inline-color/prism-inline-color.css",
+          "node_modules/@gewd/components/highlight-editor/bracket-match.css"
+        ],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "./angular.webpack.cjs",
+          "target": "web"
+        },
+        "webWorkerTsConfig": "tsconfig.worker.json"
+      },
+      "configurations": {
+        "dev": {
+          "optimization": false,
+          "outputHashing": "all",
+          "sourceMap": true,
+          "namedChunks": false,
+          "aot": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": false,
+          "fileReplacements": [
+            {
+              "replace": "src/environments/environment.ts",
+              "with": "src/environments/environment.dev.ts"
+            }
+          ]
+        },
+        "cypress": {
+          "optimization": false,
+          "outputHashing": "all",
+          "sourceMap": true,
+          "namedChunks": false,
+          "aot": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": false,
+          "fileReplacements": [
+            {
+              "replace": "src/environments/modules/modules.ts",
+              "with": "src/environments/modules/modules.cypress.ts"
+            }
+          ]
+        },
+        "web": {
+          "optimization": false,
+          "outputHashing": "all",
+          "sourceMap": true,
+          "namedChunks": true,
+          "aot": true,
+          "extractLicenses": false,
+          "vendorChunk": false,
+          "buildOptimizer": false,
+          "fileReplacements": [
+            {
+              "replace": "src/environments/environment.ts",
+              "with": "src/environments/environment.web.ts"
+            }
+          ]
+        },
+        "production": {
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": true,
+          "aot": true,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "fileReplacements": [
+            {
+              "replace": "src/environments/environment.ts",
+              "with": "src/environments/environment.prod.ts"
+            },
+            {
+              "replace": "src/environments/modules/modules.ts",
+              "with": "src/environments/modules/modules.prod.ts"
+            }
+          ],
+          "serviceWorker": true,
+          "ngswConfigPath": "ngsw-config.json"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-builders/custom-webpack:dev-server",
+      "options": {
+        "browserTarget": "memebox-app:build",
+        "hmr": true
+      },
+      "configurations": {
+        "dev": {
+          "browserTarget": "memebox-app:build:dev",
+          "hmr": true
+        },
+        "cypress": {
+          "browserTarget": "memebox-app:build:cypress",
+          "hmr": true
+        },
+        "web": {
+          "browserTarget": "memebox-app:build:web",
+          "hmr": true
+        },
+        "production": {
+          "browserTarget": "memebox-app:build:production",
+          "hmr": true
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "memebox-app:build"
+      }
+    },
+    "test": {
+      "executor": "@angular-builders/jest:run",
+      "options": {
+        "polyfills": "src/polyfills-test.ts",
+        "tsConfig": "tsconfig.spec.json",
+        "scripts": [],
+        "styles": ["src/styles.scss"],
+        "assets": ["src/assets"],
+        "customWebpackConfig": {
+          "path": "./angular.webpack.cjs",
+          "target": "electron-renderer"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "cache": true,
+        "lintFilePatterns": [
+          "src/**/*.ts",
+          "src/**/*.html",
+          "!src/**/*.spec.ts"
+        ]
+      }
+    },
+    "cypress-run": {
+      "executor": "@cypress/schematic:cypress",
+      "options": {
+        "devServerTarget": "memebox-app:serve:cypress",
+        "headless": true
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "memebox-app:serve:production"
+        }
+      }
+    },
+    "cypress-open": {
+      "executor": "@cypress/schematic:cypress",
+      "options": {
+        "devServerTarget": "memebox-app:serve:cypress",
+        "watch": true,
+        "headless": false
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "memebox-app:serve:production"
+        }
+      }
+    },
+    "e2e": {
+      "executor": "@cypress/schematic:cypress",
+      "options": {
+        "devServerTarget": "memebox-app:serve:cypress",
+        "watch": true,
+        "headless": false
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "memebox-app:serve:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}

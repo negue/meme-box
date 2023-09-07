@@ -1,0 +1,39 @@
+{
+  "name": "recipe-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/recipe-ui/src",
+  "prefix": "memebox",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "options": {
+        "tsConfig": "projects/recipe-ui/tsconfig.lib.json",
+        "project": "projects/recipe-ui/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/recipe-ui/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "projects/recipe-ui/src/**/*.ts",
+          "projects/recipe-ui/src/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/projects/recipe-ui"],
+      "options": {
+        "jestConfig": "projects/recipe-ui/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

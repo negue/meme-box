@@ -1,0 +1,39 @@
+{
+  "name": "recipe-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/recipe-core/src",
+  "prefix": "memebox",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "options": {
+        "tsConfig": "projects/recipe-core/tsconfig.lib.json",
+        "project": "projects/recipe-core/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/recipe-core/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "projects/recipe-core/src/**/*.ts",
+          "projects/recipe-core/src/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/projects/recipe-core"],
+      "options": {
+        "jestConfig": "projects/recipe-core/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

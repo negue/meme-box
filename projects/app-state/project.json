@@ -1,0 +1,34 @@
+{
+  "name": "app-state",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/app-state/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "tsConfig": "projects/app-state/tsconfig.lib.json",
+        "project": "projects/app-state/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/app-state/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-builders/jest:run",
+      "options": {
+        "tsConfig": "projects/app-state/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["projects/app-state/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

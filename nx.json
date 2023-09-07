@@ -1,21 +1,15 @@
 {
-  "extends": "nx/presets/npm.json",
-  "npmScope": "memebox",
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "test",
-          "lint",
-          "package",
-          "prepare"
-        ],
+        "cacheableOperations": ["build", "test", "lint", "package", "prepare"],
         "parallel": 3
       }
     }
   },
+  "extends": "nx/presets/npm.json",
+  "npmScope": "memebox",
   "affected": {
     "defaultBase": "develop"
   },
@@ -51,9 +45,13 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.js"]
     }
   }
 }

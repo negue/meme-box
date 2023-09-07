@@ -1,0 +1,37 @@
+{
+  "name": "shared-state",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/shared-state/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "tsConfig": "projects/shared-state/tsconfig.lib.json",
+        "project": "projects/shared-state/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/shared-state/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-builders/jest:run",
+      "options": {
+        "tsConfig": "projects/shared-state/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "projects/shared-state/**/*.ts",
+          "projects/shared-state/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

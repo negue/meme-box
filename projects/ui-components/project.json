@@ -1,0 +1,37 @@
+{
+  "name": "ui-components",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/ui-components/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "tsConfig": "projects/ui-components/tsconfig.lib.json",
+        "project": "projects/ui-components/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/ui-components/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-builders/jest:run",
+      "options": {
+        "tsConfig": "projects/ui-components/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "projects/ui-components/**/*.ts",
+          "projects/ui-components/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
