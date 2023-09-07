@@ -75,10 +75,10 @@
     "@angular-eslint/schematics": "14.4.0",
     "@angular-eslint/template-parser": "15.0.0",
     "@angular/cli": "~15.2.0",
-    "@angular/compiler-cli": "16.2.4",
-    "@angular/elements": "16.2.4",
-    "@angular/language-service": "16.2.4",
-    "@angular/service-worker": "16.2.4",
+    "@angular/compiler-cli": "14.2.12",
+    "@angular/elements": "14.2.12",
+    "@angular/language-service": "14.2.12",
+    "@angular/service-worker": "14.2.12",
     "@babel/core": "7.20.2",
     "@compodoc/compodoc": "1.1.19",
     "@cypress/schematic": "1.7.0",
@@ -156,16 +156,16 @@
     "node": "16"
   },
   "dependencies": {
-    "@angular/animations": "16.2.4",
-    "@angular/cdk": "16.2.3",
-    "@angular/common": "16.2.4",
-    "@angular/compiler": "16.2.4",
-    "@angular/core": "16.2.4",
-    "@angular/forms": "16.2.4",
-    "@angular/material": "16.2.3",
-    "@angular/platform-browser": "16.2.4",
-    "@angular/platform-browser-dynamic": "16.2.4",
-    "@angular/router": "16.2.4",
+    "@angular/animations": "14.2.12",
+    "@angular/cdk": "14.2.7",
+    "@angular/common": "14.2.12",
+    "@angular/compiler": "14.2.12",
+    "@angular/core": "14.2.12",
+    "@angular/forms": "14.2.12",
+    "@angular/material": "14.2.7",
+    "@angular/platform-browser": "14.2.12",
+    "@angular/platform-browser-dynamic": "14.2.12",
+    "@angular/router": "14.2.12",
     "@codemirror/basic-setup": "0.19.1",
     "@codemirror/commands": "0.19.8",
     "@codemirror/lang-css": "0.19.3",
@@ -226,4 +226,3 @@
     "outputPath": "release/out"
   }
 }
-

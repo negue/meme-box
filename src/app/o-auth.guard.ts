@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
-import {Router} from "@angular/router";
+import {CanActivate, Router} from "@angular/router";
 import {checkToken} from "./shared/dialogs/twitch-connection-edit/twitch.oauth";
 
 @Injectable({ providedIn: 'root'})
-export class OAuthGuard  {
+export class OAuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
   canActivate(): boolean  {
