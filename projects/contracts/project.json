@@ -27,8 +27,7 @@
       "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "projects/contracts/**/*.ts",
-          "projects/contracts/**/*.html"
+          "projects/contracts/**/*.ts"
         ]
       }
     }

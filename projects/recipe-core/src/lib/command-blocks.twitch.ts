@@ -1,10 +1,6 @@
-import {RecipeCommandBlockRegistry} from "./recipe.types";
-import {TwitchAnnouncementColors} from "@memebox/contracts";
-import {RecipeStepConfigArguments} from "./recipeStepConfigArgument";
-
-console.info({
-  TwitchAnnouncementColors
-})
+import { RecipeCommandBlockRegistry } from "./recipe.types";
+import { TwitchAnnouncementColors } from "@memebox/contracts";
+import { RecipeStepConfigArguments } from "./recipeStepConfigArgument";
 
 /* Command Block Ideas
  *
@@ -14,7 +10,7 @@ console.info({
  *    Resolve BroadcasterID based on a username
  */
 
-export function registerTwitchCommandBlocks (
+export function registerTwitchCommandBlocks(
   registry: RecipeCommandBlockRegistry
 ): void {
   registry['twitch:sendMessage'] = {
@@ -26,7 +22,7 @@ export function registerTwitchCommandBlocks (
         label: "Message to write",
         type: "textarea",
         flags: {
-          canUseVariables: true,
+          canUseVariables: true
         }
       }
     ],
@@ -36,9 +32,9 @@ export function registerTwitchCommandBlocks (
     commandEntryLabelAsync: (queries, payload) => {
       const textToSay = payload.text as string;
 
-      return Promise.resolve('Write in Chat: '+ textToSay);
+      return Promise.resolve('Write in Chat: ' + textToSay);
     },
-    entryIcon: () => 'twitch',
+    entryIcon: () => 'twitch'
   };
 
   registry['twitch:shoutout'] = {
@@ -50,7 +46,7 @@ export function registerTwitchCommandBlocks (
         label: "Username to Shoutout",
         type: "text",
         flags: {
-          canUseVariables: true,
+          canUseVariables: true
         }
       }
     ],
@@ -60,7 +56,7 @@ export function registerTwitchCommandBlocks (
     commandEntryLabelAsync: (queries, payload) => {
       const username = payload.username as string;
 
-      return Promise.resolve('Twitch: Shoutout: '+ username);
+      return Promise.resolve('Twitch: Shoutout: ' + username);
     }
   };
 
@@ -74,7 +70,7 @@ export function registerTwitchCommandBlocks (
         label: "Announcement to send",
         type: "textarea",
         flags: {
-          canUseVariables: true,
+          canUseVariables: true
         }
       },
       {
@@ -102,7 +98,7 @@ export function registerTwitchCommandBlocks (
 
       return Promise.resolve(`${color} Announcement: ${textToSay}`);
     },
-    entryIcon: () => 'twitch',
+    entryIcon: () => 'twitch'
   };
 
   // https://dev.twitch.tv/docs/api/reference#delete-chat-messages
@@ -116,7 +112,7 @@ export function registerTwitchCommandBlocks (
     commandEntryLabelAsync: (queries, payload) => {
       return Promise.resolve(`Clear Chat`);
     },
-    entryIcon: () => 'twitch',
+    entryIcon: () => 'twitch'
   };
 
 
@@ -133,27 +129,27 @@ export function registerTwitchCommandBlocks (
         entries: [
           {
             id: '30',
-            label: '30 Seconds',
+            label: '30 Seconds'
           },
           {
             id: '60',
-            label: '60 Seconds',
+            label: '60 Seconds'
           },
           {
             id: '90',
-            label: '90 Seconds',
+            label: '90 Seconds'
           },
           {
             id: '120',
-            label: '120 Seconds',
+            label: '120 Seconds'
           },
           {
             id: '150',
-            label: '150 Seconds',
+            label: '150 Seconds'
           },
           {
             id: '180',
-            label: '180 Seconds',
+            label: '180 Seconds'
           }
         ]
       }
@@ -166,7 +162,7 @@ export function registerTwitchCommandBlocks (
       const length = payload.length as string;
       return Promise.resolve(`Start Commercial for ${length} Seconds`);
     },
-    entryIcon: () => 'twitch',
+    entryIcon: () => 'twitch'
   };
 
   // https://dev.twitch.tv/docs/api/reference#create-stream-marker
@@ -180,31 +176,31 @@ export function registerTwitchCommandBlocks (
     commandEntryLabelAsync: (queries, payload) => {
       return Promise.resolve(`Create Marker`);
     },
-    entryIcon: () => 'twitch',
+    entryIcon: () => 'twitch'
   };
 
-  const chatSettingsArray:RecipeStepConfigArguments[] = [
+  const chatSettingsArray: RecipeStepConfigArguments[] = [
     {
       name: "emote_mode",
       label: "Emote Mode",
       type: "boolean"
-    },   {
+    }, {
       name: "follower_mode",
       label: "Follower Mode",
       type: "boolean"
-    },   {
+    }, {
       name: "slow_mode",
       label: "Slow Mode",
       type: "boolean"
-    },   {
+    }, {
       name: "subscriber_mode",
       label: "Subscriber Mode",
       type: "boolean"
-    },   {
+    }, {
       name: "unique_chat_mode",
       label: "Unique Chatter Mode",
       type: "boolean"
-    },
+    }
   ];
 
   // https://dev.twitch.tv/docs/api/reference#update-chat-settings
@@ -220,13 +216,13 @@ export function registerTwitchCommandBlocks (
     commandEntryLabelAsync: (queries, payload) => {
       return Promise.resolve(`Update Chat Settings`);
     },
-    entryIcon: () => 'twitch',
+    entryIcon: () => 'twitch'
   };
 
   chatSettingsArray.forEach(chatSetting => {
-    const label =`Change [${chatSetting.label}]`;
+    const label = `Change [${chatSetting.label}]`;
 
-    registry['twitch:changeChatSettings_'+chatSetting.name] = {
+    registry['twitch:changeChatSettings_' + chatSetting.name] = {
       pickerLabel: label,
       commandGroup: "twitch",
       configArguments: [
@@ -242,9 +238,9 @@ export function registerTwitchCommandBlocks (
       commandEntryLabelAsync: (queries, payload) => {
         const value = payload[chatSetting.name];
 
-        return Promise.resolve(`${value? 'Activate':'Deactivate'} [${chatSetting.label}]`);
+        return Promise.resolve(`${value ? 'Activate' : 'Deactivate'} [${chatSetting.label}]`);
       },
-      entryIcon: () => 'twitch',
+      entryIcon: () => 'twitch'
     };
   })
 }
