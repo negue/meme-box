@@ -1,6 +1,6 @@
 import * as tmi from 'tmi.js';
-import {ChatUserstate, Options, SubMethods, Userstate} from 'tmi.js';
-import {debounceTime, startWith} from 'rxjs/operators';
+import { ChatUserstate, Options, SubMethods, Userstate } from 'tmi.js';
+import { debounceTime, startWith } from 'rxjs/operators';
 import {
   ChangedInfo,
   TWITCH_BOT_RESPONSE_CONSTS,
@@ -18,20 +18,19 @@ import {
   TwitchTrigger,
   TwitchTriggerCommand
 } from '@memebox/contracts';
-import {Service, UseOpts} from "@tsed/di";
-import {Inject} from "@tsed/common";
-import {isAllowedToTrigger} from "./twitch.utils";
-import {Persistence} from "../../persistence";
-import {PERSISTENCE_DI} from "../contracts";
-import {NamedLogger} from "../named-logger";
-import {getLevelOfTags} from "./twitch.functions";
+import { Service, UseOpts } from "@tsed/di";
+import { Inject } from "@tsed/common";
+import { isAllowedToTrigger } from "./twitch.utils";
 
-import {PubSubClient} from '@twurple/pubsub';
-import {StaticAuthProvider} from "@twurple/auth";
+import { NamedLogger, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { getLevelOfTags } from "./twitch.functions";
 
-import {TwitchAuthInformationProvider} from "./twitch.auth-information";
-import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
-import {ConnectionsStateHub, UpdateStateFunc} from "../connections-state.hub";
+import { PubSubClient } from '@twurple/pubsub';
+import { StaticAuthProvider } from "@twurple/auth";
+
+import { TwitchAuthInformationProvider } from "./twitch.auth-information";
+import { TwitchQueueEventBus } from "./twitch-queue-event.bus";
+import { ConnectionsStateHub, UpdateStateFunc } from "../connections-state.hub";
 
 
 @Service()
@@ -39,7 +38,7 @@ export class TwitchConnector {
   private tmiReadOnlyClient: tmi.Client;
   private tmiMainClient: tmi.Client;
   private tmiBotClient: tmi.Client;
-  private tmiConnected: {[key: string]: boolean} = {};
+  private tmiConnected: { [key: string]: boolean } = {};
   private _twitchBotEnabled = false;
   private _currentTwitchConfig: TwitchConfig;
 
@@ -54,12 +53,10 @@ export class TwitchConnector {
     // once there is some other "config" layer,
     // then it'll be replaced
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-
     @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
-
     private twitchAuth: TwitchAuthInformationProvider,
     private twitchEventBus: TwitchQueueEventBus,
-    private connectionStateHub: ConnectionsStateHub,
+    private connectionStateHub: ConnectionsStateHub
   ) {
     this.tmiReadOnlyState = this.connectionStateHub.registerService({
       name: 'TMI Readonly Connection'
@@ -107,7 +104,7 @@ export class TwitchConnector {
       });
   }
 
-  public availableConnectionTypes (): TwitchConnectionType[] {
+  public availableConnectionTypes(): TwitchConnectionType[] {
     const types: TwitchConnectionType[] = [];
 
     if (this._currentTwitchConfig.token) {
@@ -121,7 +118,7 @@ export class TwitchConnector {
     return types;
   }
 
-  public async getTmiWriteInstance(type: TwitchConnectionType|null = null) : Promise<tmi.Client> {
+  public async getTmiWriteInstance(type: TwitchConnectionType | null = null): Promise<tmi.Client> {
     if (type === null) {
       const availableTypes = this.availableConnectionTypes();
 
@@ -149,11 +146,11 @@ export class TwitchConnector {
     return client;
   }
 
-  public getTwitchSettings (){
+  public getTwitchSettings() {
     return this._currentTwitchConfig;
   }
 
-  public disconnect(): void  {
+  public disconnect(): void {
     this.tmiReadOnlyClient?.disconnect();
     this.tmiMainClient?.disconnect();
     this.tmiBotClient?.disconnect();
@@ -185,12 +182,12 @@ export class TwitchConnector {
     }
   }
 
-  private logTwitchAuthResult (twitchAuthResult: TwitchAuthResult,
-                               twitchConnectionType: TwitchConnectionType) {
-    if( twitchAuthResult.valid ) {
+  private logTwitchAuthResult(twitchAuthResult: TwitchAuthResult,
+                              twitchConnectionType: TwitchConnectionType) {
+    if (twitchAuthResult.valid) {
       const dateToFormat = new Date(twitchAuthResult.expires_in_date);
       const dateIn2Weeks = new Date();
-      dateIn2Weeks.setDate(dateIn2Weeks.getDate()+14);
+      dateIn2Weeks.setDate(dateIn2Weeks.getDate() + 14);
 
       this.logger.info(`${twitchConnectionType}-Twitch Auth is valid: ${dateToFormat.toISOString()}`);
 
@@ -202,15 +199,15 @@ export class TwitchConnector {
     }
   }
 
-  private createBaseTmiConfig (): Options {
+  private createBaseTmiConfig(): Options {
     const tmiConfig: Options = {
       options: {
-        skipUpdatingEmotesets: true,
+        skipUpdatingEmotesets: true
       },
       //options: {debug: true},
       connection: {
         secure: true,
-        reconnect: true,
+        reconnect: true
       },
       channels: [this._currentTwitchConfig.channel]
     };
@@ -218,11 +215,11 @@ export class TwitchConnector {
     return tmiConfig;
   }
 
-  private createTmiConnection (type: TwitchConnectionType): tmi.Client {
+  private createTmiConnection(type: TwitchConnectionType): tmi.Client {
     const tmiConfig = this.createBaseTmiConfig();
 
     if (type === 'MAIN') {
-      if(this._currentTwitchConfig.token) {
+      if (this._currentTwitchConfig.token) {
         tmiConfig.identity = {
           username: this._currentTwitchConfig.channel,
           password: this._currentTwitchConfig.token
@@ -246,7 +243,7 @@ export class TwitchConnector {
     return tmi.Client(tmiConfig);
   }
 
-  private hasBotToken () {
+  private hasBotToken() {
     return this._currentTwitchConfig.bot?.enabled
       && this._currentTwitchConfig.bot?.auth?.name
       && this._currentTwitchConfig.bot?.auth?.token;
@@ -302,7 +299,7 @@ export class TwitchConnector {
       const twitchEvent = new TwitchCheerMessage({
         channel,
         message,
-        userstate,
+        userstate
       });
 
       this.twitchEventBus.queueEvent(twitchEvent);
@@ -315,7 +312,7 @@ export class TwitchConnector {
     });
 
     //Reason is being returned as null even when one is provided when banning someone
-    this.tmiReadOnlyClient.on('ban', (channel: string, username:string, reason:string) => {
+    this.tmiReadOnlyClient.on('ban', (channel: string, username: string, reason: string) => {
       this.twitchEventBus.queueEvent(new TwitchBanEvent({
         username, reason
       }));
@@ -355,7 +352,7 @@ export class TwitchConnector {
       this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
-    this.tmiReadOnlyClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods : SubMethods) => {
+    this.tmiReadOnlyClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods: SubMethods) => {
       const twitchSubEvent = new TwitchSubEvent({
         username,
         userState,
@@ -372,7 +369,7 @@ export class TwitchConnector {
       this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
-    this.tmiReadOnlyClient.on('subgift', (channel: string, username:string, months:number, recipient: string, methods : SubMethods, userState: Userstate) => {
+    this.tmiReadOnlyClient.on('subgift', (channel: string, username: string, months: number, recipient: string, methods: SubMethods, userState: Userstate) => {
       const twitchSubEvent = new TwitchGiftEvent({
         gifter: username,
         userState,

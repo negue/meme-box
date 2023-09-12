@@ -1,6 +1,6 @@
-import {Service} from "@tsed/di";
-import {NamedLogger} from "./named-logger";
-import {filter} from "rxjs/operators";
+import { Service } from "@tsed/di";
+import { NamedLogger } from "@memebox/server-common";
+import { filter } from "rxjs/operators";
 
 
 @Service()

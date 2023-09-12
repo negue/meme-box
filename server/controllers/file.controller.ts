@@ -1,14 +1,17 @@
-import { Persistence } from '../persistence';
-import { getFiles, mapFileInformations } from '../file.utilts';
+import {
+  getFiles,
+  GetPreviewFilePath,
+  mapFileInformations,
+  Persistence,
+  PERSISTENCE_DI,
+  safeResolve
+} from '@memebox/server-common';
 import { ENDPOINTS, FileInfo, SERVER_URL } from '@memebox/contracts';
 import fs from 'fs';
 import { allowedFileUrl } from '../validations';
 import { Controller, Get, Inject, PathParams, Req, Res } from '@tsed/common';
-import { PERSISTENCE_DI } from '../providers/contracts';
 import { NotFound, PreconditionFailed } from '@tsed/exceptions';
 import type { Request, Response } from 'express';
-import { GetPreviewFilePath } from '../persistence.functions';
-import { safeResolve } from '../path.utils';
 import path from 'path';
 
 

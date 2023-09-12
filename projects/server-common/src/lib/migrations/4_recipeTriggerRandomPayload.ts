@@ -1,4 +1,4 @@
-import {ActionType, SettingsState} from "@memebox/contracts";
+import { ActionType, SettingsState } from "@memebox/contracts";
 import {
   listAllEntriesOfTypes,
   RecipeCommandConfigActionListPayload,

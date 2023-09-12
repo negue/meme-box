@@ -1,11 +1,11 @@
 import * as express from 'express';
-import {PersistenceInstance} from "../persistence";
+import { PersistenceInstance } from "@memebox/server-common";
 
 export const TAG_ROUTES = express.Router();
 
 TAG_ROUTES
   // Add a binding to handle '/tests'
-  .get('/', (req,res) => {
+  .get('/', (req, res) => {
     res.send(PersistenceInstance.listTags());
   })
   // Post = New
