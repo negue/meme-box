@@ -19,7 +19,7 @@
     "build:dev": "npm run build memebox-app -- -c dev",
     "build:prod": "npm run build memebox-app -- -c production",
     "build:prod:stats": "npm run build memebox-app -- -c production --stats-json",
-    "build": "ng build --base-href ./",
+    "build": "ng build",
     "ng:serve": "nx serve memebox-app",
     "ng:serve:web": "nx serve memebox-app -c web",
     "ng:serve:prod": "nx serve memebox-app -c production",
