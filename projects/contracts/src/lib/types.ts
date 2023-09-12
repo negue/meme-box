@@ -1,9 +1,9 @@
-import {ChatUserstate} from "tmi.js";
-import {ActionType} from "./action.types";
-import {ActionOverridableProperties, TriggerAction} from "./actions";
-import {AllTwitchEvents} from "./twitch.connector.types";
-import {DefaultImage} from "./twitch-data.types";
-import {RecipeContext} from "./recipe.types";
+import { ChatUserstate } from "tmi.js";
+import { ActionType } from "./action.types";
+import { ActionOverridableProperties, TriggerAction } from "./actions";
+import { AllTwitchEvents } from "./twitch.connector.types";
+import { DefaultImage } from "./twitch-data.types";
+import { RecipeContext } from "@recipe/contracts";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
 
@@ -21,7 +21,8 @@ export interface HasTargetScreenId {
 }
 
 // TODO replace by Record<TKey, TValue>
-export interface Dictionary<T> extends Record<string, T> { }
+export interface Dictionary<T> extends Record<string, T> {
+}
 
 // TODO CHECK META
 export enum MetaTriggerTypes {
@@ -170,10 +171,10 @@ export enum TwitchEventTypes {
 }
 
 export interface TwitchEventFields {
-  [event:string]: {
+  [event: string]: {
     fields: {
-      minValue?: { enable: boolean, placeholder?: string},
-      maxValue?: { enable: boolean, placeholder?: string},
+      minValue?: { enable: boolean, placeholder?: string },
+      maxValue?: { enable: boolean, placeholder?: string },
       channelPointId?: { enable: boolean }
     }
   }
@@ -210,7 +211,7 @@ export interface TwitchTrigger extends TriggerBase {
 
   channelPointId?: string;
 
-  channelPointData?:TwitchTriggerChannelPointData;
+  channelPointData?: TwitchTriggerChannelPointData;
 
   // !magic
   // TODO other options per type
@@ -282,8 +283,8 @@ export interface TwitchConfig {
    */
   enableLog?: boolean;
   bot?: TwitchBotConfig;
-  token: string|null;
-  customScopes?: string[]|null;
+  token: string | null;
+  customScopes?: string[] | null;
 }
 
 export interface ObsConfig {
@@ -354,10 +355,10 @@ export type TwitchConnectionType = "MAIN" | "BOT";
 export interface ChangedInfo {
   id?: string;
   targetScreenId?: string;
-  dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
-    |'settings'|'twitch-events'|'timers'|'twitch-setting'|'obs-settings';
+  dataType: 'everything' | 'action' | 'tags' | 'screens' | 'screen-action-config'
+    | 'settings' | 'twitch-events' | 'timers' | 'twitch-setting' | 'obs-settings';
   actionType?: ActionType;
-  changeType: 'added'|'changed'|'removed';
+  changeType: 'added' | 'changed' | 'removed';
 }
 
 export type ScreenState = Record<string, boolean>;
@@ -412,7 +413,7 @@ export interface ObsSourceFilterEntry {
 }
 
 
-export function getUserDataState (settings: SettingsState): UserDataState {
+export function getUserDataState(settings: SettingsState): UserDataState {
   return {
     actions: settings.clips,
     screen: settings.screen,

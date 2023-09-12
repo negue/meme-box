@@ -8,18 +8,19 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
   Action,
   ACTION_TYPE_INFORMATION,
   ACTION_TYPE_INFORMATION_ARRAY,
   ActionType,
   FileInfo,
+  RecipeContext,
   Tag,
   UserDataState
 } from "@memebox/contracts";
-import {UntypedFormBuilder, UntypedFormControl, Validators} from "@angular/forms";
-import {AppQueries, AppService, SnackbarService} from "@memebox/app-state";
+import { UntypedFormBuilder, UntypedFormControl, Validators } from "@angular/forms";
+import { AppQueries, AppService, SnackbarService } from "@memebox/app-state";
 import {
   debounceTime,
   distinctUntilChanged,
@@ -31,11 +32,11 @@ import {
   take,
   takeUntil
 } from "rxjs/operators";
-import {BehaviorSubject, combineLatest, Observable, Subject} from "rxjs";
-import {COMMA, ENTER} from "@angular/cdk/keycodes";
-import {MatAutocomplete, MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
-import {MatChipInputEvent} from "@angular/material/chips";
-import {DialogService} from "../dialog.service";
+import { BehaviorSubject, combineLatest, Observable, Subject } from "rxjs";
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { MatChipInputEvent } from "@angular/material/chips";
+import { DialogService } from "../dialog.service";
 import {
   actionDataToScriptConfig,
   actionDataToWidgetContent,
@@ -53,11 +54,11 @@ import {
   ScriptConfig,
   toMarkdown
 } from "@memebox/utils";
-import {Clipboard} from "@angular/cdk/clipboard";
-import {DialogData} from "../dialog.contract";
-import {ACTION_CONFIG_FLAGS} from "./media-edit.type-config";
-import {downloadFile} from "@gewd/utils";
-import {createRecipeContext, generateCodeByRecipe, RecipeContext} from "@memebox/recipe-core";
+import { Clipboard } from "@angular/cdk/clipboard";
+import { DialogData } from "../dialog.contract";
+import { ACTION_CONFIG_FLAGS } from "./media-edit.type-config";
+import { downloadFile } from "@gewd/utils";
+import { createRecipeContext, generateCodeByRecipe } from "@memebox/recipe-core";
 
 const DEFAULT_PLAY_LENGTH = 2500;
 
@@ -80,6 +81,7 @@ interface MediaTypeButton {
   name: string;
   icon: string;
 }
+
 // TODO REFACTOR!!!!
 // TODO maybe use "TYPES WITH PATH"
 // TODO extract these informs to the media dictionary?
@@ -98,8 +100,7 @@ export interface MediaEditDialogPayload {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaEditComponent
-  implements OnInit, OnDestroy,  DialogData<MediaEditDialogPayload>
-{
+  implements OnInit, OnDestroy, DialogData<MediaEditDialogPayload> {
   public isEditMode = false;
   public selectedFirstTabIndex = 0;
   public actionToEdit: Action;
@@ -124,7 +125,7 @@ export class MediaEditComponent
 
   availableMediaFiles$ = combineLatest([
     this.appQuery.currentMediaFile$.pipe(filter((files) => !!files)),
-    this.currentMediaType$,
+    this.currentMediaType$
   ]).pipe(
     map(([mediaFiles, currentFileType]) => {
       return mediaFiles.filter((m) => m.fileType === currentFileType);
@@ -166,7 +167,7 @@ export class MediaEditComponent
   currentScript: ScriptConfig = null;
 
   widgetTemplates$ = this.appQuery.actionList$.pipe(
-    map(( allMedias) => {
+    map((allMedias) => {
       return allMedias.filter(c => c.type === ActionType.WidgetTemplate);
     }),
     shareReplay(1)
@@ -196,7 +197,7 @@ export class MediaEditComponent
     private dialogService: DialogService,
     private cd: ChangeDetectorRef,
     private clipboard: Clipboard,
-    private snackbar: SnackbarService,
+    private snackbar: SnackbarService
   ) {
     const defaultValues = Object.assign({}, ACTION_DEFAULT_PROPERTIES, this.data?.defaults ?? {});
     this.setNewActionEditData(this.data?.actionToEdit, defaultValues);
@@ -234,10 +235,10 @@ export class MediaEditComponent
 
         this.form.patchValue({
           path: "",
-          previewUrl: "",
+          previewUrl: ""
         });
 
-        if ([ActionType.Audio, ActionType.Video].includes(next) ) {
+        if ([ActionType.Audio, ActionType.Video].includes(next)) {
           this.form.patchValue({
             playLength: undefined
           });
@@ -251,7 +252,7 @@ export class MediaEditComponent
 
         if (ACTION_CONFIG_FLAGS[next].hasPathSelection) {
           this.form.controls['path'].setValidators([
-            Validators.required,
+            Validators.required
           ]);
         } else {
           this.form.controls['path'].clearValidators();
@@ -280,7 +281,7 @@ export class MediaEditComponent
     this.triggerHtmlRefresh$.pipe(
       debounceTime(1000),
       takeUntil(this._destroy$)
-    ).subscribe( () => {
+    ).subscribe(() => {
       this.executeHTMLRefresh();
     });
   }
@@ -302,7 +303,7 @@ export class MediaEditComponent
 
 
     if (this.actionToEdit?.type === ActionType.Recipe
-      && !this.actionToEdit.recipe ) {
+      && !this.actionToEdit.recipe) {
       this.actionToEdit.recipe = createRecipeContext();
     }
   }
@@ -315,7 +316,7 @@ export class MediaEditComponent
       return;
     }
 
-    const { value } = this.form;
+    const {value} = this.form;
 
     const valueAsAction: Action = {
       ...this.actionToEdit, // base props that are not in the form
@@ -338,7 +339,7 @@ export class MediaEditComponent
 
     if (this.selectedScreenId && ACTION_CONFIG_FLAGS[valueAsAction.type].isVisibleAction) {
       this.appService.addOrUpdateScreenMedia(this.selectedScreenId, {
-        id: valueAsAction.id,
+        id: valueAsAction.id
       });
     }
 
@@ -362,7 +363,7 @@ export class MediaEditComponent
 
   updateActionType(value: ActionType): void {
     this.actionToEdit.type = value;
-    this.form.patchValue({ type: value });
+    this.form.patchValue({type: value});
   }
 
   ngOnDestroy(): void {
@@ -469,7 +470,7 @@ export class MediaEditComponent
     this.triggerHtmlRefresh$.next();
   }
 
-  executeHTMLRefresh (): void {
+  executeHTMLRefresh(): void {
     if (!this.isWidget()) {
       console.warn('NOPE');
       return;
@@ -477,7 +478,7 @@ export class MediaEditComponent
 
     const currentExtendedValues = this.actionToEdit.extended;
 
-    const updatedHtmlDataset: DynamicIframeContent  = {
+    const updatedHtmlDataset: DynamicIframeContent = {
       ...this.currentHtmlConfig,
       variables: currentExtendedValues
     };
@@ -517,14 +518,14 @@ export class MediaEditComponent
     }
   }
 
-  copyIdToClipboard(): void  {
+  copyIdToClipboard(): void {
     if (this.clipboard.copy(this.actionToEdit.id)) {
       this.snackbar.normal("The Action ID was copied to the clipboard");
     }
   }
 
   // todo extract
-  makeScreenshot(videoElement: HTMLVideoElement): void  {
+  makeScreenshot(videoElement: HTMLVideoElement): void {
     videoElement.controls = false;
 
     const WANTED_WIDTH = 320;
@@ -555,8 +556,8 @@ export class MediaEditComponent
     w.document.write(image.outerHTML);
 */
 
-      videoElement.controls = true;
-    }
+    videoElement.controls = true;
+  }
 
   onVideoLoaded($event: Event, videoElement: HTMLVideoElement): void {
     console.info('onVideoLoaded', $event);
@@ -573,7 +574,7 @@ export class MediaEditComponent
 
   }
 
-  toScriptCode (recipeContext: RecipeContext, userData: UserDataState): string  {
+  toScriptCode(recipeContext: RecipeContext, userData: UserDataState): string {
     return generateCodeByRecipe(recipeContext, userData);
   }
 
@@ -660,7 +661,7 @@ export class MediaEditComponent
 
     const suffix = ACTION_TYPE_INFORMATION[this.actionToEdit.type].labelFallback;
 
-    downloadFile(`${this.actionToEdit.name}-${suffix}.md`,dataStr);
+    downloadFile(`${this.actionToEdit.name}-${suffix}.md`, dataStr);
   }
 
 
@@ -668,7 +669,7 @@ export class MediaEditComponent
 
   // region Helper Methods
 
-  private currentActionType (): ActionType {
+  private currentActionType(): ActionType {
     return this.actionToEdit.type;
   }
 
@@ -686,7 +687,7 @@ export class MediaEditComponent
     return [ActionType.Recipe].includes(this.currentActionType());
   }
 
-  private setNewActionEditData (
+  private setNewActionEditData(
     newActionData: Partial<Action>,
     defaultValues = ACTION_DEFAULT_PROPERTIES
   ) {

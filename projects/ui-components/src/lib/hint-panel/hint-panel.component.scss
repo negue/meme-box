@@ -1,15 +1,15 @@
-@import '~angular-material-css-vars/public-util';
+@use "angular-material-css-vars" as mat-css-vars;
 
 :host {
   display: block;
-  border-left: 6px solid mat-css-color-accent();
+  border-left: 6px solid mat-css-vars.mat-css-color-accent();
   padding-top: 0.5rem;
   padding-left: 0.5rem;
   padding-bottom: 0.5rem;
   position: relative;
 
   &::before {
-    border-top: 3px double mat-css-color-accent();
+    border-top: 3px double mat-css-vars.mat-css-color-accent();
     width: 30%;
     display: block;
     position: absolute;
@@ -19,7 +19,7 @@
   }
 
   &::after {
-    border-bottom: 3px double mat-css-color-accent();
+    border-bottom: 3px double mat-css-vars.mat-css-color-accent();
     width: 30%;
     display: block;
     position: absolute;

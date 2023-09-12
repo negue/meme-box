@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@import '~angular-material-css-vars/main';
+@use "angular-material-css-vars" as mat-css-vars;
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
 @import './css-var-colors';
 
@@ -33,7 +33,7 @@ $custom-typography: mat.define-typography-config(
 // init theme
 // examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
 
-@include init-material-css-vars($typography-config: $custom-typography) {
+@include mat-css-vars.init-material-css-vars($typography-config: $custom-typography) {
   .mat-app-background {
     background-color: var(--palette-background-background) !important;
   }
@@ -41,7 +41,9 @@ $custom-typography: mat.define-typography-config(
   .navigation {
     background-color: var(--palette-background-background) !important;
   }
-};
+}
+
+;
 
 .cdk-global-scrollblock {
   overflow-y: hidden;
@@ -128,7 +130,7 @@ $custom-typography: mat.define-typography-config(
 }
 
 .mat-grid-tile .mat-figure {
-  justify-content: flex-start !important ;
+  justify-content: flex-start !important;
 }
 
 .form-field-row {

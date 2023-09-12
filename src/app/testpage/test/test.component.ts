@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {createRecipeContext, RecipeContext} from "@memebox/recipe-core";
-import {AppService} from "@memebox/app-state";
+import { Component, OnInit } from '@angular/core';
+import { createRecipeContext } from "@memebox/recipe-core";
+import { AppService } from "@memebox/app-state";
+import { RecipeContext } from "@recipe/contracts";
 
 @Component({
   selector: 'app-test',
@@ -12,7 +13,8 @@ export class TestComponent implements OnInit {
 
   constructor(
     private appService: AppService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.appService.loadState();

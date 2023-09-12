@@ -1,0 +1,36 @@
+{
+  "name": "recipe-contracts",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/recipe-contracts/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "tsConfig": "projects/recipe-contracts/tsconfig.lib.json",
+        "project": "projects/recipe-contracts/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/recipe-contracts/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-builders/jest:run",
+      "options": {
+        "tsConfig": "projects/recipe-contracts/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "projects/recipe-contracts/**/*.ts"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

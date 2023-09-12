@@ -1,20 +1,18 @@
-import {uuid} from "@gewd/utils";
+import { uuid } from "@gewd/utils";
 import {
-  ActionType,
   RecipeContext,
   RecipeEntry,
   RecipeEntryCommandCall,
   RecipeEntryCommandPayload,
-  RecipeSubCommandBlock,
-  TriggerActionOverrides,
-  UserDataState
-} from "@memebox/contracts";
-import {RecipeStepConfigArguments} from "./recipeStepConfigArgument";
-import {AppQueriesInterface} from "./command-blocks.memebox";
+  RecipeSubCommandBlock
+} from "@recipe/contracts";
+import { RecipeStepConfigArguments } from "./recipeStepConfigArgument";
+import { AppQueriesInterface } from "./command-blocks.memebox";
+import { ActionType, TriggerActionOverrides, UserDataState } from "@memebox/contracts";
 
 export const RecipeRootCommandBlockId = 'recipeRoot';
 
-export function createRecipeContext (): RecipeContext {
+export function createRecipeContext(): RecipeContext {
   const rootId = uuid();
 
   return {
@@ -77,9 +75,9 @@ export type CommandBlockCodeGenerationPayload = GenerateCodeByStepPayload & {
 // Registry Types
 export interface RecipeCommandDefinition {
   pickerLabel: string;
-  commandEntryLabelAsync: (queries: AppQueriesInterface, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => string|Promise<string>;
+  commandEntryLabelAsync: (queries: AppQueriesInterface, payload: RecipeEntryCommandPayload, parentStep: RecipeEntry) => string | Promise<string>;
   subCommandBlockLabelAsync?: (queries: AppQueriesInterface, commandBlock: RecipeEntry, labelId: string) => Promise<string>;
-  entryIcon?: (queries: AppQueriesInterface,  payload: RecipeEntryCommandPayload) => string|Promise<string>;
+  entryIcon?: (queries: AppQueriesInterface, payload: RecipeEntryCommandPayload) => string | Promise<string>;
   commandGroup: string;
   configArguments: RecipeStepConfigArguments[]; // each argument name will be applied to the payload as prop
 
@@ -99,11 +97,11 @@ export interface RecipeCommandSelectionGroup {
 export interface RecipeCommandBlockRegistry {
   [stepType: string]: RecipeCommandDefinition
 }
+
 export interface generatedCodeBySubCommandBlock {
   subCommand: RecipeSubCommandBlock;
   generatedScript: string;
 }
-
 
 
 export type generateCodeByStep = (payload: GenerateCodeByStepPayload) => generatedCodeBySubCommandBlock[];

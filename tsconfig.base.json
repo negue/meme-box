@@ -42,6 +42,9 @@
       "@memebox/contracts": [
         "projects/contracts/src/public-api"
       ],
+      "@recipe/contracts": [
+        "projects/recipe-contracts/src/public-api"
+      ],
       "@memebox/recipe-core": [
         "projects/recipe-core/src/index"
       ],

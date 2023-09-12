@@ -1,16 +1,15 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   listAllEntriesOfTypes,
   RecipeCommandConfigActionListPayload,
-  RecipeCommandConfigActionPayload,
-  RecipeContext
+  RecipeCommandConfigActionPayload
 } from "@memebox/recipe-core";
-import {BehaviorSubject, combineLatest} from "rxjs";
-import {AppQueries} from "@memebox/app-state";
-import {filter, map, startWith, withLatestFrom} from "rxjs/operators";
-import {isNonNull} from "@gewd/utils/ts";
-import {ActionAssigningMode, ActionType, UnassignedFilterEnum} from "@memebox/contracts";
-import {DialogService} from "../../../../../../src/app/shared/dialogs/dialog.service";
+import { BehaviorSubject, combineLatest } from "rxjs";
+import { AppQueries } from "@memebox/app-state";
+import { filter, map, startWith, withLatestFrom } from "rxjs/operators";
+import { isNonNull } from "@gewd/utils/ts";
+import { ActionAssigningMode, ActionType, RecipeContext, UnassignedFilterEnum } from "@memebox/contracts";
+import { DialogService } from "../../../../../../src/app/shared/dialogs/dialog.service";
 
 interface ActionIdName {
   id: string;
@@ -26,9 +25,9 @@ interface ActionIdName {
 })
 export class ActionSelectionComponent {
 
-  private readonly recipeContext$ = new BehaviorSubject<RecipeContext|null>(null);
+  private readonly recipeContext$ = new BehaviorSubject<RecipeContext | null>(null);
 
-  public selectionActionIdUi$ = new BehaviorSubject<string|null|undefined>(null);
+  public selectionActionIdUi$ = new BehaviorSubject<string | null | undefined>(null);
 
   @Output()
   public readonly selectedActionId$ = new EventEmitter<string>();
@@ -100,17 +99,18 @@ export class ActionSelectionComponent {
     startWith(true)
   )
 
-  public selectedActionInfo$ =     this.selectionActionIdUi$.pipe(
+  public selectedActionInfo$ = this.selectionActionIdUi$.pipe(
     withLatestFrom(this.appQuery.actionMap$),
     map(([actionId, actionMap]) => actionId ? actionMap[actionId] : null)
   );
 
   constructor(
     private appQuery: AppQueries,
-    private dialogService: DialogService,
-  ) { }
+    private dialogService: DialogService
+  ) {
+  }
 
-  async onSelectionChanged(newActionId: string|null) {
+  async onSelectionChanged(newActionId: string | null) {
     if (newActionId) {
       this.selectedActionId$.next(newActionId);
     } else {
@@ -128,14 +128,14 @@ export class ActionSelectionComponent {
   }
 
 
-  private async _selectAction (actionId?: string | undefined): Promise<string> {
+  private async _selectAction(actionId?: string | undefined): Promise<string> {
     const [selectedId] = await this.dialogService.showActionSelectionDialogAsync({
       mode: ActionAssigningMode.Single,
-      selectedActionIdList: actionId ? [actionId]: [],
+      selectedActionIdList: actionId ? [actionId] : [],
       dialogTitle: 'Config Argument',
       showMetaItems: true,
 
-      unassignedFilterType: UnassignedFilterEnum.RecipeCommandArgument,
+      unassignedFilterType: UnassignedFilterEnum.RecipeCommandArgument
       // showOnlyUnassignedFilter: true
     });
 

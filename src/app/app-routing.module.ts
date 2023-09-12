@@ -1,7 +1,7 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {AppConfig} from "@memebox/app/env";
-import {OAuthGuard} from "./o-auth.guard";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { AppConfig } from "@memebox/app/env";
+import { OAuthGuard } from "./o-auth.guard";
 
 // root
 // | main page (with sidebar)
@@ -41,7 +41,7 @@ const rootRoutes: Routes = [
   },
   {
     path: '**',
-    canActivate:[OAuthGuard],
+    canActivate: [OAuthGuard],
     loadChildren: () => import('./oauth-target/o-auth-target.module')
       .then(module => module.OAuthTargetModule)
   }
@@ -52,9 +52,8 @@ const rootRoutes: Routes = [
   imports: [
     RouterModule.forRoot(rootRoutes, {
       enableTracing: !AppConfig.production,
-      useHash: true,
-      relativeLinkResolution: 'legacy'
-    }),
+      useHash: true
+    })
   ],
   exports: [RouterModule]
 })

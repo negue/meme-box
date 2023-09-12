@@ -1,27 +1,21 @@
-import {Injectable} from '@angular/core';
-import {
-  generateRecipeEntryCommandCall,
-  RecipeCommandDefinition,
-  RecipeCommandRegistry,
-  RecipeContext,
-  RecipeEntry,
-  RecipeEntryCommandCall,
-  RecipeEntryCommandPayload
-} from "@memebox/recipe-core";
-import {DialogService} from "../../../../src/app/shared/dialogs/dialog.service";
-import type {CommandSettingDialogPayload} from "./command-setting-dialog/step-setting-dialog.component";
+import { Injectable } from '@angular/core';
+import { generateRecipeEntryCommandCall, RecipeCommandDefinition, RecipeCommandRegistry } from "@memebox/recipe-core";
+import { RecipeContext, RecipeEntry, RecipeEntryCommandCall, RecipeEntryCommandPayload } from "@recipe/contracts";
+import { DialogService } from "../../../../src/app/shared/dialogs/dialog.service";
+import type { CommandSettingDialogPayload } from "./command-setting-dialog/step-setting-dialog.component";
 
 @Injectable({
   providedIn: 'any'
 })
 export class RecipeCommandCreatorService {
   constructor(
-    private dialogService: DialogService,
-  ) { }
+    private dialogService: DialogService
+  ) {
+  }
 
-  async generateCommandData (parentStep: RecipeEntry,
-                             stepType: string,
-                             context: RecipeContext): Promise<RecipeEntryCommandCall|void> {
+  async generateCommandData(parentStep: RecipeEntry,
+                            stepType: string,
+                            context: RecipeContext): Promise<RecipeEntryCommandCall | void> {
 
     const recipeCommandDefinition = RecipeCommandRegistry[stepType];
 
@@ -29,7 +23,7 @@ export class RecipeCommandCreatorService {
       const dialogResult = await this._loadAndOpenSettingDialog({
         configArguments: recipeCommandDefinition.configArguments,
         recipeContext: context,
-        commandBlockName: recipeCommandDefinition.pickerLabel,
+        commandBlockName: recipeCommandDefinition.pickerLabel
       });
 
       if (!dialogResult) {
@@ -50,8 +44,8 @@ export class RecipeCommandCreatorService {
     }
   }
 
-  async editStepData (currentStep: RecipeEntry, context: RecipeContext): Promise<RecipeEntryCommandPayload|void> {
-    if (currentStep.entryType !== 'command'){
+  async editStepData(currentStep: RecipeEntry, context: RecipeContext): Promise<RecipeEntryCommandPayload | void> {
+    if (currentStep.entryType !== 'command') {
       return;
     }
 
@@ -71,7 +65,7 @@ export class RecipeCommandCreatorService {
     return dialogResult;
   }
 
-  getPossibleCommands (step: RecipeEntry, context: RecipeContext): RecipeCommandDefinition[] {
+  getPossibleCommands(step: RecipeEntry, context: RecipeContext): RecipeCommandDefinition[] {
     return Object.entries(RecipeCommandRegistry)
       .filter(([_, value]) => {
         if (!value.allowedToBeAdded) {

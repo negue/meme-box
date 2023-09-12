@@ -1,5 +1,4 @@
-@import '~angular-material-css-vars/public-util';
-
+@use "angular-material-css-vars" as mat-css-vars;
 
 :host {
 
@@ -12,7 +11,7 @@
 
     .mat-chip {
       &.mat-chip.mat-standard-chip {
-        background-color: mat-css-color-warn();
+        background-color: mat-css-vars.mat-css-color-warn();
 
         &.selected {
           background-color: #0be881; //TODO - make a var

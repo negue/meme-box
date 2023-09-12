@@ -1,5 +1,5 @@
-import {NgModule} from "@angular/core";
-import {MaterialCssVariables, MaterialCssVarsModule, MaterialCssVarsService} from "angular-material-css-vars";
+import { NgModule } from "@angular/core";
+import { MaterialCssVarsModule, MaterialCssVarsService } from "angular-material-css-vars";
 
 
 export const StyleguideColors = {
@@ -21,9 +21,9 @@ export const StyleguideColors = {
       // all optional
       isAutoContrast: true,
       darkThemeClass: 'isDarkTheme',
-      lightThemeClass: 'isLightTheme',
+      lightThemeClass: 'isLightTheme'
       // ...
-    }),
+    })
   ]
 })
 export class DarkmodeModule {
@@ -35,8 +35,9 @@ export class DarkmodeModule {
     this.materialCssVarsService.setPrimaryColor(StyleguideColors.primary);
     this.materialCssVarsService.setAccentColor(StyleguideColors.accent);
     this.materialCssVarsService.setWarnColor(StyleguideColors.warn);
-    this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundText, StyleguideColors.foreground);
-    this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundTextAlpha, '1');
-    this.materialCssVarsService.setVariable(MaterialCssVariables.BackgroundBackground, StyleguideColors.background);
+    // TODO still needed?
+    // this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundText, StyleguideColors.foreground);
+    // this.materialCssVarsService.setVariable(MaterialCssVariables.ForegroundTextAlpha, '1');
+    // this.materialCssVarsService.setVariable(MaterialCssVariables.BackgroundBackground, StyleguideColors.background);
   }
 }

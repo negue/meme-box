@@ -1,20 +1,14 @@
-import {Component, Inject} from '@angular/core';
-import {
-  RecipeCommandBlockGroups,
-  RecipeCommandDefinition,
-  RecipeCommandSelectionGroup,
-  RecipeContext,
-  RecipeEntry,
-  RecipeSubCommandInfo
-} from "@memebox/recipe-core";
-import {DialogService} from "../../../../../src/app/shared/dialogs/dialog.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {AppQueries} from "@memebox/app-state";
-import {RecipeCommandCreatorService} from "../recipe-command-creator.service";
+import { Component, Inject } from '@angular/core';
+import { RecipeCommandBlockGroups, RecipeCommandDefinition, RecipeCommandSelectionGroup } from "@memebox/recipe-core";
+import { DialogService } from "../../../../../src/app/shared/dialogs/dialog.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { AppQueries } from "@memebox/app-state";
+import { RecipeCommandCreatorService } from "../recipe-command-creator.service";
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
-import {BehaviorSubject} from "rxjs";
-import {debounceTime, map, startWith} from "rxjs/operators";
+import { BehaviorSubject } from "rxjs";
+import { debounceTime, map, startWith } from "rxjs/operators";
+import { RecipeContext, RecipeEntry, RecipeSubCommandInfo } from "@recipe/contracts";
 
 interface RecipeCommandBlockGroup extends RecipeCommandSelectionGroup {
   blocks: RecipeCommandDefinition[];
@@ -22,18 +16,18 @@ interface RecipeCommandBlockGroup extends RecipeCommandSelectionGroup {
 
 function groupByCommandBlocksType(
   allBlocks: RecipeCommandDefinition[]
-) : RecipeCommandBlockGroup[] {
-  const groupedByArray  = Object.entries(
+): RecipeCommandBlockGroup[] {
+  const groupedByArray = Object.entries(
     groupBy(allBlocks, 'commandGroup')
   );
 
-  return orderBy( groupedByArray
+  return orderBy(groupedByArray
     .map(([groupName, blocks]) => {
       return {
         ...RecipeCommandBlockGroups[groupName],
         blocks
       } as RecipeCommandBlockGroup;
-  }), ['order']);
+    }), ['order']);
 }
 
 @Component({
@@ -41,7 +35,7 @@ function groupByCommandBlocksType(
   templateUrl: './recipe-command-selector.component.html',
   styleUrls: ['./recipe-command-selector.component.scss']
 })
-export class RecipeCommandSelectorComponent  {
+export class RecipeCommandSelectorComponent {
   private possibleCommandBlocks: RecipeCommandBlockGroup[] =
     groupByCommandBlocksType(
       this.stepCreator.getPossibleCommands(this.data.entry, this.data.context)
@@ -81,9 +75,10 @@ export class RecipeCommandSelectorComponent  {
     },
     private appQuery: AppQueries,
     private stepCreator: RecipeCommandCreatorService
-  ) { }
+  ) {
+  }
 
-  updateSearchField(value: string): void  {
+  updateSearchField(value: string): void {
     this.searchText = value;
     this.searchChanged$.next(value);
   }
@@ -100,7 +95,7 @@ export class RecipeCommandSelectorComponent  {
     );
 
     if (createdStep) {
-       this.dialogRef.close(createdStep);
+      this.dialogRef.close(createdStep);
     }
   }
 }

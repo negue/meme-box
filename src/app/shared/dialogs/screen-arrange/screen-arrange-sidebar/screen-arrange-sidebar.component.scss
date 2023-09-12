@@ -1,4 +1,4 @@
-@import '~angular-material-css-vars/public-util';
+@use "angular-material-css-vars" as mat-css-vars;
 
 :host {
   width: 300px;
@@ -64,7 +64,7 @@ h3 {
   }
 
   .selected {
-    border: 3px mat-css-color-accent() solid;
+    border: 3px mat-css-vars.mat-css-color-accent() solid;
   }
 }
 

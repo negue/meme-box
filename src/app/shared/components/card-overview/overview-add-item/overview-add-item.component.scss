@@ -1,4 +1,4 @@
-@import '~angular-material-css-vars/public-util';
+@use "angular-material-css-vars" as mat-css-vars;
 
 :host {
   width: 100%;
@@ -23,7 +23,7 @@ button {
   box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0px rgba(0, 0, 0, 0.14), 0 1px 3px 0px rgba(0, 0, 0, 0.12);
 
   &:hover, &:focus {
-    background-color: mat-css-color-accent() !important;
+    background-color: mat-css-vars.mat-css-color-accent() !important;
     outline: 0;
   }
 }

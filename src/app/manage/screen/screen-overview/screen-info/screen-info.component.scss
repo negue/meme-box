@@ -1,4 +1,4 @@
-@import '~angular-material-css-vars/public-util';
+@use "angular-material-css-vars" as mat-css-vars;
 
 :host {
   width: 100%;
@@ -31,7 +31,7 @@
   &:hover {
     ::ng-deep {
       .mat-form-field-underline {
-        background: mat-css-color-accent();
+        background: mat-css-vars.mat-css-color-accent();
       }
     }
   }
@@ -45,6 +45,7 @@
       .mat-select {
         width: unset;
       }
+
       .mat-button {
         padding: 0 4px;
       }
