@@ -176,10 +176,17 @@ ___
 
 ## Roadmap
 
-### 2022.1
-See finished and upcoming changes in:
-- [CHANGELOG.md](CHANGELOG.md)
-- [`Milestone 2022.1`](https://github.com/negue/meme-box/milestone/5)
+### 2023.1 (maybe 2024.1, depending how long it takes) 
+
+- Main Feature: [Refactor Trigger System / Config](https://github.com/negue/meme-box/pull/560)
+  - Easier way to add more types of triggers
+  - Also adds the command blocks per trigger (easier way to just "do" stuff)
+ 
+Dependencies for that: ^
+  - https://github.com/negue/meme-box/pull/558 &
+  - a current big refactor to how the repository is working internally (NPM -> PNPM)
+    - these changes will be hopefully soon(TM) done/merged (Current Date of Writing this: 14th of November 2023)
+    - been already working on this for 3 months... yay.   
 
 ### [Future Version](ROADMAP.md)
 
