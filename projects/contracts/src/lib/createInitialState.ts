@@ -1,4 +1,4 @@
-import {SettingsState} from "./types";
+import {SettingsState} from "./types.state";
 
 export function createInitialState (): SettingsState {
   return {
@@ -18,10 +18,9 @@ export function createInitialState (): SettingsState {
         }
       },
     },
-    twitchEvents: {},
+    triggers: {},
     screen: {},
     clips: {},
     tags: {},
-    timers: {}
   }
 }

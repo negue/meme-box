@@ -1,8 +1,5 @@
-import {ChatUserstate} from "tmi.js";
 import {ActionType} from "./action.types";
 import {ActionOverridableProperties, TriggerAction} from "./actions";
-import {AllTwitchEvents} from "./twitch.connector.types";
-import {DefaultImage} from "./twitch-data.types";
 import {RecipeContext} from "@memebox/recipe-core";
 
 // TODO MERGE / IMPROVE THESE TYPE IMPORTS..
@@ -13,6 +10,10 @@ export interface HasId {
 
 export interface HasClipId {
   clipId: string;
+}
+
+export interface HasRecipe {
+  recipe: RecipeContext
 }
 
 
@@ -156,73 +157,13 @@ export interface ScreenViewEntry extends Screen {
   url: string;
 }
 
-export enum TwitchEventTypes {
-  message = 'message',
-  follow = 'follow',
-  bits = 'bits',
-  raid = 'raid',
-  host = 'host',
-  channelPoints = 'channelPoints',
-  ban = 'ban',
-  subscription = "subscription",
-  gift = "gift"
-}
-
-export interface TwitchEventFields {
-  [event:string]: {
-    fields: {
-      minValue?: { enable: boolean, placeholder?: string},
-      maxValue?: { enable: boolean, placeholder?: string},
-      channelPointId?: { enable: boolean }
-    }
-  }
-}
-
-export interface TriggerBase
-  extends HasId, HasClipId, HasTargetScreenId, HasExtendedData {
-
-}
-
-// TODO RENAME TimedAction/ Twitch so that those are recognized to be a trigger
-
-export interface TimedAction extends TriggerBase {
-  // id => has nothing to do with clipID
-  everyXms: number;
-  active: boolean;
-}
-
-export interface TwitchTrigger extends TriggerBase {
+export interface ScriptInformation extends HasId {
   name: string;
-  // screenId:      string; // TODO
-  event: TwitchEventTypes;
-  contains?: string; // additional settings TODO
-  aliases?: string[];
+  type: ActionType;
 
-  active: boolean;
-
-  roles: string[]; // maybe enum
-  minAmount?: number;
-  maxAmount?: number;
-
-  cooldown?: number;
-  canBroadcasterIgnoreCooldown?: boolean;
-
-  channelPointId?: string;
-
-  channelPointData?:TwitchTriggerChannelPointData;
-
-  // !magic
-  // TODO other options per type
+  recipe?: RecipeContext;
 }
 
-export interface TwitchTriggerChannelPointData {
-  id: string;
-  image?: null;
-  background_color: string;
-  cost: number;
-  title: string;
-  default_image: DefaultImage;
-}
 
 export interface Tag extends HasId {
   name: string;
@@ -235,36 +176,6 @@ export interface UserDataState {
   tags: Dictionary<Tag>;
 }
 
-/**
- * Settings.json - State
- *
- * Persistent State
- */
-export interface SettingsState {
-  version: number;
-  clips: Dictionary<Action>;
-  twitchEvents: Dictionary<TwitchTrigger>;
-  timers: Dictionary<TimedAction>;
-  screen: Dictionary<Screen>;
-  tags: Dictionary<Tag>;
-
-  config: Partial<Config>;
-}
-
-export interface UpdateState {
-  available: boolean,
-  version: string;
-}
-
-export interface ServerState {
-  update: UpdateState;
-}
-
-export interface AppState extends SettingsState {
-  currentMediaFiles: FileInfo[];
-  offlineMode: boolean;
-  update: UpdateState;
-}
 
 export interface Config {
   customPort?: number | null;
@@ -316,11 +227,7 @@ export interface FileInfo {
   fileType: ActionType;
 }
 
-export interface TwitchTriggerCommand {
-  command?: TwitchTrigger; // Config-Object
-  tags?: ChatUserstate;
-  twitchEvent?: AllTwitchEvents
-}
+
 
 export enum TargetScreenType {
   OneScreen,
@@ -354,7 +261,7 @@ export interface ChangedInfo {
   id?: string;
   targetScreenId?: string;
   dataType: 'everything'|'action'|'tags'|'screens'|'screen-action-config'
-    |'settings'|'twitch-events'|'timers'|'twitch-setting'|'obs-settings';
+    |'settings'|'triggers'|'twitch-setting'|'obs-settings';
   actionType?: ActionType;
   changeType: 'added'|'changed'|'removed';
 }
@@ -411,13 +318,6 @@ export interface ObsSourceFilterEntry {
 }
 
 
-export function getUserDataState (settings: SettingsState): UserDataState {
-  return {
-    actions: settings.clips,
-    screen: settings.screen,
-    tags: settings.tags
-  }
-}
 
 export interface ErrorWithContext {
   errorMessage: string;

@@ -19,4 +19,5 @@ module.exports = {
   rootDir: __dirname,
   preset: 'jest-preset-angular',
   setupFilesAfterEnv: ['<rootDir>/setup-jest.ts'],
+  projects: '<rootDir>/projects/twitch-api'
 };

@@ -1,9 +1,8 @@
-import { Injectable, ProviderScope, ProviderType, UseOpts } from "@tsed/di";
-import { NamedLogger } from "../named-logger";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "../contracts";
-import { Persistence } from "../../persistence";
-import { TwitchQueueEventBus } from "./twitch-queue-event.bus";
+import {Injectable, ProviderScope, ProviderType, UseOpts} from "@tsed/di";
+import {NamedLogger} from "../named-logger";
+import {Inject} from "@tsed/common";
+import {PERSISTENCE_DI} from "../contracts";
+import {Persistence} from "../../persistence";
 
 // skipcq: JS-0579
 @Injectable({
@@ -15,8 +14,6 @@ export class TwitchLogger {
 
   constructor(
     @UseOpts({name: 'TwitchLogger'}) private logger: NamedLogger,
-    private twitchEventBus: TwitchQueueEventBus,
-
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
   ) {
 
@@ -29,15 +26,6 @@ export class TwitchLogger {
       });
       this._logEnabled = true;
     }
-
-
-    twitchEventBus
-      .AllQueuedEvents$
-      .subscribe(value => {
-        if (this._logEnabled) {
-          logger.info(value);
-        }
-      });
   }
 
   public log(data: any): void  {

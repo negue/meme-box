@@ -608,6 +608,191 @@
           }
         }
       }
+    },
+    "triggers-twitch": {
+      "projectType": "library",
+      "root": "projects/triggers-twitch",
+      "sourceRoot": "projects/triggers-twitch/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/triggers-twitch/tsconfig.lib.json",
+            "project": "projects/triggers-twitch/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/triggers-twitch/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/triggers-twitch/src/**/*.ts",
+              "projects/triggers-twitch/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/triggers-twitch"],
+          "options": {
+            "jestConfig": "projects/triggers-twitch/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "triggers-timer": {
+      "projectType": "library",
+      "root": "projects/triggers-timer",
+      "sourceRoot": "projects/triggers-timer/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/triggers-timer/tsconfig.lib.json",
+            "project": "projects/triggers-timer/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/triggers-timer/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/triggers-timer/src/**/*.ts",
+              "projects/triggers-timer/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/triggers-timer"],
+          "options": {
+            "jestConfig": "projects/triggers-timer/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "triggers-twitch-contracts": {
+      "projectType": "library",
+      "root": "projects/triggers-twitch-contracts",
+      "sourceRoot": "projects/triggers-twitch-contracts/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/triggers-twitch-contracts/tsconfig.lib.json",
+            "project": "projects/triggers-twitch-contracts/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/triggers-twitch-contracts/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/triggers-twitch-contracts/src/**/*.ts",
+              "projects/triggers-twitch-contracts/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/triggers-twitch-contracts"],
+          "options": {
+            "jestConfig": "projects/triggers-twitch-contracts/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "server-common": {
+      "projectType": "library",
+      "root": "projects/server-common",
+      "sourceRoot": "projects/server-common/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/server-common/tsconfig.lib.json",
+            "project": "projects/server-common/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/server-common/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/server-common/src/**/*.ts",
+              "projects/server-common/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/server-common"],
+          "options": {
+            "jestConfig": "projects/server-common/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "twitch-api": {
+      "projectType": "library",
+      "root": "projects/twitch-api",
+      "sourceRoot": "projects/twitch-api/src",
+      "prefix": "memebox",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:ng-packagr-lite",
+          "options": {
+            "tsConfig": "projects/twitch-api/tsconfig.lib.json",
+            "project": "projects/twitch-api/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/twitch-api/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/twitch-api/src/**/*.ts",
+              "projects/twitch-api/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/projects/twitch-api"],
+          "options": {
+            "jestConfig": "projects/twitch-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
@@ -630,6 +815,9 @@
       "prefix": "app",
       "style": "scss",
       "skipTests": true
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
     }
   }
 }

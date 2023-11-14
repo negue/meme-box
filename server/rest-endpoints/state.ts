@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {ServerState} from "../../projects/contracts/src/lib/types";
+import {ServerState} from "@memebox/contracts";
 
 export const STATE_OBJECT: ServerState = {
   update: {

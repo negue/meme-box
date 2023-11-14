@@ -30,7 +30,14 @@
       "@memebox/utils": ["projects/utils/src/public-api"],
       "@memebox/version": ["src/version_info.json"],
       "@memebox/recipe-ui": ["projects/recipe-ui/src/index"],
-      "@memebox/recipe-core": ["projects/recipe-core/src/index"]
+      "@memebox/recipe-core": ["projects/recipe-core/src/index"],
+      "@memebox/triggers-twitch": ["projects/triggers-twitch/src/index.ts"],
+      "@memebox/triggers-timer": ["projects/triggers-timer/src/index.ts"],
+      "@memebox/triggers-twitch-contracts": [
+        "projects/triggers-twitch-contracts/src/index.ts"
+      ],
+      "@memebox/server-common": ["projects/server-common/src/index.ts"],
+      "@memebox/twitch-api": ["projects/twitch-api/src/index.ts"]
     }
   },
   "exclude": ["node_modules"]

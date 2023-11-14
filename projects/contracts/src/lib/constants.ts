@@ -1,5 +1,3 @@
-import {TwitchEventTypes} from './types';
-
 // TODO merge App / Server Endpoint CONSTANTS
 
 export const ENDPOINTS = {
@@ -10,7 +8,6 @@ export const ENDPOINTS = {
   ERROR: 'error',
   STATE: 'state',
 
-  TIMED_EVENTS: 'timed_events',
   NETWORK_LIST: 'network_ip_list',
 
   OPEN: {
@@ -27,11 +24,12 @@ export const ENDPOINTS = {
     CUSTOM_PORT: '/customPort'
   },
 
-  TWITCH_EVENTS: {
-    PREFIX: 'twitch_events',
+
+  TRIGGER_CONFIGS: {
+    PREFIX: 'trigger_configs',
     TRIGGER_CONFIG_EXAMPLE: '/trigger_config_example',
-    TRIGGER_EVENT: '/trigger_event',
-    LAST_20_EVENTS: '/last_events'
+    TRIGGER_ONE: '/trigger_one',
+    LAST_20_EVENTS: '/last_triggered'
   },
 
   OBS_DATA: {
@@ -72,18 +70,6 @@ export const ENDPOINTS = {
     PREVIEW: '/preview/'
   },
 }
-
-export const TwitchTypesArray = [
-  // TwitchEventTypes.follow,
-  TwitchEventTypes.bits,
-  TwitchEventTypes.channelPoints,
-  // TwitchEventTypes.host,
-  TwitchEventTypes.message,
-  TwitchEventTypes.raid,
-  TwitchEventTypes.ban,
-  TwitchEventTypes.subscription,
-  TwitchEventTypes.gift
-];
 
 export const WEBSOCKET_PATHS = {
   TWITCH_EVENTS: '/ws/twitch_events',

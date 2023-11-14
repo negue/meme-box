@@ -8,6 +8,25 @@ You can now shoutout a specific person by adding a Shoutout Command .. or
 With the help of a [very powerful json query library: JSONata](https://jsonata.org) it is now possible to parse trigger payloads (twitch message, raid, etc) and use those as variables for Arguments of Command Blocks.
 (insert screenshot here)
 
+## 2023.1.0
+
+### Features
+
+- New Recipe Command Block: Shoutout a twitch user
+  Example: as Command Block
+
+- Triggers now have inline Recipes (link to recipe example)
+  Example: screenshot and stuff
+
+- Recipe: Command Block -> Config Arguments can now use variables (from the Triggers)
+  Example: parse the chat commands 2nd argument to shoutout
+
+- New Recipe Command Block: Call an URL and reuse it in other commands (thanks to variables :tada:)
+
+### Internal
+
+Refactored the Twitch / Timer Triggers to be more generic for easier way to add more types of triggers.
+
 ## 2022.1.1
 
 ### New Command Block "Random Command Group"

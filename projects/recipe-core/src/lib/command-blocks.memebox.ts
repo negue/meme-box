@@ -2,12 +2,12 @@ import {
   generateCodeByStep,
   RecipeCommandBlockRegistry,
   RecipeCommandConfigActionListPayload,
-  RecipeCommandConfigActionPayload
+  RecipeCommandConfigActionPayload,
+  RecipeStateQueries
 } from "./recipe.types";
 import {map, take} from "rxjs/operators";
 import {generateRandomCharacters, listActionsOfActionListPayload} from "./utils";
 import {ACTION_TYPE_INFORMATION} from "@memebox/contracts";
-import {AppQueries} from "@memebox/app-state";
 
 function createMemeboxApiVariable(
   actionPayload: RecipeCommandConfigActionPayload
@@ -29,7 +29,7 @@ function createMemeboxApiVariable(
 }
 
 async function getActionLabel(
-  queries: AppQueries,
+  queries: RecipeStateQueries,
   actionPayload: RecipeCommandConfigActionPayload,
   prefix = ''
 ): Promise<string> {

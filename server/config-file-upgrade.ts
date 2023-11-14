@@ -1,7 +1,9 @@
-import {ConfigV0, SettingsState} from "@memebox/contracts";
+import {SettingsState} from "@memebox/contracts";
 import {SavePreviewFile} from "./persistence.functions";
 import {convertMetaActionsToRecipe} from "./migrations/3_meta_to_recipe";
 import {convertRecipeTriggerRandomPayload} from "./migrations/4_recipeTriggerRandomPayload";
+import {ConfigV0, StateV0} from "../projects/contracts/src/lib/types.outdated";
+import {convertToNewTriggerSystem} from "./migrations/5_migrateToNewTriggerSystem";
 
 /* Deprecation List: (properties to rename or remove)
  * maybe for the next version
@@ -14,7 +16,7 @@ import {convertRecipeTriggerRandomPayload} from "./migrations/4_recipeTriggerRan
  */
 
 // This is the CONFIG-Version, not the App Version
-const CURRENT_VERSION = 4;
+const CURRENT_VERSION = 5;
 
 export function upgradeConfigFile(
   configFromFile: SettingsState
@@ -54,6 +56,10 @@ export function upgradeConfigFile(
 
   if (configFromFile.version === 3) {
     convertRecipeTriggerRandomPayload(configFromFile);
+  }
+
+  if (configFromFile.version < 5) {
+    convertToNewTriggerSystem(configFromFile as StateV0);
   }
 
   configFromFile.version = CURRENT_VERSION;

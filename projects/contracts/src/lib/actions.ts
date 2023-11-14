@@ -1,5 +1,5 @@
 import {Dictionary, ScreenMediaOverridableProperties} from "./types";
-import {AllTwitchEvents} from "./twitch.connector.types";
+import {AllTwitchEvents} from "../../../triggers-twitch-contracts/src/lib/twitch.connector.types";
 
 // TODO refactor / rename to more understandable names
 
@@ -23,13 +23,24 @@ export const ACTIONS = {
 }
 
 export enum TriggerActionOrigin {
-  Unknown,
-  AppPreview,
-  StreamDeck, // currently also Unknown
-  TwitchEvent,
-  Timer,
-  Meta, // TODO CHECK META
-  Scripts
+  Unknown = 0,
+  AppPreview = 1,
+  StreamDeck = 2, // currently also Unknown
+  /**
+   * @deprecated
+   */
+  TwitchEvent = 3,
+  /**
+   * @deprecated
+   */
+  Timer = 4,
+  /**
+   * @deprecated
+   */
+  Meta = 5,
+  Scripts = 6,
+  Recipe = 7,
+  Triggers = 8
 }
 
 /**

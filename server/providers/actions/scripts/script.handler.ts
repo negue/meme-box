@@ -6,6 +6,7 @@ import {
   ActionStateEnum,
   ActionType,
   getUserDataState,
+  ScriptInformation,
   TriggerAction
 } from "@memebox/contracts";
 import {NamedLogger} from "../../named-logger";
@@ -21,11 +22,11 @@ import {ActionPersistentStateHandler} from "../action-persistent-state.handler";
 import {MemeboxApiFactory} from "./apis/memebox.api";
 import {ObsConnection} from "../../obs-connection";
 import {ObsApi} from "./apis/obs.api";
-import {TwitchConnector} from "../../twitch/twitch.connector";
+import {TwitchConnector} from "../../../../projects/triggers-twitch/src/lib/twitch.connector";
 import {TwitchApi} from "./apis/twitch.api";
 import {TwitchDataProvider} from "../../twitch/twitch.data-provider";
 import {setGlobalVMScope} from "./global.context";
-import {TwitchQueueEventBus} from "../../twitch/twitch-queue-event.bus";
+import {TwitchQueueEventBus} from "../../../../projects/triggers-twitch/src/lib/twitch-queue-event.bus";
 import {actionDataToScriptConfig, ScriptConfig} from "@memebox/utils";
 import {generateCodeByRecipe} from "@memebox/recipe-core";
 
@@ -107,8 +108,8 @@ export class ScriptHandler implements ActionStoreAdapter {
 
   // endregion ActionStoreAdapter
 
-  public handleRecipe(script: Action, payloadObs: TriggerAction) {
-    const generatedScript = generateCodeByRecipe(script.recipe, getUserDataState(this._persistence.fullState()));
+  public handleRecipe(scriptInformation: ScriptInformation, payloadObs: TriggerAction) {
+    const generatedScript = generateCodeByRecipe(scriptInformation.recipe, getUserDataState(this._persistence.fullState()));
 
     const scriptConfig: ScriptConfig = {
       bootstrapScript: '',
@@ -119,7 +120,7 @@ export class ScriptHandler implements ActionStoreAdapter {
       }
     };
 
-    return this.handleGenericScript(script, scriptConfig, payloadObs);
+    return this.handleGenericScript(scriptInformation, scriptConfig, payloadObs);
   }
 
   public handleScript (script: Action, payloadObs: TriggerAction) {
@@ -129,7 +130,7 @@ export class ScriptHandler implements ActionStoreAdapter {
   }
 
   private async handleGenericScript(
-    script: Action,
+    script: ScriptInformation,
     scriptConfig: ScriptConfig,
     payloadObs: TriggerAction
   ) {
@@ -226,13 +227,13 @@ export class ScriptHandler implements ActionStoreAdapter {
     this._compiledScripts.delete(scriptId);
   }
 
-  private logScript(action: Action, logMessage: string, error?: unknown){
-    const scriptType = ACTION_TYPE_INFORMATION[action.type]?.labelFallback ?? '[Unknown]';
+  private logScript(script: ScriptInformation, logMessage: string, error?: unknown){
+    const scriptType = ACTION_TYPE_INFORMATION[script.type]?.labelFallback ?? '[Unknown]';
 
     if (error){
-      this.logger.error(error, `${scriptType} "${action.name}": ${logMessage}`)
+      this.logger.error(error, `${scriptType} "${script.name}": ${logMessage}`)
     }
-    this.logger.info(`${scriptType} "${action.name}": ${logMessage}`)
+    this.logger.info(`${scriptType} "${script.name}": ${logMessage}`)
   }
 
 }

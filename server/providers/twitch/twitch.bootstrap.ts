@@ -1,7 +1,6 @@
 import {Service} from "@tsed/di";
-import {TwitchConnector} from "./twitch.connector";
+import {TwitchConnector} from "../../../projects/triggers-twitch/src/lib/twitch.connector";
 import {TwitchLogger} from "./twitch.logger";
-import {TwitchTriggerHandler} from "./twitch-trigger-handler.service";
 
 // This is just to have all Services created on startup
 
@@ -9,8 +8,7 @@ import {TwitchTriggerHandler} from "./twitch-trigger-handler.service";
 export class TwitchBootstrap {
   constructor(
     private _connector: TwitchConnector,
-    private _logger: TwitchLogger,
-    private _twitchHandler: TwitchTriggerHandler
+    private _logger: TwitchLogger
   ) {
   }
 }

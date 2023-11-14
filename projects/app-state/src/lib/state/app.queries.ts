@@ -1,20 +1,20 @@
-import { Injectable } from "@angular/core";
-import { Query } from "@datorama/akita";
-import { AppState } from "@memebox/contracts";
-import { AppStore } from "./app.store";
+import {Injectable} from "@angular/core";
+import {Query} from "@datorama/akita";
+import {AppState} from "@memebox/contracts";
+import {AppStore} from "./app.store";
+import {RecipeStateQueries} from "@memebox/recipe-core";
 
 @Injectable({
   providedIn: "root"
 })
-export class AppQueries extends Query<AppState> {
+export class AppQueries extends Query<AppState> implements RecipeStateQueries {
   state$ = this.select().pipe(
 
   );
 
   actionList$ = this.select(store => Object.values(store.clips));
   screensList$ = this.select(store => Object.values(store.screen));
-  twitchEvents$ = this.select(store => Object.values(store.twitchEvents));
-  timedEvents$ = this.select(store => Object.values(store.timers));
+  triggers$ = this.select(store => Object.values(store.triggers));
   tagList$ = this.select(store => Object.values(store.tags));
   queueList$ = this.select(store => {
     const allClips = Object.values(store.clips);
