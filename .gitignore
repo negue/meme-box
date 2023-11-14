@@ -59,7 +59,7 @@ Thumbs.db
 /src/assets/*.webm
 /src/assets/*.mp3
 /src/assets/*.mp4
- !angular.webpack.cjs
+!angular.webpack.cjs
 **/settings.json
 **/settings.json*.backup
 *.log
@@ -71,3 +71,4 @@ documentation.json
 
 # misc
 .eslintcache
+.angular/cache

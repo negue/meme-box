@@ -1,21 +1,16 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {
-  RecipeCommandRegistry,
-  RecipeEntry,
-  RecipeEntryCommandCall,
-  RecipeRootCommandBlockId,
-  RecipeSubCommandInfo
-} from "@memebox/recipe-core";
-import {from, Observable, of} from "rxjs";
-import {AppQueries} from "@memebox/app-state";
-import {RecipeContextDirective} from "../recipe-context.directive";
+import { Pipe, PipeTransform } from '@angular/core';
+import { RecipeCommandRegistry, RecipeRootCommandBlockId } from "@memebox/recipe-core";
+import { from, Observable, of } from "rxjs";
+import { AppQueries } from "@memebox/app-state";
+import { RecipeContextDirective } from "../recipe-context.directive";
+import { RecipeEntry, RecipeEntryCommandCall, RecipeSubCommandInfo } from "@recipe/contracts";
 
 @Pipe({
   name: 'getEntrySubBlockInfoArray$'
 })
 export class GetEntrySubBlockInfoArrayPipe implements PipeTransform {
 
-  constructor (
+  constructor(
     private context: RecipeContextDirective,
     private appQueries: AppQueries
   ) {

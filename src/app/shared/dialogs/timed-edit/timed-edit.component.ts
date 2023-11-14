@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {UntypedFormBuilder, Validators} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Action, ActionAssigningMode, Dictionary, TimedAction, UnassignedFilterEnum} from '@memebox/contracts';
@@ -21,7 +21,7 @@ const INITIAL_TIMED_ACTION: Partial<TimedAction> = {
   styleUrls: ['./timed-edit.component.scss']
 })
 export class TimedEditComponent implements OnInit, OnDestroy {
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     id: "",
     clipId: "",
     screenId: "",

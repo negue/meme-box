@@ -1,0 +1,34 @@
+{
+  "name": "utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "projects/utils/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:ng-packagr",
+      "options": {
+        "tsConfig": "projects/utils/tsconfig.lib.json",
+        "project": "projects/utils/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "projects/utils/tsconfig.lib.prod.json"
+        }
+      }
+    },
+    "test": {
+      "executor": "@angular-builders/jest:run",
+      "options": {
+        "tsConfig": "projects/utils/tsconfig.spec.json"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["projects/utils/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,9 +1,7 @@
-import {ENDPOINTS} from "@memebox/contracts";
+import { ENDPOINTS } from "@memebox/contracts";
 import open from "open";
-import {NEW_CONFIG_PATH} from "../path.utils";
-import {Controller, Get, Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence} from "../persistence";
+import { NEW_CONFIG_PATH, Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { Controller, Get, Inject } from "@tsed/common";
 
 @Controller(ENDPOINTS.OPEN.PREFIX)
 export class OpenController {

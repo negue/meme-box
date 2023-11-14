@@ -1,20 +1,19 @@
-import {
-  GenerateCodeByStepPayload,
-  generatedCodeBySubCommandBlock,
-  RecipeContext,
-  RecipeEntryCommandCall,
-  RecipeEntryCommandPayload
-} from "./recipe.types";
-import {uuid} from "@gewd/utils";
-import {registerMemeboxCommandBlocks} from "./command-blocks.memebox";
-import {registerObsCommandBlocks} from "./command-blocks.obs";
-import {registerTwitchCommandBlocks} from "./command-blocks.twitch";
-import {UserDataState} from "@memebox/contracts";
-import {RecipeCommandRegistry} from "./recipeCommandRegistry";
-import {registerGenericCommandBlocks} from "./command-blocks.generic";
+import { GenerateCodeByStepPayload, generatedCodeBySubCommandBlock } from "./recipe.types";
+import { uuid } from "@gewd/utils";
+import { registerMemeboxCommandBlocks } from "./command-blocks.memebox";
+import { registerObsCommandBlocks } from "./command-blocks.obs";
+import { registerTwitchCommandBlocks } from "./command-blocks.twitch";
+import { RecipeContext, RecipeEntryCommandCall, RecipeEntryCommandPayload } from "@recipe/contracts";
+import { RecipeCommandRegistry } from "./recipeCommandRegistry";
+import { registerGenericCommandBlocks } from "./command-blocks.generic";
+import { UserDataState } from "@memebox/contracts";
 
 
-function generateCodeByStepAsync ({step, context, userData}: GenerateCodeByStepPayload): generatedCodeBySubCommandBlock[] {
+function generateCodeByStepAsync({
+                                   step,
+                                   context,
+                                   userData
+                                 }: GenerateCodeByStepPayload): generatedCodeBySubCommandBlock[] {
   const result: generatedCodeBySubCommandBlock[] = [];
 
   for (const subStepInfo of step.subCommandBlocks) {
@@ -25,7 +24,7 @@ function generateCodeByStepAsync ({step, context, userData}: GenerateCodeByStepP
 
       if (!subEntry) {
         scriptCode.push(`logger.error('this shouldnt have happened: cant find command block information of ${entryId});`);
-      } else if (subEntry.entryType === 'command'){
+      } else if (subEntry.entryType === 'command') {
         const entryDefinition = RecipeCommandRegistry[subEntry.commandBlockType];
 
         // result.push(`logger.log('Pre: ${subEntry.commandType}');`);
@@ -56,7 +55,7 @@ function generateCodeByStepAsync ({step, context, userData}: GenerateCodeByStepP
 
         // result.push(`logger.log('Post: ${subEntry.commandType}');`);
       } else {
-        scriptCode.push('TODO FOR TYPE: '+subEntry.entryType);
+        scriptCode.push('TODO FOR TYPE: ' + subEntry.entryType);
       }
     }
 
@@ -72,7 +71,7 @@ function generateCodeByStepAsync ({step, context, userData}: GenerateCodeByStepP
 
 export function generateCodeByRecipe(
   recipeContext: RecipeContext, userData: UserDataState
-): string  {
+): string {
   const rootEntry = recipeContext.entries[recipeContext.rootEntry];
 
   return generateCodeByStepAsync({step: rootEntry, context: recipeContext, userData})
@@ -80,7 +79,7 @@ export function generateCodeByRecipe(
     .join('\r\n');
 }
 
-export function generateRecipeEntryCommandCall (
+export function generateRecipeEntryCommandCall(
   commandBlockType: string,
   payload: RecipeEntryCommandPayload
 ): RecipeEntryCommandCall {
@@ -90,7 +89,7 @@ export function generateRecipeEntryCommandCall (
     payload,
     awaited: true,
     entryType: "command",
-    subCommandBlocks: [],
+    subCommandBlocks: []
   };
 }
 

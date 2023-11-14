@@ -1,17 +1,13 @@
-import {
-  RecipeCommandConfigActionListPayload,
-  RecipeCommandConfigActionPayload,
-  RecipeContext,
-  RecipeEntryCommandCall
-} from "./recipe.types";
-import {UserDataState} from "@memebox/contracts";
+import { RecipeCommandConfigActionListPayload, RecipeCommandConfigActionPayload } from "./recipe.types";
+import { RecipeContext, RecipeEntryCommandCall } from "@recipe/contracts";
+import { UserDataState } from "@memebox/contracts";
 
-const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const charactersLength = characters.length;
 
-export function generateRandomCharacters(length: number): string  {
-  let result           = '';
-  for ( let i = 0; i < length; i++ ) {
+export function generateRandomCharacters(length: number): string {
+  let result = '';
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
@@ -26,7 +22,7 @@ export function* listAllEntriesOfTypes(
 
   if (entry.entryType === 'command') {
     if (commandTypeList) {
-      if ( commandTypeList.includes(entry.commandBlockType)) {
+      if (commandTypeList.includes(entry.commandBlockType)) {
         yield entry;
       }
     } else {
@@ -37,13 +33,13 @@ export function* listAllEntriesOfTypes(
   if (entry.subCommandBlocks?.length > 0) {
     for (const subCommandBlock of entry.subCommandBlocks) {
       for (const subEntry of subCommandBlock.entries) {
-        yield *listAllEntriesOfTypes(recipeContext, subEntry, commandTypeList);
+        yield* listAllEntriesOfTypes(recipeContext, subEntry, commandTypeList);
       }
     }
   }
 }
 
-export function listActionsOfActionListPayload (
+export function listActionsOfActionListPayload(
   actionListPayload: RecipeCommandConfigActionListPayload,
   userData: UserDataState
 ) {

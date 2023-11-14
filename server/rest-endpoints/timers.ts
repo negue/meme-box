@@ -1,8 +1,8 @@
-import {PersistenceInstance} from "../persistence";
+import { PersistenceInstance } from "@memebox/server-common";
 
 import * as express from 'express';
-import {body} from "express-validator";
-import {validOrLeave} from "../validations";
+import { body } from "express-validator";
+import { validOrLeave } from "../validations";
 
 const timerPostValidator = [
   body('clipId').isString(),
@@ -14,9 +14,8 @@ const timerPostValidator = [
 
 const timerPutValidator = [
   ...timerPostValidator,
-  body('id').isString(),
+  body('id').isString()
 ];
-
 
 
 /**
@@ -30,17 +29,17 @@ TIMER_ROUTES
   })
 
 
-// Post = New
-.post('/', timerPostValidator, validOrLeave, (req, res) => {
-  res.send(PersistenceInstance.addTimedEvent(req.body));
-})
+  // Post = New
+  .post('/', timerPostValidator, validOrLeave, (req, res) => {
+    res.send(PersistenceInstance.addTimedEvent(req.body));
+  })
 
-// Put = Update
-.put('/:eventId', timerPutValidator, validOrLeave, (req, res) => {
-  res.send(PersistenceInstance.updateTimedEvent(req.params['eventId'], req.body));
-})
-// Delete
-.delete('/:eventId', (req, res) => {
-  res.send(PersistenceInstance.deleteTimedEvent(req.params['eventId']));
-});
+  // Put = Update
+  .put('/:eventId', timerPutValidator, validOrLeave, (req, res) => {
+    res.send(PersistenceInstance.updateTimedEvent(req.params['eventId'], req.body));
+  })
+  // Delete
+  .delete('/:eventId', (req, res) => {
+    res.send(PersistenceInstance.deleteTimedEvent(req.params['eventId']));
+  });
 

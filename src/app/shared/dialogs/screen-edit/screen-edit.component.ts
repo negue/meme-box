@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Screen} from "@memebox/contracts";
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 import {AppService, SnackbarService} from "@memebox/app-state";
 import {cssCodemirror} from "../../../core/codemirror.extensions";
 
@@ -12,7 +12,7 @@ import {cssCodemirror} from "../../../core/codemirror.extensions";
 })
 export class ScreenEditComponent implements OnInit {
 
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     name: '',
     id: '',
     customCss: '',

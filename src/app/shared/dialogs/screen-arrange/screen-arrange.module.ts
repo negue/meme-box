@@ -1,10 +1,9 @@
 import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ScreenArrangeComponent} from './screen-arrange.component';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {DialogContract} from '../dialog.contract';
 import {Screen} from '@memebox/contracts';
-import {MatDialogRef} from '@angular/material/dialog/dialog-ref';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';

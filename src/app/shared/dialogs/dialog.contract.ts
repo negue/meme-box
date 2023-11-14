@@ -1,4 +1,4 @@
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {MatDialogRef} from "@angular/material/dialog";
 import {DynamicIframeContent, ScriptConfig} from "@memebox/utils";
 import {ActionType} from "@memebox/contracts";
 

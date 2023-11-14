@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CombinedActionContext, Screen} from '@memebox/contracts';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {DialogService} from '../../dialog.service';
 import {ScreenActionAssignmentService} from "../../../screenActionAssignment.service";
 
@@ -18,7 +18,7 @@ export class ScreenArrangeSidebarComponent {
   visibleItems: CombinedActionContext[];
 
   @Input()
-  selectedItems: FormControl;
+  selectedItems: UntypedFormControl;
 
   @Input()
   screen: Screen;

@@ -1,9 +1,9 @@
-import {BodyParams, Controller, Get, PathParams, Put} from "@tsed/common";
-import {WidgetConnectionState} from "../providers/widget-connection.state";
-import {UseOpts} from "@tsed/di";
-import {NamedLogger} from "../providers/named-logger";
-import {ActionStore} from "@memebox/shared-state";
-import {ActionPersistentStateHandler} from "../providers/actions/action-persistent-state.handler";
+import { BodyParams, Controller, Get, PathParams, Put } from "@tsed/common";
+import { WidgetConnectionState } from "../providers/widget-connection.state";
+import { UseOpts } from "@tsed/di";
+import { NamedLogger } from "@memebox/server-common";
+import { ActionStore } from "@memebox/shared-state";
+import { ActionPersistentStateHandler } from "../providers/actions/action-persistent-state.handler";
 
 // TODO extract the endpoint path as constant
 @Controller("widget-state")
@@ -18,7 +18,7 @@ export class WidgetStateController {
 
   @Get('/:mediaId')
   getWidgetState(
-    @PathParams("mediaId") mediaId: string,
+    @PathParams("mediaId") mediaId: string
   ): Promise<ActionStore> {
     const widgetFileHandler = this.actionStateHandler.getActionFileHandler(mediaId);
 
@@ -37,11 +37,11 @@ export class WidgetStateController {
 
       widgetFileHandler.update(updatedState);
 
-      this.logger.info('Allowed to update the State', { widgetInstanceId });
+      this.logger.info('Allowed to update the State', {widgetInstanceId});
 
       // allowed to save
     } else {
-      this.logger.info('Not allowed to update the State', { widgetInstanceId });
+      this.logger.info('Not allowed to update the State', {widgetInstanceId});
     }
   }
 }

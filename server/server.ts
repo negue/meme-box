@@ -1,8 +1,8 @@
 import open from 'open';
-import {LOGGER} from "./logger.utils";
-import {bootstrapTsED} from "./server.bootstrap";
-import {isProduction} from "./server.tsed";
-import {CLI_OPTIONS} from "./utils/cli-options";
+import { LOGGER } from "@memebox/server-common";
+import { bootstrapTsED } from "./server.bootstrap";
+import { isProduction } from "./server.tsed";
+import { CLI_OPTIONS } from "../projects/server-common/src/lib/utils/cli-options";
 
 // CLI, Headless Mode
 

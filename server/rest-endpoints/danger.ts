@@ -1,7 +1,6 @@
 import * as express from 'express';
-import {PersistenceInstance} from "../persistence";
-import {Action, ACTION_TYPE_INFORMATION, ActionType, FileResult, TargetScreenType} from "@memebox/contracts";
-import {getFiles, mapFileInformations} from "../file.utilts";
+import { getFiles, mapFileInformations, PersistenceInstance } from "@memebox/server-common";
+import { Action, ACTION_TYPE_INFORMATION, ActionType, FileResult, TargetScreenType } from "@memebox/contracts";
 
 // Only used in the Server
 export function mediaToString(mediaType: ActionType) {
@@ -11,7 +10,7 @@ export function mediaToString(mediaType: ActionType) {
 export const DANGER_ROUTES = express.Router();
 
 DANGER_ROUTES
-  .post('/clean_config', (req,res) => {
+  .post('/clean_config', (req, res) => {
     PersistenceInstance.cleanUpConfigs();
 
     res.send({ok: true});
@@ -27,13 +26,12 @@ DANGER_ROUTES
     // files with information
     const fileInfoList = mapFileInformations(mediaFolder, files);
 
-    switch(targetScreenType) {
+    switch (targetScreenType) {
       // todo rename enum?
-      case TargetScreenType.OneScreen:
-      {
+      case TargetScreenType.OneScreen: {
         // add a new screen
         const oneScreenId = PersistenceInstance.addScreen({
-          name: 'Imported all files',
+          name: 'Imported all files'
         });
 
         const newClips = fileInfoList.map(fileInfoToClip);
@@ -44,8 +42,7 @@ DANGER_ROUTES
         break;
       }
 
-      case TargetScreenType.ScreenPerType:
-      {
+      case TargetScreenType.ScreenPerType: {
         // group all clips by type
 
         const groupedByType = groupBy(fileInfoList, 'fileType');
@@ -55,7 +52,7 @@ DANGER_ROUTES
           const screenPerTypeId = PersistenceInstance.addScreen({
             // key is string
             // but enum needs a "number" for it, so +string = number
-            name: `All ${mediaToString(+key as any)} files`,
+            name: `All ${mediaToString(+key as any)} files`
           });
 
           const newClips = value.map(fileInfoToClip);
@@ -73,12 +70,12 @@ DANGER_ROUTES
 ;
 
 
-function fileInfoToClip (fileInfo: FileResult): Partial<Action> {
+function fileInfoToClip(fileInfo: FileResult): Partial<Action> {
   const clip: Partial<Action> = {
     name: fileInfo.fileName,
     type: fileInfo.fileType,
     path: fileInfo.apiUrl,
-    volumeSetting: 20, // XX / 100
+    volumeSetting: 20 // XX / 100
   };
 
   if (clip.type === ActionType.Picture) {
@@ -88,8 +85,8 @@ function fileInfoToClip (fileInfo: FileResult): Partial<Action> {
   return clip;
 }
 
-function groupBy<T>(xs: T[], key: keyof T): {[key: string]: T[]} {
-  return xs.reduce(function(rv, x) {
+function groupBy<T>(xs: T[], key: keyof T): { [key: string]: T[] } {
+  return xs.reduce(function (rv, x) {
     (rv[x[key] as any] = rv[x[key] as any] || []).push(x);
     return rv;
   }, {});

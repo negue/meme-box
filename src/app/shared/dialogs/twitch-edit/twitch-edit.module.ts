@@ -1,8 +1,7 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {DialogContract} from "../dialog.contract";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {TwitchTrigger} from "@memebox/contracts";
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";

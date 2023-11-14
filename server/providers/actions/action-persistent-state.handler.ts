@@ -1,8 +1,7 @@
-import {Service} from "@tsed/di";
-import {FileHandler} from "../../utils/file-handler";
+import { Service } from "@tsed/di";
+import { FileHandler, NEW_CONFIG_PATH } from "@memebox/server-common";
 import path from "path";
-import {NEW_CONFIG_PATH} from "../../path.utils";
-import {ActionStore} from "@memebox/shared-state";
+import { ActionStore } from "@memebox/shared-state";
 
 @Service()
 export class ActionPersistentStateHandler {
@@ -16,7 +15,7 @@ export class ActionPersistentStateHandler {
         path.join(NEW_CONFIG_PATH, 'action-states', `${actionId}.json`)
       )
       this._widgetStateMap.set(actionId, fileHandler);
-    }  else {
+    } else {
       fileHandler = this._widgetStateMap.get(actionId);
     }
 

@@ -1,11 +1,11 @@
-@import '~angular-material-css-vars/public-util';
+@use "angular-material-css-vars" as mat-css-vars;
 
 :host {
   ::ng-deep {
     .mat-chip {
       &.mat-chip.mat-standard-chip {
         &.filterChip--selected {
-          background-color: mat-css-color-accent();
+          background-color: mat-css-vars.mat-css-color-accent();
         }
       }
     }

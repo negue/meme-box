@@ -1,5 +1,5 @@
-@import '~@angular/material/theming';
-@import '~angular-material-css-vars/main';
+@use '@angular/material' as mat;
+@use "angular-material-css-vars" as mat-css-vars;
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
 @import './css-var-colors';
 
@@ -16,24 +16,24 @@ $mat-css-light-theme-selector: '.isLightTheme';
   // Define any styles affected by the theme.
   .app-header {
     // Use mat-color to extract individual colors from a palette.
-    background-color: mat-color($primary);
-    border: medium solid mat-color($accent, A400);
+    background-color: mat.get-color-from-palette($primary);
+    border: medium solid mat.get-color-from-palette($accent, A400);
   }
 }
 
 
 // Define a custom typography config that overrides the font-family as well as the
 // `headlines` and `body-1` levels.
-$custom-typography: mat-typography-config(
+$custom-typography: mat.define-typography-config(
   $font-family: 'Barlow, sans-serif',
-  $headline: mat-typography-level(32px, 48px, 700),
-  $body-1: mat-typography-level(16px, 24px, 500)
+  $headline: mat.define-typography-level(32px, 48px, 700),
+  $body-1: mat.define-typography-level(16px, 24px, 500)
 );
 
 // init theme
 // examples https://github.com/johannesjo/angular-material-css-vars/blob/master/src/app/app.component.scss
 
-@include init-material-css-vars($typography-config: $custom-typography) {
+@include mat-css-vars.init-material-css-vars($typography-config: $custom-typography) {
   .mat-app-background {
     background-color: var(--palette-background-background) !important;
   }
@@ -41,7 +41,9 @@ $custom-typography: mat-typography-config(
   .navigation {
     background-color: var(--palette-background-background) !important;
   }
-};
+}
+
+;
 
 .cdk-global-scrollblock {
   overflow-y: hidden;
@@ -128,7 +130,7 @@ $custom-typography: mat-typography-config(
 }
 
 .mat-grid-tile .mat-figure {
-  justify-content: flex-start !important ;
+  justify-content: flex-start !important;
 }
 
 .form-field-row {

@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {AppQueries, AppService} from '@memebox/app-state';
@@ -12,7 +12,7 @@ import {ConfigService} from "../../../../../../projects/app-state/src/lib/servic
   styleUrls: ['./custom-port-setting.component.scss']
 })
 export class CustomPortSettingComponent implements OnInit, OnDestroy {
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     port: ''
   });
 

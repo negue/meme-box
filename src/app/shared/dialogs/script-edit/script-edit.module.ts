@@ -1,8 +1,7 @@
 import {NgModule} from "@angular/core";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import type {DialogContract} from "../dialog.contract";
 import {CustomScriptDialogPayload} from "../dialog.contract";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {ScriptEditComponent} from "./script-edit.component";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {CustomFormControlModule} from "@gewd/mat-utils/custom-form-control";

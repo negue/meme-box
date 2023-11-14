@@ -1,13 +1,12 @@
-import {BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use} from "@tsed/common";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence, PersistenceInstance} from "../persistence";
-import {AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
-import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
-import {twitchPostValidator, twitchPutValidator, validOrLeave} from "../validations";
-import {ExampleTwitchCommandsSubject} from "../shared";
-import {TwitchQueueEventBus} from "../providers/twitch/twitch-queue-event.bus";
-import {takeLatestItems} from "@memebox/utils";
-import {filter} from "rxjs/operators";
+import { BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use } from "@tsed/common";
+import { Persistence, PERSISTENCE_DI, PersistenceInstance } from "@memebox/server-common";
+import { AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand } from "@memebox/contracts";
+import { TwitchDataProvider } from "../providers/twitch/twitch.data-provider";
+import { twitchPostValidator, twitchPutValidator, validOrLeave } from "../validations";
+import { ExampleTwitchCommandsSubject } from "../shared";
+import { TwitchQueueEventBus } from "../providers/twitch/twitch-queue-event.bus";
+import { takeLatestItems } from "@memebox/utils";
+import { filter } from "rxjs/operators";
 
 @Controller(ENDPOINTS.TWITCH_EVENTS.PREFIX)
 export class TwitchEventsController {
@@ -16,12 +15,12 @@ export class TwitchEventsController {
   constructor(
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
     private _dataProvider: TwitchDataProvider,
-    private _twitchEventBus: TwitchQueueEventBus,
+    private _twitchEventBus: TwitchQueueEventBus
   ) {
     _twitchEventBus.AllQueuedEvents$.pipe(
       filter(str => {
         return str.type !== TwitchEventTypes.message;
-      } ),
+      }),
       takeLatestItems(20)
     ).subscribe(value => {
       this.latest20Events = value;

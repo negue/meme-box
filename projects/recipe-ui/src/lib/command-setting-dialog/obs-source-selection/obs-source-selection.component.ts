@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {combineLatest, from, Subject} from "rxjs";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {map, startWith} from "rxjs/operators";
 import {ENDPOINTS, ObsSourceEntry} from "@memebox/contracts";
 import {Scene} from "obs-websocket-js";
@@ -14,7 +14,7 @@ import {MemeboxApiService} from "@memebox/app-state";
 export class ObsSourceSelectionComponent implements OnInit {
   private _destroy$ = new Subject<void>();
 
-  public sourceFormControl = new FormControl();
+  public sourceFormControl = new UntypedFormControl();
 
   @Output()
   public readonly payloadChanged = new Subject<string>();

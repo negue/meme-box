@@ -12,7 +12,7 @@ import {
 } from "@memebox/contracts";
 import {map, take} from "rxjs/operators";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 import {cssCodemirror} from "../../../core/codemirror.extensions";
 
 export interface ScreenClipOptionsPayload {
@@ -30,7 +30,7 @@ export class ScreenClipOptionsComponent implements OnInit {
 
   // TODO formly?
   // TODO any other typed forms
-  public form = new FormBuilder().group({
+  public form = new UntypedFormBuilder().group({
     id: '',
     width: '',
     height: '',

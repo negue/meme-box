@@ -1,11 +1,11 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormControl } from "@angular/forms";
-import { Scene } from "obs-websocket-js";
-import { ENDPOINTS, ObsSourceEntry, ObsSourceFilterEntry } from "@memebox/contracts";
-import { combineLatest, from, Observable, of, Subject } from "rxjs";
-import { map, startWith, switchMap, takeUntil } from "rxjs/operators";
-import { MemeboxApiService } from "@memebox/app-state";
-import { RecipeCommandConfigObsSetFilterStatePayload } from "@memebox/recipe-core";
+import {Component, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {UntypedFormControl} from "@angular/forms";
+import {Scene} from "obs-websocket-js";
+import {ENDPOINTS, ObsSourceEntry, ObsSourceFilterEntry} from "@memebox/contracts";
+import {combineLatest, from, Observable, of, Subject} from "rxjs";
+import {map, startWith, switchMap, takeUntil} from "rxjs/operators";
+import {MemeboxApiService} from "@memebox/app-state";
+import {RecipeCommandConfigObsSetFilterStatePayload} from "@memebox/recipe-core";
 
 @Component({
   selector: 'app-obs-filter-selection',
@@ -15,8 +15,8 @@ import { RecipeCommandConfigObsSetFilterStatePayload } from "@memebox/recipe-cor
 export class ObsFilterSelectionComponent implements OnInit, OnDestroy {
   private _destroy$ = new Subject<void>();
 
-  public sourceFormControl = new FormControl();
-  public filterFormControl = new FormControl();
+  public sourceFormControl = new UntypedFormControl();
+  public filterFormControl = new UntypedFormControl();
 
   public selectedSourceSubject = new Subject<string>();
   public selectedFilterSubject = new Subject<string>();

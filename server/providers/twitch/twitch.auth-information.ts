@@ -1,21 +1,21 @@
-import {Service} from "@tsed/di";
+import { Service } from "@tsed/di";
 import fetch from "node-fetch";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
-import {Persistence} from "../../persistence";
-import {TwitchAuthResult} from "@memebox/contracts";
+import { Inject } from "@tsed/common";
+
+import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { TwitchAuthResult } from "@memebox/contracts";
 
 
 @Service()
 export class TwitchAuthInformationProvider {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    @Inject(PERSISTENCE_DI) private _persistence: Persistence
   ) {
   }
 
-  public getTwitchAuthAsync (): Promise<TwitchAuthResult|null> {
-    const currentTwitchConfig =  this._persistence.getConfig(false).twitch;
+  public getTwitchAuthAsync(): Promise<TwitchAuthResult | null> {
+    const currentTwitchConfig = this._persistence.getConfig(false).twitch;
 
     if (!currentTwitchConfig?.token) {
       return null;
@@ -24,10 +24,10 @@ export class TwitchAuthInformationProvider {
     return TwitchAuthInformationProvider.getTwitchTokenAuthAsync(currentTwitchConfig.token);
   }
 
-  public getBotAuthAsync (): Promise<TwitchAuthResult|null> {
+  public getBotAuthAsync(): Promise<TwitchAuthResult | null> {
     const fullConfig = this._persistence.getConfig(false);
 
-    const currentTwitchConfig =  fullConfig.twitch?.bot?.auth;
+    const currentTwitchConfig = fullConfig.twitch?.bot?.auth;
 
     if (!currentTwitchConfig?.token) {
       return null;
@@ -36,14 +36,14 @@ export class TwitchAuthInformationProvider {
     return TwitchAuthInformationProvider.getTwitchTokenAuthAsync(currentTwitchConfig.token);
   }
 
-  private static async getTwitchTokenAuthAsync (token: string): Promise<TwitchAuthResult|null> {
-    const password = token.replace( "oauth:", "" );
+  private static async getTwitchTokenAuthAsync(token: string): Promise<TwitchAuthResult | null> {
+    const password = token.replace("oauth:", "");
 
-    const validation = await fetch( "https://id.twitch.tv/oauth2/validate", {
+    const validation = await fetch("https://id.twitch.tv/oauth2/validate", {
       headers: {
         "Authorization": `Bearer ${password}`
       }
-    }).then( r => r.json() );
+    }).then(r => r.json());
 
     return {
       valid: !validation.status,

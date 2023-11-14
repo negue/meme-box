@@ -10,6 +10,8 @@ import {AppService} from "./state/app.service";
 import {ConfigService} from "./services/config.service";
 import {ErrorsService, GithubService} from "./services";
 
+console.trace();
+
 @NgModule({
   imports: [
     CommonModule,

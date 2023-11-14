@@ -417,7 +417,8 @@
               </mat-chip>
               <input
                 #tagInput
-                (blur)="enterNewTag({input: tagInput, value: tagInput.value})"
+                #chipInput="matChipInput"
+                (blur)="enterNewTag({input: tagInput, value: tagInput.value, chipInput: chipInput})"
                 (matChipInputTokenEnd)="enterNewTag($event)"
                 [formControl]="tagFormCtrl"
                 [matAutocomplete]="tagAutoComplete"

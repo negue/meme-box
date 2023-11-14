@@ -1,11 +1,11 @@
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
-import {Persistence} from "../../persistence";
-import {ActionStateEnum, TriggerAction, VisibilityEnum} from "@memebox/contracts";
-import {Subject} from "rxjs";
-import {concatMap, filter, take} from "rxjs/operators";
-import {ActionActiveState} from "./action-active-state";
-import {isVisibleMedia} from "@memebox/shared-state";
+import { Inject } from "@tsed/common";
+
+import { Persistence, PERSISTENCE_DI } from "@memebox/server-common";
+import { ActionStateEnum, TriggerAction, VisibilityEnum } from "@memebox/contracts";
+import { Subject } from "rxjs";
+import { concatMap, filter, take } from "rxjs/operators";
+import { ActionActiveState } from "./action-active-state";
+import { isVisibleMedia } from "@memebox/shared-state";
 
 export class ActionQueue {
   private _queueSubjectsDictionary: Record<string, Subject<TriggerAction>> = {};
@@ -56,10 +56,10 @@ export class ActionQueue {
     ).toPromise();
   }
 
-  private createOrGetQueueSubject (queueName: string) {
+  private createOrGetQueueSubject(queueName: string) {
     if (this._queueSubjectsDictionary[queueName]) {
       return this._queueSubjectsDictionary[queueName];
-    } else{
+    } else {
       const subject = new Subject<TriggerAction>();
 
       this._queueSubjectsDictionary[queueName] = subject;
@@ -71,7 +71,7 @@ export class ActionQueue {
         concatMap(async triggerAction => {
           await this.executeTriggerWithoutQueueAndWait(triggerAction);
           return triggerAction;
-        }),
+        })
 
         // tap(action => console.info(queueName + ': After concatMap', action.uniqueId))
       ).subscribe((actionDone) => {

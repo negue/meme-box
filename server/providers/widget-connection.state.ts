@@ -1,20 +1,19 @@
 import { Injectable, UseOpts } from "@tsed/di";
 import { MemeboxWebsocket } from "./websockets/memebox.websocket";
 import { ACTIONS, ActionStateEnum } from "@memebox/contracts";
-import { NamedLogger } from "./named-logger";
+import { NamedLogger } from "@memebox/server-common";
 import { ActionActiveStateEventBus } from "./actions/action-active-state-event.bus";
 
 // skipcq: JS-0579
 @Injectable()
 export class WidgetConnectionState {
   private connectedSocketMap = new Map<string, WebSocket>();
-  private connectionState: Record<string, { connectedInstances: string[], mainId: string }> = { }
+  private connectionState: Record<string, { connectedInstances: string[], mainId: string }> = {}
 
   constructor(
     private memeboxWebSocket: MemeboxWebsocket,
     private actionActiveState: ActionActiveStateEventBus,
-
-    @UseOpts({name: 'WidgetConnectionState'}) private logger: NamedLogger,
+    @UseOpts({name: 'WidgetConnectionState'}) private logger: NamedLogger
   ) {
     memeboxWebSocket.ReceivedActions$.subscribe(({type, payload, ws}) => {
       switch (type) {
@@ -22,7 +21,7 @@ export class WidgetConnectionState {
           const [mediaId, instanceId] = payload.split('|');
 
           if (this.connectionState[mediaId]) {
-           const mediaInformation = this.connectionState[mediaId];
+            const mediaInformation = this.connectionState[mediaId];
 
             mediaInformation.connectedInstances.push(instanceId);
 
@@ -61,11 +60,11 @@ export class WidgetConnectionState {
     });
   }
 
-  public isTheMainInstance(mediaId: string, instanceId: string): boolean  {
+  public isTheMainInstance(mediaId: string, instanceId: string): boolean {
     return this.connectionState[mediaId]?.mainId === instanceId;
   }
 
-  private unregisterWidgetConnection (mediaId: string, instanceId: string)  {
+  private unregisterWidgetConnection(mediaId: string, instanceId: string) {
     this.actionActiveState.updateActionState({
       mediaId,
       state: ActionStateEnum.Unset,

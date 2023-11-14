@@ -51,11 +51,12 @@
               </mat-chip>
               <input
                 #tagInput
+                #chipInput="matChipInput"
                 [formControl]="aliasesFrmControl"
                 [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (matChipInputTokenEnd)="enterNewAlias($event)" autocomplete="off"
-                (blur)="enterNewAlias({input: tagInput, value: tagInput.value})">
+                (blur)="enterNewAlias({value: tagInput.value, chipInput: chipInput, input: tagInput})">
             </mat-chip-list>
           </mat-form-field>
         </div>

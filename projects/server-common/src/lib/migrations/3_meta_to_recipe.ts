@@ -6,7 +6,7 @@ import {
   RecipeCommandRegistry,
   RecipeRootCommandBlockId
 } from "@memebox/recipe-core";
-import {ActionType, MetaTriggerTypes, SettingsState} from "@memebox/contracts";
+import { ActionType, MetaTriggerTypes, SettingsState } from "@memebox/contracts";
 
 export function createTriggerActionCommand(
   actionToTriggerId: string
@@ -55,7 +55,7 @@ export function createTriggerRandomActionCommand(
   return recipeEntryCommandCall;
 }
 
-export function convertMetaActionsToRecipe (
+export function convertMetaActionsToRecipe(
   configFromFile: SettingsState
 ) {
   const actionKeyValueList = Object.entries(configFromFile.clips);
@@ -100,7 +100,7 @@ export function convertMetaActionsToRecipe (
           rootEntryList.entries.push(createdCommand.id);
 
           if (awaited) {
-            const awaitedCommand = generateRecipeEntryCommandCall('sleepMs',{
+            const awaitedCommand = generateRecipeEntryCommandCall('sleepMs', {
               ms: metaAction.metaDelay
             });
 

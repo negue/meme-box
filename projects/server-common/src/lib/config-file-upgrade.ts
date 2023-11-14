@@ -1,7 +1,7 @@
-import {ConfigV0, SettingsState} from "@memebox/contracts";
-import {SavePreviewFile} from "./persistence.functions";
-import {convertMetaActionsToRecipe} from "./migrations/3_meta_to_recipe";
-import {convertRecipeTriggerRandomPayload} from "./migrations/4_recipeTriggerRandomPayload";
+import { ConfigV0, SettingsState } from "@memebox/contracts";
+import { SavePreviewFile } from "./persistence.functions";
+import { convertMetaActionsToRecipe } from "./migrations/3_meta_to_recipe";
+import { convertRecipeTriggerRandomPayload } from "./migrations/4_recipeTriggerRandomPayload";
 
 /* Deprecation List: (properties to rename or remove)
  * maybe for the next version

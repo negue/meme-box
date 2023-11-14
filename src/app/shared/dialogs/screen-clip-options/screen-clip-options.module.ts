@@ -1,8 +1,7 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {DialogContract} from "../dialog.contract";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatSelectModule} from "@angular/material/select";
 import {MatIconModule} from "@angular/material/icon";
 import {ReactiveFormsModule} from "@angular/forms";

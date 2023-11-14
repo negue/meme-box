@@ -1,20 +1,20 @@
-import {Directive, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {filterNil, Store, StoreConfig} from "@datorama/akita";
+import { Directive, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { filterNil, Store, StoreConfig } from "@datorama/akita";
 import {
   RecipeContext,
   RecipeEntry,
   RecipeEntryCommandCall,
   RecipeEntryCommandPayload,
   RecipeSubCommandInfo
-} from "@memebox/recipe-core";
-import {Observable} from "rxjs";
-import {produce} from "immer";
-import {skip, take} from "rxjs/operators";
-import {arraymove} from "@memebox/utils";
-import {getUserDataState, UserDataState} from "@memebox/contracts";
-import {AppQueries} from "@memebox/app-state";
+} from "@recipe/contracts";
+import { Observable } from "rxjs";
+import { produce } from "immer";
+import { skip, take } from "rxjs/operators";
+import { arraymove } from "@memebox/utils";
+import { getUserDataState, UserDataState } from "@memebox/contracts";
+import { AppQueries } from "@memebox/app-state";
 
-function addEntryToPath (
+function addEntryToPath(
   state: RecipeContext,
   entry: RecipeEntry
 ) {
@@ -31,9 +31,8 @@ function addEntryToPath (
 })
 export class RecipeContextDirective
   extends Store<RecipeContext>
-  implements OnInit, OnChanges
-{
-  public userData: UserDataState| null = null;
+  implements OnInit, OnChanges {
+  public userData: UserDataState | null = null;
 
   @Input()
   public recipe: RecipeContext | null = null;
@@ -56,7 +55,7 @@ export class RecipeContextDirective
         filterNil
       );
 
-  constructor (
+  constructor(
     private appQueries: AppQueries
   ) {
     super({
@@ -65,7 +64,7 @@ export class RecipeContextDirective
     });
   }
 
-  async ngOnInit (): Promise<void> {
+  async ngOnInit(): Promise<void> {
     if (this.recipe) {
       this.update({
         ...this.recipe
@@ -112,7 +111,7 @@ export class RecipeContextDirective
     });
   }
 
-  addStep (entry: RecipeEntry, subStepInfo: RecipeSubCommandInfo, stepToAdd: RecipeEntryCommandCall): void  {
+  addStep(entry: RecipeEntry, subStepInfo: RecipeSubCommandInfo, stepToAdd: RecipeEntryCommandCall): void {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -124,10 +123,10 @@ export class RecipeContextDirective
     });
   }
 
-  findEntry (
+  findEntry(
     state: RecipeContext,
     entry: RecipeEntry
-  ): RecipeEntry  {
+  ): RecipeEntry {
     if (entry) {
       return state.entries[entry.id];
     } else {
@@ -135,7 +134,7 @@ export class RecipeContextDirective
     }
   }
 
-  changeAwaited(entry: RecipeEntry, checked: boolean): void  {
+  changeAwaited(entry: RecipeEntry, checked: boolean): void {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -143,7 +142,7 @@ export class RecipeContextDirective
     });
   }
 
-  removeStep(subStep: RecipeEntry, parent: RecipeEntry): void  {
+  removeStep(subStep: RecipeEntry, parent: RecipeEntry): void {
     this.update(state => {
       const foundEntry = this.findEntry(state, parent);
 
@@ -155,7 +154,7 @@ export class RecipeContextDirective
     });
   }
 
-  changePayload(entry: RecipeEntryCommandCall, newPayload: RecipeEntryCommandPayload): void  {
+  changePayload(entry: RecipeEntryCommandCall, newPayload: RecipeEntryCommandPayload): void {
     this.update(state => {
       const foundEntry = this.findEntry(state, entry);
 
@@ -165,9 +164,9 @@ export class RecipeContextDirective
     });
   }
 
-  changeEntry(entry: RecipeEntryCommandCall): void{
+  changeEntry(entry: RecipeEntryCommandCall): void {
     this.update(state => {
       state.entries[entry.id] = entry;
     })
-}
+  }
 }

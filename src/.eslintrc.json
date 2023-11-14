@@ -5,9 +5,7 @@
     {
       "files": ["*.ts"],
       "excludedFiles": ["**/*.d.ts", "**/*.spec.ts"],
-      "extends": [
-        "plugin:@angular-eslint/template/process-inline-templates"
-      ],
+      "extends": ["plugin:@angular-eslint/template/process-inline-templates"],
       "parserOptions": {
         "project": ["src/tsconfig.*?.json"]
       },
@@ -17,7 +15,7 @@
     },
     {
       "files": ["*.html"],
-      "extends": ["plugin:@nrwl/nx/angular-template"],
+      "extends": ["plugin:@nx/angular-template"],
       "rules": {}
     }
   ]

@@ -1,53 +1,57 @@
 {
-  "extends": "@nrwl/workspace/presets/npm.json",
-  "npmScope": "memebox",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "test", "lint", "package", "prepare"]
+        "cacheableOperations": ["build", "test", "lint", "package", "prepare"],
+        "parallel": 3
       }
     }
   },
-  "targetDependencies": {
-    "prepare": [{ "target": "prepare", "projects": "dependencies" }],
-    "package": [{ "target": "package", "projects": "dependencies" }]
+  "extends": "nx/presets/npm.json",
+  "npmScope": "memebox",
+  "affected": {
+    "defaultBase": "develop"
   },
-  "affected": { "defaultBase": "develop" },
-  "workspaceLayout": { "libsDir": "projects", "appsDir": "projects" },
-  "cli": { "analytics": false, "defaultCollection": "@nrwl/angular" },
+  "workspaceLayout": {
+    "libsDir": "projects",
+    "appsDir": "projects"
+  },
+  "cli": {
+    "analytics": false
+  },
   "generators": {
     "@schematics/angular:component": {
       "prefix": "app",
       "style": "scss",
       "skipTests": true
     },
-    "@schematics/angular:directive": { "prefix": "app", "skipTests": true },
-    "@nrwl/angular:application": {
+    "@schematics/angular:directive": {
+      "prefix": "app",
+      "skipTests": true
+    },
+    "@nx/angular:application": {
       "linter": "eslint",
       "unitTestRunner": "jest"
     },
-    "@nrwl/angular:library": {
+    "@nx/angular:library": {
       "linter": "eslint",
       "unitTestRunner": "jest",
       "buildable": true,
-      "style": "scss",
       "strict": true
     }
   },
   "defaultProject": "memebox-app",
-  "projects": {
-    "action-variables": { "tags": [] },
-    "action-variables-ui": { "tags": [] },
-    "app-state": { "tags": [] },
-    "contracts": { "tags": [] },
-    "memebox-app": { "tags": [] },
-    "server": { "tags": [] },
-    "shared-state": { "tags": [] },
-    "state-components": { "tags": [] },
-    "ui-components": { "tags": [] },
-    "utils": { "tags": [] },
-    "recipe-core": { "tags": [] },
-    "recipe-ui": { "tags": [] }
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "inputs": ["default", "^default", "{workspaceRoot}/jest.preset.js"]
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.js"]
+    }
   }
 }

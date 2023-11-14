@@ -1,11 +1,10 @@
 import * as electron from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, Menu, MessageBoxSyncOptions, nativeImage, shell, Tray } from 'electron';
 import * as os from 'os';
-import {app, BrowserWindow, dialog, ipcMain, Menu, MessageBoxSyncOptions, nativeImage, shell, Tray} from 'electron';
 import * as path from 'path';
-import {join} from 'path';
-import {NEW_CONFIG_PATH} from "./server/path.utils";
-import {bootstrapTsED} from "./server/server.bootstrap";
-import {getAppRootPath, getElectronPath, isInElectron} from "./server/file.utilts";
+import { join } from 'path';
+import { getAppRootPath, getElectronPath, isInElectron, NEW_CONFIG_PATH } from "@memebox/server-common";
+import { bootstrapTsED } from "./server/server.bootstrap";
 
 // TODO Refactor / Abstract the electron usages
 
@@ -42,14 +41,14 @@ const openExternalLinksInOSBrowser = (event, url) => {
 const addPresentationIcons = (
   target: electron.NativeImage,
   source: electron.NativeImage,
-  baseSize: number,
+  baseSize: number
 ): void => {
   [1, 1.25, 1.5, 2, 3].forEach(scale => {
     target.addRepresentation({
       scaleFactor: scale,
       width: baseSize * scale,
       height: baseSize * scale,
-      buffer: source.resize({ width: baseSize * scale, height: baseSize * scale }).toBitmap(),
+      buffer: source.resize({width: baseSize * scale, height: baseSize * scale}).toBitmap()
     });
   });
 };
@@ -77,11 +76,10 @@ const createTrayIcon = (appRootPath: string): electron.NativeImage => {
 };
 
 var initPath = path.join(NEW_CONFIG_PATH, "init.json");
-var data = { bounds: { width: 800, height: 600 }};
+var data = {bounds: {width: 800, height: 600}};
 try {
   data = JSON.parse(fs.readFileSync(initPath, 'utf8'));
-}
-catch(e) {
+} catch (e) {
 }
 
 let alreadyAllowedToBeHidden = false;
@@ -91,8 +89,8 @@ let tray;
  * Create the application's tray icon in the system menu bar, setting up the platform dependent icon
  * as well as menu items and further tray information.
  */
-function createTray () {
-  function toggle () {
+function createTray() {
+  function toggle() {
     if (win !== null) {
       win.close();
     } else {
@@ -126,7 +124,7 @@ function createTray () {
   var trayMenu = Menu.buildFromTemplate(template);
   tray.setContextMenu(trayMenu);
   tray.setToolTip('Meme-Box');
-  tray.addListener('double-click',  (event: KeyboardEvent) => {
+  tray.addListener('double-click', (event: KeyboardEvent) => {
     alreadyAllowedToBeHidden = true;
     toggle();
   });
@@ -137,7 +135,7 @@ function createWindow(): BrowserWindow {
 
   const electronPath = getElectronPath();
 
-  console.info({ isInElectron, __dirname });
+  console.info({isInElectron, __dirname});
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -148,8 +146,8 @@ function createWindow(): BrowserWindow {
       // protect against prototype pollution
       contextIsolation: true,
       // Preload script
-      preload: path.join(electronPath, 'preload.js'),
-    },
+      preload: path.join(electronPath, 'preload.js')
+    }
   });
 
   portPromise.then((port) => {
@@ -162,35 +160,35 @@ function createWindow(): BrowserWindow {
       });
       win.loadURL(`http://localhost:4200?port=${port}`);
     } else {
-      win.loadURL(  `http://localhost:${port}`);
+      win.loadURL(`http://localhost:${port}`);
     }
   });
 
-  win.on("close", function(e) {
+  win.on("close", function (e) {
     var data = {
       bounds: win.getBounds()
     };
     fs.writeFileSync(initPath, JSON.stringify(data));
 
     // ask it hide or close if its triggered from the Electron Window
-  if (!alreadyAllowedToBeHidden) {
-    const result = dialog.showMessageBoxSync(win, {
-      message: 'Hide to tray or quit?',
-      buttons: [
-        'To Tray',
-        'Quit Meme-Box'
-      ]
-    } as MessageBoxSyncOptions);
+    if (!alreadyAllowedToBeHidden) {
+      const result = dialog.showMessageBoxSync(win, {
+        message: 'Hide to tray or quit?',
+        buttons: [
+          'To Tray',
+          'Quit Meme-Box'
+        ]
+      } as MessageBoxSyncOptions);
 
-    if (result === 0) {
-      // do nothing :)
-      alreadyAllowedToBeHidden = true;
-    }
+      if (result === 0) {
+        // do nothing :)
+        alreadyAllowedToBeHidden = true;
+      }
 
-    if (result === 1) {
-      app.quit();
+      if (result === 1) {
+        app.quit();
+      }
     }
-  }
   });
 
   const ipcSelectDirEvent = async (event) => {
@@ -199,7 +197,7 @@ function createWindow(): BrowserWindow {
     })
     console.log('directories selected', result.filePaths);
 
-    const arg =  result.filePaths?.[0] ?? '';
+    const arg = result.filePaths?.[0] ?? '';
 
     event.sender.send('dir-selected', arg);
   };
@@ -222,7 +220,6 @@ function createWindow(): BrowserWindow {
 
   return win;
 }
-
 
 
 try {

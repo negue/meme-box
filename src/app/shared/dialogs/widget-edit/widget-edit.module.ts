@@ -1,7 +1,6 @@
 import {NgModule} from "@angular/core";
-import {MatDialog, MatDialogModule} from "@angular/material/dialog";
+import {MatDialog, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import type {CustomHtmlDialogPayload, DialogContract} from "../dialog.contract";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
 import {WidgetEditComponent} from "./widget-edit.component";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatFormFieldModule} from "@angular/material/form-field";
