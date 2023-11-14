@@ -5,9 +5,7 @@ import { WebsocketBootstrap } from "./websockets/websocket.bootstrap";
 import { ScriptHandler } from "./actions/scripts/script.handler";
 import { ObsConnection } from "./obs-connection";
 import { ObsApi } from "./actions/scripts/apis/obs.api";
-import { Persistence } from "../persistence";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "./contracts";
+import { Persistence } from "@memebox/server-common";
 import { Logger } from "@tsed/logger";
 
 /**
@@ -24,19 +22,19 @@ export class BootstrapServices {
     _scriptHandler: ScriptHandler,
     private _obsConnection: ObsConnection,
     private _mainLogger: Logger,
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence
   ) {
-     this.tryCatchAsync(
-       this.connectToObsAndRefreshScreens(),
-       "connectToObsAndRefreshScreens"
-     );
+    this.tryCatchAsync(
+      this.connectToObsAndRefreshScreens(),
+      "connectToObsAndRefreshScreens"
+    );
   }
 
   private async tryCatchAsync(promiseToWait: Promise<unknown>,
-                              errorMessage: string)  {
+                              errorMessage: string) {
     try {
       await promiseToWait;
-    }catch (e) {
+    } catch (e) {
       this._mainLogger.error(`Unexpected error of: ${errorMessage}`, e);
     }
   }

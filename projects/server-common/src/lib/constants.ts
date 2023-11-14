@@ -1,4 +1,4 @@
-import {BRANCH} from '@memebox/version';
+import { BRANCH } from '@memebox/version';
 
 export const DEFAULT_PORT = 6363; // T9 for MEME
 
@@ -16,11 +16,11 @@ export interface MarkdownDialogPayload {
 }
 
 export const SCRIPT_TUTORIAL: MarkdownDialogPayload =
-    {
-      name: 'Action Type: Scripts',
-      githubName: 'scripts.md',
-      showHeader: false
-    };
+  {
+    name: 'Action Type: Scripts',
+    githubName: 'scripts.md',
+    showHeader: false
+  };
 
 export const WIDGET_TUTORIAL: MarkdownDialogPayload =
   {

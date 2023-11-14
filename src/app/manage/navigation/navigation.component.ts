@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {DialogService} from "../../shared/dialogs/dialog.service";
-import {QrcodeDialogComponent} from "../qrcode-dialog/qrcode-dialog.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {take} from "rxjs/operators";
-import {AppQueries, AppService} from "@memebox/app-state";
-import {RELEASE_PAGE} from "../../../../server/constants";
+import { Component, OnInit } from '@angular/core';
+import { DialogService } from "../../shared/dialogs/dialog.service";
+import { QrcodeDialogComponent } from "../qrcode-dialog/qrcode-dialog.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { take } from "rxjs/operators";
+import { AppQueries, AppService } from "@memebox/app-state";
+import { RELEASE_PAGE } from "@memebox/server-common";
 
 interface LinkEntry {
   path: string;
@@ -30,7 +30,7 @@ export class NavigationComponent implements OnInit {
       {path: './dashboard', displayName: 'dashboard'},
       {path: './actions', displayName: 'actions'},
       {path: './screens', displayName: 'screens'},
-      {path: './triggers', displayName: 'triggers'},
+      {path: './triggers', displayName: 'triggers'}
     ];
   }
 
@@ -44,7 +44,7 @@ export class NavigationComponent implements OnInit {
         this.snackbar.open('Update available', 'Open GitHub', {
           horizontalPosition: "center",
           verticalPosition: "bottom",
-          duration: 10000,
+          duration: 10000
         }).onAction()
           .pipe(
             take(1)
@@ -58,10 +58,8 @@ export class NavigationComponent implements OnInit {
     }, 15000)
   }
 
-  openMobileViewDialog(): void  {
+  openMobileViewDialog(): void {
     console.info('open qr');
-    this.dialogService.open(QrcodeDialogComponent, {
-
-    });
+    this.dialogService.open(QrcodeDialogComponent, {});
   }
 }

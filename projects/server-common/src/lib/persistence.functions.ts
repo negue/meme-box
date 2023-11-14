@@ -1,17 +1,17 @@
-import {createDirIfNotExists, MEDIA_SCREENSHOT_PATH, safeResolve} from "./path.utils";
-import {Action, ActionType} from "@memebox/contracts";
-import fs, {writeFileSync} from "fs";
+import { createDirIfNotExists, MEDIA_SCREENSHOT_PATH, safeResolve } from "./utils/path.utils";
+import { Action, ActionType } from "@memebox/contracts";
+import fs, { writeFileSync } from "fs";
 import path from "path";
 
-export const GetPreviewFilePath = (actionId: string) => safeResolve(MEDIA_SCREENSHOT_PATH, actionId+'.jpg');
+export const GetPreviewFilePath = (actionId: string) => safeResolve(MEDIA_SCREENSHOT_PATH, actionId + '.jpg');
 
-export function SavePreviewFile(action: Action): void  {
+export function SavePreviewFile(action: Action): void {
   if (action.type === ActionType.Video && action.previewUrl?.includes('data:image/jpeg;base64')) {
     const previewImgBase64 = action.previewUrl.replace('data:image/jpeg;base64,', '');
 
     writeFileSync(GetPreviewFilePath(action.id), previewImgBase64, 'base64');
 
-    action.previewUrl = null;
+    action.previewUrl = undefined;
     action.hasPreview = true;
   }
 }

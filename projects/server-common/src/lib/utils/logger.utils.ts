@@ -1,4 +1,4 @@
-import {NamedLogger} from "./providers/named-logger";
+import { NamedLogger } from "../named-logger";
 
 
 // TODO move from winston to @tsed/logger for DI injection magic
@@ -15,14 +15,14 @@ export const LOGGER = newLogger('MemeBox');
 
 LOGGER.info('##########  Started Log  ##########');
 
-function logAndExit (type: string) {
+function logAndExit(type: string) {
   process.on(type as any, (err: Error) => {
     if (typeof err === 'string') {
-      LOGGER.error(err, 'Process Event Type: '+type);
+      LOGGER.error(err, 'Process Event Type: ' + type);
     } else {
       const message = err.message;
       const stack = err.stack;
-      LOGGER.error({...err, message, stack}, 'Process Event Type: '+type);
+      LOGGER.error({...err, message, stack}, 'Process Event Type: ' + type);
     }
 
     // Exiting the process on error, doesnt work,

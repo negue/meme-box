@@ -1,55 +1,55 @@
-import {Opts} from "@tsed/common";
-import {Logger} from "@tsed/logger";
-import {Injectable} from "@tsed/di";
-import {LOG_PATH} from "../path.utils";
-import {BehaviorSubject} from "rxjs";
-import {CLI_OPTIONS} from "../utils/cli-options";
-import {ErrorWithContext} from "@memebox/contracts";
+import { Opts } from "@tsed/common";
+import { Logger } from "@tsed/logger";
+import { Injectable } from "@tsed/di";
+import { LOG_PATH } from "./utils/path.utils";
+import { BehaviorSubject } from "rxjs";
+import { CLI_OPTIONS } from "./utils/cli-options";
+import { ErrorWithContext } from "@memebox/contracts";
 
 // TODO add all other methods
 
 // skipcq: JS-0579
 @Injectable()
 export class NamedLogger {
-  public static NewestError$ = new BehaviorSubject<ErrorWithContext>(null);
+  public static NewestError$ = new BehaviorSubject<ErrorWithContext | null>(null);
 
 
   private logger: Logger;
 
-  constructor(@Opts options: {name: string} = {name: 'Logger'}) {
+  constructor(@Opts options: { name: string } = {name: 'Logger'}) {
     this.logger = new Logger(options.name);
     addDefaultLoggerAppenders(this.logger);
   }
 
-  warn(...data: unknown[]): void  {
+  warn(...data: unknown[]): void {
     this.logger.warn(...data);
   }
 
-  info(...data: unknown[]): void  {
+  info(...data: unknown[]): void {
     this.logger.info(...data);
   }
 
-  customFile(param: { date: boolean; name: string, maxLogSize?: number }): void  {
+  customFile(param: { date: boolean; name: string, maxLogSize?: number }): void {
     this.logger.appenders.delete('file');
 
-    const TODAY_LOG_SUFFIX = `.${ new Date().toISOString().slice(0,10) }`;
+    const TODAY_LOG_SUFFIX = `.${new Date().toISOString().slice(0, 10)}`;
 
 
     // todo maybe extract this and from server.tsed.ts
     this.logger.appenders.set("file", {
       type: "file",
       // pattern not working so we added DateFormat ourselves
-      filename: `${LOG_PATH}/${param.name}_tsed${param.date ?  TODAY_LOG_SUFFIX : ''}.log`,
+      filename: `${LOG_PATH}/${param.name}_tsed${param.date ? TODAY_LOG_SUFFIX : ''}.log`,
       maxLogSize: param.maxLogSize,
       // pattern: '.yyyy-MM-dd',
-      layout:{
+      layout: {
         type: "json",
         separator: ""
       }
     })
   }
 
-  error(error: Error|unknown, context?: string): void  {
+  error(error: Error | unknown, context?: string): void {
     if (isNormalError(error)) {
       NamedLogger.NewestError$.next({
         errorMessage: error?.message,
@@ -63,11 +63,11 @@ export class NamedLogger {
 
 }
 
-function isNormalError(error: any): error is Error{
+function isNormalError(error: any): error is Error {
   return typeof error === 'object' && error.message;
 }
 
-export function addDefaultLoggerAppenders (logger: Logger): void  {
+export function addDefaultLoggerAppenders(logger: Logger): void {
   const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
 
   const jsonLayout = {

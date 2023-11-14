@@ -1,14 +1,14 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {DynamicIframeContent, isDynamicIframeVariableValid, NOT_ALLOWED_WIDGET_VARIABLE_NAMES} from "@memebox/utils";
-import {BehaviorSubject} from "rxjs";
-import {debounceTime} from "rxjs/operators";
-import type {CustomHtmlDialogPayload} from "../dialog.contract";
-import {MatCheckbox} from "@angular/material/checkbox";
-import {cssCodemirror, htmlCodemirror, jsCodemirror} from "../../../core/codemirror.extensions";
-import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
-import {WIDGET_TUTORIAL} from "../../../../../server/constants";
-import {DialogService} from "../dialog.service";
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { DynamicIframeContent, isDynamicIframeVariableValid, NOT_ALLOWED_WIDGET_VARIABLE_NAMES } from "@memebox/utils";
+import { BehaviorSubject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
+import type { CustomHtmlDialogPayload } from "../dialog.contract";
+import { MatCheckbox } from "@angular/material/checkbox";
+import { cssCodemirror, htmlCodemirror, jsCodemirror } from "../../../core/codemirror.extensions";
+import { ActionVariableConfig, ActionVariableTypes } from "@memebox/action-variables";
+import { WIDGET_TUTORIAL } from "@memebox/server-common";
+import { DialogService } from "../dialog.service";
 
 @Component({
   selector: 'app-widget-edit',
@@ -38,15 +38,16 @@ export class WidgetEditComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: CustomHtmlDialogPayload,
     private dialogRef: MatDialogRef<any>,
-    private dialogService: DialogService,
-  ) { }
+    private dialogService: DialogService
+  ) {
+  }
 
   ngOnInit(): void {
     this.setWorkingValues(this.data.iframePayload);
     this.initDone = true;
   }
 
-  private setWorkingValues (payload: DynamicIframeContent) {
+  private setWorkingValues(payload: DynamicIframeContent) {
     this.workingValue = {
       settings: {},
       ...payload
@@ -56,7 +57,7 @@ export class WidgetEditComponent implements OnInit {
   }
 
   addNewExternal(): void {
-    this.workingValue.libraries.push({type:'css', src:''});
+    this.workingValue.libraries.push({type: 'css', src: ''});
     this.markForCheck();
   }
 
@@ -75,7 +76,7 @@ export class WidgetEditComponent implements OnInit {
     for (const value of this.variablesList) {
       const variableNameValid = isDynamicIframeVariableValid(value.name, NOT_ALLOWED_WIDGET_VARIABLE_NAMES);
 
-      if (!variableNameValid.ok){
+      if (!variableNameValid.ok) {
         alert(variableNameValid.message);
         return;
       }
@@ -108,7 +109,7 @@ export class WidgetEditComponent implements OnInit {
   addNewVariable(): void {
     this.variablesList.push({
       hint: '',
-      name: `myVar${this.variablesList.length+1}`,
+      name: `myVar${this.variablesList.length + 1}`,
       fallback: '',
       type: ActionVariableTypes.text
     });
@@ -126,7 +127,7 @@ export class WidgetEditComponent implements OnInit {
     this.markForCheck();
   }
 
-  openTutorialMarkdown(): void  {
+  openTutorialMarkdown(): void {
     this.dialogService.showMarkdownFile(WIDGET_TUTORIAL);
   }
 }

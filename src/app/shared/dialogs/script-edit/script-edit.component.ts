@@ -1,21 +1,21 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {isDynamicIframeVariableValid, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES, ScriptConfig} from "@memebox/utils";
-import {CustomScriptDialogPayload} from "../dialog.contract";
-import {MatCheckbox} from "@angular/material/checkbox";
-import {jsCodemirror} from "../../../core/codemirror.extensions";
-import {DialogService} from "../dialog.service";
-import {SCRIPT_TUTORIAL} from "../../../../../server/constants";
-import {Action, ActionAssigningMode, ActionType} from "@memebox/contracts";
-import {ActionVariableConfig, ActionVariableTypes} from "@memebox/action-variables";
-import {BehaviorSubject, Observable} from "rxjs";
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { isDynamicIframeVariableValid, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES, ScriptConfig } from "@memebox/utils";
+import { CustomScriptDialogPayload } from "../dialog.contract";
+import { MatCheckbox } from "@angular/material/checkbox";
+import { jsCodemirror } from "../../../core/codemirror.extensions";
+import { DialogService } from "../dialog.service";
+import { SCRIPT_TUTORIAL } from "@memebox/server-common";
+import { Action, ActionAssigningMode, ActionType } from "@memebox/contracts";
+import { ActionVariableConfig, ActionVariableTypes } from "@memebox/action-variables";
+import { BehaviorSubject, Observable } from "rxjs";
 import {
   ActionEntry,
   returnDeclaredActionEntries
 } from "../../../../../projects/utils/src/lib/script-information.parser";
-import {AppQueries} from "@memebox/app-state";
-import {map, take, withLatestFrom} from "rxjs/operators";
-import {CodemirrorComponent} from "@gewd/components/codemirror";
+import { AppQueries } from "@memebox/app-state";
+import { map, take, withLatestFrom } from "rxjs/operators";
+import { CodemirrorComponent } from "@gewd/components/codemirror";
 
 @Component({
   selector: 'app-script-edit',
@@ -53,7 +53,8 @@ export class ScriptEditComponent implements OnInit {
     private dialogRef: MatDialogRef<any>,
     private dialogService: DialogService,
     private appQuery: AppQueries
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.setWorkingValues(this.data.scriptConfig);
@@ -63,7 +64,7 @@ export class ScriptEditComponent implements OnInit {
   }
 
 
-  private setWorkingValues (payload: ScriptConfig) {
+  private setWorkingValues(payload: ScriptConfig) {
     this.workingValue = {
       settings: {},
       ...payload
@@ -77,7 +78,7 @@ export class ScriptEditComponent implements OnInit {
     for (const value of this.variablesList) {
       const variableNameValid = isDynamicIframeVariableValid(value.name, NOT_ALLOWED_SCRIPT_VARIABLE_NAMES);
 
-      if (!variableNameValid.ok){
+      if (!variableNameValid.ok) {
         alert(variableNameValid.message);
         return;
       }
@@ -98,7 +99,7 @@ export class ScriptEditComponent implements OnInit {
   addNewVariable(): void {
     this.variablesList.push({
       hint: '',
-      name: `myVar${this.variablesList.length+1}`,
+      name: `myVar${this.variablesList.length + 1}`,
       fallback: '',
       type: ActionVariableTypes.text
     });
@@ -117,9 +118,9 @@ export class ScriptEditComponent implements OnInit {
   }
 
   async addActionAtCursor(codemirrorComponent: CodemirrorComponent) {
-      const [actionId] = await this.dialogService.showActionSelectionDialogAsync({
-        mode: ActionAssigningMode.Single,
-        selectedActionIdList: [],
+    const [actionId] = await this.dialogService.showActionSelectionDialogAsync({
+      mode: ActionAssigningMode.Single,
+      selectedActionIdList: [],
       dialogTitle: 'Action',
       showMetaItems: true
     });
@@ -132,11 +133,11 @@ export class ScriptEditComponent implements OnInit {
       take(1)
     ).toPromise();
 
-      const selectedAction = clipMap[actionId];
+    const selectedAction = clipMap[actionId];
 
-      // todo get a variable name from the action name
+    // todo get a variable name from the action name
 
-      const isAction = [ActionType.Script, ActionType.Recipe].includes(selectedAction.type);
+    const isAction = [ActionType.Script, ActionType.Recipe].includes(selectedAction.type);
 
     const codeToAdd = `const myActionVar = memebox.get${isAction ? 'Action' : 'Media'}('${actionId}');\n`;
 

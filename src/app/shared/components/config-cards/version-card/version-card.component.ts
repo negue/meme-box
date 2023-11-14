@@ -1,10 +1,10 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 import VERSION_JSON from '../../../../../version_info.json';
-import {AppQueries, ConfigService} from "@memebox/app-state";
-import {MatCheckboxChange} from "@angular/material/checkbox";
-import {map} from "rxjs/operators";
+import { AppQueries, ConfigService } from "@memebox/app-state";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { map } from "rxjs/operators";
 // TODO constants / path imports
-import {RELEASE_PAGE} from "../../../../../../server/constants";
+import { RELEASE_PAGE } from "@memebox/server-common";
 
 
 @Component({
@@ -30,16 +30,17 @@ export class VersionCardComponent {
   )
 
   constructor(private appQuery: AppQueries,
-              private configService: ConfigService) { }
+              private configService: ConfigService) {
+  }
 
-  onVersionCheckChanged($event: MatCheckboxChange): void  {
+  onVersionCheckChanged($event: MatCheckboxChange): void {
 
     this.configService.updateConfig({
       enableVersionCheck: $event.checked
     });
   }
 
-  openGitubPage(): void  {
+  openGitubPage(): void {
     window.open(RELEASE_PAGE, '_blank');
   }
 }

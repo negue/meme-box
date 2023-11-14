@@ -1,10 +1,10 @@
-import {TwitchConnector} from "../../../twitch/twitch.connector";
-import {DisposableBase} from "./disposableBase";
-import {takeUntil} from "rxjs/operators";
-import {ActionType, TwitchAnnouncementColors, TwitchConnectionType} from "@memebox/contracts";
-import {TwitchDataProvider} from "../../../twitch/twitch.data-provider";
-import {TwitchQueueEventBus} from "../../../twitch/twitch-queue-event.bus";
-import {randomElement} from "@memebox/utils";
+import { TwitchConnector } from "../../../twitch/twitch.connector";
+import { DisposableBase } from "./disposableBase";
+import { takeUntil } from "rxjs/operators";
+import { ActionType, TwitchConnectionType } from "@memebox/contracts";
+import { TwitchAnnouncementColors, TwitchDataProvider } from "@memebox/twitch-api";
+import { TwitchQueueEventBus } from "../../../twitch/twitch-queue-event.bus";
+import { randomElement } from "@memebox/utils";
 
 export class TwitchApi extends DisposableBase {
 
@@ -27,33 +27,33 @@ export class TwitchApi extends DisposableBase {
     }
   }
 
-  public async say(message: string, type: TwitchConnectionType|null = null) : Promise<void> {
+  public async say(message: string, type: TwitchConnectionType | null = null): Promise<void> {
     const tmiInstance = await this.twitchConnector.getTmiWriteInstance(type);
     const settings = this.twitchConnector.getTwitchSettings();
 
     tmiInstance.say(settings.channel, message);
   }
 
-  public async shoutout(username: string) : Promise<void> {
+  public async shoutout(username: string): Promise<void> {
     const userId = await this.getUserIdByName(username);
 
     const broadcasterId = await this.getBroadcasterIdAsync();
 
-    await this.postHelixDataAsync('chat/shoutouts',{
+    await this.postHelixDataAsync('chat/shoutouts', {
       from_broadcaster_id: broadcasterId,
       to_broadcaster_id: userId,
       moderator_id: broadcasterId
     });
   }
 
-  public async getUserIdByName(username:string) : Promise<string> {
-    const userResult = await this.getHelixDataAsync<{ id:string }[]>(`users?login=${username}`);
+  public async getUserIdByName(username: string): Promise<string> {
+    const userResult = await this.getHelixDataAsync<{ id: string }[]>(`users?login=${username}`);
 
     return userResult.data[0].id;
   }
 
   public async getBroadcasterIdAsync(): Promise<string> {
-    const mainAuth =  await this.dataProvider.getMainTwitchAuthAsync();
+    const mainAuth = await this.dataProvider.getMainTwitchAuthAsync();
 
     return mainAuth?.userId;
   }
@@ -70,10 +70,10 @@ export class TwitchApi extends DisposableBase {
     return this.dataProvider.patchHelixDataAsync(endpointAndQuery, bodyData);
   }
 
-  public async sendAnnouncement(message: string, color?: string){
+  public async sendAnnouncement(message: string, color?: string) {
     const broadcasterId = await this.getBroadcasterIdAsync();
 
-    if (color === 'random'){
+    if (color === 'random') {
       color = randomElement(TwitchAnnouncementColors).id;
     }
 
@@ -86,7 +86,7 @@ export class TwitchApi extends DisposableBase {
     )
   }
 
-  public async clearChat (){
+  public async clearChat() {
     const broadcasterId = await this.getBroadcasterIdAsync();
 
     return this.dataProvider.deleteHelixDataAsync(
@@ -95,7 +95,7 @@ export class TwitchApi extends DisposableBase {
   }
 
   // https://dev.twitch.tv/docs/api/reference#start-commercial
-  public async startCommercial (length: 30| 60|90| 120|  150|  180){
+  public async startCommercial(length: 30 | 60 | 90 | 120 | 150 | 180) {
     const broadcaster_id = await this.getBroadcasterIdAsync();
 
     return this.dataProvider.postHelixDataAsync(
@@ -107,20 +107,20 @@ export class TwitchApi extends DisposableBase {
   }
 
   // https://dev.twitch.tv/docs/api/reference#create-stream-marker
-  public async createMarker (){
+  public async createMarker() {
     return this.dataProvider.postHelixDataAsync(
       `streams/markers`, {}
     );
   }
 
   // https://dev.twitch.tv/docs/api/reference#update-chat-settings
-  public async updateChatSettings (chatSettings: {
+  public async updateChatSettings(chatSettings: {
     emote_mode?: boolean,
     follower_mode?: boolean,
     slow_mode?: boolean,
     subscriber_mode?: boolean,
     unique_chat_mode?: boolean
-  }){
+  }) {
     const broadcasterId = await this.getBroadcasterIdAsync();
 
     return this.dataProvider.patchHelixDataAsync(

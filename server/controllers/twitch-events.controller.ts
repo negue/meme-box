@@ -1,27 +1,26 @@
-import {BodyParams, Controller, Delete, Get, Inject, PathParams, Post, Put, Use} from "@tsed/common";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence, PersistenceInstance} from "../persistence";
-import {AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand} from "@memebox/contracts";
-import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
-import {twitchPostValidator, twitchPutValidator, validOrLeave} from "../validations";
-import {ExampleTwitchCommandsSubject} from "../shared";
-import {TwitchQueueEventBus} from "../providers/twitch/twitch-queue-event.bus";
-import {takeLatestItems} from "@memebox/utils";
-import {filter} from "rxjs/operators";
+import { BodyParams, Controller, Delete, Get, PathParams, Post, Put, Use } from "@tsed/common";
+import { Persistence } from "@memebox/server-common";
+import { AllTwitchEvents, ENDPOINTS, TwitchEventTypes, TwitchTrigger, TwitchTriggerCommand } from "@memebox/contracts";
+import { TwitchDataProvider } from "@memebox/twitch-api";
+import { twitchPostValidator, twitchPutValidator, validOrLeave } from "../validations";
+import { ExampleTwitchCommandsSubject } from "../shared";
+import { TwitchQueueEventBus } from "../providers/twitch/twitch-queue-event.bus";
+import { takeLatestItems } from "@memebox/utils";
+import { filter } from "rxjs/operators";
 
 @Controller(ENDPOINTS.TWITCH_EVENTS.PREFIX)
 export class TwitchEventsController {
   private latest20Events: AllTwitchEvents[] = [];
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private _dataProvider: TwitchDataProvider,
-    private _twitchEventBus: TwitchQueueEventBus,
+    private _twitchEventBus: TwitchQueueEventBus
   ) {
     _twitchEventBus.AllQueuedEvents$.pipe(
       filter(str => {
         return str.type !== TwitchEventTypes.message;
-      } ),
+      }),
       takeLatestItems(20)
     ).subscribe(value => {
       this.latest20Events = value;
@@ -30,7 +29,7 @@ export class TwitchEventsController {
 
   @Get('/')
   getTwitchEvents(): TwitchTrigger[] {
-    return PersistenceInstance.listTwitchEvents();
+    return this._persistence.listTwitchEvents();
   }
 
 
@@ -39,7 +38,7 @@ export class TwitchEventsController {
   addTwitchEvent(
     @BodyParams() newTrigger: TwitchTrigger
   ): string {
-    return PersistenceInstance.addTwitchEvent(newTrigger)
+    return this._persistence.addTwitchEvent(newTrigger)
   }
 
   @Put('/:eventId')
@@ -48,7 +47,7 @@ export class TwitchEventsController {
     @PathParams("eventId") eventId: string,
     @BodyParams() trigger: TwitchTrigger
   ): any {
-    PersistenceInstance.updateTwitchEvent(eventId, trigger)
+    this._persistence.updateTwitchEvent(eventId, trigger)
 
     return {
       ok: true
@@ -59,7 +58,7 @@ export class TwitchEventsController {
   deleteTwitchEvent(
     @PathParams("eventId") eventId: string
   ): void {
-    PersistenceInstance.deleteTwitchEvent(eventId);
+    this._persistence.deleteTwitchEvent(eventId);
   }
 
   @Post(ENDPOINTS.TWITCH_EVENTS.TRIGGER_CONFIG_EXAMPLE)

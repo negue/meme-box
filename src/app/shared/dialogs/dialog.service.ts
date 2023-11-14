@@ -1,13 +1,13 @@
-import {Compiler, Injectable, Injector, TemplateRef, Type} from '@angular/core';
-import {MatDialog} from "@angular/material/dialog";
-import {Action, Screen, TimedAction, TwitchTrigger} from "@memebox/contracts";
-import {ComponentType} from "@angular/cdk/portal";
-import {MatDialogConfig} from "@angular/material/dialog/dialog-config";
-import {MatDialogRef} from "@angular/material/dialog/dialog-ref";
-import type {ConfirmationsPayload} from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
-import type {ScreenClipOptionsPayload} from "./screen-clip-options/screen-clip-options.component";
-import type {ActionAssigningDialogOptions} from "./action-assigning-dialog/action-assigning-dialog.component";
-import {MarkdownDialogPayload} from "../../../../server/constants";
+import { Compiler, Injectable, Injector, TemplateRef, Type } from '@angular/core';
+import { MatDialog } from "@angular/material/dialog";
+import { Action, Screen, TimedAction, TwitchTrigger } from "@memebox/contracts";
+import { ComponentType } from "@angular/cdk/portal";
+import { MatDialogConfig } from "@angular/material/dialog/dialog-config";
+import { MatDialogRef } from "@angular/material/dialog/dialog-ref";
+import type { ConfirmationsPayload } from "./simple-confirmation-dialog/simple-confirmation-dialog.component";
+import type { ScreenClipOptionsPayload } from "./screen-clip-options/screen-clip-options.component";
+import type { ActionAssigningDialogOptions } from "./action-assigning-dialog/action-assigning-dialog.component";
+import { MarkdownDialogPayload } from "@memebox/server-common";
 import {
   CustomHtmlDialogPayload,
   CustomScriptDialogPayload,
@@ -15,8 +15,8 @@ import {
   TwitchScopeSelectionPayload,
   TwitchScopeSelectionResult
 } from "./dialog.contract";
-import {MediaEditDialogPayload} from "./media-edit/media-edit.component";
-import {DialogsModule} from "./dialogs.module";
+import { MediaEditDialogPayload } from "./media-edit/media-edit.component";
+import { DialogsModule } from "./dialogs.module";
 
 // TODO rename async methods - maybe as eslint rule?
 
@@ -42,35 +42,35 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  showMediaEditDialog(clipInfo: MediaEditDialogPayload): void  {
+  showMediaEditDialog(clipInfo: MediaEditDialogPayload): void {
     this.loadAndOpen(
       import('./media-edit/media-edit.module'),
       clipInfo
     )
   }
 
-  showScreenEditDialog(screen: Partial<Screen>): void  {
+  showScreenEditDialog(screen: Partial<Screen>): void {
     this.loadAndOpen(
       import('./screen-edit/screen-edit.module'),
       screen
     )
   }
 
-  showScreenClipOptionsDialog(payload: ScreenClipOptionsPayload): void  {
+  showScreenClipOptionsDialog(payload: ScreenClipOptionsPayload): void {
     this.loadAndOpen(
       import('./screen-clip-options/screen-clip-options.module'),
       payload
     )
   }
 
-  showTwitchEditDialog(info: TwitchTrigger): void  {
+  showTwitchEditDialog(info: TwitchTrigger): void {
     this.loadAndOpen(
       import('./twitch-edit/twitch-edit.module'),
       info
     );
   }
 
-  showGettingStarted(info: any): void  {
+  showGettingStarted(info: any): void {
     this.loadAndOpen(
       import('./getting-started/getting-started-dialog.module'),
       info
@@ -106,7 +106,7 @@ export class DialogService {
     return dialogRef.afterClosed().toPromise();
   }
 
-  showTimedEditDialog(info: Partial<TimedAction>): void  {
+  showTimedEditDialog(info: Partial<TimedAction>): void {
     this.loadAndOpen(
       import('./timed-edit/timed-edit.module'),
       info
@@ -134,21 +134,21 @@ export class DialogService {
     return filteredActions;
   }
 
-  showHelpOverview(): void  {
+  showHelpOverview(): void {
     this.loadAndOpen(
       import('./help-overview/helpoverview-dialog.module'),
       null
     );
   }
 
-  showMarkdownFile(info: MarkdownDialogPayload): void  {
+  showMarkdownFile(info: MarkdownDialogPayload): void {
     this.loadAndOpen(
       import('./markdown/markdown-dialog.module'),
       info
     );
   }
 
-  arrangeMediaInScreen(info: Screen): void  {
+  arrangeMediaInScreen(info: Screen): void {
     this.loadAndOpen(
       import('./screen-arrange/screen-arrange.module'),
       info
@@ -164,14 +164,14 @@ export class DialogService {
     return await dialogRef.afterClosed().toPromise();
   }
 
-  openTwitchConnectionConfig(): void  {
+  openTwitchConnectionConfig(): void {
     this.loadAndOpen(
       import('./twitch-connection-edit/twitch-connection-edit.module'),
       null
     );
   }
 
-  openObsConnectionDialog(): void  {
+  openObsConnectionDialog(): void {
     this.loadAndOpen(
       import('./obs-connection-edit/obs-connection-edit.module'),
       null
@@ -180,7 +180,7 @@ export class DialogService {
 
   async loadAndOpen<TPayload, TDialogComponent>(
     // typesafety for module lazy loads :), it has to use the same TPayload you pass
-    lazyDialogImport: Promise<{[moduleExport: string]: Type<DialogContract<TPayload, TDialogComponent>>}>,
+    lazyDialogImport: Promise<{ [moduleExport: string]: Type<DialogContract<TPayload, TDialogComponent>> }>,
     payload: TPayload
   ): Promise<MatDialogRef<TDialogComponent>> {
     const imported = await lazyDialogImport;

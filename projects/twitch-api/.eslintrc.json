@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "../../.eslintrc.js"
+  ],
+  "ignorePatterns": [
+    "!**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/twitch-api/tsconfig.*?.json"
+        ]
+      },
+      "rules": {
+      }
+    }
+  ]
+}

@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
-import {AppStore} from './app.store';
+import { Injectable } from '@angular/core';
+import { AppStore } from './app.store';
 import {
   Action,
   AppState,
-  ChannelPointRedemption,
   ENDPOINTS,
   FileInfo,
   Response,
@@ -15,11 +14,12 @@ import {
   UpdateState,
   VisibilityEnum
 } from '@memebox/contracts';
-import {addOrUpdateScreenClip, deleteAction, fillDefaultsScreenClip} from '@memebox/shared-state';
-import {uuid} from "@gewd/utils";
-import {SnackbarService} from "../services/snackbar.service";
-import {ConnectionStateService} from "./connection-state.service";
-import {MemeboxApiService} from "./memeboxApi.service";
+import { addOrUpdateScreenClip, deleteAction, fillDefaultsScreenClip } from '@memebox/shared-state';
+import { uuid } from "@gewd/utils";
+import { SnackbarService } from "../services/snackbar.service";
+import { ConnectionStateService } from "./connection-state.service";
+import { MemeboxApiService } from "./memeboxApi.service";
+import { ChannelPointRedemption } from "@memebox/twitch-api";
 
 @Injectable({
   providedIn: "root"
@@ -90,7 +90,8 @@ export class AppService {
         return;
       }
 
-      action.id = newActionId = response.id;
+
+      action.id = newActionId = response.id!;
     } else {
       // add the action to api & await
       await this.memeboxApi.put(`${ENDPOINTS.CLIPS}/${newActionId}`, action);
@@ -121,7 +122,7 @@ export class AppService {
   public async addOrUpdateTag(tag: Tag) {
     let newTagId = tag?.id ?? '';
 
-    console.info({ tag });
+    console.info({tag});
 
     if (newTagId === '') {
       // add the action to api & await
@@ -179,7 +180,7 @@ export class AppService {
         return;
       }
 
-      newId = screen.id = response.id;
+      newId = screen.id = response.id!;
       screen.clips = {};
     } else {
       // add the action to api & await
@@ -234,8 +235,8 @@ export class AppService {
     this.snackbar.normal('Media saved!');
   }
 
-  public async addOrUpdateScreenMedia(screenId: string, screenClip: Partial<ScreenMedia>) {
-    screenClip = fillDefaultsScreenClip(screenClip);
+  public async addOrUpdateScreenMedia(screenId: string, screenClipOverrides: Partial<ScreenMedia>) {
+    const screenClip = fillDefaultsScreenClip(screenClipOverrides);
 
     // add the action to api & await
     await this.memeboxApi.put(`${ENDPOINTS.SCREEN}/${screenId}/${ENDPOINTS.OBS_CLIPS}/${screenClip.id}`, screenClip);
@@ -249,10 +250,11 @@ export class AppService {
 
     this.snackbar.normal(`Media ${wasAlreadyAdded ? 'Settings updated' : 'added to screen'}!`);
   }
+
   public async addOrUpdateAssignedScreenMediaInBulk(
     screenId: string,
     addedScreenMediaIdList: string[],
-    deletedScreenMediaIdList: string[],
+    deletedScreenMediaIdList: string[]
   ) {
     // TODO create Endpoint to update this completely in the backend
 
@@ -430,7 +432,7 @@ export class AppService {
     };
 
     try {
-     await this.memeboxApi.postReturnString(ENDPOINTS.ERROR, logPayload, '');
+      await this.memeboxApi.postReturnString(ENDPOINTS.ERROR, logPayload, '');
     } catch (e) {
       console.error('Couldnt send the error to Memebox')
     }
@@ -452,7 +454,7 @@ export class AppService {
     this.addOrUpdateAction(newAction);
   }
 
-  public async checkVersionUpdateAvailable (): Promise<UpdateState> {
+  public async checkVersionUpdateAvailable(): Promise<UpdateState> {
     try {
       const newVersionResponse = await this.memeboxApi.get<UpdateState>(`${ENDPOINTS.STATE}/update_available`);
 
@@ -485,6 +487,6 @@ export interface LogPayload {
   message: string;
   filename?: string;
   linenumber?: string;
-  stack: string;
+  stack?: string;
   url: string;
 }

@@ -1,10 +1,9 @@
-import {Service} from "@tsed/di";
+import { Service } from "@tsed/di";
 import fetch from "node-fetch";
-import {TwitchAuthResult} from "@memebox/contracts";
-import {TwitchAuthInformationProvider} from "./twitch.auth-information";
-import {Persistence} from "../../persistence";
-import {Inject} from "@tsed/common";
-import {PERSISTENCE_DI} from "../contracts";
+import { TwitchAuthResult } from "./twitch-data.types";
+import { TwitchAuthInformationProvider } from "./twitch.auth-information";
+import { Persistence } from "@memebox/server-common";
+
 
 export interface TwitchHelixResult<TResult> {
   data?: TResult;
@@ -17,12 +16,12 @@ export interface TwitchHelixResult<TResult> {
 @Service()
 export class TwitchDataProvider {
 
-  private _savedMainTwitchAuth: TwitchAuthResult|null = null;
-  private _savedBotTwitchAuth: TwitchAuthResult|null = null;
+  private _savedMainTwitchAuth: TwitchAuthResult | null = null;
+  private _savedBotTwitchAuth: TwitchAuthResult | null = null;
 
   constructor(
     private twitchAuth: TwitchAuthInformationProvider,
-    @Inject(PERSISTENCE_DI) persistence: Persistence
+    persistence: Persistence
   ) {
     persistence.dataUpdated$().subscribe(
       changed => {
@@ -52,7 +51,7 @@ export class TwitchDataProvider {
         "Client-ID": twitchAuth.clientId,
         "Authorization": `Bearer ${twitchAuth.token}`
       }
-    }).then( r => r.json() );
+    }).then(r => r.json());
 
     return result;
   }
@@ -161,7 +160,7 @@ export class TwitchDataProvider {
     return result;
   }
 
-  public async getMainTwitchAuthAsync(): Promise<TwitchAuthResult|null> {
+  public async getMainTwitchAuthAsync(): Promise<TwitchAuthResult | null> {
     if (this._savedMainTwitchAuth === null) {
       this._savedMainTwitchAuth = await this.twitchAuth.getTwitchAuthAsync();
     }
@@ -169,7 +168,7 @@ export class TwitchDataProvider {
     return this._savedMainTwitchAuth;
   }
 
-  public async getBotTwitchAuthAsync(): Promise<TwitchAuthResult|null> {
+  public async getBotTwitchAuthAsync(): Promise<TwitchAuthResult | null> {
     if (this._savedBotTwitchAuth === null) {
       this._savedBotTwitchAuth = await this.twitchAuth.getBotAuthAsync();
     }

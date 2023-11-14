@@ -1,12 +1,12 @@
-import {Service, UseOpts} from "@tsed/di";
-import {NamedLogger} from "../named-logger";
+import { Service, UseOpts } from "@tsed/di";
+import { NamedLogger } from "@memebox/server-common";
 import * as WebSocket from "ws";
-import {ActionActiveStatePayload, ACTIONS, Dictionary, TriggerAction} from "@memebox/contracts";
-import {Subject} from "rxjs";
-import {ActionQueueEventBus} from "../actions/action-queue-event.bus";
-import {ActionActiveStateEventBus} from "../actions/action-active-state-event.bus";
-import {AbstractWebsocketHandler} from "./abstract-websocket-handler";
-import {ScreenActiveStateEventBus} from "../screens/screen-active-state-event.bus";
+import { ActionActiveStatePayload, ACTIONS, Dictionary, TriggerAction } from "@memebox/contracts";
+import { Subject } from "rxjs";
+import { ActionQueueEventBus } from "../actions/action-queue-event.bus";
+import { ActionActiveStateEventBus } from "../actions/action-active-state-event.bus";
+import { AbstractWebsocketHandler } from "./abstract-websocket-handler";
+import { ScreenActiveStateEventBus } from "../screens/screen-active-state-event.bus";
 
 // UNTIL everything in the backend is refactored to TSED, we need some global instance
 export let CURRENT_MEMEBOX_WEBSOCKET: MemeboxWebsocket;
@@ -16,7 +16,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
   private _socketsPerScreen: Dictionary<WebSocket[]> = {};
   private _manageViewSockets: WebSocket[] = [];
 
-  private _receivedActions$ = new Subject<{type: string, payload: string, ws: WebSocket}>();
+  private _receivedActions$ = new Subject<{ type: string, payload: string, ws: WebSocket }>();
 
   public ReceivedActions$ = this._receivedActions$.asObservable();
 
@@ -32,7 +32,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
     CURRENT_MEMEBOX_WEBSOCKET = this;
   }
 
-  sendDataToScreen(targetId: string|null, message: string) {
+  sendDataToScreen(targetId: string | null, message: string) {
     if (!this._socketsPerScreen[targetId]) {
       return;
     }
@@ -40,7 +40,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
     this.sendDataToSockets(message, this._socketsPerScreen[targetId]);
   }
 
-  isScreenActive (screenId: string): boolean  {
+  isScreenActive(screenId: string): boolean {
     if (!this._socketsPerScreen[screenId]) {
       return false;
     }
@@ -64,7 +64,7 @@ export class MemeboxWebsocket extends AbstractWebsocketHandler {
     this._receivedActions$.next({
       type: action,
       payload,
-      ws,
+      ws
     });
 
     // console.info({action, payload});

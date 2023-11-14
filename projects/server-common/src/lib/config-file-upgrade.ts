@@ -26,7 +26,7 @@ export function upgradeConfigFile(
 
     if (configV0) {
       configFromFile.config.twitch = {
-        channel: configV0.twitchChannel,
+        channel: configV0.twitchChannel ?? '',
         token: '',
         enableLog: configV0.twitchLog,
         bot: {

@@ -4,12 +4,14 @@ import {
   RecipeCommandConfigActionListPayload,
   RecipeCommandConfigActionPayload,
   RecipeCommandRegistry,
+  RecipeEntry,
   RecipeRootCommandBlockId
 } from "@memebox/recipe-core";
 import {ActionType, MetaTriggerTypes, SettingsState} from "@memebox/contracts";
 
 export function createTriggerActionCommand(
-  actionToTriggerId: string
+  actionToTriggerId: string,
+  parentStep: RecipeEntry
 ) {
   const recipeCommandDefinition = RecipeCommandRegistry['triggerAction'];
 
@@ -22,7 +24,7 @@ export function createTriggerActionCommand(
 
   if (recipeCommandDefinition.extendCommandBlock) {
     recipeCommandDefinition.extendCommandBlock(
-      recipeEntryCommandCall, null
+      recipeEntryCommandCall, parentStep
     );
   }
 
@@ -31,7 +33,8 @@ export function createTriggerActionCommand(
 
 
 export function createTriggerRandomActionCommand(
-  actionIdListToTrigger: string[]
+  actionIdListToTrigger: string[],
+  parentStep: RecipeEntry
 ) {
   const recipeCommandDefinition = RecipeCommandRegistry['triggerRandom'];
 
@@ -48,14 +51,14 @@ export function createTriggerRandomActionCommand(
 
   if (recipeCommandDefinition.extendCommandBlock) {
     recipeCommandDefinition.extendCommandBlock(
-      recipeEntryCommandCall, null
+      recipeEntryCommandCall, parentStep
     );
   }
 
   return recipeEntryCommandCall;
 }
 
-export function convertMetaActionsToRecipe (
+export function convertMetaActionsToRecipe(
   configFromFile: SettingsState
 ) {
   const actionKeyValueList = Object.entries(configFromFile.clips);
@@ -84,8 +87,9 @@ export function convertMetaActionsToRecipe (
     ).map(([, foundAction]) => foundAction.id);
 
     const recipeContext = createRecipeContext();
-    const rootEntryList = recipeContext.entries[recipeContext.rootEntry]
-      .subCommandBlocks.find(b => b.labelId === RecipeRootCommandBlockId);
+    const rootEntry = recipeContext.entries[recipeContext.rootEntry];
+    const rootEntryList = rootEntry
+      .subCommandBlocks.find(b => b.labelId === RecipeRootCommandBlockId)!;
 
     switch (whatTypeOfMetaIsIt) {
       case MetaTriggerTypes.AllDelay:
@@ -93,14 +97,14 @@ export function convertMetaActionsToRecipe (
         const awaited = whatTypeOfMetaIsIt === MetaTriggerTypes.AllDelay;
 
         for (const actionToTrigger of allTaggedActions) {
-          const createdCommand = createTriggerActionCommand(actionToTrigger);
+          const createdCommand = createTriggerActionCommand(actionToTrigger, rootEntry);
           createdCommand.awaited = awaited;
 
           recipeContext.entries[createdCommand.id] = createdCommand;
           rootEntryList.entries.push(createdCommand.id);
 
           if (awaited) {
-            const awaitedCommand = generateRecipeEntryCommandCall('sleepMs',{
+            const awaitedCommand = generateRecipeEntryCommandCall('sleepMs', {
               ms: metaAction.metaDelay
             });
 
@@ -112,7 +116,7 @@ export function convertMetaActionsToRecipe (
         break;
       }
       case MetaTriggerTypes.Random: {
-        const createdCommand = createTriggerRandomActionCommand(allTaggedActions);
+        const createdCommand = createTriggerRandomActionCommand(allTaggedActions, rootEntry);
         recipeContext.entries[createdCommand.id] = createdCommand;
         rootEntryList.entries.push(createdCommand.id);
 

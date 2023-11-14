@@ -1,4 +1,4 @@
-import {BodyParams, Controller, Get, Inject, PathParams, Post} from "@tsed/common";
+import { BodyParams, Controller, Get, PathParams, Post } from "@tsed/common";
 import {
   ACTION_TYPE_INFORMATION,
   ActionType,
@@ -8,14 +8,13 @@ import {
   TriggerActionDashboardEntry,
   TriggerActionOverrides
 } from "@memebox/contracts";
-import {Persistence} from "../persistence";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {actionCanBeTriggeredWithVariables, getVariablesConfigListOfAction, takeLatestItems} from "@memebox/utils";
-import {ActionVariableConfig} from "@memebox/action-variables";
-import {ActionQueueEventBus} from "../providers/actions/action-queue-event.bus";
-import {Optional} from "@tsed/schema";
-import {map} from "rxjs/operators";
-import {ActionVariableState} from "../providers/actions/action-variable-state";
+import { actionCanBeTriggeredWithVariables, getVariablesConfigListOfAction, takeLatestItems } from "@memebox/utils";
+import { ActionVariableConfig } from "@memebox/action-variables";
+import { ActionQueueEventBus } from "../providers/actions/action-queue-event.bus";
+import { Optional } from "@tsed/schema";
+import { map } from "rxjs/operators";
+import { ActionVariableState } from "../providers/actions/action-variable-state";
+import { Persistence } from "@memebox/server-common";
 
 export interface SimpleActionInformation extends HasId {
   name: string;
@@ -32,7 +31,7 @@ export class ActionController {
   private latest20Actions: TriggerActionDashboardEntry[] = [];
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private _actionEventBus: ActionQueueEventBus,
     private _actionVariableState: ActionVariableState
   ) {
@@ -79,7 +78,7 @@ export class ActionController {
 
   @Get(`${ENDPOINTS.ACTION.LAST_OVERRIDES}:actionId`)
   getLastActionOverrides(
-     @PathParams("actionId") actionId: string,
+    @PathParams("actionId") actionId: string
   ): TriggerActionOverrides {
     return this._actionVariableState.getLastActionOverrides(actionId);
   }
@@ -87,9 +86,8 @@ export class ActionController {
   @Post(`${ENDPOINTS.ACTION.TRIGGER_ACTION}:actionId`)
   triggerAction(
     @PathParams("actionId") actionId: string,
-
     @Optional() @BodyParams() triggerAction: TriggerAction
-  ): void  {
+  ): void {
     const actionToTrigger: TriggerAction = {
       id: actionId,
       ...triggerAction

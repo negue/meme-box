@@ -1,20 +1,19 @@
-import {Controller, Get, Inject, PathParams, QueryParams} from "@tsed/common";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence, TOKEN_EXISTS_MARKER} from "../persistence";
-import {ChannelPointRedemption, ENDPOINTS, TwitchAuthInformation} from "@memebox/contracts";
-import {TwitchDataProvider} from "../providers/twitch/twitch.data-provider";
+import { Controller, Get, PathParams, QueryParams } from "@tsed/common";
+import { Persistence, TOKEN_EXISTS_MARKER } from "@memebox/server-common";
+import { ENDPOINTS } from "@memebox/contracts";
+import { ChannelPointRedemption, TwitchAuthInformation, TwitchDataProvider } from "@memebox/twitch-api";
 
 @Controller(ENDPOINTS.TWITCH_DATA.PREFIX)
 export class TwitchDataController {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
+    private _persistence: Persistence,
     private _dataProvider: TwitchDataProvider
   ) {
   }
 
 
-  @Get(ENDPOINTS.TWITCH_DATA.HELIX+'/*')
+  @Get(ENDPOINTS.TWITCH_DATA.HELIX + '/*')
   getHelixData(
     @PathParams() rawEndpoint: Record<number, string>,
     @QueryParams() params: Record<string, unknown>
@@ -56,7 +55,7 @@ export class TwitchDataController {
         authResult: {
           ...botAuth,
           token: botAuth.token ? TOKEN_EXISTS_MARKER : ''
-        },
+        }
       });
     }
 
@@ -75,7 +74,7 @@ export class TwitchDataController {
       `channel_points/custom_rewards?broadcaster_id=${twitchAuth.userId}`
     );
 
-    const channelRewards  = channelRewardsResult.data;
+    const channelRewards = channelRewardsResult.data;
 
     return channelRewards?.filter(cr => cr.is_enabled) ?? [];
   }

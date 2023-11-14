@@ -1,3 +1,5 @@
+import { DefaultImage } from "@memebox/contracts";
+
 export interface ChannelPointRedemption {
   broadcaster_name: string;
   broadcaster_login: string;
@@ -20,23 +22,22 @@ export interface ChannelPointRedemption {
   redemptions_redeemed_current_stream?: null;
   cooldown_expires_at?: null;
 }
+
 export interface MaxPerStreamSetting {
   is_enabled: boolean;
   max_per_stream: number;
 }
+
 export interface MaxPerUserPerStreamSetting {
   is_enabled: boolean;
   max_per_user_per_stream: number;
 }
+
 export interface GlobalCooldownSetting {
   is_enabled: boolean;
   global_cooldown_seconds: number;
 }
-export interface DefaultImage {
-  url_1x: string;
-  url_2x: string;
-  url_4x: string;
-}
+
 
 export interface TwitchAuthResult {
   clientId: string;
@@ -51,29 +52,29 @@ export interface TwitchAuthResult {
 }
 
 export interface TwitchAuthInformation {
-  type: 'main'|'bot',
+  type: 'main' | 'bot',
   authResult: TwitchAuthResult;
 }
 
 export const TwitchAnnouncementColors = [
   {
     id: 'primary',
-    label: 'Primary',
+    label: 'Primary'
   },
   {
     id: 'blue',
-    label: 'Blue',
+    label: 'Blue'
   },
   {
     id: 'green',
-    label: 'Green',
+    label: 'Green'
   },
   {
     id: 'orange',
-    label: 'Orange',
+    label: 'Orange'
   },
   {
     id: 'purple',
-    label: 'Purple',
+    label: 'Purple'
   }
 ];

@@ -4,9 +4,8 @@ import { Service } from "@tsed/di";
 import { ActionQueueEventBus } from "../../action-queue-event.bus";
 import { ActionType, SimpleTriggerAction, TriggerActionOrigin } from "@memebox/contracts";
 import { ActionActiveState } from "../../action-active-state";
-import { Inject } from "@tsed/common";
-import { PERSISTENCE_DI } from "../../../contracts";
-import { Persistence } from "../../../../persistence";
+
+import { Persistence } from "@memebox/server-common";
 import { DisposableBase } from "./disposableBase";
 import { takeUntil } from "rxjs/operators";
 import { ActionApi } from "./action.api";
@@ -14,10 +13,9 @@ import { MediaApi } from "./media.api";
 import { UtilsApi } from "./utils.api";
 import { uuid } from "@gewd/utils";
 
-
 // todo multiple actions
 
-export type ActionSelector = string  | {
+export type ActionSelector = string | {
   byId?: string[],
   byTags: string[]
 }
@@ -73,8 +71,6 @@ export class MemeboxApiFactory {
   constructor(
     private actionTriggerEventBus: ActionQueueEventBus,
     private actionActiveState: ActionActiveState,
-
-    @Inject(PERSISTENCE_DI)
     private _persistence: Persistence
   ) {
   }

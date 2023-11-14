@@ -1,22 +1,13 @@
-import {
-  Config,
-  ENDPOINTS,
-  ObsConfig,
-  Response,
-  TWITCH_CLIENT_ID,
-  TwitchConfig,
-  TwitchConnectionType
-} from "@memebox/contracts";
-import {allowedFileUrl} from "../validations";
-import {existsSync} from "fs";
-import {sep} from 'path';
-import {BodyParams, Controller, Delete, Get, Inject, PathParams, Put} from "@tsed/common";
-import {PERSISTENCE_DI} from "../providers/contracts";
-import {Persistence} from "../persistence";
+import { Config, ENDPOINTS, ObsConfig, Response, TwitchConfig, TwitchConnectionType } from "@memebox/contracts";
+import { allowedFileUrl } from "../validations";
+import { existsSync } from "fs";
+import { sep } from 'path';
+import { BodyParams, Controller, Delete, Get, PathParams, Put } from "@tsed/common";
+import { NamedLogger, Persistence } from "@memebox/server-common";
 import fetch from "node-fetch";
-import {URLSearchParams} from 'url';
-import {UseOpts} from "@tsed/di";
-import {NamedLogger} from "../providers/named-logger";
+import { URLSearchParams } from 'url';
+import { UseOpts } from "@tsed/di";
+import { TWITCH_CLIENT_ID } from "@memebox/twitch-api";
 
 
 // TODO allow config generic put endpoint
@@ -26,9 +17,8 @@ import {NamedLogger} from "../providers/named-logger";
 export class ConfigController {
 
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-
-    @UseOpts({name: 'ConfigController'}) public logger: NamedLogger,
+    private _persistence: Persistence,
+    @UseOpts({name: 'ConfigController'}) public logger: NamedLogger
   ) {
   }
 
@@ -114,7 +104,7 @@ export class ConfigController {
     params.append('token', targetToken);
 
     // call the revoke functions
-    const result = await fetch( "https://id.twitch.tv/oauth2/revoke", {
+    const result = await fetch("https://id.twitch.tv/oauth2/revoke", {
       method: 'POST',
       body: params
     });

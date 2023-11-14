@@ -1,7 +1,7 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {API_BASE, EXPRESS_BASE} from "@memebox/app-state";
-import {Action, ActionType, ENDPOINTS, SERVER_URL} from "@memebox/contracts";
-import {API_PREFIX} from "../../../../../server/constants";
+import { Pipe, PipeTransform } from '@angular/core';
+import { API_BASE, EXPRESS_BASE } from "@memebox/app-state";
+import { Action, ActionType, ENDPOINTS, SERVER_URL } from "@memebox/contracts";
+import { API_PREFIX } from "@memebox/server-common";
 
 @Pipe({
   name: 'mediaToPreviewUrl'
@@ -27,7 +27,7 @@ export class MediaToPreviewUrlPipe implements PipeTransform {
 
 }
 
-function replaceholder (value: string): string{
+function replaceholder(value: string): string {
   if (value) {
     return value.replace(SERVER_URL, `${EXPRESS_BASE}${API_PREFIX}`);
   }

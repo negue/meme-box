@@ -1,6 +1,6 @@
 import * as express from 'express';
-import {LogPayload, logValidations, validOrLeave} from "../validations";
-import {LOGGER} from "../logger.utils";
+import { LogPayload, logValidations, validOrLeave } from "../validations";
+import { LOGGER } from "@memebox/server-common";
 
 export const LOG_ROUTES = express.Router();
 

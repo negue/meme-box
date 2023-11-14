@@ -1,21 +1,18 @@
-import { Persistence } from '../persistence';
 import { getFiles, mapFileInformations } from '../file.utilts';
 import { ENDPOINTS, FileInfo, SERVER_URL } from '@memebox/contracts';
 import fs from 'fs';
 import { allowedFileUrl } from '../validations';
-import { Controller, Get, Inject, PathParams, Req, Res } from '@tsed/common';
-import { PERSISTENCE_DI } from '../providers/contracts';
+import { Controller, Get, PathParams, Req, Res } from '@tsed/common';
+import { GetPreviewFilePath, Persistence, safeResolve } from "@memebox/server-common";
 import { NotFound, PreconditionFailed } from '@tsed/exceptions';
 import type { Request, Response } from 'express';
-import { GetPreviewFilePath } from '../persistence.functions';
-import { safeResolve } from '../path.utils';
 import path from 'path';
 
 
 @Controller(ENDPOINTS.FILE.PREFIX)
 export class FileController {
   constructor(
-    @Inject(PERSISTENCE_DI) private _persistence: Persistence
+    private _persistence: Persistence
   ) {
   }
 

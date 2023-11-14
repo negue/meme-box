@@ -1,17 +1,17 @@
 import path from "path";
-import {createDirIfNotExists} from "../path.utils";
+import { createDirIfNotExists } from "./path.utils";
 import fs from "fs";
-import {Subject} from "rxjs";
-import {debounceTime} from "rxjs/operators";
+import { Subject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 
 export class FileHandler<TFileContent> {
-  private _currentContent: TFileContent;
+  private _currentContent?: TFileContent;
   private _alreadyLoaded = false;
   private _debounceSubject = new Subject<void>();
 
   constructor(private filePath: string) {
     this._debounceSubject.pipe(
-      debounceTime(5000),
+      debounceTime(5000)
     ).subscribe(value => {
       const getDirOfPath = path.dirname(filePath);
 
@@ -23,9 +23,9 @@ export class FileHandler<TFileContent> {
     })
   }
 
-  public async loadFile(fallbackIfEmpty: TFileContent) : Promise<TFileContent> {
+  public async loadFile(fallbackIfEmpty: TFileContent): Promise<TFileContent> {
     if (this._alreadyLoaded) {
-      return this._currentContent;
+      return this._currentContent!;
     }
 
     const dir = path.dirname(this.filePath);
@@ -47,20 +47,20 @@ export class FileHandler<TFileContent> {
 
         if (!data) {
           this._currentContent = fallbackIfEmpty;
-        } else{
+        } else {
           this._currentContent = JSON.parse(data);
         }
 
         this._alreadyLoaded = true;
 
-        resolve(this._currentContent);
+        resolve(this._currentContent!);
       });
     });
 
 
   }
 
-  public update(newContent: TFileContent) : void {
+  public update(newContent: TFileContent): void {
     this._currentContent = newContent;
     this._debounceSubject.next();
   }

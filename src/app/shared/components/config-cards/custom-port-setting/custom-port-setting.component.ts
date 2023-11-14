@@ -1,10 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {Subject} from 'rxjs';
-import {filter, take} from 'rxjs/operators';
-import {AppQueries, AppService} from '@memebox/app-state';
-import {DEFAULT_PORT} from "../../../../../../server/constants";
-import {ConfigService} from "../../../../../../projects/app-state/src/lib/services/config.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
+import { AppQueries, AppService, ConfigService } from '@memebox/app-state';
+import { DEFAULT_PORT } from "@memebox/server-common";
 
 @Component({
   selector: 'app-custom-port-setting',
@@ -35,7 +34,7 @@ export class CustomPortSettingComponent implements OnInit, OnDestroy {
 
     this.appQuery.config$.pipe(
       filter(config => !!config.customPort),
-      take(1),
+      take(1)
     ).subscribe(value => {
       this.form.reset({
         port: value.customPort
@@ -59,7 +58,7 @@ export class CustomPortSettingComponent implements OnInit, OnDestroy {
     await this.configService.updateCustomPort(this.form.value.port);
   }
 
-  toggleOrSave(): void  {
+  toggleOrSave(): void {
     if (this.editMode) {
       this.save();
     } else {
