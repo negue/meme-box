@@ -1,6 +1,6 @@
 This list might be changed in future, depending on the amount of work that needs to be done for these Features.
 
-### 2022.2 and later (in no particular order)
+### 2024.1 and later (in no particular order)
 * [ ] Twitch Extension
 * [ ] Support for new OBS-websocket(.js) v5
 * [ ] Labels on or around the Media, each with their own Position / Animation
