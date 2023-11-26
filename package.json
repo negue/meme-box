@@ -87,7 +87,7 @@
     "@nrwl/eslint-plugin-nx": "11.6.3",
     "@nrwl/jest": "11.6.3",
     "@nrwl/linter": "11.6.3",
-    "@nrwl/node": "11.6.3",
+    "@nrwl/node": "15.0.13",
     "@nrwl/workspace": "11.6.3",
     "@storybook/addon-actions": "6.5.13",
     "@storybook/addon-essentials": "6.5.13",
