@@ -18,27 +18,29 @@ import {
   TwitchTrigger,
   TwitchTriggerCommand
 } from '@memebox/contracts';
-import {Service, UseOpts} from "@tsed/di";
-import {Inject} from "@tsed/common";
-import {isAllowedToTrigger} from "./twitch.utils";
-import {Persistence} from "../../persistence";
-import {PERSISTENCE_DI} from "../contracts";
-import {NamedLogger} from "../named-logger";
-import {getLevelOfTags} from "./twitch.functions";
+import { Service, UseOpts } from '@tsed/di';
+import { Inject } from '@tsed/common';
+import { isAllowedToTrigger } from './twitch.utils';
+import { Persistence } from '../../persistence';
+import { PERSISTENCE_DI } from '../contracts';
+import { NamedLogger } from '../named-logger';
+import { getLevelOfTags } from './twitch.functions';
 
-import {PubSubClient} from '@twurple/pubsub';
-import {StaticAuthProvider} from "@twurple/auth";
+import { EventSubWsListener } from '@twurple/eventsub-ws';
+import { StaticAuthProvider } from '@twurple/auth';
 
-import {TwitchAuthInformationProvider} from "./twitch.auth-information";
-import {TwitchQueueEventBus} from "./twitch-queue-event.bus";
-import {ConnectionsStateHub, UpdateStateFunc} from "../connections-state.hub";
+import { TwitchAuthInformationProvider } from './twitch.auth-information';
+import { TwitchQueueEventBus } from './twitch-queue-event.bus';
+import { ConnectionsStateHub, UpdateStateFunc } from '../connections-state.hub';
 
+import { ApiClient } from '@twurple/api';
 
 @Service()
 export class TwitchConnector {
   private tmiReadOnlyClient: tmi.Client;
   private tmiMainClient: tmi.Client;
   private tmiBotClient: tmi.Client;
+
   private tmiConnected: {[key: string]: boolean} = {};
   private _twitchBotEnabled = false;
   private _currentTwitchConfig: TwitchConfig;
@@ -54,12 +56,10 @@ export class TwitchConnector {
     // once there is some other "config" layer,
     // then it'll be replaced
     @Inject(PERSISTENCE_DI) private _persistence: Persistence,
-
-    @UseOpts({name: 'TwitchConnector'}) private logger: NamedLogger,
-
+    @UseOpts({ name: 'TwitchConnector' }) private logger: NamedLogger,
     private twitchAuth: TwitchAuthInformationProvider,
     private twitchEventBus: TwitchQueueEventBus,
-    private connectionStateHub: ConnectionsStateHub,
+    private connectionStateHub: ConnectionsStateHub
   ) {
     this.tmiReadOnlyState = this.connectionStateHub.registerService({
       name: 'TMI Readonly Connection'
@@ -71,7 +71,7 @@ export class TwitchConnector {
     _persistence.dataUpdated$()
       .pipe(
         debounceTime(600),
-        startWith({dataType: 'twitch-setting'} as ChangedInfo)
+        startWith({ dataType: 'twitch-setting' } as ChangedInfo)
       )
       .subscribe((changedInfo) => {
         if (!['twitch-events', 'twitch-setting'].includes(changedInfo.dataType)) {
@@ -107,7 +107,7 @@ export class TwitchConnector {
       });
   }
 
-  public availableConnectionTypes (): TwitchConnectionType[] {
+  public availableConnectionTypes(): TwitchConnectionType[] {
     const types: TwitchConnectionType[] = [];
 
     if (this._currentTwitchConfig.token) {
@@ -185,12 +185,12 @@ export class TwitchConnector {
     }
   }
 
-  private logTwitchAuthResult (twitchAuthResult: TwitchAuthResult,
-                               twitchConnectionType: TwitchConnectionType) {
-    if( twitchAuthResult.valid ) {
+  private logTwitchAuthResult(twitchAuthResult: TwitchAuthResult,
+                              twitchConnectionType: TwitchConnectionType) {
+    if (twitchAuthResult.valid) {
       const dateToFormat = new Date(twitchAuthResult.expires_in_date);
       const dateIn2Weeks = new Date();
-      dateIn2Weeks.setDate(dateIn2Weeks.getDate()+14);
+      dateIn2Weeks.setDate(dateIn2Weeks.getDate() + 14);
 
       this.logger.info(`${twitchConnectionType}-Twitch Auth is valid: ${dateToFormat.toISOString()}`);
 
@@ -246,7 +246,7 @@ export class TwitchConnector {
     return tmi.Client(tmiConfig);
   }
 
-  private hasBotToken () {
+  private hasBotToken() {
     return this._currentTwitchConfig.bot?.enabled
       && this._currentTwitchConfig.bot?.auth?.name
       && this._currentTwitchConfig.bot?.auth?.token;
@@ -302,7 +302,7 @@ export class TwitchConnector {
       const twitchEvent = new TwitchCheerMessage({
         channel,
         message,
-        userstate,
+        userstate
       });
 
       this.twitchEventBus.queueEvent(twitchEvent);
@@ -315,7 +315,7 @@ export class TwitchConnector {
     });
 
     //Reason is being returned as null even when one is provided when banning someone
-    this.tmiReadOnlyClient.on('ban', (channel: string, username:string, reason:string) => {
+    this.tmiReadOnlyClient.on('ban', (channel: string, username: string, reason: string) => {
       this.twitchEventBus.queueEvent(new TwitchBanEvent({
         username, reason
       }));
@@ -332,7 +332,7 @@ export class TwitchConnector {
         shouldShareStreak: false,
         cumulativeMonths: 1,
         gifter: null,
-        subtype: "anongiftpaidupgrade"
+        subtype: 'anongiftpaidupgrade'
       });
 
       this.twitchEventBus.queueEvent(twitchSubEvent);
@@ -349,13 +349,13 @@ export class TwitchConnector {
         shouldShareStreak: false,
         cumulativeMonths: 1,
         gifter: sender,
-        subtype: "giftpaidupgrade"
+        subtype: 'giftpaidupgrade'
       });
 
       this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
-    this.tmiReadOnlyClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods : SubMethods) => {
+    this.tmiReadOnlyClient.on('resub', (channel: string, username: string, months: number, message: string, userState: Userstate, methods: SubMethods) => {
       const twitchSubEvent = new TwitchSubEvent({
         username,
         userState,
@@ -363,28 +363,28 @@ export class TwitchConnector {
         methods,
         message,
         months,
-        shouldShareStreak: userState["msg-param-should-share-streak"],
-        cumulativeMonths: ~~userState["msg-param-cumulative-months"],
+        shouldShareStreak: userState['msg-param-should-share-streak'],
+        cumulativeMonths: ~~userState['msg-param-cumulative-months'],
         gifter: null,
-        subtype: "resub"
+        subtype: 'resub'
       });
 
       this.twitchEventBus.queueEvent(twitchSubEvent);
     });
 
-    this.tmiReadOnlyClient.on('subgift', (channel: string, username:string, months:number, recipient: string, methods : SubMethods, userState: Userstate) => {
+    this.tmiReadOnlyClient.on('subgift', (channel: string, username: string, months: number, recipient: string, methods: SubMethods, userState: Userstate) => {
       const twitchSubEvent = new TwitchGiftEvent({
         gifter: username,
         userState,
 
         methods,
-        subtype: "subgift",
+        subtype: 'subgift',
         streakMonths: months,
         gifts: months,
-        recipientId: userState["msg-param-recipient-id"],
+        recipientId: userState['msg-param-recipient-id'],
         recipientUserName: recipient,
-        recipientDisplayName: userState["msg-param-recipient-display-name"],
-        totalGifts: ~~userState["msg-param-sender-count"]
+        recipientDisplayName: userState['msg-param-recipient-display-name'],
+        totalGifts: ~~userState['msg-param-sender-count']
       });
 
       this.twitchEventBus.queueEvent(twitchSubEvent);
@@ -397,12 +397,12 @@ export class TwitchConnector {
 
         methods,
         gifts: numberOfSubs,
-        subtype: "submysterygift",
+        subtype: 'submysterygift',
         streakMonths: 0,
         recipientId: null,
         recipientUserName: null,
         recipientDisplayName: null,
-        totalGifts: ~~userState["msg-param-sender-count"]
+        totalGifts: ~~userState['msg-param-sender-count']
       });
 
       this.twitchEventBus.queueEvent(twitchSubEvent);
@@ -419,12 +419,13 @@ export class TwitchConnector {
         shouldShareStreak: false,
         cumulativeMonths: 1,
         gifter: null,
-        subtype: "subscription"
+        subtype: 'subscription'
       });
 
       this.twitchEventBus.queueEvent(twitchSubEvent);
     });
   }
+
 
   private async connectAndListenPubSub() {
     const twitchAuth = await this.twitchAuth.getTwitchAuthAsync();
@@ -450,22 +451,34 @@ export class TwitchConnector {
 
     const authProvider = new StaticAuthProvider(twitchAuth.clientId, twitchAuth.token);
 
-    const pubSubClient = new PubSubClient();
-    const userId = await pubSubClient.registerUserListener(authProvider);
+    const userId = twitchAuth.userId;
+
+    console.info('Connected to EventSubWS');
+
+    const pubSubClient = new EventSubWsListener({
+      apiClient: new ApiClient({
+        authProvider
+      })
+    });
+    pubSubClient.start();
 
     this.tmiPubSubState({
       label: 'Connected'
     });
 
+    const alreadyReceivedEventId = new Set<string>();
 
-    pubSubClient.onRedemption(userId, channelPointRedemption => {
+    pubSubClient.onChannelRedemptionAdd(userId, data => {
+      if (alreadyReceivedEventId.has(data.id)) {
+        return;
+      }
 
-      // Extracting all properties because of the channelPointRedemption overrides the toString and with that the object
-      // cant be logged
+      // sometimes the events came twice, so we're filtering them out
+      alreadyReceivedEventId.add(data.id);
 
       const {
         id,
-        message,
+        input,
         redemptionDate,
         rewardId,
         rewardTitle,
@@ -475,10 +488,10 @@ export class TwitchConnector {
         userId,
         userName,
         userDisplayName
-      } = channelPointRedemption;
+      } = data;
 
       this.twitchEventBus.queueEvent(new TwitchChannelPointRedemptionEvent({
-        message,
+        message: input,
         redemptionDate,
         rewardId,
         rewardName: rewardTitle,
@@ -487,7 +500,7 @@ export class TwitchConnector {
         userName,
         userDisplayName
       }));
-    });
+    })
   }
 
   async handleCommandsRequest(tags: tmi.ChatUserstate): Promise<void> {
@@ -499,7 +512,7 @@ export class TwitchConnector {
 
     const foundLevels = getLevelOfTags(tags);
     const commands = this.twitchSettings.filter((event) => {
-      const trigger: TwitchTriggerCommand = {command: event, tags};
+      const trigger: TwitchTriggerCommand = { command: event, tags };
 
       return (
         event.event === TwitchEventTypes.message &&
