@@ -70,7 +70,7 @@ jobs:
           BRANCH: ${{ steps.vars.outputs.branch }}
 
       - name: Uploading Version Info Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: version_info
           path: './src/version_info.json'
@@ -80,7 +80,7 @@ jobs:
       - run: npm run build:all
 
       - name: Uploading Angular Dist Files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: angular-dist
           path: dist
