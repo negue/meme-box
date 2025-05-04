@@ -1,6 +1,7 @@
 import {NgModule} from "@angular/core";
-import {RegisterIconsModule} from "@gewd/mat-utils/material-icons";
+// import {RegisterIconsModule} from "@gewd/mat-utils/material-icons";
 import {APP_ICONS} from "./app.icons";
+import { RegisterIconsModule } from './RegisterIconsModule';
 
 
 @NgModule({
