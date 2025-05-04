@@ -453,8 +453,6 @@ export class TwitchConnector {
 
     const userId = twitchAuth.userId;
 
-    console.info('Connected to EventSubWS');
-
     const pubSubClient = new EventSubWsListener({
       apiClient: new ApiClient({
         authProvider
