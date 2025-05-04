@@ -63,7 +63,7 @@ jobs:
       - run: npm run build:pkg -- -o release/out/memebox
       - run: release/out/memebox --cli-test-mode=true  --config=./release/config
       - run: npm run electron:build:only
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}_output
           path: |
@@ -118,7 +118,7 @@ jobs:
         run: npm run build:windows
       - name: Build Tauri app
         run: npm run tauri:build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: tauri-${{ matrix.os }}
           path: |
