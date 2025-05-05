@@ -1,10 +1,10 @@
 {
   "extends": "../tsconfig-electron.json",
   "compilerOptions": {
-    "skipLibCheck": true,
     "outDir": "../out-tsc/server",
     "target": "ES6",
-    "module": "CommonJS"
+    "module": "CommonJS",
+    "emitDecoratorMetadata": true
   },
   "files": [
     "server.ts"

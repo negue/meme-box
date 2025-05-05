@@ -68,12 +68,18 @@ function isNormalError(error: any): error is Error{
 }
 
 export function addDefaultLoggerAppenders (logger: Logger): void  {
+
+  if (!logger){
+    return;
+  }
+
   const TODAY_LOG_SUFFIX = new Date().toISOString().slice(0, 10);
 
   const jsonLayout = {
     type: "json",
     separator: ""
   };
+
 
   logger.appenders
     .set("stdout", {

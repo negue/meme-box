@@ -72,3 +72,4 @@ documentation.json
 # misc
 .eslintcache
 .angular
+/build

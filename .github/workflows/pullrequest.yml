@@ -74,6 +74,8 @@ jobs:
             !release-electron/mac/**
 
   build_tauri:
+    # install webkit deps breaks, so disabling for now
+    if: false
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

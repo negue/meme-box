@@ -1,4 +1,5 @@
 import {NamedLogger} from "./providers/named-logger";
+import { CLI_OPTIONS } from './utils/cli-options';
 
 
 // TODO move from winston to @tsed/logger for DI injection magic
@@ -32,7 +33,10 @@ function logAndExit (type: string) {
   });
 }
 
-// log and exit for uncaughtException events.
-logAndExit('uncaughtException');
-// log and exit for unhandledRejection events.
-logAndExit('unhandledRejection');
+// if any other issues occur, this should mark the CI step as failed, I hope..
+if (!CLI_OPTIONS.CI_TEST_MODE) {
+  // log and exit for uncaughtException events.
+  logAndExit('uncaughtException');
+  // log and exit for unhandledRejection events.
+  logAndExit('unhandledRejection');
+}
