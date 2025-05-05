@@ -182,7 +182,7 @@
               "path": "./angular.webpack.cjs",
               "target": "web"
             },
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            "webWorkerTsConfig": "src/tsconfig.worker.json"
           },
           "configurations": {
             "dev": {
@@ -234,7 +234,7 @@
               ]
             },
             "production": {
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": true,
@@ -252,7 +252,7 @@
                   "with": "src/environments/modules/modules.prod.ts"
                 }
               ],
-              "serviceWorker": true,
+              "serviceWorker": false,
               "ngswConfigPath": "ngsw-config.json"
             }
           }

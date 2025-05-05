@@ -2,10 +2,9 @@ import {NgModule} from "@angular/core";
 import {MarkdownOptionsInjectorToken} from "@gewd/markdown/service";
 import {DEFAULT_PRISM_OPTIONS, MarkdownServiceOptions} from "@gewd/markdown/contracts";
 
-const markdownWorker = () => new Worker('./markdown.worker.ts', {
-  name: 'markdown',
-  type: "module"
-});
+const markdownWorker = () => new Worker(
+  /* webpackChunkName: "markdown-worker" */ new URL('./markdown.worker.ts', import.meta.url)
+)
 
 @NgModule({
   providers: [
