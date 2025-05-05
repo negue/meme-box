@@ -1,5 +1,6 @@
-@import '~@angular/material/theming';
-@import '~angular-material-css-vars/main';
+@import '@angular/material/theming';
+@import 'angular-material-css-vars/src/lib/main';
+
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&display=swap');
 @import './css-var-colors';
 

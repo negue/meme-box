@@ -1,4 +1,4 @@
-@import '~animate.css/animate.css';
+@import 'animate.css/animate.css';
 @import './styles/material.overrides';
 @import './styles/moveable.overrides';
 @import './styles/two-column';
@@ -69,7 +69,7 @@ iframe {
 }
 
 gewd-markdown, .markdown-styling {
-  @import "~@gewd/markdown/markdown.mixin";
+  @import "@gewd/markdown/markdown.mixin";
 
   @include markdownCss();
   @include markdownDefaultDarkColor();

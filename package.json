@@ -180,7 +180,7 @@
     "@twurple/auth": "7.3.0",
     "@twurple/chat": "7.3.0",
     "@twurple/eventsub-ws": "7.3.0",
-    "angular-material-css-vars": "1.2.0",
+    "angular-material-css-vars": "3.0.0",
     "angular2-qrcode": "2.0.3",
     "animate.css": "4.1.1",
     "body-parser": "1.20.3",
