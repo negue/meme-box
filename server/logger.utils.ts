@@ -16,6 +16,19 @@ export const LOGGER = newLogger('MemeBox');
 
 LOGGER.info('##########  Started Log  ##########');
 
+// Each named logger increases this...
+// this needs to be redone, maybe use logtape or something
+// upgrading the max to remove the warning
+process.setMaxListeners(30);
+/*
+const oldProcessListener = process.on;
+process.on = function (event: string, listener: (...args: any[]) => void) {
+   console.trace('Added Process Listener for', {event});
+
+
+  return oldProcessListener.call(this, event, listener);
+};*/
+
 function logAndExit (type: string) {
   process.on(type as any, (err: Error) => {
     if (typeof err === 'string') {
