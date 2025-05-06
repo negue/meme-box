@@ -179,7 +179,7 @@ jobs:
       - run: npm install
 
       - name: Download Angular Output from build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: angular-dist
           path: dist
@@ -229,7 +229,7 @@ jobs:
       - run: npm install
 
       - name: Download Angular Output from build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: angular-dist
           path: dist
