@@ -1,4 +1,4 @@
-import express, {Express} from 'express';
+import express, { Express } from 'express';
 import {
   API_PREFIX,
   CLIP_ENDPOINT,
@@ -10,20 +10,20 @@ import {
   TAGS_ENDPOINT,
   TIMED_ENDPOINT
 } from './constants';
-import {listNetworkInterfaces} from "./network-interfaces";
-import {PersistenceInstance} from "./persistence";
+import { listNetworkInterfaces } from './network-interfaces';
+import { PersistenceInstance } from './persistence';
 
-import {TAG_ROUTES} from "./rest-endpoints/tags";
-import {getAppRootPath, isInElectron} from "./file.utilts";
-import {clipValidations, validOrLeave} from "./validations";
+import { TAG_ROUTES } from './rest-endpoints/tags';
+import { getAppRootPath, isInElectron } from './file.utilts';
+import { clipValidations, validOrLeave } from './validations';
 
-import {DANGER_ROUTES} from "./rest-endpoints/danger";
-import {LOG_ROUTES} from "./rest-endpoints/logs";
-import {TIMER_ROUTES} from "./rest-endpoints/timers";
-import {STATE_ROUTES} from "./rest-endpoints/state";
+import { DANGER_ROUTES } from './rest-endpoints/danger';
+import { LOG_ROUTES } from './rest-endpoints/logs';
+import { TIMER_ROUTES } from './rest-endpoints/timers';
+import { STATE_ROUTES } from './rest-endpoints/state';
 
-const cors = require('cors');
-const bodyParser = require('body-parser');
+import cors from 'cors';
+import bodyParser from 'body-parser';
 
 
 const app: Express = express();
@@ -56,7 +56,7 @@ app.get(API_PREFIX, (req,res) => {
  * Clips API
  */
 
-app.get(CLIP_ENDPOINT, (req,res) => {
+app.get(CLIP_ENDPOINT, (req, res) => {
   res.send(PersistenceInstance.listActions());
 });
 
@@ -97,8 +97,7 @@ app.get(NETWORK_IP_LIST_ENDPOINT, (req, res) => {
 });
 
 
-
-export function createExpress(port: number): Express  {
+export function createExpress(port: number): Express {
   app.set('port', port);
 
   // app.get('port')

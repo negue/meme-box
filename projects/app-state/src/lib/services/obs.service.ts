@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {ACTIONS, ENDPOINTS} from "@memebox/contracts";
-import {MemeboxApiService, MemeboxWebsocketService} from "@memebox/app-state";
+import { MemeboxApiService } from "../state/memeboxApi.service";
+import { MemeboxWebsocketService } from './memebox-websocket.service';
 
 @Injectable({
   providedIn: "root"
