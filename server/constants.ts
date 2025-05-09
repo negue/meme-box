@@ -1,4 +1,6 @@
-import {BRANCH} from '@memebox/version';
+import VERSION from '@memebox/version';
+
+const { BRANCH } = VERSION;
 
 export const DEFAULT_PORT = 6363; // T9 for MEME
 

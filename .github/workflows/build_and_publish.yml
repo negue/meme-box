@@ -41,7 +41,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Cache multiple paths
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -70,7 +70,7 @@ jobs:
           BRANCH: ${{ steps.vars.outputs.branch }}
 
       - name: Uploading Version Info Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: version_info
           path: './src/version_info.json'
@@ -80,7 +80,7 @@ jobs:
       - run: npm run build:all
 
       - name: Uploading Angular Dist Files
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: angular-dist
           path: dist
@@ -166,7 +166,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Cache multiple paths
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -179,7 +179,7 @@ jobs:
       - run: npm install
 
       - name: Download Angular Output from build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: angular-dist
           path: dist
@@ -216,7 +216,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Cache multiple paths
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -229,7 +229,7 @@ jobs:
       - run: npm install
 
       - name: Download Angular Output from build
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: angular-dist
           path: dist

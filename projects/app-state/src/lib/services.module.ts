@@ -5,7 +5,7 @@ import {SettingsService} from "./services/settings.service";
 import {MemeboxWebsocketService} from "./services/memebox-websocket.service";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {SnackbarService} from "./services/snackbar.service";
-import {AppQueries} from "./state";
+import {AppQueries} from "./state/app.queries";
 import {AppService} from "./state/app.service";
 import {ConfigService} from "./services/config.service";
 import {ErrorsService, GithubService} from "./services";

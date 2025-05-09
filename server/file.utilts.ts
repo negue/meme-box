@@ -1,7 +1,7 @@
-import {fileEndingToType} from "../projects/utils/src/lib/files";
-import {basename, dirname, extname, join, resolve, sep} from "path";
-import {FileInfo, SERVER_URL} from '@memebox/contracts';
-import fs, {existsSync} from "fs";
+import { fileEndingToType } from '../projects/utils/src/lib/files';
+import { basename, dirname, extname, join, resolve, sep } from 'path';
+import { FileInfo, SERVER_URL } from '@memebox/contracts';
+import fs, { existsSync } from 'fs';
 
 const { readdir } = fs.promises;
 
@@ -18,7 +18,7 @@ export async function getFiles(dir: string): Promise<string[]> {
   return Array.prototype.concat(...files);
 }
 
-export function mapFileInformations (
+export function mapFileInformations(
   mediaFolder: string,
   files: string[]): FileInfo[] {
 
@@ -60,20 +60,20 @@ export function mapFileInformations (
       ext,
       fileType,
       apiUrl
-    }
+    };
   });
 }
 
 const versions = process.versions;
 export const isInElectron = !!versions['electron'];
 
-export function getAppRootPath () {
+export function getAppRootPath() {
   const baseDir = dirname(process.execPath);
 
   const defaultAppOutPutDir = join(baseDir, '/dist');
   const isBundled = isInElectron || !!versions['pkg'];
 
-  let appRootPath = isBundled
+  let appRootPath = isBundled || baseDir.includes('node')
     ? join(__dirname, '/../dist')
     : defaultAppOutPutDir;
 
@@ -96,7 +96,8 @@ export function getAppRootPath () {
 }
 
 const outElectronPath = 'out-electron';
-export function getElectronPath () {
+
+export function getElectronPath() {
   if (isInElectron) {
     if (__dirname.includes(outElectronPath)) {
       const indexOf = __dirname.indexOf(outElectronPath);
@@ -108,7 +109,4 @@ export function getElectronPath () {
   }
 
   return __dirname;
-}
-
-export function getPreloadJsPath (): void  {
 }

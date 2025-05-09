@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {ENDPOINTS, NetworkInfo} from "@memebox/contracts";
 import {map, shareReplay} from "rxjs/operators";
 import {Observable} from "rxjs";
-import {EXPRESS_BASE} from "../state";
+import { EXPRESS_BASE } from '../state/memeboxApi.service';
 
 const CURRENT_NETWORK_INFO: NetworkInfo = {
   ifname: `Current Location (${location.protocol}//${location.host})`,

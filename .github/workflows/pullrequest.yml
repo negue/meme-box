@@ -16,7 +16,7 @@ jobs:
           fetch-depth: 0
       - name: Cache multiple paths
         id: cache-package
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -48,7 +48,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Cache multiple paths
         id: cache-package
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -63,7 +63,7 @@ jobs:
       - run: npm run build:pkg -- -o release/out/memebox
       - run: release/out/memebox --cli-test-mode=true  --config=./release/config
       - run: npm run electron:build:only
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}_output
           path: |
@@ -74,6 +74,8 @@ jobs:
             !release-electron/mac/**
 
   build_tauri:
+    # install webkit deps breaks, so disabling for now
+    if: false
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -83,7 +85,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Cache multiple paths
         id: cache-package
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -118,7 +120,7 @@ jobs:
         run: npm run build:windows
       - name: Build Tauri app
         run: npm run tauri:build
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: tauri-${{ matrix.os }}
           path: |
